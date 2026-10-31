@@ -1,0 +1,239 @@
+--- a/CMake/ProjectVersion.cmake
++++ b/CMake/ProjectVersion.cmake
+@@ -66,6 +66,6 @@
+ endif()
+ 
+ # Private CPU compositor candidate; never identify this binary as public parity.3.
+-set(PVZP_VERSION "0.2.6-web-software.6")
++set(PVZP_VERSION "0.2.6-web-software.7")
+ set(PVZP_VERSION_PLAIN "0.2.6")
+ configure_file("${PROJECT_SOURCE_DIR}/CMake/ProjectVersion.h.in" "${PROJECT_BINARY_DIR}/ProjectVersion.h" @ONLY)
+--- a/src/PvzpLib/PvzpDrawTriangle.inc
++++ b/src/PvzpLib/PvzpDrawTriangle.inc
+@@ -20,6 +20,10 @@
+  */
+ 
+ // This file is included by EffectSystem.cpp and should not be built directly by the project.
++
++// Implemented at the dedicated screen boundary; keep this generated callback
++// include independent of the image class definition.
++namespace Sexy { bool NativeScreenRasterTargetMatches(const void* surface, unsigned int bytePitch); }
+ 
+ #if (TRI0==0)
+ #define PTYPE uint32_t
+@@ -70,6 +74,14 @@
+ #define NAME5 BLEND0
+ #endif
+ 
++// Only these alpha-textured RGB888 combinations have addressed native proof.
++// Other targets/formats/combinations retain the existing callback code.
++#if (TRI0==1) && (TRI2==1) && ((TRI3==0) || ((TRI4==0) && (TRI5==1)))
++#undef PIXEL_INCLUDE
++#define PIXEL_INCLUDE "PvzpLib/PvzpNativeScreenPixel888.inc"
++#define PVZ_NATIVE_SCREEN_RASTER
++#endif
++
+ #define funcname2additive(t0,t1,t2,t3,t4,t5) PvzpDrawTriangle_##t0##_##t1##_##t2##_##t3##_##t4##_##t5##_ADDITIVE
+ #define funcname1additive(t0,t1,t2,t3,t4,t5) funcname2additive(t0,t1,t2,t3,t4,t5)
+ #define funcnameadditive funcname1additive(NAME0,NAME1,NAME2,NAME3,NAME4,NAME5)
+@@ -95,6 +107,18 @@
+ 	const int pitch = bytepitch / sizeof(PTYPE);
+ 	const int tex_pitch = textureInfo->pitch;
+ 	const unsigned int tex_endpos = textureInfo->endpos;
++
++#if defined(PVZ_NATIVE_SCREEN_RASTER)
++    const unsigned int nativeTextureWidth = tex_pitch > 0 ? static_cast<unsigned int>(tex_pitch) : 0;
++    const unsigned int nativeTextureHeight = nativeTextureWidth ? tex_endpos / nativeTextureWidth : 0;
++    const bool nativeScreenRaster = Sexy::NativeScreenRasterTargetMatches(pFrameBuffer, bytepitch) &&
++        nativeTextureWidth > 0 && nativeTextureWidth <= 32767 && nativeTextureHeight > 0 &&
++        nativeTextureHeight <= 32767 && tex_endpos % nativeTextureWidth == 0
++#if defined(GLOBAL_ARGB)
++        && globalDiffuse.a <= 255 && globalDiffuse.r <= 255 && globalDiffuse.g <= 255 && globalDiffuse.b <= 255
++#endif
++        ;
++#endif
+ 
+ 	const SWHelper::signed64 bigOne = static_cast<SWHelper::signed64>(1) << 48;
+ #define  swap(a,b,type) {type tmp = a; a = b; b = tmp;}
+@@ -304,3 +328,4 @@
+ #undef NAME3
+ #undef NAME4
+ #undef NAME5
++#undef PVZ_NATIVE_SCREEN_RASTER
+--- a/src/PvzpLib/PvzpNativeScreenPixel888.inc
++++ b/src/PvzpLib/PvzpNativeScreenPixel888.inc
+@@ -0,0 +1,49 @@
++/* Copyright (C) 2026. SPDX-License-Identifier: LGPL-3.0-or-later */
++// Keep unproved inputs and every offscreen call on the frozen6 implementation.
++if (nativeScreenRaster && u <= nativeTextureWidth * 0x10000u && v <= nativeTextureHeight * 0x10000u
++#if defined(MOD_ARGB)
++    && a <= 0xff0000u && r <= 0xff0000u && g <= 0xff0000u && b <= 0xff0000u
++#endif
++    )
++{
++    #include "PvzpLib/PvzpNativeScreenTexel.inc"
++    if (alpha > 8)
++    {
++        // Existing tint interpolation/modulation is independently matched.
++        #include "graphics/SWTri/SWTri_TexelARGB.inc"
++        unsigned int result = 0xff000000u;
++        for (int shift = 0; shift < 24; shift += 8)
++        {
++            const unsigned int source = (tex >> shift) & 255;
++            const unsigned int destination = (*pix >> shift) & 255;
++            unsigned int output;
++            #if defined(NAME_ADDITIVE)
++                #if defined(LINEAR_BLEND)
++                    const unsigned int contribution = source;
++                #else
++                    const unsigned int contribution = (source * alpha) >> 8;
++                #endif
++                output = destination + contribution;
++                if (output > 255) output = 255;
++            #else
++                if (alpha >= 240)
++                    output = source;
++                else
++                {
++                    #if defined(LINEAR_BLEND)
++                        const unsigned int contribution = source;
++                    #else
++                        const unsigned int contribution = (source * alpha) >> 8;
++                    #endif
++                    output = contribution + ((destination * (255 - alpha)) >> 8);
++                }
++            #endif
++            result |= output << shift;
++        }
++        *pix = result;
++    }
++}
++else
++{
++    #include "graphics/SWTri/SWTri_Pixel888.inc"
++}
+--- a/src/PvzpLib/PvzpNativeScreenTexel.inc
++++ b/src/PvzpLib/PvzpNativeScreenTexel.inc
+@@ -0,0 +1,41 @@
++/* Copyright (C) 2026. SPDX-License-Identifier: LGPL-3.0-or-later */
++// Addressed original RGB888 sampler; caller proves complete dimensions/UVs.
++unsigned int tex;
++#if !defined(LINEAR_BLEND)
++{
++    const unsigned int position = (v >> 16) * nativeTextureWidth + (u >> 16);
++    tex = position < tex_endpos ? pTexture[position] : 0;
++}
++#else
++{
++    const int qx = static_cast<int>(u) - 0x8000;
++    const int qy = static_cast<int>(v) - 0x8000;
++    const int bx = qx > 0 ? qx & ~0xffff : 0;
++    const int by = qy > 0 ? qy & ~0xffff : 0;
++    const unsigned int dx = qx > 0 && static_cast<unsigned int>(bx >> 16) < nativeTextureWidth - 1 ? 1 : 0;
++    const unsigned int dy = qy > 0 && static_cast<unsigned int>(by >> 16) < nativeTextureHeight - 1 ? nativeTextureWidth : 0;
++    const unsigned int position = static_cast<unsigned int>(by >> 16) * nativeTextureWidth + static_cast<unsigned int>(bx >> 16);
++    const unsigned int pixels[4] = {pTexture[position], pTexture[position + dx],
++        pTexture[position + dy], pTexture[position + dx + dy]};
++    const unsigned int fx = (static_cast<unsigned int>(qx - bx) & 0xfffe) + 1;
++    const unsigned int fy = (static_cast<unsigned int>(qy - by) & 0xfffe) + 1;
++    const unsigned int weights[4] = {((0x10000u - fx) * (0x10000u - fy)) >> 16,
++        (fx * (0x10000u - fy)) >> 16, ((0x10000u - fx) * fy) >> 16, (fx * fy) >> 16};
++    unsigned int alphas[4];
++    unsigned int totalAlpha = 0;
++    for (int i = 0; i < 4; ++i)
++    {
++        alphas[i] = ((pixels[i] >> 24) * weights[i]) >> 16;
++        totalAlpha += alphas[i];
++    }
++    tex = (totalAlpha & 255) << 24;
++    for (int shift = 0; shift < 24; shift += 8)
++    {
++        unsigned int sum = 0;
++        for (int i = 0; i < 4; ++i)
++            sum += ((pixels[i] >> shift) & 255) * alphas[i];
++        tex |= ((sum >> 8) & 255) << shift;
++    }
++}
++#endif
++unsigned int alpha = tex >> 24;
+--- a/src/SexyAppFramework/graphics/SoftwareScreenImage.cpp
++++ b/src/SexyAppFramework/graphics/SoftwareScreenImage.cpp
+@@ -7,10 +7,54 @@
+ 
+ using namespace Sexy;
+ 
++namespace
++{
++struct ScreenRasterTarget
++{
++    const void* surface = nullptr;
++    unsigned int bytePitch = 0;
++};
++thread_local ScreenRasterTarget gScreenRasterTarget;
++
++class ScopedScreenRasterTarget
++{
++    ScreenRasterTarget mPrevious;
++public:
++    ScopedScreenRasterTarget(const void* surface, unsigned int bytePitch)
++        : mPrevious(gScreenRasterTarget)
++    {
++        gScreenRasterTarget = {surface, bytePitch};
++    }
++    ~ScopedScreenRasterTarget() { gScreenRasterTarget = mPrevious; }
++    ScopedScreenRasterTarget(const ScopedScreenRasterTarget&) = delete;
++    ScopedScreenRasterTarget& operator=(const ScopedScreenRasterTarget&) = delete;
++};
++}
++
++bool Sexy::NativeScreenRasterTargetMatches(const void* surface, unsigned int bytePitch)
++{
++    return surface != nullptr && surface == gScreenRasterTarget.surface &&
++        bytePitch != 0 && bytePitch == gScreenRasterTarget.bytePitch;
++}
++
+ SoftwareScreenImage::SoftwareScreenImage(SexyAppBase* app) : MemoryImage(app)
+ {
+     SetImageMode(false, false);
+     mPurgeBits = false;
++}
++
++void SoftwareScreenImage::BltMatrix(Image* image, float x, float y, const SexyMatrix3& matrix,
++    const Rect& clipRect, const Color& color, int drawMode, const Rect& sourceRect, bool blend)
++{
++    ScopedScreenRasterTarget target(GetBits(), static_cast<unsigned int>(mWidth) * 4u);
++    MemoryImage::BltMatrix(image, x, y, matrix, clipRect, color, drawMode, sourceRect, blend);
++}
++
++void SoftwareScreenImage::BltTrianglesTex(Image* texture, const TriVertex vertices[][3], int triangleCount,
++    const Rect& clipRect, const Color& color, int drawMode, float x, float y, bool blend)
++{
++    ScopedScreenRasterTarget target(GetBits(), static_cast<unsigned int>(mWidth) * 4u);
++    MemoryImage::BltTrianglesTex(texture, vertices, triangleCount, clipRect, color, drawMode, x, y, blend);
+ }
+ 
+ void SoftwareScreenImage::Create(int width, int height)
+--- a/src/SexyAppFramework/graphics/SoftwareScreenImage.h
++++ b/src/SexyAppFramework/graphics/SoftwareScreenImage.h
+@@ -5,6 +5,10 @@
+ 
+ namespace Sexy
+ {
++
++// The registered game callbacks may also draw into opaque offscreen images.
++// Match the active virtual screen boundary AND its actual destination buffer.
++bool NativeScreenRasterTargetMatches(const void* surface, unsigned int bytePitch);
+ 
+ // Opaque RGB888 CPU screen destination. Offscreen MemoryImages retain their
+ // distinct native MemoryImage composition. This emulates the audited nonvolatile
+@@ -26,6 +30,10 @@
+         const Rect& clipRect, const Color& color, int drawMode, bool fastStretch) override;
+     void StretchBltMirror(Image* image, const Rect& destinationRect, const Rect& sourceRect,
+         const Rect& clipRect, const Color& color, int drawMode, bool fastStretch) override;
++    void BltMatrix(Image* image, float x, float y, const SexyMatrix3& matrix,
++        const Rect& clipRect, const Color& color, int drawMode, const Rect& sourceRect, bool blend) override;
++    void BltTrianglesTex(Image* texture, const TriVertex vertices[][3], int triangleCount,
++        const Rect& clipRect, const Color& color, int drawMode, float x, float y, bool blend) override;
+ };
+ 
+ }

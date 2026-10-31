@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "current_engine": "0.2.6-web-software.10",
+  "upstream_tag": "0.2.6",
+  "layout": "Site-source nests current corresponding source and upstream baseline only. Other exact source archives remain standalone downloads beside this index and in the full runtime distribution.",
+  "nested_sources": [
+    "pvz-portable-0.2.6-source.zip",
+    "pvz-portable-0.2.6-web-software.10-source.zip"
+  ],
+  "archives": [
+    {
+      "name": "pvz-portable-0.2.6-source.zip",
+      "bytes": 4276717,
+      "sha256": "40af59aa49d936ad21756a1a28ee14d8db51e6aaccbee44c647c2913e9c83556",
+      "current": false,
+      "upstream": true
+    },
+    {
+      "name": "pvz-portable-0.2.6-web-parity.2-source.zip",
+      "bytes": 4287443,
+      "sha256": "42d91e6841a48214888d6b50e95e4249b050f6ccd7b520512693d079af53f580",
+      "current": false,
+      "upstream": false
+    },
+    {
+      "name": "pvz-portable-0.2.6-web-parity.3-source.zip",
+      "bytes": 4303675,
+      "sha256": "d12c29eec4885dfd9419cba57b17980a6506812aa634dd9de85cf63eed260230",
+      "current": false,
+      "upstream": false
+    },
+    {
+      "name": "pvz-portable-0.2.6-web-parity.4-source.zip",
+      "bytes": 4350325,
+      "sha256": "574e760c35cd4409da74a30c8d8d196bddf05e78efc5453e99eb782ff7c6a208",
+      "current": false,
+      "upstream": false
+    },
+    {
+      "name": "pvz-portable-0.2.6-web-software.10-source.zip",
+      "bytes": 5233817,
+      "sha256": "62bf399ffeedde34ec9946b4aece8fce4cb4ffb119739d3b55d2025bc4cda261",
+      "current": true,
+      "upstream": false
+    },
+    {
+      "name": "pvz-portable-0.2.6-web-software.4-source.zip",
+      "bytes": 4816352,
+      "sha256": "649863914351065e939ada9a09cd61f63c12839de970912eb984420910b94458",
+      "current": false,
+      "upstream": false
+    },
+    {
+      "name": "pvz-portable-0.2.6-web-software.6-source.zip",
+      "bytes": 5460587,
+      "sha256": "0358d6b633c2c900f49a89d948dc6b72ab542a56bea6fa8de66f33f40d708794",
+      "current": false,
+      "upstream": false
+    },
+    {
+      "name": "pvz-portable-0.2.6-web-software.7-source.zip",
+      "bytes": 5816054,
+      "sha256": "66b4cf8c473f1c9e6293a60cb2d7864b24cd91b0803745a77ef62c1669cacc3a",
+      "current": false,
+      "upstream": false
+    },
+    {
+      "name": "pvz-portable-0.2.6-web-software.8-source.zip",
+      "bytes": 4579507,
+      "sha256": "6a6470f33dec2c763c595062fa407fbb691a92d43093a64b1d322b6905d7621b",
+      "current": false,
+      "upstream": false
+    },
+    {
+      "name": "pvz-portable-0.2.6-web-software.9-source.zip",
+      "bytes": 5145870,
+      "sha256": "b4ca8b710fe2c61ead0ab5ee1f1a4dffbae92e7c9c705b8ac2e3c4e0f4f83fc4",
+      "current": false,
+      "upstream": false
+    },
+    {
+      "name": "pvz-portable-0.2.6-web-zombatar-source.zip",
+      "bytes": 4281012,
+      "sha256": "f7119893eb13d04eacca0fbd3ced518cf2c7a00aae0ef1237e8a250d5966f029",
+      "current": false,
+      "upstream": false
+    }
+  ]
+}

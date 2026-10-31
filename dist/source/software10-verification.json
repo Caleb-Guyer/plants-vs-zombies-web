@@ -1,0 +1,526 @@
+{
+  "candidate": "0.2.6-web-software.10",
+  "scope": "Actual full Release build/current corresponding source and focused paired additive tests; own10 runtime pending",
+  "base": "Raw upstream0.2.6 commit396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
+  "sourceFilesCompared": 757,
+  "sourceChanges": [
+    {
+      "path": "CMake/ProjectVersion.cmake",
+      "beforeSha256": "847414680a53f1c19723a9672bb34c72386f0beeac8c155825500b8c6d8aff04",
+      "afterSha256": "1aa6e327c0de35fde411958fa8bddfb3bc66f021a3357e9fd02e5b83ebc18758"
+    },
+    {
+      "path": "src/Lawn/Challenge.cpp",
+      "beforeSha256": "4171495aefd7d00bd992144574850b77e0162e473cd01a468e942a4295c63a1f",
+      "afterSha256": "cac1a63dc1f3bc6c577cbab3bc01233915454079419df4b48f266c5f898801e4"
+    },
+    {
+      "path": "src/Lawn/Widget/ZombatarWidget.cpp",
+      "beforeSha256": "68a6f9e831e393173f5a8ef65fd245175d38df5bad3b880ae52cce9e0275f193",
+      "afterSha256": "f2a7397b88bf92ebaa7e61e5f8710df658c32557a44ee8106eb44883a19b4a04"
+    },
+    {
+      "path": "src/Lawn/Widget/ZombatarWidget.h",
+      "beforeSha256": "cef10e102832471c85c22e4c92e7f137a1357d784c7512168d409bbcc68eb539",
+      "afterSha256": "b7575913a53df4ea51aafc92c082694ba6d4fe0d1bd33586d23204ef3dcb7435"
+    },
+    {
+      "path": "src/Lawn/Zombie.cpp",
+      "beforeSha256": "90c23aaa7dc530cd8395525fff24b7428eef38e9c472808ac0e167d42565bf9b",
+      "afterSha256": "8390f4143fabd512745b1eb15b1c1d066b2d3f09ace9827706369e5515ad6ce5"
+    },
+    {
+      "path": "src/LawnApp.cpp",
+      "beforeSha256": "1a5340a05ccbbc088b8fcc0733fea698054a405eb4f1e3566c7aff6b65da3b62",
+      "afterSha256": "417dbe49a8ffa772aa063c3969a2edf6d70ad1392d8d4dd6fee7c43c4beb369f"
+    },
+    {
+      "path": "src/PvzpLib/PvzpDrawTriangle.inc",
+      "beforeSha256": "893d4011970f35aca41aaff68963d58710653305040f3426c2512156f0c99565",
+      "afterSha256": "0e2b54f76ca23cabacbfb79dc7e3f3ed9e6b93cfc5f923bd999fc672ddbfdcdd"
+    },
+    {
+      "path": "src/PvzpLib/PvzpNativeScreenPixel888.inc",
+      "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "afterSha256": "a8f0592b0284f1cb381f75911d70e0a0f193c716d9cee6925d5ce8257d6d1553"
+    },
+    {
+      "path": "src/PvzpLib/PvzpNativeScreenTexel.inc",
+      "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "afterSha256": "dd058d3c7c0a225d6d483b582ba2477e34ae39784cf88a88ae8ebbc37d08e1cb"
+    },
+    {
+      "path": "src/SexyAppFramework/SexyAppBase.cpp",
+      "beforeSha256": "a9f5d3fca91ad13eca4e678555fea5869d3ccfd572e547b4bca4dccbc39315bb",
+      "afterSha256": "923096babc2af2476b9d1b7c2c98bafdd84e7254994f7f674db795f3eadd6d8b"
+    },
+    {
+      "path": "src/SexyAppFramework/SexyAppBase.h",
+      "beforeSha256": "7296f938bf0a6a211e9e7d87e043408dc40e4379c972b773017e5187d1181588",
+      "afterSha256": "e4e4c6956809303cd28be2197d936fa6e8da4489ea473c6cd1254e385df4d9bd"
+    },
+    {
+      "path": "src/SexyAppFramework/graphics/GLImage.cpp",
+      "beforeSha256": "b4bbb17439fa10108c9ef812656b96358555e80b51ece11b912303be48de45f8",
+      "afterSha256": "fff7494f9c727f6634272976f65d4ad3865c8368a3583bbfe4ef8e9452521506"
+    },
+    {
+      "path": "src/SexyAppFramework/graphics/GLInterface.cpp",
+      "beforeSha256": "87a9708ba9bccfce4453e4b4c45a8b7d528e17879dc46701c9048d7350e00050",
+      "afterSha256": "92d635a68662c22921a98982b23a2a6e921fbd559e8b838b666af329b61e9a42"
+    },
+    {
+      "path": "src/SexyAppFramework/graphics/GLInterface.h",
+      "beforeSha256": "e8ee348c077d71508a947bbcd7454cdcc87e3d16ad65b4defe7f919bbe99ecf4",
+      "afterSha256": "731f304ca3a9eb8de1bdeb592fb84aefac71e0bb39f1964dc63c7a49c702a4ee"
+    },
+    {
+      "path": "src/SexyAppFramework/graphics/MemoryImage.cpp",
+      "beforeSha256": "b7b92b728b028ab54855a24eb0ff828f95be137c520f2a48deb14e2ed682deb4",
+      "afterSha256": "dda5454a498cb2fb95d99ce305c966e3341d7ef6f178d01d2d9c86fc259fa630"
+    },
+    {
+      "path": "src/SexyAppFramework/graphics/MemoryImage.h",
+      "beforeSha256": "6a95b6d1cd4d66178f963e06ddf7a831333f9d9475bb39f060d07f106cb52821",
+      "afterSha256": "06cabc9c3f35e5528adce735a6e051d5a78cab44096cc4281d9e39b157498f25"
+    },
+    {
+      "path": "src/SexyAppFramework/graphics/SoftwareScreenImage.cpp",
+      "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "afterSha256": "74339270f4d2c291322d9e769c5bad0de71c9b84ed34989968cdfb0dbb2cbc5c"
+    },
+    {
+      "path": "src/SexyAppFramework/graphics/SoftwareScreenImage.h",
+      "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "afterSha256": "644aa044110ef9e35fc5cc2a71dca6e06195ed4386d9b9cfdd6a0862f275cca2"
+    },
+    {
+      "path": "src/SexyAppFramework/graphics/inc_routines/MI_SlowStretchBlt.inc",
+      "beforeSha256": "eb5bd4482a3527146539930664c224ceb958e6905e65b4a3e14756d34c3d9332",
+      "afterSha256": "5f2b80eaf331e126fb23d2e4e9c337b679a8f40b7efdb8cb7182c99a2841e9ba"
+    },
+    {
+      "path": "src/SexyAppFramework/imagelib/ImageLib.cpp",
+      "beforeSha256": "a2072015d1305e4557040afacf0a6930e50d1bc82f99b9dbd83e063f7da770b2",
+      "afterSha256": "9a3b30b1db54b6e2b7bea163233bfa9b92affa83f33ae2b99d32dd5706921342"
+    },
+    {
+      "path": "src/SexyAppFramework/imagelib/ImageLib.h",
+      "beforeSha256": "a799281366786a97f756682896820dc93673246acf91bdca85ac980b443b9bfd",
+      "afterSha256": "2ef3601120d69fb744074e774d220e5278a67639381646571216c37e52cacd05"
+    },
+    {
+      "path": "src/SexyAppFramework/platform/default/Window.cpp",
+      "beforeSha256": "d8b18252fcd8a428ee12f56fb0bb5c42050fe286ba39636f471df083a72b511e",
+      "afterSha256": "a2f263d0fd5ddc7c68bfea23baf4f36db2c93ce41f5822e72a4c7729d9d050fb"
+    },
+    {
+      "path": "src/SexyAppFramework/platform/emscripten/Window.cpp",
+      "beforeSha256": "3b9e59e333abf9dd13f592020414c6f1afe4d982048740d6bbbfadd73e38c6b6",
+      "afterSha256": "e857f001fa308d67938205eab118da6464c8edc36f613b90a5580a1ae2fb9b9d"
+    }
+  ],
+  "sourcePatchPath": "web-software.10.patch",
+  "sourcePatchSha256": "23c50a326efdecfd25e6d7bc9f55b2398cb19b88ae7539d15dd4099253d2d208",
+  "software9Delta": {
+    "path": "software9-to-software10.patch",
+    "bytes": 3228,
+    "sha256": "1b8bf519c6b674adcf1c59ebbbce640bfecd65f1a99bb86b27c931fb3cffdca7",
+    "crc32": "dadc57b8",
+    "changes": [
+      {
+        "path": "CMake/ProjectVersion.cmake",
+        "beforeSha256": "cc96732554a2a8d3da70e576c1aca74f7fd1d1f91035b7d81398587b85992ee7",
+        "afterSha256": "1aa6e327c0de35fde411958fa8bddfb3bc66f021a3357e9fd02e5b83ebc18758"
+      },
+      {
+        "path": "src/PvzpLib/PvzpDrawTriangle.inc",
+        "beforeSha256": "48e83e4dfca83ce994352b85ba435412558863de6ffc9154f75cad10b917cba6",
+        "afterSha256": "0e2b54f76ca23cabacbfb79dc7e3f3ed9e6b93cfc5f923bd999fc672ddbfdcdd"
+      },
+      {
+        "path": "src/PvzpLib/PvzpNativeScreenPixel888.inc",
+        "beforeSha256": "1eea6abcbb726df1596d14ed9b1ce2aa3ac70bc03987930f224f437f9e22d760",
+        "afterSha256": "a8f0592b0284f1cb381f75911d70e0a0f193c716d9cee6925d5ce8257d6d1553"
+      }
+    ]
+  },
+  "upstreamSourceArchive": {
+    "path": "pvz-portable-0.2.6-source.zip",
+    "sha256": "40af59aa49d936ad21756a1a28ee14d8db51e6aaccbee44c647c2913e9c83556",
+    "sourceFiles": 753
+  },
+  "parentSourceArchive": {
+    "path": "pvz-portable-0.2.6-web-software.9-source.zip",
+    "sha256": "b4ca8b710fe2c61ead0ab5ee1f1a4dffbae92e7c9c705b8ac2e3c4e0f4f83fc4",
+    "entries": 806,
+    "sourceFiles": 757
+  },
+  "artifacts": [
+    {
+      "path": "build/pvz-portable.html",
+      "bytes": 22550,
+      "sha256": "b6a9f2e4ea1b3ebb8ad49e013fe8f2f29e023869c9ead52830d8f4170d95b9e4",
+      "crc32": "d540b1a5"
+    },
+    {
+      "path": "build/pvz-portable.js",
+      "bytes": 208448,
+      "sha256": "905679974d24b7657297c42cfb39b3201f4168cf2e607efb7a8a45cf0a1d9669",
+      "crc32": "e6c2a77e"
+    },
+    {
+      "path": "build/pvz-portable.wasm",
+      "bytes": 7411823,
+      "sha256": "b8b041dfe57d3e66d7ea6889ba9fabb8db6bd71b6eda8e6944188ee982ec24c1",
+      "crc32": "1c650b2f"
+    },
+    {
+      "path": "build/ProjectVersion.h",
+      "bytes": 195,
+      "sha256": "b0ade30f006a12a73d977c25d18a17d78964fe62f161579df48cf3a232a81ee5",
+      "crc32": "5f5332ec"
+    }
+  ],
+  "sourceManifestSha256": "32b6fa0a003466468728a3f3e9e8a764cab6b95e6ed1cc91617a481ffa9d64ce",
+  "preservation": {
+    "unchangedParentSourceFiles": 754,
+    "exactThreeApprovedChangedPaths": true,
+    "preBuild757MapMatchesPostBuildAndCurrentSource": true,
+    "normalDispatchersPreprocessedByteExact": true,
+    "otherExpandedCallbackBodiesUnchanged": 90,
+    "fallbackFullRecordsBitExact": true
+  },
+  "checks": {
+    "fullRelease": {
+      "status": "PASS complete private Release build",
+      "command": [
+        "powershell",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "C:\\Users\\caleb\\Documents\\Codex\\2026-10-25\\co\\work\\portable-build\\software10-candidate\\build-candidate.ps1"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 135.885,
+      "sourceFiles": 757,
+      "sourceUnchangedDuringBuild": true,
+      "sourceBeforeManifestSha256": "605d1033e79ba19cba7b9eb175dd9cea953c1d38c7807fa00313bc09c7360034",
+      "sourceAfterManifestSha256": "605d1033e79ba19cba7b9eb175dd9cea953c1d38c7807fa00313bc09c7360034",
+      "buildRecipeSha256": "3e9c4d78c4da5fc275051db996f99a5bb0638f6ffeccc3055330b895bda2e32e",
+      "recorderSha256": "a14b4ba0dd0cc6cc8a305f21be261814c39479f9668cf11afc3560759666f7a5",
+      "buildLogSha256": "81bc44012a6530486041b8d3375cafd4eb0f5dbbcba44b2af8e8f543484e1d16",
+      "flags": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "DO_FIX_BUGS": "OFF",
+        "PVZ_DEBUG": "OFF",
+        "LOW_MEMORY": "OFF"
+      },
+      "outputs": {
+        "ProjectVersion.h": {
+          "bytes": 195,
+          "sha256": "b0ade30f006a12a73d977c25d18a17d78964fe62f161579df48cf3a232a81ee5"
+        },
+        "pvz-portable.js": {
+          "bytes": 208448,
+          "sha256": "905679974d24b7657297c42cfb39b3201f4168cf2e607efb7a8a45cf0a1d9669"
+        },
+        "pvz-portable.wasm": {
+          "bytes": 7411823,
+          "sha256": "b8b041dfe57d3e66d7ea6889ba9fabb8db6bd71b6eda8e6944188ee982ec24c1"
+        },
+        "pvz-portable.html": {
+          "bytes": 22550,
+          "sha256": "b6a9f2e4ea1b3ebb8ad49e013fe8f2f29e023869c9ead52830d8f4170d95b9e4"
+        },
+        "CMakeCache.txt": {
+          "bytes": 23446,
+          "sha256": "5ad7d57acc3b45e51b7581511eb1f9c3f2468a25310b586bca8f8b8f756f6e3b"
+        }
+      },
+      "generatedVersionHeader": "// Generated from CMake/ProjectVersion.h.in by CMake; do not edit.\n#pragma once\n\n#define PVZP_VERSION \"0.2.6-web-software.10\"\n#define PVZP_BUILD_NUMBER 1\n#define PVZP_COMMIT_DATE \"unknown\"\n",
+      "scope": "Compilation/link only with pinned existing SDK and flags. No browser/game/original/audio execution, scene or full parity claim."
+    },
+    "flagsAndActualCmakeHomeChecked": true,
+    "sourceBefore": {
+      "bytes": 99517,
+      "sha256": "605d1033e79ba19cba7b9eb175dd9cea953c1d38c7807fa00313bc09c7360034",
+      "crc32": "ec8e2501"
+    },
+    "sourceAfter": {
+      "bytes": 99517,
+      "sha256": "605d1033e79ba19cba7b9eb175dd9cea953c1d38c7807fa00313bc09c7360034",
+      "crc32": "ec8e2501"
+    },
+    "sourceFingerprintTiming": "Current source bytes equal the actual full Release source-before and source-after757-file captures. Source freeze evidence, not per-object compiler input attestation.",
+    "actualGeneratedVersionHeader": "// Generated from CMake/ProjectVersion.h.in by CMake; do not edit.\r\n#pragma once\r\n\r\n#define PVZP_VERSION \"0.2.6-web-software.10\"\r\n#define PVZP_BUILD_NUMBER 1\r\n#define PVZP_COMMIT_DATE \"unknown\"\r\n",
+    "nodeSyntaxExitCode": 0,
+    "wasmValidateWithoutInstantiation": true,
+    "focusedAdditive": {
+      "path": "additive-tests/results/results.json",
+      "bytes": 513896,
+      "sha256": "5227f972f6f10c059776d9370790441503bb39aab4aafaeb94db60e466e6a14f",
+      "crc32": "1d1fada5",
+      "normalAssertions": [
+        458240,
+        413568
+      ],
+      "additiveAssertions": [
+        458368,
+        413696
+      ],
+      "candidateAdditiveFailures": [
+        0,
+        0
+      ],
+      "parentExpectedAdditiveFailures": [
+        47270,
+        50870
+      ],
+      "stateAssertions": 628406,
+      "stateFailures": 0,
+      "degenerateCalls": 8,
+      "fallbackRecordCount": 74,
+      "unchangedExpandedCallbacks": 90
+    }
+  },
+  "producerInputRecords": {
+    "README.txt": {
+      "bytes": 4925,
+      "sha256": "2e3cf39c94f554e8a2a80f0adf7da5d169a57efbf3dbe220732e8f9b577b951a",
+      "crc32": "1935fb5f"
+    },
+    "candidate_support.py": {
+      "bytes": 10758,
+      "sha256": "1c8d10c15b7b8ebd030f4d2e129549e4356ea262b63f03e1647791e943f422bd",
+      "crc32": "94f980f5"
+    },
+    "build-candidate.ps1": {
+      "bytes": 1457,
+      "sha256": "3e9c4d78c4da5fc275051db996f99a5bb0638f6ffeccc3055330b895bda2e32e",
+      "crc32": "a5966854"
+    },
+    "build-and-record.py": {
+      "bytes": 3227,
+      "sha256": "a14b4ba0dd0cc6cc8a305f21be261814c39479f9668cf11afc3560759666f7a5",
+      "crc32": "2e6121f9"
+    },
+    "prepare-from-software9.py": {
+      "bytes": 6220,
+      "sha256": "e91df80b4a0526a409abf6f4b42e15cd55fe8584aff6c919754810d86a24322f",
+      "crc32": "7c4aadc6"
+    },
+    "verify-source-inputs.py": {
+      "bytes": 802,
+      "sha256": "0a9b411b41f0d15ef9c0b0817de6c1aba1e474f7e1dc4af2f1823c43efd5bb78",
+      "crc32": "a92260d2"
+    },
+    "write-provenance.py": {
+      "bytes": 6696,
+      "sha256": "3dd0cdba9a4825c02f9cd7218bc8472b1aaa1e0db89ef120b572aad18d13746c",
+      "crc32": "3d08fa10"
+    },
+    "package-candidate.py": {
+      "bytes": 5897,
+      "sha256": "a1c260c3489218902ec698c22475104d277d2432f01256638596341f7c2604be",
+      "crc32": "cf6f3bd7"
+    },
+    "software9-parent.json": {
+      "bytes": 101321,
+      "sha256": "d7eddcc2a3657222a0918dd314f7b4088703eda0cc32f573db5ea489ff66bf9e",
+      "crc32": "3222a4f5"
+    },
+    "scaffold-preparation.json": {
+      "bytes": 1467,
+      "sha256": "f7b33542e87a0893a467f69a023061bd7507c99e87b3e908c33b5582455b37d1",
+      "crc32": "6bce9ad6"
+    },
+    "logs/build-result.json": {
+      "bytes": 2114,
+      "sha256": "570636b040d6ad61b5f38699ccba19ddc105c2c51ffea947f21342fb98a60a5e",
+      "crc32": "b5874321"
+    },
+    "logs/build.log": {
+      "bytes": 17850,
+      "sha256": "81bc44012a6530486041b8d3375cafd4eb0f5dbbcba44b2af8e8f543484e1d16",
+      "crc32": "07cb872d"
+    },
+    "logs/source-before.json": {
+      "bytes": 99517,
+      "sha256": "605d1033e79ba19cba7b9eb175dd9cea953c1d38c7807fa00313bc09c7360034",
+      "crc32": "ec8e2501"
+    },
+    "logs/source-after.json": {
+      "bytes": 99517,
+      "sha256": "605d1033e79ba19cba7b9eb175dd9cea953c1d38c7807fa00313bc09c7360034",
+      "crc32": "ec8e2501"
+    },
+    "additive-tests/README.txt": {
+      "bytes": 1741,
+      "sha256": "55ad2de700adff7978af3c3a1040b8585763302dc7a0d4b87513dcb6df0f9c3e",
+      "crc32": "44bcfef0"
+    },
+    "additive-tests/fixtures.cpp": {
+      "bytes": 12129,
+      "sha256": "8904d78a6074c5954f74fb3a0f8b25bb839ebc5798e133c119fc3dc761f10d1b",
+      "crc32": "97549d9b"
+    },
+    "additive-tests/run-paired-tests.py": {
+      "bytes": 8664,
+      "sha256": "93d74fba403fcd8d8258a8a98b8d07e83daba065123778d8270cc160cd6b845a",
+      "crc32": "b5fdb685"
+    },
+    "additive-tests/native-reference.h": {
+      "bytes": 1087,
+      "sha256": "335e26590ff5e716e47ca6283375db8cd77a0bbda716b4b9681a7cf7d06ffc7f",
+      "crc32": "07dd7071"
+    },
+    "additive-tests/baseline-manifest.json": {
+      "bytes": 102586,
+      "sha256": "3b29303a855968c78df0b6d8c3f4a794ec6459be05f2e00e92c26523161070c3",
+      "crc32": "f716ec14"
+    },
+    "additive-tests/results/results.json": {
+      "bytes": 513896,
+      "sha256": "5227f972f6f10c059776d9370790441503bb39aab4aafaeb94db60e466e6a14f",
+      "crc32": "1d1fada5"
+    },
+    "additive-tests/software9-baseline/src/PvzpLib/PvzpDrawTriangle.inc": {
+      "bytes": 10413,
+      "sha256": "48e83e4dfca83ce994352b85ba435412558863de6ffc9154f75cad10b917cba6",
+      "crc32": "3a5df280"
+    },
+    "additive-tests/software9-baseline/src/PvzpLib/PvzpDrawTriangleInc.inc": {
+      "bytes": 8504,
+      "sha256": "2dde34557514cacfbdf8db8ccc3d9f742d3e528f2826c13c99d4ea18ea5e49cb",
+      "crc32": "bf74bffa"
+    },
+    "additive-tests/software9-baseline/src/PvzpLib/EffectSystem.h": {
+      "bytes": 23584,
+      "sha256": "b9fd87e0ffa60d53c8366223cf7dbfd521194befa5c71e2064cd7cdc468eac81",
+      "crc32": "ce6cd4cf"
+    },
+    "additive-tests/software9-baseline/src/PvzpLib/PvzpNativeScreenPixel888.inc": {
+      "bytes": 1831,
+      "sha256": "1eea6abcbb726df1596d14ed9b1ce2aa3ac70bc03987930f224f437f9e22d760",
+      "crc32": "0cec72ae"
+    },
+    "additive-tests/software9-baseline/src/PvzpLib/PvzpNativeScreenTexel.inc": {
+      "bytes": 1868,
+      "sha256": "dd058d3c7c0a225d6d483b582ba2477e34ae39784cf88a88ae8ebbc37d08e1cb",
+      "crc32": "8b1971c3"
+    },
+    "additive-tests/software9-baseline/src/SexyAppFramework/graphics/SoftwareScreenImage.cpp": {
+      "bytes": 15106,
+      "sha256": "74339270f4d2c291322d9e769c5bad0de71c9b84ed34989968cdfb0dbb2cbc5c",
+      "crc32": "5373b121"
+    },
+    "additive-tests/software9-baseline/src/SexyAppFramework/graphics/SoftwareScreenImage.h": {
+      "bytes": 2197,
+      "sha256": "644aa044110ef9e35fc5cc2a71dca6e06195ed4386d9b9cfdd6a0862f275cca2",
+      "crc32": "0f7505ad"
+    },
+    "additive-tests/software9-baseline/src/SexyAppFramework/graphics/SWTri.cpp": {
+      "bytes": 25267,
+      "sha256": "047dd229933d9603e6654af2f562786db7a11c9ea75d3a5683a86bc5bb5df134",
+      "crc32": "84cf5476"
+    },
+    "additive-tests/software9-baseline/src/SexyAppFramework/graphics/SWTri/SWTri_Loop.inc": {
+      "bytes": 2124,
+      "sha256": "813343776852d534d2c50ef13b361044a136bf956b94261f278c24dd17dd8898",
+      "crc32": "61b51d4d"
+    },
+    "additive-tests/software9-baseline/src/SexyAppFramework/graphics/SWTri/SWTri_Pixel888.inc": {
+      "bytes": 2467,
+      "sha256": "a420f6c2032ac6945423a0282abf2f837d9e1f7fcc678b49e86267c6032ae7b4",
+      "crc32": "50b5f729"
+    },
+    "additive-tests/software9-baseline/src/SexyAppFramework/graphics/SWTri/SWTri_Pixel8888.inc": {
+      "bytes": 3093,
+      "sha256": "52dffe789aa25868af9147772678be86abca7267b8da1264c59a5957556b5a94",
+      "crc32": "2941ec47"
+    },
+    "additive-tests/software9-baseline/src/SexyAppFramework/graphics/SWTri/SWTri_Pixel565.inc": {
+      "bytes": 2652,
+      "sha256": "db47c27ed15a6c8e68b5b2d11f31ece1c7338a036bbf68ac6445544cd0a17825",
+      "crc32": "15cfd135"
+    },
+    "additive-tests/software9-baseline/src/SexyAppFramework/graphics/SWTri/SWTri_Pixel555.inc": {
+      "bytes": 2652,
+      "sha256": "05fbf979b88515dd7b748e5314951b26c046c6e986d21a0273f76d0ba5f3c71e",
+      "crc32": "ccc92398"
+    },
+    "additive-tests/software9-baseline/src/SexyAppFramework/graphics/SWTri/SWTri_GetTexel.inc": {
+      "bytes": 2873,
+      "sha256": "0d24d55b26675fdf6e77a301c381093f91d380cc90424c80fd01740e6ca13fef",
+      "crc32": "283ff80c"
+    },
+    "additive-tests/software9-baseline/src/SexyAppFramework/graphics/SWTri/SWTri_TexelARGB.inc": {
+      "bytes": 2261,
+      "sha256": "408510be19c53b8e8fb56a9b6a8f6e079f2c481f6a4ba1d7252c79109a533ea2",
+      "crc32": "89198093"
+    },
+    "additive-tests/results/software9/actual.cpp": {
+      "bytes": 35196,
+      "sha256": "4b0ececb536656fd2b197b26d751bb5d8c2cb6de4c1f9722ff1df1ef84194773",
+      "crc32": "cf419558"
+    },
+    "additive-tests/results/software9/expanded.cpp": {
+      "bytes": 3847818,
+      "sha256": "baae38bb2fc76e66b878ba0a39c54ab07f6194caddaeb1f3ab844f8695fef1f6",
+      "crc32": "357b3a61"
+    },
+    "additive-tests/results/software9/build.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crc32": "00000000"
+    },
+    "additive-tests/results/software9/run.log": {
+      "bytes": 117901,
+      "sha256": "8c0961b15663cf968982abf33a911ec325d14f86cd11aba83dc608f979b6711b",
+      "crc32": "c83afd2e"
+    },
+    "additive-tests/results/candidate/actual.cpp": {
+      "bytes": 35196,
+      "sha256": "4b0ececb536656fd2b197b26d751bb5d8c2cb6de4c1f9722ff1df1ef84194773",
+      "crc32": "cf419558"
+    },
+    "additive-tests/results/candidate/expanded.cpp": {
+      "bytes": 3858966,
+      "sha256": "ac0fb830415ef0f382c09554c62738eac8c7da3ae9cdcad9c38b57b428a98f28",
+      "crc32": "6863fda0"
+    },
+    "additive-tests/results/candidate/build.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crc32": "00000000"
+    },
+    "additive-tests/results/candidate/run.log": {
+      "bytes": 117893,
+      "sha256": "2c165e54ccfee4c07d1fe8ffa5e4870eb20d7d3720c1c2d57725adcb606a9622",
+      "crc32": "b6b5ad30"
+    }
+  },
+  "limits": [
+    "Only RGB888 nearest ADDITIVE TA1/MOD1/GLOB1 constant valid original input colors and TA0/MOD0/GLOB1 are newly admitted. Original combined prepass and repeated pixel global modulation are authentic and unchanged.",
+    "Exactly90 expanded callback bodies, including normal dispatchers and the old9 additive family, are byte-exact. The actual paired cases preserve complete offscreen/invalid/gradient destination storage and original vertex state.",
+    "Actual callbacks and extracted screen RAII/query/virtual boundaries use app/image/flat4x4 triangle doubles. Conditional arithmetic/state tests are not original native geometry/scan/interpolation/x87/cache/device/framebuffer proof.",
+    "No ordinary gameplay scene invoking either new nearest/additive family was established. Full Release compilation/link is complete; browser/runtime/ordinary-scene testing remains pending.",
+    "Earlier Software.9 tests/gameplay/UI/wins remain historical preserved-source evidence, not newly run10 tests. Only the focused paired additive suite is bundled here.",
+    "No browser/game/original/audio runtime initializes in these producers. Full1:1, all Adventure/modes/rosters, native frames and dense runtime performance remain incomplete."
+  ],
+  "engineInitialized": false,
+  "browserLaunched": false,
+  "audioDeviceOpened": false,
+  "publicOrStable9Modified": false,
+  "independentReviews": [
+    {
+      "path": "review.json",
+      "bytes": 6525,
+      "sha256": "ee4705fe0b42be5d446be3e21a2b57591b775086f7c71fc37a2839f92be8c171",
+      "crc32": "c7986e8f",
+      "scope": "External bounded source/equation/paired-result review; full build verified separately by actual build record; private native evidence not bundled."
+    }
+  ]
+}

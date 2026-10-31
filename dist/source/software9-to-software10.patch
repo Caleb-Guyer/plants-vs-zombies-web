@@ -1,0 +1,66 @@
+--- a/CMake/ProjectVersion.cmake
++++ b/CMake/ProjectVersion.cmake
+@@ -66,6 +66,6 @@
+ endif()
+ 
+ # Private CPU compositor candidate; never identify this binary as public parity.3.
+-set(PVZP_VERSION "0.2.6-web-software.9")
++set(PVZP_VERSION "0.2.6-web-software.10")
+ set(PVZP_VERSION_PLAIN "0.2.6")
+ configure_file("${PROJECT_SOURCE_DIR}/CMake/ProjectVersion.h.in" "${PROJECT_BINARY_DIR}/ProjectVersion.h" @ONLY)
+--- a/src/PvzpLib/PvzpDrawTriangle.inc
++++ b/src/PvzpLib/PvzpDrawTriangle.inc
+@@ -74,9 +74,12 @@
+ #define NAME5 BLEND0
+ #endif
+ 
+-// Only these alpha-textured RGB888 combinations have addressed native proof.
++// Only these RGB888 combinations have addressed native proof.
++// The two new global-color families are nearest/additive only.
+ // Other targets/formats/combinations retain the existing callback code.
+-#if (TRI0==1) && (TRI2==1) && ((TRI3==0) || ((TRI4==0) && ((TRI5==1) || defined(NAME_ADDITIVE))))
++#if (TRI0==1) && (((TRI2==1) && ((TRI3==0) || ((TRI4==0) && ((TRI5==1) || defined(NAME_ADDITIVE))))) || \
++    (defined(NAME_ADDITIVE) && (TRI5==0) && (TRI4==1) && \
++    (((TRI2==1) && (TRI3==1)) || ((TRI2==0) && (TRI3==0)))))
+ #undef PIXEL_INCLUDE
+ #define PIXEL_INCLUDE "PvzpLib/PvzpNativeScreenPixel888.inc"
+ #define PVZ_NATIVE_SCREEN_RASTER
+@@ -117,13 +120,21 @@
+ #if defined(GLOBAL_ARGB)
+         && globalDiffuse.a <= 255 && globalDiffuse.r <= 255 && globalDiffuse.g <= 255 && globalDiffuse.b <= 255
+ #endif
+-#if defined(NAME_ADDITIVE) && (TRI3==1) && (TRI4==0) && (TRI5==0)
+-        // Only the newly admitted nearest-additive family requires constant
+-        // input vertex color; unproved gradients retain the existing path.
++#if defined(NAME_ADDITIVE) && (TRI3==1) && (TRI5==0)
++        // The admitted nearest/additive vertex-color families require
++        // constant input color; unproved gradients retain the existing path.
+         && pVerts[0].a == pVerts[1].a && pVerts[0].a == pVerts[2].a
+         && pVerts[0].r == pVerts[1].r && pVerts[0].r == pVerts[2].r
+         && pVerts[0].g == pVerts[1].g && pVerts[0].g == pVerts[2].g
+         && pVerts[0].b == pVerts[1].b && pVerts[0].b == pVerts[2].b
++#endif
++#if defined(NAME_ADDITIVE) && (TRI2==1) && (TRI3==1) && (TRI4==1) && (TRI5==0)
++        // Check original fixed-point inputs before the authentic global
++        // prepass. Keep the later combined global modulation unchanged too.
++        && pVerts[0].a >= 0 && pVerts[0].a <= 0xff0000
++        && pVerts[0].r >= 0 && pVerts[0].r <= 0xff0000
++        && pVerts[0].g >= 0 && pVerts[0].g <= 0xff0000
++        && pVerts[0].b >= 0 && pVerts[0].b <= 0xff0000
+ #endif
+         ;
+ #endif
+--- a/src/PvzpLib/PvzpNativeScreenPixel888.inc
++++ b/src/PvzpLib/PvzpNativeScreenPixel888.inc
+@@ -7,6 +7,11 @@
+     )
+ {
+     #include "PvzpLib/PvzpNativeScreenTexel.inc"
++    #if defined(NAME_ADDITIVE) && !defined(TEX_ALPHA) && !defined(MOD_ARGB) && defined(GLOBAL_ARGB) && !defined(LINEAR_BLEND)
++        // The addressed opaque nearest worker ignores stored texture alpha.
++        // Force it before global modulation, including zero/empty texels.
++        alpha = 255;
++    #endif
+     if (alpha > 8)
+     {
+         // Existing tint interpolation/modulation is independently matched.

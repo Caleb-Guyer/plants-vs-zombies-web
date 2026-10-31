@@ -1,0 +1,56 @@
+--- a/CMake/ProjectVersion.cmake
++++ b/CMake/ProjectVersion.cmake
+@@ -66,6 +66,6 @@
+ endif()
+ 
+ # Private CPU compositor candidate; never identify this binary as public parity.3.
+-set(PVZP_VERSION "0.2.6-web-software.5")
++set(PVZP_VERSION "0.2.6-web-software.6")
+ set(PVZP_VERSION_PLAIN "0.2.6")
+ configure_file("${PROJECT_SOURCE_DIR}/CMake/ProjectVersion.h.in" "${PROJECT_BINARY_DIR}/ProjectVersion.h" @ONLY)
+--- a/src/SexyAppFramework/graphics/SoftwareScreenImage.cpp
++++ b/src/SexyAppFramework/graphics/SoftwareScreenImage.cpp
+@@ -219,3 +219,32 @@
+         }
+     BitsChanged();
+ }
++
++void SoftwareScreenImage::BltMirror(Image* image, int x, int y, const Rect& sourceRect,
++    const Color& color, int drawMode, bool linearFilter)
++{
++    if (drawMode != Graphics::DRAWMODE_NORMAL && drawMode != Graphics::DRAWMODE_ADDITIVE)
++        return;
++    auto* source = dynamic_cast<MemoryImage*>(image);
++    if (!source || sourceRect.mWidth <= 0 || sourceRect.mHeight <= 0 || sourceRect.mX < 0 || sourceRect.mY < 0 ||
++        sourceRect.mX + sourceRect.mWidth > source->mWidth || sourceRect.mY + sourceRect.mHeight > source->mHeight)
++        return;
++    if (source->mIsVolatile)
++        return MemoryImage::BltMirror(image, x, y, sourceRect, color, drawMode, linearFilter);
++    image->mDrawn = true;
++    source->CommitBits();
++    // Keep the existing alias-safe reversed temporary. Native DD unscaled mirror
++    // always uses pixel alpha, even if source mode flags force opaque or are stale.
++    MemoryImage mirrored(mApp);
++    mirrored.Create(sourceRect.mWidth, sourceRect.mHeight);
++    uint32_t* output = mirrored.GetBits();
++    const uint32_t* pixels = source->GetBits();
++    for (int row = 0; row < sourceRect.mHeight; ++row)
++        for (int column = 0; column < sourceRect.mWidth; ++column)
++            output[row * sourceRect.mWidth + column] = pixels[(sourceRect.mY + row) * source->mWidth + sourceRect.mX + sourceRect.mWidth - 1 - column];
++    mirrored.BitsChanged();
++    mirrored.SetImageMode(true, true);
++    const Rect clipped = Rect(x, y, sourceRect.mWidth, sourceRect.mHeight).Intersection(Rect(0, 0, mWidth, mHeight));
++    if (clipped.mWidth > 0 && clipped.mHeight > 0)
++        Blt(&mirrored, clipped.mX, clipped.mY, Rect(clipped.mX - x, clipped.mY - y, clipped.mWidth, clipped.mHeight), color, drawMode, linearFilter);
++}
+--- a/src/SexyAppFramework/graphics/SoftwareScreenImage.h
++++ b/src/SexyAppFramework/graphics/SoftwareScreenImage.h
+@@ -20,6 +20,8 @@
+     void FillRect(const Rect& rect, const Color& color, int drawMode) override;
+     void Blt(Image* image, int x, int y, const Rect& sourceRect, const Color& color,
+         int drawMode, bool linearFilter = true) override;
++    void BltMirror(Image* image, int x, int y, const Rect& sourceRect, const Color& color,
++        int drawMode, bool linearFilter = true) override;
+     void StretchBlt(Image* image, const Rect& destinationRect, const Rect& sourceRect,
+         const Rect& clipRect, const Color& color, int drawMode, bool fastStretch) override;
+     void StretchBltMirror(Image* image, const Rect& destinationRect, const Rect& sourceRect,

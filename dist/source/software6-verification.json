@@ -1,0 +1,327 @@
+{
+  "candidate": "0.2.6-web-software.6",
+  "scope": "Private dedicated RGB888 screen unscaled mirror source-commit/alpha correction, retaining5 mirror-stretch and FillRect; no publication/browser/runtime equivalence claim",
+  "base": "Raw upstream0.2.6 commit396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
+  "sourceFilesCompared": 755,
+  "sourceChanges": [
+    {
+      "path": "CMake/ProjectVersion.cmake",
+      "beforeSha256": "847414680a53f1c19723a9672bb34c72386f0beeac8c155825500b8c6d8aff04",
+      "afterSha256": "c552dd155ed4ac20ad05948e6e8bbcde5d9aeadca68c40b8ba7b802a698caa14"
+    },
+    {
+      "path": "src/Lawn/Widget/ZombatarWidget.cpp",
+      "beforeSha256": "68a6f9e831e393173f5a8ef65fd245175d38df5bad3b880ae52cce9e0275f193",
+      "afterSha256": "f2a7397b88bf92ebaa7e61e5f8710df658c32557a44ee8106eb44883a19b4a04"
+    },
+    {
+      "path": "src/Lawn/Widget/ZombatarWidget.h",
+      "beforeSha256": "cef10e102832471c85c22e4c92e7f137a1357d784c7512168d409bbcc68eb539",
+      "afterSha256": "b7575913a53df4ea51aafc92c082694ba6d4fe0d1bd33586d23204ef3dcb7435"
+    },
+    {
+      "path": "src/Lawn/Zombie.cpp",
+      "beforeSha256": "90c23aaa7dc530cd8395525fff24b7428eef38e9c472808ac0e167d42565bf9b",
+      "afterSha256": "8390f4143fabd512745b1eb15b1c1d066b2d3f09ace9827706369e5515ad6ce5"
+    },
+    {
+      "path": "src/LawnApp.cpp",
+      "beforeSha256": "1a5340a05ccbbc088b8fcc0733fea698054a405eb4f1e3566c7aff6b65da3b62",
+      "afterSha256": "417dbe49a8ffa772aa063c3969a2edf6d70ad1392d8d4dd6fee7c43c4beb369f"
+    },
+    {
+      "path": "src/SexyAppFramework/SexyAppBase.cpp",
+      "beforeSha256": "a9f5d3fca91ad13eca4e678555fea5869d3ccfd572e547b4bca4dccbc39315bb",
+      "afterSha256": "923096babc2af2476b9d1b7c2c98bafdd84e7254994f7f674db795f3eadd6d8b"
+    },
+    {
+      "path": "src/SexyAppFramework/SexyAppBase.h",
+      "beforeSha256": "7296f938bf0a6a211e9e7d87e043408dc40e4379c972b773017e5187d1181588",
+      "afterSha256": "e4e4c6956809303cd28be2197d936fa6e8da4489ea473c6cd1254e385df4d9bd"
+    },
+    {
+      "path": "src/SexyAppFramework/graphics/GLImage.cpp",
+      "beforeSha256": "b4bbb17439fa10108c9ef812656b96358555e80b51ece11b912303be48de45f8",
+      "afterSha256": "fff7494f9c727f6634272976f65d4ad3865c8368a3583bbfe4ef8e9452521506"
+    },
+    {
+      "path": "src/SexyAppFramework/graphics/GLInterface.cpp",
+      "beforeSha256": "87a9708ba9bccfce4453e4b4c45a8b7d528e17879dc46701c9048d7350e00050",
+      "afterSha256": "92d635a68662c22921a98982b23a2a6e921fbd559e8b838b666af329b61e9a42"
+    },
+    {
+      "path": "src/SexyAppFramework/graphics/GLInterface.h",
+      "beforeSha256": "e8ee348c077d71508a947bbcd7454cdcc87e3d16ad65b4defe7f919bbe99ecf4",
+      "afterSha256": "731f304ca3a9eb8de1bdeb592fb84aefac71e0bb39f1964dc63c7a49c702a4ee"
+    },
+    {
+      "path": "src/SexyAppFramework/graphics/MemoryImage.cpp",
+      "beforeSha256": "b7b92b728b028ab54855a24eb0ff828f95be137c520f2a48deb14e2ed682deb4",
+      "afterSha256": "dda5454a498cb2fb95d99ce305c966e3341d7ef6f178d01d2d9c86fc259fa630"
+    },
+    {
+      "path": "src/SexyAppFramework/graphics/MemoryImage.h",
+      "beforeSha256": "6a95b6d1cd4d66178f963e06ddf7a831333f9d9475bb39f060d07f106cb52821",
+      "afterSha256": "06cabc9c3f35e5528adce735a6e051d5a78cab44096cc4281d9e39b157498f25"
+    },
+    {
+      "path": "src/SexyAppFramework/graphics/SoftwareScreenImage.cpp",
+      "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "afterSha256": "971897e8cdbdf4bd36402b633c0a4dbb2aabdac422358e932ba0196f42036d92"
+    },
+    {
+      "path": "src/SexyAppFramework/graphics/SoftwareScreenImage.h",
+      "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "afterSha256": "bca55a6f44ae0ad315b9407d78481119fec6ed9c7643968fdb0b25612b8c6019"
+    },
+    {
+      "path": "src/SexyAppFramework/graphics/inc_routines/MI_SlowStretchBlt.inc",
+      "beforeSha256": "eb5bd4482a3527146539930664c224ceb958e6905e65b4a3e14756d34c3d9332",
+      "afterSha256": "5f2b80eaf331e126fb23d2e4e9c337b679a8f40b7efdb8cb7182c99a2841e9ba"
+    },
+    {
+      "path": "src/SexyAppFramework/imagelib/ImageLib.cpp",
+      "beforeSha256": "a2072015d1305e4557040afacf0a6930e50d1bc82f99b9dbd83e063f7da770b2",
+      "afterSha256": "9a3b30b1db54b6e2b7bea163233bfa9b92affa83f33ae2b99d32dd5706921342"
+    },
+    {
+      "path": "src/SexyAppFramework/imagelib/ImageLib.h",
+      "beforeSha256": "a799281366786a97f756682896820dc93673246acf91bdca85ac980b443b9bfd",
+      "afterSha256": "2ef3601120d69fb744074e774d220e5278a67639381646571216c37e52cacd05"
+    },
+    {
+      "path": "src/SexyAppFramework/platform/default/Window.cpp",
+      "beforeSha256": "d8b18252fcd8a428ee12f56fb0bb5c42050fe286ba39636f471df083a72b511e",
+      "afterSha256": "a2f263d0fd5ddc7c68bfea23baf4f36db2c93ce41f5822e72a4c7729d9d050fb"
+    },
+    {
+      "path": "src/SexyAppFramework/platform/emscripten/Window.cpp",
+      "beforeSha256": "3b9e59e333abf9dd13f592020414c6f1afe4d982048740d6bbbfadd73e38c6b6",
+      "afterSha256": "e857f001fa308d67938205eab118da6464c8edc36f613b90a5580a1ae2fb9b9d"
+    }
+  ],
+  "sourcePatchPath": "web-software.6.patch",
+  "sourcePatchSha256": "169d806a879973f31a1cd557dd80a9dce3b9d6854d9d6a3c119bcfa9b3723d32",
+  "software5Delta": {
+    "path": "software5-to-software6.patch",
+    "sha256": "d3b751ec2942b73d141d41bb1da24a7eb4515c4517cbefe791d3e72f3f5cb404",
+    "sourceChanges": [
+      {
+        "path": "CMake/ProjectVersion.cmake",
+        "beforeSha256": "cd89c4fe596b6d72003a73806fa402e645e8792c1fdac2d32320f5df20aff774",
+        "afterSha256": "c552dd155ed4ac20ad05948e6e8bbcde5d9aeadca68c40b8ba7b802a698caa14"
+      },
+      {
+        "path": "src/SexyAppFramework/graphics/SoftwareScreenImage.cpp",
+        "beforeSha256": "a86fe1579a852112af5548dd4d1d3394c6f0f3dfaebd2996a19051439fa2de15",
+        "afterSha256": "971897e8cdbdf4bd36402b633c0a4dbb2aabdac422358e932ba0196f42036d92"
+      },
+      {
+        "path": "src/SexyAppFramework/graphics/SoftwareScreenImage.h",
+        "beforeSha256": "93dbab5f01887df96547161bc4924d6de5ecac5719b04aef19dc56dd4c8fd71f",
+        "afterSha256": "bca55a6f44ae0ad315b9407d78481119fec6ed9c7643968fdb0b25612b8c6019"
+      }
+    ]
+  },
+  "upstreamSourceArchive": {
+    "name": "pvz-portable-0.2.6-source.zip",
+    "sha256": "40af59aa49d936ad21756a1a28ee14d8db51e6aaccbee44c647c2913e9c83556",
+    "files": 753
+  },
+  "artifacts": [
+    {
+      "path": "build/pvz-portable.html",
+      "bytes": 22550,
+      "sha256": "b6a9f2e4ea1b3ebb8ad49e013fe8f2f29e023869c9ead52830d8f4170d95b9e4"
+    },
+    {
+      "path": "build/pvz-portable.js",
+      "bytes": 207940,
+      "sha256": "6d0f4b08aa4bcaee8c7ed1236e2947acd63e64a22e225daf2a1589d2f751171d"
+    },
+    {
+      "path": "build/pvz-portable.wasm",
+      "bytes": 7386250,
+      "sha256": "29253249c1697d79f4a89ba405e4bf5b8996bc90830897c32b55a7ecb1473ba1"
+    },
+    {
+      "path": "build/ProjectVersion.h",
+      "bytes": 197,
+      "sha256": "2a9dac74516c4f4f89e4169a7afbbf32f5bcd1cb8814c90815207c1ce57fe681"
+    }
+  ],
+  "checks": {
+    "unscaledMirror": {
+      "candidate": "0.2.6-web-software.6",
+      "status": "PASS",
+      "variants": {
+        "frozen5": {
+          "exitCode": 1,
+          "output": "FAIL native normal/additive/tint/global-alpha/source-flag pixel\nFAIL native normal/additive/tint/global-alpha/source-flag pixel\nFAIL native normal/additive/tint/global-alpha/source-flag pixel\nFAIL native normal/additive/tint/global-alpha/source-flag pixel\nFAIL native normal/additive/tint/global-alpha/source-flag pixel\nFAIL native normal/additive/tint/global-alpha/source-flag pixel\nFAIL native normal/additive/tint/global-alpha/source-flag pixel\nFAIL native normal/additive/tint/global-alpha/source-flag pixel\nUnscaled mirror DD32: checks=3039478 failures=14336 draws=1505732 indexedCalls=226; actual source vs independent addressed reference\n",
+          "generatedSha256": "e4caa5a229a7200b25ca2df9c34791bc88a9c8e4bfe385bc49fa4211e57d0124",
+          "generatedLogicalTextSha256": "e4caa5a229a7200b25ca2df9c34791bc88a9c8e4bfe385bc49fa4211e57d0124",
+          "generatedEncoding": "UTF-8, LF; generatedSha256 hashes actual compiled file bytes",
+          "actualSourceSha256": {
+            "MemoryImage.cpp": "dda5454a498cb2fb95d99ce305c966e3341d7ef6f178d01d2d9c86fc259fa630",
+            "SoftwareScreenImage.cpp": "a86fe1579a852112af5548dd4d1d3394c6f0f3dfaebd2996a19051439fa2de15",
+            "SoftwareScreenImage.h": "93dbab5f01887df96547161bc4924d6de5ecac5719b04aef19dc56dd4c8fd71f"
+          }
+        },
+        "candidate6": {
+          "exitCode": 0,
+          "output": "Unscaled mirror DD32: checks=3039478 failures=0 draws=1505732 indexedCalls=226; actual source vs independent addressed reference\n",
+          "generatedSha256": "4f78c3e1b24662ce573ff7e37abea64ad18a1f011e20438a7bd40fe197a169b3",
+          "generatedLogicalTextSha256": "4f78c3e1b24662ce573ff7e37abea64ad18a1f011e20438a7bd40fe197a169b3",
+          "generatedEncoding": "UTF-8, LF; generatedSha256 hashes actual compiled file bytes",
+          "actualSourceSha256": {
+            "MemoryImage.cpp": "dda5454a498cb2fb95d99ce305c966e3341d7ef6f178d01d2d9c86fc259fa630",
+            "SoftwareScreenImage.cpp": "971897e8cdbdf4bd36402b633c0a4dbb2aabdac422358e932ba0196f42036d92",
+            "SoftwareScreenImage.h": "bca55a6f44ae0ad315b9407d78481119fec6ed9c7643968fdb0b25612b8c6019"
+          }
+        }
+      },
+      "referenceSha256": "81ef67d26dc2e62dd5c310f3070b4b817722decd7ad76d60492daf513ba236d6",
+      "fixturesSha256": "308360b5084987e6e33f8017ec0e986ca44847bdcaa41e582a4078c47f59e117",
+      "runnerSha256": "541e83a1e383620d364da055667d27d12961657e7ecf6878481ebb22566f8f12",
+      "baselineManifestSha256": "a140386d03560071d740a8b85ff260ded5ff320384825ec4c4bc815a76c04d90",
+      "baselineMatchesFrozenParentFingerprint": true,
+      "sourceUnchangedByTests": true,
+      "scope": "Actual source-extracted unscaled mirror/base virtual calls vs independent addressed ordinary RGB888 mirror equations; all256alphas/raw/indexed/forced+stale flags/white+tint+globalalpha/modes0+1+invalid/rightcrop/alias control.",
+      "limits": [
+        "No original code execution or full original framebuffer claim.",
+        "No game/browser/audio initialization.",
+        "DD16/D3D/driver/volatile/cache-recovery and other primitive dispatch remain excluded."
+      ]
+    },
+    "retainedMirrorStretch": {
+      "candidate": "0.2.6-web-software.6",
+      "status": "PASS",
+      "variants": {
+        "frozen4": {
+          "exitCode": 1,
+          "output": "FAIL one native mirror pixel/mode/alpha\nFAIL one native mirror pixel/mode/alpha\nFAIL one native mirror pixel/mode/alpha\nFAIL one native mirror pixel/mode/alpha\nFAIL one native mirror pixel/mode/alpha\nFAIL one native mirror pixel/mode/alpha\nFAIL one native mirror pixel/mode/alpha\nFAIL one native mirror pixel/mode/alpha\nMirror DD32: checks=98802 failures=21208 draws=16964 paletteDraws=226; actual inherited-or-screen virtual mirror calls vs independent addressed reference\n",
+          "generatedSha256": "38b2cff8c8efa1b0f4e1667891463488f8779ee2f42b3a3825c35f6faaa74b08",
+          "actualSourceSha256": {
+            "MemoryImage.cpp": "dda5454a498cb2fb95d99ce305c966e3341d7ef6f178d01d2d9c86fc259fa630",
+            "SoftwareScreenImage.cpp": "9c280f36d4048b67ac9d29a505882425b6dd8a503ed21c7a175163dac0128177",
+            "SoftwareScreenImage.h": "4b0f826035b9ae5165a755c5cb134efb047c72fc2d143e68e342b53faa3d411f"
+          }
+        },
+        "candidate6": {
+          "exitCode": 0,
+          "output": "Mirror DD32: checks=98802 failures=0 draws=16964 paletteDraws=226; actual inherited-or-screen virtual mirror calls vs independent addressed reference\n",
+          "generatedSha256": "984445ea0ddeab19dbbd21d327da2574bbdcfcccf9780b4910f8d6228556057f",
+          "actualSourceSha256": {
+            "MemoryImage.cpp": "dda5454a498cb2fb95d99ce305c966e3341d7ef6f178d01d2d9c86fc259fa630",
+            "SoftwareScreenImage.cpp": "971897e8cdbdf4bd36402b633c0a4dbb2aabdac422358e932ba0196f42036d92",
+            "SoftwareScreenImage.h": "bca55a6f44ae0ad315b9407d78481119fec6ed9c7643968fdb0b25612b8c6019"
+          }
+        }
+      },
+      "referenceSha256": "5957dc5e66faad26b56c2f3eb9ef25d01514953aa038a37418d1a2ed03c0dddb",
+      "fixturesSha256": "887d830eb0deb91607bda033898ec787ef04ac0f62ad7ca7e9584f91821fc80b",
+      "sourceUnchangedByTests": true,
+      "scope": "Actual source-extracted methods and inherited/base virtual calls vs independent addressed RGB888 mirror clip/fixed16/native-alpha equations; raw/indexed/forced-flags/white/tint/global-alpha/normal/nonzero-additive/both-fast-values.",
+      "limits": [
+        "No original code execution or full original framebuffer claim.",
+        "No game/browser/audio initialization.",
+        "DD16/D3D/driver/volatile/cache-recovery and other primitive dispatch remain excluded."
+      ]
+    },
+    "retainedFill": {
+      "candidate": "0.2.6-web-software.6",
+      "status": "PASS",
+      "variants": {
+        "frozen4": {
+          "exitCode": 1,
+          "checks": 2118543,
+          "differences": 539971,
+          "output": "DIFFERENCE normal full color-alpha grid: 317798\nDIFFERENCE additive full color-alpha grid: 221289\nDIFFERENCE valid rectangle RGB: 544\nDIFFERENCE inherited axis line virtualFill RGB: 136\nDIFFERENCE inherited axis AA virtualFill RGB: 136\nDIFFERENCE actual base span virtualFill RGB: 56\nDIFFERENCE unknown fill mode unchanged: 12\nFAIL 2118543 checks, 539971 differences; actual source, no game/audio initialization.\n",
+          "generatedSha256": "171d4c5d6616989f134e72e430cf24aa66334977894370edd94584615197e0d5",
+          "actualSourceSha256": {
+            "MemoryImage.cpp": "dda5454a498cb2fb95d99ce305c966e3341d7ef6f178d01d2d9c86fc259fa630",
+            "Image.cpp": "6594fb78da16fdd0061c96aa3f6d6861e6754b374c7f28f98542ec116dac9e48",
+            "SoftwareScreenImage.cpp": "9c280f36d4048b67ac9d29a505882425b6dd8a503ed21c7a175163dac0128177",
+            "SoftwareScreenImage.h": "4b0f826035b9ae5165a755c5cb134efb047c72fc2d143e68e342b53faa3d411f"
+          }
+        },
+        "candidate6": {
+          "exitCode": 0,
+          "checks": 2118543,
+          "differences": 0,
+          "output": "PASS 2118543 checks, 0 differences; actual source, no game/audio initialization.\n",
+          "generatedSha256": "cc1eb3bd3114fe491466ca12fb8a692868b5125a073e64fb35617db17e6b86c6",
+          "actualSourceSha256": {
+            "MemoryImage.cpp": "dda5454a498cb2fb95d99ce305c966e3341d7ef6f178d01d2d9c86fc259fa630",
+            "Image.cpp": "6594fb78da16fdd0061c96aa3f6d6861e6754b374c7f28f98542ec116dac9e48",
+            "SoftwareScreenImage.cpp": "971897e8cdbdf4bd36402b633c0a4dbb2aabdac422358e932ba0196f42036d92",
+            "SoftwareScreenImage.h": "bca55a6f44ae0ad315b9407d78481119fec6ed9c7643968fdb0b25612b8c6019"
+          }
+        }
+      },
+      "referenceSha256": "ec5788a8b262db0dd58158b9e01ed0041dfc95319cba2ace8c737694a49b2456",
+      "fixturesSha256": "58f6d77225f8923eb5c8be2ef57970d68b732b7dbe8cf330d07b08f643647a75",
+      "runnerSha256": "482106afb6608599c33c354ec04b8053e5fd7d6b1f692a47fbac180e3c6cd3d8",
+      "sourceUnchangedByTests": true,
+      "scope": "Actual source class/header/method extraction versus independently derived scalar native DD32 RGB888 fill equations; full0..255 color+alpha grid/eight destination RGBs/both modes; valid rect/guard, actual inherited axis Line+AA and baseSpan virtual dispatch, unknown-mode guard, offscreen and nonaxis first-pixel controls.",
+      "limits": [
+        "No installed original binary is read or executed by this runner.",
+        "No game/browser/audio initialization or full native framebuffer claim.",
+        "RGB888 successful-lock ordinary software path only; DD16/D3D/driver/volatile/failure paths excluded.",
+        "Defensive outside-screen clipping is not asserted as native invalid-geometry equivalence.",
+        "Nonaxis additiveAA remains unchanged and a known API discrepancy; normalAA/full line geometry unproved."
+      ]
+    },
+    "retainedDD32": {
+      "candidate": "0.2.6-web-software.6",
+      "exitCode": 0,
+      "output": "DD32: checks=20900 candidateFailures=0 Software3RGBDifferences=7352; actual screen/base virtual calls, synthetic only\n",
+      "actualMemoryImageSha256": "dda5454a498cb2fb95d99ce305c966e3341d7ef6f178d01d2d9c86fc259fa630",
+      "actualScreenSha256": "971897e8cdbdf4bd36402b633c0a4dbb2aabdac422358e932ba0196f42036d92",
+      "actualScreenHeaderSha256": "bca55a6f44ae0ad315b9407d78481119fec6ed9c7643968fdb0b25612b8c6019",
+      "generatedSha256": "2bdecdd5172429d148b4fbacafc0a8a1d5dfdcdf7d34a8deafd682e283333021",
+      "includeSha256": {
+        "MI_NormalBlt.inc": "d1da33815df7eedc7630967633d3af48778f6144d9e8a7aabccb855c5bf8e909",
+        "MI_AdditiveBlt.inc": "df8858077eaaf278722d91407803e1c41b9810243a0e468365299ad38c6a1946",
+        "MI_SlowStretchBlt.inc": "5f2b80eaf331e126fb23d2e4e9c337b679a8f40b7efdb8cb7182c99a2841e9ba"
+      },
+      "independentReferenceSha256": "05cdedf6811961d6df64419c2baf68734728f8bd9f07f6fe0f1ccfe55ffd8b7f",
+      "scope": "Retained20893 ordinary equation assertions and7 white mirror assertions preserved; stretched mirror indices updated to proved source-forward/destination-reverse order. Indexed fixtures strengthened with distinct palette data/null raw bits and faithful lazy GetBits. Literal MI3 unchanged. No driver surface/DD16/volatile/framebuffer/game/browser/audio proof."
+    },
+    "retainedPrimitives": "PASS149/149; baseline31/149 expected failure",
+    "preservedMIStretch": "PASS20fixtures/zero differences; unchanged MI3 inputs",
+    "mode": "PASS actual transition with doubles",
+    "presenter": "PASS actual batcher/presenter with GL/SDL doubles",
+    "matte": "PASS9fixtures; original/partial controls fail as expected",
+    "fullEngineCompileLink": "PASS isolated Release with pinned tools/flags",
+    "jsSyntaxAndWasmValidation": "PASS without initialization",
+    "browserOrNativeUi": "NOT RUN",
+    "denseDisplayPerformance": "NOT MEASURED",
+    "verificationLogSha256": {
+      "primitives-retained-test.log": "0962c748f1515f996c424e0d0212e7febffd42b69a5958ccccd8a4401fb03183",
+      "mode-retained-test.log": "8cfe3240ee3bf9c4954ca3bdd73224246e7f54f44c8e9b01653dd79bc9a8bf48",
+      "presenter-retained-test.log": "e77cf5db325730aa53f87e9e4ef7ca7fa1e2ea8aa92217ac7171e49b1f389b64",
+      "mi-stretch-retained-test.log": "4233d4b6d7ccaa7aa68a46f5d09bebcdeec4c1ea2fa8cfa9c9cacf091b6bf914",
+      "dd32-retained-test.log": "12cc6c71c69e86283df6f6a53c880de90145665296c56ba363219d26472ff6cc",
+      "matte-retained-test.log": "158ba891f55e91782c61064f520f579c36ef3aa5282adf436e3049ae1fa9c0a2",
+      "mirror-regression.log": "9a926c931a826218161bfd9898c2134587a6579633506aa5b402a91052212966",
+      "fill-regression.log": "2e33e6ef46b07e5fd1ea89baba65d653e1cc408f9411eb7f62f0782256770039",
+      "unscaled-mirror-regression.log": "b32ba564aa0e33080cb8f82fb7aa18630a1e679bcae8611ec44d1081dddb6d6f",
+      "logs/build.log": "11fa57ca040da18c55563cddacee74d0373a36666dec4aff4fc58a8ed831d4ad"
+    }
+  },
+  "independentReviews": {
+    "unscaledMirror": "garden_input independently authenticated addressed gates/math/clipping, source/preservation, genuine indexed/stale fixtures and final actual-file hashes; PASS bounded source/test review",
+    "retainedFillAndMirrorStretch": "Software5 independently reviewed functions and all source fixtures preserved; current6 extraction/link tests pass",
+    "generatedHashScope": "New unscaled suite hashes actual compiled UTF-8/LF disk bytes. Inherited source5 suite generatedSha256 fields retain their logical-text hash definition."
+  },
+  "limits": [
+    "Conditional successful-lock nonvolatile CPU RGB888 bitmap/stretch/mirror-stretch/unscaled-mirror/fill paths with valid integer/preclipped geometry and current native caches; no original framebuffer capture/equivalence claim.",
+    "DD16/other layouts, driver/D3D shortcuts, volatile inputs and native cache/device recovery remain unverified.",
+    "Fractional/rotated/matrix/triangle/coverage dispatch and offscreen tint/additive remain separate limits.",
+    "Native nonaxis additive AA is a confirmed no-op/port extension left unchanged; no game call site found.",
+    "Normal nonaxis line controls cover first pixels only; no all-endpoint/coverage proof.",
+    "CPU composition still needs the existing WebGL context for one final bitmap transport.",
+    "No6 browser scenes, save/preference persistence, dense-scene/display FPS, all effects or whole-game parity verified; no5 UI credit transfers."
+  ]
+}

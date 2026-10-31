@@ -1,0 +1,9 @@
+# Local tooling and provider metadata are not GitHub release inputs.
+.openai/
+__pycache__/
+*.py[cod]
+node_modules/
+outputs/
+package-output/
+.DS_Store
+Thumbs.db

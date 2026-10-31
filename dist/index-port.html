@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#000000">
+  <meta name="description" content="Plants vs. Zombies in your browser, ready to play.">
+  <title>Plants vs. Zombies</title>
+  <link rel="stylesheet" href="./port.css">
+  <script src="./audio-controls.js"></script>
+  <script src="./vendor/jszip.min.js"></script>
+</head>
+<body class="upload-mode">
+  <main id="canvas-container">
+    <canvas id="canvas" width="800" height="600" tabindex="0" role="application" aria-label="Plants vs. Zombies. Use the mouse to play. Escape opens the game menu."></canvas>
+  </main>
+
+  <section id="upload-screen" aria-label="Loading game">
+    <div class="setup-card">
+      <section id="drop-zone" aria-label="Game loading status">
+        <h1>Plants vs. Zombies</h1>
+        <div id="loading-drop-zone" role="status" aria-live="polite">Loading game...</div>
+        <button id="retry-load" class="text-button" type="button" hidden>Retry</button>
+      </section>
+      <p id="engine-status" class="setup-status" role="status"></p>
+    </div>
+  </section>
+
+  <nav id="save-toolbar" class="control-rail" aria-label="Browser controls">
+    <button id="mute-btn" class="icon-button" type="button" aria-label="Mute sound" aria-pressed="false" title="Mute sound">Mute sound</button>
+    <button id="fullscreen-btn" class="icon-button" type="button" aria-label="Toggle fullscreen" title="Fullscreen">Fullscreen</button>
+    <button id="import-btn" class="icon-button" type="button" aria-label="Import saves" title="Import">Import</button>
+    <button id="save-export-btn" class="icon-button" type="button" aria-label="Export saves" title="Export saves">Export saves</button>
+    <button id="more-btn" class="icon-button" type="button" aria-label="More controls and information" aria-haspopup="dialog" aria-expanded="false" title="More">More</button>
+  </nav>
+
+  <dialog id="more-dialog" class="settings-dialog" aria-labelledby="more-title">
+    <div class="dialog-heading"><h2 id="more-title">Controls</h2><button id="more-close" class="icon-button close-icon" type="button" aria-label="Close controls" title="Close">Close</button></div>
+    <div class="settings-group">
+      <div id="upload-save-actions" class="save-actions">
+        <button id="upload-save-import-btn" class="setting-action" type="button">Import save ZIP</button>
+        <button id="upload-save-import-dir-btn" class="setting-action" type="button">Import save folder</button>
+        <p id="save-import-status" class="setting-note" role="status" hidden></p>
+      </div>
+    </div>
+    <details class="settings-details">
+      <summary>Advanced</summary>
+      <div class="settings-group">
+        <button id="add-test-profiles" class="setting-action" type="button">Add unlocked test profiles</button>
+        <p id="test-profile-status" class="setting-note" role="status">Separate generated profiles; existing progress is kept.</p>
+        <button id="upload-save-clear-btn" class="setting-action danger-action" type="button">Clear browser saves</button>
+      </div>
+    </details>
+    <details class="settings-details information">
+      <summary>Information</summary>
+      <p>Powered by <a href="https://github.com/wszqkzqk/PvZ-Portable" target="_blank" rel="noopener">PvZ-Portable 0.2.6</a>, custom local build <span id="engine-build-id">0.2.6-web-software.10</span> with browser export and selectable CPU rendering. Fresh tutorial and save-transfer checks passed. © 2026 Zhou Qiankang and contributors. LGPL-3.0-or-later.</p>
+      <p>Unofficial community engine. Original game and assets © PopCap / Electronic Arts. Exact 1:1 parity has not been exhaustively verified.</p>
+      <div class="information-links"><a href="./source/pvz-portable-0.2.6-web-software.10-source.zip" download>Engine source</a><a href="./source/pvz-portable-0.2.6-source.zip" download>Upstream source</a><a href="./source/build-provenance.json">Build record</a><a href="./source/site-source.zip" download>Site source</a><a href="./licenses/LGPL-3.0.txt">License</a></div>
+    </details>
+  </dialog>
+
+  <input id="upload-save-import-input" type="file" accept=".zip" hidden>
+  <input id="upload-save-import-dir-input" type="file" multiple webkitdirectory hidden>
+  <textarea id="pvz-soft-keyboard" autocapitalize="off" autocomplete="off" autocorrect="off" enterkeyhint="done" spellcheck="false" aria-label="In-game text input"></textarea>
+  <dialog id="return-files-dialog" class="browser-dialog" aria-labelledby="return-files-title">
+    <h2 id="return-files-title">Import or manage saves?</h2>
+    <p>Save your current level through the in-game Menu → Main Menu first. Continue reloads the game to manage saved data before it starts.</p>
+    <p id="return-files-status" role="status"></p>
+    <div class="dialog-actions"><button id="return-files-cancel" type="button" autofocus>Keep playing</button><button id="return-files-confirm" type="button">Continue</button></div>
+  </dialog>
+  <noscript><div class="noscript">Enable JavaScript to play.</div></noscript>
+  <script src="./runtime.js"></script>
+  <script src="./save-storage.js"></script>
+  <script src="./save-transfer.js"></script>
+  <script src="./game/pvz-portable.js?v=905679974d24" async></script>
+  <script src="./loader.js"></script>
+  <script src="./steam-compat.js"></script>
+  <script src="./test-profiles.js"></script>
+  <script src="./bundled-assets.js"></script>
+  <script src="./launcher.js"></script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+# Preserve checksum-pinned engine artifacts on Windows checkouts.
+dist/game/pvz-portable.js -text
+dist/source/*.patch -text
+*.wasm binary
+*.zip binary
+
+# Preserve checksum-pinned game data, including original XML line endings.
+dist/game-assets/** -text
+
+# Preserve every served byte from the frozen release, including shell metadata.
+dist/** -text
+
+# Generator source must have stable newlines on Windows and Linux checkouts.
+*.mjs text eol=lf
+*.py text eol=lf

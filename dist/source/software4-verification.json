@@ -1,0 +1,247 @@
+{
+  "candidate": "0.2.6-web-software.4",
+  "scope": "Private dedicated nonvolatile DD32 CPU screen plus retained native MemoryImage offscreen arithmetic; not published or browser-runtime verified",
+  "base": "Raw upstream0.2.6 commit396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
+  "sourceFilesCompared": 755,
+  "sourceChanges": [
+    {
+      "path": "CMake/ProjectVersion.cmake",
+      "beforeSha256": "847414680a53f1c19723a9672bb34c72386f0beeac8c155825500b8c6d8aff04",
+      "afterSha256": "7468e7c871e8ecae460a012f1f83216714210ab4db2cd34af18615976dee1fd0"
+    },
+    {
+      "path": "src/Lawn/Widget/ZombatarWidget.cpp",
+      "beforeSha256": "68a6f9e831e393173f5a8ef65fd245175d38df5bad3b880ae52cce9e0275f193",
+      "afterSha256": "f2a7397b88bf92ebaa7e61e5f8710df658c32557a44ee8106eb44883a19b4a04"
+    },
+    {
+      "path": "src/Lawn/Widget/ZombatarWidget.h",
+      "beforeSha256": "cef10e102832471c85c22e4c92e7f137a1357d784c7512168d409bbcc68eb539",
+      "afterSha256": "b7575913a53df4ea51aafc92c082694ba6d4fe0d1bd33586d23204ef3dcb7435"
+    },
+    {
+      "path": "src/Lawn/Zombie.cpp",
+      "beforeSha256": "90c23aaa7dc530cd8395525fff24b7428eef38e9c472808ac0e167d42565bf9b",
+      "afterSha256": "8390f4143fabd512745b1eb15b1c1d066b2d3f09ace9827706369e5515ad6ce5"
+    },
+    {
+      "path": "src/LawnApp.cpp",
+      "beforeSha256": "1a5340a05ccbbc088b8fcc0733fea698054a405eb4f1e3566c7aff6b65da3b62",
+      "afterSha256": "417dbe49a8ffa772aa063c3969a2edf6d70ad1392d8d4dd6fee7c43c4beb369f"
+    },
+    {
+      "path": "src/SexyAppFramework/SexyAppBase.cpp",
+      "beforeSha256": "a9f5d3fca91ad13eca4e678555fea5869d3ccfd572e547b4bca4dccbc39315bb",
+      "afterSha256": "923096babc2af2476b9d1b7c2c98bafdd84e7254994f7f674db795f3eadd6d8b"
+    },
+    {
+      "path": "src/SexyAppFramework/SexyAppBase.h",
+      "beforeSha256": "7296f938bf0a6a211e9e7d87e043408dc40e4379c972b773017e5187d1181588",
+      "afterSha256": "e4e4c6956809303cd28be2197d936fa6e8da4489ea473c6cd1254e385df4d9bd"
+    },
+    {
+      "path": "src/SexyAppFramework/graphics/GLImage.cpp",
+      "beforeSha256": "b4bbb17439fa10108c9ef812656b96358555e80b51ece11b912303be48de45f8",
+      "afterSha256": "fff7494f9c727f6634272976f65d4ad3865c8368a3583bbfe4ef8e9452521506"
+    },
+    {
+      "path": "src/SexyAppFramework/graphics/GLInterface.cpp",
+      "beforeSha256": "87a9708ba9bccfce4453e4b4c45a8b7d528e17879dc46701c9048d7350e00050",
+      "afterSha256": "92d635a68662c22921a98982b23a2a6e921fbd559e8b838b666af329b61e9a42"
+    },
+    {
+      "path": "src/SexyAppFramework/graphics/GLInterface.h",
+      "beforeSha256": "e8ee348c077d71508a947bbcd7454cdcc87e3d16ad65b4defe7f919bbe99ecf4",
+      "afterSha256": "731f304ca3a9eb8de1bdeb592fb84aefac71e0bb39f1964dc63c7a49c702a4ee"
+    },
+    {
+      "path": "src/SexyAppFramework/graphics/MemoryImage.cpp",
+      "beforeSha256": "b7b92b728b028ab54855a24eb0ff828f95be137c520f2a48deb14e2ed682deb4",
+      "afterSha256": "dda5454a498cb2fb95d99ce305c966e3341d7ef6f178d01d2d9c86fc259fa630"
+    },
+    {
+      "path": "src/SexyAppFramework/graphics/MemoryImage.h",
+      "beforeSha256": "6a95b6d1cd4d66178f963e06ddf7a831333f9d9475bb39f060d07f106cb52821",
+      "afterSha256": "06cabc9c3f35e5528adce735a6e051d5a78cab44096cc4281d9e39b157498f25"
+    },
+    {
+      "path": "src/SexyAppFramework/graphics/SoftwareScreenImage.cpp",
+      "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "afterSha256": "9c280f36d4048b67ac9d29a505882425b6dd8a503ed21c7a175163dac0128177"
+    },
+    {
+      "path": "src/SexyAppFramework/graphics/SoftwareScreenImage.h",
+      "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "afterSha256": "4b0f826035b9ae5165a755c5cb134efb047c72fc2d143e68e342b53faa3d411f"
+    },
+    {
+      "path": "src/SexyAppFramework/graphics/inc_routines/MI_SlowStretchBlt.inc",
+      "beforeSha256": "eb5bd4482a3527146539930664c224ceb958e6905e65b4a3e14756d34c3d9332",
+      "afterSha256": "5f2b80eaf331e126fb23d2e4e9c337b679a8f40b7efdb8cb7182c99a2841e9ba"
+    },
+    {
+      "path": "src/SexyAppFramework/imagelib/ImageLib.cpp",
+      "beforeSha256": "a2072015d1305e4557040afacf0a6930e50d1bc82f99b9dbd83e063f7da770b2",
+      "afterSha256": "9a3b30b1db54b6e2b7bea163233bfa9b92affa83f33ae2b99d32dd5706921342"
+    },
+    {
+      "path": "src/SexyAppFramework/imagelib/ImageLib.h",
+      "beforeSha256": "a799281366786a97f756682896820dc93673246acf91bdca85ac980b443b9bfd",
+      "afterSha256": "2ef3601120d69fb744074e774d220e5278a67639381646571216c37e52cacd05"
+    },
+    {
+      "path": "src/SexyAppFramework/platform/default/Window.cpp",
+      "beforeSha256": "d8b18252fcd8a428ee12f56fb0bb5c42050fe286ba39636f471df083a72b511e",
+      "afterSha256": "a2f263d0fd5ddc7c68bfea23baf4f36db2c93ce41f5822e72a4c7729d9d050fb"
+    },
+    {
+      "path": "src/SexyAppFramework/platform/emscripten/Window.cpp",
+      "beforeSha256": "3b9e59e333abf9dd13f592020414c6f1afe4d982048740d6bbbfadd73e38c6b6",
+      "afterSha256": "e857f001fa308d67938205eab118da6464c8edc36f613b90a5580a1ae2fb9b9d"
+    }
+  ],
+  "sourcePatchSha256": "19021e7958c36beb53a2bfb3f1aa2a029cde17123fbc47f9fc94d02eed630ea1",
+  "artifacts": [
+    {
+      "path": "build/pvz-portable.html",
+      "bytes": 22550,
+      "sha256": "b6a9f2e4ea1b3ebb8ad49e013fe8f2f29e023869c9ead52830d8f4170d95b9e4"
+    },
+    {
+      "path": "build/pvz-portable.js",
+      "bytes": 207940,
+      "sha256": "6d0f4b08aa4bcaee8c7ed1236e2947acd63e64a22e225daf2a1589d2f751171d"
+    },
+    {
+      "path": "build/pvz-portable.wasm",
+      "bytes": 7382311,
+      "sha256": "c309fbb5aff76fa0a3880932b2348debd2656db84e06051d3606c11810ead88b"
+    },
+    {
+      "path": "build/ProjectVersion.h",
+      "bytes": 197,
+      "sha256": "550820100fc560d0e02d600eccc1d233f20292d9fcc6710eb63c1148e72c99c2"
+    }
+  ],
+  "checks": {
+    "actualPrimitiveAssertions": 149,
+    "candidatePrimitiveAssertionsPassed": 149,
+    "baselinePrimitiveAssertionsPassed": 31,
+    "baselineExpectedFailures": 118,
+    "actualModeTransitionTests": "PASS with backend/image doubles",
+    "actualPresenterSharedBatcherTests": "PASS with GL/SDL doubles",
+    "retainedMatteProductionExtraction": "PASS9fixtures; baseline and both partial-fix controls fail as expected",
+    "preservedOffscreenMIStretchDiagnostic": {
+      "fixtures": 20,
+      "software2DifferentPixels": 398,
+      "preservedMI3DifferentPixels": 0,
+      "scope": "Actual unchanged MI3 kernel inside Software.4; synthetic only"
+    },
+    "dedicatedDD32ScreenDiagnostic": {
+      "pixelAssertions": 20900,
+      "nativeEquationAssertions": 20893,
+      "inheritedVirtualMirrorDispatchAssertions": 7,
+      "candidateFailures": 0,
+      "software3RgbDifferences": 7360,
+      "scope": "Actual new screen against independent native nonvolatile RGB888 equations; mirror checks establish dispatch only"
+    },
+    "fullEngineCompileAndLink": "PASS, Release/Emscripten6.0.13; no game launched",
+    "realBrowserOrNativeUi": "NOT RUN",
+    "nativeSoftwarePixelParity": "NOT VERIFIED",
+    "denseScenePerformance": "NOT MEASURED",
+    "browserPreferenceReload": "NOT RUN"
+  },
+  "limits": [
+    "CPU scene composition uses WebGL only for one final bitmap transport; requires existing WebGL context",
+    "Temporary mirrored/resampled MemoryImages need performance profiling",
+    "Nonvolatile CPU RGB888 Blt/fast/slow dispatch is statically supported and synthetically tested; no original framebuffer equivalence claim",
+    "DD16, driver surface Blt shortcuts, volatile sources, native surface/device loss and other formats remain unverified",
+    "Fractional/rotated/matrix/triangle/mirror native screen dispatch needs separate original reference; inherited mirror tests establish virtual dispatch only",
+    "Offscreen MI tint/additive extensions remain unverified native equivalence; MI3 white-normal equations are unchanged",
+    "Mode-specific effects/cache alignment need original/software comparison",
+    "Missing-key default remains browser hardware policy; original native automatic selection is conditional",
+    "No parity.3/public/native settings changes; no audio/game initialization in isolated tests"
+  ],
+  "privateParity3Delta": {
+    "path": "source-changes.patch",
+    "sha256": "b75323a98320e63c23d0c6eb6d88bf9ca561abd10852438389c8d8c5a7b40eec",
+    "changedFiles": [
+      {
+        "path": "CMake/ProjectVersion.cmake",
+        "beforeSha256": "847414680a53f1c19723a9672bb34c72386f0beeac8c155825500b8c6d8aff04",
+        "afterSha256": "7468e7c871e8ecae460a012f1f83216714210ab4db2cd34af18615976dee1fd0"
+      },
+      {
+        "path": "src/Lawn/Widget/ZombatarWidget.cpp",
+        "beforeSha256": "5f3fac762c87696012c0a4e070ddc821680d9881c4d6ea55cdd45cb75304d268",
+        "afterSha256": "f2a7397b88bf92ebaa7e61e5f8710df658c32557a44ee8106eb44883a19b4a04"
+      },
+      {
+        "path": "src/SexyAppFramework/SexyAppBase.cpp",
+        "beforeSha256": "a9f5d3fca91ad13eca4e678555fea5869d3ccfd572e547b4bca4dccbc39315bb",
+        "afterSha256": "923096babc2af2476b9d1b7c2c98bafdd84e7254994f7f674db795f3eadd6d8b"
+      },
+      {
+        "path": "src/SexyAppFramework/SexyAppBase.h",
+        "beforeSha256": "7296f938bf0a6a211e9e7d87e043408dc40e4379c972b773017e5187d1181588",
+        "afterSha256": "e4e4c6956809303cd28be2197d936fa6e8da4489ea473c6cd1254e385df4d9bd"
+      },
+      {
+        "path": "src/SexyAppFramework/graphics/GLImage.cpp",
+        "beforeSha256": "b4bbb17439fa10108c9ef812656b96358555e80b51ece11b912303be48de45f8",
+        "afterSha256": "fff7494f9c727f6634272976f65d4ad3865c8368a3583bbfe4ef8e9452521506"
+      },
+      {
+        "path": "src/SexyAppFramework/graphics/GLInterface.cpp",
+        "beforeSha256": "87a9708ba9bccfce4453e4b4c45a8b7d528e17879dc46701c9048d7350e00050",
+        "afterSha256": "92d635a68662c22921a98982b23a2a6e921fbd559e8b838b666af329b61e9a42"
+      },
+      {
+        "path": "src/SexyAppFramework/graphics/GLInterface.h",
+        "beforeSha256": "e8ee348c077d71508a947bbcd7454cdcc87e3d16ad65b4defe7f919bbe99ecf4",
+        "afterSha256": "731f304ca3a9eb8de1bdeb592fb84aefac71e0bb39f1964dc63c7a49c702a4ee"
+      },
+      {
+        "path": "src/SexyAppFramework/graphics/MemoryImage.cpp",
+        "beforeSha256": "b7b92b728b028ab54855a24eb0ff828f95be137c520f2a48deb14e2ed682deb4",
+        "afterSha256": "dda5454a498cb2fb95d99ce305c966e3341d7ef6f178d01d2d9c86fc259fa630"
+      },
+      {
+        "path": "src/SexyAppFramework/graphics/MemoryImage.h",
+        "beforeSha256": "6a95b6d1cd4d66178f963e06ddf7a831333f9d9475bb39f060d07f106cb52821",
+        "afterSha256": "06cabc9c3f35e5528adce735a6e051d5a78cab44096cc4281d9e39b157498f25"
+      },
+      {
+        "path": "src/SexyAppFramework/graphics/SoftwareScreenImage.cpp",
+        "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "afterSha256": "9c280f36d4048b67ac9d29a505882425b6dd8a503ed21c7a175163dac0128177"
+      },
+      {
+        "path": "src/SexyAppFramework/graphics/SoftwareScreenImage.h",
+        "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "afterSha256": "4b0f826035b9ae5165a755c5cb134efb047c72fc2d143e68e342b53faa3d411f"
+      },
+      {
+        "path": "src/SexyAppFramework/graphics/inc_routines/MI_SlowStretchBlt.inc",
+        "beforeSha256": "eb5bd4482a3527146539930664c224ceb958e6905e65b4a3e14756d34c3d9332",
+        "afterSha256": "5f2b80eaf331e126fb23d2e4e9c337b679a8f40b7efdb8cb7182c99a2841e9ba"
+      },
+      {
+        "path": "src/SexyAppFramework/platform/default/Window.cpp",
+        "beforeSha256": "d8b18252fcd8a428ee12f56fb0bb5c42050fe286ba39636f471df083a72b511e",
+        "afterSha256": "a2f263d0fd5ddc7c68bfea23baf4f36db2c93ce41f5822e72a4c7729d9d050fb"
+      },
+      {
+        "path": "src/SexyAppFramework/platform/emscripten/Window.cpp",
+        "beforeSha256": "85747e6a29537cb936d5d53b1d6581668615cbfce4cb6f3b2707e33355e942d6",
+        "afterSha256": "e857f001fa308d67938205eab118da6464c8edc36f613b90a5580a1ae2fb9b9d"
+      }
+    ]
+  },
+  "upstreamSourceArchive": {
+    "name": "pvz-portable-0.2.6-source.zip",
+    "sha256": "40af59aa49d936ad21756a1a28ee14d8db51e6aaccbee44c647c2913e9c83556",
+    "files": 753
+  },
+  "sourcePatchPath": "web-software.4.patch"
+}
