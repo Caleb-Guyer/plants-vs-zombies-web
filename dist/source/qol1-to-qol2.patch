@@ -1,0 +1,1494 @@
+--- a/CMake/ProjectVersion.cmake
++++ b/CMake/ProjectVersion.cmake
+@@ -66,6 +66,6 @@
+ endif()
+ 
+ # Private CPU compositor candidate; never identify this binary as public parity.3.
+-set(PVZP_VERSION "0.2.6-web-qol.1")
++set(PVZP_VERSION "0.2.6-web-qol.2")
+ set(PVZP_VERSION_PLAIN "0.2.6")
+ configure_file("${PROJECT_SOURCE_DIR}/CMake/ProjectVersion.h.in" "${PROJECT_BINARY_DIR}/ProjectVersion.h" @ONLY)
+--- a/src/Lawn/Board.cpp
++++ b/src/Lawn/Board.cpp
+@@ -4604,7 +4604,7 @@
+ 		if (aSpeedPressArmed && theClickCount > 0 && mApp->IsGameSpeedButtonAt(x, y) &&
+ 			CanInteractWithBoardButtons() && !mIgnoreMouseUp && mTimeStopCounter == 0)
+ 		{
+-			mApp->mDoubleGameSpeed = !mApp->mDoubleGameSpeed;
++			mApp->ToggleGameSpeed();
+ 		}
+ 		mApp->UpdateGameSpeedButton();
+ 		UpdateCursor();
+@@ -7659,9 +7659,16 @@
+ 	}
+ }
+ 
++void Board::KeyUp(KeyCode theKey)
++{
++	mApp->ReleaseQoLKey(theKey);
++}
++
+ void Board::KeyDown(KeyCode theKey)
+ {
+ 	DoTypingCheck(theKey);
++	if (mApp->HandleQoLKey(theKey))
++		return;
+ 
+ 	if (mApp->mGameScene == GameScenes::SCENE_LEVEL_INTRO &&
+ 		mApp->mGameMode != GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN &&
+--- a/src/Lawn/Board.h
++++ b/src/Lawn/Board.h
+@@ -283,7 +283,7 @@
+ 	void							MouseDown(int x, int y, int theClickCount) override;
+ 	void							MouseUp(int x, int y, int theClickCount) override;
+ 	void							KeyChar(char theChar) override;
+-	void							KeyUp(KeyCode) override {}
++	void							KeyUp(KeyCode theKey) override;
+ 	void							KeyDown(KeyCode theKey) override;
+ 	void							Update() override;
+ 	void							UpdateLayers();
+--- a/src/Lawn/SeedPacket.cpp
++++ b/src/Lawn/SeedPacket.cpp
+@@ -20,10 +20,12 @@
+  */
+ 
+ #include <format>
++#include <utility>
+ #include "Board.h"
+ #include "Cutscene.h"
+ #include "Challenge.h"
+ #include "SeedPacket.h"
++#include "SeedPacketCooldown.h"
+ #include "../LawnApp.h"
+ #include "CursorObject.h"
+ #include "../Resources.h"
+@@ -680,6 +682,23 @@
+ 		}
+ 
+ 		DrawSeedPacket(g, mOffsetX, 0.0f, mPacketType, mImitaterType, aPercentDark, aGrayness, aDrawCost, true);
++        if (mApp->GetQoLSettings().mShowCooldownNumbers && mApp->mGameScene == SCENE_PLAYING &&
++            !mBoard->HasConveyorBeltSeedBank() && !mApp->IsSlotMachineLevel() &&
++            mPacketType >= SEED_PEASHOOTER && mPacketType < NUM_SEEDS_IN_CHOOSER)
++        {
++            const int seconds = SeedPacketCooldownSeconds(mRefreshing, mActive, mRefreshTime, mRefreshCounter);
++            if (seconds > 0)
++            {
++                const std::string text = std::to_string(seconds);
++                const int x = mOffsetX + SEED_PACKET_WIDTH / 2;
++                const int y = 35;
++                // Existing hand-lettered font with a dark outline remains
++                // readable on both dark recharge masks and bright plant art.
++                for (const auto& offset : {std::pair{-1, 0}, std::pair{1, 0}, std::pair{0, -1}, std::pair{0, 1}})
++                    PvzpDrawString(g, text, x + offset.first, y + offset.second, FONT_BRIANNETOD16, Color(20, 22, 15), DS_ALIGN_CENTER);
++                PvzpDrawString(g, text, x, y, FONT_BRIANNETOD16, Color(255, 240, 170), DS_ALIGN_CENTER);
++            }
++        }
+ 	}
+ }
+ 
+--- /dev/null
++++ b/src/Lawn/SeedPacketCooldown.h
+@@ -0,0 +1,15 @@
++// SPDX-License-Identifier: LGPL-3.0-or-later
++#ifndef PVZ_SEED_PACKET_COOLDOWN_H
++#define PVZ_SEED_PACKET_COOLDOWN_H
++#include <algorithm>
++#include <cstdint>
++
++inline int SeedPacketCooldownSeconds(bool refreshing, bool active, int refreshTime, int refreshCounter)
++{
++    if (!refreshing || active || refreshTime <= 0) return 0;
++    // Update() makes a packet ready on the first update AFTER refreshTime.
++    const int64_t remaining = std::max<int64_t>(0, static_cast<int64_t>(refreshTime) -
++        std::max(0, refreshCounter)) + 1;
++    return static_cast<int>((remaining + 99) / 100);
++}
++#endif
+--- /dev/null
++++ b/src/Lawn/System/DeckPresets.cpp
+@@ -0,0 +1,31 @@
++// SPDX-License-Identifier: LGPL-3.0-or-later
++#include "DeckPresets.h"
++#include "PlayerInfo.h"
++#include "../../LawnApp.h"
++#include "../../PvzpLib/PvzpCommon.h"
++#include "misc/Buffer.h"
++#include <format>
++
++static std::string DeckFile(LawnApp* app)
++{
++    return GetAppDataPath(std::format("userdata/qol-decks-{}.txt", app->mPlayerInfo->mId));
++}
++
++bool DeckPresets::Load(LawnApp* app)
++{
++    if (!app || !app->mPlayerInfo) return false;
++    Sexy::Buffer buffer;
++    if (!app->ReadBufferFromFile(DeckFile(app), &buffer)) return true;
++    if (buffer.GetDataLen() < 0 || buffer.GetDataLen() > 8192) return false;
++    return Decode(std::string(reinterpret_cast<const char*>(buffer.GetDataPtr()), buffer.GetDataLen()));
++}
++
++bool DeckPresets::Save(LawnApp* app) const
++{
++    if (!app || !app->mPlayerInfo) return false;
++    const std::string text = Encode();
++    DeckPresets validated;
++    if (!validated.Decode(text)) return false;
++    MkDir(GetAppDataPath("userdata"));
++    return app->WriteBytesToFile(DeckFile(app), text.data(), static_cast<unsigned long>(text.size()));
++}
+--- /dev/null
++++ b/src/Lawn/System/DeckPresets.h
+@@ -0,0 +1,141 @@
++// SPDX-License-Identifier: LGPL-3.0-or-later
++#ifndef PVZ_DECK_PRESETS_H
++#define PVZ_DECK_PRESETS_H
++
++#include <array>
++#include <iomanip>
++#include <sstream>
++#include <string>
++#include <vector>
++
++class LawnApp;
++
++struct DeckPresetSeed
++{
++    int mSeed = -1;
++    int mImitater = -1;
++    bool operator==(const DeckPresetSeed&) const = default;
++};
++
++struct DeckPreset
++{
++    std::string mName;
++    std::vector<DeckPresetSeed> mSeeds;
++};
++
++struct DeckSelectionPlan
++{
++    std::vector<DeckPresetSeed> mSeeds;
++    int mUnavailable = 0;
++    int mOverflow = 0;
++};
++
++template<class Available>
++DeckSelectionPlan PlanDeckSelection(const std::vector<DeckPresetSeed>& desired,
++    const std::vector<DeckPresetSeed>& forced, int capacity, Available canUse)
++{
++    DeckSelectionPlan plan;
++    capacity = capacity < 0 ? 0 : capacity > 10 ? 10 : capacity;
++    for (const auto& seed : forced)
++        if (static_cast<int>(plan.mSeeds.size()) < capacity) plan.mSeeds.push_back(seed);
++    for (const auto& seed : desired)
++    {
++        bool duplicate = false;
++        for (const auto& selected : plan.mSeeds) if (selected.mSeed == seed.mSeed) duplicate = true;
++        if (duplicate) continue;
++        if (!canUse(seed)) { ++plan.mUnavailable; continue; }
++        if (static_cast<int>(plan.mSeeds.size()) >= capacity) { ++plan.mOverflow; continue; }
++        plan.mSeeds.push_back(seed);
++    }
++    return plan;
++}
++
++// Pure versioned model: no native profile, board, or unlock data is changed.
++class DeckPresets
++{
++public:
++    static constexpr int SLOT_COUNT = 8;
++    static constexpr int MAX_NAME = 18;
++    std::array<DeckPreset, SLOT_COUNT> mDecks;
++
++    DeckPresets()
++    {
++        const char* names[] = {"Day", "Night", "Pool", "Roof", "Deck 5", "Deck 6", "Deck 7", "Deck 8"};
++        for (int i = 0; i < SLOT_COUNT; ++i) mDecks[i].mName = names[i];
++    }
++
++    static std::string CleanName(std::string name)
++    {
++        std::string result;
++        for (unsigned char ch : name)
++        {
++            if (ch >= 32 && ch < 127 && result.size() < MAX_NAME) result += static_cast<char>(ch);
++        }
++        while (!result.empty() && result.front() == ' ') result.erase(result.begin());
++        while (!result.empty() && result.back() == ' ') result.pop_back();
++        return result;
++    }
++
++    static bool ValidSeed(const DeckPresetSeed& seed)
++    {
++        return seed.mSeed >= 0 && seed.mSeed < 49 &&
++            (seed.mSeed == 48 ? seed.mImitater >= 0 && seed.mImitater < 40 : seed.mImitater == -1);
++    }
++
++    static bool ValidSeeds(const std::vector<DeckPresetSeed>& seeds)
++    {
++        if (seeds.size() > 10) return false;
++        std::array<bool, 49> used{};
++        for (const auto& seed : seeds)
++        {
++            if (!ValidSeed(seed) || used[seed.mSeed]) return false;
++            used[seed.mSeed] = true;
++        }
++        return true;
++    }
++
++    std::string Encode() const
++    {
++        std::ostringstream stream;
++        stream << "PVZDECKS 1\n" << SLOT_COUNT << '\n';
++        for (const auto& deck : mDecks)
++        {
++            stream << std::quoted(deck.mName) << ' ' << deck.mSeeds.size();
++            for (const auto& seed : deck.mSeeds) stream << ' ' << seed.mSeed << ' ' << seed.mImitater;
++            stream << '\n';
++        }
++        return stream.str();
++    }
++
++    bool Decode(const std::string& text)
++    {
++        if (text.size() > 8192) return false;
++        std::istringstream stream(text);
++        std::string magic;
++        int version = 0, slots = 0;
++        if (!(stream >> magic >> version >> slots) || magic != "PVZDECKS" || version != 1 || slots != SLOT_COUNT) return false;
++        DeckPresets parsed;
++        for (auto& deck : parsed.mDecks)
++        {
++            int count = -1;
++            if (!(stream >> std::quoted(deck.mName) >> count) || count < 0 || count > 10 ||
++                deck.mName.empty() || deck.mName != CleanName(deck.mName)) return false;
++            for (int i = 0; i < count; ++i)
++            {
++                DeckPresetSeed seed;
++                if (!(stream >> seed.mSeed >> seed.mImitater)) return false;
++                deck.mSeeds.push_back(seed);
++            }
++            if (!ValidSeeds(deck.mSeeds)) return false;
++        }
++        stream >> std::ws;
++        if (!stream.eof()) return false;
++        *this = parsed;
++        return true;
++    }
++
++    bool Load(LawnApp* app);
++    bool Save(LawnApp* app) const;
++};
++
++#endif
+--- a/src/Lawn/System/PlayerInfo.cpp
++++ b/src/Lawn/System/PlayerInfo.cpp
+@@ -25,6 +25,7 @@
+ #include "DataSync.h"
+ #include <algorithm>
+ #include "PlayerInfo.h"
++#include "../../LawnApp.h"
+ #include "../LawnCommon.h"
+ #include "../Widget/ChallengeScreen.h"
+ #include "../../PvzpLib/PvzpDebug.h"
+@@ -249,6 +250,19 @@
+ 
+ void PlayerInfo::DeleteUserFiles()
+ {
++	// These versioned companions belong to this explicit profile deletion too.
++	// Keeping them would leak old preferences/decks if a later player reuses mId.
++	gSexyAppBase->EraseFile(GetAppDataPath(std::format("userdata/qol-settings-{}.txt", mId)));
++	gSexyAppBase->EraseFile(GetAppDataPath(std::format("userdata/qol-decks-{}.txt", mId)));
++	if (gLawnApp && gLawnApp->mQoLProfileId == mId)
++	{
++		gLawnApp->mQoLProfileId = UINT32_MAX;
++		gLawnApp->mQoLSettings = QoLSettings();
++		gLawnApp->mQoLSettingsWritable = true;
++		gLawnApp->mQoLKeysDown.fill(false);
++		gLawnApp->mGameSpeedPressArmed = false;
++		gLawnApp->mDoubleGameSpeed = false;
++	}
+ 	std::string aFilename = GetAppDataPath(std::format("userdata/user{}.dat", mId));
+ 	gSexyAppBase->EraseFile(aFilename);
+ 
+--- /dev/null
++++ b/src/Lawn/System/QoLSettings.cpp
+@@ -0,0 +1,94 @@
++// SPDX-License-Identifier: LGPL-3.0-or-later
++#include "QoLSettings.h"
++#include <sstream>
++
++QoLSettings::QoLSettings()
++{
++	ResetHotkeys();
++}
++
++void QoLSettings::ResetHotkeys()
++{
++	mHotkeys = {'1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'S', 'F'};
++}
++
++bool QoLSettings::IsBindable(int theKey)
++{
++	return theKey == 0 || (theKey >= '0' && theKey <= '9') ||
++		(theKey >= 'A' && theKey <= 'Z') || (theKey >= 37 && theKey <= 40) ||
++		(theKey >= 96 && theKey <= 105);
++}
++
++bool QoLSettings::SetBinding(int theAction, int theKey)
++{
++	if (theAction < 0 || theAction >= HOTKEY_COUNT || !IsBindable(theKey))
++		return false;
++	for (int i = 0; i < HOTKEY_COUNT; i++)
++		if (i != theAction && theKey != 0 && mHotkeys[i] == theKey)
++			return false;
++	mHotkeys[theAction] = theKey;
++	return true;
++}
++
++bool QoLSettings::Decode(std::string_view theText)
++{
++	if (theText.size() > 4096)
++		return false;
++	std::istringstream aStream{std::string(theText)};
++	std::string aMagic;
++	int aVersion, aPause, aRemember, aSpeed, aCooldown;
++	if (!(aStream >> aMagic >> aVersion >> aPause >> aRemember >> aSpeed >> aCooldown) ||
++		aMagic != "PVZQOL" || aVersion != 1 ||
++		(aPause != 0 && aPause != 1) || (aRemember != 0 && aRemember != 1) ||
++		(aSpeed != 0 && aSpeed != 1) || (aCooldown != 0 && aCooldown != 1))
++		return false;
++	QoLSettings aParsed;
++	aParsed.mHotkeys.fill(0);
++	for (int i = 0; i < HOTKEY_COUNT; i++)
++	{
++		int aKey;
++		if (!(aStream >> aKey) || !aParsed.SetBinding(i, aKey))
++			return false;
++	}
++	aStream >> std::ws;
++	if (!aStream.eof())
++		return false;
++	aParsed.mAutoPause = aPause != 0;
++	aParsed.mRememberSpeed = aRemember != 0;
++	aParsed.mPreferredDoubleSpeed = aSpeed != 0;
++	aParsed.mShowCooldownNumbers = aCooldown != 0;
++	*this = aParsed;
++	return true;
++}
++
++std::string QoLSettings::Encode() const
++{
++	std::ostringstream aStream;
++	aStream << "PVZQOL 1\n" << mAutoPause << ' ' << mRememberSpeed << ' '
++		<< mPreferredDoubleSpeed << ' ' << mShowCooldownNumbers << '\n';
++	for (int aKey : mHotkeys)
++		aStream << aKey << ' ';
++	aStream << '\n';
++	return aStream.str();
++}
++
++std::string QoLSettings::KeyName(int theKey)
++{
++	if (theKey == 0) return "None";
++	if ((theKey >= '0' && theKey <= '9') || (theKey >= 'A' && theKey <= 'Z'))
++		return std::string(1, static_cast<char>(theKey));
++	if (theKey >= 96 && theKey <= 105) return "Num " + std::to_string(theKey - 96);
++	if (theKey == 37) return "Left";
++	if (theKey == 38) return "Up";
++	if (theKey == 39) return "Right";
++	if (theKey == 40) return "Down";
++	return "None";
++}
++
++std::string QoLSettings::ActionName(int theAction)
++{
++	if (theAction >= 0 && theAction < 10) return "Seed " + std::to_string(theAction + 1);
++	if (theAction == SHOVEL_ACTION) return "Shovel";
++	if (theAction == SPEED_ACTION) return "Speed";
++	return "Control";
++}
+--- /dev/null
++++ b/src/Lawn/System/QoLSettings.h
+@@ -0,0 +1,33 @@
++// SPDX-License-Identifier: LGPL-3.0-or-later
++#ifndef __QOLSETTINGS_H__
++#define __QOLSETTINGS_H__
++
++#include <array>
++#include <string>
++#include <string_view>
++
++// Versioned, per-profile preferences. Native profile and Board save bytes stay
++// unchanged; the app persists this separate text record under userdata/.
++class QoLSettings
++{
++public:
++	static constexpr int HOTKEY_COUNT = 12;
++	static constexpr int SHOVEL_ACTION = 10;
++	static constexpr int SPEED_ACTION = 11;
++	bool mAutoPause = true;
++	bool mRememberSpeed = true;
++	bool mPreferredDoubleSpeed = false;
++	bool mShowCooldownNumbers = false;
++	std::array<int, HOTKEY_COUNT> mHotkeys{};
++
++	QoLSettings();
++	void ResetHotkeys();
++	bool SetBinding(int theAction, int theKey);
++	bool Decode(std::string_view theText);
++	std::string Encode() const;
++	static bool IsBindable(int theKey);
++	static std::string KeyName(int theKey);
++	static std::string ActionName(int theAction);
++};
++
++#endif
+--- a/src/Lawn/Widget/NewOptionsDialog.cpp
++++ b/src/Lawn/Widget/NewOptionsDialog.cpp
+@@ -28,6 +28,7 @@
+ #include "../System/Music.h"
+ #include "../../Resources.h"
+ #include "NewOptionsDialog.h"
++#include "graphics/Font.h"
+ #include "../../ConstEnums.h"
+ #include "../../PvzpLib/PvzpFoley.h"
+ #include "widget/Slider.h"
+@@ -45,6 +46,7 @@
+ 	mAlmanacButton = MakeButton(NewOptionsDialog::NewOptionsDialog_Almanac, this, "[VIEW_ALMANAC_BUTTON]");
+ 	mRestartButton = MakeButton(NewOptionsDialog::NewOptionsDialog_Restart, this, "[RESTART_LEVEL]");
+ 	mBackToMainButton = MakeButton(NewOptionsDialog::NewOptionsDialog_MainMenu, this, "[MAIN_MENU_BUTTON]");
++	mQoLButton = MakeButton(NewOptionsDialog::NewOptionsDialog_QoL, this, "Quality of Life");
+ 
+ 	mBackToGameButton = MakeNewButton(
+ 		Dialog::ID_OK,
+@@ -122,6 +124,7 @@
+ {
+ 	Dialog::AddedToManager(theWidgetManager);
+ 	AddWidget(mAlmanacButton.get());
++	AddWidget(mQoLButton.get());
+ 	AddWidget(mRestartButton.get());
+ 	AddWidget(mBackToMainButton.get());
+ 	AddWidget(mMusicVolumeSlider.get());
+@@ -135,6 +138,7 @@
+ {
+ 	Dialog::RemovedFromManager(theWidgetManager);
+ 	RemoveWidget(mAlmanacButton.get());
++	RemoveWidget(mQoLButton.get());
+ 	RemoveWidget(mMusicVolumeSlider.get());
+ 	RemoveWidget(mSfxVolumeSlider.get());
+ 	RemoveWidget(mFullscreenCheckbox.get());
+@@ -152,7 +156,26 @@
+ 	mHardwareAccelerationCheckbox->Resize(283, 175, 46, 45);
+ 	mFullscreenCheckbox->Resize(284, 206, 46, 45);
+ 	mAlmanacButton->Resize(107, 241, 209, 46);
+-	mRestartButton->Resize(mAlmanacButton->mX, mAlmanacButton->mY + 43, 209, 46);
++	mQoLButton->Resize(107, 241, 209, 46);
++	if (mAlmanacButton->mVisible)
++	{
++		mAlmanacButton->SetLabel("Almanac");
++		mQoLButton->SetLabel("QoL");
++		// Stone centers repeat in whole image tiles; logical and painted bounds
++		// must agree before centering text. The original assets give 117 / 71.
++		const int aCaps = IMAGE_BUTTON_LEFT->mWidth + IMAGE_BUTTON_RIGHT->mWidth;
++		const int aTile = std::max(1, IMAGE_BUTTON_MIDDLE->mWidth);
++		auto aLabelWidth = [&](const std::string& theLabel)
++		{
++			const int aNeeded = FONT_DWARVENTODCRAFT18GREENINSET->StringWidth(theLabel) + 12;
++			return aCaps + std::max(0, (aNeeded - aCaps + aTile - 1) / aTile) * aTile;
++		};
++		const int anAlmanacWidth = aLabelWidth(mAlmanacButton->mLabel);
++		const int aQoLWidth = aLabelWidth(mQoLButton->mLabel);
++		mAlmanacButton->Resize(107, 241, anAlmanacWidth, 46);
++		mQoLButton->Resize(107 + 209 - aQoLWidth, 241, aQoLWidth, 46);
++	}
++	mRestartButton->Resize(107, 284, 209, 46);
+ 	mBackToMainButton->Resize(mRestartButton->mX, mRestartButton->mY + 43, 209, 46);
+ 	mBackToGameButton->Resize(30, 381, mBackToGameButton->mWidth, mBackToGameButton->mHeight);
+ 
+@@ -162,6 +185,7 @@
+ 		mSfxVolumeSlider->mY += 10;
+ 		mHardwareAccelerationCheckbox->mY += 15;
+ 		mFullscreenCheckbox->mY += 20;
++		mQoLButton->mY += 43;
+ 	}
+ 
+ 	if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN || mApp->mGameMode == GameMode::GAMEMODE_TREE_OF_WISDOM)
+@@ -383,6 +407,10 @@
+ 		break;
+ 	}
+ 
++	case NewOptionsDialog::NewOptionsDialog_QoL:
++		mApp->DoQoLDialog();
++		break;
++
+ 	case NewOptionsDialog::NewOptionsDialog_Update:
+ 		mApp->CheckForUpdates();
+ 		break;
+--- a/src/Lawn/Widget/NewOptionsDialog.h
++++ b/src/Lawn/Widget/NewOptionsDialog.h
+@@ -49,6 +49,7 @@
+ 		NewOptionsDialog_SoundVolume,
+ 		NewOptionsDialog_Fullscreen,
+ 		NewOptionsDialog_HardwareAcceleration,
++		NewOptionsDialog_QoL,
+ 	};
+ 
+ public:
+@@ -60,6 +61,7 @@
+ 	std::unique_ptr<LawnStoneButton>	mAlmanacButton;
+ 	std::unique_ptr<LawnStoneButton>	mBackToMainButton;
+ 	std::unique_ptr<LawnStoneButton>	mRestartButton;
++	std::unique_ptr<LawnStoneButton> mQoLButton;
+ 	std::unique_ptr<NewLawnButton>		mBackToGameButton;
+ 	bool								mFromGameSelector;
+ 
+--- /dev/null
++++ b/src/Lawn/Widget/PlantDecksDialog.cpp
+@@ -0,0 +1,196 @@
++// SPDX-License-Identifier: LGPL-3.0-or-later
++#include "PlantDecksDialog.h"
++#include "SeedChooserScreen.h"
++#include "GameButton.h"
++#include "../Board.h"
++#include "../Plant.h"
++#include "../../LawnApp.h"
++#include "../../Resources.h"
++#include "../LawnCommon.h"
++#include "widget/EditWidget.h"
++#include "widget/WidgetManager.h"
++#include "graphics/Font.h"
++#include "graphics/Image.h"
++#include <algorithm>
++#include <format>
++
++using namespace Sexy;
++
++namespace
++{
++int WholeStoneWidth(int width, bool roundUp)
++{
++    const int caps = IMAGE_BUTTON_LEFT->mWidth + IMAGE_BUTTON_RIGHT->mWidth;
++    const int tile = IMAGE_BUTTON_MIDDLE->mWidth;
++    if (tile <= 0) return std::max(caps, width);
++    const int extra = std::max(0, width - caps);
++    return caps + ((extra + (roundUp ? tile - 1 : 0)) / tile) * tile;
++}
++}
++
++PlantDecksDialog::PlantDecksDialog(LawnApp* app, SeedChooserScreen* chooser) :
++    LawnDialog(app, DIALOG_ID, true, "Plant Decks", "", "Done", Dialog::BUTTONS_FOOTER),
++    mChooser(chooser)
++{
++    mVerticalCenterText = false;
++    mStoreWritable = mPresets.Load(app);
++    mStatus = mStoreWritable ? "Choose a preset to save or load your plants." : "Saved decks could not be read. The file is preserved.";
++    for (int i = 0; i < DeckPresets::SLOT_COUNT; ++i)
++        mSlots[i] = MakeButton(200 + i, this, mPresets.mDecks[i].mName);
++    mSaveButton = MakeButton(300, this, "Save");
++    mLoadButton = MakeButton(301, this, "Load");
++    mDeleteButton = MakeButton(302, this, "Delete");
++    mNameEdit = CreateEditWidget(350, this, this);
++    mNameEdit->mMaxChars = DeckPresets::MAX_NAME;
++    mNameEdit->AddWidthCheckFont(FONT_BRIANNETOD16, 270);
++    CalcSize(650 - mWidth, 550 - mHeight);
++    if (chooser->mBoard->StageHasRoof()) mSelected = 3;
++    else if (chooser->mBoard->StageHasPool()) mSelected = 2;
++    else if (chooser->mBoard->StageIsNight()) mSelected = 1;
++    SelectSlot(mSelected);
++}
++
++PlantDecksDialog::~PlantDecksDialog() = default;
++
++void PlantDecksDialog::AddedToManager(WidgetManager* manager)
++{
++    LawnDialog::AddedToManager(manager);
++    for (auto& button : mSlots) AddWidget(button.get());
++    AddWidget(mSaveButton.get()); AddWidget(mLoadButton.get()); AddWidget(mDeleteButton.get()); AddWidget(mNameEdit.get());
++    manager->SetFocus(this);
++}
++
++void PlantDecksDialog::RemovedFromManager(WidgetManager* manager)
++{
++    for (auto& button : mSlots) RemoveWidget(button.get());
++    RemoveWidget(mSaveButton.get()); RemoveWidget(mLoadButton.get()); RemoveWidget(mDeleteButton.get()); RemoveWidget(mNameEdit.get());
++    LawnDialog::RemovedFromManager(manager);
++}
++
++void PlantDecksDialog::Resize(int x, int y, int width, int height)
++{
++    LawnDialog::Resize(x, y, width, height);
++    const int slotWidth = WholeStoneWidth(190, false);
++    for (int i = 0; i < DeckPresets::SLOT_COUNT; ++i) mSlots[i]->Resize(36, 104 + i * 39, slotWidth, 36);
++    mNameEdit->Resize(255, 116, mWidth - 305, 28);
++    LawnStoneButton* actions[] = {mSaveButton.get(), mLoadButton.get(), mDeleteButton.get()};
++    int actionWidths[3];
++    int groupWidth = 14;
++    for (int i = 0; i < 3; ++i)
++    {
++        actionWidths[i] = WholeStoneWidth(FONT_DWARVENTODCRAFT18GREENINSET->StringWidth(actions[i]->mLabel) + 20, true);
++        groupWidth += actionWidths[i];
++    }
++    int actionX = 250 + (mWidth - 300 - groupWidth) / 2;
++    for (int i = 0; i < 3; ++i)
++    {
++        actions[i]->Resize(actionX, 373, actionWidths[i], 38);
++        actionX += actionWidths[i] + 7;
++    }
++    if (mLawnYesButton)
++    {
++        const int footerWidth = WholeStoneWidth(mLawnYesButton->mWidth, false);
++        mLawnYesButton->Resize((mWidth - footerWidth) / 2, mLawnYesButton->mY, footerWidth, mLawnYesButton->mHeight);
++    }
++}
++
++void PlantDecksDialog::SelectSlot(int slot)
++{
++    mSelected = slot;
++    mNameEdit->SetText(mPresets.mDecks[slot].mName, true);
++    RefreshButtons();
++}
++
++void PlantDecksDialog::RefreshButtons()
++{
++    for (int i = 0; i < DeckPresets::SLOT_COUNT; ++i)
++    {
++        const auto& deck = mPresets.mDecks[i];
++        std::string label = std::format("{}. {}", i + 1, deck.mName);
++        const int labelWidth = mSlots[i]->mWidth - 20;
++        if (FONT_DWARVENTODCRAFT18GREENINSET->StringWidth(label) > labelWidth)
++        {
++            while (label.size() > 3 && FONT_DWARVENTODCRAFT18GREENINSET->StringWidth(label + "..") > labelWidth) label.pop_back();
++            label += "..";
++        }
++        mSlots[i]->SetLabel(label);
++        mSlots[i]->mInverted = i == mSelected;
++    }
++    const bool empty = mPresets.mDecks[mSelected].mSeeds.empty();
++    mSaveButton->SetDisabled(!mStoreWritable);
++    mLoadButton->SetDisabled(empty || !mStoreWritable);
++    mDeleteButton->SetDisabled(empty || !mStoreWritable);
++}
++
++void PlantDecksDialog::Draw(Graphics* g)
++{
++    LawnDialog::Draw(g);
++    DrawEditBox(g, mNameEdit.get());
++    const auto& deck = mPresets.mDecks[mSelected];
++    int unavailable = 0;
++    for (size_t i = 0; i < deck.mSeeds.size(); ++i)
++    {
++        const auto& seed = deck.mSeeds[i];
++        const bool allowed = mChooser->DeckSeedAvailable(seed);
++        if (!allowed) ++unavailable;
++        std::string name = Plant::GetNameString(static_cast<SeedType>(seed.mSeed), static_cast<SeedType>(seed.mImitater));
++        if (name.size() > 20) name = name.substr(0, 18) + "..";
++        if (!allowed) name = "! " + name;
++        PvzpDrawString(g, name, 255 + static_cast<int>(i / 5) * 165, 166 + static_cast<int>(i % 5) * 29,
++            FONT_BRIANNETOD12, allowed ? Color(224, 187, 98) : Color(255, 125, 105), DS_ALIGN_LEFT);
++    }
++    if (deck.mSeeds.empty())
++        PvzpDrawString(g, "This preset is empty.", 255, 168, FONT_BRIANNETOD16, Color(224, 187, 98), DS_ALIGN_LEFT);
++    PvzpDrawString(g, unavailable ? std::format("! {} unavailable on this level", unavailable) :
++        std::format("{} saved plants", deck.mSeeds.size()), 255, 329, FONT_BRIANNETOD12, Color(224, 187, 98), DS_ALIGN_LEFT);
++    PvzpDrawString(g, "Unavailable plants stay unselected.", 255, 351, FONT_BRIANNETOD12, Color(224, 187, 98), DS_ALIGN_LEFT);
++    PvzpDrawString(g, mStatus, 255, 435, FONT_BRIANNETOD12, Color(224, 187, 98), DS_ALIGN_LEFT);
++}
++
++void PlantDecksDialog::ButtonDepress(int id)
++{
++    if (id >= 200 && id < 200 + DeckPresets::SLOT_COUNT)
++    {
++        SelectSlot(id - 200);
++        return;
++    }
++    if (id == Dialog::ID_YES || id == Dialog::ID_NO)
++    {
++        mApp->KillDialog(mId);
++        mApp->mWidgetManager->SetFocus(mChooser);
++        return;
++    }
++    if (!mStoreWritable) return;
++    auto& deck = mPresets.mDecks[mSelected];
++    if (id == 300)
++    {
++        const auto seeds = mChooser->CurrentDeckPreset();
++        const std::string name = DeckPresets::CleanName(mNameEdit->mString);
++        if (name.empty()) { mStatus = "Enter a name for this preset."; return; }
++        if (seeds.empty()) { mStatus = "Choose your plants before saving a deck."; return; }
++        const auto previous = deck;
++        deck = {name, seeds};
++        if (mPresets.Save(mApp)) mStatus = "Your selected plants have been saved.";
++        else { deck = previous; mStatus = "The deck could not be saved. Please retry."; }
++    }
++    else if (id == 301 && !deck.mSeeds.empty())
++    {
++        const auto result = mChooser->ApplyDeckPreset(deck.mSeeds);
++        mStatus = std::format("Loaded {} plants; {} unavailable, {} no room.",
++            result.mSeeds.size(), result.mUnavailable, result.mOverflow);
++    }
++    else if (id == 302 && !deck.mSeeds.empty())
++    {
++        const auto previous = deck;
++        deck.mSeeds.clear();
++        if (mPresets.Save(mApp)) mStatus = "The preset has been cleared.";
++        else { deck = previous; mStatus = "The deck could not be cleared. Please retry."; }
++    }
++    RefreshButtons();
++}
++
++void PlantDecksDialog::KeyDown(KeyCode key)
++{
++    if (key == KEYCODE_ESCAPE) ButtonDepress(Dialog::ID_YES);
++}
++
+--- /dev/null
++++ b/src/Lawn/Widget/PlantDecksDialog.h
+@@ -0,0 +1,38 @@
++// SPDX-License-Identifier: LGPL-3.0-or-later
++#ifndef PVZ_PLANT_DECKS_DIALOG_H
++#define PVZ_PLANT_DECKS_DIALOG_H
++#include "LawnDialog.h"
++#include "../System/DeckPresets.h"
++#include "widget/EditListener.h"
++#include <array>
++#include <memory>
++
++class SeedChooserScreen;
++namespace Sexy { class EditWidget; }
++
++class PlantDecksDialog : public LawnDialog, public Sexy::EditListener
++{
++public:
++    static constexpr int DIALOG_ID = 7002;
++    SeedChooserScreen* mChooser;
++    DeckPresets mPresets;
++    int mSelected = 0;
++    bool mStoreWritable = true;
++    std::string mStatus;
++    std::array<std::unique_ptr<LawnStoneButton>, DeckPresets::SLOT_COUNT> mSlots;
++    std::unique_ptr<LawnStoneButton> mSaveButton, mLoadButton, mDeleteButton;
++    std::unique_ptr<Sexy::EditWidget> mNameEdit;
++
++    PlantDecksDialog(LawnApp* app, SeedChooserScreen* chooser);
++    ~PlantDecksDialog() override;
++    void AddedToManager(WidgetManager* manager) override;
++    void RemovedFromManager(WidgetManager* manager) override;
++    void Resize(int x, int y, int width, int height) override;
++    void Draw(Graphics* g) override;
++    void ButtonDepress(int id) override;
++    void KeyDown(KeyCode key) override;
++    void EditWidgetText(int, const std::string&) override {}
++    void SelectSlot(int slot);
++    void RefreshButtons();
++};
++#endif
+--- /dev/null
++++ b/src/Lawn/Widget/QoLDialog.cpp
+@@ -0,0 +1,208 @@
++// SPDX-License-Identifier: LGPL-3.0-or-later
++#include "QoLDialog.h"
++#include "GameButton.h"
++#include "../../LawnApp.h"
++#include "../../Resources.h"
++#include "../LawnCommon.h"
++#include "graphics/Graphics.h"
++#include "graphics/Font.h"
++#include <algorithm>
++#include "widget/Checkbox.h"
++#include "widget/WidgetManager.h"
++#ifdef __EMSCRIPTEN__
++#include <emscripten.h>
++#endif
++
++using namespace Sexy;
++
++static int QoLStoneButtonWidth(int theDesiredWidth, int theTextWidth, int theCaps, int theTile)
++{
++	theTile = std::max(1, theTile);
++	int aWidth = theCaps + std::max(0, (theDesiredWidth - theCaps) / theTile) * theTile;
++	while (aWidth < theTextWidth + 12) aWidth += theTile;
++	return aWidth;
++}
++
++
++enum { QOL_AUTO_PAUSE = 30, QOL_REMEMBER_SPEED, QOL_COOLDOWNS,
++	QOL_CONTROLS, QOL_BACKUPS, QOL_DEFAULTS, QOL_BACK };
++
++QoLDialog::QoLDialog(LawnApp* theApp) : LawnDialog(theApp, QOL_DIALOG_ID,
++	true, "Quality of Life", "", "", Dialog::BUTTONS_NONE)
++{
++	auto& aSettings = mApp->GetQoLSettings();
++	mAutoPauseCheckbox = MakeNewCheckbox(QOL_AUTO_PAUSE, this, aSettings.mAutoPause);
++	mRememberSpeedCheckbox = MakeNewCheckbox(QOL_REMEMBER_SPEED, this, aSettings.mRememberSpeed);
++	mCooldownCheckbox = MakeNewCheckbox(QOL_COOLDOWNS, this, aSettings.mShowCooldownNumbers);
++	mControlsButton = MakeButton(QOL_CONTROLS, this, "Keyboard Controls");
++	mBackupsButton = MakeButton(QOL_BACKUPS, this, "Save Backups");
++	mDefaultsButton = MakeButton(QOL_DEFAULTS, this, "Reset Controls");
++	mBackButton = MakeButton(QOL_BACK, this, "Back");
++	for (int i = 0; i < 12; i++)
++		mKeyButtons[i] = MakeButton(i, this, "");
++	mApp->CenterDialog(this, 640, 555);
++	RefreshPage();
++}
++
++QoLDialog::~QoLDialog() = default;
++
++void QoLDialog::AddedToManager(WidgetManager* theManager)
++{
++	LawnDialog::AddedToManager(theManager);
++	for (auto& aButton : mKeyButtons) AddWidget(aButton.get());
++	AddWidget(mControlsButton.get()); AddWidget(mBackupsButton.get());
++	AddWidget(mDefaultsButton.get()); AddWidget(mBackButton.get());
++	AddWidget(mAutoPauseCheckbox.get()); AddWidget(mRememberSpeedCheckbox.get());
++	AddWidget(mCooldownCheckbox.get());
++}
++
++void QoLDialog::RemovedFromManager(WidgetManager* theManager)
++{
++	for (auto& aButton : mKeyButtons) RemoveWidget(aButton.get());
++	RemoveWidget(mControlsButton.get()); RemoveWidget(mBackupsButton.get());
++	RemoveWidget(mDefaultsButton.get()); RemoveWidget(mBackButton.get());
++	RemoveWidget(mAutoPauseCheckbox.get()); RemoveWidget(mRememberSpeedCheckbox.get());
++	RemoveWidget(mCooldownCheckbox.get());
++	LawnDialog::RemovedFromManager(theManager);
++}
++
++void QoLDialog::Resize(int x, int y, int width, int height)
++{
++	LawnDialog::Resize(x, y, width, height);
++	if (!mBackButton) return; // Base construction sizes before child creation.
++	mAutoPauseCheckbox->Resize(466, 130, 46, 45);
++	mRememberSpeedCheckbox->Resize(466, 178, 46, 45);
++	mCooldownCheckbox->Resize(466, 226, 46, 45);
++	const int aCaps = IMAGE_BUTTON_LEFT->mWidth + IMAGE_BUTTON_RIGHT->mWidth;
++	const int aTile = IMAGE_BUTTON_MIDDLE->mWidth;
++	auto aPlace = [&](LawnStoneButton* theButton, int theX, int theY, int theWidth)
++	{
++		const int aText = FONT_DWARVENTODCRAFT18GREENINSET->StringWidth(theButton->mLabel);
++		const int aWidth = QoLStoneButtonWidth(theWidth, aText, aCaps, aTile);
++		theButton->Resize(theX + (theWidth - aWidth) / 2, theY, aWidth, 46);
++	};
++	aPlace(mControlsButton.get(), 112, 292, 416);
++	aPlace(mBackupsButton.get(), 112, 344, 416);
++	for (int i = 0; i < 12; i++)
++		aPlace(mKeyButtons[i].get(), 54 + (i / 6) * 274, 136 + (i % 6) * 47, 252);
++	aPlace(mDefaultsButton.get(), 54, 425, 252);
++	aPlace(mBackButton.get(), mControlsPage ? 328 : 112, 425, mControlsPage ? 252 : 416);
++}
++
++void QoLDialog::RefreshPage()
++{
++	mDialogHeader = mControlsPage ? "Keyboard Controls" : "Quality of Life";
++	mAutoPauseCheckbox->SetVisible(!mControlsPage);
++	mRememberSpeedCheckbox->SetVisible(!mControlsPage);
++	mCooldownCheckbox->SetVisible(!mControlsPage);
++	mControlsButton->SetVisible(!mControlsPage);
++	mBackupsButton->SetVisible(!mControlsPage);
++	mDefaultsButton->SetVisible(mControlsPage);
++	const auto& aSettings = mApp->GetQoLSettings();
++	for (int i = 0; i < 12; i++)
++	{
++		mKeyButtons[i]->SetVisible(mControlsPage);
++		mKeyButtons[i]->SetLabel(mCapturing == i ? "Press a key..." :
++			QoLSettings::ActionName(i) + ": " + QoLSettings::KeyName(aSettings.mHotkeys[i]));
++	}
++	Resize(mX, mY, mWidth, mHeight);
++	MarkDirty();
++}
++
++void QoLDialog::Persist()
++{
++	mStatus = mApp->SaveQoLSettings() ? "" : "Settings could not be saved. Your existing file was kept.";
++	RefreshPage();
++}
++
++void QoLDialog::Draw(Graphics* g)
++{
++	LawnDialog::Draw(g);
++	const Color aColor(224, 187, 98);
++	if (!mControlsPage)
++	{
++		PvzpDrawString(g, "Pause when leaving the game", 100, 157,
++			FONT_DWARVENTODCRAFT18, aColor, DrawStringJustification::DS_ALIGN_LEFT);
++		PvzpDrawString(g, "Remember gameplay speed", 100, 205,
++			FONT_DWARVENTODCRAFT18, aColor, DrawStringJustification::DS_ALIGN_LEFT);
++		PvzpDrawString(g, "Show cooldown numbers", 100, 253,
++			FONT_DWARVENTODCRAFT18, aColor, DrawStringJustification::DS_ALIGN_LEFT);
++	}
++	else
++	{
++		PvzpDrawString(g, "Letters, numbers or arrows. Space and Esc stay unchanged.", mWidth / 2, 121,
++			FONT_DWARVENTODCRAFT12, aColor, DrawStringJustification::DS_ALIGN_CENTER);
++		PvzpDrawString(g, mCapturing >= 0 ? "Press Backspace/Delete to clear, or Esc to cancel." :
++			"Click a control to change its key.", mWidth / 2, 503,
++			FONT_DWARVENTODCRAFT12, aColor, DrawStringJustification::DS_ALIGN_CENTER);
++	}
++	if (!mStatus.empty())
++		PvzpDrawString(g, mStatus, mWidth / 2, mControlsPage ? 526 : 503,
++			FONT_DWARVENTODCRAFT12, aColor, DrawStringJustification::DS_ALIGN_CENTER);
++}
++
++void QoLDialog::CheckboxChecked(int theId, bool checked)
++{
++	auto& aSettings = mApp->GetQoLSettings();
++	if (theId == QOL_AUTO_PAUSE) aSettings.mAutoPause = checked;
++	if (theId == QOL_REMEMBER_SPEED)
++	{
++		aSettings.mRememberSpeed = checked;
++		if (checked) aSettings.mPreferredDoubleSpeed = mApp->mDoubleGameSpeed;
++	}
++	if (theId == QOL_COOLDOWNS) aSettings.mShowCooldownNumbers = checked;
++	mApp->PlaySample(SOUND_BUTTONCLICK);
++	Persist();
++}
++
++void QoLDialog::ButtonDepress(int theId)
++{
++	if (theId >= 0 && theId < 12 && mControlsPage)
++	{
++		mCapturing = theId;
++		mStatus.clear();
++		RefreshPage();
++	}
++	else if (theId == QOL_CONTROLS)
++	{
++		mControlsPage = true; mCapturing = -1; mStatus.clear(); RefreshPage();
++	}
++	else if (theId == QOL_BACKUPS)
++	{
++#ifdef __EMSCRIPTEN__
++		EM_ASM({ if (window.PVZSaveRecovery) window.PVZSaveRecovery.open(); });
++#else
++		mStatus = "Browser save backups are available in the web version."; RefreshPage();
++#endif
++	}
++	else if (theId == QOL_DEFAULTS)
++	{
++		mApp->GetQoLSettings().ResetHotkeys(); mCapturing = -1; Persist();
++	}
++	else if (theId == QOL_BACK)
++	{
++		if (mControlsPage) { mControlsPage = false; mCapturing = -1; mStatus.clear(); RefreshPage(); }
++		else
++		{
++			mApp->KillDialog(QOL_DIALOG_ID);
++			if (auto* aOptions = mApp->GetDialog(Dialogs::DIALOG_NEWOPTIONS))
++				mApp->mWidgetManager->SetFocus(aOptions);
++		}
++	}
++}
++
++void QoLDialog::KeyDown(KeyCode theKey)
++{
++	if (mCapturing >= 0)
++	{
++		if (theKey == KEYCODE_ESCAPE) { mCapturing = -1; mStatus.clear(); RefreshPage(); return; }
++		const int aKey = theKey == KEYCODE_BACK || theKey == KEYCODE_DELETE ? 0 : static_cast<int>(theKey);
++		if (!QoLSettings::IsBindable(aKey))
++			mStatus = "Use a letter, number or arrow key.";
++		else if (!mApp->GetQoLSettings().SetBinding(mCapturing, aKey))
++			mStatus = "That key is already used by another control.";
++		else { mCapturing = -1; Persist(); return; }
++		RefreshPage();
++	}
++	else if (theKey == KEYCODE_ESCAPE) ButtonDepress(QOL_BACK);
++}
+--- /dev/null
++++ b/src/Lawn/Widget/QoLDialog.h
+@@ -0,0 +1,39 @@
++// SPDX-License-Identifier: LGPL-3.0-or-later
++#ifndef __QOLDIALOG_H__
++#define __QOLDIALOG_H__
++
++#include "LawnDialog.h"
++#include "widget/CheckboxListener.h"
++#include <array>
++
++constexpr int QOL_DIALOG_ID = 7001;
++
++class QoLDialog : public LawnDialog, public Sexy::CheckboxListener
++{
++public:
++	std::array<std::unique_ptr<LawnStoneButton>, 12> mKeyButtons;
++	std::unique_ptr<LawnStoneButton> mControlsButton;
++	std::unique_ptr<LawnStoneButton> mBackupsButton;
++	std::unique_ptr<LawnStoneButton> mDefaultsButton;
++	std::unique_ptr<LawnStoneButton> mBackButton;
++	std::unique_ptr<Sexy::Checkbox> mAutoPauseCheckbox;
++	std::unique_ptr<Sexy::Checkbox> mRememberSpeedCheckbox;
++	std::unique_ptr<Sexy::Checkbox> mCooldownCheckbox;
++	bool mControlsPage = false;
++	int mCapturing = -1;
++	std::string mStatus;
++
++	QoLDialog(LawnApp* theApp);
++	~QoLDialog() override;
++	void AddedToManager(Sexy::WidgetManager*) override;
++	void RemovedFromManager(Sexy::WidgetManager*) override;
++	void Resize(int x, int y, int width, int height) override;
++	void Draw(Sexy::Graphics*) override;
++	void ButtonDepress(int theId) override;
++	void CheckboxChecked(int theId, bool checked) override;
++	void KeyDown(Sexy::KeyCode theKey) override;
++	void RefreshPage();
++	void Persist();
++};
++
++#endif
+--- a/src/Lawn/Widget/SeedChooserScreen.cpp
++++ b/src/Lawn/Widget/SeedChooserScreen.cpp
+@@ -33,6 +33,7 @@
+ #include "../../Lawn/Plant.h"
+ #include "../ToolTipWidget.h"
+ #include "SeedChooserScreen.h"
++#include "PlantDecksDialog.h"
+ #include "../../GameConstants.h"
+ #include "../System/PlayerInfo.h"
+ #include "misc/Debug.h"
+@@ -75,6 +76,10 @@
+ 	mMenuButton->SetLabel("[MENU_BUTTON]");
+ 	mMenuButton->Resize(681, -10, 117, 46);
+ 	mMenuButton->mDrawStoneButton = true;
++	mDecksButton = std::make_unique<GameButton>(SeedChooserScreen_Decks);
++	mDecksButton->mDrawStoneButton = true;
++	mDecksButton->SetLabel("Decks");
++	mDecksButton->Resize(681, 32, 117, 46);
+ 
+ 	mRandomButton = std::make_unique<GameButton>(SeedChooserScreen::SeedChooserScreen_Random);
+ 	mRandomButton->SetLabel("(Debug Play)");
+@@ -427,6 +432,7 @@
+ 	aBoardFrameG.mTransX -= mX;
+ 	aBoardFrameG.mTransY -= mY;
+ 	mMenuButton->Draw(&aBoardFrameG);
++	mDecksButton->Draw(&aBoardFrameG);
+ 	mToolTip->Draw(g);
+ }
+ 
+@@ -504,7 +510,7 @@
+ 
+ 	if (mMouseVisible && mChooseState != CHOOSE_VIEW_LAWN && ((aMouseSeedType != SEED_NONE && !SeedNotAllowedToPick(aMouseSeedType)) ||
+ 		mRandomButton->IsMouseOver() || mViewLawnButton->IsMouseOver() || mAlmanacButton->IsMouseOver() || mImitaterButton->IsMouseOver() ||
+-		mStoreButton->IsMouseOver() || mMenuButton->IsMouseOver() || mStartButton->IsMouseOver()))
++		mStoreButton->IsMouseOver() || mMenuButton->IsMouseOver() || mDecksButton->IsMouseOver() || mStartButton->IsMouseOver()))
+ 		mApp->SetCursor(CURSOR_HAND);
+ 	else
+ 		mApp->SetCursor(CURSOR_POINTER);
+@@ -547,6 +553,9 @@
+ 	mImitaterButton->Update();
+ 	mStoreButton->Update();
+ 	mMenuButton->Update();
++	mDecksButton->mBtnNoDraw = mMenuButton->mBtnNoDraw || mApp->mGameMode == GAMEMODE_UPSELL;
++	mDecksButton->mDisabled = mDecksButton->mBtnNoDraw || mChooseState == CHOOSE_VIEW_LAWN || mBoard->HasConveyorBeltSeedBank();
++	mDecksButton->Update();
+ 	UpdateViewLawn();
+ 	UpdateCursor();
+ 	MarkDirty();
+@@ -724,7 +733,16 @@
+ 	if (mSeedsInFlight > 0 || mChooseState == CHOOSE_VIEW_LAWN || !mMouseVisible)
+ 		return;
+ 
+-	if (theId == SeedChooserScreen::SeedChooserScreen_ViewLawn)
++	if (theId == SeedChooserScreen_Decks)
++	{
++		if (mBoard->HasConveyorBeltSeedBank() || mApp->GetDialogCount() || !mApp->mPlayerInfo) return;
++		RemoveToolTip();
++		auto* dialog = new PlantDecksDialog(mApp, this);
++		mApp->AddDialog(dialog->mId, dialog);
++		dialog->Resize((mApp->mWidth - dialog->mWidth) / 2, (mApp->mHeight - dialog->mHeight) / 2, dialog->mWidth, dialog->mHeight);
++		mApp->mWidgetManager->SetFocus(dialog);
++	}
++	else if (theId == SeedChooserScreen::SeedChooserScreen_ViewLawn)
+ 	{
+ 		mChooseState = CHOOSE_VIEW_LAWN;
+ 		mMenuButton->mDisabled = true;
+@@ -952,7 +970,8 @@
+ {
+ 	if (theClickCount == 1)
+ 	{
+-		if (mMenuButton->IsMouseOver()) ButtonDepress(SeedChooserScreen::SeedChooserScreen_Menu);
++		if (mDecksButton->IsMouseOver()) ButtonDepress(SeedChooserScreen_Decks);
++		else if (mMenuButton->IsMouseOver()) ButtonDepress(SeedChooserScreen::SeedChooserScreen_Menu);
+ 		else if (mStartButton->IsMouseOver()) ButtonDepress(SeedChooserScreen::SeedChooserScreen_Start);
+ 		else if (mAlmanacButton->IsMouseOver()) ButtonDepress(SeedChooserScreen::SeedChooserScreen_Almanac);
+ 		else if (mStoreButton->IsMouseOver()) ButtonDepress(SeedChooserScreen::SeedChooserScreen_Store);
+@@ -998,6 +1017,10 @@
+ 	{
+ 		mApp->PlaySample(Sexy::SOUND_TAP);
+ 		ButtonDepress(SeedChooserScreen::SeedChooserScreen_ViewLawn);
++	}
++	else if (mDecksButton->IsMouseOver())
++	{
++		mApp->PlaySample(Sexy::SOUND_GRAVEBUTTON);
+ 	}
+ 	else if (mMenuButton->IsMouseOver())
+ 	{
+@@ -1142,3 +1165,70 @@
+ 	EnableStartButton(mSeedsInBank == mBoard->mSeedBank->mNumPackets);
+ 	UpdateImitaterButton();
+ }
++
++// Capture actual bank order, including the plant copied by Imitater.
++std::vector<DeckPresetSeed> SeedChooserScreen::CurrentDeckPreset()
++{
++    std::vector<DeckPresetSeed> result;
++    for (int i = 0; i < mBoard->mSeedBank->mNumPackets; ++i)
++    {
++        const SeedType type = FindSeedInBank(i);
++        if (type != SEED_NONE)
++            result.push_back({static_cast<int>(type), static_cast<int>(mChosenSeeds[type].mImitaterType)});
++    }
++    return result;
++}
++
++bool SeedChooserScreen::DeckSeedAvailable(const DeckPresetSeed& seed)
++{
++    if (!DeckPresets::ValidSeed(seed)) return false;
++    const SeedType type = static_cast<SeedType>(seed.mSeed);
++    if (!mApp->HasSeedType(type) || SeedNotAllowedToPick(type) || SeedNotAllowedDuringTrial(type)) return false;
++    if (type == SEED_IMITATER)
++    {
++        const SeedType copied = static_cast<SeedType>(seed.mImitater);
++        if (!mApp->HasSeedType(copied) || SeedNotAllowedToPick(copied) || SeedNotAllowedDuringTrial(copied)) return false;
++    }
++    return true;
++}
++
++DeckSelectionPlan SeedChooserScreen::ApplyDeckPreset(const std::vector<DeckPresetSeed>& seeds)
++{
++    DeckSelectionPlan blocked;
++    if (!DeckPresets::ValidSeeds(seeds) || seeds.empty() || mChooseState != CHOOSE_NORMAL ||
++        mBoard->HasConveyorBeltSeedBank() || mSeedsInFlight > 0) return blocked;
++    std::vector<DeckPresetSeed> forced;
++    for (const auto& seed : CurrentDeckPreset())
++        if (mChosenSeeds[seed.mSeed].mCrazyDavePicked ||
++            (mApp->mGameMode == GAMEMODE_CHALLENGE_SEEING_STARS && seed.mSeed == SEED_STARFRUIT)) forced.push_back(seed);
++    const auto plan = PlanDeckSelection(seeds, forced, mBoard->mSeedBank->mNumPackets,
++        [this](const DeckPresetSeed& seed) { return DeckSeedAvailable(seed); });
++    // Use the same selection/removal paths as ordinary clicks, finishing each
++    // flight before the next operation so bank indexes and counts stay valid.
++    for (int i = mSeedsInBank - 1; i >= 0; --i)
++    {
++        const SeedType type = FindSeedInBank(i);
++        if (type == SEED_NONE || mChosenSeeds[type].mCrazyDavePicked ||
++            (mApp->mGameMode == GAMEMODE_CHALLENGE_SEEING_STARS && type == SEED_STARFRUIT)) continue;
++        ClickedSeedInBank(mChosenSeeds[type]);
++        for (int k = 0; k < NUM_SEEDS_IN_CHOOSER; ++k) LandFlyingSeed(mChosenSeeds[k]);
++    }
++    for (const auto& seed : plan.mSeeds)
++    {
++        auto& chosen = mChosenSeeds[seed.mSeed];
++        if (chosen.mSeedState == SEED_IN_BANK) continue;
++        if (seed.mSeed == SEED_IMITATER)
++        {
++            chosen.mSeedState = SEED_IN_CHOOSER;
++            chosen.mImitaterType = static_cast<SeedType>(seed.mImitater);
++            chosen.mX = mImitaterButton->mX; chosen.mY = mImitaterButton->mY;
++        }
++        if (chosen.mSeedState != SEED_IN_CHOOSER) continue;
++        ClickedSeedInChooser(chosen);
++        LandFlyingSeed(chosen);
++    }
++    UpdateImitaterButton();
++    EnableStartButton(mSeedsInBank == mBoard->mSeedBank->mNumPackets);
++    RemoveToolTip();
++    return plan;
++}
+--- a/src/Lawn/Widget/SeedChooserScreen.h
++++ b/src/Lawn/Widget/SeedChooserScreen.h
+@@ -26,6 +26,7 @@
+ #include "../../PvzpLib/PvzpCommon.h"
+ #include "widget/Widget.h"
+ #include <memory>
++#include "../System/DeckPresets.h"
+ using namespace Sexy;
+ 
+ class Board;
+@@ -68,7 +69,8 @@
+ 		SeedChooserScreen_Almanac = 103,
+ 		SeedChooserScreen_Menu = 104,
+ 		SeedChooserScreen_Store = 105,
+-		SeedChooserScreen_Imitater = 106
++		SeedChooserScreen_Imitater = 106,
++		SeedChooserScreen_Decks = 107
+ 	};
+ 
+ public:
+@@ -79,6 +81,7 @@
+ 	std::unique_ptr<GameButton> mAlmanacButton;
+ 	std::unique_ptr<GameButton> mMenuButton;
+ 	std::unique_ptr<GameButton> mImitaterButton;
++	std::unique_ptr<GameButton> mDecksButton;
+ 	ChosenSeed              mChosenSeeds[NUM_SEED_TYPES];
+ 	LawnApp*                mApp;
+ 	Board*                  mBoard;
+@@ -133,6 +136,9 @@
+ 	void                    KeyDown(KeyCode theKey) override;
+ 	void                    KeyChar(char theChar) override;
+ 	void                    UpdateAfterPurchase();
++	std::vector<DeckPresetSeed> CurrentDeckPreset();
++	bool                    DeckSeedAvailable(const DeckPresetSeed& seed);
++	DeckSelectionPlan       ApplyDeckPreset(const std::vector<DeckPresetSeed>& seeds);
+ };
+ 
+ #endif
+--- a/src/LawnApp.cpp
++++ b/src/LawnApp.cpp
+@@ -64,6 +64,10 @@
+ #include "Lawn/System/ReanimationLawn.h"
+ #include "Lawn/Widget/ChallengeScreen.h"
+ #include "Lawn/Widget/NewOptionsDialog.h"
++#include "Lawn/Widget/QoLDialog.h"
++#include "Lawn/CursorObject.h"
++#include "Lawn/SeedPacket.h"
++#include "misc/Buffer.h"
+ #include "Lawn/Widget/ZombatarTOS.h"
+ #include "Lawn/Widget/SeedChooserScreen.h"
+ #include "widget/WidgetManager.h"
+@@ -96,6 +100,18 @@
+ static EM_BOOL BrowserFullscreenChanged(int, const EmscriptenFullscreenChangeEvent* theEvent, void* theUserData)
+ {
+ 	SyncBrowserFullscreen(static_cast<LawnApp*>(theUserData), theEvent->isFullscreen);
++	return EM_FALSE;
++}
++
++static EM_BOOL BrowserQoLBlur(int, const EmscriptenFocusEvent*, void* theUserData)
++{
++	static_cast<LawnApp*>(theUserData)->PauseForFocusLoss();
++	return EM_FALSE;
++}
++
++static EM_BOOL BrowserQoLVisibility(int, const EmscriptenVisibilityChangeEvent* theEvent, void* theUserData)
++{
++	if (theEvent->hidden) static_cast<LawnApp*>(theUserData)->PauseForFocusLoss();
+ 	return EM_FALSE;
+ }
+ #endif
+@@ -194,6 +210,8 @@
+ {
+ #ifdef __EMSCRIPTEN__
+ 	emscripten_set_fullscreenchange_callback(EMSCRIPTEN_EVENT_TARGET_DOCUMENT, nullptr, EM_FALSE, nullptr);
++	emscripten_set_blur_callback(EMSCRIPTEN_EVENT_TARGET_WINDOW, nullptr, EM_FALSE, nullptr);
++	emscripten_set_visibilitychange_callback(nullptr, EM_FALSE, nullptr);
+ #endif
+ 	while (!mDialogMap.empty())
+ 	{
+@@ -330,12 +348,16 @@
+ 
+ void LawnApp::LostFocus()
+ {
+-#if (defined(__ANDROID__) && !defined(__TERMUX__)) || defined(__IPHONEOS__)
+-	if (!mCheatKeys && CanPauseNow())
+-	{
++	PauseForFocusLoss();
++}
++
++void LawnApp::PauseForFocusLoss()
++{
++	mQoLKeysDown.fill(false);
++	mGameSpeedPressArmed = false;
++	if (mBoard && mGameScene == GameScenes::SCENE_PLAYING &&
++		!mBoard->mPaused && GetQoLSettings().mAutoPause && CanPauseNow())
+ 		DoPauseDialog();
+-	}
+-#endif
+ }
+ 
+ void LawnApp::WriteToRegistry()
+@@ -1194,6 +1216,8 @@
+ 
+ #ifdef __EMSCRIPTEN__
+ 	emscripten_set_fullscreenchange_callback(EMSCRIPTEN_EVENT_TARGET_DOCUMENT, this, EM_FALSE, BrowserFullscreenChanged);
++	emscripten_set_blur_callback(EMSCRIPTEN_EVENT_TARGET_WINDOW, this, EM_FALSE, BrowserQoLBlur);
++	emscripten_set_visibilitychange_callback(this, EM_FALSE, BrowserQoLVisibility);
+ 	EmscriptenFullscreenChangeEvent aFullscreenStatus{};
+ 	SyncBrowserFullscreen(this,
+ 		emscripten_get_fullscreen_status(&aFullscreenStatus) == EMSCRIPTEN_RESULT_SUCCESS && aFullscreenStatus.isFullscreen);
+@@ -1583,14 +1607,129 @@
+ 	}
+ }
+ 
++QoLSettings& LawnApp::GetQoLSettings()
++{
++	const uint32_t aProfile = mPlayerInfo ? mPlayerInfo->mId : 0;
++	if (mQoLProfileId != aProfile)
++	{
++		mQoLProfileId = aProfile;
++		mQoLSettings = QoLSettings();
++		mQoLSettingsWritable = true;
++		Buffer aBuffer;
++		const std::string aPath = GetAppDataPath(std::format("userdata/qol-settings-{}.txt", aProfile));
++		if (ReadBufferFromFile(aPath, &aBuffer))
++		{
++			if (aBuffer.GetDataLen() > 4096 || !mQoLSettings.Decode(std::string_view(
++				reinterpret_cast<const char*>(aBuffer.GetDataPtr()), aBuffer.GetDataLen())))
++				mQoLSettingsWritable = false; // Preserve newer/unknown files rather than overwriting them.
++		}
++		mQoLKeysDown.fill(false);
++	}
++	return mQoLSettings;
++}
++
++bool LawnApp::SaveQoLSettings()
++{
++	auto& aSettings = GetQoLSettings();
++	if (!mQoLSettingsWritable)
++		return false;
++	MkDir(GetAppDataPath("userdata"));
++	const std::string aText = aSettings.Encode();
++	Buffer aBuffer;
++	aBuffer.WriteBytes(reinterpret_cast<const uint8_t*>(aText.data()), aText.size());
++	return WriteBufferToFile(GetAppDataPath(std::format("userdata/qol-settings-{}.txt", mQoLProfileId)), &aBuffer);
++}
++
++void LawnApp::DoQoLDialog()
++{
++	if (auto* aExisting = GetDialog(QOL_DIALOG_ID))
++	{
++		mWidgetManager->SetFocus(aExisting);
++		return;
++	}
++	auto* aDialog = new QoLDialog(this);
++	AddDialog(QOL_DIALOG_ID, aDialog);
++	mWidgetManager->SetFocus(aDialog);
++}
++
++void LawnApp::ToggleGameSpeed()
++{
++	mDoubleGameSpeed = !mDoubleGameSpeed;
++	auto& aSettings = GetQoLSettings();
++	if (aSettings.mRememberSpeed)
++	{
++		aSettings.mPreferredDoubleSpeed = mDoubleGameSpeed;
++		SaveQoLSettings();
++	}
++	UpdateGameSpeedButton();
++}
++
++void LawnApp::ReleaseQoLKey(KeyCode theKey)
++{
++	const int aKey = static_cast<int>(theKey);
++	if (aKey >= 0 && aKey < static_cast<int>(mQoLKeysDown.size()))
++		mQoLKeysDown[aKey] = false;
++}
++
++bool LawnApp::HandleQoLKey(KeyCode theKey)
++{
++	if (!mBoard || mGameScene != GameScenes::SCENE_PLAYING || mBoard->mPaused ||
++		GetDialogCount() > 0 || mSeedChooserScreen || mBoard->mBoardFadeOutCounter >= 0 ||
++		mCrazyDaveState != CrazyDaveState::CRAZY_DAVE_OFF || mBoard->mLevelComplete ||
++		mBoard->mTimeStopCounter > 0 || !mActive || mMinimized)
++		return false;
++	if (mWidgetManager->mKeyDown[KEYCODE_CONTROL] || mWidgetManager->mKeyDown[KEYCODE_MENU] ||
++		mWidgetManager->mKeyDown[KEYCODE_LWIN] || mWidgetManager->mKeyDown[KEYCODE_RWIN])
++		return false;
++	const int aKey = static_cast<int>(theKey);
++	const auto& aSettings = GetQoLSettings();
++	int aAction = -1;
++	for (int i = 0; i < QoLSettings::HOTKEY_COUNT; i++)
++		if (aKey != 0 && aSettings.mHotkeys[i] == aKey) { aAction = i; break; }
++	if (aAction < 0 || aKey < 0 || aKey >= static_cast<int>(mQoLKeysDown.size()))
++		return false;
++	if (mQoLKeysDown[aKey]) return true; // Ignore key-repeat until a real key-up.
++	mQoLKeysDown[aKey] = true;
++	if (aAction == QoLSettings::SPEED_ACTION)
++	{
++		if (IsGameSpeedButtonVisible()) ToggleGameSpeed();
++		return true;
++	}
++	const CursorType aCursor = mBoard->mCursorObject->mCursorType;
++	if (aCursor != CursorType::CURSOR_TYPE_NORMAL && aCursor != CursorType::CURSOR_TYPE_PLANT_FROM_BANK &&
++		aCursor != CursorType::CURSOR_TYPE_SHOVEL)
++		return true;
++	if (aAction == QoLSettings::SHOVEL_ACTION)
++	{
++		if (mBoard->mShowShovel)
++		{
++			mBoard->RefreshSeedPacketFromCursor();
++			if (aCursor != CursorType::CURSOR_TYPE_SHOVEL) mBoard->PickUpTool(GameObjectType::OBJECT_TYPE_SHOVEL);
++			mBoard->UpdateCursor();
++		}
++		return true;
++	}
++	if (aAction >= mBoard->mSeedBank->mNumPackets)
++		return true;
++	const bool aSamePacket = aCursor == CursorType::CURSOR_TYPE_PLANT_FROM_BANK &&
++		mBoard->mCursorObject->mSeedBankIndex == aAction;
++	mBoard->RefreshSeedPacketFromCursor();
++	if (!aSamePacket)
++		mBoard->mSeedBank->mSeedPackets[aAction].MouseDown(0, 0, 1);
++	mBoard->UpdateCursor();
++	return true;
++}
++
+ void LawnApp::InitializeGameSpeedButton(Board* theBoard)
+ {
+-	mDoubleGameSpeed = false;
++	const auto& aSettings = GetQoLSettings();
++	mDoubleGameSpeed = aSettings.mRememberSpeed && aSettings.mPreferredDoubleSpeed;
++	mQoLKeysDown.fill(false);
+ 	mGameSpeedPressArmed = false;
+ 	mGameSpeedButton = std::make_unique<GameButton>(2);
+ 	mGameSpeedButton->mDrawStoneButton = true;
+ 	mGameSpeedButton->mParentWidget = theBoard;
+-	mGameSpeedButton->SetLabel("1x");
++	mGameSpeedButton->SetLabel(mDoubleGameSpeed ? "2x" : "1x");
+ 	// The ten-packet bank and shovel fill the horizontal space beside Menu.
+ 	mGameSpeedButton->Resize(681, 32, 117, 46);
+ 	mGameSpeedButton->mBtnNoDraw = true;
+@@ -1641,8 +1780,16 @@
+ 	mGameSpeedButton->Update();
+ }
+ 
++void LawnApp::SyncQoLKeyReleases()
++{
++	if (!mWidgetManager) return;
++	for (int i = 0; i < static_cast<int>(mQoLKeysDown.size()); i++)
++		if (!mWidgetManager->mKeyDown[i]) mQoLKeysDown[i] = false;
++}
++
+ void LawnApp::UpdateFrames()
+ {
++	SyncQoLKeyReleases();
+ 	if ((!mActive || mMinimized) && mBoard)
+ 	{
+ 		mBoard->ResetFPSStats();
+--- a/src/LawnApp.h
++++ b/src/LawnApp.h
+@@ -23,7 +23,9 @@
+ #define __LAWNAPP_H__
+ 
+ #include "ConstEnums.h"
++#include "Lawn/System/QoLSettings.h"
+ #include "SexyAppFramework/SexyApp.h"
++#include "SexyAppFramework/misc/KeyCodes.h"
+ #include "PvzpLib/PvzpFoley.h"
+ #include <memory>
+ 
+@@ -78,6 +80,10 @@
+ 	std::unique_ptr<GameButton>		mGameSpeedButton;
+ 	bool							mDoubleGameSpeed;
+ 	bool							mGameSpeedPressArmed;
++	QoLSettings mQoLSettings;
++	uint32_t mQoLProfileId = UINT32_MAX;
++	bool mQoLSettingsWritable = true;
++	std::array<bool, 0xFF> mQoLKeysDown{};
+ 	std::unique_ptr<TitleScreen>	mTitleScreen;
+ 	std::unique_ptr<GameSelector>	mGameSelector;
+ 	std::unique_ptr<SeedChooserScreen>	mSeedChooserScreen;
+@@ -239,6 +245,14 @@
+ 	bool							IsGameSpeedButtonAt(int x, int y) const;
+ 	bool							IsDoubleGameSpeedActive();
+ 	void							UpdateGameSpeedButton();
++	QoLSettings& GetQoLSettings();
++	bool SaveQoLSettings();
++	void DoQoLDialog();
++	void PauseForFocusLoss();
++	bool HandleQoLKey(KeyCode theKey);
++	void ReleaseQoLKey(KeyCode theKey);
++	void SyncQoLKeyReleases();
++	void ToggleGameSpeed();
+ 	void							PlayFoley(FoleyType theFoleyType);
+ 	void							PlayFoleyPitch(FoleyType theFoleyType, float thePitch);
+ 	void							PlaySample(intptr_t theSoundNum) override;

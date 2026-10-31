@@ -1,5 +1,5 @@
 {
-  "id": "0.2.6-web-qol.1",
+  "id": "0.2.6-web-qol.2",
   "upstream": {
     "tag": "0.2.6",
     "commit": "396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
@@ -7,58 +7,138 @@
     "officialJsSha256": "0f2d7425190e49c762f6700b68b080086e3dcb8f2dc5e9724de42ce9fb508573"
   },
   "sourceArchive": {
-    "path": "pvz-portable-0.2.6-web-qol.1-source.zip",
-    "bytes": 4816285,
-    "sha256": "cfb04160423d2bf5d66cf414daa476e0b292951a9c4cc31d5fd6e9eb884cadeb",
-    "crc32": "745d9c1f",
-    "entries": 771,
-    "uncompressedBytes": 15480239
+    "path": "pvz-portable-0.2.6-web-qol.2-source.zip",
+    "bytes": 4739286,
+    "sha256": "9d77a0a5e2a367630bded271996e7ccffd081bc4cf7f77e16892591812a6f841",
+    "crc32": "e74fc6a9",
+    "entries": 786,
+    "uncompressedBytes": 14912108
   },
   "artifacts": [
     {
       "path": "build/pvz-portable.js",
-      "bytes": 208448,
-      "sha256": "b60338d9d8ceb53c3e30407a667bd2761243c9abc83f82d567173ac4fb14c160",
-      "crc32": "266b929b"
+      "bytes": 208517,
+      "sha256": "e2aaa79b42ab33d59a7230f51bc0d995b5aff53615e42b6a02beccc800557328",
+      "crc32": "ae89ad23"
     },
     {
       "path": "build/pvz-portable.wasm",
-      "bytes": 7415985,
-      "sha256": "5319147e3ac37d05b7179c4206c79e76bd98f19521e94b1ea710b07b31768566",
-      "crc32": "468b221e"
+      "bytes": 7514958,
+      "sha256": "441d8f3b66ad2ed5163eb333a3801e189d52afd14fd9e7e2697e415458d3b248",
+      "crc32": "4c9360e8"
     },
     {
       "path": "build/ProjectVersion.h",
       "bytes": 189,
-      "sha256": "b7e858a8bc142ee1ecbb0b8241deb5bbe02e6e85b4be36e735f3b8072da14936",
-      "crc32": "fe1523a6"
+      "sha256": "8132c1ac4ba1caa65ddb1e9dc1798c2455d94f5915327f540b6940038146a808",
+      "crc32": "5a6ba163"
     }
   ],
-  "sourceFiles": 757,
-  "sourceBytes": 12902834,
-  "sourceDeltaVsSoftware10": [
+  "sourceFiles": 766,
+  "sourceBytes": 12943951,
+  "sourceDeltaVsQoL1": [
     {
       "path": "CMake/ProjectVersion.cmake",
-      "beforeSha256": "1aa6e327c0de35fde411958fa8bddfb3bc66f021a3357e9fd02e5b83ebc18758",
-      "afterSha256": "8d5a54ac6144252172b753577e22020231394fcf8321475668225c42b1644840"
+      "beforeSha256": "8d5a54ac6144252172b753577e22020231394fcf8321475668225c42b1644840",
+      "afterSha256": "47af9daa93eefea417931c5ae1581212b5ddc4d74a9a95b680f33a5f74c49438"
     },
     {
       "path": "src/Lawn/Board.cpp",
-      "beforeSha256": "466a2f572aec808d15a43ba071a0d7512f57afbfa8b7b62da1ed1454a1cb538a",
-      "afterSha256": "894d0aec8b06711a426de12214d9976db9334dd29b68017882bba27427c46285"
+      "beforeSha256": "894d0aec8b06711a426de12214d9976db9334dd29b68017882bba27427c46285",
+      "afterSha256": "472eda0ec34d94d966eb4cbb175e8ac8598a6e95dc0f85b4271da83cf9b5b6f3"
+    },
+    {
+      "path": "src/Lawn/Board.h",
+      "beforeSha256": "f97d2c60ec26f673deb8e76264bb68dbd069f33a284a2045eb0bcfbdd5b284ce",
+      "afterSha256": "2813a83df089410965d2859850e2e4621a2740f9876a744946d0f7913a86c914"
+    },
+    {
+      "path": "src/Lawn/SeedPacket.cpp",
+      "beforeSha256": "719c6b639359343022342bdd5ae7e24f61615b9f5718fe957f827cc1f6562372",
+      "afterSha256": "b7d50d07eef6e289d6632970a559828d1695fa70c742b0fed2de560cafe32747"
+    },
+    {
+      "path": "src/Lawn/SeedPacketCooldown.h",
+      "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "afterSha256": "7cdab377088625e1b4c418e3ea9bf14c8441753a7ba98c4d69f614b412a01d3e"
+    },
+    {
+      "path": "src/Lawn/System/DeckPresets.cpp",
+      "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "afterSha256": "5080d83cdec2fe34a6c7f71f3217e43ab5c7b1e8ccb8aa426f39a2a68e883387"
+    },
+    {
+      "path": "src/Lawn/System/DeckPresets.h",
+      "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "afterSha256": "b70e606e93e0f7b44994b9a56767fcefd5e8919b4ea7033b81d7c44b60c32ad2"
+    },
+    {
+      "path": "src/Lawn/System/PlayerInfo.cpp",
+      "beforeSha256": "bb09b872ba73e1684b43eabbd75e120011390baa2be4f911cfa0c271a77230bb",
+      "afterSha256": "b148f5b2b12db9e4fb651d4e9f07192b4434e4744230fe478edc18803d91fe02"
+    },
+    {
+      "path": "src/Lawn/System/QoLSettings.cpp",
+      "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "afterSha256": "7f14f222c3dfd2a8f2910f60a35a45c41a1c1ad40c16b3d3f62ccff4c9883200"
+    },
+    {
+      "path": "src/Lawn/System/QoLSettings.h",
+      "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "afterSha256": "56ca5ecf024b80ae6fad2d2ffed24f84ec044104b2ca07e974d733e3a16542c9"
+    },
+    {
+      "path": "src/Lawn/Widget/NewOptionsDialog.cpp",
+      "beforeSha256": "ce3d5be8c8b1215abf016ba20d062511dc1cbc9c8510016b6474e42ae0495fbd",
+      "afterSha256": "bd1d7895bc5b79213a048a9f8c651ce5cb2bb075801ca507b49723bb03094a8a"
+    },
+    {
+      "path": "src/Lawn/Widget/NewOptionsDialog.h",
+      "beforeSha256": "1f983a62abe7d180bd49142261bd6f43fea46226cd063846805a0bd36f8948ac",
+      "afterSha256": "d7d5e159357f4f3dedfb57baad9c05a9469787ffa6438bed2ad9be3795f11ccf"
+    },
+    {
+      "path": "src/Lawn/Widget/PlantDecksDialog.cpp",
+      "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "afterSha256": "4eac61207b28672cf943ed56eb06d3597ca8a23fade7766de080a23a4844be65"
+    },
+    {
+      "path": "src/Lawn/Widget/PlantDecksDialog.h",
+      "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "afterSha256": "d2ad1bc973ab41b4a5d257c3a34c8dec3575111996f0aaac216d360d44cef3fd"
+    },
+    {
+      "path": "src/Lawn/Widget/QoLDialog.cpp",
+      "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "afterSha256": "88999ba07549b15829e3441580fba56e3d88db3ec9d1b328a2999df3ba17b0ce"
+    },
+    {
+      "path": "src/Lawn/Widget/QoLDialog.h",
+      "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "afterSha256": "3596530ed4822423f7e05367c2c6020c461f3dccb7384f9ab776ce8819c2465f"
+    },
+    {
+      "path": "src/Lawn/Widget/SeedChooserScreen.cpp",
+      "beforeSha256": "0b99f633da8bc5bfdc6144699728d721a429b046f1dee98c5d2a59fc96840738",
+      "afterSha256": "8146e748e7d5104ad1859016188646aeadfdcb62120791b3984d8e599248a966"
+    },
+    {
+      "path": "src/Lawn/Widget/SeedChooserScreen.h",
+      "beforeSha256": "76f46e7b50aea05000975e4ef3ec4575abd5e07d86841b583d9212014ee0bfe8",
+      "afterSha256": "525a434c4f4e0d674f825e17686574f9cce80775c66bacab7e48a5a96aef5579"
     },
     {
       "path": "src/LawnApp.cpp",
-      "beforeSha256": "417dbe49a8ffa772aa063c3969a2edf6d70ad1392d8d4dd6fee7c43c4beb369f",
-      "afterSha256": "b41ade5a2fc28857c87e23fcdf6ee902359646d058f3db05cea3dca9818c9ba0"
+      "beforeSha256": "b41ade5a2fc28857c87e23fcdf6ee902359646d058f3db05cea3dca9818c9ba0",
+      "afterSha256": "fb44b4507b53c2e406e0cc41e58128d87190bc875f10951754f81eb2901d8b1e"
     },
     {
       "path": "src/LawnApp.h",
-      "beforeSha256": "73128e363cb5798223035f7b10ea3289055cfd0db557259ad0198c0c23086749",
-      "afterSha256": "de0036b0d7b765619a5eefb55e2dc4b55421975972824f07e704ad36851e8c25"
+      "beforeSha256": "de0036b0d7b765619a5eefb55e2dc4b55421975972824f07e704ad36851e8c25",
+      "afterSha256": "4455c08c3d98b32ac1be71fe94e6c92397087c1c0d63b23e1d483f4889ba9b20"
     }
   ],
-  "compiledVersionHeader": "// Generated from CMake/ProjectVersion.h.in by CMake; do not edit.\r\n#pragma once\r\n\r\n#define PVZP_VERSION \"0.2.6-web-qol.1\"\r\n#define PVZP_BUILD_NUMBER 1\r\n#define PVZP_COMMIT_DATE \"unknown\"\r\n",
+  "compiledVersionHeader": "// Generated from CMake/ProjectVersion.h.in by CMake; do not edit.\r\n#pragma once\r\n\r\n#define PVZP_VERSION \"0.2.6-web-qol.2\"\r\n#define PVZP_BUILD_NUMBER 1\r\n#define PVZP_COMMIT_DATE \"unknown\"\r\n",
   "checks": {
     "fullRelease": {
       "exitCode": 0,
@@ -72,58 +152,77 @@
       "receipt": {
         "path": "logs/build-result.json",
         "bytes": 602,
-        "sha256": "46b30bbbb68ff35d5f3334e808bd13b5f1e8c53a7b336babaa1828414aca9242",
-        "crc32": "f6c27d62"
+        "sha256": "fdfb372a849499cc5dfb621eb046006f17f4325e94267b1b6176bb064fd2d59c",
+        "crc32": "d86e1e77"
       }
     },
-    "focusedSpeedTests": {
-      "path": "tests/game-speed-results.json",
-      "bytes": 1371,
-      "sha256": "0b4312bfae73cd3160454cf2874bde4cfa0650c8324194500a6c669c0ba6f551",
-      "crc32": "3dc24853",
-      "status": "PASS focused production-method game-speed tests",
+    "focusedQoLTests": {
+      "status": "PASS focused QoL production tests",
       "failures": 0,
-      "checks": 64,
-      "scope": "Actual extracted LawnApp speed-policy/UpdateFrames/initialization/button-update methods and added Board input prefixes with controlled collaborators. No full game build, renderer/browser/audio execution, save roundtrip or wall-clock performance claim."
+      "checks": 261,
+      "scope": "Actual extracted production methods and pure settings/deck/cooldown code. No audio device or full game starts.",
+      "reports": [
+        {
+          "path": "tests/game-speed-results.json",
+          "bytes": 1599,
+          "sha256": "4fe79e8ab7ddb9a33d1daf5555f44359ec52905e36f3edc9556e8a8bf2110d51",
+          "crc32": "47773846",
+          "checks": 66
+        },
+        {
+          "path": "tests/qol-controls-results.json",
+          "bytes": 1687,
+          "sha256": "fb897e9a01872f6962ec9cf928a2e71ae06482b7fb8f5f63ed8e8c226aafaffa",
+          "crc32": "1ef55901",
+          "checks": 90
+        },
+        {
+          "path": "tests/decks-cooldowns-results.json",
+          "bytes": 1003,
+          "sha256": "c51f7af36acb0200c640cd3763dbb6889deb56b3fa665067688d9f05a2f07ee4",
+          "crc32": "517860b0",
+          "checks": 105
+        }
+      ]
     },
     "patchReconstruction": {
       "upstream": {
         "gitApplyCheck": "PASS",
         "gitApply": "PASS",
         "everySourceByteMatches": true,
-        "sourceFiles": 757
+        "sourceFiles": 766
       },
-      "software10": {
+      "qol1": {
         "gitApplyCheck": "PASS",
         "gitApply": "PASS",
         "everySourceByteMatches": true,
-        "sourceFiles": 757
+        "sourceFiles": 766
       }
     }
   },
   "combinedPatch": {
-    "path": "web-qol.1.patch",
-    "bytes": 1379067,
-    "sha256": "b7522bb75c85d1453ddb2f8ef06a97fa4e1251b181ff013bbbd9e78988359a8b",
-    "crc32": "e8bf21c5",
-    "sourcePaths": 25
+    "path": "web-qol.2.patch",
+    "bytes": 1429228,
+    "sha256": "081cad7a19c05f0ec33d8f552084a3a0315004ca30d2b13821d0fe3b8808bc6a",
+    "crc32": "6808aad8",
+    "sourcePaths": 41
   },
   "incrementalPatch": {
-    "path": "software10-to-qol1.patch",
-    "bytes": 791995,
-    "sha256": "51241b5b4f19ea13f5b967af72a0f94da4bc2338d5400e3c5fa32011413d89ed",
-    "crc32": "df28bdb5",
-    "sourcePaths": 4
+    "path": "qol1-to-qol2.patch",
+    "bytes": 54327,
+    "sha256": "84fc666a14f2723f4387353d80dfcbddebd735e6b8eb0f88479ca35198b1607a",
+    "crc32": "343884d3",
+    "sourcePaths": 20
   },
   "parent": {
-    "id": "0.2.6-web-software.10",
-    "sourceArchiveSha256": "62bf399ffeedde34ec9946b4aece8fce4cb4ffb119739d3b55d2025bc4cda261",
-    "releaseManifestSha256": "b422b33932456438b7265b654abaee1ae67322baf28484eded6615d564bd8732",
-    "scope": "Complete historical parent engine metadata is preserved in engine-provenance.json.parent."
+    "id": "0.2.6-web-qol.1",
+    "sourceArchiveSha256": "cfb04160423d2bf5d66cf414daa476e0b292951a9c4cc31d5fd6e9eb884cadeb",
+    "releaseManifestSha256": "4b37194ad39e88487b52342285127c4626bb6d3a3961cde7a4693df899c36a13",
+    "scope": "Complete historical parent engine metadata is preserved in the parent property of engine-provenance.json."
   },
   "limits": [
-    "This is the user-requested QoL speed feature, not a claim of exact original-game parity.",
+    "These are the six user-requested QoL features, not a claim of exact original-game parity.",
     "Focused production-method tests and build checks do not replace broad game or browser validation.",
-    "Earlier Software.10 results remain historical parent evidence only."
+    "Earlier QoL.1 results remain historical parent evidence only."
   ]
 }

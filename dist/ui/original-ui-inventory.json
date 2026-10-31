@@ -1,0 +1,107 @@
+{
+  "bundleId": "sha256:b468b22439430ca4a36035b886a74bd831a86b2a1a36c39d3203396f5b75d093",
+  "files": [
+    {
+      "file": "qol-stone-left.png",
+      "original": "images/button_left.png",
+      "bytes": 1896,
+      "sha256": "4bbc52c480ad97c8a611c5e76f93898ed567f7c603965f389fb69a40b6f3490c"
+    },
+    {
+      "file": "qol-stone-middle.png",
+      "original": "images/button_middle.png",
+      "bytes": 1342,
+      "sha256": "4a78caf163579cf9baac8db6581dde177a0a635002c852efedbbe17ce81d89c3"
+    },
+    {
+      "file": "qol-stone-right.png",
+      "original": "images/button_right.png",
+      "bytes": 1710,
+      "sha256": "18f7690e01f84c4e543b4b7a20fcfea9dac80df1c4833d621a345eb55d77d26b"
+    },
+    {
+      "file": "qol-dialog-topleft.png",
+      "original": "images/dialog_topleft.png",
+      "bytes": 5704,
+      "sha256": "4860437be14e2d87686b117ae8c925754696e179a176dff4ac0f20b480a9f7aa"
+    },
+    {
+      "file": "qol-dialog-topmiddle.png",
+      "original": "images/dialog_topmiddle.png",
+      "bytes": 2760,
+      "sha256": "530e9288724ca72bd2fb4ec628fbebea35c388b2da0380a8656daeb2c5ca8ab5"
+    },
+    {
+      "file": "qol-dialog-topright.png",
+      "original": "images/dialog_topright.png",
+      "bytes": 6384,
+      "sha256": "fc69f02366520f5e77576593cf5dc1f037c2853d331c53ba88c47ce255ec1685"
+    },
+    {
+      "file": "qol-dialog-centerleft.png",
+      "original": "images/dialog_centerleft.png",
+      "bytes": 1959,
+      "sha256": "15ef3b9badc0cbb6b6ef0ecc9ddb6f5a3a540543f785a53b57cd5698c7fe0e88"
+    },
+    {
+      "file": "qol-dialog-centermiddle.png",
+      "original": "images/dialog_centermiddle.png",
+      "bytes": 367,
+      "sha256": "5e339ba4b104f1c9660351668ed5cfb11176e18671f11536f624ecf93d95b7d3"
+    },
+    {
+      "file": "qol-dialog-centerright.png",
+      "original": "images/dialog_centerright.png",
+      "bytes": 2148,
+      "sha256": "ef5fdc74936870b1460cd89f5a048cfedd7ca5dffe73f578b7822e794c05eadc"
+    },
+    {
+      "file": "qol-dialog-bottomleft.png",
+      "original": "images/dialog_bottomleft.png",
+      "bytes": 6043,
+      "sha256": "d92dfe7c3e8467e589232c10c05239abdcaf0e553a5477f4f95286f8f0d1976e"
+    },
+    {
+      "file": "qol-dialog-bottommiddle.png",
+      "original": "images/dialog_bottommiddle.png",
+      "bytes": 3127,
+      "sha256": "4139a4d023a3c39427be4f3ce72061f047253285c5354bce343348306af7c92c"
+    },
+    {
+      "file": "qol-dialog-bottomright.png",
+      "original": "images/dialog_bottomright.png",
+      "bytes": 6380,
+      "sha256": "7561df9f0fb80e423bdac347bf165309af0a780b48412b786531356119cbc8ba"
+    },
+    {
+      "file": "qol-font-green.png",
+      "original": "data/DwarvenTodcraft18GreenInset.png",
+      "bytes": 51292,
+      "sha256": "f3b5bb1247a75966184b16d36d5653c680055bf284edfb4dd3aa1098e026b661"
+    },
+    {
+      "file": "qol-font-green.json",
+      "original": "data/DwarvenTodcraft18GreenInset.txt (parsed metrics)",
+      "bytes": 11566,
+      "sha256": "541fa8af3a68df048319b904a9e1660258645db7bdf2c80df3877c37db009541"
+    },
+    {
+      "file": "qol-font-bright.png",
+      "original": "data/DwarvenTodcraft18BrightGreenInset.png",
+      "bytes": 52103,
+      "sha256": "4b348162d745e31430187d326c5d5b9a82a505784e67dd3d48fde3438ad4cdf3"
+    },
+    {
+      "file": "qol-font-bright.json",
+      "original": "data/DwarvenTodcraft18BrightGreenInset.txt (parsed metrics)",
+      "bytes": 11567,
+      "sha256": "61c0dc2c85c97f9ff3f46fdd6df6fa993882f15712ebfc530e00183d49028bfe"
+    },
+    {
+      "file": "README.txt",
+      "original": "Attribution",
+      "bytes": 236,
+      "sha256": "194515332e8cebd3b2e22d4d21300c3a371a71de110167f4eb67a48bf222c622"
+    }
+  ]
+}

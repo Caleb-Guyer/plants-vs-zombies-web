@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "current_engine": "0.2.6-web-qol.1",
+  "current_engine": "0.2.6-web-qol.2",
   "upstream_tag": "0.2.6",
   "layout": "Site-source nests current corresponding source and upstream baseline only. Other exact source archives remain standalone downloads beside this index and in the full runtime distribution.",
   "nested_sources": [
     "pvz-portable-0.2.6-source.zip",
-    "pvz-portable-0.2.6-web-qol.1-source.zip"
+    "pvz-portable-0.2.6-web-qol.2-source.zip"
   ],
   "archives": [
     {
@@ -40,6 +40,13 @@
       "name": "pvz-portable-0.2.6-web-qol.1-source.zip",
       "bytes": 4816285,
       "sha256": "cfb04160423d2bf5d66cf414daa476e0b292951a9c4cc31d5fd6e9eb884cadeb",
+      "current": false,
+      "upstream": false
+    },
+    {
+      "name": "pvz-portable-0.2.6-web-qol.2-source.zip",
+      "bytes": 4739286,
+      "sha256": "9d77a0a5e2a367630bded271996e7ccffd081bc4cf7f77e16892591812a6f841",
       "current": true,
       "upstream": false
     },

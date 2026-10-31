@@ -130,7 +130,7 @@ def regenerate_source_downloads():
         "nested_sources": [baseline.name, paths["source"].name],
         "archives": archives,
     }
-    SOURCE_DOWNLOADS.write_text(json.dumps(index, indent=2, ensure_ascii=True) + "\n", encoding="utf-8")
+    SOURCE_DOWNLOADS.write_text(json.dumps(index, indent=2, ensure_ascii=True) + "\n", encoding="utf-8", newline="\n")
 
 
 def inspect_zip(data, label, depth=0):

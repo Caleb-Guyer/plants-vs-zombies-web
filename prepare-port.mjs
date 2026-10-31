@@ -163,6 +163,10 @@ loader=replaceBetween(loader,'async function importSaveDirectory(','async functi
   finally{button.disabled=false;button.textContent=previous;window.onSaveOperationFinished?.();}
 }`);
 loader=replaceOnce(loader,'finally{e.disabled=!1,e.textContent=t}}','finally{e.disabled=!1,e.textContent=t;window.onSaveOperationFinished?.()}}');
+// Explicit clear-all also removes automatic history after the cleared current
+// save commits. Ordinary saves and imports retain their recoverable history.
+loader=replaceOnce(loader,'a("/saves"),await syncSaves(),alert("All save data has been cleared.")',
+  'a("/saves"),await syncSaves(),await window.PVZSaveStorage?.install(Module.FS).purgeRecoveryHistory?.(),alert("All save data has been cleared.")');
 await writeFile('dist/loader.js',notice+loader);
 await writeFile('dist/game/VERSION',`PvZ-Portable ${engine.id}\n${engine.change}\nEngine JavaScript SHA-256: ${engine.artifacts.jsSha256}\nEngine WASM SHA-256: ${engine.artifacts.wasmSha256}\nCorresponding modified source and build record: ../source/\nOriginal JPEG equivalence and full game parity remain unverified.\n`);
 const sourceHref='./source/'+engine.artifacts.source.split('/').at(-1);

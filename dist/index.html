@@ -37,6 +37,7 @@
   <dialog id="more-dialog" class="settings-dialog" aria-labelledby="more-title">
     <div class="dialog-heading"><h2 id="more-title">Controls</h2><button id="more-close" class="icon-button close-icon" type="button" aria-label="Close controls" title="Close">Close</button></div>
     <div class="settings-group">
+      <button id="save-backups-btn" class="setting-action" type="button">Save Backups</button>
       <div id="upload-save-actions" class="save-actions">
         <button id="upload-save-import-btn" class="setting-action" type="button">Import save ZIP</button>
         <button id="upload-save-import-dir-btn" class="setting-action" type="button">Import save folder</button>
@@ -53,9 +54,9 @@
     </details>
     <details class="settings-details information">
       <summary>Information</summary>
-      <p>Powered by <a href="https://github.com/wszqkzqk/PvZ-Portable" target="_blank" rel="noopener">PvZ-Portable 0.2.6</a>, custom local build <span id="engine-build-id">0.2.6-web-qol.1</span> with browser saves, selectable CPU rendering and a native 1x/2x speed toggle. © 2026 Zhou Qiankang and contributors. LGPL-3.0-or-later.</p>
+      <p>Powered by <a href="https://github.com/wszqkzqk/PvZ-Portable" target="_blank" rel="noopener">PvZ-Portable 0.2.6</a>, custom local build <span id="engine-build-id">0.2.6-web-qol.2</span> with save recovery and original-style quality-of-life controls. © 2026 Zhou Qiankang and contributors. LGPL-3.0-or-later.</p>
       <p>Unofficial community engine. Original game and assets © PopCap / Electronic Arts. Exact 1:1 parity has not been exhaustively verified.</p>
-      <div class="information-links"><a href="./source/pvz-portable-0.2.6-web-qol.1-source.zip" download>Engine source</a><a href="./source/pvz-portable-0.2.6-source.zip" download>Upstream source</a><a href="./source/build-provenance.json">Build record</a><a href="./source/site-source.zip" download>Site source</a><a href="./licenses/LGPL-3.0.txt">License</a></div>
+      <div class="information-links"><a href="./source/pvz-portable-0.2.6-web-qol.2-source.zip" download>Engine source</a><a href="./source/pvz-portable-0.2.6-source.zip" download>Upstream source</a><a href="./source/build-provenance.json">Build record</a><a href="./source/site-source.zip" download>Site source</a><a href="./licenses/LGPL-3.0.txt">License</a></div>
     </details>
   </dialog>
 
@@ -68,11 +69,23 @@
     <p id="return-files-status" role="status"></p>
     <div class="dialog-actions"><button id="return-files-cancel" type="button" autofocus>Keep playing</button><button id="return-files-confirm" type="button">Continue</button></div>
   </dialog>
+  <dialog id="save-recovery-dialog" class="recovery-dialog" aria-labelledby="save-recovery-title">
+    <h2 id="save-recovery-title">Save Backups</h2>
+    <p id="save-recovery-status" class="recovery-note" role="status"></p>
+    <div id="save-recovery-list" class="save-backup-list" aria-label="Automatic save backups"></div>
+    <div class="recovery-actions">
+      <button id="save-recovery-close" class="original-stone-button" type="button">Back</button>
+      <button id="save-recovery-restore" class="original-stone-button" type="button" disabled>Restore Save</button>
+      <button id="save-recovery-retry" class="original-stone-button" type="button" hidden>Reload Game</button>
+    </div>
+  </dialog>
   <noscript><div class="noscript">Enable JavaScript to play.</div></noscript>
   <script src="./runtime.js"></script>
   <script src="./save-storage.js"></script>
   <script src="./save-transfer.js"></script>
-  <script src="./game/pvz-portable.js?v=b60338d9d8ce" async></script>
+  <script src="./original-ui.js"></script>
+  <script src="./save-recovery.js"></script>
+  <script src="./game/pvz-portable.js?v=e2aaa79b42ab" async></script>
   <script src="./loader.js"></script>
   <script src="./steam-compat.js"></script>
   <script src="./test-profiles.js"></script>

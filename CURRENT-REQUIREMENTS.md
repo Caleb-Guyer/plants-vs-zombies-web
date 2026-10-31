@@ -8,11 +8,20 @@ The user directed us on 2026-10-31 to stop manual gameplay and wrap the current 
 
 Publication status: [GitHub Pages](https://caleb-guyer.github.io/plants-vs-zombies-web/) is live after [workflow 41230962473](https://github.com/Caleb-Guyer/plants-vs-zombies-web/actions/runs/41230962473) succeeded on 2026-10-31. A silent browser check reached the original title without a file prompt; WASM returned HTTP 200 as `application/wasm`. This adds hosting/startup proof only, with no GitHub campaign gameplay or full-parity certification.
 
-## Requested QoL change, 2026-10-31
+## Requested QoL updates, 2026-10-31
 
-The user requested a 1x/2x speed button near Menu that matches the game's visual style. QoL.1 adds a native stone button directly below Menu, leaving room for the full seed tray and shovel. This intentional gameplay option supersedes the earlier strict 1:1 requirement for speed only. Normal speed remains the default for every new/resumed board. Pause, dialogs, chooser and transitions do not accelerate. Keep audio pitch and existing save formats unchanged. Targeted feature tests and a short silent UI check are appropriate; do not resume broad campaign playtesting.
+The user requested a 1x/2x speed button near Menu that matches the game's visual style. QoL.1 added a native stone button directly below Menu, leaving room for the full seed tray and shovel. The user then authorized all six proposed QoL additions, automated tests with sound off and a GitHub Pages update. These intentional options extend the earlier strict 1:1 requirement. Pause, dialogs, chooser and transitions do not accelerate; audio pitch and existing native save formats remain unchanged. Do not resume broad campaign playtesting.
 
-The GitHub Pages release now uses `0.2.6-web-qol.1`, retaining the Software.10 rendering code. Current source and binary hashes are in `dist/game/engine-provenance.json`; prior Software.10 records below retain their historical scope.
+The current release candidate uses `0.2.6-web-qol.2`, retaining the Software.10 rendering code. Current source and binary hashes are in `dist/game/engine-provenance.json`; prior release records below retain their historical scope. The six additions are:
+
+- Auto-pause on window blur or a hidden tab, enabled by default, with explicit resume and no automatic resume.
+- Remappable seed-slot, shovel and speed keys: defaults `1`–`9`, `0`, `S` and `F`. Space and Escape retain their original pause/menu behavior; native costs, cooldowns and unlocks still apply.
+- Eight named plant-deck presets per profile, respecting capacity, unlocked plants, Imitater and forced picks.
+- Per-profile remembered 1x/2x speed, enabled by default. A new profile starts at 1x; disabling Remember Speed resets new/resumed boards to 1x.
+- Optional numeric seed cooldowns, disabled by default.
+- Browser-local automatic save history with up to eight previous versions. Recovery applies to all profiles and backs up the current version before replacement.
+
+Keep the options, keyboard and deck dialogs in the game's original visual style. Store QoL settings and decks per profile in separate save files and include them in save export/import. Save history remains local to this browser and is not part of the export. Normal saves persist automatically without export/import. Focused automated tests and a bounded silent visual check are sufficient for this update; neither adds a full-parity claim.
 
 ## Objective and completion status
 

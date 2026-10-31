@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-qol.1
-Adds a native 1x/2x gameplay speed toggle beside Menu using the original button style.
-Engine JavaScript SHA-256: b60338d9d8ceb53c3e30407a667bd2761243c9abc83f82d567173ac4fb14c160
-Engine WASM SHA-256: 5319147e3ac37d05b7179c4206c79e76bd98f19521e94b1ea710b07b31768566
+PvZ-Portable 0.2.6-web-qol.2
+Adds automatic save recovery, native per-profile QoL options, focus-loss pause, remappable controls, plant decks, remembered speed and optional cooldown numbers.
+Engine JavaScript SHA-256: e2aaa79b42ab33d59a7230f51bc0d995b5aff53615e42b6a02beccc800557328
+Engine WASM SHA-256: 441d8f3b66ad2ed5163eb333a3801e189d52afd14fd9e7e2697e415458d3b248
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.

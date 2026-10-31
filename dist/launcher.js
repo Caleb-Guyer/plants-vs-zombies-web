@@ -4,13 +4,15 @@
   const el = id => document.getElementById(id);
   const mutations = [uploadSaveImportBtn, uploadSaveImportDirBtn, uploadSaveClearBtn, el('add-test-profiles')];
   let bundleReady = false, starting = false, scheduled = false, loading = null, engineFailed = false;
-  let showImportOnLoad = false;
+  let showImportOnLoad = false, showRecoveryOnLoad = false, requestingRecovery = false;
   try {
     showImportOnLoad = sessionStorage.getItem('pvz-show-import') === '1';
+    showRecoveryOnLoad = sessionStorage.getItem('pvz-show-recovery') === '1';
+    sessionStorage.removeItem('pvz-show-recovery');
     sessionStorage.removeItem('pvz-show-import');
     sessionStorage.removeItem('pvz-show-files');
   } catch (_) {}
-  function hasOpenPanel() { return el('more-dialog').open || el('return-files-dialog').open; }
+  function hasOpenPanel() { return el('more-dialog').open || el('return-files-dialog').open || !!window.PVZSaveRecovery?.isOpen(); }
   function showFailure(error, engine = false) {
     engineFailed = engineFailed || engine;
     loadStatus.textContent = engine ? 'The game could not start. Retry to reload.' : 'The game could not download. Check your connection and retry.';
@@ -42,6 +44,7 @@
       } catch (error) { console.warn('Optional Steam text compatibility could not be generated.', error); }
     }
     await PVZAudio.prepareRegistry(FS);
+    await window.PVZSaveRecovery?.beforeNativeStart();
   };
 
   const upstreamStartGame = window.startGame;
@@ -105,14 +108,15 @@
   el('mute-btn').onclick = () => { PVZAudio.setMuted(!PVZAudio.isMuted()); PVZAudio.resume(); };
   document.addEventListener('pointerdown', () => PVZAudio.resume(), {capture: true});
   document.addEventListener('keydown', () => { if (!hasOpenPanel()) PVZAudio.resume(); }, {capture: true});
-  const keyboardRoots = ['save-toolbar', 'upload-screen', 'more-dialog', 'return-files-dialog'].map(el);
+  const keyboardRoots = ['save-toolbar', 'upload-screen', 'more-dialog', 'return-files-dialog', 'save-recovery-dialog'].map(el);
   for (const type of ['keydown', 'keypress', 'keyup']) {
     for (const root of keyboardRoots) root.addEventListener(type, event => event.stopPropagation());
     document.addEventListener(type, event => { if (hasOpenPanel()) event.stopPropagation(); });
   }
   el('more-btn').onclick = () => el('more-dialog').open ? closeMore() : openMore();
   el('more-close').onclick = closeMore;
-  function requestSaveScreen() {
+  function requestSaveScreen(recovery = false) {
+    requestingRecovery = recovery;
     closeMore(); el('return-files-status').textContent = '';
     el('return-files-dialog').showModal();
   }
@@ -145,7 +149,7 @@
     const button = el('return-files-confirm'); button.disabled = true; button.textContent = 'Saving...';
     try {
       await syncSaves();
-      try { sessionStorage.setItem('pvz-show-import', '1'); } catch (_) {}
+      try { sessionStorage.setItem(requestingRecovery ? 'pvz-show-recovery' : 'pvz-show-import', '1'); } catch (_) {}
       window.location.reload();
     } catch (error) {
       button.disabled = false; button.textContent = 'Retry';
@@ -176,8 +180,24 @@
       scheduleAutoStart();
     }
   };
+  window.PVZSaveRecovery?.configure({
+    ensureReady: ensureSaveFsReady,
+    getAdapter: () => Module.FS ? window.PVZSaveStorage.install(Module.FS) : null,
+    flush: async () => {await ensureSaveFsReady(); await syncSaves();},
+    closeMore,
+    requestOpen: () => gameStarted ? requestSaveScreen(true) : window.PVZSaveRecovery.show(),
+    beforeReload: () => {
+      gameStarted = false;
+      runtimeReloadScheduled = true;
+      if (saveSyncIntervalId !== null) {clearInterval(saveSyncIntervalId); saveSyncIntervalId = null;}
+    },
+    reload: () => window.location.reload(),
+    onClose: () => {if (gameStarted) Module.canvas.focus({preventScroll: true}); else scheduleAutoStart();},
+  });
+  el('save-backups-btn').onclick = () => window.PVZSaveRecovery?.open();
   document.addEventListener('fullscreenchange', () => requestAnimationFrame(resizeCanvas));
   window.moduleReadyPromise.catch(error => showFailure(error, true));
-  if (showImportOnLoad) openMore(true);
+  if (showRecoveryOnLoad && window.PVZSaveRecovery) void window.PVZSaveRecovery.show();
+  else if (showImportOnLoad) openMore(true);
   window.PVZLaunch = Object.freeze({ready: loadResources(), retry: loadResources});
 })();

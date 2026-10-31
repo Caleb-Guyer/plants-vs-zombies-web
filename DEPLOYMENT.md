@@ -2,7 +2,7 @@
 
 This clean release repository targets `Caleb-Guyer/plants-vs-zombies-web`. On 2026-10-31 the user directed publication of the current build and stopped further manual gameplay. Publication is authorized while full original-game 1:1 parity remains unverified; it does not certify parity or complete that goal. GitHub Pages publication succeeded on 2026-10-31: [release workflow 41230962473](https://github.com/Caleb-Guyer/plants-vs-zombies-web/actions/runs/41230962473) deployed commit `5ba4d0d7279145dcbdfa3e91d19b91218ef1c04a`.
 
-The current engine is `0.2.6-web-qol.1`, retaining Software.10 and adding the native 1x/2x speed control. The original public18 baseline is source commit `877bbbf3f001fc2f9202700ba790e27665179e92`. Approved original runtime assets and historical engine source downloads remain unchanged; the current binary, matching source, provenance and shell cache keys advance together. Preserve `.gitattributes` so served bytes survive a fresh Git checkout.
+The current release candidate is `0.2.6-web-qol.2`, retaining Software.10 and the native 1x/2x speed control. It adds focus-loss auto-pause with explicit resume, remappable controls, named plant decks, remembered speed, optional numeric cooldowns and automatic save recovery. The original public18 baseline is source commit `877bbbf3f001fc2f9202700ba790e27665179e92`. Approved original runtime assets and historical engine source downloads remain unchanged; the current binary, matching source, provenance and shell cache keys advance together. Preserve `.gitattributes` so served bytes survive a fresh Git checkout.
 
 ## What gets published
 
@@ -21,7 +21,7 @@ Release the reviewed current build without further manual gameplay:
 3. Run **Publish game to GitHub Pages** manually from the intended branch. Pushes and pull requests do not deploy this workflow. There is no additional game or parity input flag.
 4. Review the validation job and deployment result. Open the URL recorded by the deployment environment.
 
-The workflow uses Node 24 and Python 3.13 for checkout checks and the runner's C++ compiler for the 64 production-method speed tests. No `npm install`, Emscripten SDK, original game installation or full WASM rebuild is needed in deployment. It verifies the bundled resource bytes, browser shell, source and speed behavior before uploading `dist`.
+The workflow uses Node 24 and Python 3.13 for checkout checks and the runner's C++ compiler for the production-method speed, controls, deck and cooldown tests. No `npm install`, Emscripten SDK, original game installation or full WASM rebuild is needed in deployment. It verifies the bundled resource bytes, browser shell, save recovery, corresponding source and QoL behavior before uploading `dist`. Automated native tests do not initialize the game or audio; browser checks use `?testing=1`.
 
 The site includes the empty `.nojekyll` marker. Packaging checks every served file against a 25 MiB limit, below GitHub's 100 MiB per-file limit; the static game remains below the 1 GB published-site limit.
 
@@ -37,7 +37,9 @@ Normal players retain music and sound effects, subject to browser autoplay rules
 
 Browser saves belong to the origin. Export progress from the current playtest through its normal save control and import on the new origin. Repository paths on the same `caleb-guyer.github.io` origin currently share the fixed save-database names; a single copy needs no namespace change, but another copy on that origin should be considered before migration. A repository rename does not migrate or isolate saves.
 
-The served `dist/source/site-source.zip` remains the exact baseline source download. The separate `pvz-github-pages-source-v18.zip` handoff includes this repository's deployment metadata without rewriting any served source or engine artifact. A successful Pages deployment proves hosting success, not complete original-game parity.
+Saves persist automatically. Per-profile QoL settings and plant decks are separate files included in save export/import. Up to eight previous saved versions are retained locally for all-profile recovery; that browser-local history is not exported or migrated between origins. Recovery backs up the current version before replacing it. These additions leave existing native profile and board-save formats unchanged.
+
+The served `dist/source/site-source.zip` is regenerated from current website source and the corresponding engine package. Original UI extracts used by save recovery include attribution and hashes in `dist/ui`; full game resource payloads stay separate from that source download. A successful Pages deployment proves hosting success, not complete original-game parity.
 
 ## Primary references
 

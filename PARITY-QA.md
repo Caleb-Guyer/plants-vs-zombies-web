@@ -1,5 +1,17 @@
 # Browser parity and QA record
 
+## QoL.2 release scope, 2026-10-31
+
+`0.2.6-web-qol.2` retains the renderer and 1x/2x control and adds six authorized QoL features: focus-loss/hidden-tab auto-pause with explicit resume; remappable seed, shovel and speed keys (defaults `1`–`9`, `0`, `S`, `F`); eight named plant decks per profile; remembered speed enabled by default; optional numeric seed cooldowns; and browser-local recovery of up to eight previous save versions. New profiles start at 1x, cooldown numbers start off, and Space/Escape retain the original pause/menu actions. Deck loading preserves forced picks and respects unlocks, Imitater and capacity.
+
+QoL settings and decks are per-profile files included in save export/import. Recovery history stays in this browser, restores all profiles and backs up current progress first. Existing native profile and board-save formats remain unchanged. The focused automation covers production speed/control/deck/cooldown behavior and browser save storage, recovery and transfer; it does not initialize game audio. Browser checks remain forced silent with `?testing=1`.
+
+The final Emscripten Release build passed in 101.829 seconds with all 766 source files unchanged during compilation. The focused production tests passed 261 checks (66 speed, 90 controls/settings, 105 decks/cooldowns); all 13 browser integration suites passed, including version migration, checksum corruption recovery, stale-tab protection, failure rollback and QoL-file export/import. Full and incremental patches independently reconstructed every current source byte. Published source and binaries are pinned together in the manifests.
+
+A bounded silent local UI check used synthetic profiles: enabled cooldown numbers, remapped seed slot 1 to Z, planted a sunflower with that binding, toggled 2x with F, saved a ten-plant Day deck, and restored an automatic backup back to the title screen. This is feature smoke-test evidence only.
+
+This section records the current feature and validation scope, not a new whole-game parity result. Broad campaign playtesting remains stopped. The QoL.1 and Software.10 observations below retain their original builds and scope.
+
 ## QoL.1 speed control, 2026-10-31
 
 `0.2.6-web-qol.1` retains the Software.10 renderer and adds a native 1x/2x gameplay toggle. Its full Emscripten Release build passed in 132.228 seconds with all 757 input source files unchanged during compilation. Four source paths differ from Software.10: the version file, Board.cpp, LawnApp.cpp and LawnApp.h. Board.h and the save serializer are byte-identical to the parent.

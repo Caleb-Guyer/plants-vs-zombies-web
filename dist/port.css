@@ -76,3 +76,25 @@ body.game-mode #more-dialog{inset:50% calc(max(8px,env(safe-area-inset-right)) +
 @media(max-width:380px){.control-rail{right:6px;top:6px}.setup-card{width:100%}#drop-zone{padding:23px 16px}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 
+
+/* Save recovery uses original stone slices and bitmap button lettering. */
+.recovery-dialog{width:min(560px,calc(100vw - 24px));max-height:calc(100dvh - 24px);padding:42px 38px 30px;border:0;border-radius:0;color:#e7dda4;overflow:auto;box-shadow:0 18px 80px #000b;font:15px/1.4 Georgia,'Times New Roman',serif;background-color:transparent;background-image:url('./ui/qol-dialog-topleft.png'),url('./ui/qol-dialog-topright.png'),url('./ui/qol-dialog-bottomleft.png'),url('./ui/qol-dialog-bottomright.png'),url('./ui/qol-dialog-centerleft.png'),url('./ui/qol-dialog-centerright.png'),url('./ui/qol-dialog-topmiddle.png'),url('./ui/qol-dialog-bottommiddle.png'),url('./ui/qol-dialog-centermiddle.png');background-position:left top,right top,left bottom,right bottom,left 97px,right 97px,107px top,107px bottom,107px 97px;background-size:107px 97px,120px 97px,107px 112px,120px 114px,107px calc(100% - 211px),117px calc(100% - 211px),calc(100% - 227px) 97px,calc(100% - 227px) 114px,calc(100% - 224px) calc(100% - 211px);background-repeat:no-repeat}
+.recovery-dialog::backdrop{background:#0007}
+.recovery-dialog h2{display:grid;place-items:center;margin:0 0 15px;color:#70de26;font-size:24px;font-weight:bold;text-shadow:1px 2px #203317}
+.recovery-note{margin:12px 0 16px;min-height:42px;color:#ece5ba;text-align:center;font:14px/1.45 Georgia,'Times New Roman',serif}
+.save-backup-list{display:grid;gap:5px;max-height:35vh;min-height:35px;overflow:auto;padding:3px;scrollbar-color:#8d91ac #373948}
+.save-backup-entry{padding:10px 12px;min-height:56px;background:#414357;color:#e5dca9;border:2px solid #73768f;box-shadow:inset 1px 1px #232537;text-align:left;font:14px/1.4 Georgia,'Times New Roman',serif;border-radius:0}
+.save-backup-entry:hover,.save-backup-entry:focus-visible{background:#50546a;border-color:#a1a58c}
+.save-backup-entry[aria-pressed='true']{background:#394b38;border-color:#8ad64a}
+.save-backup-date{display:block;color:#d6eaa4;font-weight:bold;font-size:16px}
+.save-backup-detail{display:block;font-size:12px;margin-top:3px;color:#c8c7ad}
+.recovery-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:18px}
+.original-stone-button{height:46px;min-width:140px;padding:0 14px;border:0;border-radius:0;background-color:#666981;background-image:url('./ui/qol-stone-left.png'),url('./ui/qol-stone-right.png'),url('./ui/qol-stone-middle.png');background-position:left center,right center,center;background-repeat:no-repeat,no-repeat,repeat-x;color:#70de26;font:bold 19px Georgia,'Times New Roman',serif;text-shadow:1px 1px #203317;box-shadow:none}
+.original-stone-button:active{transform:translate(1px,1px)}
+.original-bitmap-label{position:relative;display:inline-grid;place-items:center}
+.original-bitmap-label canvas{grid-area:1/1;max-width:100%;height:auto;pointer-events:none}
+.original-label-bright{visibility:hidden}
+button:hover .original-label-bright,button:focus-visible .original-label-bright{visibility:visible}
+button:hover .original-label-normal,button:focus-visible .original-label-normal{visibility:hidden}
+.original-label-text{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+@media(max-width:480px){.recovery-dialog{padding:32px 22px 24px}.recovery-actions{gap:5px}.original-stone-button{min-width:125px;font-size:17px}.save-backup-list{max-height:30vh}}
