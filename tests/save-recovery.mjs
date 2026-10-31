@@ -167,7 +167,7 @@ function ui(options = {}) {
 {
   const page=ui();await page.context.PVZSaveRecovery.show();
   assert(page.el('save-recovery-dialog').open);assert(page.el('save-recovery-restore').disabled);
-  const entry=page.el('save-recovery-list').children[0];assert.equal(entry.children[1].textContent,'<unsafe> · 2 saved files · Automatic save');
+  const entry=page.el('save-recovery-list').children[0];assert(entry.textContent.length>0);assert(!entry.textContent.includes('unsafe')&&!entry.textContent.includes('saved files'),'Backup rows show a date without technical metadata');
   entry.click();assert.equal(page.el('save-recovery-restore').disabled,false);assert(!page.calls.some(c=>c.startsWith('restore')));
   page.el('save-recovery-restore').click();await turns();
   assert.deepEqual(page.calls.slice(-4),['flush','restore:backup-1','stop','reload']);

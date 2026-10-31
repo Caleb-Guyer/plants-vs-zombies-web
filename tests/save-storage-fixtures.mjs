@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 import assert from 'node:assert/strict';
 const source = fs.readFileSync(new URL('../dist/save-storage.js', import.meta.url), 'utf8');
+const coreSource = fs.readFileSync(new URL('../dist/save-storage-core.js', import.meta.url), 'utf8');
 const turns = async () => { for (let i = 0; i < 30; i++) await Promise.resolve(); };
 
 function memoryFS() {
@@ -110,6 +111,7 @@ function fakeIndexedDB() {
 function apiFor(db) {
   const context = vm.createContext({ indexedDB: db.storage, Uint8Array, WeakMap, console });
   vm.runInContext('window=globalThis;', context);
+  vm.runInContext(coreSource, context, { filename: 'save-storage-core.js' });
   vm.runInContext(source, context, { filename: 'save-storage.js' });
   return context.PVZSaveStorage;
 }

@@ -37,13 +37,10 @@
       const backups = await adapter().listBackups();
       for (const backup of backups) {
         const row = global.document.createElement('button');
-        row.type = 'button'; row.className = 'save-backup-entry';
+        row.type = 'button'; row.className = 'save-backup-entry original-stone-button';
         row.setAttribute('aria-pressed', 'false');
         const date = backup.savedAt ? new Date(backup.savedAt).toLocaleString() : 'Before this update';
-        const title = global.document.createElement('span'); title.className = 'save-backup-date'; title.textContent = date;
-        const detail = global.document.createElement('span'); detail.className = 'save-backup-detail';
-        detail.textContent = backup.engineVersion + ' · ' + backup.files + ' saved files · ' + backup.reason;
-        row.append(title, detail);
+        label(row, date);
         row.addEventListener('click', () => {
           if (busy || committed) return;
           selected = backup.id;
@@ -53,7 +50,7 @@
         list.appendChild(row);
       }
       const notice = adapter().getRecoveryNotice?.();
-      status(notice || (backups.length ? 'Choose a backup for all profiles. Your current progress will be backed up before restoring.' : 'Backups appear automatically when saved progress changes. Your current save is kept.'));
+      status(notice || (backups.length ? 'Restore saved progress for all players.' : 'No backups yet.'));
     } catch (error) {status(error.message || 'Backups could not be loaded. Keep this page open and try again.');}
     finally {setBusy(false);}
   }
@@ -62,9 +59,9 @@
     if (committed) {reload(); return;}
     config.closeMore?.();
     if (!dialog().open) dialog().showModal();
-    label(el('save-recovery-title'), 'Save Backups');
+    label(el('save-recovery-title'), 'Restore Game');
     label(el('save-recovery-close'), acknowledge ? 'Continue Game' : 'Back');
-    label(el('save-recovery-restore'), 'Restore Save');
+    label(el('save-recovery-restore'), 'Restore');
     label(el('save-recovery-retry'), 'Reload Game');
     el('save-recovery-retry').hidden = true;
     await refresh();

@@ -25,10 +25,10 @@ const wait = async (condition, message) => {
   for (let i = 0; i < 200 && !condition(); i++) await new Promise(resolve => setTimeout(resolve, 0));
   assert(condition(), message);
 };
-function browser({importFirst = false, failDownload = false, existingSave = true, suspendedAudio = false, importFailure = false} = {}) {
-  const events = [], requests = [], pending = [], downloads = [], errors = [], alerts = [];
+function browser({importFirst = false, failDownload = false, existingSave = true, suspendedAudio = false, importFailure = false, exportFailure = false} = {}) {
+  const events = [], requests = [], pending = [], downloads = [], errors = [], warnings = [], alerts = [], exportedBlobs = [];
   const storage = new Map(importFirst ? [['pvz-show-import', '1']] : []);
-  let main = 0, reload = 0, badDownload = failDownload, ready;
+  let main = 0, reload = 0, badDownload = failDownload, ready, rejectReady;
   class Node {
     constructor(id = '') {
       this.id = id; this.style = {}; this.hidden = false; this.disabled = false; this.open = false;
@@ -68,9 +68,9 @@ function browser({importFirst = false, failDownload = false, existingSave = true
     readFile(path) { assert(files.has(path), path); return files.get(path); },
     syncfs(populate, callback) { events.push(populate ? 'restore-saves' : 'persist-saves'); pending.push({populate, callback}); },
   };
-  const readyPromise = new Promise(resolve => { ready = resolve; });
-  class URLs extends URL { static createObjectURL() { return 'blob:save-only'; } static revokeObjectURL() {} }
-  const context = vm.createContext({console: {warn() {}, error: (...args) => errors.push(args)},
+  const readyPromise = new Promise((resolve, reject) => { ready = resolve; rejectReady = reject; });
+  class URLs extends URL { static createObjectURL(blob) { exportedBlobs.push(blob); return 'blob:save-only'; } static revokeObjectURL() {} }
+  const context = vm.createContext({console: {warn: (...args) => warnings.push(args), error: (...args) => errors.push(args)},
     document, Blob, URL: URLs, URLSearchParams, TextEncoder, TextDecoder, Uint8Array, Map, Promise,
     crypto: webcrypto, AbortController, indexedDB: {open() { throw Error('No resource storage'); }},
     setTimeout, clearTimeout, setInterval: () => 1, clearInterval() {}, requestAnimationFrame() {},
@@ -95,14 +95,18 @@ function browser({importFirst = false, failDownload = false, existingSave = true
       async importFiles(filesystem, selected, persist) { assert.equal(filesystem, FS); assert.equal(selected[0].webkitRelativePath, 'userdata/users.dat');
         if (importFailure) throw Error('Invalid save folder');
         FS.writeFile('/saves/userdata/users.dat', bytes('imported-profile-index')); await persist(); events.push('import-durable'); },
-      async exportZip(filesystem) { assert.equal(filesystem, FS); events.push('export-saves'); return new Blob([FS.readFile('/saves/userdata/users.dat')]); },
+      async exportZip(filesystem) {
+        assert.equal(filesystem, FS); events.push('export-saves');
+        if (exportFailure) throw Error('Invalid native save data');
+        return new Blob([FS.readFile('/saves/userdata/users.dat')]);
+      },
     }, JSZip: {}, alert: message => alerts.push(message), confirm: () => true,
   });
   vm.runInContext('window=globalThis', context);
   for (const name of ['loader.js', 'bundled-assets.js', 'launcher.js']) vm.runInContext(read(name), context, {filename: name});
-  return {context, el, events, files, requests, pending, downloads, errors, alerts, storage, resolveModule: ready,
+  return {context, el, events, files, requests, pending, downloads, errors, warnings, alerts, exportedBlobs, storage, resolveModule: ready, rejectModule: rejectReady,
     main: () => main, reloads: () => reload,
-    finish(populate) { const index = pending.findIndex(item => item.populate === populate); assert(index >= 0); pending.splice(index, 1)[0].callback(null); }};
+    finish(populate, error = null) { const index = pending.findIndex(item => item.populate === populate); assert(index >= 0); pending.splice(index, 1)[0].callback(error); }};
 }
 
 for (const existingSave of [false, true]) {
@@ -164,6 +168,59 @@ assert.equal(importing.downloads.at(-1).name, 'pvz-portable-savedata.zip');
 assert(importing.events.includes('export-saves'));
 assert(importing.requests.every(path => !path.includes('test-profiles')), 'No optional QA profiles loaded automatically');
 console.log('PASS save-only import/export, import-before-start race, durable reload before live-profile replacement, and no automatic QA fixture changes.');
+
+{
+  const page = browser(); page.resolveModule();
+  await wait(() => page.pending.some(item => item.populate), 'Safe export test restores browser data first');
+  page.finish(true); await page.context.PVZLaunch.ready;
+  page.context.Module.FS.writeFile('/saves/userdata/users.dat', bytes('latest-live-checkpoint'));
+  const operation = page.el('save-export-btn').click();
+  await wait(() => page.pending.some(item => !item.populate), 'Safe export still attempts its normal durable flush');
+  assert.equal(page.downloads.length, 0, 'Do not export before the persistence attempt finishes');
+  const workerFailure = Error('Browser save worker stopped. Reload the game before saving again.');
+  page.finish(false, workerFailure); await operation;
+  assert.equal(page.downloads.length, 1);
+  assert.equal(page.downloads[0].name, 'pvz-portable-savedata.zip');
+  assert.equal(await page.exportedBlobs[0].text(), 'latest-live-checkpoint', 'Export uses intact live native files rather than older browser storage');
+  assert(page.events.includes('export-saves'), 'The normal save-transfer exporter still validates and creates the ZIP');
+  assert(page.warnings.some(args => args[0] === 'Save persistence failed; exporting live saved data:' && args[1] === workerFailure));
+  assert.equal(page.alerts.length, 0); assert.equal(page.el('save-export-btn').disabled, false);
+}
+
+{
+  const page = browser({importFirst: true}); page.resolveModule(); await page.context.PVZLaunch.ready;
+  const operation = page.el('save-export-btn').click();
+  await wait(() => page.pending.some(item => item.populate), 'Export must populate saved data before any recovery fallback');
+  page.finish(true, Error('Browser saved data could not be restored')); await operation;
+  assert.equal(page.downloads.length, 0); assert.equal(page.exportedBlobs.length, 0);
+  assert(!page.events.includes('export-saves'), 'Failed population must not export a partial or uninitialized filesystem');
+  assert(page.alerts.some(message => /Export failed:.*could not be restored/.test(message)));
+  assert.equal(page.main(), 0); assert.equal(page.el('save-export-btn').disabled, false);
+}
+
+{
+  const page = browser({importFirst: true}); await page.context.PVZLaunch.ready;
+  const operation = page.el('save-export-btn').click();
+  page.rejectModule(Error('Native module did not initialize')); await operation;
+  assert.equal(page.pending.length, 0); assert.equal(page.downloads.length, 0); assert.equal(page.exportedBlobs.length, 0);
+  assert(!page.events.includes('export-saves'));
+  assert(page.alerts.some(message => /Export failed:.*did not initialize/.test(message)));
+  assert.equal(page.main(), 0); assert.equal(page.el('save-export-btn').disabled, false);
+}
+
+{
+  const page = browser({exportFailure: true}); page.resolveModule();
+  await wait(() => page.pending.some(item => item.populate), 'Invalid-export test restores existing saved data first');
+  page.finish(true); await page.context.PVZLaunch.ready;
+  const operation = page.el('save-export-btn').click();
+  await wait(() => page.pending.some(item => !item.populate), 'Invalid-export test reaches its persistence attempt');
+  page.finish(false, Error('Browser save worker stopped')); await operation;
+  assert(page.events.includes('export-saves'), 'Persistence fallback retains the normal save-transfer validation step');
+  assert.equal(page.downloads.length, 0); assert.equal(page.exportedBlobs.length, 0);
+  assert(page.alerts.some(message => /Export failed: Invalid native save data/.test(message)));
+  assert.equal(page.el('save-export-btn').disabled, false);
+}
+console.log('PASS restored live saves remain exportable after persistence failure; startup/population and ZIP-validation failures still prevent downloads.');
 
 for (const folder of [false, true]) for (const importFailure of [false, true]) {
   const page = browser({importFirst: true, importFailure}); page.resolveModule();

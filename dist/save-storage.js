@@ -1,155 +1,109 @@
-/* Browser save persistence and automatic recovery. Copyright (C) 2026. MIT License.
- * Native save payloads are preserved byte for byte; only this browser envelope is versioned. */
+/* Browser save persistence adapter. Copyright (C) 2026. MIT License.
+ * Filesystem access stays on the game thread. IndexedDB, history validation,
+ * checksums and byte comparisons normally run in a dedicated save worker. */
 (function (global) {
   'use strict';
-  const DATABASE = 'pvz-portable-browser-saves-v1', STORE = 'snapshots';
-  const KEY = 'saves', HISTORY_KEY = 'save-history', ROOT = '/saves';
-  const SNAPSHOT_VERSION = 2, HISTORY_VERSION = 1, MAX_BACKUPS = 8;
+  const ROOT = '/saves', WORKER_VERSION = 'save-worker-1', PROTOCOL = 1;
+  const STARTUP_TIMEOUT_MS = 10000, OPERATION_TIMEOUT_MS = 30000;
   const installed = new WeakMap();
+  const scriptBase = global.document?.currentScript?.src || global.document?.baseURI || global.location?.href;
   const failure = message => new Error(message);
-  const unsupported = message => Object.assign(failure(message), {unsupportedVersion: true});
-  const now = () => Date.now();
   function engineVersion() {
     const value = global.document?.getElementById?.('engine-build-id')?.textContent || 'unknown';
     return /^[a-zA-Z0-9.+_-]{1,80}$/.test(value) ? value : 'unknown';
   }
-
-  function validateEntries(input) {
-    if (!Array.isArray(input)) throw failure('Stored browser saves contain invalid entries.');
-    const names = new Set(), directories = new Set(['']);
-    const entries = input.map(entry => {
-      if (!entry || typeof entry.path !== 'string' || !entry.path || entry.path.includes('\\') || entry.path.includes('\0') ||
-          entry.path.split('/').some(part => !part || part === '.' || part === '..') || names.has(entry.path)) {
-        throw failure('Stored browser saves contain an invalid path.');
-      }
-      names.add(entry.path);
-      if (!['file', 'directory'].includes(entry.kind) || !Number.isSafeInteger(entry.mode) || !Number.isFinite(entry.mtime)) {
-        throw failure('Stored browser saves contain invalid metadata.');
-      }
-      if (entry.kind === 'directory') directories.add(entry.path);
-      else if (!(entry.data instanceof Uint8Array)) throw failure('Stored browser saves contain invalid file data.');
-      return {path: entry.path, kind: entry.kind, mode: entry.mode, mtime: entry.mtime,
-        ...(entry.kind === 'file' ? {data: new Uint8Array(entry.data)} : {})};
-    });
-    for (const entry of entries) {
-      const slash = entry.path.lastIndexOf('/');
-      if (!directories.has(slash < 0 ? '' : entry.path.slice(0, slash))) throw failure('Stored browser saves contain a missing parent directory.');
+  function directBackend(storage) {
+    if (!global.PVZSaveStorageCore) throw failure('Browser save storage did not load. Refresh the page to retry.');
+    const core = global.PVZSaveStorageCore.create(storage);
+    return Object.freeze({call: (method, args) => core[method](...args)});
+  }
+  function createBackend(storage) {
+    if (typeof global.Worker !== 'function' || typeof global.URL !== 'function' ||
+        typeof global.setTimeout !== 'function' || typeof global.clearTimeout !== 'function') {
+      return Promise.resolve(directBackend(storage));
     }
-    return entries;
-  }
-  const crcTable = new Uint32Array(256);
-  for (let index = 0; index < 256; index++) {
-    let value = index;
-    for (let bit = 0; bit < 8; bit++) value = value & 1 ? 0xedb88320 ^ value >>> 1 : value >>> 1;
-    crcTable[index] = value >>> 0;
-  }
-  function contentChecksum(entries) {
-    const sorted = [...entries].sort((a, b) => a.path < b.path ? -1 : a.path > b.path ? 1 : 0);
-    const metadata = JSON.stringify(sorted.map(entry => [entry.path, entry.kind, entry.mode, entry.mtime, entry.data?.length || 0]));
-    let crc = 0xffffffff;
-    const byte = value => {crc = crcTable[(crc ^ value) & 255] ^ crc >>> 8;};
-    // Canonical UTF-16LE metadata plus length-delimited file bytes; no locale or async work.
-    for (let i = 0; i < metadata.length; i++) {const code = metadata.charCodeAt(i); byte(code & 255); byte(code >>> 8);}
-    for (const entry of sorted) if (entry.kind === 'file') for (const value of entry.data) byte(value);
-    return 'crc32:' + ((crc ^ 0xffffffff) >>> 0).toString(16).padStart(8, '0');
-  }
-  function normalizeSnapshot(snapshot) {
-    if (snapshot?.version !== 1 && snapshot?.version !== SNAPSHOT_VERSION) {
-      throw unsupported('Stored browser saves use a newer or unsupported format. Keep this browser data and update the game.');
-    }
-    if (!Number.isSafeInteger(snapshot.revision) || snapshot.revision < 1) throw failure('Stored browser saves contain an invalid revision.');
-    if (snapshot.version === SNAPSHOT_VERSION && (!Number.isFinite(snapshot.savedAt) || snapshot.savedAt < 0 ||
-        typeof snapshot.engineVersion !== 'string')) throw failure('Stored browser saves contain invalid version metadata.');
-    const entries = validateEntries(snapshot.entries), checksum = contentChecksum(entries);
-    if (snapshot.version === SNAPSHOT_VERSION && snapshot.checksum !== checksum) throw failure('Stored browser save checksum is invalid.');
-    return {version: SNAPSHOT_VERSION, revision: snapshot.revision, entries, checksum,
-      savedAt: snapshot.version === 1 ? 0 : snapshot.savedAt,
-      engineVersion: snapshot.version === 1 ? 'Earlier version' : snapshot.engineVersion};
-  }
-  function sameContent(a, b) {
-    if (a.length !== b.length) return false;
-    const sorted = values => [...values].sort((x, y) => x.path < y.path ? -1 : x.path > y.path ? 1 : 0);
-    const left = sorted(a), right = sorted(b);
-    return left.every((entry, i) => {
-      const other = right[i];
-      return entry.path === other.path && entry.kind === other.kind && entry.mode === other.mode &&
-        (entry.kind !== 'file' || entry.data.length === other.data.length && entry.data.every((byte, j) => byte === other.data[j]));
-    });
-  }
-  function readHistory(value) {
-    if (value === undefined) return {backups: [], damaged: false};
-    if (value?.version !== HISTORY_VERSION) throw unsupported('Automatic backups use a newer or unsupported format. Update the game before saving.');
-    if (!Array.isArray(value.backups)) return {backups: [], damaged: true};
-    const ids = new Set(), backups = [];
-    let damaged = false;
-    for (const entry of value.backups) {
+    return new Promise((resolve, reject) => {
+      let worker, settled = false, initialized = false, failed = null, nextId = 1, startupTimer = null;
+      const pending = new Map();
+      const stop = () => {try {worker?.terminate();} catch (_) {}};
+      const fallback = () => {
+        if (settled) return;
+        settled = true;
+        if (startupTimer !== null) global.clearTimeout(startupTimer);
+        stop();
+        try {resolve(directBackend(storage));} catch (error) {reject(error);}
+      };
+      const fail = () => {
+        if (!settled) {fallback(); return;}
+        if (!initialized || failed) return;
+        failed = failure('Browser save worker stopped. Reload the game before saving again.');
+        stop();
+        for (const item of pending.values()) {global.clearTimeout(item.timer); item.reject(failed);}
+        pending.clear();
+      };
+      const client = Object.freeze({call(method, args) {
+        if (failed) return Promise.reject(failed);
+        return new Promise((resolveCall, rejectCall) => {
+          const id = nextId++;
+          const timer = global.setTimeout(fail, OPERATION_TIMEOUT_MS);
+          pending.set(id, {resolve: resolveCall, reject: rejectCall, timer});
+          try {
+            // capture() creates independent buffers. Transferring them cannot
+            // detach files or the native game's WebAssembly memory.
+            const transfer = method === 'commit' ?
+              [...new Set(args[0].filter(entry => entry.kind === 'file').map(entry => entry.data.buffer))] : [];
+            worker.postMessage({type: 'call', id, method, args}, transfer);
+          } catch (_) {fail();}
+        });
+      }});
       try {
-        if (!entry || typeof entry.id !== 'string' || !entry.id || ids.has(entry.id) ||
-            typeof entry.reason !== 'string') throw failure('Invalid backup metadata.');
-        const snapshot = normalizeSnapshot(entry.snapshot);
-        ids.add(entry.id); backups.push({id: entry.id, reason: entry.reason, snapshot});
-      } catch (error) {
-        if (error.unsupportedVersion) throw error;
-        damaged = true;
-      }
-    }
-    return {backups: backups.slice(0, MAX_BACKUPS), damaged};
+        const url = new global.URL('./save-storage-worker.js', scriptBase);
+        url.search = 'v=' + WORKER_VERSION;
+        worker = new global.Worker(url.href);
+        worker.onmessage = event => {
+          const message = event.data;
+          if (!settled) {
+            if (message?.type === 'ready' && message.protocol === PROTOCOL) {
+              settled = true; initialized = true;
+              if (startupTimer !== null) global.clearTimeout(startupTimer);
+              resolve(client);
+            } else if (message?.type === 'startup-error' || message?.type === 'ready') fallback();
+            return;
+          }
+          if (!initialized || failed || !message || !Number.isSafeInteger(message.id)) return;
+          const item = pending.get(message.id);
+          if (!item) return;
+          if (message.type !== 'result' && message.type !== 'error') {fail(); return;}
+          pending.delete(message.id); global.clearTimeout(item.timer);
+          if (message.type === 'result') item.resolve(message.value);
+          else {
+            const error = failure(String(message.error?.message || 'Browser save storage failed.'));
+            error.name = String(message.error?.name || 'Error');
+            if (message.error?.unsupportedVersion) error.unsupportedVersion = true;
+            item.reject(error);
+          }
+        };
+        worker.onerror = event => {event?.preventDefault?.(); fail();};
+        worker.onmessageerror = fail;
+        if (!settled) startupTimer = global.setTimeout(fallback, STARTUP_TIMEOUT_MS);
+      } catch (_) {fallback();}
+    });
   }
-  function addBackup(backups, snapshot, reason) {
-    if (!snapshot || !snapshot.entries.some(entry => entry.kind === 'file')) return backups;
-    return [{id: 'save-' + snapshot.revision + '-' + (snapshot.savedAt || now()), reason, snapshot},
-      ...backups.filter(entry => !sameContent(entry.snapshot.entries, snapshot.entries))].slice(0, MAX_BACKUPS);
-  }
-
   function install(FS) {
     if (installed.has(FS)) return installed.get(FS);
     if (FS.filesystems && FS.filesystems.IDBFS) return Object.freeze({fallback: false, historyAvailable: false});
     const storage = global.indexedDB;
     if (!storage) throw failure('Browser save storage is unavailable.');
     const originalSync = FS.syncfs.bind(FS);
+    const backend = createBackend(storage);
+    // The loader awaits its first operation. Keep an early bootstrap failure
+    // handled even when another dependency delays that first request.
+    backend.catch(() => {});
     let queue = Promise.resolve(), restored = false, revision = 0, reloadRequired = false, recoveryNotice = '';
     function enqueue(operation) {
       const result = queue.then(operation); queue = result.catch(() => {}); return result;
     }
-    function openDatabase() {
-      return new Promise((resolve, reject) => {
-        const request = storage.open(DATABASE, 1);
-        let settled = false;
-        request.onupgradeneeded = () => {
-          if (!request.result.objectStoreNames.contains(STORE)) request.result.createObjectStore(STORE);
-        };
-        request.onerror = () => {settled = true; reject(request.error || failure('Browser save storage could not open.'));};
-        request.onblocked = () => {settled = true; reject(failure('Close other game tabs, then retry saving.'));};
-        request.onsuccess = () => {
-          if (settled) {request.result.close(); return;}
-          settled = true; resolve(request.result);
-        };
-      });
-    }
-    async function transaction(mode, operation) {
-      const db = await openDatabase();
-      try {
-        return await new Promise((resolve, reject) => {
-          const tx = db.transaction(STORE, mode), store = tx.objectStore(STORE);
-          const currentRequest = store.get(KEY), historyRequest = store.get(HISTORY_KEY);
-          let currentReady = false, historyReady = false, result, error;
-          const run = () => {
-            if (!currentReady || !historyReady) return;
-            try {result = operation(currentRequest.result, historyRequest.result, store);}
-            catch (caught) {error = caught; tx.abort();}
-          };
-          currentRequest.onsuccess = () => {currentReady = true; run();};
-          historyRequest.onsuccess = () => {historyReady = true; run();};
-          tx.oncomplete = () => resolve(result);
-          tx.onerror = tx.onabort = () => reject(error || tx.error || currentRequest.error || historyRequest.error || failure('Browser save transaction failed.'));
-        });
-      } finally {db.close();}
-    }
-    function checkRevision(current) {
-      const storedRevision = current === undefined ? 0 : current.revision;
-      if (storedRevision !== revision) throw failure('Saves changed in another game tab. Keep this page open to protect its progress.');
-      if (!Number.isSafeInteger(revision) || revision < 0 || revision >= Number.MAX_SAFE_INTEGER) throw failure('Stored browser save revision is invalid.');
-    }
+    async function call(method, args = []) {return (await backend).call(method, args);}
     function capture() {
       const entries = [];
       function visit(path, relative) {
@@ -163,7 +117,7 @@
           visit(path + '/' + name, relative ? relative + '/' + name : name);
         }
       }
-      visit(ROOT, ''); return validateEntries(entries);
+      visit(ROOT, ''); return entries;
     }
     function replaceFiles(entries) {
       function remove(path) {
@@ -182,53 +136,12 @@
         if (FS.utime) FS.utime(path, entry.mtime, entry.mtime);
       }
     }
-    function validatedCurrent(current) {
-      if (current === undefined) return null;
-      return normalizeSnapshot(current);
-    }
-    function quarantine(store, current, history, historyInfo) {
-      // Preserve malformed records before replacing them, in this same atomic transaction.
-      if (current !== undefined) {
-        try {normalizeSnapshot(current);} catch (error) {
-          if (error.unsupportedVersion) throw error;
-          store.put({capturedAt: now(), value: current}, 'save-damaged-current');
-        }
-      }
-      if (historyInfo.damaged) store.put({capturedAt: now(), value: history}, 'save-damaged-history');
-    }
-    async function commitSnapshot(entries) {
-      const nextRevision = await transaction('readwrite', (current, history, store) => {
-        checkRevision(current);
-        const info = readHistory(history);
-        let previous;
-        try {previous = validatedCurrent(current);} catch (error) {if (error.unsupportedVersion) throw error;}
-        quarantine(store, current, history, info);
-        let backups = info.backups;
-        if (previous && !sameContent(previous.entries, entries)) backups = addBackup(backups, previous, 'Automatic save');
-        const next = revision + 1;
-        store.put({version: SNAPSHOT_VERSION, revision: next, entries, checksum: contentChecksum(entries), savedAt: now(), engineVersion: engineVersion()}, KEY);
-        store.put({version: HISTORY_VERSION, backups}, HISTORY_KEY);
-        return next;
-      });
-      revision = nextRevision;
-    }
     async function synchronize(populate) {
       if (reloadRequired) throw failure('A backup was restored. Reload the game before saving again.');
       if (populate) restored = false;
       await new Promise((resolve, reject) => originalSync(populate, error => error ? reject(error) : resolve()));
       if (populate) {
-        const state = await transaction('readonly', (current, history) => {
-          if (current === undefined) return {snapshot: null, revision: 0};
-          try {return {snapshot: normalizeSnapshot(current), revision: current.revision};}
-          catch (error) {
-            if (error.unsupportedVersion) throw error;
-            const info = readHistory(history), backup = info.backups[0];
-            if (!backup) throw error;
-            if (!Number.isSafeInteger(current.revision) || current.revision < 1) throw failure('Damaged save revision cannot safely be recovered.');
-            return {snapshot: backup.snapshot, revision: current.revision,
-              notice: 'Your latest browser save was damaged. The most recent valid automatic backup was recovered. The damaged record is preserved; you can choose another backup in Save Backups.'};
-          }
-        });
+        const state = await call('read');
         if (state.snapshot) {
           const previous = capture();
           try {replaceFiles(state.snapshot.entries);} catch (error) {replaceFiles(previous); throw error;}
@@ -236,7 +149,7 @@
         revision = state.revision; recoveryNotice = state.notice || ''; restored = true;
       } else {
         if (!restored) throw failure('Browser saves have not been restored. Retry loading before saving.');
-        await commitSnapshot(capture());
+        revision = await call('commit', [capture(), revision, engineVersion()]);
       }
     }
     FS.syncfs = function (populate, callback) {
@@ -246,43 +159,20 @@
     };
     const adapter = Object.freeze({
       fallback: true, historyAvailable: true,
-      purgeRecoveryHistory: () => enqueue(() => transaction('readwrite', (current, history, store) => {
-        checkRevision(current);
-        store.put({version: HISTORY_VERSION, backups: []}, HISTORY_KEY);
-        store.put(null, 'save-damaged-current');
-        store.put(null, 'save-damaged-history');
-        recoveryNotice = '';
-      })),
+      purgeRecoveryHistory: () => enqueue(async () => {
+        await call('purgeRecoveryHistory', [revision]); recoveryNotice = '';
+      }),
       getRecoveryNotice: () => recoveryNotice,
       acknowledgeRecoveryNotice() {recoveryNotice = '';},
-      listBackups: () => enqueue(() => transaction('readonly', (current, history) => {
-        if (current !== undefined) {try {normalizeSnapshot(current);} catch (error) {if (error.unsupportedVersion) throw error;}}
-        return readHistory(history).backups.map(backup => ({id: backup.id, reason: backup.reason,
-          savedAt: backup.snapshot.savedAt, engineVersion: backup.snapshot.engineVersion,
-          files: backup.snapshot.entries.filter(entry => entry.kind === 'file').length,
-          bytes: backup.snapshot.entries.reduce((sum, entry) => sum + (entry.data?.length || 0), 0)}));
-      })),
+      listBackups: () => enqueue(() => call('listBackups')),
       restoreBackup: id => enqueue(async () => {
         if (!restored || reloadRequired) throw failure('Load browser saves before restoring a backup.');
-        const nextRevision = await transaction('readwrite', (current, history, store) => {
-          checkRevision(current);
-          const info = readHistory(history), selected = info.backups.find(backup => backup.id === id);
-          if (!selected) throw failure('This backup is no longer available. Refresh the backup list.');
-          let previous;
-          try {previous = validatedCurrent(current);} catch (error) {if (error.unsupportedVersion) throw error;}
-          quarantine(store, current, history, info);
-          const backups = addBackup(info.backups, previous, 'Before restore');
-          const next = revision + 1;
-          store.put({version: SNAPSHOT_VERSION, revision: next, entries: selected.snapshot.entries,
-            checksum: contentChecksum(selected.snapshot.entries), savedAt: now(), engineVersion: engineVersion()}, KEY);
-          store.put({version: HISTORY_VERSION, backups}, HISTORY_KEY);
-          return next;
-        });
-        revision = nextRevision; reloadRequired = true;
+        revision = await call('restoreBackup', [id, revision, engineVersion()]);
+        reloadRequired = true;
         return {reloadRequired: true};
       }),
     });
     installed.set(FS, adapter); return adapter;
   }
-  global.PVZSaveStorage = Object.freeze({install, snapshotVersion: SNAPSHOT_VERSION, maxBackups: MAX_BACKUPS});
+  global.PVZSaveStorage = Object.freeze({install, snapshotVersion: 2, maxBackups: 8});
 })(window);

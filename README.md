@@ -2,9 +2,9 @@
 
 [Play on GitHub Pages](https://caleb-guyer.github.io/plants-vs-zombies-web/) · [Existing playtest](https://lawn-defense-caleb-plays.usgi.chatgpt.site) · [Deployment](DEPLOYMENT.md) · [Requirements](CURRENT-REQUIREMENTS.md) · [QA history](PARITY-QA.md)
 
-This source uses **0.2.6-web-content.1**, based on PvZ-Portable 0.2.6 commit `396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca`. It retains the published QoL.2 controls, save recovery and renderer corrections, and adds the optional Cone Zone challenge. Full 1:1 parity remains unverified; broad manual validation stopped at the user's request on 2026-10-31. The earlier Software.10 evidence below remains historical.
+This source uses **0.2.6-web-polish.1**, based on PvZ-Portable 0.2.6 commit `396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca`. It retains Content.1's optional Cone Zone challenge and the earlier controls, save recovery and renderer corrections. Polish.1 simplifies the menus and moves expensive save processing into a background worker; it adds no gameplay features. Full 1:1 parity remains unverified; broad manual validation stopped at the user's request on 2026-10-31. The earlier Software.10 evidence below remains historical.
 
-The detailed QA descriptions below are the frozen v18 evidence snapshot. They retain their original capture-time scope, including earlier limits; they are not a claim that later validation or the full parity goal is complete.
+The Software.10 and earlier QA descriptions below are the frozen v18 evidence snapshot. They retain their original capture-time scope, including earlier limits; they are not a claim that later validation or the full parity goal is complete.
 
 ## Play and saves
 
@@ -12,7 +12,7 @@ The website automatically downloads, verifies and caches its bundled original GO
 
 The native 800×600 game fits at 4:3. Five discreet icons provide mute, fullscreen, save import, save export and more. Import/export handles **saves only**. More contains attribution, licenses, source downloads, additional save tools and optional generated QA profiles. Save an active level through the original Menu → Main Menu flow before importing or exporting a checkpoint.
 
-Saves persist automatically in this browser without export/import. Saves and asset caches use separate browser stores. Export preserves native profile/registry/detail bytes, portable board saves and per-profile QoL settings and plant decks. Import validates ZIP/folder contents and rolls back failed changes. Browser storage can be cleared by the player or browser; export progress before switching browsers. Generated QA profiles are fixtures, not earned campaign progress.
+Saves persist automatically in this browser without export/import. The existing five-second autosave interval, schema 2 storage and native save layouts are retained. Checksums, backup history and IndexedDB transactions run in a dedicated worker; capturing written game files remains on the main thread. Saves and asset caches use separate browser stores. Export preserves native profile/registry/detail bytes, portable board saves and per-profile QoL settings and plant decks. Import validates ZIP/folder contents and rolls back failed changes. Browser storage can be cleared by the player or browser; export progress before switching browsers. Generated QA profiles are fixtures, not earned campaign progress.
 
 ## Audio and rendering
 
@@ -31,7 +31,7 @@ and Cherry Bomb. Costs and recharge times retain their normal behavior. The
 level has its own checkpoint and completion record; it does not advance the
 original campaign or original trophy totals. Save/resume, restart, autosaves
 and save export/import include the bonus checkpoint. Canceling Continue returns
-to Bonus. The original Mini-Games grid remains available through its footer.
+to Bonus. The Bonus page now uses the standard challenge grid/card layout; the challenge uses the native flag banner. The original Mini-Games grid remains available through its footer.
 
 ## Gameplay controls
 
@@ -39,16 +39,22 @@ Click the stone **1x** button directly below Menu to switch to **2x**. It uses t
 
 Only active gameplay accelerates. Menus, pause, seed selection and level transitions keep their normal behavior, and audio playback keeps its normal pitch. New profiles start at 1x. Remember Speed is enabled by default and restores that profile's chosen speed for new or resumed boards; disabling it makes those boards start at 1x.
 
-Open the original **Options → Quality of Life** dialog for these additions:
+Open the original **Options → More Options** dialog for these additions:
 
-- **Auto-pause:** enabled by default; losing window focus or hiding the tab pauses active play. Resume explicitly when you return.
-- **Keyboard controls:** `1`–`9`, `0` select seed slots, `S` selects the shovel and `F` switches speed. Remap or clear these keys in Keyboard Controls; Space and Escape retain the original pause/menu behavior.
-- **Plant decks:** the chooser's stone **Decks** button saves and loads eight named presets per profile. Loading respects unlocked seeds, bank capacity, Imitater and forced selections.
+- **Auto Pause:** enabled by default; losing window focus or hiding the tab pauses active play. Resume explicitly when you return.
+- **Controls:** `1`–`9`, `0` select seed slots, `S` selects the shovel and `F` switches speed. Remap or clear these keys in Controls; Space and Escape retain the original pause/menu behavior.
+- **Plant decks:** the chooser's stone **Decks** button saves and loads eight named presets per profile, with a preview using native seed-packet artwork. Loading respects unlocked seeds, bank capacity, Imitater and forced selections.
 - **Remember Speed:** retain each profile's 1x/2x choice between boards and browser visits.
-- **Cooldown numbers:** optional remaining recharge seconds on seed packets, disabled by default.
-- **Save Backups:** recover one of up to eight previous saved versions. Recovery restores all profiles and saves the current version before replacement. History stays in this browser and is separate from exported save data.
+- **Recharge Timers:** optional remaining recharge seconds on seed packets, disabled by default.
+- **Backups:** recover one of up to eight previous saved versions, shown as date-labeled stone buttons. Recovery restores all profiles and saves the current version before replacement. History stays in this browser and is separate from exported save data.
 
-The native options and deck dialogs use the original game artwork. QoL preferences and decks travel with save exports in separate files; existing native profile and board-save formats remain unchanged. Save Backups is also available through More.
+The native options and deck dialogs use the original game artwork and concise labels. QoL preferences and decks travel with save exports in separate files; existing native profile and board-save formats remain unchanged. Backups is also available through the small More utility icon.
+
+## Polish.1 verification
+
+Eleven dedicated-worker scenarios, fourteen browser integration suites and 678 native checks passed. A muted preview of the final build loaded existing schema 2 synthetic saves and confirmed the centered More Options form, Controls screen and standard Bonus card layout. Further observations and hosted verification are recorded separately in [QA](PARITY-QA.md).
+
+In Node fixtures modeled on public file sizes, the old synchronous transaction work reached 177/306 ms for the two larger datasets. The new main-thread capture and dispatch measured 1.60/2.51 ms median, with maxima of 1.87/2.76 ms. Heavy persistence work still takes time in the worker. These measurements do not establish browser FPS or complete stutter elimination.
 
 ## Rendering
 
@@ -132,7 +138,7 @@ python package-portable.py --output-dir outputs
 
 The approved bundle consists of six exact original runtime data files totaling 45,462,524 bytes, split into 11 verified parts. It contains no Windows executable, DLL or installed save data. To regenerate it, explicitly supply `--zip <resource-archive.zip>` or `--game-dir <installed-game-directory>`.
 
-Current corresponding source is `dist/source/pvz-portable-0.2.6-web-content.1-source.zip`; `web-content.1.patch` is the complete upstream patch and `qol2-to-content1.patch` is the increment from QoL.2. The source includes the native bonus and retained QoL implementations, build recipes and focused tests. The full source builds without applying a patch. Historical packages, upstream baseline, build provenance and licenses remain available. Full resource payloads remain separate from source archives and are included in the full-runtime distribution. The website source includes the approved original UI artwork extracted for the save-recovery panel; `dist/ui` records its attribution and hashes.
+Current corresponding source is [Polish.1 engine source](dist/source/pvz-portable-0.2.6-web-polish.1-source.zip); [web-polish.1.patch](dist/source/web-polish.1.patch) is the complete upstream patch and [content1-to-polish1.patch](dist/source/content1-to-polish1.patch) is the increment from [Content.1 source](dist/source/pvz-portable-0.2.6-web-content.1-source.zip). The source includes the native bonus and retained QoL implementations, build recipes and focused tests. The full source builds without applying a patch. [Engine provenance](dist/game/engine-provenance.json) and the [build record](dist/source/build-provenance.json) pin release artifacts. The website source contains the save worker and shared storage core. Historical packages, upstream baseline, build provenance and licenses remain available. Full resource payloads remain separate from source archives and are included in the full-runtime distribution. The website source includes the approved original UI artwork extracted for the save-recovery panel; `dist/ui` records its attribution and hashes.
 
 Public v15 preserved the three approved XML resource files' original CRLF bytes in Git and added the matching attributes rule, closing the fresh-checkout checksum blocker without changing the Software.7 runtime. GitHub Pages publication succeeded on 2026-10-31 through [release workflow 41230962473](https://github.com/Caleb-Guyer/plants-vs-zombies-web/actions/runs/41230962473). The bounded hosted startup check does not establish full game parity. The user authorized publication of the current build on 2026-10-31 while full 1:1 parity remains unverified; publication does not mark that goal complete.
 

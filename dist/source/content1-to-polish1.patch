@@ -1,0 +1,331 @@
+--- a/CMake/ProjectVersion.cmake
++++ b/CMake/ProjectVersion.cmake
+@@ -66,6 +66,6 @@
+ endif()
+ 
+ # Private CPU compositor candidate; never identify this binary as public parity.3.
+-set(PVZP_VERSION "0.2.6-web-content.1")
++set(PVZP_VERSION "0.2.6-web-polish.1")
+ set(PVZP_VERSION_PLAIN "0.2.6")
+ configure_file("${PROJECT_SOURCE_DIR}/CMake/ProjectVersion.h.in" "${PROJECT_BINARY_DIR}/ProjectVersion.h" @ONLY)
+--- a/src/Lawn/Challenge.cpp
++++ b/src/Lawn/Challenge.cpp
+@@ -207,7 +207,7 @@
+ 	GameMode aGameMode = mApp->mGameMode;
+ 	if (BonusChallenge::IsMode(aGameMode))
+ 	{
+-		mBoard->DisplayAdvice("Cone Zone: Survive two flags with six classic plants.", MESSAGE_STYLE_HINT_FAST, ADVICE_SURVIVE_FLAGS);
++		mBoard->DisplayAdvice(PvzpReplaceNumberString("[ADVICE_SURVIVE_FLAGS]", "{FLAGS}", 2), MESSAGE_STYLE_HINT_FAST, ADVICE_SURVIVE_FLAGS);
+ 	}
+ 	if (aGameMode == GAMEMODE_CHALLENGE_BOBSLED_BONANZA)
+ 	{
+--- a/src/Lawn/Widget/ChallengeScreen.cpp
++++ b/src/Lawn/Widget/ChallengeScreen.cpp
+@@ -174,7 +174,7 @@
+ 		aChallengeButton->mDoFinger = true;
+ 		aChallengeButton->mFrameNoDraw = true;
+ 		if (aChlDef.mPage == CHALLENGE_PAGE_BONUS)
+-			aChallengeButton->Resize(102, 196, 104, 115);
++			aChallengeButton->Resize(38, 93, 104, 115);
+ 		else if (aChlDef.mPage == CHALLENGE_PAGE_CHALLENGE || aChlDef.mPage == CHALLENGE_PAGE_LIMBO || aChlDef.mPage == CHALLENGE_PAGE_PUZZLE)
+ 			aChallengeButton->Resize(38 + aChlDef.mCol * 155, 93 + aChlDef.mRow * 119, 104, 115);
+ 		else
+@@ -589,10 +589,10 @@
+ 
+ 	std::string aTitleString =
+ 		mPageIndex == CHALLENGE_PAGE_SURVIVAL ? "[PICK_AREA]" :
+-		mPageIndex == CHALLENGE_PAGE_BONUS ? "Bonus Challenges" :
++		mPageIndex == CHALLENGE_PAGE_BONUS ? "Bonus" :
+ 		mPageIndex == CHALLENGE_PAGE_PUZZLE ? "[SCARY_POTTER]" : "[PICK_CHALLENGE]";
+ 	PvzpDrawString(g, aTitleString, 400, 58, Sexy::FONT_HOUSEOFTERROR28,
+-		mPageIndex == CHALLENGE_PAGE_BONUS ? Color(224, 187, 98) : Color(220, 220, 220), DS_ALIGN_CENTER);
++		Color(220, 220, 220), DS_ALIGN_CENTER);
+ 
+ 	int aTrophiesGot = mApp->GetNumTrophies(mPageIndex);
+ 	int aTrophiesTotal = mPageIndex == CHALLENGE_PAGE_SURVIVAL ? 10 : mPageIndex == CHALLENGE_PAGE_CHALLENGE ? 20 : mPageIndex == CHALLENGE_PAGE_PUZZLE ? 18 : 0;
+@@ -603,22 +603,6 @@
+ 	}
+ 	if (mPageIndex != CHALLENGE_PAGE_BONUS)
+ 		PvzpDrawImageScaledF(g, Sexy::IMAGE_TROPHY, 718, 26, 0.5f, 0.5f);
+-	else
+-	{
+-		const Color aHeadingColor(143, 87, 35);
+-		const Color aRulesColor(75, 48, 35);
+-		PvzpDrawString(g, "Cone Zone", 265, 173, Sexy::FONT_DWARVENTODCRAFT18, aHeadingColor, DS_ALIGN_LEFT);
+-		const char* aRules[] = {
+-			"Defend the daytime lawn for 20 waves.",
+-			"Start with 150 sun and six fixed plants.",
+-			"Sunflower, Peashooter, Wall-nut,",
+-			"Potato Mine, Snow Pea and Cherry Bomb.",
+-			"Watch for tougher conehead waves!",
+-			"Completion is tracked separately."
+-		};
+-		for (int i = 0; i < 6; ++i)
+-			PvzpDrawString(g, aRules[i], 265, 215 + i * 31, Sexy::FONT_BRIANNETOD16, aRulesColor, DS_ALIGN_LEFT);
+-	}
+ 
+ 	for (int aChallengeMode = 0; aChallengeMode < NUM_CHALLENGE_MODES; aChallengeMode++)
+ 		DrawButton(g, aChallengeMode);
+@@ -734,6 +718,16 @@
+ 	{
+ 		const ChallengeDefinition& aDef = GetChallengeDefinition(aChallengeMode);
+ 		ButtonWidget* aChallengeButton = mChallengeButtons[aChallengeMode].get();
++		if (aDef.mPage == CHALLENGE_PAGE_BONUS && aChallengeButton->mVisible &&
++			aChallengeButton->Contains(mApp->mWidgetManager->mLastMouseX, mApp->mWidgetManager->mLastMouseY))
++		{
++			mToolTip->mX = aChallengeButton->mWidth / 2 + aChallengeButton->mX;
++			mToolTip->mY = aChallengeButton->mY + aChallengeButton->mHeight + 4;
++			if (mToolTip->mLabel != "20 waves. Six classic plants.")
++				mToolTip->SetLabel("20 waves. Six classic plants.");
++			mToolTip->mVisible = true;
++			return;
++		}
+ 		if (aChallengeButton->mVisible && aChallengeButton->mDisabled &&
+ 			aChallengeButton->Contains(mApp->mWidgetManager->mLastMouseX, mApp->mWidgetManager->mLastMouseY) &&
+ 			AccomplishmentsNeeded(aChallengeMode) <= 1)
+--- a/src/Lawn/Widget/NewOptionsDialog.cpp
++++ b/src/Lawn/Widget/NewOptionsDialog.cpp
+@@ -46,7 +46,7 @@
+ 	mAlmanacButton = MakeButton(NewOptionsDialog::NewOptionsDialog_Almanac, this, "[VIEW_ALMANAC_BUTTON]");
+ 	mRestartButton = MakeButton(NewOptionsDialog::NewOptionsDialog_Restart, this, "[RESTART_LEVEL]");
+ 	mBackToMainButton = MakeButton(NewOptionsDialog::NewOptionsDialog_MainMenu, this, "[MAIN_MENU_BUTTON]");
+-	mQoLButton = MakeButton(NewOptionsDialog::NewOptionsDialog_QoL, this, "Quality of Life");
++	mQoLButton = MakeButton(NewOptionsDialog::NewOptionsDialog_QoL, this, "More Options");
+ 
+ 	mBackToGameButton = MakeNewButton(
+ 		Dialog::ID_OK,
+@@ -160,7 +160,7 @@
+ 	if (mAlmanacButton->mVisible)
+ 	{
+ 		mAlmanacButton->SetLabel("Almanac");
+-		mQoLButton->SetLabel("QoL");
++		mQoLButton->SetLabel("More");
+ 		// Stone centers repeat in whole image tiles; logical and painted bounds
+ 		// must agree before centering text. The original assets give 117 / 71.
+ 		const int aCaps = IMAGE_BUTTON_LEFT->mWidth + IMAGE_BUTTON_RIGHT->mWidth;
+--- a/src/Lawn/Widget/PlantDecksDialog.cpp
++++ b/src/Lawn/Widget/PlantDecksDialog.cpp
+@@ -3,7 +3,7 @@
+ #include "SeedChooserScreen.h"
+ #include "GameButton.h"
+ #include "../Board.h"
+-#include "../Plant.h"
++#include "../SeedPacket.h"
+ #include "../../LawnApp.h"
+ #include "../../Resources.h"
+ #include "../LawnCommon.h"
+@@ -12,7 +12,6 @@
+ #include "graphics/Font.h"
+ #include "graphics/Image.h"
+ #include <algorithm>
+-#include <format>
+ 
+ using namespace Sexy;
+ 
+@@ -34,7 +33,7 @@
+ {
+     mVerticalCenterText = false;
+     mStoreWritable = mPresets.Load(app);
+-    mStatus = mStoreWritable ? "Choose a preset to save or load your plants." : "Saved decks could not be read. The file is preserved.";
++    mStatus = mStoreWritable ? "" : "Saved plants could not be read.";
+     for (int i = 0; i < DeckPresets::SLOT_COUNT; ++i)
+         mSlots[i] = MakeButton(200 + i, this, mPresets.mDecks[i].mName);
+     mSaveButton = MakeButton(300, this, "Save");
+@@ -97,6 +96,7 @@
+ void PlantDecksDialog::SelectSlot(int slot)
+ {
+     mSelected = slot;
++    if (mStoreWritable) mStatus.clear();
+     mNameEdit->SetText(mPresets.mDecks[slot].mName, true);
+     RefreshButtons();
+ }
+@@ -106,7 +106,7 @@
+     for (int i = 0; i < DeckPresets::SLOT_COUNT; ++i)
+     {
+         const auto& deck = mPresets.mDecks[i];
+-        std::string label = std::format("{}. {}", i + 1, deck.mName);
++        std::string label = deck.mName;
+         const int labelWidth = mSlots[i]->mWidth - 20;
+         if (FONT_DWARVENTODCRAFT18GREENINSET->StringWidth(label) > labelWidth)
+         {
+@@ -127,24 +127,20 @@
+     LawnDialog::Draw(g);
+     DrawEditBox(g, mNameEdit.get());
+     const auto& deck = mPresets.mDecks[mSelected];
+-    int unavailable = 0;
++    constexpr int aPacketWidth = 50, aPacketPitch = 58, aColumns = 5;
++    const int aGridWidth = aPacketWidth + (aColumns - 1) * aPacketPitch;
++    const int aStartX = mNameEdit->mX + std::max(0, (mNameEdit->mWidth - aGridWidth) / 2);
+     for (size_t i = 0; i < deck.mSeeds.size(); ++i)
+     {
+         const auto& seed = deck.mSeeds[i];
+         const bool allowed = mChooser->DeckSeedAvailable(seed);
+-        if (!allowed) ++unavailable;
+-        std::string name = Plant::GetNameString(static_cast<SeedType>(seed.mSeed), static_cast<SeedType>(seed.mImitater));
+-        if (name.size() > 20) name = name.substr(0, 18) + "..";
+-        if (!allowed) name = "! " + name;
+-        PvzpDrawString(g, name, 255 + static_cast<int>(i / 5) * 165, 166 + static_cast<int>(i % 5) * 29,
+-            FONT_BRIANNETOD12, allowed ? Color(224, 187, 98) : Color(255, 125, 105), DS_ALIGN_LEFT);
++        DrawSeedPacket(g, aStartX + static_cast<int>(i % aColumns) * aPacketPitch,
++            156 + static_cast<int>(i / aColumns) * 90,
++            static_cast<SeedType>(seed.mSeed), static_cast<SeedType>(seed.mImitater),
++            0.0f, allowed ? 255 : 115, true, false);
+     }
+-    if (deck.mSeeds.empty())
+-        PvzpDrawString(g, "This preset is empty.", 255, 168, FONT_BRIANNETOD16, Color(224, 187, 98), DS_ALIGN_LEFT);
+-    PvzpDrawString(g, unavailable ? std::format("! {} unavailable on this level", unavailable) :
+-        std::format("{} saved plants", deck.mSeeds.size()), 255, 329, FONT_BRIANNETOD12, Color(224, 187, 98), DS_ALIGN_LEFT);
+-    PvzpDrawString(g, "Unavailable plants stay unselected.", 255, 351, FONT_BRIANNETOD12, Color(224, 187, 98), DS_ALIGN_LEFT);
+-    PvzpDrawString(g, mStatus, 255, 435, FONT_BRIANNETOD12, Color(224, 187, 98), DS_ALIGN_LEFT);
++    if (!mStatus.empty())
++        PvzpDrawString(g, mStatus, 255, 435, FONT_BRIANNETOD12, Color(224, 187, 98), DS_ALIGN_LEFT);
+ }
+ 
+ void PlantDecksDialog::ButtonDepress(int id)
+@@ -166,25 +162,25 @@
+     {
+         const auto seeds = mChooser->CurrentDeckPreset();
+         const std::string name = DeckPresets::CleanName(mNameEdit->mString);
+-        if (name.empty()) { mStatus = "Enter a name for this preset."; return; }
+-        if (seeds.empty()) { mStatus = "Choose your plants before saving a deck."; return; }
++        if (name.empty()) { mStatus = "Enter a name."; return; }
++        if (seeds.empty()) { mStatus = "Choose plants first."; return; }
+         const auto previous = deck;
+         deck = {name, seeds};
+-        if (mPresets.Save(mApp)) mStatus = "Your selected plants have been saved.";
+-        else { deck = previous; mStatus = "The deck could not be saved. Please retry."; }
++        if (mPresets.Save(mApp)) mStatus.clear();
++        else { deck = previous; mStatus = "Unable to save plants."; }
+     }
+     else if (id == 301 && !deck.mSeeds.empty())
+     {
+         const auto result = mChooser->ApplyDeckPreset(deck.mSeeds);
+-        mStatus = std::format("Loaded {} plants; {} unavailable, {} no room.",
+-            result.mSeeds.size(), result.mUnavailable, result.mOverflow);
++        mStatus = result.mUnavailable ? "Some plants are unavailable." :
++            result.mOverflow ? "Not enough seed slots." : "";
+     }
+     else if (id == 302 && !deck.mSeeds.empty())
+     {
+         const auto previous = deck;
+         deck.mSeeds.clear();
+-        if (mPresets.Save(mApp)) mStatus = "The preset has been cleared.";
+-        else { deck = previous; mStatus = "The deck could not be cleared. Please retry."; }
++        if (mPresets.Save(mApp)) mStatus.clear();
++        else { deck = previous; mStatus = "Unable to delete plants."; }
+     }
+     RefreshButtons();
+ }
+--- a/src/Lawn/Widget/QoLDialog.cpp
++++ b/src/Lawn/Widget/QoLDialog.cpp
+@@ -28,14 +28,14 @@
+ 	QOL_CONTROLS, QOL_BACKUPS, QOL_DEFAULTS, QOL_BACK };
+ 
+ QoLDialog::QoLDialog(LawnApp* theApp) : LawnDialog(theApp, QOL_DIALOG_ID,
+-	true, "Quality of Life", "", "", Dialog::BUTTONS_NONE)
++	true, "More Options", "", "", Dialog::BUTTONS_NONE)
+ {
+ 	auto& aSettings = mApp->GetQoLSettings();
+ 	mAutoPauseCheckbox = MakeNewCheckbox(QOL_AUTO_PAUSE, this, aSettings.mAutoPause);
+ 	mRememberSpeedCheckbox = MakeNewCheckbox(QOL_REMEMBER_SPEED, this, aSettings.mRememberSpeed);
+ 	mCooldownCheckbox = MakeNewCheckbox(QOL_COOLDOWNS, this, aSettings.mShowCooldownNumbers);
+-	mControlsButton = MakeButton(QOL_CONTROLS, this, "Keyboard Controls");
+-	mBackupsButton = MakeButton(QOL_BACKUPS, this, "Save Backups");
++	mControlsButton = MakeButton(QOL_CONTROLS, this, "Controls");
++	mBackupsButton = MakeButton(QOL_BACKUPS, this, "Backups");
+ 	mDefaultsButton = MakeButton(QOL_DEFAULTS, this, "Reset Controls");
+ 	mBackButton = MakeButton(QOL_BACK, this, "Back");
+ 	for (int i = 0; i < 12; i++)
+@@ -70,9 +70,9 @@
+ {
+ 	LawnDialog::Resize(x, y, width, height);
+ 	if (!mBackButton) return; // Base construction sizes before child creation.
+-	mAutoPauseCheckbox->Resize(466, 130, 46, 45);
+-	mRememberSpeedCheckbox->Resize(466, 178, 46, 45);
+-	mCooldownCheckbox->Resize(466, 226, 46, 45);
++	mAutoPauseCheckbox->Resize(386, 130, 46, 45);
++	mRememberSpeedCheckbox->Resize(386, 178, 46, 45);
++	mCooldownCheckbox->Resize(386, 226, 46, 45);
+ 	const int aCaps = IMAGE_BUTTON_LEFT->mWidth + IMAGE_BUTTON_RIGHT->mWidth;
+ 	const int aTile = IMAGE_BUTTON_MIDDLE->mWidth;
+ 	auto aPlace = [&](LawnStoneButton* theButton, int theX, int theY, int theWidth)
+@@ -91,7 +91,7 @@
+ 
+ void QoLDialog::RefreshPage()
+ {
+-	mDialogHeader = mControlsPage ? "Keyboard Controls" : "Quality of Life";
++	mDialogHeader = mControlsPage ? "Controls" : "More Options";
+ 	mAutoPauseCheckbox->SetVisible(!mControlsPage);
+ 	mRememberSpeedCheckbox->SetVisible(!mControlsPage);
+ 	mCooldownCheckbox->SetVisible(!mControlsPage);
+@@ -111,34 +111,31 @@
+ 
+ void QoLDialog::Persist()
+ {
+-	mStatus = mApp->SaveQoLSettings() ? "" : "Settings could not be saved. Your existing file was kept.";
++	mStatus = mApp->SaveQoLSettings() ? "" : "Unable to save settings.";
+ 	RefreshPage();
+ }
+ 
+ void QoLDialog::Draw(Graphics* g)
+ {
+ 	LawnDialog::Draw(g);
+-	const Color aColor(224, 187, 98);
++	const Color aColor(107, 109, 145);
+ 	if (!mControlsPage)
+ 	{
+-		PvzpDrawString(g, "Pause when leaving the game", 100, 157,
+-			FONT_DWARVENTODCRAFT18, aColor, DrawStringJustification::DS_ALIGN_LEFT);
+-		PvzpDrawString(g, "Remember gameplay speed", 100, 205,
+-			FONT_DWARVENTODCRAFT18, aColor, DrawStringJustification::DS_ALIGN_LEFT);
+-		PvzpDrawString(g, "Show cooldown numbers", 100, 253,
+-			FONT_DWARVENTODCRAFT18, aColor, DrawStringJustification::DS_ALIGN_LEFT);
+-	}
+-	else
+-	{
+-		PvzpDrawString(g, "Letters, numbers or arrows. Space and Esc stay unchanged.", mWidth / 2, 121,
+-			FONT_DWARVENTODCRAFT12, aColor, DrawStringJustification::DS_ALIGN_CENTER);
+-		PvzpDrawString(g, mCapturing >= 0 ? "Press Backspace/Delete to clear, or Esc to cancel." :
+-			"Click a control to change its key.", mWidth / 2, 503,
+-			FONT_DWARVENTODCRAFT12, aColor, DrawStringJustification::DS_ALIGN_CENTER);
++		PvzpDrawString(g, "Auto Pause", 377, 157,
++			FONT_DWARVENTODCRAFT18, aColor, DrawStringJustification::DS_ALIGN_RIGHT);
++		PvzpDrawString(g, "Remember Speed", 377, 205,
++			FONT_DWARVENTODCRAFT18, aColor, DrawStringJustification::DS_ALIGN_RIGHT);
++		PvzpDrawString(g, "Recharge Timers", 377, 253,
++			FONT_DWARVENTODCRAFT18, aColor, DrawStringJustification::DS_ALIGN_RIGHT);
++	}
++	else if (mCapturing >= 0)
++	{
++		PvzpDrawString(g, "Delete: Clear", mWidth / 2, 503,
++			FONT_DWARVENTODCRAFT12, Color(224, 187, 98), DrawStringJustification::DS_ALIGN_CENTER);
+ 	}
+ 	if (!mStatus.empty())
+-		PvzpDrawString(g, mStatus, mWidth / 2, mControlsPage ? 526 : 503,
+-			FONT_DWARVENTODCRAFT12, aColor, DrawStringJustification::DS_ALIGN_CENTER);
++		PvzpDrawString(g, mStatus, mWidth / 2, mControlsPage && mCapturing >= 0 ? 526 : 503,
++			FONT_DWARVENTODCRAFT12, Color(224, 187, 98), DrawStringJustification::DS_ALIGN_CENTER);
+ }
+ 
+ void QoLDialog::CheckboxChecked(int theId, bool checked)
+@@ -172,7 +169,7 @@
+ #ifdef __EMSCRIPTEN__
+ 		EM_ASM({ if (window.PVZSaveRecovery) window.PVZSaveRecovery.open(); });
+ #else
+-		mStatus = "Browser save backups are available in the web version."; RefreshPage();
++		mStatus = "Backups are unavailable."; RefreshPage();
+ #endif
+ 	}
+ 	else if (theId == QOL_DEFAULTS)
+@@ -198,9 +195,9 @@
+ 		if (theKey == KEYCODE_ESCAPE) { mCapturing = -1; mStatus.clear(); RefreshPage(); return; }
+ 		const int aKey = theKey == KEYCODE_BACK || theKey == KEYCODE_DELETE ? 0 : static_cast<int>(theKey);
+ 		if (!QoLSettings::IsBindable(aKey))
+-			mStatus = "Use a letter, number or arrow key.";
++			mStatus = "Use a letter, number or arrow.";
+ 		else if (!mApp->GetQoLSettings().SetBinding(mCapturing, aKey))
+-			mStatus = "That key is already used by another control.";
++			mStatus = "Key already in use.";
+ 		else { mCapturing = -1; Persist(); return; }
+ 		RefreshPage();
+ 	}

@@ -1,6 +1,20 @@
 # Browser parity and QA record
 
-## Content.1 release scope, 2026-10-31
+## Polish.1 release scope, 2026-10-31
+
+`0.2.6-web-polish.1` retains Content.1 gameplay and the earlier QoL and renderer behavior. It adds no gameplay features. Native dialogs use **More Options**, **Controls** and **Backups**, concise labels and a deck preview made from original seed-packet artwork. The Bonus page uses the standard challenge grid/card layout; the challenge uses the native flag banner. Browser backup rows use date labels on stone buttons.
+
+The save adapter captures written filesystem data on the main thread, then transfers it to a dedicated worker. CRC/checksums, history validation and IndexedDB transactions run in the worker/shared core. The existing five-second autosave interval, schema 2, eight-version history limit, native save layouts, revision guards, corruption recovery and durable callback semantics remain unchanged. Startup failures fall back safely before any operation; a failure or timeout after startup rejects uncertain writes without retrying through a second backend.
+
+The final native alignment rebuild passed in 101.496 seconds with all 767 source files unchanged during compilation. Five production-method suites pass **678 checks**: 66 speed, 90 controls, 105 decks/cooldowns, 139 bonus waves and 278 completion/rewards/navigation. The controls report was rerun successfully after the final alignment change, before that rebuild. All **fourteen browser integration suites** pass, including **eleven real-worker scenarios** covering durable queue ordering, transferred-byte safety, stale-tab rejection, failed commits, corruption recovery, main-thread responsiveness under a gated worker, unsupported versions, safe startup fallback and fail-closed worker death/timeouts.
+
+The Node benchmark uses synthetic bytes following public compiled-file size distributions and mocked IndexedDB, with eight backups. For the representative cache and cache-plus-1-MiB-board datasets, the old instrumented synchronous transaction blocks reached **177.38 ms / 305.80 ms**. New main-thread capture plus transferable dispatch measured **1.60 ms / 2.51 ms median**, with **1.87 ms / 2.76 ms maxima**. These compare the work left on the main thread; they are not total save latency. Heavy work continues asynchronously in the worker. Evidence is recorded in `outputs/stutter-audit/benchmark-results.json` and `worker-benchmark-results.json` in the private working records. This is a Node fixture measurement, not browser FPS, a browser frame-time trace or proof that every source of stutter is eliminated.
+
+A bounded muted preview loaded the worker and existing schema 2 synthetic QA-Boss profile. On the final WASM (`852d8a02…`), screenshots confirmed the centered More Options form, Controls screen and native Bonus page with its standard top-left card and no rules paragraph. In the same preview, Survival: Day's chooser selected Sunflower, Peashooter, Wall-nut and Cherry Bomb; saving the Day deck through Decks displayed all four native seed packets cleanly, without count, name-list, helper or success text. No battle was started. Private working evidence: `outputs/pvz-polish-more-options.jpg`, `pvz-polish-controls.jpg`, `pvz-polish-bonus.jpg` and `pvz-polish-decks.jpg`; these screenshots are not downloadable GitHub files. Final website-source package verification and hosted Polish.1 verification remain separate and are not credited here. No new campaign win, full bonus battle, new ability, authentic-original runtime comparison or full-parity result is claimed. Broad manual gameplay remains stopped; normal-player audio stays available and agent browser checks use `?testing=1`.
+
+Current corresponding source: [Polish.1 source](dist/source/pvz-portable-0.2.6-web-polish.1-source.zip), [complete upstream patch](dist/source/web-polish.1.patch), [Content.1 increment](dist/source/content1-to-polish1.patch) and retained [Content.1 parent source](dist/source/pvz-portable-0.2.6-web-content.1-source.zip). The engine source package passes staging/package checks with 795 entries and 767 source files; its SHA-256 is `aba3e5a40370a81826c6dc61e5f04ad1742dda405bffc3da86e24edcd981391d`. Full and incremental patches each reconstruct the current source bytes exactly through `git apply`. The website source includes `dist/save-storage.js`, `dist/save-storage-core.js` and `dist/save-storage-worker.js`; its final package check is distinct from these engine-source results. Final release hashes are recorded together in [engine provenance](dist/game/engine-provenance.json) and the [build record](dist/source/build-provenance.json); the historical identities below retain their original scope.
+
+## Historical Content.1 release scope, 2026-10-31
 
 `0.2.6-web-content.1` adds one optional level, Cone Zone, under Mini-Games → Bonus.
 It uses the existing daytime lawn, six classic plants, normal sun production,
@@ -35,7 +49,7 @@ restored the same sunflower and 100 remaining sun. No full bonus battle or broad
 original-campaign playthrough was performed. The unlocked QA fixture pre-fills
 completion records; first-clear/replay rewards were tested by the native suite.
 
-## QoL.2 release scope, 2026-10-31
+## Historical QoL.2 release scope, 2026-10-31
 
 `0.2.6-web-qol.2` retains the renderer and 1x/2x control and adds six authorized QoL features: focus-loss/hidden-tab auto-pause with explicit resume; remappable seed, shovel and speed keys (defaults `1`–`9`, `0`, `S`, `F`); eight named plant decks per profile; remembered speed enabled by default; optional numeric seed cooldowns; and browser-local recovery of up to eight previous save versions. New profiles start at 1x, cooldown numbers start off, and Space/Escape retain the original pause/menu actions. Deck loading preserves forced picks and respects unlocks, Imitater and capacity.
 
@@ -47,7 +61,7 @@ A bounded silent local UI check used synthetic profiles: enabled cooldown number
 
 This section records the current feature and validation scope, not a new whole-game parity result. Broad campaign playtesting remains stopped. The QoL.1 and Software.10 observations below retain their original builds and scope.
 
-## QoL.1 speed control, 2026-10-31
+## Historical QoL.1 speed control, 2026-10-31
 
 `0.2.6-web-qol.1` retains the Software.10 renderer and adds a native 1x/2x gameplay toggle. Its full Emscripten Release build passed in 132.228 seconds with all 757 input source files unchanged during compilation. Four source paths differ from Software.10: the version file, Board.cpp, LawnApp.cpp and LawnApp.h. Board.h and the save serializer are byte-identical to the parent.
 
@@ -57,19 +71,19 @@ A short private `?testing=1` browser check used a generated QA profile in Surviv
 
 The Software.10 descriptions below remain historical. Broad campaign playtesting remains stopped; this feature receives only targeted validation.
 
-This source uses **0.2.6-web-software.10**. The frozen public v18 baseline uses Software.10 (source `877bbbf3f001fc2f9202700ba790e27665179e92`). Software.10's own scoped private first-level and save-transfer observations are recorded below; prior observations retain their named build and scope. Normal players have audio; agent tests use `?testing=1`. No complete 1:1 or authentic-original runtime result is claimed. Further manual validation stopped at the user's request on 2026-10-31; historical active-goal statements below do not authorize resuming it.
+The frozen public v18 baseline uses **0.2.6-web-software.10** (source `877bbbf3f001fc2f9202700ba790e27665179e92`). Software.10's own scoped private first-level and save-transfer observations are recorded below; prior observations retain their named build and scope. Normal players have audio; agent tests use `?testing=1`. No complete 1:1 or authentic-original runtime result is claimed. Further manual validation stopped at the user's request on 2026-10-31; historical active-goal statements below do not authorize resuming it.
 
 GitHub Pages release, 2026-10-31: [workflow 41230962473](https://github.com/Caleb-Guyer/plants-vs-zombies-web/actions/runs/41230962473) succeeded for commit `5ba4d0d7279145dcbdfa3e91d19b91218ef1c04a`. The normal [Play URL](https://caleb-guyer.github.io/plants-vs-zombies-web/) is live. A `?testing=1` check automatically reached the original Click to Start title without a file prompt; index/glue/manifest matched local bytes and WASM returned HTTP 200 as `application/wasm` (7,411,823 bytes). No campaign gameplay was performed on GitHub, and this is not full-parity or original-runtime comparison credit.
 
 The detailed QA descriptions below are the frozen v18 evidence snapshot. They retain their original capture-time scope, including earlier limits; they are not a claim that later validation or the full parity goal is complete.
 
-## Software.10 current source/build and private UI/save evidence, 2026-10-29
+## Historical Software.10 source/build and private UI/save evidence, 2026-10-29
 
 Software.10 changes exactly three source paths relative to Software.9: the version file, callback admission and the narrow native-screen pixel include; all other 754 of 757 engine files are byte-identical. Its isolated full Release compile/link passed with exit 0 in 135.885 seconds. The paired actual-code suite runs 2,372,278 assertions per variant: frozen Software.9 has 47,270 and 50,870 expected additive differences in the two families, while Software.10 has zero failures. The 90 unchanged expanded callback bodies include both normal dispatchers and remain byte-identical to Software.9.
 
 The two corrections apply only to guarded dedicated CPU-screen RGB888 nearest-additive routes: texture-alpha with constant original vertex color plus global color, and opaque texture with global color. The combined route preserves the original global/256 vertex prepass and second per-pixel global multiplication; the opaque route ignores stored texture alpha before global modulation. Existing exact target-buffer/pitch, dimensions, UV, valid-channel and offscreen fallbacks remain. Geometry, clipping, scan conversion, interpolation, game rules and audio are unchanged. No ordinary scene using either new additive route has been established; conditional API tests do not prove original framebuffer or full renderer parity.
 
-Current corresponding source is `dist/source/pvz-portable-0.2.6-web-software.10-source.zip` (807 archive entries, 757 engine files); `web-software.10.patch` is the complete raw-upstream patch. `software9-to-software10.patch` is the separately labeled three-path increment from Software.9. The full source builds without applying a patch. Historical packages, upstream baseline, build provenance and licenses remain available. Approved asset payloads remain separate from code/source archives and are included only in the full-runtime distribution. The source archive SHA-256 is `62bf399ffeedde34ec9946b4aece8fce4cb4ffb119739d3b55d2025bc4cda261`.
+Historical Software.10 corresponding source is `dist/source/pvz-portable-0.2.6-web-software.10-source.zip` (807 archive entries, 757 engine files); `web-software.10.patch` is the complete raw-upstream patch. `software9-to-software10.patch` is the separately labeled three-path increment from Software.9. The full source builds without applying a patch. Historical packages, upstream baseline, build provenance and licenses remain available. Approved asset payloads remain separate from code/source archives and are included only in the full-runtime distribution. The source archive SHA-256 is `62bf399ffeedde34ec9946b4aece8fce4cb4ffb119739d3b55d2025bc4cda261`.
 
 Software.10's own muted private browser check used a fresh Web10QA profile without generated QA fixtures. Native CPU mode was selected before Adventure and remained unchecked on Options reopen during 1-1. The first attempt completed 1-1 without Restart or Game Over: Peashooter placement, sun collection and projectiles were observed, the Sunflower reward was collected, and Next Level entered 1-2. One Sunflower was planted in the leftmost middle cell, with zero sun remaining.
 

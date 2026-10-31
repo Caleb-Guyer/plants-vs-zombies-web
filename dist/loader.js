@@ -61,7 +61,8 @@ function startSaveAutosync(){null===saveSyncIntervalId&&(saveSyncIntervalId=wind
   const previous=button.textContent;
   button.disabled=true;button.textContent='Exporting…';
   try{
-    await ensureSaveFsReady();await syncSaves();
+    await ensureSaveFsReady();
+    try{await syncSaves();}catch(error){console.warn('Save persistence failed; exporting live saved data:',error);}
     const blob=await PVZSaveTransfer.exportZip(Module.FS,JSZip,{type:'blob'});
     const anchor=document.createElement('a'),url=URL.createObjectURL(blob);
     anchor.href=url;anchor.download='pvz-portable-savedata.zip';anchor.click();

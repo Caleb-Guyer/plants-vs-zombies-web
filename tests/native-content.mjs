@@ -16,10 +16,10 @@ new Function('module', 'exports', 'require', fs.readFileSync(new URL('vendor/jsz
 const JSZip = vendor.exports;
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
 const engine = JSON.parse(fs.readFileSync(new URL('game/engine-provenance.json', dist)));
-assert.equal(engine.id, '0.2.6-web-content.1');
+assert.equal(engine.id, '0.2.6-web-polish.1');
 const current = await JSZip.loadAsync(fs.readFileSync(new URL(engine.artifacts.source, new URL('game/engine-provenance.json', dist))), {checkCRC32: true});
-const parent = await JSZip.loadAsync(fs.readFileSync(new URL('source/pvz-portable-0.2.6-web-qol.2-source.zip', dist)), {checkCRC32: true});
-const prefix = 'content1-candidate/';
+const parent = await JSZip.loadAsync(fs.readFileSync(new URL('source/pvz-portable-0.2.6-web-content.1-source.zip', dist)), {checkCRC32: true});
+const prefix = 'polish1-candidate/';
 const read = async name => {
   const entry = current.file(prefix + name);
   assert(entry, 'Missing current production source/test: ' + name);
@@ -42,7 +42,7 @@ for (const name of suites) {
   checks += result.checks;
   reports.set(name, result);
 }
-const parentBytes = async name => Buffer.from(await parent.file('qol2-candidate/source/' + name).async('uint8array'));
+const parentBytes = async name => Buffer.from(await parent.file('content1-candidate/source/' + name).async('uint8array'));
 // SeedPacket.h also defines the serialized SeedBank class.
 for (const name of ['src/Lawn/SeedPacket.h', 'src/Lawn/Challenge.h', 'src/Lawn/System/SaveGame.cpp', 'src/Lawn/System/PlayerInfo.h', 'src/Lawn/System/PlayerInfo.cpp', 'src/LawnApp.h']) {
   assert.deepEqual(await read('source/' + name), await parentBytes(name), 'Saved data layout/serialization must remain unchanged');
@@ -83,9 +83,7 @@ for (const [name, count, addition] of [
 ]) {
   const before = enumValues(oldEnums, name), after = enumValues(newEnums, name);
   for (const [key, value] of before) if (key !== count) assert.equal(after.get(key), value, 'Original ID stays stable: ' + key);
-  assert.equal(after.size, before.size + 1);
-  assert.equal(after.get(addition), before.get(count));
-  assert.equal(after.get(count), before.get(count) + 1);
+  assert.deepEqual([...after], [...before], 'Presentation changes preserve every mode/page ID and count');
 }
 function definitions(text) {
   const table = text.slice(text.indexOf('gChallengeDefs['));
@@ -95,12 +93,12 @@ function definitions(text) {
 }
 const oldDefinitions = definitions((await parentBytes('src/Lawn/Widget/ChallengeScreen.cpp')).toString());
 const newDefinitions = definitions((await read('source/src/Lawn/Widget/ChallengeScreen.cpp')).toString());
-assert.equal(oldDefinitions.length, 72);
+assert.equal(oldDefinitions.length, 73);
 assert.deepEqual(newDefinitions.slice(0, oldDefinitions.length), oldDefinitions);
-assert.equal(newDefinitions.length, oldDefinitions.length + 1);
+assert.equal(newDefinitions.length, oldDefinitions.length);
 assert(newDefinitions.at(-1).includes('GAMEMODE_CHALLENGE_CONE_ZONE'));
 assert(newDefinitions.at(-1).includes('CHALLENGE_PAGE_BONUS'));
-console.log('PASS all original mode/page IDs, native saved layouts and 72 challenge definitions remain unchanged; the bonus gets its own appended identity.');
+console.log('PASS all original mode/page IDs, native saved layouts and 73 challenge definitions remain unchanged.');
 
 
 if (process.argv.includes('--run-native')) {
