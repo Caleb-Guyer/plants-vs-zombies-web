@@ -2,7 +2,7 @@
 
 [Play on GitHub Pages](https://caleb-guyer.github.io/plants-vs-zombies-web/) · [Existing playtest](https://lawn-defense-caleb-plays.usgi.chatgpt.site) · [Deployment](DEPLOYMENT.md) · [Requirements](CURRENT-REQUIREMENTS.md) · [QA history](PARITY-QA.md)
 
-This source uses **0.2.6-web-polish.1**, based on PvZ-Portable 0.2.6 commit `396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca`. It retains Content.1's optional Cone Zone challenge and the earlier controls, save recovery and renderer corrections. Polish.1 simplifies the menus and moves expensive save processing into a background worker; it adds no gameplay features. Full 1:1 parity remains unverified; broad manual validation stopped at the user's request on 2026-10-31. The earlier Software.10 evidence below remains historical.
+This source uses **0.2.6-web-night.1**, based on PvZ-Portable 0.2.6 commit `396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca`. It adds Night Shift alongside Cone Zone on the native Bonus page, retaining Polish.1's simplified menus, background save worker, earlier controls, save recovery and renderer corrections. Full 1:1 parity remains unverified; broad manual validation stopped at the user's request on 2026-10-31. Earlier release evidence below remains historical.
 
 The Software.10 and earlier QA descriptions below are the frozen v18 evidence snapshot. They retain their original capture-time scope, including earlier limits; they are not a claim that later validation or the full parity goal is complete.
 
@@ -18,10 +18,26 @@ Saves persist automatically in this browser without export/import. The existing 
 
 Normal players have music and sound effects, subject to browser autoplay rules and the saved mute preference. The mute icon remembers the player's choice; original volume controls remain available. **All agent testing uses `?testing=1`, which forces inaudible output without changing the normal-player preference.**
 
+## Bonus challenge: Night Shift
+
+Once Mini-Games is unlocked, choose **Mini-Games → Bonus → Night Shift**.
+Survive **twenty waves across two flags** on the original nighttime lawn, with
+**150 starting sun** and no falling sky sun. Grow Sun-shrooms to fund your defense.
+The fixed bank contains Sun-shroom, Puff-shroom, Fume-shroom, Grave Buster,
+Ice-shroom and Doom-shroom, with their normal costs, recharge and behavior.
+
+Normal zombies give way to coneheads, newspapers, screen doors and later buckets.
+The native night lawn includes graves and its final-wave grave rise; the authored
+wave table is separate from those grave zombies. Night Shift uses original artwork,
+the standard challenge card and flag banner, with no extra information overlay.
+It has its own saved checkpoint and completion record. Save/resume, restart and
+save import/export include Night Shift without changing Cone Zone or original
+campaign progress, unlocks or trophy totals.
+
 ## Bonus challenge: Cone Zone
 
 Once Mini-Games is unlocked, choose **Mini-Games → Bonus → Cone Zone**.
-The original-style Bonus page adds one optional level: a daylight lawn with
+Cone Zone uses a daylight lawn with
 **150 starting sun, six fixed plants and twenty authored waves across two flags**.
 Sunflowers and falling sun work normally. Coneheads become the main threat,
 with a few pole-vaulters and bucketheads later in the level.
@@ -50,7 +66,11 @@ Open the original **Options → More Options** dialog for these additions:
 
 The native options and deck dialogs use the original game artwork and concise labels. QoL preferences and decks travel with save exports in separate files; existing native profile and board-save formats remain unchanged. Backups is also available through the small More utility icon.
 
-## Polish.1 verification
+## Night.1 verification
+
+The full engine build, six native suites totaling **952 checks**, fourteen browser integration suites and corresponding engine-source packaging pass. The native checks cover Night Shift's nighttime setup and economy, authored waves, independent saves, completion, awards and retained controls. Both source patches reconstruct the current engine source exactly. A bounded muted preview confirmed the matching card, nighttime setup, mushroom planting and native save/reload/Continue with the saved Sun-shroom and 125 sun. Website-source packaging and hosted verification are recorded separately in [QA](PARITY-QA.md).
+
+## Historical Polish.1 verification
 
 Eleven dedicated-worker scenarios, fourteen browser integration suites and 678 native checks passed. A muted preview of the final build loaded existing schema 2 synthetic saves and confirmed the centered More Options form, Controls screen and standard Bonus card layout. Further observations and hosted verification are recorded separately in [QA](PARITY-QA.md).
 
@@ -138,7 +158,7 @@ python package-portable.py --output-dir outputs
 
 The approved bundle consists of six exact original runtime data files totaling 45,462,524 bytes, split into 11 verified parts. It contains no Windows executable, DLL or installed save data. To regenerate it, explicitly supply `--zip <resource-archive.zip>` or `--game-dir <installed-game-directory>`.
 
-Current corresponding source is [Polish.1 engine source](dist/source/pvz-portable-0.2.6-web-polish.1-source.zip); [web-polish.1.patch](dist/source/web-polish.1.patch) is the complete upstream patch and [content1-to-polish1.patch](dist/source/content1-to-polish1.patch) is the increment from [Content.1 source](dist/source/pvz-portable-0.2.6-web-content.1-source.zip). The source includes the native bonus and retained QoL implementations, build recipes and focused tests. The full source builds without applying a patch. [Engine provenance](dist/game/engine-provenance.json) and the [build record](dist/source/build-provenance.json) pin release artifacts. The website source contains the save worker and shared storage core. Historical packages, upstream baseline, build provenance and licenses remain available. Full resource payloads remain separate from source archives and are included in the full-runtime distribution. The website source includes the approved original UI artwork extracted for the save-recovery panel; `dist/ui` records its attribution and hashes.
+Current corresponding source is [Night.1 engine source](dist/source/pvz-portable-0.2.6-web-night.1-source.zip); [web-night.1.patch](dist/source/web-night.1.patch) is the complete upstream patch and [polish1-to-night1.patch](dist/source/polish1-to-night1.patch) is the increment from [Polish.1 source](dist/source/pvz-portable-0.2.6-web-polish.1-source.zip). The source includes both native bonus challenges and retained QoL implementations, build recipes and focused tests. The full source builds without applying a patch. [Engine provenance](dist/game/engine-provenance.json) and the [build record](dist/source/build-provenance.json) pin release artifacts. The website source contains the save worker and shared storage core. Historical packages, upstream baseline, build provenance and licenses remain available. Full resource payloads remain separate from source archives and are included in the full-runtime distribution. The website source includes the approved original UI artwork extracted for the save-recovery panel; `dist/ui` records its attribution and hashes.
 
 Public v15 preserved the three approved XML resource files' original CRLF bytes in Git and added the matching attributes rule, closing the fresh-checkout checksum blocker without changing the Software.7 runtime. GitHub Pages publication succeeded on 2026-10-31 through [release workflow 41230962473](https://github.com/Caleb-Guyer/plants-vs-zombies-web/actions/runs/41230962473). The bounded hosted startup check does not establish full game parity. The user authorized publication of the current build on 2026-10-31 while full 1:1 parity remains unverified; publication does not mark that goal complete.
 

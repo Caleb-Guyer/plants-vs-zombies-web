@@ -16,16 +16,16 @@ new Function('module', 'exports', 'require', fs.readFileSync(new URL('vendor/jsz
 const JSZip = vendor.exports;
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
 const engine = JSON.parse(fs.readFileSync(new URL('game/engine-provenance.json', dist)));
-assert.equal(engine.id, '0.2.6-web-polish.1');
+assert.equal(engine.id, '0.2.6-web-night.1');
 const current = await JSZip.loadAsync(fs.readFileSync(new URL(engine.artifacts.source, new URL('game/engine-provenance.json', dist))), {checkCRC32: true});
-const parent = await JSZip.loadAsync(fs.readFileSync(new URL('source/pvz-portable-0.2.6-web-content.1-source.zip', dist)), {checkCRC32: true});
-const prefix = 'polish1-candidate/';
+const parent = await JSZip.loadAsync(fs.readFileSync(new URL('source/pvz-portable-0.2.6-web-polish.1-source.zip', dist)), {checkCRC32: true});
+const prefix = 'night1-candidate/';
 const read = async name => {
   const entry = current.file(prefix + name);
   assert(entry, 'Missing current production source/test: ' + name);
   return Buffer.from(await entry.async('uint8array'));
 };
-const suites = ['game-speed', 'qol-controls', 'decks-cooldowns', 'bonus-challenge', 'bonus-completion'];
+const suites = ['game-speed', 'qol-controls', 'decks-cooldowns', 'bonus-challenge', 'bonus-completion', 'night-shift'];
 const reports = new Map();
 let checks = 0;
 for (const name of suites) {
@@ -42,7 +42,7 @@ for (const name of suites) {
   checks += result.checks;
   reports.set(name, result);
 }
-const parentBytes = async name => Buffer.from(await parent.file('content1-candidate/source/' + name).async('uint8array'));
+const parentBytes = async name => Buffer.from(await parent.file('polish1-candidate/source/' + name).async('uint8array'));
 // SeedPacket.h also defines the serialized SeedBank class.
 for (const name of ['src/Lawn/SeedPacket.h', 'src/Lawn/Challenge.h', 'src/Lawn/System/SaveGame.cpp', 'src/Lawn/System/PlayerInfo.h', 'src/Lawn/System/PlayerInfo.cpp', 'src/LawnApp.h']) {
   assert.deepEqual(await read('source/' + name), await parentBytes(name), 'Saved data layout/serialization must remain unchanged');
@@ -77,14 +77,14 @@ function enumValues(text, name) {
 }
 const oldEnums = (await parentBytes('src/ConstEnums.h')).toString();
 const newEnums = (await read('source/src/ConstEnums.h')).toString();
-for (const [name, count, addition] of [
-  ['GameMode', 'NUM_GAME_MODES', 'GAMEMODE_CHALLENGE_CONE_ZONE'],
-  ['ChallengePage', 'MAX_CHALLANGE_PAGES', 'CHALLENGE_PAGE_BONUS'],
-]) {
-  const before = enumValues(oldEnums, name), after = enumValues(newEnums, name);
-  for (const [key, value] of before) if (key !== count) assert.equal(after.get(key), value, 'Original ID stays stable: ' + key);
-  assert.deepEqual([...after], [...before], 'Presentation changes preserve every mode/page ID and count');
-}
+const oldModes = enumValues(oldEnums, 'GameMode'), newModes = enumValues(newEnums, 'GameMode');
+assert.equal(oldModes.get('NUM_GAME_MODES'), 74);
+assert.deepEqual([...newModes], [
+  ...[...oldModes].filter(([key]) => key !== 'NUM_GAME_MODES'),
+  ['GAMEMODE_CHALLENGE_NIGHT_SHIFT', 74], ['NUM_GAME_MODES', 75],
+], 'Night Shift appends exactly one mode; every original and Cone Zone ID stays stable');
+assert.deepEqual([...enumValues(newEnums, 'ChallengePage')], [...enumValues(oldEnums, 'ChallengePage')],
+  'Night Shift uses the existing Bonus page without changing any page IDs');
 function definitions(text) {
   const table = text.slice(text.indexOf('gChallengeDefs['));
   const end = table.indexOf('};');
@@ -95,10 +95,13 @@ const oldDefinitions = definitions((await parentBytes('src/Lawn/Widget/Challenge
 const newDefinitions = definitions((await read('source/src/Lawn/Widget/ChallengeScreen.cpp')).toString());
 assert.equal(oldDefinitions.length, 73);
 assert.deepEqual(newDefinitions.slice(0, oldDefinitions.length), oldDefinitions);
-assert.equal(newDefinitions.length, oldDefinitions.length);
-assert(newDefinitions.at(-1).includes('GAMEMODE_CHALLENGE_CONE_ZONE'));
+assert.equal(newDefinitions.length, oldDefinitions.length + 1);
+assert(newDefinitions.at(-1).includes('GAMEMODE_CHALLENGE_NIGHT_SHIFT'));
 assert(newDefinitions.at(-1).includes('CHALLENGE_PAGE_BONUS'));
-console.log('PASS all original mode/page IDs, native saved layouts and 73 challenge definitions remain unchanged.');
+assert(newDefinitions.at(-1).includes('.mChallengeIconIndex = 1'));
+assert(newDefinitions.at(-1).includes('.mRow = 1, .mCol = 1'));
+assert(newDefinitions.at(-1).includes('.mChallengeName = "Night Shift"'));
+console.log('PASS Night Shift appends one native Bonus card; all original/Cone Zone mode IDs, saved layouts and 73 prior challenge definitions remain unchanged.');
 
 
 if (process.argv.includes('--run-native')) {

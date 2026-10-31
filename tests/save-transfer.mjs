@@ -30,14 +30,16 @@ function registry(user='QA - Pool',music=37){
   return Buffer.concat(chunks);
 }
 function crc32(data){let value=0xffffffff;for(const b of data){value^=b;for(let i=0;i<8;i++)value=(value>>>1)^((value&1)?0xedb88320:0);}return(value^0xffffffff)>>>0;}
-function board(){
+function board(marker=1){
   const payload=Buffer.from([1,0,0,0,9,0,0,0,0,255,2,3,4,5,6,7,8]);
+  payload[0]=marker;
   const header=Buffer.alloc(24);header.write('PVZP_SAVE4');header.writeUInt32LE(1,12);header.writeUInt32LE(payload.length,16);header.writeUInt32LE(crc32(payload),20);
   return Buffer.concat([header,payload]);
 }
 originals.set('/saves/registry.regemu',registry());
 originals.set('/saves/userdata/game900002_0.v4',board());
-originals.set('/saves/userdata/game900002_73.v4',board());
+originals.set('/saves/userdata/game900002_73.v4',board(73));
+originals.set('/saves/userdata/game900002_74.v4',board(74));
 originals.set('/saves/userdata/auxiliary/notes.bin',Buffer.from([0,251,255,4]));
 originals.set('/saves/userdata/qol-settings-900001.txt',Buffer.from('PVZQOL 1\n1 1 1 1\n49 50 51 52 53 54 55 56 57 48 83 70\n'));
 originals.set('/saves/userdata/qol-decks-900001.txt',Buffer.from('PVZDECKS 1\n8\n"Day" 1 0 -1\n"Night" 0\n"Pool" 0\n"Roof" 0\n"Deck 5" 0\n"Deck 6" 0\n"Deck 7" 0\n"Deck 8" 0\n'));
@@ -77,7 +79,8 @@ source.FS.mkdir('/properties');
 source.FS.writeFile('/properties/default.xml',Buffer.from('<synthetic/>'));
 const backup=await transfer.exportZip(source.FS,JSZip,{type:'uint8array'});
 const zipped=await JSZip.loadAsync(backup,{checkCRC32:true});
-assert(zipped.file('registry.regemu'));assert(zipped.file('userdata/game900002_0.v4'));assert(zipped.file('userdata/game900002_73.v4'));
+assert(zipped.file('registry.regemu'));assert(zipped.file('userdata/game900002_0.v4'));assert(zipped.file('userdata/game900002_73.v4'));assert(zipped.file('userdata/game900002_74.v4'));
+assert.notDeepEqual(originals.get('/saves/userdata/game900002_73.v4'),originals.get('/saves/userdata/game900002_74.v4'),'Bonus checkpoint fixtures are distinct so aliasing cannot pass');
 assert(!zipped.file('outside-backup.note'));
 assert(!Object.keys(zipped.files).some(name=>/main\.pak|properties\//i.test(name)),'Export contains saved data only, never game resources');
 assert.deepEqual(Object.keys(zipped.files).sort(),[...originals.keys()].map(n=>n.slice('/saves/'.length)).sort());
@@ -89,7 +92,7 @@ for(const[name,data]of originals)assert.deepEqual(Buffer.from(target.FS.readFile
 assert.equal(Buffer.from(target.FS.readFile('/saves/userdata/unrelated.note')).toString(),'keep me');
 const reg=Buffer.from(target.FS.readFile('/saves/registry.regemu'));
 assert(reg.includes(Buffer.from('QA - Pool\0')));assert(reg.includes(Buffer.from('MusicVolume\0')));assert(reg.includes(Buffer.from([37,0,0,0])));
-console.log('PASS actual JSZip roundtrip preserves native index/details, root CurUser/options registry, nested files, original and independent bonus .v4 bytes; unrelated saves survive.');
+console.log('PASS actual JSZip roundtrip preserves native index/details, root CurUser/options registry, nested files and distinct original/Cone Zone/Night Shift .v4 bytes; unrelated saves survive.');
 
 for(const[prefix,rooted]of[['',false],['backup/',false],['backup/userdata/',true],['BACKUP/UserData/',true]]){
   const entries=[...originals].filter(([name])=>/^\/saves\/userdata\/(?:users\.dat|user\d+\.dat|game\d+_\d+\.v4)$/.test(name)).map(([name,data])=>[prefix+name.slice('/saves/userdata/'.length),data]);

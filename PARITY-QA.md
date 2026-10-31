@@ -1,6 +1,26 @@
 # Browser parity and QA record
 
-## Polish.1 release scope, 2026-10-31
+## Night.1 release scope, 2026-10-31
+
+`0.2.6-web-night.1` adds the optional **Night Shift** card beside Cone Zone on the existing native Bonus page. It uses the original night lawn, 150 starting sun, no falling sky sun, twenty authored waves and two flags. Its six fixed packets are Sun-shroom, Puff-shroom, Fume-shroom, Grave Buster, Ice-shroom and Doom-shroom; normal costs, recharge, nocturnal behavior and sun production remain native. Normal zombies open the level, with newspapers on wave 4, screen doors on wave 8 and buckets on wave 15. The authored wave table peaks at sixteen zombies including its flag bearer. Native nighttime setup adds nine graves, and the standard final-wave grave rise can add zombies outside that table. No new plant or zombie mechanics, artwork or information overlay is introduced.
+
+Night Shift appends mode 74, its own native checkpoint and reserved completion record 73. The prior 73 challenge definitions, including Cone Zone, retain their identities; Bonus page IDs, original campaign progression, unlock flags, original trophy totals and gold-sunflower routing remain unchanged. The saved Board, Challenge, SeedBank, SeedPacket and PlayerInfo layouts and serializer remain unchanged. Polish.1's save worker and concise native controls remain in place.
+
+Six focused native production-method suites pass **952 checks**: 66 speed, 90 controls, 105 decks/cooldowns, 139 retained bonus waves, 421 completion/rewards/navigation and 131 Night Shift. Night Shift coverage executes the production background setup with five lawn lanes and nine graves, night/grave predicates, sky-sun suppression, native mushroom sleeping and Sun-shroom sun production, fixed bank, authored waves, roster and invalid-buffer cases. Completion coverage exercises both bonus modes, independent records/checkpoint names, first/replay awards, unchanged original trophies/campaign/gold-sunflower decisions, cancel/continue and confirmed restart routing. Native tests initialize no game or audio device.
+
+The full Emscripten Release build passed in **134.523 seconds**, with all **768 source files unchanged** during compilation. All **fourteen browser integration suites** pass, including the retained **eleven real-worker scenarios** and current-source coherence for the 952 native checks. The transfer suite roundtrips distinct CRC-valid original, Cone Zone and Night Shift checkpoints, so one bonus checkpoint cannot silently alias the other.
+
+Engine-source packaging passes with **799 archive entries and 4,791,403 bytes**. Both the full upstream patch and the Polish.1 increment reconstruct every current source byte exactly through `git apply`. Artifact identities are pinned in the release manifests below. This engine-source check is separate from the final website-source package check.
+
+The owned muted preview loaded the final Night.1 WASM with the existing synthetic QA-Boss profile and forced-mute indicator set. Mini-Games → Bonus displayed the second matching Night Shift card, with the native night thumbnail beside Cone Zone. Launch showed the original night lawn, nine graves, 150 sun, all six intended packets, the native two-flag progress bar and 1x control. Planting a Sun-shroom spent 25 sun, leaving 125; Puff-shroom planting spent zero. Both mushrooms were awake. Native Menu → Main Menu → Leave saved and returned to the main menu. The fixture pre-populates completion records, so trophy ribbons in these screenshots are not evidence of an earned Night Shift win. Private working screenshots are `outputs/pvz-night1-release/bonus-cards.jpg` and `night-game.jpg`, not downloadable GitHub files.
+
+After that save, the preview reloaded and selected Night Shift again through the existing QA-Boss profile and Bonus page. The native Continue Game prompt showed the saved 125 sun and Sun-shroom on the night lawn with graves and the wave bar. Continue resumed that same board with 125 sun and the same Sun-shroom. The Puff-shroom had already been eaten before saving, so no Puff-shroom persistence is claimed. Private proof is `outputs/pvz-night1-release/night-continue.jpg` and `night-resumed.jpg`. This establishes the bounded native save/reload/Continue path, not a completed battle.
+
+Final website-source packaging and hosted Night.1 verification remain separate observations. Earlier Polish.1 results below are historical parent evidence. Agent browser testing uses `?testing=1`, while normal-player audio remains available. Broad original-game parity playtesting remains stopped.
+
+Current corresponding source: [Night.1 source](dist/source/pvz-portable-0.2.6-web-night.1-source.zip), [complete upstream patch](dist/source/web-night.1.patch), [Polish.1 increment](dist/source/polish1-to-night1.patch) and retained [Polish.1 parent source](dist/source/pvz-portable-0.2.6-web-polish.1-source.zip). Release identities belong in [engine provenance](dist/game/engine-provenance.json) and the [build record](dist/source/build-provenance.json).
+
+## Historical Polish.1 release scope, 2026-10-31
 
 `0.2.6-web-polish.1` retains Content.1 gameplay and the earlier QoL and renderer behavior. It adds no gameplay features. Native dialogs use **More Options**, **Controls** and **Backups**, concise labels and a deck preview made from original seed-packet artwork. The Bonus page uses the standard challenge grid/card layout; the challenge uses the native flag banner. Browser backup rows use date labels on stone buttons.
 

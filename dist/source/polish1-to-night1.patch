@@ -1,0 +1,328 @@
+--- a/CMake/ProjectVersion.cmake
++++ b/CMake/ProjectVersion.cmake
+@@ -66,6 +66,6 @@
+ endif()
+ 
+ # Private CPU compositor candidate; never identify this binary as public parity.3.
+-set(PVZP_VERSION "0.2.6-web-polish.1")
++set(PVZP_VERSION "0.2.6-web-night.1")
+ set(PVZP_VERSION_PLAIN "0.2.6")
+ configure_file("${PROJECT_SOURCE_DIR}/CMake/ProjectVersion.h.in" "${PROJECT_BINARY_DIR}/ProjectVersion.h" @ONLY)
+--- a/src/ConstEnums.h
++++ b/src/ConstEnums.h
+@@ -453,6 +453,7 @@
+ 	GAMEMODE_UPSELL,
+ 	GAMEMODE_INTRO,
+ 	GAMEMODE_CHALLENGE_CONE_ZONE = 73,
++	GAMEMODE_CHALLENGE_NIGHT_SHIFT = 74,
+ 	NUM_GAME_MODES
+ };
+ enum GameObjectType : int32_t
+--- a/src/Lawn/Board.cpp
++++ b/src/Lawn/Board.cpp
+@@ -574,7 +574,7 @@
+ {
+ 	if (BonusChallenge::IsMode(mApp->mGameMode))
+ 	{
+-		mNumWaves = BonusChallenge::PopulateWaves(mZombiesInWave);
++		mNumWaves = BonusChallenge::PopulateWaves(mApp->mGameMode, mZombiesInWave);
+ 		return;
+ 	}
+ 
+@@ -907,6 +907,7 @@
+ 		mBackground = BackgroundType::BACKGROUND_1_DAY;
+ 		break;
+ 
++	case GameMode::GAMEMODE_CHALLENGE_NIGHT_SHIFT:
+ 	case GameMode::GAMEMODE_SURVIVAL_NORMAL_STAGE_2:
+ 	case GameMode::GAMEMODE_SURVIVAL_HARD_STAGE_2:
+ 	case GameMode::GAMEMODE_SURVIVAL_ENDLESS_STAGE_2:
+@@ -1347,7 +1348,7 @@
+ 	InitZombieWaves();
+ 	if (BonusChallenge::IsMode(aGameMode))
+ 	{
+-		mSunMoney = BonusChallenge::kStartingSun;
++		mSunMoney = BonusChallenge::StartingSun(aGameMode);
+ 	}
+ 	else if (aGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED || aGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED_TWIST ||
+ 		mApp->IsScaryPotterLevel() || mApp->IsWhackAZombieLevel())
+@@ -1398,7 +1399,7 @@
+ 	}
+ 	if (BonusChallenge::IsMode(aGameMode))
+ 	{
+-		BonusChallenge::FillSeedBank(*mSeedBank);
++		BonusChallenge::FillSeedBank(aGameMode, *mSeedBank);
+ 	}
+ 	else if (mApp->IsSlotMachineLevel())
+ 	{
+@@ -8620,7 +8621,7 @@
+ 
+ int Board::GetNumSeedsInBank()
+ {
+-	if (BonusChallenge::IsMode(mApp->mGameMode)) return static_cast<int>(BonusChallenge::kSeeds.size());
++	if (BonusChallenge::IsMode(mApp->mGameMode)) return BonusChallenge::SeedCount(mApp->mGameMode);
+ 
+ 	if (mApp->IsScaryPotterLevel())
+ 	{
+--- a/src/Lawn/Challenge.cpp
++++ b/src/Lawn/Challenge.cpp
+@@ -2296,7 +2296,7 @@
+ 	GameMode aGameMode = mApp->mGameMode;
+ 	if (BonusChallenge::IsMode(aGameMode))
+ 	{
+-		BonusChallenge::PopulateAllowedZombies(mBoard->mZombieAllowed);
++		BonusChallenge::PopulateAllowedZombies(aGameMode, mBoard->mZombieAllowed);
+ 		return;
+ 	}
+ 	bool* aList = mBoard->mZombieAllowed;
+--- a/src/Lawn/System/BonusChallenge.h
++++ b/src/Lawn/System/BonusChallenge.h
+@@ -2,6 +2,7 @@
+ #pragma once
+ 
+ #include "../../ConstEnums.h"
++#include "NightShift.h"
+ #include <array>
+ #include <cstddef>
+ #include <string_view>
+@@ -43,7 +44,7 @@
+     {2, 6, 0, 2}, {2, 5, 2, 2}, {2, 6, 0, 3}, {3, 7, 2, 3}
+ }};
+ 
+-constexpr bool IsMode(GameMode mode) { return mode == kMode; }
++constexpr bool IsMode(GameMode mode) { return mode == kMode || NightShift::IsMode(mode); }
+ constexpr bool IsFlagWave(int wave) { return wave >= 0 && wave < kWaveCount && (wave + 1) % 10 == 0; }
+ constexpr int ZombieCount(int wave)
+ {
+@@ -92,6 +93,30 @@
+     for (int i = 0; i < bank.mNumPackets; ++i) bank.mSeedPackets[i].SetPacketType(kSeeds[i]);
+ }
+ 
++// Shared routing keeps the original Cone Zone data and helpers unchanged.
++constexpr int StartingSun(GameMode mode) { return NightShift::IsMode(mode) ? NightShift::kStartingSun : kStartingSun; }
++constexpr int SeedCount(GameMode mode) { return static_cast<int>(NightShift::IsMode(mode) ? NightShift::kSeeds.size() : kSeeds.size()); }
++
++template<std::size_t Waves, std::size_t Slots>
++int PopulateWaves(GameMode mode, ZombieType (&output)[Waves][Slots])
++{
++    return NightShift::IsMode(mode) ? NightShift::PopulateWaves(output) : PopulateWaves(output);
++}
++
++template<std::size_t Count>
++void PopulateAllowedZombies(GameMode mode, bool (&output)[Count])
++{
++    if (NightShift::IsMode(mode)) NightShift::PopulateAllowedZombies(output);
++    else PopulateAllowedZombies(output);
++}
++
++template<class Bank>
++void FillSeedBank(GameMode mode, Bank& bank)
++{
++    if (NightShift::IsMode(mode)) NightShift::FillSeedBank(bank);
++    else FillSeedBank(bank);
++}
++
+ static_assert(static_cast<int>(kMode) == 73);
+ static_assert(ZombieCount(kWaveCount - 1) == kLargestWave);
+ }
+--- /dev/null
++++ b/src/Lawn/System/NightShift.h
+@@ -0,0 +1,98 @@
++// SPDX-License-Identifier: LGPL-3.0-or-later
++#pragma once
++
++#include "../../ConstEnums.h"
++#include <array>
++#include <cstddef>
++#include <string_view>
++
++// Uses the native nighttime lawn, sun economy, graves and mushroom behavior.
++// Mode 74 owns reserved profile record 73 without extending serialized objects.
++namespace NightShift
++{
++inline constexpr GameMode kMode = GAMEMODE_CHALLENGE_NIGHT_SHIFT;
++inline constexpr std::string_view kId = "night-shift";
++inline constexpr int kRevision = 1;
++inline constexpr int kStartingSun = 150;
++inline constexpr int kWaveCount = 20;
++inline constexpr int kLargestWave = 16;
++inline constexpr std::array<SeedType, 6> kSeeds = {
++    SEED_SUNSHROOM, SEED_PUFFSHROOM, SEED_FUMESHROOM,
++    SEED_GRAVEBUSTER, SEED_ICESHROOM, SEED_DOOMSHROOM
++};
++inline constexpr std::array<ZombieType, 5> kPreviewZombies = {
++    ZOMBIE_NORMAL, ZOMBIE_TRAFFIC_CONE, ZOMBIE_NEWSPAPER, ZOMBIE_DOOR, ZOMBIE_PAIL
++};
++
++struct Wave
++{
++    int mNormal;
++    int mCones;
++    int mNewspapers;
++    int mDoors;
++    int mBuckets;
++};
++
++// Free Puff-shrooms protect the opening economy. Newspapers arrive on wave 4,
++// doors on wave 8 and buckets on wave 15; native Fume-shrooms counter shields.
++inline constexpr std::array<Wave, kWaveCount> kWaves = {{
++    {1, 0, 0, 0, 0}, {2, 0, 0, 0, 0}, {3, 0, 0, 0, 0}, {2, 0, 1, 0, 0},
++    {2, 1, 1, 0, 0}, {3, 1, 1, 0, 0}, {3, 2, 1, 0, 0}, {3, 2, 1, 1, 0},
++    {3, 2, 2, 1, 0}, {4, 3, 2, 1, 0}, {3, 3, 1, 2, 0}, {3, 3, 2, 2, 0},
++    {3, 3, 2, 3, 0}, {3, 3, 2, 3, 0}, {3, 3, 2, 3, 1}, {3, 4, 2, 3, 1},
++    {3, 4, 2, 3, 2}, {3, 3, 3, 3, 2}, {3, 4, 2, 3, 2}, {3, 4, 3, 3, 2}
++}};
++
++constexpr bool IsMode(GameMode mode) { return mode == kMode; }
++constexpr bool IsFlagWave(int wave) { return wave >= 0 && wave < kWaveCount && (wave + 1) % 10 == 0; }
++constexpr int ZombieCount(int wave)
++{
++    if (wave < 0 || wave >= kWaveCount) return 0;
++    const Wave& entry = kWaves[wave];
++    return entry.mNormal + entry.mCones + entry.mNewspapers + entry.mDoors + entry.mBuckets + (IsFlagWave(wave) ? 1 : 0);
++}
++
++// Reject invalid input before writing any part of the native wave buffer.
++constexpr int ComposeWave(int wave, ZombieType* output, int capacity)
++{
++    if (wave < 0 || wave >= kWaveCount || !output || capacity <= ZombieCount(wave)) return -1;
++    for (int i = 0; i < capacity; ++i) output[i] = ZOMBIE_INVALID;
++    const Wave& entry = kWaves[wave];
++    int count = 0;
++    if (IsFlagWave(wave)) output[count++] = ZOMBIE_FLAG;
++    for (int i = 0; i < entry.mNormal; ++i) output[count++] = ZOMBIE_NORMAL;
++    for (int i = 0; i < entry.mCones; ++i) output[count++] = ZOMBIE_TRAFFIC_CONE;
++    for (int i = 0; i < entry.mNewspapers; ++i) output[count++] = ZOMBIE_NEWSPAPER;
++    for (int i = 0; i < entry.mDoors; ++i) output[count++] = ZOMBIE_DOOR;
++    for (int i = 0; i < entry.mBuckets; ++i) output[count++] = ZOMBIE_PAIL;
++    return count;
++}
++
++template<std::size_t Waves, std::size_t Slots>
++int PopulateWaves(ZombieType (&output)[Waves][Slots])
++{
++    static_assert(Waves >= kWaveCount && Slots > kLargestWave);
++    for (auto& wave : output)
++        for (auto& zombie : wave) zombie = ZOMBIE_INVALID;
++    for (int i = 0; i < kWaveCount; ++i) ComposeWave(i, output[i], static_cast<int>(Slots));
++    return kWaveCount;
++}
++
++template<std::size_t Count>
++void PopulateAllowedZombies(bool (&output)[Count])
++{
++    static_assert(Count > static_cast<std::size_t>(ZOMBIE_DOOR));
++    for (auto& allowed : output) allowed = false;
++    for (ZombieType zombie : kPreviewZombies) output[zombie] = true;
++}
++
++template<class Bank>
++void FillSeedBank(Bank& bank)
++{
++    bank.mNumPackets = static_cast<int>(kSeeds.size());
++    for (int i = 0; i < bank.mNumPackets; ++i) bank.mSeedPackets[i].SetPacketType(kSeeds[i]);
++}
++
++static_assert(static_cast<int>(kMode) == 74);
++static_assert(ZombieCount(kWaveCount - 1) == kLargestWave);
++}
+--- a/src/Lawn/Widget/ChallengeScreen.cpp
++++ b/src/Lawn/Widget/ChallengeScreen.cpp
+@@ -109,7 +109,8 @@
+ 	{ .mChallengeMode = GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_ENDLESS, .mChallengeIconIndex = 11, .mPage = ChallengePage::CHALLENGE_PAGE_PUZZLE, .mRow = 3, .mCol = 4, .mChallengeName = "[I_ZOMBIE_ENDLESS]" },
+ 	{ .mChallengeMode = GameMode::GAMEMODE_UPSELL, .mChallengeIconIndex = 10, .mPage = ChallengePage::CHALLENGE_PAGE_LIMBO, .mRow = 3, .mCol = 4, .mChallengeName = "Upsell" },
+ 	{ .mChallengeMode = GameMode::GAMEMODE_INTRO, .mChallengeIconIndex = 10, .mPage = ChallengePage::CHALLENGE_PAGE_LIMBO, .mRow = 2, .mCol = 3, .mChallengeName = "Intro" },
+-	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_CONE_ZONE, .mChallengeIconIndex = 0, .mPage = ChallengePage::CHALLENGE_PAGE_BONUS, .mRow = 1, .mCol = 0, .mChallengeName = "Cone Zone" }
++	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_CONE_ZONE, .mChallengeIconIndex = 0, .mPage = ChallengePage::CHALLENGE_PAGE_BONUS, .mRow = 1, .mCol = 0, .mChallengeName = "Cone Zone" },
++	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_NIGHT_SHIFT, .mChallengeIconIndex = 1, .mPage = ChallengePage::CHALLENGE_PAGE_BONUS, .mRow = 1, .mCol = 1, .mChallengeName = "Night Shift" }
+ };
+ 
+ ChallengeScreen::ChallengeScreen(LawnApp* theApp, ChallengePage thePage)
+@@ -174,7 +175,7 @@
+ 		aChallengeButton->mDoFinger = true;
+ 		aChallengeButton->mFrameNoDraw = true;
+ 		if (aChlDef.mPage == CHALLENGE_PAGE_BONUS)
+-			aChallengeButton->Resize(38, 93, 104, 115);
++			aChallengeButton->Resize(38 + aChlDef.mCol * 155, 93 + (aChlDef.mRow - 1) * 119, 104, 115);
+ 		else if (aChlDef.mPage == CHALLENGE_PAGE_CHALLENGE || aChlDef.mPage == CHALLENGE_PAGE_LIMBO || aChlDef.mPage == CHALLENGE_PAGE_PUZZLE)
+ 			aChallengeButton->Resize(38 + aChlDef.mCol * 155, 93 + aChlDef.mRow * 119, 104, 115);
+ 		else
+@@ -723,8 +724,10 @@
+ 		{
+ 			mToolTip->mX = aChallengeButton->mWidth / 2 + aChallengeButton->mX;
+ 			mToolTip->mY = aChallengeButton->mY + aChallengeButton->mHeight + 4;
+-			if (mToolTip->mLabel != "20 waves. Six classic plants.")
+-				mToolTip->SetLabel("20 waves. Six classic plants.");
++			const char* aLabel = aDef.mChallengeMode == GAMEMODE_CHALLENGE_NIGHT_SHIFT ?
++				"20 waves. No falling sun." : "20 waves. Six classic plants.";
++			if (mToolTip->mLabel != aLabel)
++				mToolTip->SetLabel(aLabel);
+ 			mToolTip->mVisible = true;
+ 			return;
+ 		}
+--- a/src/Lawn/Widget/ContinueDialog.cpp
++++ b/src/Lawn/Widget/ContinueDialog.cpp
+@@ -24,6 +24,7 @@
+ #include "GameButton.h"
+ #include "../../LawnApp.h"
+ #include "ContinueDialog.h"
++#include "../System/BonusChallenge.h"
+ #include "../../Resources.h"
+ #include "../../PvzpLib/PvzpFoley.h"
+ #include "../../PvzpLib/PvzpStringFile.h"
+@@ -206,7 +207,7 @@
+ 			mApp->KillBoard();
+ 			mApp->ShowChallengeScreen(ChallengePage::CHALLENGE_PAGE_PUZZLE);
+ 		}
+-		else if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_CONE_ZONE)
++		else if (BonusChallenge::IsMode(mApp->mGameMode))
+ 		{
+ 			mApp->KillBoard();
+ 			mApp->ShowChallengeScreen(ChallengePage::CHALLENGE_PAGE_BONUS);
+--- a/src/Lawn/Zombie.cpp
++++ b/src/Lawn/Zombie.cpp
+@@ -26,6 +26,7 @@
+ #include "Board.h"
+ #include "../ConstEnums.h"
+ #include "Zombie.h"
++#include "System/BonusChallenge.h"
+ #include "Cutscene.h"
+ #include "GridItem.h"
+ #include "LawnMower.h"
+@@ -7238,7 +7239,7 @@
+ 			mBoard->AddCoin(aCenterX + i * 5, aCenterY, CoinType::COIN_SUN, CoinMotion::COIN_MOTION_COIN);
+ 		}
+ 	}
+-	else if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_CONE_ZONE)
++	else if (BonusChallenge::IsMode(mApp->mGameMode))
+ 	{
+ 		// An optional bonus trophy must never substitute for the last
+ 		// original trophy and prematurely award the gold sunflower.
+--- a/src/LawnApp.cpp
++++ b/src/LawnApp.cpp
+@@ -36,6 +36,7 @@
+ #include "Lawn/ZenGarden.h"
+ #include "PvzpLib/Trail.h"
+ #include "Lawn/System/Music.h"
++#include "Lawn/System/BonusChallenge.h"
+ #include "Lawn/System/SaveGame.h"
+ #include "PvzpLib/PvzpDebug.h"
+ #include "PvzpLib/PvzpFoley.h"
+@@ -1352,7 +1353,7 @@
+ 
+ bool LawnApp::UpdatePlayerProfileForFinishingLevel()
+ {
+-	if (mGameMode == GameMode::GAMEMODE_CHALLENGE_CONE_ZONE)
++	if (BonusChallenge::IsMode(mGameMode))
+ 	{
+ 		// Bonus completion occupies a reserved record without advancing the
+ 		// original campaign, trophy totals, unlock flags or award screens.
+@@ -1468,7 +1469,7 @@
+ 
+ 	bool aUnlockedNewChallenge = UpdatePlayerProfileForFinishingLevel();
+ 
+-	if (mGameMode == GameMode::GAMEMODE_CHALLENGE_CONE_ZONE)
++	if (BonusChallenge::IsMode(mGameMode))
+ 	{
+ 		KillBoard();
+ 		ShowChallengeScreen(ChallengePage::CHALLENGE_PAGE_BONUS);

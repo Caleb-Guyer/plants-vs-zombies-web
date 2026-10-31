@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-polish.1
-Simplifies bonus challenge, options and plant-deck presentation using the original game artwork and concise native controls. Browser saves use a background worker in the corresponding website source.
-Engine JavaScript SHA-256: e7f8d0ba327ce5acb94d7301da92e398d078e6b2a0ff13db06346a0925f4d7d6
-Engine WASM SHA-256: 852d8a02dbf6fc0d1302b0a4fe4964dd80abbb7609d20bab4610b0c7a265f000
+PvZ-Portable 0.2.6-web-night.1
+Adds Night Shift, a twenty-wave nighttime Bonus challenge with six fixed mushroom-focused seeds and an independent checkpoint and completion record. Retains background saves and original-style controls.
+Engine JavaScript SHA-256: f6d1a7749955e3d889257c6074b9d2095df9a81c1bc67d323db7957f45d00755
+Engine WASM SHA-256: a63038207945b1e4ae82abc646693fb89c0b3292e37e758806ae744d1fb2ff9f
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.

@@ -32,7 +32,7 @@ function srcFiles(zip) {
     // Engine sources live at the archive root; build recipes can contain
     // separately hashed prior-source fixtures with their own nested /src/.
     const parts = entry.name.split('/');
-    const engineRoot = ['polish1-candidate/source/', 'content1-candidate/source/', 'qol2-candidate/source/', 'qol1-candidate/source/', 'software10-candidate/source/']
+    const engineRoot = ['night1-candidate/source/', 'polish1-candidate/source/', 'content1-candidate/source/', 'qol2-candidate/source/', 'qol1-candidate/source/', 'software10-candidate/source/']
       .find(prefix => entry.name.startsWith(prefix + 'src/'));
     const relative = engineRoot
       ? entry.name.slice(engineRoot.length)
@@ -48,7 +48,7 @@ function srcFiles(zip) {
 const originals = srcFiles(official);
 const candidates = srcFiles(modified);
 const addedRendererFiles=['src/SexyAppFramework/graphics/SoftwareScreenImage.cpp','src/SexyAppFramework/graphics/SoftwareScreenImage.h','src/PvzpLib/PvzpNativeScreenPixel888.inc','src/PvzpLib/PvzpNativeScreenTexel.inc'];
-const addedContentFiles=['src/Lawn/System/BonusChallenge.h'];
+const addedContentFiles=['src/Lawn/System/BonusChallenge.h','src/Lawn/System/NightShift.h'];
 const addedQoLFiles=['src/Lawn/System/QoLSettings.h','src/Lawn/System/QoLSettings.cpp','src/Lawn/Widget/QoLDialog.h','src/Lawn/Widget/QoLDialog.cpp','src/Lawn/System/DeckPresets.h','src/Lawn/System/DeckPresets.cpp','src/Lawn/Widget/PlantDecksDialog.h','src/Lawn/Widget/PlantDecksDialog.cpp','src/Lawn/SeedPacketCooldown.h'];
 assert.deepEqual([...candidates.keys()].sort(), [...originals.keys(),...addedRendererFiles,...addedQoLFiles,...addedContentFiles].sort(),
   'The complete source adds exactly the retained renderer, QoL and reviewed bonus files');
@@ -105,7 +105,7 @@ assert.deepEqual(changed.sort(), [
   "src/SexyAppFramework/platform/emscripten/Window.cpp"
 ].sort(), 'The packaged source changes exactly the reviewed existing engine paths; renderer additions are separately constrained');
 const [before, source] = decoded.get('src/Lawn/Widget/ZombatarWidget.cpp');
-console.log('PASS complete Polish.1 source layout, retained renderer additions and reviewed native QoL/bonus paths; all Zombatar behavior checks remain active.');
+console.log('PASS complete Night.1 source layout, retained renderer additions and reviewed native QoL/bonus paths; all Zombatar behavior checks remain active.');
 
 // Find the actual complete body, respecting quoted strings and comments.
 function functionText(text, signature) {
