@@ -8,6 +8,12 @@ The user directed us on 2026-10-31 to stop manual gameplay and wrap the current 
 
 Publication status: [GitHub Pages](https://caleb-guyer.github.io/plants-vs-zombies-web/) is live after [workflow 41230962473](https://github.com/Caleb-Guyer/plants-vs-zombies-web/actions/runs/41230962473) succeeded on 2026-10-31. A silent browser check reached the original title without a file prompt; WASM returned HTTP 200 as `application/wasm`. This adds hosting/startup proof only, with no GitHub campaign gameplay or full-parity certification.
 
+## Requested QoL change, 2026-10-31
+
+The user requested a 1x/2x speed button near Menu that matches the game's visual style. QoL.1 adds a native stone button directly below Menu, leaving room for the full seed tray and shovel. This intentional gameplay option supersedes the earlier strict 1:1 requirement for speed only. Normal speed remains the default for every new/resumed board. Pause, dialogs, chooser and transitions do not accelerate. Keep audio pitch and existing save formats unchanged. Targeted feature tests and a short silent UI check are appropriate; do not resume broad campaign playtesting.
+
+The GitHub Pages release now uses `0.2.6-web-qol.1`, retaining the Software.10 rendering code. Current source and binary hashes are in `dist/game/engine-provenance.json`; prior Software.10 records below retain their historical scope.
+
 ## Objective and completion status
 
 The user wants original **Plants vs. Zombies GOTY**, with complete content, original graphics and 1:1 game behavior, on the public site at https://lawn-defense-caleb-plays.usgi.chatgpt.site.

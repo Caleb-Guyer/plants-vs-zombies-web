@@ -32,8 +32,10 @@ function srcFiles(zip) {
     // Engine sources live at the archive root; build recipes can contain
     // separately hashed prior-source fixtures with their own nested /src/.
     const parts = entry.name.split('/');
-    const relative = entry.name.startsWith('software10-candidate/source/src/')
-      ? entry.name.slice('software10-candidate/source/'.length)
+    const engineRoot = ['qol1-candidate/source/', 'software10-candidate/source/']
+      .find(prefix => entry.name.startsWith(prefix + 'src/'));
+    const relative = engineRoot
+      ? entry.name.slice(engineRoot.length)
       : parts[0] === 'src' ? entry.name
       : parts[1] === 'src' ? parts.slice(1).join('/') : null;
     if (!relative) continue;
@@ -68,11 +70,13 @@ for (const [name, entry] of originals) {
   if (!equal) changed.push(name);
 }
 assert.deepEqual(changed.sort(), [
+  "src/Lawn/Board.cpp",
   "src/Lawn/Challenge.cpp",
   "src/Lawn/Widget/ZombatarWidget.cpp",
   "src/Lawn/Widget/ZombatarWidget.h",
   "src/Lawn/Zombie.cpp",
   "src/LawnApp.cpp",
+  "src/LawnApp.h",
   "src/PvzpLib/PvzpDrawTriangle.inc",
   "src/SexyAppFramework/SexyAppBase.cpp",
   "src/SexyAppFramework/SexyAppBase.h",
@@ -88,7 +92,7 @@ assert.deepEqual(changed.sort(), [
   "src/SexyAppFramework/platform/emscripten/Window.cpp"
 ], 'The packaged source changes exactly the reviewed existing engine paths; renderer additions are separately constrained');
 const [before, source] = decoded.get('src/Lawn/Widget/ZombatarWidget.cpp');
-console.log('PASS complete Software.10 source layout, four reviewed renderer additions and reviewed existing-path scope; all Zombatar behavior checks remain active.');
+console.log('PASS complete QoL.1 source layout, four retained renderer additions and reviewed native speed-control paths; all Zombatar behavior checks remain active.');
 
 // Find the actual complete body, respecting quoted strings and comments.
 function functionText(text, signature) {

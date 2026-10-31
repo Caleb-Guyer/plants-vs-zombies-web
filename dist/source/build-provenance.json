@@ -1,5 +1,5 @@
 {
-  "id": "0.2.6-web-software.10",
+  "id": "0.2.6-web-qol.1",
   "upstream": {
     "tag": "0.2.6",
     "commit": "396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
@@ -7,252 +7,123 @@
     "officialJsSha256": "0f2d7425190e49c762f6700b68b080086e3dcb8f2dc5e9724de42ce9fb508573"
   },
   "sourceArchive": {
-    "path": "pvz-portable-0.2.6-web-software.10-source.zip",
-    "bytes": 5233817,
-    "sha256": "62bf399ffeedde34ec9946b4aece8fce4cb4ffb119739d3b55d2025bc4cda261",
-    "crc32": "a5880a40",
-    "entries": 807,
-    "uncompressedBytes": 22781175
+    "path": "pvz-portable-0.2.6-web-qol.1-source.zip",
+    "bytes": 4816285,
+    "sha256": "cfb04160423d2bf5d66cf414daa476e0b292951a9c4cc31d5fd6e9eb884cadeb",
+    "crc32": "745d9c1f",
+    "entries": 771,
+    "uncompressedBytes": 15480239
   },
   "artifacts": [
     {
-      "path": "build/pvz-portable.html",
-      "bytes": 22550,
-      "sha256": "b6a9f2e4ea1b3ebb8ad49e013fe8f2f29e023869c9ead52830d8f4170d95b9e4",
-      "crc32": "d540b1a5"
-    },
-    {
       "path": "build/pvz-portable.js",
       "bytes": 208448,
-      "sha256": "905679974d24b7657297c42cfb39b3201f4168cf2e607efb7a8a45cf0a1d9669",
-      "crc32": "e6c2a77e"
+      "sha256": "b60338d9d8ceb53c3e30407a667bd2761243c9abc83f82d567173ac4fb14c160",
+      "crc32": "266b929b"
     },
     {
       "path": "build/pvz-portable.wasm",
-      "bytes": 7411823,
-      "sha256": "b8b041dfe57d3e66d7ea6889ba9fabb8db6bd71b6eda8e6944188ee982ec24c1",
-      "crc32": "1c650b2f"
+      "bytes": 7415985,
+      "sha256": "5319147e3ac37d05b7179c4206c79e76bd98f19521e94b1ea710b07b31768566",
+      "crc32": "468b221e"
     },
     {
       "path": "build/ProjectVersion.h",
-      "bytes": 195,
-      "sha256": "b0ade30f006a12a73d977c25d18a17d78964fe62f161579df48cf3a232a81ee5",
-      "crc32": "5f5332ec"
+      "bytes": 189,
+      "sha256": "b7e858a8bc142ee1ecbb0b8241deb5bbe02e6e85b4be36e735f3b8072da14936",
+      "crc32": "fe1523a6"
     }
   ],
   "sourceFiles": 757,
-  "sourceBytes": 12885604,
-  "sourceDeltaVsSoftware9": [
+  "sourceBytes": 12902834,
+  "sourceDeltaVsSoftware10": [
     {
       "path": "CMake/ProjectVersion.cmake",
-      "beforeSha256": "cc96732554a2a8d3da70e576c1aca74f7fd1d1f91035b7d81398587b85992ee7",
-      "afterSha256": "1aa6e327c0de35fde411958fa8bddfb3bc66f021a3357e9fd02e5b83ebc18758"
+      "beforeSha256": "1aa6e327c0de35fde411958fa8bddfb3bc66f021a3357e9fd02e5b83ebc18758",
+      "afterSha256": "8d5a54ac6144252172b753577e22020231394fcf8321475668225c42b1644840"
     },
     {
-      "path": "src/PvzpLib/PvzpDrawTriangle.inc",
-      "beforeSha256": "48e83e4dfca83ce994352b85ba435412558863de6ffc9154f75cad10b917cba6",
-      "afterSha256": "0e2b54f76ca23cabacbfb79dc7e3f3ed9e6b93cfc5f923bd999fc672ddbfdcdd"
+      "path": "src/Lawn/Board.cpp",
+      "beforeSha256": "466a2f572aec808d15a43ba071a0d7512f57afbfa8b7b62da1ed1454a1cb538a",
+      "afterSha256": "894d0aec8b06711a426de12214d9976db9334dd29b68017882bba27427c46285"
     },
     {
-      "path": "src/PvzpLib/PvzpNativeScreenPixel888.inc",
-      "beforeSha256": "1eea6abcbb726df1596d14ed9b1ce2aa3ac70bc03987930f224f437f9e22d760",
-      "afterSha256": "a8f0592b0284f1cb381f75911d70e0a0f193c716d9cee6925d5ce8257d6d1553"
+      "path": "src/LawnApp.cpp",
+      "beforeSha256": "417dbe49a8ffa772aa063c3969a2edf6d70ad1392d8d4dd6fee7c43c4beb369f",
+      "afterSha256": "b41ade5a2fc28857c87e23fcdf6ee902359646d058f3db05cea3dca9818c9ba0"
+    },
+    {
+      "path": "src/LawnApp.h",
+      "beforeSha256": "73128e363cb5798223035f7b10ea3289055cfd0db557259ad0198c0c23086749",
+      "afterSha256": "de0036b0d7b765619a5eefb55e2dc4b55421975972824f07e704ad36851e8c25"
     }
   ],
+  "compiledVersionHeader": "// Generated from CMake/ProjectVersion.h.in by CMake; do not edit.\r\n#pragma once\r\n\r\n#define PVZP_VERSION \"0.2.6-web-qol.1\"\r\n#define PVZP_BUILD_NUMBER 1\r\n#define PVZP_COMMIT_DATE \"unknown\"\r\n",
   "checks": {
     "fullRelease": {
-      "status": "PASS complete private Release build",
-      "command": [
-        "powershell",
-        "-NoProfile",
-        "-ExecutionPolicy",
-        "Bypass",
-        "-File",
-        "C:\\Users\\caleb\\Documents\\Codex\\2026-10-25\\co\\work\\portable-build\\software10-candidate\\build-candidate.ps1"
-      ],
       "exitCode": 0,
-      "elapsedSeconds": 135.885,
-      "sourceFiles": 757,
-      "sourceUnchangedDuringBuild": true,
-      "sourceBeforeManifestSha256": "605d1033e79ba19cba7b9eb175dd9cea953c1d38c7807fa00313bc09c7360034",
-      "sourceAfterManifestSha256": "605d1033e79ba19cba7b9eb175dd9cea953c1d38c7807fa00313bc09c7360034",
-      "buildRecipeSha256": "3e9c4d78c4da5fc275051db996f99a5bb0638f6ffeccc3055330b895bda2e32e",
-      "recorderSha256": "a14b4ba0dd0cc6cc8a305f21be261814c39479f9668cf11afc3560759666f7a5",
-      "buildLogSha256": "81bc44012a6530486041b8d3375cafd4eb0f5dbbcba44b2af8e8f543484e1d16",
       "flags": {
         "CMAKE_BUILD_TYPE": "Release",
         "DO_FIX_BUGS": "OFF",
         "PVZ_DEBUG": "OFF",
         "LOW_MEMORY": "OFF"
       },
-      "outputs": {
-        "ProjectVersion.h": {
-          "bytes": 195,
-          "sha256": "b0ade30f006a12a73d977c25d18a17d78964fe62f161579df48cf3a232a81ee5"
-        },
-        "pvz-portable.js": {
-          "bytes": 208448,
-          "sha256": "905679974d24b7657297c42cfb39b3201f4168cf2e607efb7a8a45cf0a1d9669"
-        },
-        "pvz-portable.wasm": {
-          "bytes": 7411823,
-          "sha256": "b8b041dfe57d3e66d7ea6889ba9fabb8db6bd71b6eda8e6944188ee982ec24c1"
-        },
-        "pvz-portable.html": {
-          "bytes": 22550,
-          "sha256": "b6a9f2e4ea1b3ebb8ad49e013fe8f2f29e023869c9ead52830d8f4170d95b9e4"
-        },
-        "CMakeCache.txt": {
-          "bytes": 23446,
-          "sha256": "5ad7d57acc3b45e51b7581511eb1f9c3f2468a25310b586bca8f8b8f756f6e3b"
-        }
-      },
-      "generatedVersionHeader": "// Generated from CMake/ProjectVersion.h.in by CMake; do not edit.\n#pragma once\n\n#define PVZP_VERSION \"0.2.6-web-software.10\"\n#define PVZP_BUILD_NUMBER 1\n#define PVZP_COMMIT_DATE \"unknown\"\n",
-      "scope": "Compilation/link only with pinned existing SDK and flags. No browser/game/original/audio execution, scene or full parity claim."
-    },
-    "flagsAndActualCmakeHomeChecked": true,
-    "sourceBefore": {
-      "bytes": 99517,
-      "sha256": "605d1033e79ba19cba7b9eb175dd9cea953c1d38c7807fa00313bc09c7360034",
-      "crc32": "ec8e2501"
-    },
-    "sourceAfter": {
-      "bytes": 99517,
-      "sha256": "605d1033e79ba19cba7b9eb175dd9cea953c1d38c7807fa00313bc09c7360034",
-      "crc32": "ec8e2501"
-    },
-    "sourceFingerprintTiming": "Current source bytes equal the actual full Release source-before and source-after757-file captures. Source freeze evidence, not per-object compiler input attestation.",
-    "actualGeneratedVersionHeader": "// Generated from CMake/ProjectVersion.h.in by CMake; do not edit.\r\n#pragma once\r\n\r\n#define PVZP_VERSION \"0.2.6-web-software.10\"\r\n#define PVZP_BUILD_NUMBER 1\r\n#define PVZP_COMMIT_DATE \"unknown\"\r\n",
-    "nodeSyntaxExitCode": 0,
-    "wasmValidateWithoutInstantiation": true,
-    "focusedAdditive": {
-      "path": "additive-tests/results/results.json",
-      "bytes": 513896,
-      "sha256": "5227f972f6f10c059776d9370790441503bb39aab4aafaeb94db60e466e6a14f",
-      "crc32": "1d1fada5",
-      "normalAssertions": [
-        458240,
-        413568
-      ],
-      "additiveAssertions": [
-        458368,
-        413696
-      ],
-      "candidateAdditiveFailures": [
-        0,
-        0
-      ],
-      "parentExpectedAdditiveFailures": [
-        47270,
-        50870
-      ],
-      "stateAssertions": 628406,
-      "stateFailures": 0,
-      "degenerateCalls": 8,
-      "fallbackRecordCount": 74,
-      "unchangedExpandedCallbacks": 90
-    }
-  },
-  "preservation": {
-    "unchangedParentSourceFiles": 754,
-    "exactThreeApprovedChangedPaths": true,
-    "preBuild757MapMatchesPostBuildAndCurrentSource": true,
-    "normalDispatchersPreprocessedByteExact": true,
-    "otherExpandedCallbackBodiesUnchanged": 90,
-    "fallbackFullRecordsBitExact": true
-  },
-  "compiledVersionHeader": "// Generated from CMake/ProjectVersion.h.in by CMake; do not edit.\n#pragma once\n\n#define PVZP_VERSION \"0.2.6-web-software.10\"\n#define PVZP_BUILD_NUMBER 1\n#define PVZP_COMMIT_DATE \"unknown\"\n",
-  "combinedPatch": {
-    "path": "web-software.10.patch",
-    "sha256": "23c50a326efdecfd25e6d7bc9f55b2398cb19b88ae7539d15dd4099253d2d208",
-    "sourcePaths": 23
-  },
-  "incrementalPatch": {
-    "path": "software9-to-software10.patch",
-    "sha256": "1b8bf519c6b674adcf1c59ebbbce640bfecd65f1a99bb86b27c931fb3cffdca7",
-    "sourcePaths": 3
-  },
-  "producerVerification": "software10-verification.json",
-  "runtimeQa": {
-    "build": "0.2.6-web-software.10",
-    "status": "PASS bounded own private fresh tutorial, renderer preference and cross-origin save transfer/Continue",
-    "context": "Private isolated Software10 origins; fresh Web10QA profile with no generated fixture. testing=1 and checked mute observed. No public-host gameplay or authentic original-runtime comparison credit.",
-    "startup": {
-      "automaticFileFreeFreshTitle": true,
-      "freshProfileNameAccepted": true,
-      "fiveCompactControlsVisible": true,
-      "initialNative3DChecked": true
-    },
-    "renderer": {
-      "cpuSelectedBeforeAdventure": true,
-      "uncheckedNativeOptionsReopenedDuring1_1": true,
-      "level1_1CpuFightWithNoLater3DRequest": true,
-      "level1_2CpuHardwareCpuCycleMenuClosedAndReopenedEach": true,
-      "importedRegistryIs3D": 0,
-      "targetMenuAfterContinueUnchecked": true,
-      "scope": "Visible native options/saved preference/board retention; no hardware fight/backend-object/FPS/native-pixel claim."
-    },
-    "gameplay": {
-      "adventure1_1": {
-        "freshOneAttemptFiniteWin": true,
-        "restartOrGameOverUsed": false,
-        "sunCollectionAndPeashooterProjectilesObserved": true,
-        "twoPeashootersRetained": true,
-        "sunflowerRewardCollectedAndAwardReached": true,
-        "exactZombieCountIndependent": false
-      },
-      "adventure1_2": {
-        "enteredViaNextLevel": true,
-        "oneVisibleSunflowerC0Middle": true,
-        "visibleSunAfterContinue": 0,
-        "finiteWinObserved": false
+      "sourceUnchangedDuringBuild": true,
+      "receipt": {
+        "path": "logs/build-result.json",
+        "bytes": 602,
+        "sha256": "46b30bbbb68ff35d5f3334e808bd13b5f1e8c53a7b336babaa1828414aca9242",
+        "crc32": "f6c27d62"
       }
     },
-    "persistence": {
-      "sourceSequence": "Native Leave/MainMenu -> Quit/confirmation -> fresh READY title -> export A",
-      "targetSequence": "Fresh separate-origin save-only import A -> export B0 before Start -> original profile/menu -> actual Continue click -> restored board/native menu",
-      "profileLevel": 2,
-      "finishedAdventure": 0,
-      "generatedFixtureUsed": false,
-      "preStartPayloads": 4,
-      "preStartExpandedBytes": 44120,
-      "allPreStartPayloadBytesEqual": true,
-      "sourceExportSha256": "9fbb5fc2bf827131e38592cf1127f7fda537507afb4f9fc7348bd247a9f54285",
-      "targetB0ExportSha256": "b447ae582ea58fca0c91267c8748c66d26f320f299abd55ed728bf77ffa348a3",
-      "checkpointBytes": 42863,
-      "checkpointSha256": "c9a015283716842956abdfb9254d6670134c498f8b9741bcd5ee3ccc7063936e",
-      "checkpointInternalCrc32": "ec6bbc32",
-      "importSuccessStatusVisible": true,
-      "actualContinueRestoredOneVisibleSunflowerC0MiddleAnd0Sun": true,
-      "postContinueNative3DUnchecked": true,
-      "fullActorEnumeration": false,
-      "scope": "Exact browser-export/import payload transfer before target Start plus bounded visible Continue. No native-original save compatibility or whole actor enumeration."
+    "focusedSpeedTests": {
+      "path": "tests/game-speed-results.json",
+      "bytes": 1371,
+      "sha256": "0b4312bfae73cd3160454cf2874bde4cfa0650c8324194500a6c669c0ba6f551",
+      "crc32": "3dc24853",
+      "status": "PASS focused production-method game-speed tests",
+      "failures": 0,
+      "checks": 64,
+      "scope": "Actual extracted LawnApp speed-policy/UpdateFrames/initialization/button-update methods and added Board input prefixes with controlled collaborators. No full game build, renderer/browser/audio execution, save roundtrip or wall-clock performance claim."
     },
-    "quietTesting": {
-      "testing1AndMuteCheckedObserved": true,
-      "realAudioGainOrDeviceInspected": false,
-      "scope": "Static/doubles gain0 checks are separate from visible controls; normal-player audio implementation is retained."
-    },
-    "privateReceipt": {
-      "name": "software10-actual-ui.json",
-      "bytes": 10479,
-      "sha256": "3b0e43483028a379ef713beeb95494572c7b218d205561509ea8f5862ecc681e"
-    },
-    "limits": [
-      "No public Software10 gameplay/finite-win credit; these observations belong to private10 only.",
-      "No ordinary new additive callback invocation, original runtime/framebuffer/geometry/UV parity, full roster/all50/allmodes or dense performance claim.",
-      "The1-2 continuation is a checkpoint sample, not a second level win. Misnamed/transitional images do not add combat, award or Continue proof.",
-      "No hardware fight or exact actor-count/timing/audio-listening claim. Earlier9/8/7 results remain historical and separately scoped."
-    ]
+    "patchReconstruction": {
+      "upstream": {
+        "gitApplyCheck": "PASS",
+        "gitApply": "PASS",
+        "everySourceByteMatches": true,
+        "sourceFiles": 757
+      },
+      "software10": {
+        "gitApplyCheck": "PASS",
+        "gitApply": "PASS",
+        "everySourceByteMatches": true,
+        "sourceFiles": 757
+      }
+    }
+  },
+  "combinedPatch": {
+    "path": "web-qol.1.patch",
+    "bytes": 1379067,
+    "sha256": "b7522bb75c85d1453ddb2f8ef06a97fa4e1251b181ff013bbbd9e78988359a8b",
+    "crc32": "e8bf21c5",
+    "sourcePaths": 25
+  },
+  "incrementalPatch": {
+    "path": "software10-to-qol1.patch",
+    "bytes": 791995,
+    "sha256": "51241b5b4f19ea13f5b967af72a0f94da4bc2338d5400e3c5fa32011413d89ed",
+    "crc32": "df28bdb5",
+    "sourcePaths": 4
+  },
+  "parent": {
+    "id": "0.2.6-web-software.10",
+    "sourceArchiveSha256": "62bf399ffeedde34ec9946b4aece8fce4cb4ffb119739d3b55d2025bc4cda261",
+    "releaseManifestSha256": "b422b33932456438b7265b654abaee1ae67322baf28484eded6615d564bd8732",
+    "scope": "Complete historical parent engine metadata is preserved in engine-provenance.json.parent."
   },
   "limits": [
-    "Only RGB888 nearest ADDITIVE TA1/MOD1/GLOB1 constant valid original input colors and TA0/MOD0/GLOB1 are newly admitted. Original combined prepass and repeated pixel global modulation are authentic and unchanged.",
-    "Exactly90 expanded callback bodies, including normal dispatchers and the old9 additive family, are byte-exact. The actual paired cases preserve complete offscreen/invalid/gradient destination storage and original vertex state.",
-    "Actual callbacks and extracted screen RAII/query/virtual boundaries use app/image/flat4x4 triangle doubles. Conditional arithmetic/state tests are not original native geometry/scan/interpolation/x87/cache/device/framebuffer proof.",
-    "No ordinary gameplay scene invoking either new nearest/additive family was established. Full Release compilation/link and separately recorded bounded private10 tutorial/preference/save-transfer checks passed; native-frame/full-game/ordinary-new-additive proof remains incomplete.",
-    "Earlier Software.9 tests/gameplay/UI/wins remain historical preserved-source evidence, not newly run10 tests. Only the focused paired additive suite is bundled here.",
-    "No browser/game/original/audio runtime initializes in these producers. Full1:1, all Adventure/modes/rosters, native frames and dense runtime performance remain incomplete.",
-    "Full original runtime/framebuffer/gameplay equivalence and broad all50/allmodes/allrosters verification remain incomplete."
-  ],
-  "producerReceiptScope": "Frozen10 verification/sourceZIP is as-built source/build/focused C++ evidence. Its pending-runtime wording is a creation-time snapshot; later own10 runtime observations must be separate and scoped."
+    "This is the user-requested QoL speed feature, not a claim of exact original-game parity.",
+    "Focused production-method tests and build checks do not replace broad game or browser validation.",
+    "Earlier Software.10 results remain historical parent evidence only."
+  ]
 }

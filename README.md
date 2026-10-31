@@ -2,7 +2,7 @@
 
 [Play on GitHub Pages](https://caleb-guyer.github.io/plants-vs-zombies-web/) · [Existing playtest](https://lawn-defense-caleb-plays.usgi.chatgpt.site) · [Deployment](DEPLOYMENT.md) · [Requirements](CURRENT-REQUIREMENTS.md) · [QA history](PARITY-QA.md)
 
-This source uses **0.2.6-web-software.10**, based on exact PvZ-Portable 0.2.6 commit `396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca`. It retains Software.9 and adds two guarded nearest-additive CPU-screen callback corrections. Full 1:1 parity remains unverified; further manual validation stopped at the user's request on 2026-10-31. Historical validation follows; Software.10's own scoped private first-level and save-transfer observations are recorded below; earlier gameplay observations remain historical.
+This source uses **0.2.6-web-qol.1**, based on PvZ-Portable 0.2.6 commit `396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca`. It retains the Software.10 engine and renderer corrections and adds the requested native gameplay speed control. Full 1:1 parity remains unverified; broad manual validation stopped at the user's request on 2026-10-31. The earlier Software.10 evidence below remains historical.
 
 The detailed QA descriptions below are the frozen v18 evidence snapshot. They retain their original capture-time scope, including earlier limits; they are not a claim that later validation or the full parity goal is complete.
 
@@ -17,6 +17,12 @@ Saves and asset caches use separate browser stores. Export preserves native prof
 ## Audio and rendering
 
 Normal players have music and sound effects, subject to browser autoplay rules and the saved mute preference. The mute icon remembers the player's choice; original volume controls remain available. **All agent testing uses `?testing=1`, which forces inaudible output without changing the normal-player preference.**
+
+## Gameplay speed
+
+Click the stone **1x** button directly below Menu to switch to **2x**. It uses the game's original button artwork, green inset font, hover and pressed states. Click again to return to normal speed. The full seed tray and shovel keep their existing positions.
+
+Only active gameplay accelerates. Menus, pause, seed selection and level transitions keep their normal behavior, and audio playback keeps its normal pitch. Each new or resumed board starts at 1x. The preference is session-only and does not change the save format.
 
 The original 3D Acceleration checkbox now selects hardware rendering or CPU scene composition. CPU mode uses the existing WebGL context to transport its final bitmap. Its dedicated opaque RGB888 screen preserves the original distinction between screen and offscreen-image arithmetic. Normal/colored/additive bitmap drawing and clipped fast/slow stretch have addressed native-reference regression tests. Hardware remains the browser default when no preference exists; original native automatic hardware selection is a separate conditional policy.
 
@@ -98,7 +104,7 @@ python package-portable.py --output-dir outputs
 
 The approved bundle consists of six exact original runtime data files totaling 45,462,524 bytes, split into 11 verified parts. It contains no Windows executable, DLL or installed save data. To regenerate it, explicitly supply `--zip <resource-archive.zip>` or `--game-dir <installed-game-directory>`.
 
-Current corresponding source is `dist/source/pvz-portable-0.2.6-web-software.10-source.zip` (807 archive entries, 757 engine files); `web-software.10.patch` is the complete raw-upstream patch. `software9-to-software10.patch` is the separately labeled three-path increment from Software.9. The full source builds without applying a patch. Historical packages, upstream baseline, build provenance and licenses remain available. Approved asset payloads remain separate from code/source archives and are included only in the full-runtime distribution.
+Current corresponding source is `dist/source/pvz-portable-0.2.6-web-qol.1-source.zip`; `web-qol.1.patch` is the complete upstream patch and `software10-to-qol1.patch` is the increment from Software.10. The source includes the native speed-control implementation, build recipes and focused tests. The full source builds without applying a patch. Historical packages, upstream baseline, build provenance and licenses remain available. Approved asset payloads remain separate from code/source archives and are included only in the full-runtime distribution.
 
 Public v15 preserved the three approved XML resource files' original CRLF bytes in Git and added the matching attributes rule, closing the fresh-checkout checksum blocker without changing the Software.7 runtime. GitHub Pages publication succeeded on 2026-10-31 through [release workflow 41230962473](https://github.com/Caleb-Guyer/plants-vs-zombies-web/actions/runs/41230962473). The bounded hosted startup check does not establish full game parity. The user authorized publication of the current build on 2026-10-31 while full 1:1 parity remains unverified; publication does not mark that goal complete.
 

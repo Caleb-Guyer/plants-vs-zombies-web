@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-software.10
-Retains Software.9. Adds only dedicated-screen RGB888 nearest ADDITIVE TA1/MOD1/GLOB1 with equal valid original input colors and TA0/MOD0/GLOB1 with effective sample alpha255. Authentic combined double-global modulation remains. The90 unchanged expanded callback bodies include both normal dispatchers. Sampling/geometry/context and game/audio source remain unchanged.
-Engine JavaScript SHA-256: 905679974d24b7657297c42cfb39b3201f4168cf2e607efb7a8a45cf0a1d9669
-Engine WASM SHA-256: b8b041dfe57d3e66d7ea6889ba9fabb8db6bd71b6eda8e6944188ee982ec24c1
+PvZ-Portable 0.2.6-web-qol.1
+Adds a native 1x/2x gameplay speed toggle beside Menu using the original button style.
+Engine JavaScript SHA-256: b60338d9d8ceb53c3e30407a667bd2761243c9abc83f82d567173ac4fb14c160
+Engine WASM SHA-256: 5319147e3ac37d05b7179c4206c79e76bd98f19521e94b1ea710b07b31768566
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.

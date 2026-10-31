@@ -2,7 +2,7 @@
 
 This clean release repository targets `Caleb-Guyer/plants-vs-zombies-web`. On 2026-10-31 the user directed publication of the current build and stopped further manual gameplay. Publication is authorized while full original-game 1:1 parity remains unverified; it does not certify parity or complete that goal. GitHub Pages publication succeeded on 2026-10-31: [release workflow 41230962473](https://github.com/Caleb-Guyer/plants-vs-zombies-web/actions/runs/41230962473) deployed commit `5ba4d0d7279145dcbdfa3e91d19b91218ef1c04a`.
 
-The candidate is based on public source commit `877bbbf3f001fc2f9202700ba790e27665179e92`, engine `0.2.6-web-software.10`. Every existing file in `dist/` is retained byte for byte against the frozen public18 physical-payload manifest, including the engine, approved original runtime assets, corresponding-source downloads and licenses. The only added served file is the empty `.nojekyll` marker. Eight text blobs are stored with their original served CRLF bytes instead of Git's earlier normalized LF; their non-newline content is unchanged.
+The current engine is `0.2.6-web-qol.1`, retaining Software.10 and adding the native 1x/2x speed control. The original public18 baseline is source commit `877bbbf3f001fc2f9202700ba790e27665179e92`. Approved original runtime assets and historical engine source downloads remain unchanged; the current binary, matching source, provenance and shell cache keys advance together. Preserve `.gitattributes` so served bytes survive a fresh Git checkout.
 
 ## What gets published
 
@@ -16,18 +16,18 @@ The workflow performs no Jekyll build. The empty `dist/.nojekyll` is also provid
 
 Release the reviewed current build without further manual gameplay:
 
-1. Use this clean `main` repository prepared from the verified `pvz-github-pages-source-v18.zip`. It excludes prior Git/provider metadata, remotes and history. Verify the bundled assets and run `npm run check`, then commit the release. With normal GitHub authentication, create or connect `Caleb-Guyer/plants-vs-zombies-web` and push `main`.
+1. Work from this repository's `main` branch. Verify the bundled assets and run `npm run check`, then commit and push the release to `Caleb-Guyer/plants-vs-zombies-web`. Native engine changes also require matching corresponding source and build records.
 2. In repository Settings → Pages, select **GitHub Actions** as the publishing source. Keep the `github-pages` environment restricted to the intended release branch.
 3. Run **Publish game to GitHub Pages** manually from the intended branch. Pushes and pull requests do not deploy this workflow. There is no additional game or parity input flag.
 4. Review the validation job and deployment result. Open the URL recorded by the deployment environment.
 
-The workflow uses Node 24 and Python 3.13 for the existing checkout checks. No `npm install`, Emscripten SDK, original game installation or WASM rebuild is needed. It verifies the bundled resource bytes and browser shell before uploading `dist`.
+The workflow uses Node 24 and Python 3.13 for checkout checks and the runner's C++ compiler for the 64 production-method speed tests. No `npm install`, Emscripten SDK, original game installation or full WASM rebuild is needed in deployment. It verifies the bundled resource bytes, browser shell, source and speed behavior before uploading `dist`.
 
-The prepared site contains 73 served files including the empty marker, totaling 122,504,035 bytes. Its largest file is 12,574,515 bytes. Each tracked file is below GitHub's 100 MiB per-file limit, and the site is below the 1 GB published-site limit. The private preparation manifest records the exact file inventory.
+The site includes the empty `.nojekyll` marker. Packaging checks every served file against a 25 MiB limit, below GitHub's 100 MiB per-file limit; the static game remains below the 1 GB published-site limit.
 
 Preserve `.gitattributes`: all `dist/**` bytes, including original XML CRLF and shell/source metadata, must survive Git checkout unchanged. Generator and test tooling use LF on Windows and Linux. This closes a demonstrated fresh-worktree failure where a converted generator header disagreed with the pinned runtime output; both required checks passed after the candidate-only newline policy was applied. `.gitignore` excludes local provider metadata and Python caches; they are not release source inputs.
 
-## Hosted release verification
+## Initial Software.10 hosted release verification
 
 The manual workflow completed successfully on 2026-10-31 (created 18:45:33 UTC; updated 18:46:13 UTC). The hosted index (5,637 bytes), JavaScript glue (208,448 bytes) and asset manifest (3,176 bytes) matched local SHA-256 values. WASM returned HTTP 200 with `application/wasm` and 7,411,823 bytes; the Software.10 source ZIP returned HTTP 200 with 5,233,817 bytes.
 

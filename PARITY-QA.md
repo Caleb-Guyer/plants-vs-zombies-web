@@ -1,5 +1,15 @@
 # Browser parity and QA record
 
+## QoL.1 speed control, 2026-10-31
+
+`0.2.6-web-qol.1` retains the Software.10 renderer and adds a native 1x/2x gameplay toggle. Its full Emscripten Release build passed in 132.228 seconds with all 757 input source files unchanged during compilation. Four source paths differ from Software.10: the version file, Board.cpp, LawnApp.cpp and LawnApp.h. Board.h and the save serializer are byte-identical to the parent.
+
+The focused harness compiled actual production method bodies and added input handlers through Emscripten and passed 64 checks with zero failures. It covers exact 1x/2x update counts, switching back, holding seeds/tools, pause/dialog/chooser exclusions, mid-update level/menu/board transitions, valid press/release behavior and 1x reset for a new/resumed board. GitHub deployment also reruns these production-method tests using its native C++ compiler. These tests do not initialize the game, renderer or audio.
+
+A short private `?testing=1` browser check used a generated QA profile in Survival: Day. With ten selected packets and the shovel visible, the native stone button fit directly below Menu. Clicking changed 1x to the pressed 2x state; the original Menu opened, Back to Game retained 2x, and a second click restored 1x. No level was completed and no earned unlock or full-mode result is claimed. Normal-player audio code was retained and output remained forced silent during the check.
+
+The Software.10 descriptions below remain historical. Broad campaign playtesting remains stopped; this feature receives only targeted validation.
+
 This source uses **0.2.6-web-software.10**. The frozen public v18 baseline uses Software.10 (source `877bbbf3f001fc2f9202700ba790e27665179e92`). Software.10's own scoped private first-level and save-transfer observations are recorded below; prior observations retain their named build and scope. Normal players have audio; agent tests use `?testing=1`. No complete 1:1 or authentic-original runtime result is claimed. Further manual validation stopped at the user's request on 2026-10-31; historical active-goal statements below do not authorize resuming it.
 
 GitHub Pages release, 2026-10-31: [workflow 41230962473](https://github.com/Caleb-Guyer/plants-vs-zombies-web/actions/runs/41230962473) succeeded for commit `5ba4d0d7279145dcbdfa3e91d19b91218ef1c04a`. The normal [Play URL](https://caleb-guyer.github.io/plants-vs-zombies-web/) is live. A `?testing=1` check automatically reached the original Click to Start title without a file prompt; index/glue/manifest matched local bytes and WASM returned HTTP 200 as `application/wasm` (7,411,823 bytes). No campaign gameplay was performed on GitHub, and this is not full-parity or original-runtime comparison credit.
