@@ -8,11 +8,25 @@ The user directed us on 2026-10-31 to stop manual gameplay and wrap the current 
 
 Publication status: [GitHub Pages](https://caleb-guyer.github.io/plants-vs-zombies-web/) is live after [workflow 41230962473](https://github.com/Caleb-Guyer/plants-vs-zombies-web/actions/runs/41230962473) succeeded on 2026-10-31. A silent browser check reached the original title without a file prompt; WASM returned HTTP 200 as `application/wasm`. This adds hosting/startup proof only, with no GitHub campaign gameplay or full-parity certification.
 
+## Authorized optional content, 2026-10-31
+
+The user approved a first small expansion using existing plants, zombies and
+artwork, with new content optional and the original game available. Content.1
+adds Cone Zone at Mini-Games → Bonus: daylight, 150 starting sun, six fixed classic
+plants, normal sun production, twenty authored waves and two flags. Use stable
+appended mode 73/page 4, a separate checkpoint and reserved completion record 72.
+Preserve all original mode IDs, 72 challenge definitions, campaign progress,
+original trophy totals, unlock flags, gold-sunflower awards and native saved
+object layouts. Keep native artwork, typography and discreet shell controls.
+Use silent focused automated tests and a bounded feature UI/save-resume check;
+do not resume broad original-game parity playtesting. Publish to the existing
+GitHub repository and Pages through the established release workflow.
+
 ## Requested QoL updates, 2026-10-31
 
 The user requested a 1x/2x speed button near Menu that matches the game's visual style. QoL.1 added a native stone button directly below Menu, leaving room for the full seed tray and shovel. The user then authorized all six proposed QoL additions, automated tests with sound off and a GitHub Pages update. These intentional options extend the earlier strict 1:1 requirement. Pause, dialogs, chooser and transitions do not accelerate; audio pitch and existing native save formats remain unchanged. Do not resume broad campaign playtesting.
 
-The current release candidate uses `0.2.6-web-qol.2`, retaining the Software.10 rendering code. Current source and binary hashes are in `dist/game/engine-provenance.json`; prior release records below retain their historical scope. The six additions are:
+The published QoL.2 parent uses `0.2.6-web-qol.2`, retaining the Software.10 rendering code. Current source and binary hashes are in `dist/game/engine-provenance.json`; prior release records below retain their historical scope. The six additions are:
 
 - Auto-pause on window blur or a hidden tab, enabled by default, with explicit resume and no automatic resume.
 - Remappable seed-slot, shovel and speed keys: defaults `1`–`9`, `0`, `S` and `F`. Space and Escape retain their original pause/menu behavior; native costs, cooldowns and unlocks still apply.

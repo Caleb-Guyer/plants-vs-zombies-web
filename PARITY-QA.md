@@ -1,5 +1,40 @@
 # Browser parity and QA record
 
+## Content.1 release scope, 2026-10-31
+
+`0.2.6-web-content.1` adds one optional level, Cone Zone, under Mini-Games → Bonus.
+It uses the existing daytime lawn, six classic plants, normal sun production,
+150 starting sun and twenty authored waves with two flags. Normal zombies lead
+into coneheads, occasional pole-vaulters and bucketheads. No new plant/zombie
+mechanics or new artwork are introduced.
+
+The bonus appends mode 73 and page 4, retaining all original IDs and 72 original
+challenge definitions. Its checkpoint uses the existing native mode-specific
+filename; its completion uses reserved record 72 in the existing array of 100 records.
+Original campaign progression, trophy totals and unlock/award routing stay on
+their existing paths. Bonus victory cannot award the original gold sunflower.
+Saved Board, Challenge, SeedBank, SeedPacket and PlayerInfo layouts and the
+serializer are retained byte for byte. Focused automated tests and the bounded
+silent new-feature check do not certify complete original-game parity.
+
+The full Content.1 Emscripten Release build passed in 162.386 seconds with all
+767 source files unchanged during compilation. Five production-method suites
+passed 678 checks: 66 speed, 90 controls, 105 decks/cooldowns, 139 bonus waves and
+278 completion/rewards/navigation. The bonus checks cover first/replay wins,
+unchanged original trophy totals and awards, original mode IDs, exact native
+cancel/continue behavior, and checkpoint/profile preservation. Both full and
+incremental source patches reconstructed every current source byte. Published
+source and binary hashes are recorded together in the manifests.
+
+All thirteen browser integration suites passed, including the independent bonus
+checkpoint in save export/import. A bounded local UI check with `?testing=1` and
+generated profiles verified the original-style Bonus footer/page, daytime lawn,
+150 starting sun, all six fixed packets and normal sunflower planting/cost. After
+saving through the native Main Menu and fully reloading the browser, Continue
+restored the same sunflower and 100 remaining sun. No full bonus battle or broad
+original-campaign playthrough was performed. The unlocked QA fixture pre-fills
+completion records; first-clear/replay rewards were tested by the native suite.
+
 ## QoL.2 release scope, 2026-10-31
 
 `0.2.6-web-qol.2` retains the renderer and 1x/2x control and adds six authorized QoL features: focus-loss/hidden-tab auto-pause with explicit resume; remappable seed, shovel and speed keys (defaults `1`–`9`, `0`, `S`, `F`); eight named plant decks per profile; remembered speed enabled by default; optional numeric seed cooldowns; and browser-local recovery of up to eight previous save versions. New profiles start at 1x, cooldown numbers start off, and Space/Escape retain the original pause/menu actions. Deck loading preserves forced picks and respects unlocks, Imitater and capacity.

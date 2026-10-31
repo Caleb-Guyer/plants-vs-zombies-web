@@ -42,7 +42,7 @@ def forbidden(name):
 
 
 def engine_inputs():
-    """Resolve the current release from its manifests, without requiring old releases."""
+    """Resolve the current release from its manifests."""
     manifest = DIST / "game" / "engine-provenance.json"
     if not manifest.is_file():
         raise ValueError(f"Required distribution input is missing: {manifest}")
@@ -62,8 +62,44 @@ def engine_inputs():
     return engine, paths, baseline
 
 
+def parent_source_input(engine):
+    """Resolve and authenticate the immediate parent needed by source checks."""
+    parent = engine.get("parent")
+    if parent is None:
+        return None
+    if not isinstance(parent, dict) or not isinstance(parent.get("artifacts"), dict):
+        raise ValueError("Invalid immediate-parent engine provenance")
+    artifacts = parent["artifacts"]
+    reference = artifacts.get("source")
+    expected = artifacts.get("sourceSha256")
+    if not isinstance(reference, str) or "\\" in reference or ":" in reference:
+        raise ValueError("Invalid immediate-parent source reference")
+    name = PurePosixPath(reference).name
+    if (reference != "../source/" + name or not name.startswith("pvz-portable-")
+            or not name.endswith("-source.zip")):
+        raise ValueError("Immediate-parent source must be a named archive in dist/source")
+    if (not isinstance(expected, str) or len(expected) != 64
+            or any(character not in "0123456789abcdef" for character in expected)):
+        raise ValueError("Invalid immediate-parent source SHA-256")
+    path = DIST / "game" / reference
+    if (path.is_symlink() or not path.is_file()
+            or not path.resolve().is_relative_to(DIST.resolve())
+            or path.resolve().parent != (DIST / "source").resolve()):
+        raise ValueError("Immediate-parent source must be a regular file inside dist/source")
+    if hashlib.sha256(path.read_bytes()).hexdigest() != expected:
+        raise ValueError("Immediate-parent source does not match engine provenance")
+    return path.resolve()
+
+
+def nested_source_inputs(engine, paths, baseline):
+    """Keep only the current, immediate-parent and raw-upstream source packages."""
+    parent = parent_source_input(engine)
+    return list(dict.fromkeys([baseline, *([parent] if parent else []), paths["source"]]))
+
+
 def validate_engine_inputs():
     engine, paths, baseline = engine_inputs()
+    parent_source_input(engine)  # Fail before packaging writes if the parent is missing or changed.
     for path in [*paths.values(), baseline]:
         if not path.is_file() or path.stat().st_size == 0:
             raise ValueError(f"Required current distribution input is missing: {path}")
@@ -111,6 +147,7 @@ def validate_game_assets():
 def regenerate_source_downloads():
     """Deterministic inventory from existing archive bytes; no inferred URL or hash."""
     engine, paths, baseline = engine_inputs()
+    nested = nested_source_inputs(engine, paths, baseline)
     archives = []
     for path in sorted((DIST / "source").glob("pvz-portable-*-source.zip")):
         if not path.is_file() or path.is_symlink():
@@ -126,8 +163,8 @@ def regenerate_source_downloads():
         "schema_version": 1,
         "current_engine": engine["id"],
         "upstream_tag": engine["upstream"]["tag"],
-        "layout": "Site-source nests current corresponding source and upstream baseline only. Other exact source archives remain standalone downloads beside this index and in the full runtime distribution.",
-        "nested_sources": [baseline.name, paths["source"].name],
+        "layout": "Site-source nests current corresponding source, its immediate parent when present, and the upstream baseline. Other exact source archives remain standalone downloads beside this index and in the full runtime distribution.",
+        "nested_sources": [path.name for path in nested],
         "archives": archives,
     }
     SOURCE_DOWNLOADS.write_text(json.dumps(index, indent=2, ensure_ascii=True) + "\n", encoding="utf-8", newline="\n")
@@ -156,8 +193,8 @@ def inspect_zip(data, label, depth=0):
 
 
 def collect_dist(include_site_source=False, source_bundle=False):
-    _, paths, baseline = engine_inputs()
-    nested_source_names = {baseline.name, paths["source"].name}
+    engine, paths, baseline = engine_inputs()
+    nested_source_names = {path.name for path in nested_source_inputs(engine, paths, baseline)}
     files = []
     for path in sorted(DIST.rglob("*")):
         if not path.is_file():

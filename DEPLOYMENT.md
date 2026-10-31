@@ -2,7 +2,7 @@
 
 This clean release repository targets `Caleb-Guyer/plants-vs-zombies-web`. On 2026-10-31 the user directed publication of the current build and stopped further manual gameplay. Publication is authorized while full original-game 1:1 parity remains unverified; it does not certify parity or complete that goal. GitHub Pages publication succeeded on 2026-10-31: [release workflow 41230962473](https://github.com/Caleb-Guyer/plants-vs-zombies-web/actions/runs/41230962473) deployed commit `5ba4d0d7279145dcbdfa3e91d19b91218ef1c04a`.
 
-The current release candidate is `0.2.6-web-qol.2`, retaining Software.10 and the native 1x/2x speed control. It adds focus-loss auto-pause with explicit resume, remappable controls, named plant decks, remembered speed, optional numeric cooldowns and automatic save recovery. The original public18 baseline is source commit `877bbbf3f001fc2f9202700ba790e27665179e92`. Approved original runtime assets and historical engine source downloads remain unchanged; the current binary, matching source, provenance and shell cache keys advance together. Preserve `.gitattributes` so served bytes survive a fresh Git checkout.
+The current release candidate is `0.2.6-web-content.1`, retaining the published QoL.2 engine and adding the optional Cone Zone bonus challenge. Mode73 checkpoints and record72 use existing native save formats; original mode IDs, challenge definitions and trophy totals remain unchanged. The original public18 baseline is source commit `877bbbf3f001fc2f9202700ba790e27665179e92`. Approved original runtime assets and historical engine source downloads remain unchanged; the current binary, matching source, provenance and shell cache keys advance together. Preserve `.gitattributes` so served bytes survive a fresh Git checkout.
 
 ## What gets published
 
@@ -14,14 +14,14 @@ The workflow performs no Jekyll build. The empty `dist/.nojekyll` is also provid
 
 ## Final release flow
 
-Release the reviewed current build without further manual gameplay:
+Release the reviewed current build after the bounded feature checks:
 
 1. Work from this repository's `main` branch. Verify the bundled assets and run `npm run check`, then commit and push the release to `Caleb-Guyer/plants-vs-zombies-web`. Native engine changes also require matching corresponding source and build records.
 2. In repository Settings → Pages, select **GitHub Actions** as the publishing source. Keep the `github-pages` environment restricted to the intended release branch.
 3. Run **Publish game to GitHub Pages** manually from the intended branch. Pushes and pull requests do not deploy this workflow. There is no additional game or parity input flag.
 4. Review the validation job and deployment result. Open the URL recorded by the deployment environment.
 
-The workflow uses Node 24 and Python 3.13 for checkout checks and the runner's C++ compiler for the production-method speed, controls, deck and cooldown tests. No `npm install`, Emscripten SDK, original game installation or full WASM rebuild is needed in deployment. It verifies the bundled resource bytes, browser shell, save recovery, corresponding source and QoL behavior before uploading `dist`. Automated native tests do not initialize the game or audio; browser checks use `?testing=1`.
+The workflow uses Node 24 and Python 3.13 for checkout checks and the runner's C++ compiler for the production-method bonus wave/completion/navigation, speed, controls, deck and cooldown tests. No `npm install`, Emscripten SDK, original game installation or full WASM rebuild is needed in deployment. It verifies the bundled resource bytes, browser shell, save recovery, corresponding source and native content/QoL behavior before uploading `dist`. Automated native tests do not initialize the game or audio; browser checks use `?testing=1`.
 
 The site includes the empty `.nojekyll` marker. Packaging checks every served file against a 25 MiB limit, below GitHub's 100 MiB per-file limit; the static game remains below the 1 GB published-site limit.
 
@@ -39,7 +39,7 @@ Browser saves belong to the origin. Export progress from the current playtest th
 
 Saves persist automatically. Per-profile QoL settings and plant decks are separate files included in save export/import. Up to eight previous saved versions are retained locally for all-profile recovery; that browser-local history is not exported or migrated between origins. Recovery backs up the current version before replacing it. These additions leave existing native profile and board-save formats unchanged.
 
-The served `dist/source/site-source.zip` is regenerated from current website source and the corresponding engine package. Original UI extracts used by save recovery include attribution and hashes in `dist/ui`; full game resource payloads stay separate from that source download. A successful Pages deployment proves hosting success, not complete original-game parity.
+The served `dist/source/site-source.zip` is regenerated from current website source, the corresponding engine package, its pinned immediate parent and the raw upstream baseline. The parent archive makes the saved-layout and catalog regression checks runnable from the source download. Original UI extracts used by save recovery include attribution and hashes in `dist/ui`; full game resource payloads stay separate from that source download. A successful Pages deployment proves hosting success, not complete original-game parity.
 
 ## Primary references
 

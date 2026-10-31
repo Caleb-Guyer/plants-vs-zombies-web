@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-qol.2
-Adds automatic save recovery, native per-profile QoL options, focus-loss pause, remappable controls, plant decks, remembered speed and optional cooldown numbers.
-Engine JavaScript SHA-256: e2aaa79b42ab33d59a7230f51bc0d995b5aff53615e42b6a02beccc800557328
-Engine WASM SHA-256: 441d8f3b66ad2ed5163eb333a3801e189d52afd14fd9e7e2697e415458d3b248
+PvZ-Portable 0.2.6-web-content.1
+Adds Cone Zone, an optional twenty-wave daylight bonus challenge with a fixed six-plant bank and an independent completion record.
+Engine JavaScript SHA-256: 39a4760b0f7a6b360d4bff47522e7b2c46973de5347f8e901fa6fafbaa5d66ff
+Engine WASM SHA-256: 9474c0b3d41ad713e195f43cf4b60ae25a345697c155f222c65aee02507febc5
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.

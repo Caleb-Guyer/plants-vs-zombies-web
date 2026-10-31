@@ -2,7 +2,7 @@
 
 [Play on GitHub Pages](https://caleb-guyer.github.io/plants-vs-zombies-web/) · [Existing playtest](https://lawn-defense-caleb-plays.usgi.chatgpt.site) · [Deployment](DEPLOYMENT.md) · [Requirements](CURRENT-REQUIREMENTS.md) · [QA history](PARITY-QA.md)
 
-This source uses **0.2.6-web-qol.2**, based on PvZ-Portable 0.2.6 commit `396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca`. It retains the Software.10 engine and renderer corrections, the native gameplay speed control and six requested quality-of-life additions. Full 1:1 parity remains unverified; broad manual validation stopped at the user's request on 2026-10-31. The earlier Software.10 evidence below remains historical.
+This source uses **0.2.6-web-content.1**, based on PvZ-Portable 0.2.6 commit `396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca`. It retains the published QoL.2 controls, save recovery and renderer corrections, and adds the optional Cone Zone challenge. Full 1:1 parity remains unverified; broad manual validation stopped at the user's request on 2026-10-31. The earlier Software.10 evidence below remains historical.
 
 The detailed QA descriptions below are the frozen v18 evidence snapshot. They retain their original capture-time scope, including earlier limits; they are not a claim that later validation or the full parity goal is complete.
 
@@ -17,6 +17,21 @@ Saves persist automatically in this browser without export/import. Saves and ass
 ## Audio and rendering
 
 Normal players have music and sound effects, subject to browser autoplay rules and the saved mute preference. The mute icon remembers the player's choice; original volume controls remain available. **All agent testing uses `?testing=1`, which forces inaudible output without changing the normal-player preference.**
+
+## Bonus challenge: Cone Zone
+
+Once Mini-Games is unlocked, choose **Mini-Games → Bonus → Cone Zone**.
+The original-style Bonus page adds one optional level: a daylight lawn with
+**150 starting sun, six fixed plants and twenty authored waves across two flags**.
+Sunflowers and falling sun work normally. Coneheads become the main threat,
+with a few pole-vaulters and bucketheads later in the level.
+
+The fixed bank contains Sunflower, Peashooter, Wall-nut, Potato Mine, Snow Pea
+and Cherry Bomb. Costs and recharge times retain their normal behavior. The
+level has its own checkpoint and completion record; it does not advance the
+original campaign or original trophy totals. Save/resume, restart, autosaves
+and save export/import include the bonus checkpoint. Canceling Continue returns
+to Bonus. The original Mini-Games grid remains available through its footer.
 
 ## Gameplay controls
 
@@ -117,7 +132,7 @@ python package-portable.py --output-dir outputs
 
 The approved bundle consists of six exact original runtime data files totaling 45,462,524 bytes, split into 11 verified parts. It contains no Windows executable, DLL or installed save data. To regenerate it, explicitly supply `--zip <resource-archive.zip>` or `--game-dir <installed-game-directory>`.
 
-Current corresponding source is `dist/source/pvz-portable-0.2.6-web-qol.2-source.zip`; `web-qol.2.patch` is the complete upstream patch and `qol1-to-qol2.patch` is the increment from QoL.1. The source includes the native QoL implementation, build recipes and focused tests. The full source builds without applying a patch. Historical packages, upstream baseline, build provenance and licenses remain available. Full resource payloads remain separate from source archives and are included in the full-runtime distribution. The website source includes the approved original UI artwork extracted for the save-recovery panel; `dist/ui` records its attribution and hashes.
+Current corresponding source is `dist/source/pvz-portable-0.2.6-web-content.1-source.zip`; `web-content.1.patch` is the complete upstream patch and `qol2-to-content1.patch` is the increment from QoL.2. The source includes the native bonus and retained QoL implementations, build recipes and focused tests. The full source builds without applying a patch. Historical packages, upstream baseline, build provenance and licenses remain available. Full resource payloads remain separate from source archives and are included in the full-runtime distribution. The website source includes the approved original UI artwork extracted for the save-recovery panel; `dist/ui` records its attribution and hashes.
 
 Public v15 preserved the three approved XML resource files' original CRLF bytes in Git and added the matching attributes rule, closing the fresh-checkout checksum blocker without changing the Software.7 runtime. GitHub Pages publication succeeded on 2026-10-31 through [release workflow 41230962473](https://github.com/Caleb-Guyer/plants-vs-zombies-web/actions/runs/41230962473). The bounded hosted startup check does not establish full game parity. The user authorized publication of the current build on 2026-10-31 while full 1:1 parity remains unverified; publication does not mark that goal complete.
 

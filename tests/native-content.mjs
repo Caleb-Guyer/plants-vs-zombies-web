@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Verify published production source/test coherence, then rerun all native
-// QoL tests on the deployment runner. No game or audio device is initialized.
+// content and QoL tests on the deployment runner. No game or audio device is initialized.
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
@@ -16,16 +16,16 @@ new Function('module', 'exports', 'require', fs.readFileSync(new URL('vendor/jsz
 const JSZip = vendor.exports;
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
 const engine = JSON.parse(fs.readFileSync(new URL('game/engine-provenance.json', dist)));
-assert.equal(engine.id, '0.2.6-web-qol.2');
+assert.equal(engine.id, '0.2.6-web-content.1');
 const current = await JSZip.loadAsync(fs.readFileSync(new URL(engine.artifacts.source, new URL('game/engine-provenance.json', dist))), {checkCRC32: true});
-const parent = await JSZip.loadAsync(fs.readFileSync(new URL('source/pvz-portable-0.2.6-web-qol.1-source.zip', dist)), {checkCRC32: true});
-const prefix = 'qol2-candidate/';
+const parent = await JSZip.loadAsync(fs.readFileSync(new URL('source/pvz-portable-0.2.6-web-qol.2-source.zip', dist)), {checkCRC32: true});
+const prefix = 'content1-candidate/';
 const read = async name => {
   const entry = current.file(prefix + name);
   assert(entry, 'Missing current production source/test: ' + name);
   return Buffer.from(await entry.async('uint8array'));
 };
-const suites = ['game-speed', 'qol-controls', 'decks-cooldowns'];
+const suites = ['game-speed', 'qol-controls', 'decks-cooldowns', 'bonus-challenge', 'bonus-completion'];
 const reports = new Map();
 let checks = 0;
 for (const name of suites) {
@@ -42,8 +42,9 @@ for (const name of suites) {
   checks += result.checks;
   reports.set(name, result);
 }
-const parentBytes = async name => Buffer.from(await parent.file('qol1-candidate/source/' + name).async('uint8array'));
-for (const name of ['src/Lawn/SeedPacket.h', 'src/Lawn/System/SaveGame.cpp', 'src/Lawn/System/PlayerInfo.h']) {
+const parentBytes = async name => Buffer.from(await parent.file('qol2-candidate/source/' + name).async('uint8array'));
+// SeedPacket.h also defines the serialized SeedBank class.
+for (const name of ['src/Lawn/SeedPacket.h', 'src/Lawn/Challenge.h', 'src/Lawn/System/SaveGame.cpp', 'src/Lawn/System/PlayerInfo.h', 'src/Lawn/System/PlayerInfo.cpp', 'src/LawnApp.h']) {
   assert.deepEqual(await read('source/' + name), await parentBytes(name), 'Saved data layout/serialization must remain unchanged');
 }
 function boardData(bytes) {
@@ -55,11 +56,56 @@ function boardData(bytes) {
 }
 assert.equal(boardData(await read('source/src/Lawn/Board.h')), boardData(await parentBytes('src/Lawn/Board.h')),
   'Board saved data members stay unchanged; the existing KeyUp method may gain an implementation');
-console.log(`PASS ${checks} published native QoL checks match their production source; saved object layouts and serializer are preserved.`);
+console.log(`PASS ${checks} published native content/QoL checks match their production source; saved object layouts and serializer are preserved.`);
+
+// New IDs append to the catalog. Every original serialized mode and challenge
+// definition retains its identity, artwork, placement and display name.
+function enumValues(text, name) {
+  const match = text.match(new RegExp('enum ' + name + ' : int32_t\\s*\\{([\\s\\S]*?)\\};'));
+  assert(match, 'Missing enum: ' + name);
+  let next = 0;
+  const values = new Map();
+  for (const item of match[1].replace(/\/\/[^\n]*/g, '').split(',')) {
+    const part = item.trim();
+    if (!part) continue;
+    const field = part.match(/^(\w+)(?:\s*=\s*(\d+))?$/);
+    assert(field, 'Unexpected enum expression: ' + part);
+    if (field[2] !== undefined) next = Number(field[2]);
+    values.set(field[1], next++);
+  }
+  return values;
+}
+const oldEnums = (await parentBytes('src/ConstEnums.h')).toString();
+const newEnums = (await read('source/src/ConstEnums.h')).toString();
+for (const [name, count, addition] of [
+  ['GameMode', 'NUM_GAME_MODES', 'GAMEMODE_CHALLENGE_CONE_ZONE'],
+  ['ChallengePage', 'MAX_CHALLANGE_PAGES', 'CHALLENGE_PAGE_BONUS'],
+]) {
+  const before = enumValues(oldEnums, name), after = enumValues(newEnums, name);
+  for (const [key, value] of before) if (key !== count) assert.equal(after.get(key), value, 'Original ID stays stable: ' + key);
+  assert.equal(after.size, before.size + 1);
+  assert.equal(after.get(addition), before.get(count));
+  assert.equal(after.get(count), before.get(count) + 1);
+}
+function definitions(text) {
+  const table = text.slice(text.indexOf('gChallengeDefs['));
+  const end = table.indexOf('};');
+  assert(end > 0);
+  return [...table.slice(0, end).matchAll(/\{\s*\.mChallengeMode\s*=[^}]+\}/g)].map(match => match[0].replace(/\s+/g, ' ').trim());
+}
+const oldDefinitions = definitions((await parentBytes('src/Lawn/Widget/ChallengeScreen.cpp')).toString());
+const newDefinitions = definitions((await read('source/src/Lawn/Widget/ChallengeScreen.cpp')).toString());
+assert.equal(oldDefinitions.length, 72);
+assert.deepEqual(newDefinitions.slice(0, oldDefinitions.length), oldDefinitions);
+assert.equal(newDefinitions.length, oldDefinitions.length + 1);
+assert(newDefinitions.at(-1).includes('GAMEMODE_CHALLENGE_CONE_ZONE'));
+assert(newDefinitions.at(-1).includes('CHALLENGE_PAGE_BONUS'));
+console.log('PASS all original mode/page IDs, native saved layouts and 72 challenge definitions remain unchanged; the bonus gets its own appended identity.');
+
 
 if (process.argv.includes('--run-native')) {
   const temporaryRoot = fs.realpathSync(os.tmpdir());
-  const temporary = fs.mkdtempSync(path.join(temporaryRoot, 'pvz-native-qol-'));
+  const temporary = fs.mkdtempSync(path.join(temporaryRoot, 'pvz-native-content-'));
   try {
     for (const entry of Object.values(current.files)) {
       if (entry.dir || !entry.name.startsWith(prefix)) continue;
@@ -78,11 +124,11 @@ if (process.argv.includes('--run-native')) {
       assert.equal(actual.checks, reports.get(name).checks);
       assert.equal(actual.failures, 0);
     }
-    console.log(`PASS all ${checks} production-method QoL tests on the native CI compiler.`);
+    console.log(`PASS all ${checks} production-method content and QoL tests on the native CI compiler.`);
   } finally {
     const resolved = fs.realpathSync(temporary);
     assert.equal(path.dirname(resolved), temporaryRoot);
-    assert(path.basename(resolved).startsWith('pvz-native-qol-'));
+    assert(path.basename(resolved).startsWith('pvz-native-content-'));
     fs.rmSync(resolved, {recursive: true});
   }
 }

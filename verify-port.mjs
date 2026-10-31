@@ -15,17 +15,17 @@ for(const file of walk(dist).filter(file=>file.endsWith('.js'))){
 }
 console.log('PASS all browser JavaScript parses.');
 const wasm=readFileSync(join(dist,'game/pvz-portable.wasm'));
-assert.equal(sha(wasm),'441d8f3b66ad2ed5163eb333a3801e189d52afd14fd9e7e2697e415458d3b248');
+assert.equal(sha(wasm),'9474c0b3d41ad713e195f43cf4b60ae25a345697c155f222c65aee02507febc5');
 assert(WebAssembly.validate(wasm),'Engine WASM validates');
 const glue=readFileSync(join(dist,'game/pvz-portable.js'),'utf8');
-assert.equal(sha(glue),'e2aaa79b42ab33d59a7230f51bc0d995b5aff53615e42b6a02beccc800557328');
+assert.equal(sha(glue),'39a4760b0f7a6b360d4bff47522e7b2c46973de5347f8e901fa6fafbaa5d66ff');
 const provenance=JSON.parse(readFileSync(join(dist,'game/engine-provenance.json'),'utf8'));
-assert.equal(provenance.id,'0.2.6-web-qol.2');
+assert.equal(provenance.id,'0.2.6-web-content.1');
 assert.equal(provenance.artifacts.jsSha256,sha(glue));
 assert.equal(provenance.artifacts.wasmSha256,sha(wasm));
-assert.equal(sha(readFileSync(join(dist,'source/pvz-portable-0.2.6-web-qol.2-source.zip'))),provenance.artifacts.sourceSha256);
-assert.equal(sha(readFileSync(join(dist,'source/web-qol.2.patch'))),provenance.artifacts.patchSha256);
-console.log('PASS pinned QoL.2 engine, full corresponding source and patch provenance.');
+assert.equal(sha(readFileSync(join(dist,'source/pvz-portable-0.2.6-web-content.1-source.zip'))),provenance.artifacts.sourceSha256);
+assert.equal(sha(readFileSync(join(dist,'source/web-content.1.patch'))),provenance.artifacts.patchSha256);
+console.log('PASS pinned Content.1 engine, full corresponding source and patch provenance.');
 const html=readFileSync(join(dist,'index.html'),'utf8');
 for(const page of ['index.html','index-port.html'])assert(readFileSync(join(dist,page),'utf8').includes('<span id="engine-build-id">'+provenance.id+'</span>'),`${page}: displayed engine label must match the source manifest`);
 const scriptPaths=[...html.matchAll(/<script[^>]+src="([^"]+)"/g)].map(match=>match[1]);
@@ -52,7 +52,7 @@ const assetManifest=JSON.parse(readFileSync(join(dist,'game-assets/manifest.json
 environment.PVZAssetBundle.validateManifest(assetManifest,'https://test.example/game-assets/manifest.json');
 assert.equal(assetManifest.id,provenance.assetBundleId);
 console.log('PASS actual shipping asset manifest validation and matching bundle identity.');
-for(const test of ['tests/audio-controls.mjs','tests/generator-fileless.mjs','tests/bundled-assets.mjs','tests/fileless-startup.mjs','tests/shell-keyboard.mjs','tests/save-storage.mjs','tests/save-recovery.mjs','tests/save-sync.mjs','tests/save-transfer.mjs','tests/zombatar-export.mjs','tests/steam-compat.mjs','tests/test-profile-merge.mjs','tests/native-qol.mjs']){
+for(const test of ['tests/audio-controls.mjs','tests/generator-fileless.mjs','tests/bundled-assets.mjs','tests/fileless-startup.mjs','tests/shell-keyboard.mjs','tests/save-storage.mjs','tests/save-recovery.mjs','tests/save-sync.mjs','tests/save-transfer.mjs','tests/zombatar-export.mjs','tests/steam-compat.mjs','tests/test-profile-merge.mjs','tests/native-content.mjs']){
   const result=spawnSync(process.execPath,[join(root,test)],{encoding:'utf8'});
   if(result.stdout)process.stdout.write(result.stdout);
   assert.equal(result.status,0,result.stderr);

@@ -1,11 +1,12 @@
 {
   "schema_version": 1,
-  "current_engine": "0.2.6-web-qol.2",
+  "current_engine": "0.2.6-web-content.1",
   "upstream_tag": "0.2.6",
-  "layout": "Site-source nests current corresponding source and upstream baseline only. Other exact source archives remain standalone downloads beside this index and in the full runtime distribution.",
+  "layout": "Site-source nests current corresponding source, its immediate parent when present, and the upstream baseline. Other exact source archives remain standalone downloads beside this index and in the full runtime distribution.",
   "nested_sources": [
     "pvz-portable-0.2.6-source.zip",
-    "pvz-portable-0.2.6-web-qol.2-source.zip"
+    "pvz-portable-0.2.6-web-qol.2-source.zip",
+    "pvz-portable-0.2.6-web-content.1-source.zip"
   ],
   "archives": [
     {
@@ -14,6 +15,13 @@
       "sha256": "40af59aa49d936ad21756a1a28ee14d8db51e6aaccbee44c647c2913e9c83556",
       "current": false,
       "upstream": true
+    },
+    {
+      "name": "pvz-portable-0.2.6-web-content.1-source.zip",
+      "bytes": 4778159,
+      "sha256": "4a8c06629b3d6d87b7ea9b3f10a6b845c764eb9d9875beeb1b82fba82f346922",
+      "current": true,
+      "upstream": false
     },
     {
       "name": "pvz-portable-0.2.6-web-parity.2-source.zip",
@@ -47,7 +55,7 @@
       "name": "pvz-portable-0.2.6-web-qol.2-source.zip",
       "bytes": 4739286,
       "sha256": "9d77a0a5e2a367630bded271996e7ccffd081bc4cf7f77e16892591812a6f841",
-      "current": true,
+      "current": false,
       "upstream": false
     },
     {

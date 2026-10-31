@@ -30,8 +30,8 @@ jobs:
         run: python bundle-game-assets.py --verify-only
       - name: Verify browser shell and corresponding source
         run: npm run check
-      - name: Test native QoL controls, decks and speed
-        run: node tests/native-qol.mjs --run-native
+      - name: Test native challenge, completion and retained QoL
+        run: node tests/native-content.mjs --run-native
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload static game only

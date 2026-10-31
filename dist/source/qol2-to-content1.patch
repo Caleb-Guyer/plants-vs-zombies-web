@@ -1,0 +1,491 @@
+--- a/CMake/ProjectVersion.cmake
++++ b/CMake/ProjectVersion.cmake
+@@ -66,6 +66,6 @@
+ endif()
+ 
+ # Private CPU compositor candidate; never identify this binary as public parity.3.
+-set(PVZP_VERSION "0.2.6-web-qol.2")
++set(PVZP_VERSION "0.2.6-web-content.1")
+ set(PVZP_VERSION_PLAIN "0.2.6")
+ configure_file("${PROJECT_SOURCE_DIR}/CMake/ProjectVersion.h.in" "${PROJECT_BINARY_DIR}/ProjectVersion.h" @ONLY)
+--- a/src/ConstEnums.h
++++ b/src/ConstEnums.h
+@@ -145,7 +145,8 @@
+ 	CHALLENGE_PAGE_CHALLENGE = 1,
+ 	CHALLENGE_PAGE_LIMBO = 2,
+ 	CHALLENGE_PAGE_PUZZLE = 3,
+-	MAX_CHALLANGE_PAGES = 4
++	CHALLENGE_PAGE_BONUS = 4,
++	MAX_CHALLANGE_PAGES = 5
+ };
+ enum ChallengeState : int32_t
+ {
+@@ -451,6 +452,7 @@
+ 	GAMEMODE_PUZZLE_I_ZOMBIE_ENDLESS,
+ 	GAMEMODE_UPSELL,
+ 	GAMEMODE_INTRO,
++	GAMEMODE_CHALLENGE_CONE_ZONE = 73,
+ 	NUM_GAME_MODES
+ };
+ enum GameObjectType : int32_t
+--- a/src/Lawn/Board.cpp
++++ b/src/Lawn/Board.cpp
+@@ -28,6 +28,7 @@
+ #include "LawnCommon.h"
+ #include "System/Music.h"
+ #include "System/SaveGame.h"
++#include "System/BonusChallenge.h"
+ #include "Widget/LawnDialog.h"
+ #include "System/PlayerInfo.h"
+ #include "System/PoolEffect.h"
+@@ -571,6 +572,12 @@
+ 
+ void Board::PickZombieWaves()
+ {
++	if (BonusChallenge::IsMode(mApp->mGameMode))
++	{
++		mNumWaves = BonusChallenge::PopulateWaves(mZombiesInWave);
++		return;
++	}
++
+ 	// Set the total number of waves
+ 	if (mApp->IsAdventureMode())
+ 	{
+@@ -881,6 +888,7 @@
+ 		break;
+ 
+ 	case GameMode::GAMEMODE_SURVIVAL_NORMAL_STAGE_1:
++	case GameMode::GAMEMODE_CHALLENGE_CONE_ZONE:
+ 	case GameMode::GAMEMODE_SURVIVAL_HARD_STAGE_1:
+ 	case GameMode::GAMEMODE_SURVIVAL_ENDLESS_STAGE_1:
+ 	case GameMode::GAMEMODE_CHALLENGE_WAR_AND_PEAS:
+@@ -1337,7 +1345,11 @@
+ 	mLevel = mApp->IsAdventureMode() ? mApp->mPlayerInfo->mLevel : 0;
+ 	PickBackground();
+ 	InitZombieWaves();
+-	if (aGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED || aGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED_TWIST ||
++	if (BonusChallenge::IsMode(aGameMode))
++	{
++		mSunMoney = BonusChallenge::kStartingSun;
++	}
++	else if (aGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED || aGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED_TWIST ||
+ 		mApp->IsScaryPotterLevel() || mApp->IsWhackAZombieLevel())
+ 	{
+ 		mSunMoney = 0;
+@@ -1384,7 +1396,11 @@
+ 		aPacket->mY = 8;
+ 		aPacket->mPacketType = SeedType::SEED_NONE;
+ 	}
+-	if (mApp->IsSlotMachineLevel())
++	if (BonusChallenge::IsMode(aGameMode))
++	{
++		BonusChallenge::FillSeedBank(*mSeedBank);
++	}
++	else if (mApp->IsSlotMachineLevel())
+ 	{
+ 		PVZP_ASSERT(mSeedBank->mNumPackets == 3);
+ 		mSeedBank->mSeedPackets[0].SetPacketType(SeedType::SEED_SUNFLOWER);
+@@ -1611,6 +1627,8 @@
+ 
+ bool Board::ChooseSeedsOnCurrentLevel()
+ {
++	if (BonusChallenge::IsMode(mApp->mGameMode)) return false;
++
+ 	if (mApp->IsChallengeWithoutSeedBank() || HasConveyorBeltSeedBank())
+ 		return false;
+ 
+@@ -1831,7 +1849,7 @@
+ 		{
+ 			mApp->PlayFoley(FoleyType::FOLEY_FINAL_FANFARE);
+ 		}
+-		else if (mApp->TrophiesNeedForGoldSunflower() == 1)
++		else if (!BonusChallenge::IsMode(mApp->mGameMode) && mApp->TrophiesNeedForGoldSunflower() == 1)
+ 		{
+ 			mApp->PlayFoley(FoleyType::FOLEY_FINAL_FANFARE);
+ 		}
+@@ -8602,6 +8620,8 @@
+ 
+ int Board::GetNumSeedsInBank()
+ {
++	if (BonusChallenge::IsMode(mApp->mGameMode)) return static_cast<int>(BonusChallenge::kSeeds.size());
++
+ 	if (mApp->IsScaryPotterLevel())
+ 	{
+ 		return 1;
+--- a/src/Lawn/Challenge.cpp
++++ b/src/Lawn/Challenge.cpp
+@@ -39,6 +39,7 @@
+ #include "MessageWidget.h"
+ #include "../GameConstants.h"
+ #include "System/PlayerInfo.h"
++#include "System/BonusChallenge.h"
+ #include "Widget/GameButton.h"
+ #include "Widget/StoreScreen.h"
+ #include "../PvzpLib/PvzpDebug.h"
+@@ -204,6 +205,10 @@
+ 		mChallengeStateCounter = 400;
+ 	}
+ 	GameMode aGameMode = mApp->mGameMode;
++	if (BonusChallenge::IsMode(aGameMode))
++	{
++		mBoard->DisplayAdvice("Cone Zone: Survive two flags with six classic plants.", MESSAGE_STYLE_HINT_FAST, ADVICE_SURVIVE_FLAGS);
++	}
+ 	if (aGameMode == GAMEMODE_CHALLENGE_BOBSLED_BONANZA)
+ 	{
+ 		for (int i = 0; i < MAX_GRID_SIZE_Y; i++)
+@@ -2289,6 +2294,11 @@
+ void Challenge::InitZombieWaves()
+ {
+ 	GameMode aGameMode = mApp->mGameMode;
++	if (BonusChallenge::IsMode(aGameMode))
++	{
++		BonusChallenge::PopulateAllowedZombies(mBoard->mZombieAllowed);
++		return;
++	}
+ 	bool* aList = mBoard->mZombieAllowed;
+ 	if (mApp->IsSurvivalMode())
+ 	{
+--- /dev/null
++++ b/src/Lawn/System/BonusChallenge.h
+@@ -0,0 +1,97 @@
++// SPDX-License-Identifier: LGPL-3.0-or-later
++#pragma once
++
++#include "../../ConstEnums.h"
++#include <array>
++#include <cstddef>
++#include <string_view>
++
++// Stable content identity and native data for the first optional challenge.
++// The mode owns an unused record in the existing 100-entry profile array;
++// it never changes a saved object layout or an original challenge definition.
++namespace BonusChallenge
++{
++inline constexpr GameMode kMode = GAMEMODE_CHALLENGE_CONE_ZONE;
++inline constexpr std::string_view kId = "cone-zone";
++inline constexpr int kRevision = 1;
++inline constexpr int kStartingSun = 150;
++inline constexpr int kWaveCount = 20;
++inline constexpr int kLargestWave = 16;
++inline constexpr std::array<SeedType, 6> kSeeds = {
++    SEED_SUNFLOWER, SEED_PEASHOOTER, SEED_WALLNUT,
++    SEED_POTATOMINE, SEED_SNOWPEA, SEED_CHERRYBOMB
++};
++inline constexpr std::array<ZombieType, 4> kPreviewZombies = {
++    ZOMBIE_NORMAL, ZOMBIE_TRAFFIC_CONE, ZOMBIE_POLEVAULTER, ZOMBIE_PAIL
++};
++
++struct Wave
++{
++    int mNormal;
++    int mCones;
++    int mPoles;
++    int mBuckets;
++};
++
++// A gentle first three waves leave time for sun production. Coneheads become
++// the main threat; occasional poles and buckets reward layered defenses.
++inline constexpr std::array<Wave, kWaveCount> kWaves = {{
++    {1, 0, 0, 0}, {2, 0, 0, 0}, {3, 0, 0, 0}, {2, 1, 0, 0},
++    {2, 2, 0, 0}, {2, 3, 0, 0}, {2, 3, 1, 0}, {2, 4, 0, 0},
++    {2, 4, 0, 1}, {4, 5, 1, 1}, {2, 4, 0, 1}, {2, 5, 1, 0},
++    {2, 4, 0, 2}, {2, 5, 1, 1}, {2, 5, 0, 2}, {2, 6, 1, 1},
++    {2, 6, 0, 2}, {2, 5, 2, 2}, {2, 6, 0, 3}, {3, 7, 2, 3}
++}};
++
++constexpr bool IsMode(GameMode mode) { return mode == kMode; }
++constexpr bool IsFlagWave(int wave) { return wave >= 0 && wave < kWaveCount && (wave + 1) % 10 == 0; }
++constexpr int ZombieCount(int wave)
++{
++    if (wave < 0 || wave >= kWaveCount) return 0;
++    const Wave& entry = kWaves[wave];
++    return entry.mNormal + entry.mCones + entry.mPoles + entry.mBuckets + (IsFlagWave(wave) ? 1 : 0);
++}
++
++// Fail before touching output when a caller lacks room for the terminator.
++constexpr int ComposeWave(int wave, ZombieType* output, int capacity)
++{
++    if (wave < 0 || wave >= kWaveCount || !output || capacity <= ZombieCount(wave)) return -1;
++    for (int i = 0; i < capacity; ++i) output[i] = ZOMBIE_INVALID;
++    const Wave& entry = kWaves[wave];
++    int count = 0;
++    if (IsFlagWave(wave)) output[count++] = ZOMBIE_FLAG;
++    for (int i = 0; i < entry.mNormal; ++i) output[count++] = ZOMBIE_NORMAL;
++    for (int i = 0; i < entry.mCones; ++i) output[count++] = ZOMBIE_TRAFFIC_CONE;
++    for (int i = 0; i < entry.mPoles; ++i) output[count++] = ZOMBIE_POLEVAULTER;
++    for (int i = 0; i < entry.mBuckets; ++i) output[count++] = ZOMBIE_PAIL;
++    return count;
++}
++
++template<std::size_t Waves, std::size_t Slots>
++int PopulateWaves(ZombieType (&output)[Waves][Slots])
++{
++    static_assert(Waves >= kWaveCount && Slots > kLargestWave);
++    for (auto& wave : output)
++        for (auto& zombie : wave) zombie = ZOMBIE_INVALID;
++    for (int i = 0; i < kWaveCount; ++i) ComposeWave(i, output[i], static_cast<int>(Slots));
++    return kWaveCount;
++}
++
++template<std::size_t Count>
++void PopulateAllowedZombies(bool (&output)[Count])
++{
++    static_assert(Count > static_cast<std::size_t>(ZOMBIE_PAIL));
++    for (auto& allowed : output) allowed = false;
++    for (ZombieType zombie : kPreviewZombies) output[zombie] = true;
++}
++
++template<class Bank>
++void FillSeedBank(Bank& bank)
++{
++    bank.mNumPackets = static_cast<int>(kSeeds.size());
++    for (int i = 0; i < bank.mNumPackets; ++i) bank.mSeedPackets[i].SetPacketType(kSeeds[i]);
++}
++
++static_assert(static_cast<int>(kMode) == 73);
++static_assert(ZombieCount(kWaveCount - 1) == kLargestWave);
++}
+--- a/src/Lawn/Widget/ChallengeScreen.cpp
++++ b/src/Lawn/Widget/ChallengeScreen.cpp
+@@ -108,7 +108,8 @@
+ 	{ .mChallengeMode = GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_9, .mChallengeIconIndex = 11, .mPage = ChallengePage::CHALLENGE_PAGE_PUZZLE, .mRow = 3, .mCol = 3, .mChallengeName = "[I_ZOMBIE_9]" },
+ 	{ .mChallengeMode = GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_ENDLESS, .mChallengeIconIndex = 11, .mPage = ChallengePage::CHALLENGE_PAGE_PUZZLE, .mRow = 3, .mCol = 4, .mChallengeName = "[I_ZOMBIE_ENDLESS]" },
+ 	{ .mChallengeMode = GameMode::GAMEMODE_UPSELL, .mChallengeIconIndex = 10, .mPage = ChallengePage::CHALLENGE_PAGE_LIMBO, .mRow = 3, .mCol = 4, .mChallengeName = "Upsell" },
+-	{ .mChallengeMode = GameMode::GAMEMODE_INTRO, .mChallengeIconIndex = 10, .mPage = ChallengePage::CHALLENGE_PAGE_LIMBO, .mRow = 2, .mCol = 3, .mChallengeName = "Intro" }
++	{ .mChallengeMode = GameMode::GAMEMODE_INTRO, .mChallengeIconIndex = 10, .mPage = ChallengePage::CHALLENGE_PAGE_LIMBO, .mRow = 2, .mCol = 3, .mChallengeName = "Intro" },
++	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_CONE_ZONE, .mChallengeIconIndex = 0, .mPage = ChallengePage::CHALLENGE_PAGE_BONUS, .mRow = 1, .mCol = 0, .mChallengeName = "Cone Zone" }
+ };
+ 
+ ChallengeScreen::ChallengeScreen(LawnApp* theApp, ChallengePage thePage)
+@@ -137,6 +138,13 @@
+ 	mBackButton->SetLabelColor(Color(42, 42, 90));
+ 	mBackButton->SetLabelHiliteColor(Color(42, 42, 90));
+ 	mBackButton->Resize(18, 568, 111, 26);
++	mBonusButton = MakeNewButton(ChallengeScreen::ChallengeScreen_Bonus, this, "Bonus", nullptr, Sexy::IMAGE_SEEDCHOOSER_BUTTON2,
++		Sexy::IMAGE_SEEDCHOOSER_BUTTON2_GLOW, Sexy::IMAGE_SEEDCHOOSER_BUTTON2_GLOW);
++	mBonusButton->mTextDownOffsetX = 1;
++	mBonusButton->mTextDownOffsetY = 1;
++	mBonusButton->SetLabelColor(Color(42, 42, 90));
++	mBonusButton->SetLabelHiliteColor(Color(42, 42, 90));
++	mBonusButton->Resize(650, 568, 111, 26);
+ 
+ 	for (int aPageIdx = CHALLENGE_PAGE_SURVIVAL; aPageIdx < MAX_CHALLANGE_PAGES; aPageIdx++)
+ 	{
+@@ -154,7 +162,7 @@
+ 		aPageButton->SetLabelColor(Color(255, 240, 0));
+ 		aPageButton->SetLabelHiliteColor(Color(220, 220, 0));
+ 		aPageButton->Resize(200 + 100 * aPageIdx, 540, 100, 75);
+-		if (!ShowPageButtons() || aPageIdx == CHALLENGE_PAGE_SURVIVAL || aPageIdx == CHALLENGE_PAGE_PUZZLE)
++		if (!ShowPageButtons() || aPageIdx == CHALLENGE_PAGE_SURVIVAL || aPageIdx == CHALLENGE_PAGE_PUZZLE || aPageIdx == CHALLENGE_PAGE_BONUS)
+ 			aPageButton->mVisible = false;
+ 	}
+ 
+@@ -165,7 +173,9 @@
+ 		ButtonWidget* aChallengeButton = mChallengeButtons[aChallengeMode].get();
+ 		aChallengeButton->mDoFinger = true;
+ 		aChallengeButton->mFrameNoDraw = true;
+-		if (aChlDef.mPage == CHALLENGE_PAGE_CHALLENGE || aChlDef.mPage == CHALLENGE_PAGE_LIMBO || aChlDef.mPage == CHALLENGE_PAGE_PUZZLE)
++		if (aChlDef.mPage == CHALLENGE_PAGE_BONUS)
++			aChallengeButton->Resize(102, 196, 104, 115);
++		else if (aChlDef.mPage == CHALLENGE_PAGE_CHALLENGE || aChlDef.mPage == CHALLENGE_PAGE_LIMBO || aChlDef.mPage == CHALLENGE_PAGE_PUZZLE)
+ 			aChallengeButton->Resize(38 + aChlDef.mCol * 155, 93 + aChlDef.mRow * 119, 104, 115);
+ 		else
+ 			aChallengeButton->Resize(38 + aChlDef.mCol * 155, 125 + aChlDef.mRow * 145, 104, 115);
+@@ -256,6 +266,8 @@
+ int ChallengeScreen::MoreTrophiesNeeded(int theChallengeIndex)
+ {
+ 	const ChallengeDefinition& aDef = GetChallengeDefinition(theChallengeIndex);
++	if (aDef.mPage == CHALLENGE_PAGE_BONUS)
++		return 0;
+ 	if (mApp->mGameMode == GAMEMODE_UPSELL && mApp->mGameScene == SCENE_LEVEL_INTRO)
+ 	{
+ 		return aDef.mChallengeMode == GAMEMODE_CHALLENGE_FINAL_BOSS ? 1 : 0;
+@@ -361,13 +373,18 @@
+ 
+ void ChallengeScreen::UpdateButtons()
+ {
++	const bool aBonusPage = mPageIndex == CHALLENGE_PAGE_BONUS;
++	mBonusButton->mVisible = aBonusPage || mPageIndex == CHALLENGE_PAGE_CHALLENGE;
++	mBonusButton->SetLabel(aBonusPage ? "Mini-Games" : "Bonus");
+ 	for (int aChallengeMode = 0; aChallengeMode < NUM_CHALLENGE_MODES; aChallengeMode++)
+ 		mChallengeButtons[aChallengeMode]->mVisible = GetChallengeDefinition(aChallengeMode).mPage == mPageIndex;
+ 	for (int aPage = 0; aPage < MAX_CHALLANGE_PAGES; aPage++)
+ 	{
+ 		ButtonWidget* aPageButton = mPageButton[aPage].get();
+-
+-		if (mLimboPageUnlocked && aPage == CHALLENGE_PAGE_LIMBO)
++		aPageButton->mVisible = !aBonusPage && ShowPageButtons() &&
++			(aPage == CHALLENGE_PAGE_CHALLENGE || aPage == CHALLENGE_PAGE_LIMBO);
++
++		if (!aBonusPage && mLimboPageUnlocked && aPage == CHALLENGE_PAGE_LIMBO)
+ 			aPageButton->mVisible = true;
+ 
+ 		if (aPage == mPageIndex)
+@@ -428,7 +445,7 @@
+ 				g->SetColorizeImages(true);
+ 			}
+ 
+-			if (mPageIndex == CHALLENGE_PAGE_SURVIVAL)
++			if (mPageIndex == CHALLENGE_PAGE_SURVIVAL || mPageIndex == CHALLENGE_PAGE_BONUS)
+ 			{
+ 				g->DrawImageCel(Sexy::IMAGE_SURVIVAL_THUMBNAILS, aPosX + 13, aPosY + 4, aDef.mChallengeIconIndex);
+ 			}
+@@ -572,8 +589,10 @@
+ 
+ 	std::string aTitleString =
+ 		mPageIndex == CHALLENGE_PAGE_SURVIVAL ? "[PICK_AREA]" :
++		mPageIndex == CHALLENGE_PAGE_BONUS ? "Bonus Challenges" :
+ 		mPageIndex == CHALLENGE_PAGE_PUZZLE ? "[SCARY_POTTER]" : "[PICK_CHALLENGE]";
+-	PvzpDrawString(g, aTitleString, 400, 58, Sexy::FONT_HOUSEOFTERROR28, Color(220, 220, 220), DS_ALIGN_CENTER);
++	PvzpDrawString(g, aTitleString, 400, 58, Sexy::FONT_HOUSEOFTERROR28,
++		mPageIndex == CHALLENGE_PAGE_BONUS ? Color(224, 187, 98) : Color(220, 220, 220), DS_ALIGN_CENTER);
+ 
+ 	int aTrophiesGot = mApp->GetNumTrophies(mPageIndex);
+ 	int aTrophiesTotal = mPageIndex == CHALLENGE_PAGE_SURVIVAL ? 10 : mPageIndex == CHALLENGE_PAGE_CHALLENGE ? 20 : mPageIndex == CHALLENGE_PAGE_PUZZLE ? 18 : 0;
+@@ -582,7 +601,24 @@
+ 		std::string aTrophyString = std::format("{}/{}", aTrophiesGot, aTrophiesTotal);
+ 		PvzpDrawString(g, aTrophyString, 739, 73, Sexy::FONT_DWARVENTODCRAFT15, Color(255, 240, 0), DS_ALIGN_CENTER);
+ 	}
+-	PvzpDrawImageScaledF(g, Sexy::IMAGE_TROPHY, 718, 26, 0.5f, 0.5f);
++	if (mPageIndex != CHALLENGE_PAGE_BONUS)
++		PvzpDrawImageScaledF(g, Sexy::IMAGE_TROPHY, 718, 26, 0.5f, 0.5f);
++	else
++	{
++		const Color aHeadingColor(143, 87, 35);
++		const Color aRulesColor(75, 48, 35);
++		PvzpDrawString(g, "Cone Zone", 265, 173, Sexy::FONT_DWARVENTODCRAFT18, aHeadingColor, DS_ALIGN_LEFT);
++		const char* aRules[] = {
++			"Defend the daytime lawn for 20 waves.",
++			"Start with 150 sun and six fixed plants.",
++			"Sunflower, Peashooter, Wall-nut,",
++			"Potato Mine, Snow Pea and Cherry Bomb.",
++			"Watch for tougher conehead waves!",
++			"Completion is tracked separately."
++		};
++		for (int i = 0; i < 6; ++i)
++			PvzpDrawString(g, aRules[i], 265, 215 + i * 31, Sexy::FONT_BRIANNETOD16, aRulesColor, DS_ALIGN_LEFT);
++	}
+ 
+ 	for (int aChallengeMode = 0; aChallengeMode < NUM_CHALLENGE_MODES; aChallengeMode++)
+ 		DrawButton(g, aChallengeMode);
+@@ -626,6 +662,7 @@
+ {
+ 	Widget::AddedToManager(theWidgetManager);
+ 	AddWidget(mBackButton.get());
++	AddWidget(mBonusButton.get());
+ 	for (const std::unique_ptr<ButtonWidget>& aButton : mPageButton) AddWidget(aButton.get());
+ 	for (const std::unique_ptr<ButtonWidget>& aButton : mChallengeButtons) AddWidget(aButton.get());
+ }
+@@ -634,6 +671,7 @@
+ {
+ 	Widget::RemovedFromManager(theWidgetManager);
+ 	RemoveWidget(mBackButton.get());
++	RemoveWidget(mBonusButton.get());
+ 	for (const std::unique_ptr<ButtonWidget>& aButton : mPageButton) RemoveWidget(aButton.get());
+ 	for (const std::unique_ptr<ButtonWidget>& aButton : mChallengeButtons) RemoveWidget(aButton.get());
+ }
+@@ -649,6 +687,16 @@
+ 	{
+ 		mApp->KillChallengeScreen();
+ 		mApp->DoBackToMain();
++		return;
++	}
++	if (theId == ChallengeScreen::ChallengeScreen_Bonus)
++	{
++		if (mPageIndex == CHALLENGE_PAGE_CHALLENGE || mPageIndex == CHALLENGE_PAGE_BONUS)
++		{
++			mPageIndex = mPageIndex == CHALLENGE_PAGE_BONUS ? CHALLENGE_PAGE_CHALLENGE : CHALLENGE_PAGE_BONUS;
++			UpdateButtons();
++		}
++		return;
+ 	}
+ 
+ 	int aChallengeMode = theId - ChallengeScreen::ChallengeScreen_Mode;
+@@ -659,7 +707,7 @@
+ 	}
+ 
+ 	int aPageIndex = theId - ChallengeScreen::ChallengeScreen_Page;
+-	if (aPageIndex >= 0 && aPageIndex < 4)
++	if (aPageIndex >= 0 && aPageIndex < MAX_CHALLANGE_PAGES)
+ 	{
+ 		mPageIndex = (ChallengePage)aPageIndex;
+ 		UpdateButtons();
+--- a/src/Lawn/Widget/ChallengeScreen.h
++++ b/src/Lawn/Widget/ChallengeScreen.h
+@@ -39,12 +39,14 @@
+ 	enum
+ 	{
+ 		ChallengeScreen_Back = 100,
++		ChallengeScreen_Bonus,
+ 		ChallengeScreen_Mode = 200,
+ 		ChallengeScreen_Page = 300
+ 	};
+ 
+ public:
+ 	std::unique_ptr<NewLawnButton>                                 mBackButton;
++	std::unique_ptr<NewLawnButton>                                 mBonusButton;
+ 	std::array<std::unique_ptr<ButtonWidget>, MAX_CHALLANGE_PAGES> mPageButton;
+ 	std::array<std::unique_ptr<ButtonWidget>, NUM_CHALLENGE_MODES> mChallengeButtons;
+ 	LawnApp*                    mApp;
+--- a/src/Lawn/Widget/ContinueDialog.cpp
++++ b/src/Lawn/Widget/ContinueDialog.cpp
+@@ -206,6 +206,11 @@
+ 			mApp->KillBoard();
+ 			mApp->ShowChallengeScreen(ChallengePage::CHALLENGE_PAGE_PUZZLE);
+ 		}
++		else if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_CONE_ZONE)
++		{
++			mApp->KillBoard();
++			mApp->ShowChallengeScreen(ChallengePage::CHALLENGE_PAGE_BONUS);
++		}
+ 		else
+ 		{
+ 			mApp->KillBoard();
+--- a/src/Lawn/Zombie.cpp
++++ b/src/Lawn/Zombie.cpp
+@@ -7238,6 +7238,13 @@
+ 			mBoard->AddCoin(aCenterX + i * 5, aCenterY, CoinType::COIN_SUN, CoinMotion::COIN_MOTION_COIN);
+ 		}
+ 	}
++	else if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_CONE_ZONE)
++	{
++		// An optional bonus trophy must never substitute for the last
++		// original trophy and prematurely award the gold sunflower.
++		aCoinType = mApp->HasBeatenChallenge(mApp->mGameMode) ?
++			CoinType::COIN_AWARD_MONEY_BAG : CoinType::COIN_TROPHY;
++	}
+ 	else if (!mApp->IsAdventureMode())
+ 	{
+ 		if (mApp->HasBeatenChallenge(mApp->mGameMode))
+--- a/src/LawnApp.cpp
++++ b/src/LawnApp.cpp
+@@ -1352,6 +1352,15 @@
+ 
+ bool LawnApp::UpdatePlayerProfileForFinishingLevel()
+ {
++	if (mGameMode == GameMode::GAMEMODE_CHALLENGE_CONE_ZONE)
++	{
++		// Bonus completion occupies a reserved record without advancing the
++		// original campaign, trophy totals, unlock flags or award screens.
++		uint32_t& aRecord = mPlayerInfo->mChallengeRecords[GetCurrentChallengeIndex()];
++		if (aRecord < UINT32_MAX) ++aRecord;
++		WriteCurrentUserConfig();
++		return false;
++	}
+ 	bool aUnlockedNewChallenge = false;
+ 
+ 	if (IsAdventureMode())
+@@ -1458,6 +1467,13 @@
+ 		return;
+ 
+ 	bool aUnlockedNewChallenge = UpdatePlayerProfileForFinishingLevel();
++
++	if (mGameMode == GameMode::GAMEMODE_CHALLENGE_CONE_ZONE)
++	{
++		KillBoard();
++		ShowChallengeScreen(ChallengePage::CHALLENGE_PAGE_BONUS);
++		return;
++	}
+ 
+ 	if (IsAdventureMode())
+ 	{

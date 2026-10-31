@@ -32,7 +32,7 @@ function srcFiles(zip) {
     // Engine sources live at the archive root; build recipes can contain
     // separately hashed prior-source fixtures with their own nested /src/.
     const parts = entry.name.split('/');
-    const engineRoot = ['qol2-candidate/source/', 'qol1-candidate/source/', 'software10-candidate/source/']
+    const engineRoot = ['content1-candidate/source/', 'qol2-candidate/source/', 'qol1-candidate/source/', 'software10-candidate/source/']
       .find(prefix => entry.name.startsWith(prefix + 'src/'));
     const relative = engineRoot
       ? entry.name.slice(engineRoot.length)
@@ -48,9 +48,10 @@ function srcFiles(zip) {
 const originals = srcFiles(official);
 const candidates = srcFiles(modified);
 const addedRendererFiles=['src/SexyAppFramework/graphics/SoftwareScreenImage.cpp','src/SexyAppFramework/graphics/SoftwareScreenImage.h','src/PvzpLib/PvzpNativeScreenPixel888.inc','src/PvzpLib/PvzpNativeScreenTexel.inc'];
+const addedContentFiles=['src/Lawn/System/BonusChallenge.h'];
 const addedQoLFiles=['src/Lawn/System/QoLSettings.h','src/Lawn/System/QoLSettings.cpp','src/Lawn/Widget/QoLDialog.h','src/Lawn/Widget/QoLDialog.cpp','src/Lawn/System/DeckPresets.h','src/Lawn/System/DeckPresets.cpp','src/Lawn/Widget/PlantDecksDialog.h','src/Lawn/Widget/PlantDecksDialog.cpp','src/Lawn/SeedPacketCooldown.h'];
-assert.deepEqual([...candidates.keys()].sort(), [...originals.keys(),...addedRendererFiles,...addedQoLFiles].sort(),
-  'The complete source adds exactly the retained renderer and reviewed QoL files');
+assert.deepEqual([...candidates.keys()].sort(), [...originals.keys(),...addedRendererFiles,...addedQoLFiles,...addedContentFiles].sort(),
+  'The complete source adds exactly the retained renderer, QoL and reviewed bonus files');
 const code = /\.(?:c|cc|cpp|cxx|h|hh|hpp|hxx|inc|java|bas|rc|sh|cmake|in)$/i;
 const normalize = text => text.replace(/\r\n?/g, '\n');
 const changed = [];
@@ -71,6 +72,10 @@ for (const [name, entry] of originals) {
   if (!equal) changed.push(name);
 }
 assert.deepEqual(changed.sort(), [
+  "src/ConstEnums.h",
+  "src/Lawn/Widget/ChallengeScreen.cpp",
+  "src/Lawn/Widget/ChallengeScreen.h",
+  "src/Lawn/Widget/ContinueDialog.cpp",
   "src/Lawn/Board.cpp",
   "src/Lawn/Board.h",
   "src/Lawn/Challenge.cpp",
@@ -98,9 +103,9 @@ assert.deepEqual(changed.sort(), [
   "src/SexyAppFramework/imagelib/ImageLib.h",
   "src/SexyAppFramework/platform/default/Window.cpp",
   "src/SexyAppFramework/platform/emscripten/Window.cpp"
-], 'The packaged source changes exactly the reviewed existing engine paths; renderer additions are separately constrained');
+].sort(), 'The packaged source changes exactly the reviewed existing engine paths; renderer additions are separately constrained');
 const [before, source] = decoded.get('src/Lawn/Widget/ZombatarWidget.cpp');
-console.log('PASS complete QoL.2 source layout, retained renderer additions and reviewed native QoL paths; all Zombatar behavior checks remain active.');
+console.log('PASS complete Content.1 source layout, retained renderer additions and reviewed native QoL/bonus paths; all Zombatar behavior checks remain active.');
 
 // Find the actual complete body, respecting quoted strings and comments.
 function functionText(text, signature) {
