@@ -1,16 +1,18 @@
 # Current requirements
 
-Updated 2026-10-31. This records the latest human clarification for continued work on the public Plants vs. Zombies browser site. It supersedes older requirements for permanent silence, a large landing page or a surrounding promotional interface. Historical QA observations remain historical evidence and must not be treated as current product requirements.
+Updated 2026-10-31. This records the latest human clarification for continued work on the public Plants vs. Zombies browser site. It supersedes older requirements for permanent silence, a large landing page or a surrounding promotional interface. Historical QA observations remain historical evidence and must not be treated as current product requirements or instructions to resume manual validation.
 
 ## Current release direction
 
 The user directed us on 2026-10-31 to stop manual gameplay and wrap the current build for GitHub commit/push and GitHub Pages unless a known defect blocks release. Target `Caleb-Guyer/plants-vs-zombies-web`; normal Play URL: https://caleb-guyer.github.io/plants-vs-zombies-web/. Publish the reviewed current build while preserving truthful unverified-parity limits. Additional manual gameplay and completion of the full parity goal are not release gates. Keep testing silent with `?testing=1`; normal-player audio remains available.
 
+Publication status: [GitHub Pages](https://caleb-guyer.github.io/plants-vs-zombies-web/) is live after [workflow 41230962473](https://github.com/Caleb-Guyer/plants-vs-zombies-web/actions/runs/41230962473) succeeded on 2026-10-31. A silent browser check reached the original title without a file prompt; WASM returned HTTP 200 as `application/wasm`. This adds hosting/startup proof only, with no GitHub campaign gameplay or full-parity certification.
+
 ## Objective and completion status
 
 The user wants original **Plants vs. Zombies GOTY**, with complete content, original graphics and 1:1 game behavior, on the public site at https://lawn-defense-caleb-plays.usgi.chatgpt.site.
 
-The full 1:1 goal is **ACTIVE**. Do not mark it complete or describe the game as verified 1:1 until the necessary comparisons are finished. Existing smoke tests and upstream source coverage are useful evidence, but they do not prove every mode, level, animation, timing detail or edge case. Broader runtime comparisons would be required to substantiate verified 1:1 parity; they are not a prerequisite for this authorized current-build release. Upstream issue #473 reports an x87/pixel-rounding difference, but its closure does not establish a fix or a reproduction in this WASM build; current rendering parity remains unverified.
+Full 1:1 parity remains unverified; further manual validation stopped at the user's request on 2026-10-31. The current objective is to ship the reviewed build, not to resume broader manual gameplay. Do not mark it complete or describe the game as verified 1:1 until the necessary comparisons are finished. Existing smoke tests and upstream source coverage are useful evidence, but they do not prove every mode, level, animation, timing detail or edge case. Broader runtime comparisons would be required to substantiate verified 1:1 parity; they are not a prerequisite for this authorized current-build release. Upstream issue #473 reports an x87/pixel-rounding difference, but its closure does not establish a fix or a reproduction in this WASM build; current rendering parity remains unverified.
 
 The coverage ledger tracks 228 required entries; source presence, untested behavior and confirmed defects must remain distinct. Retain the original scope: 49 standard plants including Imitater; 26 standard zombie Almanac entries including Dr. Zomboss; seven additional implemented zombie variant types (33 active types total); four special plant forms outside the ordinary chooser; 50 Adventure levels; 20 standard minigames; Vasebreaker and I, Zombie puzzles with endless variants; Survival; Zen Garden; Tree of Wisdom; Almanac; shop; achievements; player profiles; Zombatar; and original boss content. Dr. Zomboss is included in the 26, not an extra 27th standard zombie. These are counting categories, not a reduction in scope or proof of behavior coverage. Do not substitute the smaller procedural demo for the original-game engine.
 
@@ -56,7 +58,7 @@ Keep resource caching separate from browser saves. Preserve the user's installed
 
 ## Verification and records
 
-Validate the minimal interface, cached startup, local import, saves, fullscreen/pointer fitting, working normal-user audio and forced-muted testing. Exercise representative original content and continue the wider parity work. Keep test results tied to what was actually observed; a working menu or content inventory does not verify a full play-through.
+The current release has the recorded automated checks and bounded hosted startup proof. Further manual validation stopped at the user's request on 2026-10-31; do not resume broader gameplay from historical plans or remaining-work lists. Preserve normal-player audio and silent agent-testing behavior. Keep results tied to what was actually observed; a working title or content inventory does not verify a full play-through or 1:1 parity.
 
 Public v5 normal-UI checks observed one Marigold purchase, first garden growth and one Tree of Wisdom feeding. Original Quit/fresh reload restored the visible small Marigold and four fertilizer charges; a new export retained the same 88-byte plant record, tree height 2 and four Tree Food charges. This is a scoped persistence pass; reopening the Tree screen after that reload was not claimed. **Evidence correction:** the stylized currency sign was initially read as a leading 5. Actual save bytes establish **$99,990 → $97,490 → $97,520**, correcting earlier $599,990/$597,490/$597,520 visual notes. This is an observation correction, not a game defect or a changed fixture balance; keep this distinction in later reports.
 
@@ -79,7 +81,7 @@ The user explicitly requested immediate play without choosing game files, save-o
 
 The source uses **0.2.6-web-software.10**, with exact engine/source/patch identities in `dist/game/engine-provenance.json`. It retains the fileless shell, five icons, normal player audio, native profiles, save-only transfers, public storage keys and keyboard behavior. The frozen public v18 baseline uses Software.10 (source `877bbbf3f001fc2f9202700ba790e27665179e92`); Software.10's own scoped private first-level and save-transfer observations are recorded below. Earlier observations below retain their actual build and private/public scope.
 
-Public v15 preserved the three approved XML resource files' original CRLF bytes in Git and added the matching attributes rule, closing the fresh-checkout checksum blocker without changing the Software.7 runtime. Actual GitHub Pages hosting remains unverified. The user authorized publication of the current build on 2026-10-31 while full 1:1 parity remains unverified; publication does not mark that goal complete.
+Public v15 preserved the three approved XML resource files' original CRLF bytes in Git and added the matching attributes rule, closing the fresh-checkout checksum blocker without changing the Software.7 runtime. GitHub Pages publication succeeded on 2026-10-31 through [release workflow 41230962473](https://github.com/Caleb-Guyer/plants-vs-zombies-web/actions/runs/41230962473). The bounded hosted startup check does not establish full game parity. The user authorized publication of the current build on 2026-10-31 while full 1:1 parity remains unverified; publication does not mark that goal complete.
 
 ## Software.10 build scope and remaining work
 

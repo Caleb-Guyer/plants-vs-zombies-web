@@ -2,7 +2,7 @@
 
 [Play on GitHub Pages](https://caleb-guyer.github.io/plants-vs-zombies-web/) · [Existing playtest](https://lawn-defense-caleb-plays.usgi.chatgpt.site) · [Deployment](DEPLOYMENT.md) · [Requirements](CURRENT-REQUIREMENTS.md) · [QA history](PARITY-QA.md)
 
-This source uses **0.2.6-web-software.10**, based on exact PvZ-Portable 0.2.6 commit `396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca`. It retains Software.9 and adds two guarded nearest-additive CPU-screen callback corrections. Exact 1:1 parity remains active and incomplete; Software.10's own scoped private first-level and save-transfer observations are recorded below; earlier gameplay observations remain historical.
+This source uses **0.2.6-web-software.10**, based on exact PvZ-Portable 0.2.6 commit `396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca`. It retains Software.9 and adds two guarded nearest-additive CPU-screen callback corrections. Full 1:1 parity remains unverified; further manual validation stopped at the user's request on 2026-10-31. Historical validation follows; Software.10's own scoped private first-level and save-transfer observations are recorded below; earlier gameplay observations remain historical.
 
 The detailed QA descriptions below are the frozen v18 evidence snapshot. They retain their original capture-time scope, including earlier limits; they are not a claim that later validation or the full parity goal is complete.
 
@@ -74,9 +74,9 @@ Historical private Software.7 subsequently completed Zombiquarium on its third a
 
 ## GitHub Pages release
 
-This release targets [`Caleb-Guyer/plants-vs-zombies-web`](https://github.com/Caleb-Guyer/plants-vs-zombies-web) and the normal Play URL https://caleb-guyer.github.io/plants-vs-zombies-web/. The user authorized publishing the current build on 2026-10-31 and stopping further manual gameplay. GitHub/Pages publication is pending until the release workflow succeeds; full original-game 1:1 parity remains unverified. The historical QA descriptions below and above retain their capture-time scope and do not certify every level, mode or ability.
+This release targets [`Caleb-Guyer/plants-vs-zombies-web`](https://github.com/Caleb-Guyer/plants-vs-zombies-web) and the normal Play URL https://caleb-guyer.github.io/plants-vs-zombies-web/. The user authorized publishing the current build on 2026-10-31 and stopping further manual gameplay. GitHub Pages is published: [release workflow 41230962473](https://github.com/Caleb-Guyer/plants-vs-zombies-web/actions/runs/41230962473) completed successfully on 2026-10-31. Full original-game 1:1 parity remains unverified. The historical QA descriptions below and above retain their capture-time scope and do not certify every level, mode or ability.
 
-All original runtime assets are bundled in the prebuilt `dist/` site, so play starts without a local game installation or resource upload. The manual-only workflow publishes `dist/` directly and derives the owner's project URL from GitHub. It does not run a backend or rebuild the engine. See [deployment instructions](DEPLOYMENT.md) for the release flow, current hosting limits and the first real hosted check.
+All original runtime assets are bundled in the prebuilt `dist/` site, so play starts without a local game installation or resource upload. The manual-only workflow publishes `dist/` directly and derives the owner's project URL from GitHub. It does not run a backend or rebuild the engine. The hosted site reached the original Click to Start title automatically without a local file prompt during a silent `?testing=1` startup check. The WASM response returned HTTP 200 with `application/wasm`; no campaign gameplay was performed on GitHub. See [deployment instructions](DEPLOYMENT.md) for the release flow and bounded verification results.
 
 ## Local run and source
 
@@ -100,6 +100,6 @@ The approved bundle consists of six exact original runtime data files totaling 4
 
 Current corresponding source is `dist/source/pvz-portable-0.2.6-web-software.10-source.zip` (807 archive entries, 757 engine files); `web-software.10.patch` is the complete raw-upstream patch. `software9-to-software10.patch` is the separately labeled three-path increment from Software.9. The full source builds without applying a patch. Historical packages, upstream baseline, build provenance and licenses remain available. Approved asset payloads remain separate from code/source archives and are included only in the full-runtime distribution.
 
-Public v15 preserved the three approved XML resource files' original CRLF bytes in Git and added the matching attributes rule, closing the fresh-checkout checksum blocker without changing the Software.7 runtime. Actual GitHub Pages hosting remains unverified. The user authorized publication of the current build on 2026-10-31 while full 1:1 parity remains unverified; publication does not mark that goal complete.
+Public v15 preserved the three approved XML resource files' original CRLF bytes in Git and added the matching attributes rule, closing the fresh-checkout checksum blocker without changing the Software.7 runtime. GitHub Pages publication succeeded on 2026-10-31 through [release workflow 41230962473](https://github.com/Caleb-Guyer/plants-vs-zombies-web/actions/runs/41230962473). The bounded hosted startup check does not establish full game parity. The user authorized publication of the current build on 2026-10-31 while full 1:1 parity remains unverified; publication does not mark that goal complete.
 
 PvZ-Portable © 2026 Zhou Qiankang and contributors, LGPL-3.0-or-later; bundled dependencies retain their licenses. Plants vs. Zombies and its original names, characters and assets belong to PopCap/Electronic Arts. This unofficial community-engine playtest has no affiliation or endorsement.

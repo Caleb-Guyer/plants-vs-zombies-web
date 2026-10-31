@@ -1,6 +1,6 @@
 # GitHub Pages release: Caleb-Guyer/plants-vs-zombies-web
 
-This clean release repository targets `Caleb-Guyer/plants-vs-zombies-web`. On 2026-10-31 the user directed publication of the current build and stopped further manual gameplay. Publication is authorized while full original-game 1:1 parity remains unverified; it does not certify parity or complete that goal. Actual GitHub/Pages publication remains pending until the manual workflow succeeds.
+This clean release repository targets `Caleb-Guyer/plants-vs-zombies-web`. On 2026-10-31 the user directed publication of the current build and stopped further manual gameplay. Publication is authorized while full original-game 1:1 parity remains unverified; it does not certify parity or complete that goal. GitHub Pages publication succeeded on 2026-10-31: [release workflow 41230962473](https://github.com/Caleb-Guyer/plants-vs-zombies-web/actions/runs/41230962473) deployed commit `5ba4d0d7279145dcbdfa3e91d19b91218ef1c04a`.
 
 The candidate is based on public source commit `877bbbf3f001fc2f9202700ba790e27665179e92`, engine `0.2.6-web-software.10`. Every existing file in `dist/` is retained byte for byte against the frozen public18 physical-payload manifest, including the engine, approved original runtime assets, corresponding-source downloads and licenses. The only added served file is the empty `.nojekyll` marker. Eight text blobs are stored with their original served CRLF bytes instead of Git's earlier normalized LF; their non-newline content is unchanged.
 
@@ -27,9 +27,11 @@ The prepared site contains 73 served files including the empty marker, totaling 
 
 Preserve `.gitattributes`: all `dist/**` bytes, including original XML CRLF and shell/source metadata, must survive Git checkout unchanged. Generator and test tooling use LF on Windows and Linux. This closes a demonstrated fresh-worktree failure where a converted generator header disagreed with the pinned runtime output; both required checks passed after the candidate-only newline policy was applied. `.gitignore` excludes local provider metadata and Python caches; they are not release source inputs.
 
-## First hosted check
+## Hosted release verification
 
-Actual GitHub-hosted operation remains unverified. After deployment, use `https://caleb-guyer.github.io/plants-vs-zombies-web/?testing=1` for silent checks without changing normal-player audio preferences. Limit this release check to automatic file-free startup, the original title, JavaScript/WASM/resource responses and matching source links; further manual campaign gameplay is not a release prerequisite. Confirm the WASM response uses `application/wasm`; the glue retains an ArrayBuffer fallback if streaming compilation fails.
+The manual workflow completed successfully on 2026-10-31 (created 18:45:33 UTC; updated 18:46:13 UTC). The hosted index (5,637 bytes), JavaScript glue (208,448 bytes) and asset manifest (3,176 bytes) matched local SHA-256 values. WASM returned HTTP 200 with `application/wasm` and 7,411,823 bytes; the Software.10 source ZIP returned HTTP 200 with 5,233,817 bytes.
+
+A silent `https://caleb-guyer.github.io/plants-vs-zombies-web/?testing=1` browser check reached the original Click to Start title automatically without a local file prompt. No campaign gameplay was performed on GitHub. These checks establish deployment, bounded resource delivery and file-free title startup, not every level, mode, ability, save path or full original-game parity. Future agent checks must remain silent with `?testing=1`; the normal Play URL has no testing parameter.
 
 Normal players retain music and sound effects, subject to browser autoplay rules and their saved choice. Do not publish a testing-only URL as the ordinary Play link.
 
