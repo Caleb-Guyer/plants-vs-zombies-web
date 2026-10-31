@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-night.1
-Adds Night Shift, a twenty-wave nighttime Bonus challenge with six fixed mushroom-focused seeds and an independent checkpoint and completion record. Retains background saves and original-style controls.
-Engine JavaScript SHA-256: f6d1a7749955e3d889257c6074b9d2095df9a81c1bc67d323db7957f45d00755
-Engine WASM SHA-256: a63038207945b1e4ae82abc646693fb89c0b3292e37e758806ae744d1fb2ff9f
+PvZ-Portable 0.2.6-web-lantern.1
+Adds Lantern-shroom, a mushroom that briefly slows nearby zombies with a glowing pulse, introduced in the independent nighttime Lantern Glow Bonus challenge.
+Engine JavaScript SHA-256: 94cc37133b75e998e6fc621cfd505f05916ed498b9609d8972b4a121f4e3e272
+Engine WASM SHA-256: f4c268f7bf5535049010ed560fac3382b80471056fdc048b611489e0832c98e4
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.

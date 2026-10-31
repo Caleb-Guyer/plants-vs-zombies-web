@@ -8,7 +8,43 @@ The user directed us on 2026-10-31 to stop manual gameplay and wrap the current 
 
 Publication status: [GitHub Pages](https://caleb-guyer.github.io/plants-vs-zombies-web/) is live after [workflow 41230962473](https://github.com/Caleb-Guyer/plants-vs-zombies-web/actions/runs/41230962473) succeeded on 2026-10-31. A silent browser check reached the original title without a file prompt; WASM returned HTTP 200 as `application/wasm`. This adds hosting/startup proof only, with no GitHub campaign gameplay or full-parity certification.
 
-## Authorized Night Shift release, 2026-10-31
+## Authorized Lantern-shroom release, 2026-10-31
+
+The user approved the proposed first new plant, **Lantern-shroom**, introduced
+through its own **Lantern Glow** Bonus challenge. Continue the established
+original-style presentation, muted automated testing and GitHub Pages release
+workflow. Current source uses **0.2.6-web-lantern.1**. Keep the normal campaign,
+chooser, unlocks, native menus and five discreet utility icons familiar; introduce
+the new plant through the third standard Bonus card, with brief native hover text
+and no extra HUD or instruction panel.
+
+Lantern-shroom costs 75 sun, recharges in 750 native ticks and pulses every 400
+active gameplay ticks, briefly slowing eligible living grounded enemy zombies
+within 150 pixels for 150 ticks through native chill. It is nocturnal, deals no
+damage, respects immune/friendly/dead/airborne states, and does not shorten
+existing stronger chill or freeze. Pause, sleep, squish, death and grabbing stop
+its pulse. Use existing Plant countdown fields so phase survives saves without
+changing serialized layouts. Append seed 75 after the original special IDs;
+retain NUM_SEED_TYPES 53, original chooser 49 and all existing plant definitions.
+Use the generated transparent blue-green/amber artwork, original seed packets,
+a quiet breathing motion and short expanding pulse. The full generation prompt
+and exact PNG identity belong in [art provenance](dist/content/lantern-shroom-art.json).
+
+Lantern Glow appends mode 75, an independent checkpoint and reserved completion
+record 74. Use the native night lawn, 150 starting sun, no falling sky sun,
+twenty waves/two flags, native graves and six fixed packets: Sun-shroom,
+Puff-shroom, Fume-shroom, Lantern-shroom, Grave Buster and Doom-shroom. Preserve
+all 74 prior challenge definitions/IDs, Night Shift, Cone Zone, original trophy
+and campaign routing, saved layouts, background save worker and schema 2.
+
+Use seven native suites, the fourteen browser suites and a bounded muted feature
+check, then publish matching [Lantern.1 source](dist/source/pvz-portable-0.2.6-web-lantern.1-source.zip),
+[full patch](dist/source/web-lantern.1.patch), [Night.1 increment](dist/source/night1-to-lantern1.patch),
+retained [Night.1 source](dist/source/pvz-portable-0.2.6-web-night.1-source.zip),
+website source, art provenance and release identities together. Record observed
+results without borrowing prior-release evidence or resuming broad parity testing.
+
+## Historical authorized Night Shift release, 2026-10-31
 
 The user explicitly approved adding **Night Shift**, keeping the original game's look and feel, testing with sound off, and publishing to the existing GitHub Pages site. Current source uses **0.2.6-web-night.1**. Put the second card beside Cone Zone under **Mini-Games → Bonus** using native night artwork, fonts, the standard card layout and two-flag banner. Keep instructions to the brief native hover label; add no information panels or overlays.
 
@@ -128,7 +164,7 @@ The original native launch reached a Steam startup error without a game/JPEG cap
 
 The user explicitly requested immediate play without choosing game files, save-only import/export and public bundling of original assets. The six approved runtime files total 45,462,524 bytes in eleven parts, under manifest ID `sha256:b468b22439430ca4a36035b886a74bd831a86b2a1a36c39d3203396f5b75d093`. Preserve exact validated bundle bytes, separate save stores, automatic first visit/cache/retry and existing progress. No executable, native library, real save or private QA export belongs in distribution inputs.
 
-The source uses **0.2.6-web-night.1**, with exact engine/source/patch identities in `dist/game/engine-provenance.json`. It retains the fileless shell, five icons, normal player audio, native profiles, save-only transfers, public storage keys and keyboard behavior. The frozen public v18 baseline uses Software.10 (source `877bbbf3f001fc2f9202700ba790e27665179e92`); Software.10's own scoped private first-level and save-transfer observations below remain historical. Earlier observations retain their actual build and private/public scope.
+The source uses **0.2.6-web-lantern.1**, with exact engine/source/patch identities in `dist/game/engine-provenance.json`. It retains the fileless shell, five icons, normal player audio, native profiles, save-only transfers, public storage keys and keyboard behavior. The frozen public v18 baseline uses Software.10 (source `877bbbf3f001fc2f9202700ba790e27665179e92`); Software.10's own scoped private first-level and save-transfer observations below remain historical. Earlier observations retain their actual build and private/public scope.
 
 Public v15 preserved the three approved XML resource files' original CRLF bytes in Git and added the matching attributes rule, closing the fresh-checkout checksum blocker without changing the Software.7 runtime. GitHub Pages publication succeeded on 2026-10-31 through [release workflow 41230962473](https://github.com/Caleb-Guyer/plants-vs-zombies-web/actions/runs/41230962473). The bounded hosted startup check does not establish full game parity. The user authorized publication of the current build on 2026-10-31 while full 1:1 parity remains unverified; publication does not mark that goal complete.
 

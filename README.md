@@ -2,7 +2,7 @@
 
 [Play on GitHub Pages](https://caleb-guyer.github.io/plants-vs-zombies-web/) · [Existing playtest](https://lawn-defense-caleb-plays.usgi.chatgpt.site) · [Deployment](DEPLOYMENT.md) · [Requirements](CURRENT-REQUIREMENTS.md) · [QA history](PARITY-QA.md)
 
-This source uses **0.2.6-web-night.1**, based on PvZ-Portable 0.2.6 commit `396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca`. It adds Night Shift alongside Cone Zone on the native Bonus page, retaining Polish.1's simplified menus, background save worker, earlier controls, save recovery and renderer corrections. Full 1:1 parity remains unverified; broad manual validation stopped at the user's request on 2026-10-31. Earlier release evidence below remains historical.
+This source uses **0.2.6-web-lantern.1**, based on PvZ-Portable 0.2.6 commit `396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca`. It adds Lantern-shroom and its Lantern Glow challenge alongside Night Shift and Cone Zone on the native Bonus page, retaining the simplified menus, background save worker, earlier controls, save recovery and renderer corrections. Full 1:1 parity remains unverified; broad manual validation stopped at the user's request on 2026-10-31. Earlier release evidence below remains historical.
 
 The Software.10 and earlier QA descriptions below are the frozen v18 evidence snapshot. They retain their original capture-time scope, including earlier limits; they are not a claim that later validation or the full parity goal is complete.
 
@@ -17,6 +17,28 @@ Saves persist automatically in this browser without export/import. The existing 
 ## Audio and rendering
 
 Normal players have music and sound effects, subject to browser autoplay rules and the saved mute preference. The mute icon remembers the player's choice; original volume controls remain available. **All agent testing uses `?testing=1`, which forces inaudible output without changing the normal-player preference.**
+
+## New plant and Bonus challenge: Lantern Glow
+
+Once Mini-Games is unlocked, choose **Mini-Games → Bonus → Lantern Glow**.
+Lantern-shroom is a support mushroom: every four seconds its light briefly slows
+nearby grounded zombies. It costs **75 sun**, recharges in **7.5 seconds** and
+slows for **1.5 seconds** per pulse. It deals no damage, so pair it with Puff-shrooms
+and Fume-shrooms. Stronger existing chill and freezing are preserved.
+
+The challenge uses the original night lawn, 150 starting sun, no falling sky sun,
+twenty authored waves and two flags. Its fixed bank is Sun-shroom, Puff-shroom,
+Fume-shroom, Lantern-shroom, Grave Buster and Doom-shroom. Newspapers, poles and
+buckets arrive gradually; native graves and final-wave grave zombies remain.
+It has an independent checkpoint and completion record. Lantern-shroom is
+introduced in this challenge; the original campaign, chooser and unlocks retain
+their familiar content.
+
+The new plant has a blue-green cap and amber light, with a small breathing motion
+and an expanding pulse. Original seed packets, menus and the native flag bar
+remain in use, with no extra HUD. Its [new artwork](dist/content/lantern-shroom.png)
+was generated with the built-in image tool; [art provenance](dist/content/lantern-shroom-art.json)
+records the full prompt and exact embedded PNG identity.
 
 ## Bonus challenge: Night Shift
 
@@ -66,7 +88,21 @@ Open the original **Options → More Options** dialog for these additions:
 
 The native options and deck dialogs use the original game artwork and concise labels. QoL preferences and decks travel with save exports in separate files; existing native profile and board-save formats remain unchanged. Backups is also available through the small More utility icon.
 
-## Night.1 verification
+## Lantern.1 verification
+
+The full engine build, seven native suites totaling **1,295 checks**, fourteen
+browser integration suites and corresponding engine-source packaging pass. The
+new checks cover pulse behavior, native save-tail roundtrips, the exact embedded
+artwork, independent Bonus completion and retained original content. Both patches
+reconstruct the current engine source exactly. A bounded muted preview confirmed
+the third native Bonus card, new seed-packet/lawn sprite, planting costs, a native
+chill visual and save/reload/Continue with the three planted mushrooms and 50 sun.
+Precise pulse timing and range come from the automated checks, not a browser
+measurement. Website-source packaging and hosted verification are recorded
+separately in [QA](PARITY-QA.md). Earlier Night.1 and Polish.1 results below remain
+historical.
+
+## Historical Night.1 verification
 
 The full engine build, six native suites totaling **952 checks**, fourteen browser integration suites and corresponding engine-source packaging pass. The native checks cover Night Shift's nighttime setup and economy, authored waves, independent saves, completion, awards and retained controls. Both source patches reconstruct the current engine source exactly. A bounded muted preview confirmed the matching card, nighttime setup, mushroom planting and native save/reload/Continue with the saved Sun-shroom and 125 sun. Website-source packaging and hosted verification are recorded separately in [QA](PARITY-QA.md).
 
@@ -158,7 +194,7 @@ python package-portable.py --output-dir outputs
 
 The approved bundle consists of six exact original runtime data files totaling 45,462,524 bytes, split into 11 verified parts. It contains no Windows executable, DLL or installed save data. To regenerate it, explicitly supply `--zip <resource-archive.zip>` or `--game-dir <installed-game-directory>`.
 
-Current corresponding source is [Night.1 engine source](dist/source/pvz-portable-0.2.6-web-night.1-source.zip); [web-night.1.patch](dist/source/web-night.1.patch) is the complete upstream patch and [polish1-to-night1.patch](dist/source/polish1-to-night1.patch) is the increment from [Polish.1 source](dist/source/pvz-portable-0.2.6-web-polish.1-source.zip). The source includes both native bonus challenges and retained QoL implementations, build recipes and focused tests. The full source builds without applying a patch. [Engine provenance](dist/game/engine-provenance.json) and the [build record](dist/source/build-provenance.json) pin release artifacts. The website source contains the save worker and shared storage core. Historical packages, upstream baseline, build provenance and licenses remain available. Full resource payloads remain separate from source archives and are included in the full-runtime distribution. The website source includes the approved original UI artwork extracted for the save-recovery panel; `dist/ui` records its attribution and hashes.
+Current corresponding source is [Lantern.1 engine source](dist/source/pvz-portable-0.2.6-web-lantern.1-source.zip); [web-lantern.1.patch](dist/source/web-lantern.1.patch) is the complete upstream patch and [night1-to-lantern1.patch](dist/source/night1-to-lantern1.patch) is the increment from [Night.1 source](dist/source/pvz-portable-0.2.6-web-night.1-source.zip). The source includes Lantern-shroom, all three bonus challenges and retained QoL implementations, build recipes and focused tests. The full source builds without applying a patch. [Engine provenance](dist/game/engine-provenance.json) and the [build record](dist/source/build-provenance.json) pin release artifacts. The website source contains the save worker and shared storage core. Historical packages, upstream baseline, build provenance and licenses remain available. Full resource payloads remain separate from source archives and are included in the full-runtime distribution. The website source includes the approved original UI artwork extracted for the save-recovery panel; `dist/ui` records its attribution and hashes.
 
 Public v15 preserved the three approved XML resource files' original CRLF bytes in Git and added the matching attributes rule, closing the fresh-checkout checksum blocker without changing the Software.7 runtime. GitHub Pages publication succeeded on 2026-10-31 through [release workflow 41230962473](https://github.com/Caleb-Guyer/plants-vs-zombies-web/actions/runs/41230962473). The bounded hosted startup check does not establish full game parity. The user authorized publication of the current build on 2026-10-31 while full 1:1 parity remains unverified; publication does not mark that goal complete.
 

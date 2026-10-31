@@ -176,7 +176,7 @@ for(const path of ['dist/index.html','dist/index-port.html']){
   if(/id="(?:file-input|resource-zip-input|browse-folder-btn|browse-zip-btn|files-btn|cache-forget)"/.test(html))throw new Error('Fileless browser shell input required: '+path);
   if(!html.includes('<script src="./bundled-assets.js"></script>'))throw new Error('Bundled asset loader missing from '+path);
   const revised=html.replace(/src="\.\/game\/pvz-portable\.js(?:\?v=[^"]*)?"/,'src="./game/pvz-portable.js?v='+engine.artifacts.jsSha256.slice(0,12)+'"')
-    .replace(/src="\.\/(runtime|loader)\.js(?:\?v=[^"]*)?"/g,'src="./$1.js?v=night1"')
+    .replace(/src="\.\/(runtime|loader)\.js(?:\?v=[^"]*)?"/g,'src="./$1.js?v=lantern1"')
     .replace(/href="\.\/source\/[^"]+" download>Engine source/,'href="'+sourceHref+'" download>Engine source')
     .replace(/(<span id="engine-build-id">)[^<]*(<\/span>)/,'$1'+engine.id+'$2')
     .replace(/(<span id="engine-build-id">[^<]*<\/span>)[^<]*(?= © 2026)/,'$1 '+engine.caption);

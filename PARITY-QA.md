@@ -1,6 +1,98 @@
 # Browser parity and QA record
 
-## Night.1 release scope, 2026-10-31
+## Lantern.1 release scope, 2026-10-31
+
+`0.2.6-web-lantern.1` adds Lantern-shroom and the optional Lantern Glow challenge.
+The new mushroom costs 75 sun, recharges in 750 native ticks, and pulses every
+400 active gameplay ticks. Within a 150-pixel radius of zombie centers, it applies
+150 ticks of the native chill effect to eligible living grounded enemies, without
+damage, stacking a speed multiplier or shortening stronger existing chill/freeze.
+It is nocturnal. Sleeping, squished, dead, grabbed and inactive-gameplay plants do
+not pulse. Existing Plant counters store the remaining pulse and visible glow;
+no serialized object fields or native save formats are added.
+
+Lantern-shroom appends seed ID 75 while retaining every previous SeedType value,
+`NUM_SEED_TYPES=53` and the 49 original chooser entries. Its separate definition
+and draw paths bypass the original 53-entry plant/reanimation caches. Its PNG is
+decoded and downsampled once; native image disposal runs while the app and graphics
+owners are still alive. The original 53 plant definitions remain intact. Artwork
+is new, generated with the built-in image tool, and uses a transparent blue-green
+mushroom with amber light. The exact published PNG, dimensions and full prompt
+are recorded in [art provenance](dist/content/lantern-shroom-art.json); the native
+sprite header embeds those same bytes. No additional HUD is introduced.
+
+Lantern Glow appends mode 75 and reserved completion record 74 on the existing
+Bonus page, beside Cone Zone and Night Shift. It uses the native night lawn,
+150 starting sun, twenty authored waves and two flags. The fixed bank is
+Sun-shroom, Puff-shroom, Fume-shroom, Lantern-shroom, Grave Buster and Doom-shroom.
+Newspapers arrive on wave 5, poles on wave 8 and buckets on wave 15. Native graves
+and final-wave grave rises remain. Original campaign progression, unlocks,
+trophy totals and gold-sunflower routing are retained; all 74 prior challenge
+definitions and both earlier bonus checkpoints/records stay independent.
+
+The full Emscripten Release build passed in **127.343 seconds**, with all
+**772 source files unchanged** during compilation.
+
+All **seven native production-method suites pass 1,295 checks**: 66 speed,
+90 controls, 105 decks/cooldowns, 139 retained Cone Zone waves, 557 completion,
+rewards and navigation across all three Bonus modes, 131 Night Shift and
+207 Lantern-shroom/Lantern Glow. The new suite executes the actual pulse routing,
+eligibility, cadence, range, native chill duration and preservation of stronger
+chill, cost/recharge and custom seed drawing dispatch. Actual PortableSaveContext
+and SyncPlantTailPortable code roundtrips seed 75, pulse phase and glow through a
+controlled little-endian byte transport, then verifies the same future pulse.
+These fixtures initialize no real game or audio device and do not certify pixels.
+
+All **fourteen browser integration suites pass**, including the retained
+**eleven real-worker scenarios**, distinct mode-75 save-transfer bytes and current
+native source/report coherence. The artwork check verifies the exact public PNG,
+RGBA dimensions/provenance and equality to the native embedded bytes.
+
+The final engine-source package passes with **804 entries, 6,034,293 bytes and
+772 production source files**. Both the full upstream patch and Night.1 increment
+reconstruct every current source byte exactly. The archive contains full source,
+recipes, tests and matching receipts; it avoids duplicating the large PNG-bearing
+patches internally. Exact patches remain separately served and pinned in the
+release manifests, and full source builds without applying a patch. An earlier
+local staging package is not the release input.
+
+The owned muted preview loaded the final Lantern.1 WASM with the existing
+synthetic QA-Boss profile. Bonus displayed the third Lantern Glow card beside
+Cone Zone and Night Shift, using the native card/title treatment without extra
+UI. Launch showed the original night lawn, nine graves, 150 sun, all six intended
+packets, the new Lantern-shroom sprite in its packet, two flags and the 1x control.
+Planting Lantern-shroom spent 75 sun, Sun-shroom spent 25 and Puff-shroom spent
+zero, leaving 50 sun. The new sprite appeared correctly on the lawn and was awake.
+Native Menu → Main Menu → Leave saved and returned to the main menu. The fixture
+pre-populates completion records, so trophy ribbons are not evidence of an earned
+win. Private working screenshots are `outputs/pvz-lantern1-release/bonus-cards.jpg`
+and `lantern-game.jpg`, not downloadable GitHub files. No completed battle is
+claimed.
+
+After saving, the preview reloaded and selected Lantern Glow again through the
+existing QA-Boss profile and Bonus page. The native Continue prompt appeared;
+Continue restored the same Lantern-shroom, Sun-shroom and Puff-shroom on the night
+lawn, with the saved graves, wave progress and 50 sun. The new packet and lawn
+sprite still rendered correctly after reload. A nearby zombie in the adjacent
+row displayed the native blue chill visual, with no Ice-shroom or Snow Pea in the
+bank. This is a bounded observation of the native chill visual, not a browser
+measurement of exact pulse cadence, duration or range. Automated production-method
+checks establish those timing and eligibility properties. Private proof is
+`outputs/pvz-lantern1-release/lantern-continue.jpg` and `lantern-resumed.jpg`.
+
+Final website-source packaging and hosted release verification remain independent
+observations. Historical Night.1 results below are not Lantern.1 runtime evidence.
+Agent testing uses `?testing=1`; normal-player audio remains available. No broad
+original-game parity playthrough is a release gate.
+
+Current corresponding source: [Lantern.1 source](dist/source/pvz-portable-0.2.6-web-lantern.1-source.zip),
+[complete upstream patch](dist/source/web-lantern.1.patch),
+[Night.1 increment](dist/source/night1-to-lantern1.patch) and retained
+[Night.1 parent source](dist/source/pvz-portable-0.2.6-web-night.1-source.zip).
+Release identities belong in [engine provenance](dist/game/engine-provenance.json)
+and the [build record](dist/source/build-provenance.json).
+
+## Historical Night.1 release scope, 2026-10-31
 
 `0.2.6-web-night.1` adds the optional **Night Shift** card beside Cone Zone on the existing native Bonus page. It uses the original night lawn, 150 starting sun, no falling sky sun, twenty authored waves and two flags. Its six fixed packets are Sun-shroom, Puff-shroom, Fume-shroom, Grave Buster, Ice-shroom and Doom-shroom; normal costs, recharge, nocturnal behavior and sun production remain native. Normal zombies open the level, with newspapers on wave 4, screen doors on wave 8 and buckets on wave 15. The authored wave table peaks at sixteen zombies including its flag bearer. Native nighttime setup adds nine graves, and the standard final-wave grave rise can add zombies outside that table. No new plant or zombie mechanics, artwork or information overlay is introduced.
 

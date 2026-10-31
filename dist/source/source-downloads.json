@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
-  "current_engine": "0.2.6-web-night.1",
+  "current_engine": "0.2.6-web-lantern.1",
   "upstream_tag": "0.2.6",
   "layout": "Site-source nests current corresponding source, its immediate parent when present, and the upstream baseline. Other exact source archives remain standalone downloads beside this index and in the full runtime distribution.",
   "nested_sources": [
     "pvz-portable-0.2.6-source.zip",
-    "pvz-portable-0.2.6-web-polish.1-source.zip",
-    "pvz-portable-0.2.6-web-night.1-source.zip"
+    "pvz-portable-0.2.6-web-night.1-source.zip",
+    "pvz-portable-0.2.6-web-lantern.1-source.zip"
   ],
   "archives": [
     {
@@ -24,10 +24,17 @@
       "upstream": false
     },
     {
+      "name": "pvz-portable-0.2.6-web-lantern.1-source.zip",
+      "bytes": 6034293,
+      "sha256": "c0f1ce050347d68672afa2139fe3da05ea2934fae9ea377a9fc45a2454c55244",
+      "current": true,
+      "upstream": false
+    },
+    {
       "name": "pvz-portable-0.2.6-web-night.1-source.zip",
       "bytes": 4791403,
       "sha256": "7b77f6f892a5f29b43bbb825307abb9c453f74e5990023d1adf11545a632cb65",
-      "current": true,
+      "current": false,
       "upstream": false
     },
     {
