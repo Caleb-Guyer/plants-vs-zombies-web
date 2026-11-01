@@ -1,0 +1,20 @@
+{
+  "asset": "cone-zone-card.png",
+  "prompt": "Use case: stylized-concept. Asset type: final production Plants vs. Zombies 2009 Bonus mini-game thumbnail illustration, Cone Zone. The attached long strip is the ORIGINAL game's actual 80-by-65 challenge thumbnails and is a STYLE AND DETAIL REFERENCE, not an edit target. Create ONE finished borderless rectangular 80:65 aspect painting, intended to be downsampled to 80x65 pixels. Match the original 2009 PopCap game exactly in visual language: chunky slightly wobbly dark olive/black ink outlines, simple hand-painted cel-like volumetric shading, clean broad color areas, droll expressive character, asymmetry and original zombie anatomy. Subject: a classic green-grey Conehead Zombie with the original huge off-white eyes, small uneven teeth, exposed lower jaw, brown lapel and red striped tie, wearing a bright orange battered traffic cone. Tight dynamic chest-up portrait, turned slightly toward left, cone and both eyes clearly visible. Character fills the RIGHT TWO THIRDS of the card, cone tip near x65% y10%, face around x65% y55%. Darker vivid grassy garden and very simple fence in background, daylight green palette like the original lawn. The TOP LEFT 35% corner will be covered by the existing native triangular trophy ribbon, so no eyes or cone tip there. Composition is a single integrated original-quality illustration, NOT small gameplay sprites pasted onto a background. Strong readability at only 80 by 65 pixels, around 3-pixel major outlines at target resolution. No frame, border, lettering, UI, trophy, watermark, speed lines, photorealism, 3D-render sheen, tiny decorative details, modern vector-flat redesign or new costume. Original style reference matters more than extra detail.",
+  "tool": "built-in image_gen",
+  "nativeWidth": 80,
+  "nativeHeight": 65,
+  "bytes": 1660141,
+  "sha256": "7e001ce3ecb36dde9abff949d6b87403ed44208344cdd6dc1321b4c90d352389",
+  "width": 1391,
+  "height": 1131,
+  "rgba": false,
+  "scope": "Exact generated PNG, losslessly serialized as base64; native renderer downsamples once at the original texture size.",
+  "references": [
+    {
+      "role": "challenge-atlas",
+      "file": "Challenge_Thumbnails.jpg",
+      "sha256": "5861036fc51c38441b609974687be9006528609a512ff0a919e18c236b7027c8"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-lantern.2
-Rebuilds Lantern-shroom with the original mushroom body, blinking and animation plus a cap-only edit. Adds unique native-art Bonus pictures and removes added challenge tips.
-Engine JavaScript SHA-256: ba021f822a3187a385cadf68157f20af00745646d50ab4608e7234341d699403
-Engine WASM SHA-256: 2b75f8768df5777a3115e5557b66b3d2655b02bdbc7e4c62cff66a12473bae01
+PvZ-Portable 0.2.6-web-chill.1
+Replaces the yellow Lantern theme with Chill-shroom: a muzzle-free frost mushroom with native body animation, wind-up and radial frost release. Adds painted Bonus illustrations and retains concise native cards.
+Engine JavaScript SHA-256: e89a921124733a9950c19ad25c955e2a1688e4dc585107274d994fcdfb803db0
+Engine WASM SHA-256: 23a46b077d6cc1ae14e2d1cbf88463f86ee50e021aa63415702aa6cebafe4af5
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.

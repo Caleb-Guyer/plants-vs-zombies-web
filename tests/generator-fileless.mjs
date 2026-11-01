@@ -29,6 +29,11 @@ try {
   assert(!/importResourceZip|handleFileList|fileInput|resourceZipInput|browseFolderBtn|webkitGetAsEntry/.test(loader));
   assert(loader.includes('await ensureSaveFsReady(),await window.beforePvZStart?.()'));
   assert(loader.includes('window.onSaveOperationFinished?.()'));
+  assert(loader.includes('Loading game\u2026') && loader.includes('Loading game files\u2026 '), 'Generated progress labels preserve their concise UTF-8 text');
+  const engine = JSON.parse(fs.readFileSync(path.join(temporary, 'dist/game/engine-provenance.json'), 'utf8'));
+  for (const name of ['dist/index.html', 'dist/index-port.html']) {
+    assert(first.get(name).toString().includes('</span> ' + engine.caption + ' \u00a9 2026'), 'Displayed caption matches the current engine: ' + name);
+  }
   const page = path.join(temporary, 'dist/index.html');
   fs.writeFileSync(page, fs.readFileSync(page, 'utf8').replace('id="retry-load"', 'id="file-input"'));
   const bad = spawnSync(process.execPath, ['prepare-port.mjs'], {cwd: temporary, encoding: 'utf8'});

@@ -22,10 +22,9 @@ ROOT = Path(__file__).resolve().parent
 DIST = ROOT / "dist"
 SITE_SOURCE = DIST / "source" / "site-source.zip"
 SOURCE_DOWNLOADS = DIST / "source" / "source-downloads.json"
-# Cloudflare Workers/Pages both document 25 MiB per served static asset:
-# https://developers.cloudflare.com/workers/platform/limits/
-# https://developers.cloudflare.com/pages/platform/limits/
-MAX_STATIC_ASSET_BYTES = 25 * 1024 * 1024
+# Current publication target is GitHub Pages, via the existing Pages workflow.
+# https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-large-files-on-github
+MAX_STATIC_ASSET_BYTES = 100 * 1024 * 1024
 REQUIRED_ROOT = (
     ".gitattributes", "README.md", "CURRENT-REQUIREMENTS.md", "PARITY-QA.md", "package.json", "server.mjs",
     "verify-port.mjs", "prepare-port.mjs",
@@ -120,7 +119,7 @@ def validate_engine_inputs():
 def assert_static_asset_limit(path, label=None):
     size = path.stat().st_size
     if size > MAX_STATIC_ASSET_BYTES:
-        raise ValueError(f"Static asset exceeds Cloudflare 25 MiB limit: {label or path} ({size} bytes)")
+        raise ValueError(f"Static asset exceeds GitHub 100 MiB file limit: {label or path} ({size} bytes)")
 
 
 def validate_game_assets():

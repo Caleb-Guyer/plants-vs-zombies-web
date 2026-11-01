@@ -8,11 +8,66 @@ The user directed us on 2026-10-31 to stop manual gameplay and wrap the current 
 
 Publication status: [GitHub Pages](https://caleb-guyer.github.io/plants-vs-zombies-web/) is live after [workflow 41230962473](https://github.com/Caleb-Guyer/plants-vs-zombies-web/actions/runs/41230962473) succeeded on 2026-10-31. A silent browser check reached the original title without a file prompt; WASM returned HTTP 200 as `application/wasm`. This adds hosting/startup proof only, with no GitHub campaign gameplay or full-parity certification.
 
-## Lantern.2 art revision, 2026-10-31
+## Chill.1 identity, attack and card revision, 2026-10-31
+
+The user rejected Lantern.2's plant and challenge art. A yellow/brown Lantern
+with a Puff-shroom muzzle did not communicate its radial cold mechanic, and a
+cap tint alone did not show an attack. The current candidate targets
+**0.2.6-web-chill.1**, based on Lantern.2. Use **Chill-shroom** and **Cold Front**
+as player-facing names. Preserve internal seed 75, mode 75, completion record 74,
+existing checkpoint filenames and all other original/Bonus identities.
+
+The [Chill revision criteria](CHILL-REVISION-GOAL.md) track this explicit request.
+The goal tool rejected a new objective because the older parity goal remains
+paused. Do not falsely mark that unfinished goal complete or claim that this
+manual revision record is a new formal goal.
+
+Use the native Ice-shroom body, eyes, idle, blink and sleep with a new squat,
+rounded snowy cyan cap on its 103×54 canvas. Remove the Puff muzzle, projectile
+outlet and yellow lantern identity. Give the existing pulse a visible 40-tick
+wind-up, outward frost release and 30-tick recovery. Keep the four-second active
+cycle, 150-pixel radial native chill for 150 ticks, 75 sun, 750-tick recharge,
+no damage, enemy eligibility and stronger-chill/freeze preservation. Sleeping,
+paused, grabbed, squished and dead plants must not advance the attack.
+
+Generate separate integrated 80×65 paintings for Cone Zone, Night Shift and
+Cold Front using the actual original challenge atlas as a style reference.
+They must remain readable in the native frame both before and after the trophy
+ribbon covers the upper-left triangle. Keep native titles and hover color;
+retain the removal of added Bonus tips. Add no extra HUD or instructions.
+Full prompts, reference identities and PNG hashes belong beside the four new
+assets in [`dist/content`](dist/content/).
+
+Preserve native saved object layouts, schema 2, worker and automatic saves.
+Upgrade both Lantern.1 bodyless saves and Lantern.2 Puff-body saves to the new
+body/cap without resetting pulse phase, health, position or checkpoint progress.
+Restore cap overrides and attack pose before the paused Continue/background draw.
+Keep the existing night challenge's waves, fixed bank, original graves and
+completion/reward routing unchanged apart from its displayed names and pictures.
+
+The corrected coherent build passes with 773 unchanged source inputs; seven
+native suites pass 1,419 checks, fourteen browser suites include eleven worker
+scenarios, and engine packaging/both patch reconstructions pass. The initial
+native review rejected hidden eyes. Corrected cap content is 103×46 at the top
+of the unchanged 103×54 canvas, with transparent lower clearance. Final native
+review confirms clear half-lidded eyes, a joined cap/body, no muzzle, visible
+wind-up/radial release/recovery, readable earned/unearned cards and native hover
+without added tips. An old checkpoint retains 50 sun and three plants through
+migration. A fresh healthy current-body board also restores the same 50 sun and
+Sun-shroom/Chill-shroom/Puff-shroom through full reload and native Continue, with
+clear eyes and cap intact. Local criteria pass; website-source packaging and
+publication are independent remaining release checks. Earlier snapshots remain
+historical. Test
+with sound off and publish to the existing GitHub repository and Pages site.
+Source packaging must retain complete current source, required parent/upstream,
+assets, tests, dependencies and licenses. Use the GitHub 100 MiB per-file ceiling;
+the older provider's 25 MiB restriction must not cause required inputs to be lost.
+
+## Historical Lantern.2 art revision — visual result rejected, 2026-10-31
 
 The user rejected Lantern.1's art style and feel, requested removal of the added
 Bonus tips and required distinct challenge pictures instead of Survival images.
-Current source uses **0.2.6-web-lantern.2**. The [art revision criteria](ART-REVISION-GOAL.md)
+That revision used **0.2.6-web-lantern.2**. The [art revision criteria](ART-REVISION-GOAL.md)
 record the requested work. A new goal-tool objective was rejected because the
 older parity goal is paused; do not falsely mark that older goal complete.
 
@@ -37,7 +92,9 @@ phase. Inspect the new plant beside original mushrooms at actual game size,
 correct observed discrepancies, run focused automated/save checks with sound off
 and publish the corrected source and binary to the existing GitHub Pages site.
 Earlier Lantern.1 art-match claims are historical and rejected, not acceptance
-criteria. Automated tests cannot prove subjective visual perfection.
+criteria. The user later rejected Lantern.2's plant identity, attack and card
+pictures too. The observations below retain only their bounded functional scope.
+Automated tests cannot prove subjective visual perfection.
 
 The final coordinate-corrected build and 1,333 native/fourteen browser checks pass.
 The muted native-size comparison confirmed the new body/cap beside original
@@ -211,7 +268,7 @@ The original native launch reached a Steam startup error without a game/JPEG cap
 
 The user explicitly requested immediate play without choosing game files, save-only import/export and public bundling of original assets. The six approved runtime files total 45,462,524 bytes in eleven parts, under manifest ID `sha256:b468b22439430ca4a36035b886a74bd831a86b2a1a36c39d3203396f5b75d093`. Preserve exact validated bundle bytes, separate save stores, automatic first visit/cache/retry and existing progress. No executable, native library, real save or private QA export belongs in distribution inputs.
 
-The source uses **0.2.6-web-lantern.2**, with exact engine/source/patch identities in `dist/game/engine-provenance.json`. It retains the fileless shell, five icons, normal player audio, native profiles, save-only transfers, public storage keys and keyboard behavior. The frozen public v18 baseline uses Software.10 (source `877bbbf3f001fc2f9202700ba790e27665179e92`); Software.10's own scoped private first-level and save-transfer observations below remain historical. Earlier observations retain their actual build and private/public scope.
+The current source target is **0.2.6-web-chill.1**; completed engine/source/patch identities belong in `dist/game/engine-provenance.json`. It retains the fileless shell, five icons, normal player audio, native profiles, save-only transfers, public storage keys and keyboard behavior. The frozen public v18 baseline uses Software.10 (source `877bbbf3f001fc2f9202700ba790e27665179e92`); Software.10's own scoped private first-level and save-transfer observations below remain historical. Earlier observations retain their actual build and private/public scope.
 
 Public v15 preserved the three approved XML resource files' original CRLF bytes in Git and added the matching attributes rule, closing the fresh-checkout checksum blocker without changing the Software.7 runtime. GitHub Pages publication succeeded on 2026-10-31 through [release workflow 41230962473](https://github.com/Caleb-Guyer/plants-vs-zombies-web/actions/runs/41230962473). The bounded hosted startup check does not establish full game parity. The user authorized publication of the current build on 2026-10-31 while full 1:1 parity remains unverified; publication does not mark that goal complete.
 

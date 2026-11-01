@@ -1,0 +1,30 @@
+{
+  "asset": "night-shift-card.png",
+  "prompt": "Use case: stylized-concept. Asset type: finished production Plants vs. Zombies 2009 original-game Bonus thumbnail painting, Night Shift. Input1 original Challenge_Thumbnails.jpg is exact visual-language/reference for original game cards. Inputs2/3 are original mushroom cap references only. Create ONE integrated borderless rectangular illustration in 80:65 aspect, intended to display at only80x65 pixels. Match classic 2009 Plants vs Zombies hand-painted bitmap style: bold uneven dark purple/brown outlines, simple broad organic forms, soft painted two-tone highlights, rich blue-purple nighttime colors, original goofy plant expressions. Foreground hero original small purple Puff-shroom with round deep-purple cap, large dark-purple spots, pale green stem with two tiny black vertical eyes and its small side muzzle; beside and slightly behind it to the right a small golden Sun-shroom with orange-brown spots and off-white stem, glowing softly from the cap. Original plants, not redesigned human characters. Frame as a close-up portrait, not a whole game screenshot: the purple cap and its stem face occupy center/right of lower-middle, golden Sun-shroom at upper-right; both complete faces visible, large simple readable silhouettes. Subject placement avoids top-left triangle (top35% left35%), which will be covered by native trophy overlay. Background deep indigo grass and one simple rounded tombstone silhouette at far left, distant blue wooden fence, single moon corner, low contrast so the plants remain primary. No tiny pasted gameplay sprites: compose as one painted illustration with the same perspective and connected lighting. No frame, words, labels, UI, ribbon, trophy, watermark, hyperdetail, glossy3D or modern vector redraw. Foreground characters should nearly fill the card and have the polish/readability of the original tiny challenge artwork.",
+  "tool": "built-in image_gen",
+  "nativeWidth": 80,
+  "nativeHeight": 65,
+  "bytes": 1836901,
+  "sha256": "0d8b4d15161434bf492fcc49d00f8872cd8d193579002b009fec8a00d43a3486",
+  "width": 1392,
+  "height": 1130,
+  "rgba": false,
+  "scope": "Exact generated PNG, losslessly serialized as base64; native renderer downsamples once at the original texture size.",
+  "references": [
+    {
+      "role": "challenge-atlas",
+      "file": "Challenge_Thumbnails.jpg",
+      "sha256": "5861036fc51c38441b609974687be9006528609a512ff0a919e18c236b7027c8"
+    },
+    {
+      "role": "puff-cap",
+      "file": "PuffShroom_head.png",
+      "sha256": "5f8071f541bd510fb2e2e7ab4e364dd597ac6b107981317f5609f6d7453fcf46"
+    },
+    {
+      "role": "sun-cap",
+      "file": "SunShroom_head.png",
+      "sha256": "551dfc5e509961f1eac1bb79b35da7827a1544034ed90a96d6d539c9425b7e64"
+    }
+  ]
+}

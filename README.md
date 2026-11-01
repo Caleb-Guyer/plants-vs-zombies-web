@@ -2,7 +2,7 @@
 
 [Play on GitHub Pages](https://caleb-guyer.github.io/plants-vs-zombies-web/) · [Existing playtest](https://lawn-defense-caleb-plays.usgi.chatgpt.site) · [Deployment](DEPLOYMENT.md) · [Requirements](CURRENT-REQUIREMENTS.md) · [QA history](PARITY-QA.md)
 
-This source uses **0.2.6-web-lantern.2**, based on PvZ-Portable 0.2.6 commit `396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca`. This visual revision gives Lantern-shroom the original Puff-shroom's body and animation with a cap-only texture edit, removes added Bonus rule tips and gives the three Bonus challenges distinct native-art pictures. It retains the existing challenges, simplified menus, background save worker, controls, save recovery and renderer corrections. Full 1:1 parity remains unverified; broad manual validation stopped at the user's request on 2026-10-31. Earlier release evidence below remains historical.
+This source targets **0.2.6-web-chill.1**, based on PvZ-Portable 0.2.6 commit `396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca` and the Lantern.2 parent. The user rejected Lantern.2's plant identity, missing attack and challenge pictures. This revision introduces the muzzle-free **Chill-shroom**, renames its challenge **Cold Front** and replaces all three Bonus pictures with separate painted illustrations. It retains the existing challenges, simplified menus, background save worker, controls, save recovery and renderer corrections. Full 1:1 parity remains unverified; broad manual validation stopped at the user's request on 2026-10-31. Earlier release evidence below remains historical.
 
 The Software.10 and earlier QA descriptions below are the frozen v18 evidence snapshot. They retain their original capture-time scope, including earlier limits; they are not a claim that later validation or the full parity goal is complete.
 
@@ -18,36 +18,40 @@ Saves persist automatically in this browser without export/import. The existing 
 
 Normal players have music and sound effects, subject to browser autoplay rules and the saved mute preference. The mute icon remembers the player's choice; original volume controls remain available. **All agent testing uses `?testing=1`, which forces inaudible output without changing the normal-player preference.**
 
-## New plant and Bonus challenge: Lantern Glow
+## New plant and Bonus challenge: Cold Front
 
-Once Mini-Games is unlocked, choose **Mini-Games → Bonus → Lantern Glow**.
-Lantern-shroom is a support mushroom: every four seconds its light briefly slows
+Once Mini-Games is unlocked, choose **Mini-Games → Bonus → Cold Front**.
+Chill-shroom is a support mushroom: every four seconds its cold pulse briefly slows
 nearby grounded zombies. It costs **75 sun**, recharges in **7.5 seconds** and
 slows for **1.5 seconds** per pulse. It deals no damage, so pair it with Puff-shrooms
 and Fume-shrooms. Stronger existing chill and freezing are preserved.
 
 The challenge uses the original night lawn, 150 starting sun, no falling sky sun,
 twenty authored waves and two flags. Its fixed bank is Sun-shroom, Puff-shroom,
-Fume-shroom, Lantern-shroom, Grave Buster and Doom-shroom. Newspapers, poles and
+Fume-shroom, Chill-shroom, Grave Buster and Doom-shroom. Newspapers, poles and
 buckets arrive gradually; native graves and final-wave grave zombies remain.
-It has an independent checkpoint and completion record. Lantern-shroom is
+It has an independent checkpoint and completion record. Chill-shroom is
 introduced in this challenge; the original campaign, chooser and unlocks retain
 their familiar content.
 
-Lantern-shroom now uses the original Puff-shroom body, face, blink, sleep, shadow
-and animation geometry. Only the cap painting changes: a restrained olive cap
-with warm spots, retaining the original 81×53 texture canvas and exact alpha
-contour. A short cap-color lift shows its pulse. The former full-body bitmap,
-scaling motion and large ring are removed. Its [cap edit](dist/content/lantern-shroom-cap.png)
-was made with the built-in image tool using the original cap as its edit target;
-[cap provenance](dist/content/lantern-shroom-cap-art.json) records the reference,
-full prompt and embedded PNG identity.
+The new design uses the original Ice-shroom body and half-lidded eyes with a
+rounded snowy cyan [cap](dist/content/chill-shroom-cap.png), fitted to the native
+103×54 cap canvas. It has no Puff muzzle or yellow lantern. A 40-tick wind-up
+leads into an outward frost release and 30-tick recovery. The
+[cap provenance](dist/content/chill-shroom-cap-art.json) records its original
+references, full built-in image-tool prompt and exact PNG identity.
 
-Cone Zone, Night Shift and Lantern Glow each have a distinct picture composed from
-original game resources in the native 80×65 card window. Added Bonus rule tips
-are removed. The original seed packets, menus and flag bar remain in use, with no
-extra HUD. Existing Lantern.1 checkpoints reconstruct the native plant body and
-cap while retaining health, placement, pulse phase and other saved game state.
+Cone Zone, Night Shift and Cold Front each have a cohesive new illustration for
+the native 80×65 card window: [conehead portrait](dist/content/cone-zone-card.png),
+[night mushrooms](dist/content/night-shift-card.png) and
+[Chill-shroom's cold pulse](dist/content/cold-front-card.png). Adjacent `-art.json`
+files record their prompts and provenance. Added Bonus rule tips remain absent.
+The original seed packets, menus and flag bar remain in use, with no extra HUD.
+Seed 75, mode 75, its checkpoint filename and completion record remain unchanged;
+older Lantern-shroom saves retain their game state while adopting the revised
+plant. Native-size review caught and corrected hidden eyes: cap content now fits
+103×46 at the top of its unchanged 103×54 canvas. The face/body join, visible
+wind-up, outward frost release and three card pictures pass the bounded review.
 
 ## Bonus challenge: Night Shift
 
@@ -97,7 +101,24 @@ Open the original **Options → More Options** dialog for these additions:
 
 The native options and deck dialogs use the original game artwork and concise labels. QoL preferences and decks travel with save exports in separate files; existing native profile and board-save formats remain unchanged. Backups is also available through the small More utility icon.
 
-## Lantern.2 verification
+## Chill.1 verification status
+
+[Revision criteria](CHILL-REVISION-GOAL.md) track the explicit user request.
+Original reference extraction and independent generated-art review are complete.
+The corrected Release build passes with 773 unchanged source inputs. Seven
+native suites pass **1,419 checks**; fourteen browser suites include eleven
+worker scenarios. Engine-source packaging and both patch reconstructions pass.
+Muted native-size review confirms visible eyes, a joined cap/body, closed-eye
+wind-up, radial frost release and idle recovery beside original mushrooms.
+All three cards fit with and without trophy ribbons; hover retains the native
+red title and adds no tip. An older checkpoint migrates with its 50 sun and
+three plants. A fresh current-body board also saves and restores through full
+reload/Continue with 50 sun and the same Sun-shroom, Chill-shroom and Puff-shroom,
+including the visible eyes and cap. Local feature/save checks pass.
+Website-source packaging and publication remain separate release gates; the
+normal Play link will receive the update through GitHub Pages.
+
+## Historical Lantern.2 verification — visual result rejected
 
 The final coordinate-corrected Release build, seven native suites totaling
 **1,333 checks**, fourteen browser suites and corresponding engine-source
@@ -110,10 +131,10 @@ the fresh board retained all three plants, 50 sun and the correct cap. Observed
 scope and separate release records are in [QA](PARITY-QA.md). Automated checks do
 not certify subjective perfection or exhaustive visual equivalence.
 
-The [art revision criteria](ART-REVISION-GOAL.md) follow the user's rejection of
-Lantern.1's visual style and feel. Earlier agent observations below were bounded
-functional checks; they are not approval of that rejected artwork or proof of a
-perfect original-game match.
+The [earlier art revision criteria](ART-REVISION-GOAL.md) followed the user's
+rejection of Lantern.1. The user subsequently rejected Lantern.2's visual result
+and attack presentation as well. These bounded functional checks are not user
+acceptance of either artwork revision or proof of a perfect original-game match.
 
 ## Historical Lantern.1 verification — artwork rejected
 
@@ -222,7 +243,7 @@ python package-portable.py --output-dir outputs
 
 The approved bundle consists of six exact original runtime data files totaling 45,462,524 bytes, split into 11 verified parts. It contains no Windows executable, DLL or installed save data. To regenerate it, explicitly supply `--zip <resource-archive.zip>` or `--game-dir <installed-game-directory>`.
 
-Current corresponding source is [Lantern.2 engine source](dist/source/pvz-portable-0.2.6-web-lantern.2-source.zip); [web-lantern.2.patch](dist/source/web-lantern.2.patch) is the complete upstream patch and [lantern1-to-lantern2.patch](dist/source/lantern1-to-lantern2.patch) is the increment from [Lantern.1 source](dist/source/pvz-portable-0.2.6-web-lantern.1-source.zip). The source includes Lantern-shroom, all three bonus challenges and retained QoL implementations, build recipes and focused tests. The full source builds without applying a patch. [Engine provenance](dist/game/engine-provenance.json) and the [build record](dist/source/build-provenance.json) pin release artifacts. The website source contains the save worker and shared storage core. Historical packages, upstream baseline, build provenance and licenses remain available. Full resource payloads remain separate from source archives and are included in the full-runtime distribution. The website source includes the approved original UI artwork extracted for the save-recovery panel; `dist/ui` records its attribution and hashes.
+Current corresponding source is [Chill.1 engine source](dist/source/pvz-portable-0.2.6-web-chill.1-source.zip), with [web-chill.1.patch](dist/source/web-chill.1.patch) as the full upstream patch and [lantern2-to-chill1.patch](dist/source/lantern2-to-chill1.patch) as the increment from [Lantern.2 source](dist/source/pvz-portable-0.2.6-web-lantern.2-source.zip). The corrected engine package and both patch reconstructions pass. The complete source builds without applying a patch. [Engine provenance](dist/game/engine-provenance.json) and the [build record](dist/source/build-provenance.json) pin completed release artifacts. Source packages retain complete current source, required parent/upstream inputs, tests, assets, dependencies and licenses; full original runtime payloads remain in the runtime distribution. Packaging uses the GitHub Pages 100 MiB per-file ceiling instead of the obsolete 25 MiB provider limit. The website source contains the save worker and shared storage core, and `dist/ui` records attribution and hashes for original save-recovery artwork.
 
 Public v15 preserved the three approved XML resource files' original CRLF bytes in Git and added the matching attributes rule, closing the fresh-checkout checksum blocker without changing the Software.7 runtime. GitHub Pages publication succeeded on 2026-10-31 through [release workflow 41230962473](https://github.com/Caleb-Guyer/plants-vs-zombies-web/actions/runs/41230962473). The bounded hosted startup check does not establish full game parity. The user authorized publication of the current build on 2026-10-31 while full 1:1 parity remains unverified; publication does not mark that goal complete.
 

@@ -1,5 +1,5 @@
 {
-  "id": "0.2.6-web-lantern.2",
+  "id": "0.2.6-web-chill.1",
   "upstream": {
     "tag": "0.2.6",
     "commit": "396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
@@ -7,73 +7,78 @@
     "officialJsSha256": "0f2d7425190e49c762f6700b68b080086e3dcb8f2dc5e9724de42ce9fb508573"
   },
   "sourceArchive": {
-    "path": "pvz-portable-0.2.6-web-lantern.2-source.zip",
-    "bytes": 6037932,
-    "sha256": "64da4037777bcbc12ceb0715612e2855c31da4979c66ab85455ae466f9ac64ee",
-    "crc32": "67e240c0",
-    "entries": 804,
-    "uncompressedBytes": 20080148
+    "path": "pvz-portable-0.2.6-web-chill.1-source.zip",
+    "bytes": 10943275,
+    "sha256": "e451a8f08f442070e2855e5a64832e3a8ad263a881d37308394b198642271118",
+    "crc32": "95dff2e9",
+    "entries": 805,
+    "uncompressedBytes": 23018695
   },
   "artifacts": [
     {
       "path": "build/pvz-portable.js",
-      "bytes": 208744,
-      "sha256": "ba021f822a3187a385cadf68157f20af00745646d50ab4608e7234341d699403",
-      "crc32": "0768bbfa"
+      "bytes": 209008,
+      "sha256": "e89a921124733a9950c19ad25c955e2a1688e4dc585107274d994fcdfb803db0",
+      "crc32": "bd380fa7"
     },
     {
       "path": "build/pvz-portable.wasm",
-      "bytes": 8760090,
-      "sha256": "2b75f8768df5777a3115e5557b66b3d2655b02bdbc7e4c62cff66a12473bae01",
-      "crc32": "0faf1ed0"
+      "bytes": 16228974,
+      "sha256": "23a46b077d6cc1ae14e2d1cbf88463f86ee50e021aa63415702aa6cebafe4af5",
+      "crc32": "4df4e792"
     },
     {
       "path": "build/ProjectVersion.h",
-      "bytes": 193,
-      "sha256": "810c903873991e3f643564bc28c5ff6414c9ac3881d7558a53a13afb140f38e3",
-      "crc32": "b2bad329"
+      "bytes": 191,
+      "sha256": "21ecd054183765198172ba33253fdcd30946802acd095eac5ffacc753171c8fa",
+      "crc32": "9ce695a0"
     }
   ],
-  "sourceFiles": 772,
-  "sourceBytes": 19249290,
-  "sourceDeltaVsLantern1": [
+  "sourceFiles": 773,
+  "sourceBytes": 22140267,
+  "sourceDeltaVsLantern2": [
     {
       "path": "CMake/ProjectVersion.cmake",
-      "beforeSha256": "6215c35231b87b5d08bb6f3cc09c4d0b4d8c81ec3a4772e0d45f79b2a7a65441",
-      "afterSha256": "bdc80888d3daf528c84fc0f3a263bf831a62b163522766233e8113edf97159f4"
+      "beforeSha256": "bdc80888d3daf528c84fc0f3a263bf831a62b163522766233e8113edf97159f4",
+      "afterSha256": "6e96452a98b7ebeab36110d00ea9fcda6a08650cf4fb687a4e846c37a1f8ed09"
     },
     {
       "path": "src/Lawn/Plant.cpp",
-      "beforeSha256": "3b35a50115349c03a8f186fae707a3f7eea81a4e1613bb381d9871cda27a19ea",
-      "afterSha256": "40682af9a4ee2c67c3790d477c788c24dd04faeb5228b0660933c862c7423ab0"
+      "beforeSha256": "40682af9a4ee2c67c3790d477c788c24dd04faeb5228b0660933c862c7423ab0",
+      "afterSha256": "d854f5c4c42e9ae5cc8260ec1dde8a8cac5f25e8b6adec2a50718c84b5485381"
+    },
+    {
+      "path": "src/Lawn/System/BonusChallengeArt.h",
+      "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "afterSha256": "d3a73db211de63094258eaea1ada9412f15c673b2cf790cabf87afceee3d6db1"
+    },
+    {
+      "path": "src/Lawn/System/FrostShroomCap.h",
+      "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "afterSha256": "c2e7e190e642afc60b33533e88b60c7e931f83967fc81079d9ada8f3bf6b89f8"
     },
     {
       "path": "src/Lawn/System/LanternShroom.cpp",
-      "beforeSha256": "c3e6764dd2a7d65732c4d82b2e0a61bc8a9c66823d4d6c6dc0490e8db0b5bcae",
-      "afterSha256": "2945ce0129b24a230aeb07bc1ebf2787f1ac70a76829f9373b08060c331d8e05"
+      "beforeSha256": "2945ce0129b24a230aeb07bc1ebf2787f1ac70a76829f9373b08060c331d8e05",
+      "afterSha256": "acbf17ceea93cc07eee3c0bf3f46434d5e6bf16777bdac7f0297cc00065dc202"
     },
     {
       "path": "src/Lawn/System/LanternShroom.h",
-      "beforeSha256": "190b3a1970b453fb0b04fab894a29559ae2e0ccc1e837b9b74922cab8f2784d7",
-      "afterSha256": "cf1acad224cf97410fb58a37a3bff4a9b0a141579a44da3608d7f1f4ec5e7eb8"
+      "beforeSha256": "cf1acad224cf97410fb58a37a3bff4a9b0a141579a44da3608d7f1f4ec5e7eb8",
+      "afterSha256": "f1dd987c9e780a8086ea50b86d83c9ed43f5b41aa8c30edb429cbb2a34e4c7b0"
     },
     {
       "path": "src/Lawn/System/LanternShroomCap.h",
-      "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "afterSha256": "ab7fdd0e7859c905bfd3769862dd2037850b90c86c297725e6b2771c622388d5"
-    },
-    {
-      "path": "src/Lawn/System/LanternShroomSprite.h",
-      "beforeSha256": "f9ad2f1812af82b90a8a83436b3e5783ce13aded09ffae4f83383d7e109dea06",
+      "beforeSha256": "ab7fdd0e7859c905bfd3769862dd2037850b90c86c297725e6b2771c622388d5",
       "afterSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     },
     {
       "path": "src/Lawn/Widget/ChallengeScreen.cpp",
-      "beforeSha256": "2f6fbc14b6ce9a9db7ba9902bd37e8a2d872d89e6380f6380d50bfeb83e3ab24",
-      "afterSha256": "b82057499554931e170707d9254cf0589d74c56201c8221cd3e67aea2b13ed5c"
+      "beforeSha256": "b82057499554931e170707d9254cf0589d74c56201c8221cd3e67aea2b13ed5c",
+      "afterSha256": "90c114a873b69c1f989732e55177ab99768c5ef376fd206644e696077135c83f"
     }
   ],
-  "compiledVersionHeader": "// Generated from CMake/ProjectVersion.h.in by CMake; do not edit.\r\n#pragma once\r\n\r\n#define PVZP_VERSION \"0.2.6-web-lantern.2\"\r\n#define PVZP_BUILD_NUMBER 1\r\n#define PVZP_COMMIT_DATE \"unknown\"\r\n",
+  "compiledVersionHeader": "// Generated from CMake/ProjectVersion.h.in by CMake; do not edit.\r\n#pragma once\r\n\r\n#define PVZP_VERSION \"0.2.6-web-chill.1\"\r\n#define PVZP_BUILD_NUMBER 1\r\n#define PVZP_COMMIT_DATE \"unknown\"\r\n",
   "checks": {
     "fullRelease": {
       "exitCode": 0,
@@ -86,22 +91,22 @@
       "sourceUnchangedDuringBuild": true,
       "receipt": {
         "path": "logs/build-result.json",
-        "bytes": 601,
-        "sha256": "3331f81d2743ac7d8361bc95695901813eeca4d03593c6c80bf74d87ae7e684d",
-        "crc32": "6643ca5c"
+        "bytes": 603,
+        "sha256": "4bb1a39286cba0e65c6f58ed55c8f366e4a2d28c56e885c2a7027634dfbf15f5",
+        "crc32": "4b342ec6"
       }
     },
     "focusedNativeTests": {
       "status": "PASS focused native production tests",
       "failures": 0,
-      "checks": 1333,
+      "checks": 1419,
       "scope": "Actual extracted production methods and content, settings, deck and cooldown code. No audio device or full game starts.",
       "reports": [
         {
           "path": "tests/game-speed-results.json",
-          "bytes": 1607,
-          "sha256": "cda29678323dcada82f87a2def22d041ae0f478f52c3cabba3db56cc1452acf8",
-          "crc32": "536f387e",
+          "bytes": 1603,
+          "sha256": "20916ce7e02c52644ff794a0a59594bfce6819d52ff5519451db9c22ab259603",
+          "crc32": "0b52fcc3",
           "checks": 66
         },
         {
@@ -121,30 +126,30 @@
         {
           "path": "tests/bonus-challenge-results.json",
           "bytes": 1183,
-          "sha256": "1858ef3ec350a4e072110ebd7fd120d4dc33ce0d6c397628295c19a0828102e0",
-          "crc32": "7c314b59",
+          "sha256": "43eab9f0941a09415e1d052a4871a7a42a218b00b5b579253698193372ca8f06",
+          "crc32": "945662ce",
           "checks": 139
         },
         {
           "path": "tests/bonus-completion-results.json",
           "bytes": 1977,
-          "sha256": "725f958b9604db1dbea5c70f4711017066ca395c308615a7f612b8a72d63b7f3",
-          "crc32": "07c0c46e",
+          "sha256": "1909571ffeafca484530e345b2c7d2a15e35461d554734cca2be07354856b4ed",
+          "crc32": "44a4273e",
           "checks": 557
         },
         {
           "path": "tests/night-shift-results.json",
           "bytes": 1565,
-          "sha256": "01932d613e9f7123b75a15cc856374c048cdbcbd189daedd7759b2cd54cfb180",
-          "crc32": "6606328b",
+          "sha256": "addb290c6bca7aa082f27ab7bc740cacad8f362cd470260c1a1045f59a627adc",
+          "crc32": "801d1934",
           "checks": 131
         },
         {
           "path": "tests/lantern-shroom-results.json",
-          "bytes": 2812,
-          "sha256": "b25399e547f0aba8dfb19dd86ded35fe487083fac703ec40af0ae4eccbe24e64",
-          "crc32": "c13779e8",
-          "checks": 245
+          "bytes": 3255,
+          "sha256": "66cf4861b40e7a7aeb4003c274286b3ddabfd57c8b4e72a759427ed1cbfd5c28",
+          "crc32": "923872e2",
+          "checks": 331
         }
       ]
     },
@@ -153,39 +158,39 @@
         "gitApplyCheck": "PASS",
         "gitApply": "PASS",
         "everySourceByteMatches": true,
-        "sourceFiles": 772
+        "sourceFiles": 773
       },
-      "lantern1": {
+      "lantern2": {
         "gitApplyCheck": "PASS",
         "gitApply": "PASS",
         "everySourceByteMatches": true,
-        "sourceFiles": 772
+        "sourceFiles": 773
       }
     }
   },
   "combinedPatch": {
-    "path": "web-lantern.2.patch",
-    "bytes": 8145641,
-    "sha256": "1be4b1c670cbc8d4507fdb183ad23aaa1de99ceafce8b98563aa226f8ee0c694",
-    "crc32": "9ff63db8",
-    "sourcePaths": 52
+    "path": "web-chill.1.patch",
+    "bytes": 11044699,
+    "sha256": "e8f8be7e93ff8e16a796b55e1526a0e6cb33c08ac183c868463be65fb7412f9f",
+    "crc32": "4563c761",
+    "sourcePaths": 53
   },
   "incrementalPatch": {
-    "path": "lantern1-to-lantern2.patch",
-    "bytes": 12053650,
-    "sha256": "894401cc4801f35e9289ae174c37a3c7bc885aede74842d5e0b3d96d33e57c94",
-    "crc32": "07bc5528",
-    "sourcePaths": 7
+    "path": "lantern2-to-chill1.patch",
+    "bytes": 15588985,
+    "sha256": "e0c021eb68b44e0e1328757acd9dafb88aa3694d10364144b2993f4f069f153e",
+    "crc32": "868d494f",
+    "sourcePaths": 8
   },
   "parent": {
-    "id": "0.2.6-web-lantern.1",
-    "sourceArchiveSha256": "c0f1ce050347d68672afa2139fe3da05ea2934fae9ea377a9fc45a2454c55244",
-    "releaseManifestSha256": "58fcf942cbe5247ca18bc569021eb082a757a4ba2f915683ebea5364adf87f8a",
+    "id": "0.2.6-web-lantern.2",
+    "sourceArchiveSha256": "64da4037777bcbc12ceb0715612e2855c31da4979c66ab85455ae466f9ac64ee",
+    "releaseManifestSha256": "e6f8fb00f4fee484ddb35a83619ed4259d8ee117136e369450672d673ef5f125",
     "scope": "Complete historical parent engine metadata is preserved in the parent property of engine-provenance.json."
   },
   "limits": [
-    "Revises Lantern-shroom art/animation and Bonus card presentation; full original parity remains unverified.",
+    "Redesigns Chill-shroom with a muzzle-free frost identity, phased radial attack and painted Bonus illustrations; full original parity remains unverified.",
     "Focused production-method tests and build checks do not replace broad game or browser validation.",
-    "Earlier Lantern.1 results remain historical parent evidence only."
+    "Earlier Lantern.2 results remain historical parent evidence only."
   ]
 }

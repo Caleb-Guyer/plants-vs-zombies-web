@@ -1,0 +1,35 @@
+{
+  "asset": "cold-front-card.png",
+  "prompt": "Use case: stylized-concept. Asset type: final original-2009 Plants vs Zombies Bonus challenge thumbnail illustration, Cold Front. Inputs:1 original Challenge_Thumbnails atlas is style/composition/detailreference;2 the new snowy Chill-shroom CAP is the exact identity/design reference;3 original IceShroom_body is the stem/face reference,4 IceShroom_base the base. Make ONE finished borderless 80:65 aspect painting to show at80x65pixels. Main subject a squat muzzle-free Chill-shroom: large low cyan-blue cap with chunky snowy white patches, darkindigo underside, irregular short frozen scalloped lower rim and a tiny four-armed white frostmark on right, exactly like reference2. Under cap a squat broadturquoise stem with nativeIce-shroom half-lidded narrow dark eyes and a pale icyfoot, matching reference3; no roundPuff eyes and NO nozzle, tube, holes, spout or mouth. Character fills center-right of frame, cap aroundx55%y45% and wholeface aroundx60%y72%, allcomplete abovebottom90%. It is releasing a few chunky snowflakes and a low pale frost puff LEFT AND RIGHT, communicating a circular chill wave without anydiagram. One subordinate classic blue-chilled zombie head in back on left atx25%y50%, partly hidden in lowcoldmist; background is originalnightgarden in subdued indigo/slategrey, simplewoodfence, some frostgrass. Keepcriticalplantidentityto right/belowtop-left35%triangle which native trophywillcover. A single coherent polished painted illustration, not tiny native sprites pasted onbackground. Match actual2009originalgameart: wobbly deepnavy/blackoutlines, simplechunky shapes, broadhand-painted2toneshading, slightlyasymmetric drollfeatures, no modern3D/fantasyglitter. Morecyanandicywhitethanthepurple/amberNightShiftcard. No yelloworamber. No frame,border,text,title,labels,UI,trophy,ribbon,watermark,photorealism,pixelart,excessdetail, modernvectorredesign. Large readable foregroundhero that remainsclear at80by65pixels.",
+  "tool": "built-in image_gen",
+  "nativeWidth": 80,
+  "nativeHeight": 65,
+  "bytes": 1875159,
+  "sha256": "f03465d19bc8cdc4b92c12ce236b4d4ea9917f69ad21b767bc11cb15def574c8",
+  "width": 1392,
+  "height": 1130,
+  "rgba": false,
+  "scope": "Exact generated PNG, losslessly serialized as base64; native renderer downsamples once at the original texture size.",
+  "references": [
+    {
+      "role": "challenge-atlas",
+      "file": "Challenge_Thumbnails.jpg",
+      "sha256": "5861036fc51c38441b609974687be9006528609a512ff0a919e18c236b7027c8"
+    },
+    {
+      "role": "chill-cap",
+      "file": "chill-shroom-cap.png",
+      "sha256": "f212e7a11d59a427969c9ff7a4cac64deba25fb7a9eca544d146548012349afc"
+    },
+    {
+      "role": "ice-body",
+      "file": "IceShroom_body.png",
+      "sha256": "c77c86f096bdbf1e0377e224af8773a1ad924b08c80dbe33fa794fb2c9e93856"
+    },
+    {
+      "role": "ice-base",
+      "file": "IceShroom_base.png",
+      "sha256": "76fb5223cd1e02c40270f041027536455268d1be83b5a84d2845bad3bf59229b"
+    }
+  ]
+}

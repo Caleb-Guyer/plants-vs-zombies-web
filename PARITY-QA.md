@@ -1,10 +1,124 @@
 # Browser parity and QA record
 
-## Lantern.2 art-revision scope, 2026-10-31
+## Chill.1 revision scope and verification, 2026-10-31
+
+The user rejected Lantern.2's art and attack presentation after its bounded
+functional checks. The new `0.2.6-web-chill.1` candidate is based on Lantern.2.
+Its player-facing plant is Chill-shroom and its third Bonus challenge Cold Front;
+seed 75, mode 75, completion record 74 and checkpoint filenames remain unchanged.
+[Revision criteria](CHILL-REVISION-GOAL.md) track the explicit user request. The
+formal goal tool rejected a new objective while the older parity goal remains
+paused; the unfinished parity goal is not marked complete.
+
+Reference work extracted exact original Ice/Fume/Doom/Gloom PNGs, reanimation XML,
+the challenge atlas, frame and trophy from the authenticated bundled main.pak.
+The original bytes remain unchanged and private inventories pin their hashes.
+Ice-shroom's muzzle-free body and half-lidded eyes provide the new native basis;
+its original animation has idle and sleep but no shooting layer. The new
+attack therefore includes an explicit 40-tick wind-up, radial frost release and
+30-tick recovery synchronized to the retained slow mechanic.
+
+The new cap decoder normalizes alpha bounds above 8, fitting visible content
+to 103×46 at the top of the unchanged 103×54 native canvas. The bottom eight
+rows remain transparent so the original eyes are not covered. Native Ice
+idle/sleep/blink supplies the body and eyes; the wind-up closes eyes and compresses
+the body before rebound. The finite burst draws original Snowflakes and
+SnowPeaPuff frames in all directions, without a projectile, full-screen particle
+effect or new looping emitter. Existing saved countdown fields drive the phase
+and pose. Ensure paths migrate old Puff/bodyless saves once, preserve existing
+Ice animation time and bind custom cap overrides before paused drawing. Cap,
+preview and three card caches are disposed while app/graphics owners are alive.
+
+Independent inspection viewed all four generated production assets against the
+original references: a snowy cyan cap and three separate Bonus paintings.
+Cone Zone uses a large conehead portrait; Night Shift purple Puff-shroom and
+amber Sun-shroom; Cold Front the new cyan mushroom and a subordinate chilled
+zombie. The cap and Cold Front picture share the same muzzle-free design.
+The native 80×65 trophy mask obscures roughly the upper-left `x+y<=46` triangle;
+critical faces are placed below/right of it. These are source-art composition
+observations; separate final native-size observations below establish the bounded
+body/cap joining, trophy-state and attack review.
+Full prompts and exact asset identities are recorded in
+[`dist/content`](dist/content/).
+
+The final corrected Emscripten Release build passed in **117.519 seconds**, with
+all **773 source files unchanged** throughout compilation. Seven fresh,
+source-coherent native suites pass **1,419 checks**: 66 speed, 90 controls,
+105 decks/cooldowns, 139 Cone Zone, 557 completion/rewards/navigation,
+131 Night Shift and 331 new-plant checks. The seventh suite exercises phase/pose,
+radial effects, image binding, legacy Puff/blink migration and actual portable
+save-tail boundaries. All fourteen browser integration suites pass, including
+eleven worker scenarios, retained catalog/saved-ID checks and exact four-PNG
+Base64/header/provenance coherence. An executed controlled-PNG decoder regression
+fails six checks with the old 54-row cap-content rule and passes with the new
+46-row content/eight-row clearance; it checks actual output pixels and retains
+the untrimmed 80×65 card path. Automated checks initialize no audible game.
+
+Generator checks also verify concise UTF-8 file-free loading text and the current
+engine caption in both HTML outputs. They fail against the encoding-damaged
+generator and pass after restoring its original UTF-8 bytes with only the current
+cache token changed. Regenerated shell output and the complete fourteen-browser/
+1,419-native check run pass again; native source and binaries are unchanged.
+
+The final engine-source package passes with **805 entries and 10,943,275 bytes**.
+Both the full upstream patch and Lantern.2 incremental patch reconstruct all
+773 current source files byte for byte. Manifests pin exact release artifacts;
+their hashes are not duplicated here.
+
+The first actual muted review accepted the three earned-card illustrations:
+large subjects remain clear inside their frames around the original trophy
+ribbons. Private proof is `outputs/pvz-chill1-release/bonus-cards-earned.jpg`.
+A legacy Lantern.2 checkpoint migrated to the Ice body, retaining 50 sun and
+Sun-shroom/custom mushroom/Puff-shroom. The same native-size view rejected the
+plant's appearance: the continuous cap underside covered the half-lidded eyes,
+leaving a blank body. Private proof is `legacy-migration-native.jpg`. Migration
+success is functional evidence only; the plant visual gate failed.
+
+The 103×46 correction supersedes that first 153.677-second/1,405-check snapshot.
+Final muted native-size review shows clear half-lidded eyes, a continuous
+cap/body join and no muzzle beside original Sun-shroom and Puff-shroom. Private
+proof is `outputs/pvz-chill1-release/plant-final.jpg`. A 5.2-second capture
+sequence contains the closed-eye compressed wind-up (`attack-000.png`), rebound
+with snowflake/puff release in all directions and a blue-chilled conehead
+(`attack-005.png`), outward fading (`attack-008.png`) and open-eye idle
+(`attack-025.png`). This establishes visible attack presentation, not a precise
+browser tick/range measurement; those mechanics have production-method checks.
+
+Final earned and unearned card views retain all three distinct pictures inside
+the native frames, with their subjects visible around the trophy ribbons.
+Native hover makes the title red and adds no tip. Private proofs are
+`bonus-cards-earned.jpg`, `bonus-cards-unearned.jpg` and `bonus-hover.jpg`.
+The unearned state came from a private generated QA fixture imported only into
+an isolated localhost origin, with reserved Bonus records 72–74 zeroed. Existing
+earned-state fixture ribbons do not establish earned wins. The public game and
+real player saves were not changed.
+
+A separate fresh Cold Front board started at 150 sun. Planting Sun-shroom in
+column 0, Chill-shroom in column 1 and Puff-shroom in column 2 of the middle row
+left 50 sun. The healthy board was paused and saved through native Menu → Main
+Menu → Leave. After full reload, title/profile selection and Bonus → Cold Front →
+Continue → Back to Game, it restored the same 50 sun, all three plants, graves
+and mowers. Chill-shroom retained its visible half-lidded eyes, new cap and
+native body. Private proof is `fresh-save-before.jpg` and the full-board
+`fresh-save-resumed.jpg`. This establishes current-Ice-body cap restoration
+separately from the earlier Puff-body migration. A prior near-death attempt is
+not credited because the zombie ate the plant before the post-Continue capture.
+
+The `?testing=1` mute indicator remained checked. Owned test tabs 13, 14 and 15
+were closed; the user's public tab 4 was untouched. Local implementation,
+automated and visual/save criteria pass. Website-source packaging and hosted
+publication remain independent release records. Earlier Lantern.2 builds,
+1,333 checks and screenshots are not credited to this revision.
+No completed battle, precise browser pulse measurement, subjective perfection
+or exhaustive original-game parity is claimed.
+
+## Historical Lantern.2 art-revision scope — visual result rejected, 2026-10-31
 
 The user rejected Lantern.1's visual style and feel, its added Bonus tips and the
-use of Survival thumbnail pictures. `0.2.6-web-lantern.2` addresses those concrete
-issues. It does not assert perfect subjective art or exhaustive original-game
+use of Survival thumbnail pictures. `0.2.6-web-lantern.2` attempted those concrete
+issues. The user subsequently rejected its visual result and attack presentation;
+the observations here retain their bounded functional scope. This release does
+not establish user acceptance, perfect subjective art or exhaustive original-game
 parity. [Revision criteria](ART-REVISION-GOAL.md) track the requested goal manually:
 the goal tool rejected a new objective because the older parity goal remains
 paused; that unfinished goal has not been marked complete.
@@ -96,7 +210,7 @@ these observed engine/browser results. Earlier Lantern.1 evidence below is
 historical and its artwork was rejected by the user. Normal-player audio remains
 available. Broad original-game parity playthroughs remain stopped.
 
-Current source: [Lantern.2 source](dist/source/pvz-portable-0.2.6-web-lantern.2-source.zip),
+Historical source: [Lantern.2 source](dist/source/pvz-portable-0.2.6-web-lantern.2-source.zip),
 [complete upstream patch](dist/source/web-lantern.2.patch),
 [Lantern.1 increment](dist/source/lantern1-to-lantern2.patch) and retained
 [Lantern.1 parent source](dist/source/pvz-portable-0.2.6-web-lantern.1-source.zip).
