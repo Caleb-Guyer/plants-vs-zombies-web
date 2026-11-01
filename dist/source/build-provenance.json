@@ -1,5 +1,5 @@
 {
-  "id": "0.2.6-web-chill.9",
+  "id": "0.2.6-web-garden.1",
   "upstream": {
     "tag": "0.2.6",
     "commit": "396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
@@ -7,78 +7,98 @@
     "officialJsSha256": "0f2d7425190e49c762f6700b68b080086e3dcb8f2dc5e9724de42ce9fb508573"
   },
   "sourceArchive": {
-    "path": "pvz-portable-0.2.6-web-chill.9-source.zip",
-    "bytes": 9308592,
-    "sha256": "7fa3d16079cca928812a965ec7bdcd15c7f157570d14607895c31067d06e49f0",
-    "crc32": "6b08edcb",
-    "entries": 812,
-    "uncompressedBytes": 21523908
+    "path": "pvz-portable-0.2.6-web-garden.1-source.zip",
+    "bytes": 9342093,
+    "sha256": "34807be9b16aafc8e1e8bc9fd4da840df0ce9ae5667157cf51e61f4571d95122",
+    "crc32": "97283594",
+    "entries": 816,
+    "uncompressedBytes": 21638416
   },
   "artifacts": [
     {
       "path": "build/pvz-portable.js",
       "bytes": 209232,
-      "sha256": "e8d900ccb153376dc0a885b7371b53cb227a324b034c32140336aeefc3d7f33c",
-      "crc32": "1761c55d"
+      "sha256": "40689d2194845d13d14e2e46dbd753a483556daeacf5c053cc133630684c83ab",
+      "crc32": "d6ef20fa"
     },
     {
       "path": "build/pvz-portable.wasm",
-      "bytes": 7575731,
-      "sha256": "6e69af3cc26a776d4030c64d7cd2126fe82d8eafa5034054e6451e3ac070b488",
-      "crc32": "168ee0c5"
+      "bytes": 7581592,
+      "sha256": "99722b52f48e912fda7010d20f164dd819d46f251f3e1b54b6d50cfc63e6756d",
+      "crc32": "5cf2618a"
     },
     {
       "path": "build/ProjectVersion.h",
-      "bytes": 191,
-      "sha256": "2c058d8e8d57148d2c74e21178bfb5b0cb0a2f179fab2f8b9bab9bf05943fb69",
-      "crc32": "82786905"
+      "bytes": 192,
+      "sha256": "391a20234bc87f52774c3ed3d80aca615e4ee4f25933911029e5d10a102bae37",
+      "crc32": "bf359142"
     }
   ],
-  "sourceFiles": 780,
-  "sourceBytes": 20356203,
-  "sourceDeltaVsChill8": [
+  "sourceFiles": 781,
+  "sourceBytes": 20369695,
+  "sourceDeltaVsChill9": [
     {
       "path": "CMake/ProjectVersion.cmake",
-      "beforeSha256": "a74aedf7cea51f1b32f548fb7c97a1e415e3ca6f67455d4ea4df1a1ce735260c",
-      "afterSha256": "02b16d2d250a992a1d39cc1deebeac4212111c0989094b31b639c2cae78358ca"
+      "beforeSha256": "02b16d2d250a992a1d39cc1deebeac4212111c0989094b31b639c2cae78358ca",
+      "afterSha256": "efd58f144f8f6fb6649f8c3f4dc9057f768d1562915e504a94c51d14d9008652"
     },
     {
       "path": "artwork/chill-shroom/render.py",
-      "beforeSha256": "3baf68a8ab58aed20de84828b8393f709b65c5e9904ee3578b017c96f5f053d4",
-      "afterSha256": "2035f561d305baf34daa9a549b8ddcc4e12f0b96c26639747148823235529757"
+      "beforeSha256": "2035f561d305baf34daa9a549b8ddcc4e12f0b96c26639747148823235529757",
+      "afterSha256": "6c460d11ece3985fd437d0308f17f1aeac165ece4cac7965ba281eead77631d2"
+    },
+    {
+      "path": "src/ConstEnums.h",
+      "beforeSha256": "847cc4ff2993fa468be3aca600a93c251e1b000a6b569631989961bd605ec955",
+      "afterSha256": "069847070d81ef0888e315f2ca01ed7ce65ff1891fafe851d71d0e1a2482f4f3"
     },
     {
       "path": "src/Lawn/Board.cpp",
-      "beforeSha256": "b79d517beb6d405a91aaf8345a553d6f02bbfe8866de3da10d731b6ae2de7590",
-      "afterSha256": "6c39b4c9022c255f5b16e2a3e4874644b7533570c9539dd26404c315321c4fb5"
+      "beforeSha256": "6c39b4c9022c255f5b16e2a3e4874644b7533570c9539dd26404c315321c4fb5",
+      "afterSha256": "d65221c74e1c8a47999b1fef03636fb637b9c7bee7d35cc9758ee84ab154b512"
+    },
+    {
+      "path": "src/Lawn/Board.h",
+      "beforeSha256": "2813a83df089410965d2859850e2e4621a2740f9876a744946d0f7913a86c914",
+      "afterSha256": "e3b7dc431e329f2f1e4b9dda0b7a3ede9e8e367984855ac7cd6565b7cd963e7d"
     },
     {
       "path": "src/Lawn/Challenge.cpp",
-      "beforeSha256": "c9ed49d33f61808d44cb7f4d61e3ad2dd220d759de016b40c7b09d139c6c3e46",
-      "afterSha256": "5279e8204f781904f1af3b474b4c8d0d3557c2f06b99bd3a5af3ad28ce374561"
+      "beforeSha256": "5279e8204f781904f1af3b474b4c8d0d3557c2f06b99bd3a5af3ad28ce374561",
+      "afterSha256": "ca74884c17bf74f24b53e5577e0450b279c673bf7f73afbfc20123d10f3dfc4b"
+    },
+    {
+      "path": "src/Lawn/CursorObject.cpp",
+      "beforeSha256": "71e0611a395fa2ea0328ebc4737bbe94a1dae2df66b2697930b0f852748f7d83",
+      "afterSha256": "0a503ec02ef38abc395ed501abbca4757b57e55430c95c08dc9a21a30a8a6754"
     },
     {
       "path": "src/Lawn/System/BonusChallenge.h",
-      "beforeSha256": "0166a69f295a41989cfc03f52212b5363f2aafd7bc65346338135ed96267d103",
-      "afterSha256": "000a816bd00d6a84997c876bd8a5b835d0e8eea73b1b92894a7de8200d77288f"
+      "beforeSha256": "000a816bd00d6a84997c876bd8a5b835d0e8eea73b1b92894a7de8200d77288f",
+      "afterSha256": "81611a5a5b67d63618b0f5bfd8463f6280f3bd973aee1ec3df2820af952719e9"
     },
     {
-      "path": "src/Lawn/System/NightShift.h",
-      "beforeSha256": "fbf974594d7cf46ee6e7547719314e11607fbe9463071f4d563b79adf296d8e2",
-      "afterSha256": "75d4eebdfaab9476e23eb46c38e597a4ba229b65ebe713d6ae495a3dc19558ec"
+      "path": "src/Lawn/System/GardenShuffle.h",
+      "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "afterSha256": "b1da6153e84ecf2c4ac2532c492e04bbb63f3cc515d085c5696b35fdd3d9672a"
     },
     {
-      "path": "src/Lawn/Zombie.cpp",
-      "beforeSha256": "934a8062ecb8bfaa13ea9cc90548d3c7daa1f443446ee45f8436f0812ab2ec3b",
-      "afterSha256": "cf87a874886b60d8482809b2eae72f592ef29efc934ec53c1744c8e6929f457d"
+      "path": "src/Lawn/System/LanternShroom.cpp",
+      "beforeSha256": "10c222ec3f3545f2b1b69efa88d5e66f1b372af7a1b06fc5ff6c0812995d3f8b",
+      "afterSha256": "df7ef43bb50fabe7fbb205f28bbb9c81010ba3b8f25e4ee670a17168c0772c6f"
     },
     {
-      "path": "src/Lawn/Zombie.h",
-      "beforeSha256": "1d157047792f835b0c63636ef2105e7cffd5108069ef68d93d2b535fd84655e7",
-      "afterSha256": "1bca96cf615ec7d2268ef2c0b79093295b0e6aab15ee93a4c319a82f6536d835"
+      "path": "src/Lawn/Widget/ChallengeScreen.cpp",
+      "beforeSha256": "05a438e5a87235b6aa73ecc3575096a4a2de0eeeb55b0d638b5eb107f8254590",
+      "afterSha256": "492546b004b0561885fc048f369689185d9fea400a935a71ea6cd7ca2ce23b67"
+    },
+    {
+      "path": "src/LawnApp.cpp",
+      "beforeSha256": "55179b27934ac30b1dab24b823106d7fd621d9d1c8d26e74017f117e64671158",
+      "afterSha256": "e5349f7df83732c541971263dfe01c2721223236405131ed6c932993c9220193"
     }
   ],
-  "compiledVersionHeader": "// Generated from CMake/ProjectVersion.h.in by CMake; do not edit.\r\n#pragma once\r\n\r\n#define PVZP_VERSION \"0.2.6-web-chill.9\"\r\n#define PVZP_BUILD_NUMBER 1\r\n#define PVZP_COMMIT_DATE \"unknown\"\r\n",
+  "compiledVersionHeader": "// Generated from CMake/ProjectVersion.h.in by CMake; do not edit.\r\n#pragma once\r\n\r\n#define PVZP_VERSION \"0.2.6-web-garden.1\"\r\n#define PVZP_BUILD_NUMBER 1\r\n#define PVZP_COMMIT_DATE \"unknown\"\r\n",
   "checks": {
     "fullRelease": {
       "exitCode": 0,
@@ -92,64 +112,71 @@
       "receipt": {
         "path": "logs/build-result.json",
         "bytes": 581,
-        "sha256": "3a6cb8094cb610e0f4834b9d7069f358beb13c5c1096e4ec42511efbc73dddd4",
-        "crc32": "9d0a6850"
+        "sha256": "c6c9728010810b4481b8ea91bdc942af1cec9133bcce079030ad98964814df4e",
+        "crc32": "dbd472e5"
       }
     },
     "focusedNativeTests": {
       "status": "PASS focused native production tests",
       "failures": 0,
-      "checks": 2084,
+      "checks": 2462,
       "scope": "Actual extracted production methods and content, settings, deck and cooldown code. No audio device or full game starts.",
       "reports": [
         {
           "path": "tests/game-speed-results.json",
-          "bytes": 1603,
-          "sha256": "4622f24a081fe5d2b2d062f39aea20f50c1f48c4ed6c2aecf25c2513a2a5ef3e",
-          "crc32": "06979ba1",
+          "bytes": 1605,
+          "sha256": "e0a6102b9ce8a7836592eb1a72567b2c909d544adb8cddb14930ffc536d3c35f",
+          "crc32": "51ff36ae",
           "checks": 66
         },
         {
           "path": "tests/qol-controls-results.json",
           "bytes": 1687,
-          "sha256": "6dc09271b103382c5bbbde7d78a7e4f156f3ef80c0f017df057abc2f262a3e23",
-          "crc32": "dd55b2a1",
+          "sha256": "6b538bf1f6e6b7708dc498357d592f98e531e4bb93770a1275c91605ff850ee6",
+          "crc32": "4f97347e",
           "checks": 90
         },
         {
           "path": "tests/decks-cooldowns-results.json",
           "bytes": 1565,
-          "sha256": "474b773887146178b0d1b2df4a634b69c2c4f61fb5867b9260eac6cb176f0d43",
-          "crc32": "5644280b",
+          "sha256": "2775fc11175454e6dc2487fc7f4d29791e9a20cf5e8fb3af02abb842e8ffb5f0",
+          "crc32": "7542bc98",
           "checks": 230
         },
         {
           "path": "tests/bonus-challenge-results.json",
-          "bytes": 2224,
-          "sha256": "d894f2b135c8d515ffcc0ba5c17492985cb61a67647627bffb1945409ef34a2c",
-          "crc32": "af81122c",
+          "bytes": 2201,
+          "sha256": "ddccd2a7b2626e4b77b685a32d32eead932ffa8f96f0eb2251594190fc6b5ec8",
+          "crc32": "e0e010b1",
           "checks": 387
         },
         {
           "path": "tests/bonus-completion-results.json",
           "bytes": 2053,
-          "sha256": "69714786d9bb012363ba2b5ec76e7133275ee544d3ea258aff6cc54acc7c8647",
-          "crc32": "758dcf64",
-          "checks": 590
+          "sha256": "403b7b070d630867dfa96fc48634c903d76ed37599732eb6bcebab6bd9e3d9e1",
+          "crc32": "1454af26",
+          "checks": 726
         },
         {
           "path": "tests/night-shift-results.json",
-          "bytes": 2009,
-          "sha256": "a88f73fc3d1081b951a306ac7e0a4d284bb6bcf2826fbbe783ffdf12c0dd9caf",
-          "crc32": "fa24677b",
-          "checks": 213
+          "bytes": 1988,
+          "sha256": "799cb73980a5d298c1bfa5dec6436bd9777e58a7d7e91144d463d20fd34578c2",
+          "crc32": "0ca4ef31",
+          "checks": 231
         },
         {
           "path": "tests/lantern-shroom-results.json",
           "bytes": 5193,
-          "sha256": "13187d20cf7b04a6f5d26c6af512a3abaadbf168e09b3d0bc42a3f71a7c86d13",
-          "crc32": "c77f316f",
-          "checks": 508
+          "sha256": "07bd8b784d9e79b11f9d01248b990adc8eb381c55f03a8e1d33521089d7c1018",
+          "crc32": "918261d8",
+          "checks": 518
+        },
+        {
+          "path": "tests/garden-shuffle-results.json",
+          "bytes": 2585,
+          "sha256": "38e242b0d9a58bf17da4dae4e4738467be96da5eb2364f36042e4889428b704f",
+          "crc32": "5aed4767",
+          "checks": 214
         }
       ]
     },
@@ -158,38 +185,38 @@
         "gitApplyCheck": "PASS",
         "gitApply": "PASS",
         "everySourceByteMatches": true,
-        "sourceFiles": 780
+        "sourceFiles": 781
       },
-      "chill8": {
+      "chill9": {
         "gitApplyCheck": "PASS",
         "gitApply": "PASS",
         "everySourceByteMatches": true,
-        "sourceFiles": 780
+        "sourceFiles": 781
       }
     }
   },
   "combinedPatch": {
-    "path": "web-chill.9.patch",
-    "bytes": 9333252,
-    "sha256": "b88baaffec4f0cb52f63903b823ec6c1d6a5fbde9e35fac04da5c825b4e2e879",
-    "crc32": "5f46102e",
-    "sourcePaths": 61
+    "path": "web-garden.1.patch",
+    "bytes": 9350755,
+    "sha256": "b0bad79599a287b9d95e286bcf8a8189ff3f041e3608275b6617a35dccbea0fc",
+    "crc32": "0158e875",
+    "sourcePaths": 63
   },
   "incrementalPatch": {
-    "path": "chill8-to-chill9.patch",
-    "bytes": 701883,
-    "sha256": "d39d4b8f2cad7dea8114c3ebf4c0e22d61e3ab62a90fa30630e800410361ddc7",
-    "crc32": "00e219a0",
-    "sourcePaths": 8
+    "path": "chill9-to-garden1.patch",
+    "bytes": 29707,
+    "sha256": "0ac613aa0ad7a2d08680468e9555833002875cb880e507649f6b7763dffe1112",
+    "crc32": "9a2c21b6",
+    "sourcePaths": 12
   },
   "parent": {
-    "id": "0.2.6-web-chill.8",
-    "sourceArchiveSha256": "04bd204805f83ce8322952fbba81a9e5a2d73bdf1eeafaf95b4a5c7ccf33d367",
-    "releaseManifestSha256": "ea040b5a08ccf97e1920585eb66f5eda0357eeac9837fb95b594f1c8da77f482",
+    "id": "0.2.6-web-chill.9",
+    "sourceArchiveSha256": "7fa3d16079cca928812a965ec7bdcd15c7f157570d14607895c31067d06e49f0",
+    "releaseManifestSha256": "e361835a1262f6a257a1e892a3d351e12c2bd723da855424acfe2e4f88160796",
     "scope": "Complete historical parent engine metadata is preserved in the parent property of engine-provenance.json."
   },
   "limits": [
-    "Three native bonus minigames replace fresh fixed-bank challenges; old checkpoints retain their historical rules. The accepted artwork and original IDs/save layouts remain. Full original parity remains unverified.",
+    "Four native bonus minigames include Garden Shuffle; earlier checkpoints retain their historical rules. Accepted artwork, original IDs and serialized layouts remain. Full original parity remains unverified.",
     "Focused production-method tests and build checks do not replace broad game or browser validation.",
     "Earlier results remain historical parent evidence only. No separately image-generated challenge illustrations are active."
   ]

@@ -42,7 +42,7 @@
       "name": "Night Shift",
       "hero": "REANIM_PUFFSHROOM",
       "background": "IMAGE_BACKGROUND2",
-      "gameplay": "Native nighttime graveyard-control conveyor. Four initial graves, safe empty-tile growth capped at six, warned rises before waves 4/7/10 of at most three normal zombies, guaranteed Grave Busters and a wider mushroom mix. Ten waves and one flag."
+      "gameplay": "Native nighttime graveyard-control conveyor. Four initial graves, safe empty-tile growth capped at six, warned rises before waves 4/7/10 of at most three normal zombies, guaranteed Grave Busters and a wider mushroom mix. Ten waves and one flag. All eligible mature graves receive the native warning before a capped rise."
     },
     {
       "mode": 75,
@@ -50,6 +50,13 @@
       "hero": "Approved Chill-shroom shared DrawRig",
       "background": "IMAGE_BACKGROUND2",
       "gameplay": "Native preparation and defense puzzle: 1500 sun, no graves or income, four waves; the original Lets Rock button starts combat."
+    },
+    {
+      "mode": 76,
+      "name": "Garden Shuffle",
+      "hero": "REANIM_PEASHOOTER body/head with original IMAGE_ZEN_GARDENGLOVE",
+      "background": "IMAGE_BACKGROUND1",
+      "gameplay": "Fixed garden of three Repeaters, a Snow Pea and two Wall-nuts. Move existing living plants with the native glove; health and attack state persist. Ten rotating-lane waves, forty authored zombies, one-second move cooldown and no sun or seed economy."
     }
   ],
   "canvas": {
@@ -96,5 +103,5 @@
     "newGeneratedArtwork": false,
     "mechanics": "Release-time radial slow, no damage or delayed projectile hit; native puffs are the visual plume."
   },
-  "checkpointCompatibility": "State-zero existing bonus checkpoints keep their previous fixed-bank twenty-wave rules. Chill.8 arcade checkpoints retain saved boards/belts/waves and gain new mechanics on later events; New Game starts the revised opening/roster. Existing completion rewards remain valid."
+  "checkpointCompatibility": "State-zero existing bonus checkpoints keep their previous fixed-bank twenty-wave rules. Chill.8 arcade checkpoints retain saved boards/belts/waves and gain new mechanics on later events; New Game starts the revised opening/roster. Existing completion rewards remain valid. Garden Shuffle uses new mode76 and unused profile record75 with unchanged native object layouts; moves preserve the original plant instance."
 }

@@ -17,18 +17,18 @@ new Function('module', 'exports', 'require', fs.readFileSync(new URL('vendor/jsz
 const JSZip = vendor.exports;
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
 const engine = JSON.parse(fs.readFileSync(new URL('game/engine-provenance.json', dist)));
-assert.equal(engine.id, '0.2.6-web-chill.9');
+assert.equal(engine.id, '0.2.6-web-garden.1');
 const current = await JSZip.loadAsync(fs.readFileSync(new URL(engine.artifacts.source, new URL('game/engine-provenance.json', dist))), {checkCRC32: true});
-const parentSourceBytes = fs.readFileSync(new URL('source/pvz-portable-0.2.6-web-chill.8-source.zip', dist));
-assert.equal(sha(parentSourceBytes), '04bd204805f83ce8322952fbba81a9e5a2d73bdf1eeafaf95b4a5c7ccf33d367', 'Parent is the exact published Chill.8 source');
+const parentSourceBytes = fs.readFileSync(new URL('source/pvz-portable-0.2.6-web-chill.9-source.zip', dist));
+assert.equal(sha(parentSourceBytes), '7fa3d16079cca928812a965ec7bdcd15c7f157570d14607895c31067d06e49f0', 'Parent is the exact published Chill.9 source');
 const parent = await JSZip.loadAsync(parentSourceBytes, {checkCRC32: true});
-const prefix = 'chill9-candidate/';
+const prefix = 'garden1-candidate/';
 const read = async name => {
   const entry = current.file(prefix + name);
   assert(entry, 'Missing current production source/test: ' + name);
   return Buffer.from(await entry.async('uint8array'));
 };
-const suites = ['game-speed', 'qol-controls', 'decks-cooldowns', 'bonus-challenge', 'bonus-completion', 'night-shift', 'lantern-shroom'];
+const suites = ['game-speed', 'qol-controls', 'decks-cooldowns', 'bonus-challenge', 'bonus-completion', 'night-shift', 'lantern-shroom', 'garden-shuffle'];
 const reports = new Map();
 let checks = 0;
 for (const name of suites) {
@@ -45,7 +45,7 @@ for (const name of suites) {
   checks += result.checks;
   reports.set(name, result);
 }
-const parentBytes = async name => Buffer.from(await parent.file('chill8-candidate/source/' + name).async('uint8array'));
+const parentBytes = async name => Buffer.from(await parent.file('chill9-candidate/source/' + name).async('uint8array'));
 // SeedPacket.h also defines the serialized SeedBank class.
 for (const name of ['src/Lawn/SeedPacket.h', 'src/Lawn/Plant.h', 'src/Lawn/Challenge.h', 'src/Lawn/System/SaveGame.cpp', 'src/Lawn/System/PlayerInfo.h', 'src/Lawn/System/PlayerInfo.cpp', 'src/LawnApp.h', 'src/Lawn/System/ReanimationLawn.h']) {
   assert.deepEqual(await read('source/' + name), await parentBytes(name), 'Saved data layout/serialization must remain unchanged');
@@ -82,7 +82,10 @@ const oldEnums = (await parentBytes('src/ConstEnums.h')).toString();
 const newEnums = (await read('source/src/ConstEnums.h')).toString();
 const oldModes = enumValues(oldEnums, 'GameMode'), newModes = enumValues(newEnums, 'GameMode');
 assert.equal(oldModes.get('NUM_GAME_MODES'), 76);
-assert.deepEqual([...newModes], [...oldModes], 'The minigame revision preserves every game mode and mode count');
+for (const [key,value] of oldModes) if (key !== 'NUM_GAME_MODES') assert.equal(newModes.get(key),value,'Every prior mode ID stays stable: '+key);
+assert.equal(newModes.get('GAMEMODE_CHALLENGE_GARDEN_SHUFFLE'),76);
+assert.equal(newModes.get('NUM_GAME_MODES'),77);
+assert.equal(newModes.size,oldModes.size+1,'Exactly one new mode is appended');
 assert.deepEqual([...enumValues(newEnums, 'ChallengePage')], [...enumValues(oldEnums, 'ChallengePage')],
   'Cold Front uses the existing Bonus page without changing any page IDs');
 const oldSeeds = enumValues(oldEnums, 'SeedType'), newSeeds = enumValues(newEnums, 'SeedType');
@@ -110,12 +113,13 @@ function definitions(text) {
 const oldDefinitions = definitions((await parentBytes('src/Lawn/Widget/ChallengeScreen.cpp')).toString());
 const newDefinitions = definitions((await read('source/src/Lawn/Widget/ChallengeScreen.cpp')).toString());
 assert.equal(oldDefinitions.length, 75);
-assert.deepEqual(newDefinitions, oldDefinitions, 'Every original and custom challenge definition stays unchanged');
-assert(newDefinitions.at(-1).includes('GAMEMODE_CHALLENGE_LANTERN_GLOW'));
+assert.deepEqual(newDefinitions.slice(0,oldDefinitions.length), oldDefinitions, 'Every original and earlier custom challenge definition stays unchanged');
+assert.equal(newDefinitions.length,oldDefinitions.length+1,'Exactly one native challenge definition is appended');
+assert(newDefinitions.at(-1).includes('GAMEMODE_CHALLENGE_GARDEN_SHUFFLE'));
 assert(newDefinitions.at(-1).includes('CHALLENGE_PAGE_BONUS'));
-assert(newDefinitions.at(-1).includes('.mChallengeIconIndex = 1'));
-assert(newDefinitions.at(-1).includes('.mRow = 1, .mCol = 2'));
-assert(newDefinitions.at(-1).includes('.mChallengeName = "Cold Front"'));
+assert(newDefinitions.at(-1).includes('.mChallengeIconIndex = 0'));
+assert(newDefinitions.at(-1).includes('.mRow = 1, .mCol = 3'));
+assert(newDefinitions.at(-1).includes('.mChallengeName = "Garden Shuffle"'));
 console.log('PASS Chill-shroom preserves all mode/seed IDs, saved layouts, 53 original plant definitions and all challenge identities and titles.');
 
 const artRecord = JSON.parse(fs.readFileSync(new URL('content/native-bonus-art.json', dist)));
@@ -126,8 +130,8 @@ assert.equal(artRecord.assetBundleId, engine.assetBundleId);
 assert.equal(artRecord.plant.nativeReanimation, 'REANIM_ICESHROOM');
 assert.equal(artRecord.plant.spriteOverride, 'chill-shroom/provenance.json');
 assert.deepEqual(artRecord.canvas, {width: 80, height: 65, heroCenterX: 40, heroCenterY: 32.5, maxHeroWidth: 68, maxHeroHeight: 57});
-assert.deepEqual(artRecord.cards.map(card => card.mode), [73, 74, 75]);
-assert.deepEqual(artRecord.cards.map(card => card.name), ['Cone Zone', 'Night Shift', 'Cold Front']);
+assert.deepEqual(artRecord.cards.map(card => card.mode), [73, 74, 75, 76]);
+assert.deepEqual(artRecord.cards.map(card => card.name), ['Cone Zone', 'Night Shift', 'Cold Front', 'Garden Shuffle']);
 assert.equal(artRecord.animation.newGeneratedArtwork, false, 'Motion uses existing sprite/effect assets');
 assert.equal(artRecord.animation.idlePeriodSeconds, 2.4);
 assert.deepEqual(artRecord.animation.idleScaleX, [1, 1.012]);
@@ -352,26 +356,27 @@ assert.deepEqual(fs.readFileSync(new URL('generation.json', artworkUrl)), genera
 
 const sourceManifest = JSON.parse(await read('source-manifest.json'));
 assert.equal(sourceManifest.version, engine.id);
-// This revision changes only the Cone Zone variants/bowling supply and Night Shift grave control.
-// Everything outside this reviewed file list remains the exact published parent source.
+// Garden adds one fixed-garden rules header and reviewed mode-gated paths.
+// Every other production/artwork byte remains the exact published Chill.9 parent.
 const runtimeInputs = new Set([
-  'src/Lawn/Board.cpp', 'src/Lawn/Challenge.cpp', 'src/Lawn/Zombie.cpp', 'src/Lawn/Zombie.h',
-  'src/Lawn/System/BonusChallenge.h', 'src/Lawn/System/NightShift.h',
+  'src/ConstEnums.h', 'src/Lawn/Board.cpp', 'src/Lawn/Board.h', 'src/Lawn/Challenge.cpp',
+  'src/Lawn/CursorObject.cpp', 'src/Lawn/System/BonusChallenge.h',
+  'src/Lawn/System/LanternShroom.cpp', 'src/Lawn/Widget/ChallengeScreen.cpp', 'src/LawnApp.cpp',
 ]);
 const releaseIdentityInputs = new Set(['CMake/ProjectVersion.cmake', 'artwork/chill-shroom/render.py']);
 for (const entry of Object.values(parent.files)) {
-  if (entry.dir || !entry.name.startsWith('chill8-candidate/source/')) continue;
-  const name = entry.name.slice('chill8-candidate/source/'.length);
+  if (entry.dir || !entry.name.startsWith('chill9-candidate/source/')) continue;
+  const name = entry.name.slice('chill9-candidate/source/'.length);
   if (runtimeInputs.has(name)) continue;
   const before = Buffer.from(await entry.async('uint8array'));
   const after = await read('source/' + name);
   if (releaseIdentityInputs.has(name)) {
-    assert.equal(after.toString().replaceAll('0.2.6-web-chill.9', '0.2.6-web-chill.8'), before.toString(),
+    assert.equal(after.toString().replaceAll('0.2.6-web-garden.1', '0.2.6-web-chill.9'), before.toString(),
       'Only the release identity may change in metadata source: ' + name);
-  } else assert.deepEqual(after, before, 'Minigame revision preserves unrelated engine/content/art bytes: ' + name);
+  } else assert.deepEqual(after, before, 'Garden preserves unrelated engine/content/art bytes: ' + name);
 }
-for (const name of Object.keys(sourceManifest.files)) assert(parent.file('chill8-candidate/source/' + name),
-  'Minigame revision adds no unrelated production source: ' + name);
+const addedProduction = Object.keys(sourceManifest.files).filter(name => !parent.file('chill9-candidate/source/' + name));
+assert.deepEqual(addedProduction, ['src/Lawn/System/GardenShuffle.h'], 'Exactly one focused rules header is added');
 function omitFunction(text, signature) {
   const start = text.indexOf(signature);
   assert(start >= 0 && text.indexOf(signature, start + signature.length) < 0, 'Unique reviewed function: ' + signature);
@@ -382,16 +387,20 @@ function omitFunction(text, signature) {
   return text.slice(0, start) + text.slice(cursor + 1);
 }
 const sharedFunctionScopes = {
-  'src/Lawn/Board.cpp': ['bool Board::AreEnemyZombiesOnScreen(', 'void Board::SpawnZombiesFromGraves(',
-    'void Board::SpawnZombieWave(', 'void Board::UpdateZombieSpawning('],
-  'src/Lawn/Challenge.cpp': ['void Challenge::InitLevel(', 'void Challenge::InitZombieWaves(',
-    'void Challenge::StartLevel(', 'void Challenge::UpdateConveyorBelt(', 'void Challenge::SpawnZombieWave('],
-  'src/Lawn/Zombie.cpp': ['void Zombie::ZombieInitialize(', 'void Zombie::SetupReanimForLostHead(',
-    'void Zombie::DropHead(', 'void Zombie::UpdateReanim(', 'void Zombie::DrawReanim(',
-    'void Zombie::DropHelm(', 'int Zombie::TakeHelmDamage('],
+  'src/Lawn/Board.cpp': ['void Board::PickBackground(', 'void Board::InitLevel(', 'void Board::PlaceRake(',
+    'void Board::UpdateCursor(const HitResult*', 'bool Board::MouseHitTest(', 'void Board::PickUpTool(',
+    'void Board::MouseDown(', 'bool Board::CanInteractWithBoardButtons(', 'void Board::SpawnZombieWave(',
+    'void Board::UpdateSunSpawning(', 'void Board::DrawShovel(', 'void Board::DrawUIBottom('],
+  'src/Lawn/Challenge.cpp': ['void Challenge::InitLevel(', 'void Challenge::StartLevel(',
+    'void Challenge::Update(', 'void Challenge::SpawnZombieWave('],
+  'src/Lawn/CursorObject.cpp': ['void CursorObject::Draw('],
+  'src/Lawn/System/LanternShroom.cpp': ['std::unique_ptr<Sexy::MemoryImage> MakeNativePortrait(',
+    'Sexy::Image* GetBonusImage('],
+  'src/Lawn/Widget/ChallengeScreen.cpp': ['constinit const ChallengeDefinition gChallengeDefs['],
+  'src/LawnApp.cpp': ['bool LawnApp::IsChallengeWithoutSeedBank('],
 };
-const addedFunctionScopes = {'src/Lawn/Zombie.cpp': [
-  'void Zombie::InitializeConeZoneHelm(', 'Reanimation* Zombie::GetConeReanim(', 'void Zombie::RemoveConeReanim(',
+const addedFunctionScopes = {'src/Lawn/Board.cpp': [
+  'bool Board::MoveGardenShufflePlant(', 'bool Board::MouseDownGardenShuffle(',
 ]};
 for (const [name, signatures] of Object.entries(sharedFunctionScopes)) {
   let before = (await parentBytes(name)).toString().replace(/\r\n?/g, '\n'), after = (await read('source/' + name)).toString().replace(/\r\n?/g, '\n');
@@ -400,35 +409,39 @@ for (const [name, signatures] of Object.entries(sharedFunctionScopes)) {
     assert(!before.includes(signature), 'New helper must not replace a parent method: ' + signature);
     after = omitFunction(after, signature);
   }
-  if (name === 'src/Lawn/Zombie.cpp') after = after.replace('// Use existing helmet health and serialized reanimation IDs. Common zombies\n// already have the native cone track; other bodies borrow just that track and\n// attach it to their animated head, retaining their own arms, shields and gait.\n', '');
-  assert.equal(after.replace(/\n{3,}/g, '\n\n'), before.replace(/\n{3,}/g, '\n\n'), 'Shared source changes only reviewed variety functions and their helpers: ' + name);
-}
-// Legacy state-zero definitions remain byte-equivalent after newline normalization.
-// The current-rule appendix already existed in the exact .8 parent.
-for (const name of ['BonusChallenge', 'NightShift', 'LanternGlow']) {
-  const file = 'src/Lawn/System/' + name + '.h';
-  const before = (await parentBytes(file)).toString().replace(/\r\n?/g, '\n');
-  const after = (await read('source/' + file)).toString().replace(/\r\n?/g, '\n');
-  const legacyEnd = text => {
-    const marker = text.indexOf('static_assert(static_cast<int>(kMode) == ');
-    assert(marker >= 0);
-    return text.indexOf('\n', marker) + 1;
-  };
-  const beforeStart = legacyEnd(before), afterStart = legacyEnd(after);
-  assert.equal(after.slice(0, afterStart), before.slice(0, beforeStart),
-    'Variety revision preserves legacy helpers/data: ' + name);
+  if (name === 'src/Lawn/Board.cpp') after = after.replace('// Garden Shuffle moves the original combat instance. Keeping it on its source\n// tile while selected avoids temporary invulnerability, duplicate IDs, healing\n// or save/cancel recovery paths that would need to rebuild a plant.\n', '');
+  if (name === 'src/Lawn/CursorObject.cpp') after = after.replace('#include "Plant.h"\n', '');
+  if (name === 'src/Lawn/System/LanternShroom.cpp') after = after.replace('std::array<std::unique_ptr<Sexy::MemoryImage>, 4> bonus;', 'std::array<std::unique_ptr<Sexy::MemoryImage>, 3> bonus;');
+  assert.equal(after.replace(/\n{3,}/g, '\n\n'), before.replace(/\n{3,}/g, '\n\n'), 'Shared source changes only reviewed Garden/fair-warning functions: ' + name);
 }
 {
-  const file = 'src/Lawn/Zombie.h';
-  const savedData = bytes => {
-    const source = bytes.toString().replace(/\r\n?/g, '\n');
-    const start = source.indexOf('class Zombie : public GameObject');
-    const end = source.indexOf('Zombie();', start);
-    assert(start >= 0 && end > start);
-    return source.slice(start, end);
-  };
-  assert.equal(savedData(await read('source/' + file)), savedData(await parentBytes(file)),
-    'Cone variants reuse serialized helmet fields; Zombie member layout stays byte-equivalent');
+  const before = (await parentBytes('src/ConstEnums.h')).toString().replace(/\r\n?/g, '\n');
+  const after = (await read('source/src/ConstEnums.h')).toString().replace(/\r\n?/g, '\n');
+  assert.equal(after.replace(/^.*GAMEMODE_CHALLENGE_GARDEN_SHUFFLE.*\n/m, ''), before, 'Only the appended mode changes any native enum source');
+}
+{
+  const name = 'src/Lawn/Board.h';
+  const before = (await parentBytes(name)).toString().replace(/\r\n?/g, '\n');
+  const after = (await read('source/' + name)).toString().replace(/\r\n?/g, '\n');
+  assert.equal(after.replace(/^.*(?:MoveGardenShufflePlant|MouseDownGardenShuffle).*\n/gm, ''), before,
+    'Board header adds only the two non-serialized movement declarations');
+}
+// Reverse precisely the new Garden routing clauses, requiring every prior
+// legacy/current helper, conveyor roster, cost and authored schedule to remain.
+{
+  const name = 'src/Lawn/System/BonusChallenge.h';
+  const before = (await parentBytes(name)).toString().replace(/\r\n?/g, '\n');
+  let after = (await read('source/' + name)).toString().replace(/\r\n?/g, '\n');
+  after = after.replace('#include "GardenShuffle.h"\n', '')
+    .replace(' || GardenShuffle::IsMode(mode)', '')
+    .replaceAll('GardenShuffle::IsMode(mode) ? 0 : ', '')
+    .replaceAll('    if (GardenShuffle::IsMode(mode)) return GardenShuffle::PopulateWaves(output);\n', '')
+    .replace('    if (GardenShuffle::IsMode(mode)) GardenShuffle::PopulateAllowedZombies(output);\n    else if (LanternGlow::IsMode(mode))', '    if (LanternGlow::IsMode(mode))')
+    .replace('    if (GardenShuffle::IsMode(mode)) bank.mNumPackets = 0;\n    else if (LanternGlow::IsMode(mode))', '    if (LanternGlow::IsMode(mode))')
+    .replace('    if (GardenShuffle::IsMode(mode)) return GardenShuffle::IsCurrentRules(mode, state);\n', '')
+    .replace('    if (GardenShuffle::IsMode(mode)) return GardenShuffle::kWaveCount;\n', '')
+    .replace('    if (GardenShuffle::IsMode(mode)) { bank.mNumPackets = 0; return; }\n', '');
+  assert.equal(after, before, 'Garden routing preserves every prior minigame helper and data byte');
 }
 
 

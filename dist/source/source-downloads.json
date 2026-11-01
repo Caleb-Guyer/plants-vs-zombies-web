@@ -1,15 +1,15 @@
 {
   "schema_version": 1,
-  "current_engine": "0.2.6-web-chill.9",
+  "current_engine": "0.2.6-web-garden.1",
   "upstream_tag": "0.2.6",
   "layout": "Site-source nests current corresponding source, its immediate parent when present, the upstream baseline and the current full patch. Other source archives and incremental/historical patches remain standalone downloads beside this index and in the full runtime distribution.",
   "nested_sources": [
     "pvz-portable-0.2.6-source.zip",
-    "pvz-portable-0.2.6-web-chill.8-source.zip",
-    "pvz-portable-0.2.6-web-chill.9-source.zip"
+    "pvz-portable-0.2.6-web-chill.9-source.zip",
+    "pvz-portable-0.2.6-web-garden.1-source.zip"
   ],
   "nested_patches": [
-    "web-chill.9.patch"
+    "web-garden.1.patch"
   ],
   "archives": [
     {
@@ -79,7 +79,7 @@
       "name": "pvz-portable-0.2.6-web-chill.9-source.zip",
       "bytes": 9308592,
       "sha256": "7fa3d16079cca928812a965ec7bdcd15c7f157570d14607895c31067d06e49f0",
-      "current": true,
+      "current": false,
       "upstream": false
     },
     {
@@ -87,6 +87,13 @@
       "bytes": 4778159,
       "sha256": "4a8c06629b3d6d87b7ea9b3f10a6b845c764eb9d9875beeb1b82fba82f346922",
       "current": false,
+      "upstream": false
+    },
+    {
+      "name": "pvz-portable-0.2.6-web-garden.1-source.zip",
+      "bytes": 9342093,
+      "sha256": "34807be9b16aafc8e1e8bc9fd4da840df0ce9ae5667157cf51e61f4571d95122",
+      "current": true,
       "upstream": false
     },
     {

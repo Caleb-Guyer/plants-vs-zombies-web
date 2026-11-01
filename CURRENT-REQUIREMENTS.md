@@ -1,5 +1,50 @@
 # Current requirements
 
+## Garden.1 fixed-garden minigame and completed balance checks
+
+The user approved full 1x balance runs and save/resume checks for the existing
+three Bonus modes, followed by Garden Shuffle. The new fourth Bonus card uses a
+centered original Peashooter and native gardening glove. It starts with three
+Repeaters, one Snow Pea and two Wall-nuts facing ten authored rotating-lane waves
+(40 zombies). Click a living plant and then an empty legal square to move the
+same instance. A one-second move cooldown uses the existing challenge counter;
+health, attack clocks and animation IDs persist. Right-click cancels selection.
+The original glove occupies the shovel toolbar position; a brief native hint
+explains the controls. The field uses the original daytime lawn without a seed
+bank or sun economy, and no added tips appear below challenge cards.
+
+Mode 76 owns unused native profile record 75; all earlier IDs, records and
+serialized object members remain. A saved garden retains its surviving plants
+and moved positions. Cold Front's earned Chill-shroom unlock and the other three
+Bonus modes remain. Night Shift now warns every eligible mature grave, so
+removing one warned grave cannot promote an unwarned grave into a capped rise.
+The three-zombie rise limit and existing wave tuning are unchanged.
+
+Release validation passed: the final 781-file source built in 325.974 seconds;
+all 2,462 native checks in eight suites passed, followed by 14 browser suites
+and 11 worker scenarios. The 9,342,093-byte engine source archive has 816 entries;
+both the full-upstream patch and exact Chill.9 delta reconstructed all 781 source
+files byte-for-byte. The accepted six sprite PNGs and packed artwork are unchanged.
+
+Muted full 1x runs, with planning pauses, cleared all four Bonus modes. Cold Front
+finished with all 25 plants, all five mowers and 250 of its 1,500 starting sun.
+Cone Zone finished with three mowers after a mixed-attachment save/reload/Continue.
+Night Shift finished with all five mowers after saving during a grave warning;
+the pending rise continued after reload rather than restarting its six seconds.
+Garden Shuffle finished all ten waves with four surviving shooters and all five
+mowers, after a native save/full reload/Continue preserved moved positions and
+the two lost Wall-nuts. Selection, ghost art, valid movement, occupied-square
+rejection and the one-second cooldown were checked during the Garden run.
+
+All runs used isolated generated QA profiles with synthetic starting trophies;
+the actual native replay moneybag and return to Bonus establish the observed
+clears. Private player saves were not read. Cold Front's run used unchanged
+Chill.9 gameplay; the other three ran the final Garden.1 build. These successful
+strategies do not establish universal balance or full original-game parity.
+Packaging, extracted-source and matching GitHub Pages publication receipts are
+recorded by the release process after this validation.
+
+
 ## Chill.9 Cone Zone variety and Night Shift graveyard control
 
 The user requested many cone-wearing zombie combinations, native giant bowling
@@ -129,7 +174,7 @@ successful strategy does not establish universal balance or original-game parity
 
 Updated 2026-11-01. This records the latest human clarification for continued work on the public Plants vs. Zombies browser site. It supersedes older requirements for permanent silence, a large landing page or a surrounding promotional interface. Historical QA observations remain historical evidence and must not be treated as current product requirements or instructions to resume manual validation.
 
-## Current release direction
+## Historical Chill.8 release direction
 
 The user's 2026-11-01 playtesting complaint supersedes the earlier request
 to stop manual gameplay. This revision requires an actual muted fresh Cold Front

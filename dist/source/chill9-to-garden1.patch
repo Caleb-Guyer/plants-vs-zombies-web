@@ -1,0 +1,661 @@
+--- a/CMake/ProjectVersion.cmake
++++ b/CMake/ProjectVersion.cmake
+@@ -66,6 +66,6 @@
+ endif()
+ 
+ # Browser release identity; keep binary and corresponding-source manifests aligned.
+-set(PVZP_VERSION "0.2.6-web-chill.9")
++set(PVZP_VERSION "0.2.6-web-garden.1")
+ set(PVZP_VERSION_PLAIN "0.2.6")
+ configure_file("${PROJECT_SOURCE_DIR}/CMake/ProjectVersion.h.in" "${PROJECT_BINARY_DIR}/ProjectVersion.h" @ONLY)
+--- a/artwork/chill-shroom/render.py
++++ b/artwork/chill-shroom/render.py
+@@ -136,7 +136,7 @@
+         records[key]={'width':img.width,'height':img.height,'pngSha256':sha(target.read_bytes()),'rgbaSha256':sha(rgba)}
+     header.append('}');args.header.parent.mkdir(parents=True,exist_ok=True)
+     args.header.write_text('\n'.join(header)+'\n',encoding='utf-8',newline='\n')
+-    manifest={'schema':2,'version':'0.2.6-web-chill.9',
++    manifest={'schema':2,'version':'0.2.6-web-garden.1',
+         'method':'Approved silhouette with a painted finish and registered shared-canvas layers',
+         'imageGenerationUsed':True,'standaloneChallengeIllustrations':False,'pillowVersion':PILLOW_VERSION,
+         'approvedMasterSha256':sha(master_raw),'closedMasterSha256':sha(historical_closed_raw),
+--- a/src/ConstEnums.h
++++ b/src/ConstEnums.h
+@@ -455,6 +455,7 @@
+ 	GAMEMODE_CHALLENGE_CONE_ZONE = 73,
+ 	GAMEMODE_CHALLENGE_NIGHT_SHIFT = 74,
+ 	GAMEMODE_CHALLENGE_LANTERN_GLOW = 75,
++	GAMEMODE_CHALLENGE_GARDEN_SHUFFLE = 76,
+ 	NUM_GAME_MODES
+ };
+ enum GameObjectType : int32_t
+--- a/src/Lawn/Board.cpp
++++ b/src/Lawn/Board.cpp
+@@ -895,6 +895,7 @@
+ 
+ 	case GameMode::GAMEMODE_SURVIVAL_NORMAL_STAGE_1:
+ 	case GameMode::GAMEMODE_CHALLENGE_CONE_ZONE:
++	case GameMode::GAMEMODE_CHALLENGE_GARDEN_SHUFFLE:
+ 	case GameMode::GAMEMODE_SURVIVAL_HARD_STAGE_1:
+ 	case GameMode::GAMEMODE_SURVIVAL_ENDLESS_STAGE_1:
+ 	case GameMode::GAMEMODE_CHALLENGE_WAR_AND_PEAS:
+@@ -1355,7 +1356,8 @@
+     // A fresh game opts into the new mechanics. Loaded revision-1 checkpoints
+     // never pass through InitLevel and keep their original state and rules.
+     if (BonusChallenge::IsMode(aGameMode))
+-        mChallenge->mChallengeState = LanternGlow::IsMode(aGameMode) ? BonusChallenge::kColdSetupState : BonusChallenge::kArcadeState;
++        mChallenge->mChallengeState = GardenShuffle::IsMode(aGameMode) ? GardenShuffle::kState :
++            LanternGlow::IsMode(aGameMode) ? BonusChallenge::kColdSetupState : BonusChallenge::kArcadeState;
+ 	if (aGameMode != GameMode::GAMEMODE_TREE_OF_WISDOM && aGameMode != GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN)
+ 	{
+ 		mApp->mMusic->StopAllMusic();
+@@ -1570,6 +1572,7 @@
+ 
+ void Board::PlaceRake()
+ {
++    if (GardenShuffle::IsMode(mApp->mGameMode)) return;
+ 	if (!mApp->mPlayerInfo->mPurchases[StoreItem::STORE_ITEM_RAKE])
+ 		return;
+ 
+@@ -3001,7 +3004,7 @@
+ 		break;
+ 
+ 	case GameObjectType::OBJECT_TYPE_PLANT:
+-		if ((mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED || mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED_TWIST) && !HasLevelAwardDropped())
++		if ((mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED || mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED_TWIST || GardenShuffle::IsMode(mApp->mGameMode)) && !HasLevelAwardDropped())
+ 		{
+ 			aShowFinger = true;
+ 		}
+@@ -4016,6 +4019,99 @@
+ 	mTutorialParticleID = ParticleSystemID::PARTICLESYSTEMID_NULL;
+ }
+ 
++// Garden Shuffle moves the original combat instance. Keeping it on its source
++// tile while selected avoids temporary invulnerability, duplicate IDs, healing
++// or save/cancel recovery paths that would need to rebuild a plant.
++bool Board::MoveGardenShufflePlant(Plant* thePlant, int theGridX, int theGridY)
++{
++    if (!GardenShuffle::IsMode(mApp->mGameMode) || !mChallenge ||
++        mApp->mGameScene != SCENE_PLAYING || mPaused || mTimeStopCounter > 0 || HasLevelAwardDropped() ||
++        mChallenge->mChallengeStateCounter > 0 || !thePlant || thePlant->mBoard != this ||
++        thePlant->mDead || !thePlant->mIsOnBoard || thePlant->mSquished || thePlant->mPlantHealth <= 0 ||
++        !GardenShuffle::CanMoveSeed(thePlant->mSeedType) ||
++        theGridX < 0 || theGridX >= 9 || theGridY < 0 || theGridY >= 5 ||
++        (thePlant->mPlantCol == theGridX && thePlant->mRow == theGridY)) return false;
++    if (GetTopPlantAt(theGridX, theGridY, TOPPLANT_ANY) ||
++        CanPlantAt(theGridX, theGridY, thePlant->mSeedType) != PLANTING_OK) return false;
++
++    const int oldX = thePlant->mX;
++    const int oldY = thePlant->mY;
++    thePlant->mX = GridToPixelX(theGridX, theGridY);
++    thePlant->mY = GridToPixelY(theGridX, theGridY);
++    thePlant->mPlantCol = theGridX;
++    thePlant->mRow = theGridY;
++    thePlant->mStartRow = theGridY;
++    thePlant->mRenderOrder = thePlant->CalcRenderOrder();
++    if (PvzpParticleSystem* particle = mApp->ParticleTryToGet(thePlant->mParticleID))
++    {
++        if (particle->mEmitterList.mSize)
++        {
++            PvzpParticleEmitter* emitter = particle->mParticleHolder->mEmitters.DataArrayGet(
++                static_cast<unsigned int>(particle->mEmitterList.GetHead()->mValue));
++            particle->SystemMove(emitter->mSystemCenter.x + thePlant->mX - oldX,
++                emitter->mSystemCenter.y + thePlant->mY - oldY);
++        }
++    }
++    mChallenge->mChallengeStateCounter = GardenShuffle::kMoveCooldown;
++    DoPlantingEffects(theGridX, theGridY, thePlant);
++    return true;
++}
++
++bool Board::MouseDownGardenShuffle(int x, int y, int theClickCount)
++{
++    if (!GardenShuffle::IsMode(mApp->mGameMode) || mApp->mGameScene != SCENE_PLAYING ||
++        mPaused || HasLevelAwardDropped()) return false;
++    if (theClickCount < 0)
++    {
++        ClearCursor();
++        mApp->PlayFoley(FOLEY_DROP);
++        return true;
++    }
++    if (GetShovelButtonRect().Contains(x, y))
++    {
++        ClearCursor();
++        mCursorObject->mCursorType = CURSOR_TYPE_GLOVE;
++        mApp->PlayFoley(FOLEY_DROP);
++        return true;
++    }
++    if (y < 80) return false;
++
++    Plant* selected = mPlants.DataArrayTryToGet(mCursorObject->mGlovePlantID);
++    if (selected && (selected->mDead || selected->mSquished || selected->mPlantHealth <= 0))
++    {
++        ClearCursor();
++        selected = nullptr;
++    }
++    const int col = PixelToGridX(x, y);
++    const int row = PixelToGridY(x, y);
++    if (selected)
++    {
++        if (selected->mPlantCol == col && selected->mRow == row)
++        {
++            ClearCursor();
++            mApp->PlayFoley(FOLEY_DROP);
++        }
++        else if (MoveGardenShufflePlant(selected, col, row))
++            ClearCursor();
++        else
++            mApp->PlayFoley(FOLEY_DROP);
++        return true;
++    }
++
++    Plant* plant = ToolHitTest(x, y);
++    if (plant && !plant->mDead && !plant->mSquished && plant->mPlantHealth > 0 &&
++        GardenShuffle::CanMoveSeed(plant->mSeedType))
++    {
++        mCursorObject->mCursorType = CURSOR_TYPE_GLOVE;
++        mCursorObject->mGlovePlantID = static_cast<PlantID>(mPlants.DataArrayGetID(plant));
++        mCursorObject->mType = plant->mSeedType;
++        mCursorObject->mImitaterType = plant->mImitaterType;
++        plant->mHighlighted = true;
++        mApp->PlaySample(SOUND_TAP);
++    }
++    return true;
++}
++
+ void Board::MouseDownWithTool(int x, int y, int theClickCount, CursorType theCursorType)
+ {
+ 	if (theClickCount < 0)
+@@ -4175,9 +4271,9 @@
+ 			mCursorObject->mCursorType == CursorType::CURSOR_TYPE_HAMMER)
+ 			return true;
+ 	}
+-	if (mShowShovel && aShovelButtonRect.Contains(x, y) && CanInteractWithBoardButtons())
+-	{
+-		theHitResult->mObjectType = GameObjectType::OBJECT_TYPE_SHOVEL;
++	if ((mShowShovel || GardenShuffle::IsMode(mApp->mGameMode)) && aShovelButtonRect.Contains(x, y) && CanInteractWithBoardButtons())
++	{
++		theHitResult->mObjectType = GardenShuffle::IsMode(mApp->mGameMode) ? GameObjectType::OBJECT_TYPE_GLOVE : GameObjectType::OBJECT_TYPE_SHOVEL;
+ 		return true;
+ 	}
+ 
+@@ -4301,6 +4397,11 @@
+ 	if (mPaused || (mApp->mGameScene != GameScenes::SCENE_PLAYING && !mCutScene->IsInShovelTutorial()))
+ 		return;
+ 
++    if (GardenShuffle::IsMode(mApp->mGameMode) && (theObjectType == OBJECT_TYPE_SHOVEL || theObjectType == OBJECT_TYPE_GLOVE))
++    {
++        ClearCursor();
++        theObjectType = OBJECT_TYPE_GLOVE;
++    }
+ 	switch (theObjectType)
+ 	{
+ 	case GameObjectType::OBJECT_TYPE_SHOVEL:
+@@ -4485,6 +4586,11 @@
+ 		return;
+ 	}
+ 
++    if (MouseDownGardenShuffle(x, y, theClickCount))
++    {
++        UpdateCursor();
++        return;
++    }
+ 	if (aCursor == CursorType::CURSOR_TYPE_SHOVEL ||
+ 		aCursor == CursorType::CURSOR_TYPE_WATERING_CAN ||
+ 		aCursor == CursorType::CURSOR_TYPE_FERTILIZER ||
+@@ -4621,7 +4727,8 @@
+ 
+ 	if (mCursorObject->mCursorType != CursorType::CURSOR_TYPE_NORMAL &&
+ 		mCursorObject->mCursorType != CursorType::CURSOR_TYPE_HAMMER &&
+-		mCursorObject->mCursorType != CursorType::CURSOR_TYPE_COBCANNON_TARGET)
++		mCursorObject->mCursorType != CursorType::CURSOR_TYPE_COBCANNON_TARGET &&
++        !(GardenShuffle::IsMode(mApp->mGameMode) && mCursorObject->mCursorType == CURSOR_TYPE_GLOVE))
+ 		return false;
+ 
+ 	if (mChallenge->mChallengeState == ChallengeState::STATECHALLENGE_ZEN_FADING)
+@@ -4995,6 +5102,18 @@
+ 			}
+ 		}
+ 	}
++    else if (GardenShuffle::IsMode(mApp->mGameMode))
++    {
++        // Authored lane pairs make relocation the challenge; native walking
++        // gives ample visible approach time instead of instant lane attacks.
++        for (int i = 0; i < MAX_ZOMBIES_IN_WAVE; ++i)
++        {
++            const ZombieType type = mZombiesInWave[mCurrentWave][i];
++            if (type == ZOMBIE_INVALID) break;
++            const int row = GardenShuffle::RowForSpawn(mCurrentWave, i);
++            if (row >= 0) AddZombieInRow(type, row, mCurrentWave);
++        }
++    }
+ 	else
+ 	{
+ 		PVZP_ASSERT(mCurrentWave >= 0 && mCurrentWave < MAX_ZOMBIE_WAVES && mCurrentWave < mNumWaves);
+@@ -5018,7 +5137,7 @@
+ 		}
+ 	}
+ 
+-	if (mCurrentWave == mNumWaves - 1 && !mApp->IsContinuousChallenge() &&
++	if (mCurrentWave == mNumWaves - 1 && !mApp->IsContinuousChallenge() && !GardenShuffle::IsMode(mApp->mGameMode) &&
+         !(NightShift::IsMode(mApp->mGameMode) && BonusChallenge::IsCurrentRules(mApp->mGameMode, mChallenge->mChallengeState)))
+ 	{
+ 		mRiseFromGraveCounter = 200;
+@@ -5257,7 +5376,7 @@
+ 
+ void Board::UpdateSunSpawning()
+ {
+-	if (StageIsNight() ||
++	if (GardenShuffle::IsMode(mApp->mGameMode) || StageIsNight() ||
+ 		HasLevelAwardDropped() ||
+ 		mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_RAINING_SEEDS ||
+ 		mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ICE ||
+@@ -6941,6 +7060,19 @@
+ 
+ void Board::DrawShovel(Graphics* g)
+ {
++    if (GardenShuffle::IsMode(mApp->mGameMode))
++    {
++        Rect rect = GetShovelButtonRect();
++        g->DrawImage(IMAGE_SHOVELBANK, rect.mX, rect.mY);
++        if (mChallenge->mChallengeStateCounter > 0)
++        {
++            g->SetColorizeImages(true);
++            g->SetColor(Color(140, 140, 140));
++        }
++        g->DrawImage(IMAGE_ZEN_GARDENGLOVE, rect.mX - 6, rect.mY - 4);
++        g->SetColorizeImages(false);
++        return;
++    }
+ 	if (mApp->mGameMode != GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN && mApp->mGameMode != GameMode::GAMEMODE_TREE_OF_WISDOM)
+ 	{
+ 		if (mShowShovel)
+@@ -7266,7 +7398,7 @@
+ 
+ 	if (mApp->mGameScene != GameScenes::SCENE_ZOMBIES_WON)
+ 	{
+-		if (mSeedBank->BeginDraw(g))
++		if (!GardenShuffle::IsMode(mApp->mGameMode) && mSeedBank->BeginDraw(g))
+ 		{
+ 			mSeedBank->Draw(g);
+ 			mSeedBank->EndDraw(g);
+--- a/src/Lawn/Board.h
++++ b/src/Lawn/Board.h
+@@ -322,6 +322,8 @@
+ 	void							UpdateGameObjects();
+ 	bool							MouseHitTest(int x, int y, HitResult* theHitResult);
+ 	void							MouseDownWithPlant(int x, int y, int theClickCount);
++    bool                            MoveGardenShufflePlant(Plant* thePlant, int theGridX, int theGridY);
++    bool                            MouseDownGardenShuffle(int x, int y, int theClickCount);
+ 	void							MouseDownWithTool(int x, int y, int theClickCount, CursorType theCursorType);
+ //	inline void						MouseDownNormal(int x, int y, int theClickCount) { /* not found */; }
+ 	bool							CanInteractWithBoardButtons();
+--- a/src/Lawn/Challenge.cpp
++++ b/src/Lawn/Challenge.cpp
+@@ -118,6 +118,14 @@
+ 
+ void Challenge::InitLevel()
+ {
++    if (GardenShuffle::IsMode(mApp->mGameMode))
++    {
++        // InitLevel is only the fresh-game path; saved combat plants are never
++        // replaced or regenerated on resume.
++        for (const auto& plant : GardenShuffle::kStartingPlants)
++            mBoard->AddPlant(plant.mCol, plant.mRow, plant.mSeed, SEED_NONE);
++        mBoard->mShowShovel = false;
++    }
+     if (BonusChallenge::IsConveyor(mApp->mGameMode, mChallengeState))
+     {
+         if (NightShift::IsMode(mApp->mGameMode))
+@@ -218,6 +226,13 @@
+ 		mChallengeStateCounter = 400;
+ 	}
+ 	GameMode aGameMode = mApp->mGameMode;
++    if (GardenShuffle::IsMode(aGameMode))
++    {
++        mBoard->mZombieCountDown = GardenShuffle::kOpeningDelay;
++        mBoard->mZombieCountDownStart = GardenShuffle::kOpeningDelay;
++        mBoard->mShowShovel = false;
++        mBoard->DisplayAdvice("Click a plant, then an empty square to move it.", MESSAGE_STYLE_HINT_FAST, ADVICE_NONE);
++    }
+ 	if (BonusChallenge::IsMode(aGameMode) && !BonusChallenge::IsCurrentRules(aGameMode, mChallengeState))
+ 	{
+ 		mBoard->DisplayAdvice(PvzpReplaceNumberString("[ADVICE_SURVIVE_FLAGS]", "{FLAGS}", 2), MESSAGE_STYLE_HINT_FAST, ADVICE_SURVIVE_FLAGS);
+@@ -1978,6 +1993,18 @@
+ 	if (mApp->mGameScene != SCENE_PLAYING && mApp->mGameMode != GAMEMODE_TREE_OF_WISDOM)
+ 		return;
+ 
++    if (GardenShuffle::IsMode(mApp->mGameMode))
++    {
++        if (mChallengeStateCounter > 0) --mChallengeStateCounter;
++        if (mBoard->mCursorObject->mGlovePlantID != PLANTID_NULL)
++        {
++            Plant* plant = mBoard->mPlants.DataArrayTryToGet(mBoard->mCursorObject->mGlovePlantID);
++            if (!plant || plant->mDead || plant->mSquished || plant->mPlantHealth <= 0 || mBoard->HasLevelAwardDropped())
++                mBoard->ClearCursor();
++            else
++                plant->mHighlighted = true;
++        }
++    }
+     if (BonusChallenge::IsSetup(mApp->mGameMode, mChallengeState))
+     {
+         // Preparation uses the original stone button and packet-ready behavior.
+@@ -2836,12 +2863,10 @@
+             mBoard->mRiseFromGraveCounter = NightShift::kGraveRiseDelay;
+             // Reuse native dirt rise particles as an in-world warning, with
+             // enough time to finish a Grave Buster before emergence.
+-            int aWarnedGraves = 0;
+             for (GridItem* grave : mBoard->mGridItems)
+             {
+                 if (grave->mDead || grave->mGridItemType != GRIDITEM_GRAVESTONE || grave->mGridItemCounter < 100) continue;
+                 grave->AddGraveStoneParticles();
+-                if (++aWarnedGraves >= NightShift::kMaxRiseCount) break;
+             }
+         }
+     }
+--- a/src/Lawn/CursorObject.cpp
++++ b/src/Lawn/CursorObject.cpp
+@@ -22,6 +22,7 @@
+ #include "Board.h"
+ #include "Cutscene.h"
+ #include "ZenGarden.h"
++#include "Plant.h"
+ #include "../LawnApp.h"
+ #include "CursorObject.h"
+ #include "../Resources.h"
+@@ -114,6 +115,20 @@
+ 		break;
+ 
+ 	case CursorType::CURSOR_TYPE_GLOVE:
++        if (mApp->mGameMode == GAMEMODE_CHALLENGE_GARDEN_SHUFFLE)
++        {
++            // A combat plant stays alive on its tile until the move commits.
++            // This native translucent preview never enters potted-plant data.
++            Plant* selected = mBoard->mPlants.DataArrayTryToGet(mGlovePlantID);
++            if (selected && !selected->mDead && selected->mPlantHealth > 0)
++            {
++                Graphics preview(*g);
++                preview.SetColorizeImages(true);
++                preview.SetColor(Color(255, 255, 255, 150));
++                Plant::DrawSeedType(&preview, selected->mSeedType, selected->mImitaterType,
++                    DrawVariation::VARIATION_NORMAL, -20.0f, -30.0f);
++            }
++        }
+ 		g->DrawImage(IMAGE_ZEN_GARDENGLOVE, -17, 15);
+ 		break;
+ 
+--- a/src/Lawn/System/BonusChallenge.h
++++ b/src/Lawn/System/BonusChallenge.h
+@@ -4,6 +4,7 @@
+ #include "../../ConstEnums.h"
+ #include "NightShift.h"
+ #include "LanternGlow.h"
++#include "GardenShuffle.h"
+ #include <array>
+ #include <cstddef>
+ #include <string_view>
+@@ -45,7 +46,7 @@
+     {2, 6, 0, 2}, {2, 5, 2, 2}, {2, 6, 0, 3}, {3, 7, 2, 3}
+ }};
+ 
+-constexpr bool IsMode(GameMode mode) { return mode == kMode || NightShift::IsMode(mode) || LanternGlow::IsMode(mode); }
++constexpr bool IsMode(GameMode mode) { return mode == kMode || NightShift::IsMode(mode) || LanternGlow::IsMode(mode) || GardenShuffle::IsMode(mode); }
+ constexpr bool IsFlagWave(int wave) { return wave >= 0 && wave < kWaveCount && (wave + 1) % 10 == 0; }
+ constexpr int ZombieCount(int wave)
+ {
+@@ -95,19 +96,21 @@
+ }
+ 
+ // Shared routing keeps the original Cone Zone data and helpers unchanged.
+-constexpr int StartingSun(GameMode mode) { return LanternGlow::IsMode(mode) ? LanternGlow::kStartingSun : NightShift::IsMode(mode) ? NightShift::kStartingSun : kStartingSun; }
+-constexpr int SeedCount(GameMode mode) { return static_cast<int>(LanternGlow::IsMode(mode) ? LanternGlow::kSeeds.size() : NightShift::IsMode(mode) ? NightShift::kSeeds.size() : kSeeds.size()); }
++constexpr int StartingSun(GameMode mode) { return GardenShuffle::IsMode(mode) ? 0 : LanternGlow::IsMode(mode) ? LanternGlow::kStartingSun : NightShift::IsMode(mode) ? NightShift::kStartingSun : kStartingSun; }
++constexpr int SeedCount(GameMode mode) { return GardenShuffle::IsMode(mode) ? 0 : static_cast<int>(LanternGlow::IsMode(mode) ? LanternGlow::kSeeds.size() : NightShift::IsMode(mode) ? NightShift::kSeeds.size() : kSeeds.size()); }
+ 
+ template<std::size_t Waves, std::size_t Slots>
+ int PopulateWaves(GameMode mode, ZombieType (&output)[Waves][Slots])
+ {
++    if (GardenShuffle::IsMode(mode)) return GardenShuffle::PopulateWaves(output);
+     return LanternGlow::IsMode(mode) ? LanternGlow::PopulateWaves(output) : NightShift::IsMode(mode) ? NightShift::PopulateWaves(output) : PopulateWaves(output);
+ }
+ 
+ template<std::size_t Count>
+ void PopulateAllowedZombies(GameMode mode, bool (&output)[Count])
+ {
+-    if (LanternGlow::IsMode(mode)) LanternGlow::PopulateAllowedZombies(output);
++    if (GardenShuffle::IsMode(mode)) GardenShuffle::PopulateAllowedZombies(output);
++    else if (LanternGlow::IsMode(mode)) LanternGlow::PopulateAllowedZombies(output);
+     else if (NightShift::IsMode(mode)) NightShift::PopulateAllowedZombies(output);
+     else PopulateAllowedZombies(output);
+ }
+@@ -115,7 +118,8 @@
+ template<class Bank>
+ void FillSeedBank(GameMode mode, Bank& bank)
+ {
+-    if (LanternGlow::IsMode(mode)) LanternGlow::FillSeedBank(bank);
++    if (GardenShuffle::IsMode(mode)) bank.mNumPackets = 0;
++    else if (LanternGlow::IsMode(mode)) LanternGlow::FillSeedBank(bank);
+     else if (NightShift::IsMode(mode)) NightShift::FillSeedBank(bank);
+     else FillSeedBank(bank);
+ }
+@@ -128,6 +132,7 @@
+ inline constexpr ChallengeState kColdDefendState = static_cast<ChallengeState>(102);
+ constexpr bool IsCurrentRules(GameMode mode, ChallengeState state)
+ {
++    if (GardenShuffle::IsMode(mode)) return GardenShuffle::IsCurrentRules(mode, state);
+     return (mode == kMode || NightShift::IsMode(mode)) ? state == kArcadeState :
+         LanternGlow::IsMode(mode) && (state == kColdSetupState || state == kColdDefendState);
+ }
+@@ -140,6 +145,7 @@
+ constexpr bool IsDefending(GameMode mode, ChallengeState state) { return LanternGlow::IsMode(mode) && state == kColdDefendState; }
+ constexpr int WaveCount(GameMode mode, ChallengeState state)
+ {
++    if (GardenShuffle::IsMode(mode)) return GardenShuffle::kWaveCount;
+     return IsCurrentRules(mode, state) ? (LanternGlow::IsMode(mode) ? LanternGlow::kPuzzleWaveCount : 10) : kWaveCount;
+ }
+ constexpr int StartingSun(GameMode mode, ChallengeState state)
+@@ -228,6 +234,7 @@
+ template<std::size_t Waves, std::size_t Slots>
+ int PopulateWaves(GameMode mode, ChallengeState state, ZombieType (&output)[Waves][Slots])
+ {
++    if (GardenShuffle::IsMode(mode)) return GardenShuffle::PopulateWaves(output);
+     if (!IsCurrentRules(mode, state)) return PopulateWaves(mode, output);
+     if (LanternGlow::IsMode(mode)) return LanternGlow::PopulatePuzzleWaves(output);
+     if (NightShift::IsMode(mode)) return NightShift::PopulateMiniWaves(output);
+@@ -244,6 +251,7 @@
+ template<class Bank>
+ void FillSeedBank(GameMode mode, ChallengeState state, Bank& bank)
+ {
++    if (GardenShuffle::IsMode(mode)) { bank.mNumPackets = 0; return; }
+     if (!IsCurrentRules(mode, state)) { FillSeedBank(mode, bank); return; }
+     bank.mNumPackets = SeedCount(mode, state);
+     if (IsConveyor(mode, state)) return;
+--- /dev/null
++++ b/src/Lawn/System/GardenShuffle.h
+@@ -0,0 +1,100 @@
++// SPDX-License-Identifier: LGPL-3.0-or-later
++#pragma once
++
++#include "../../ConstEnums.h"
++#include <array>
++#include <cstddef>
++
++// A small, fixed garden faces authored lanes. Combat plants are moved in place,
++// never rebuilt: their native IDs, health and attack clocks survive a move.
++namespace GardenShuffle
++{
++inline constexpr GameMode kMode = GAMEMODE_CHALLENGE_GARDEN_SHUFFLE;
++inline constexpr ChallengeState kState = static_cast<ChallengeState>(103);
++inline constexpr int kMoveCooldown = 100;
++inline constexpr int kOpeningDelay = 1800;
++inline constexpr int kWaveCount = 10;
++inline constexpr int kLargestWave = 6;
++constexpr bool IsMode(GameMode mode) { return mode == kMode; }
++constexpr bool IsCurrentRules(GameMode mode, ChallengeState state) { return IsMode(mode) && state == kState; }
++constexpr bool CanMoveSeed(SeedType seed)
++{
++    return seed == SEED_REPEATER || seed == SEED_SNOWPEA || seed == SEED_WALLNUT;
++}
++
++struct StartingPlant
++{
++    SeedType mSeed;
++    int mCol;
++    int mRow;
++};
++inline constexpr std::array<StartingPlant, 6> kStartingPlants = {{
++    {SEED_REPEATER, 1, 1}, {SEED_REPEATER, 2, 1},
++    {SEED_REPEATER, 1, 3}, {SEED_SNOWPEA, 1, 2},
++    {SEED_WALLNUT, 5, 1}, {SEED_WALLNUT, 5, 3}
++}};
++
++struct Spawn
++{
++    ZombieType mType = ZOMBIE_INVALID;
++    int mRow = 0;
++};
++using Wave = std::array<Spawn, kLargestWave>;
++
++// Early pairs allow time to learn the glove. Later waves rotate among three
++// lanes; the final flag adds a third lane rather than an unseen speed spike.
++inline constexpr std::array<Wave, kWaveCount> kWaves = {{
++    {{{ZOMBIE_NORMAL,1}, {ZOMBIE_NORMAL,3}}},
++    {{{ZOMBIE_NORMAL,0}, {ZOMBIE_NORMAL,4}, {ZOMBIE_NORMAL,0}}},
++    {{{ZOMBIE_NORMAL,2}, {ZOMBIE_TRAFFIC_CONE,2}, {ZOMBIE_NORMAL,4}}},
++    {{{ZOMBIE_NORMAL,0}, {ZOMBIE_TRAFFIC_CONE,3}, {ZOMBIE_NORMAL,3}, {ZOMBIE_NORMAL,0}}},
++    {{{ZOMBIE_NORMAL,1}, {ZOMBIE_TRAFFIC_CONE,4}, {ZOMBIE_NORMAL,4}, {ZOMBIE_NORMAL,1}}},
++    {{{ZOMBIE_DOOR,2}, {ZOMBIE_NORMAL,0}, {ZOMBIE_NORMAL,2}, {ZOMBIE_TRAFFIC_CONE,0}}},
++    {{{ZOMBIE_NORMAL,3}, {ZOMBIE_POLEVAULTER,1}, {ZOMBIE_NORMAL,1}, {ZOMBIE_TRAFFIC_CONE,3}}},
++    {{{ZOMBIE_PAIL,4}, {ZOMBIE_NORMAL,2}, {ZOMBIE_NORMAL,4}, {ZOMBIE_TRAFFIC_CONE,2}, {ZOMBIE_NORMAL,0}}},
++    {{{ZOMBIE_DOOR,0}, {ZOMBIE_TRAFFIC_CONE,3}, {ZOMBIE_NORMAL,0}, {ZOMBIE_NORMAL,3}, {ZOMBIE_NORMAL,1}}},
++    {{{ZOMBIE_FLAG,2}, {ZOMBIE_TRAFFIC_CONE,0}, {ZOMBIE_NORMAL,0}, {ZOMBIE_TRAFFIC_CONE,4}, {ZOMBIE_NORMAL,4}, {ZOMBIE_NORMAL,2}}}
++}};
++
++constexpr int ZombieCount(int wave)
++{
++    if (wave < 0 || wave >= kWaveCount) return 0;
++    int count = 0;
++    for (const Spawn& spawn : kWaves[wave]) if (spawn.mType != ZOMBIE_INVALID) ++count;
++    return count;
++}
++constexpr int RowForSpawn(int wave, int ordinal)
++{
++    return wave >= 0 && wave < kWaveCount && ordinal >= 0 && ordinal < ZombieCount(wave)
++        ? kWaves[wave][ordinal].mRow : -1;
++}
++constexpr int ComposeWave(int wave, ZombieType* output, int capacity)
++{
++    if (wave < 0 || wave >= kWaveCount || !output || capacity <= ZombieCount(wave)) return -1;
++    for (int i = 0; i < capacity; ++i) output[i] = ZOMBIE_INVALID;
++    int count = 0;
++    for (const Spawn& spawn : kWaves[wave])
++        if (spawn.mType != ZOMBIE_INVALID) output[count++] = spawn.mType;
++    return count;
++}
++template<std::size_t Waves, std::size_t Slots>
++int PopulateWaves(ZombieType (&output)[Waves][Slots])
++{
++    static_assert(Waves >= kWaveCount && Slots > kLargestWave);
++    for (auto& wave : output) for (auto& zombie : wave) zombie = ZOMBIE_INVALID;
++    for (int i = 0; i < kWaveCount; ++i) ComposeWave(i, output[i], static_cast<int>(Slots));
++    return kWaveCount;
++}
++template<std::size_t Count>
++void PopulateAllowedZombies(bool (&output)[Count])
++{
++    static_assert(Count > static_cast<std::size_t>(ZOMBIE_DOOR));
++    for (auto& allowed : output) allowed = false;
++    for (const Wave& wave : kWaves)
++        for (const Spawn& spawn : wave)
++            if (spawn.mType != ZOMBIE_INVALID) output[spawn.mType] = true;
++}
++
++static_assert(static_cast<int>(kMode) == 76);
++static_assert(ZombieCount(0) == 2 && ZombieCount(kWaveCount - 1) == kLargestWave);
++}
+--- a/src/Lawn/System/LanternShroom.cpp
++++ b/src/Lawn/System/LanternShroom.cpp
+@@ -27,7 +27,7 @@
+     std::array<std::unique_ptr<Sexy::MemoryImage>, 6> parts;
+     std::array<std::array<std::unique_ptr<Sexy::MemoryImage>, NUM_FILTER_EFFECTS>, 5> filtered;
+     std::unique_ptr<Sexy::MemoryImage> preview;
+-    std::array<std::unique_ptr<Sexy::MemoryImage>, 3> bonus;
++    std::array<std::unique_ptr<Sexy::MemoryImage>, 4> bonus;
+     const ReanimatorDefinition* definition = nullptr;
+     std::array<int, 5> trackIndices = {-1, -1, -1, -1, -1};
+ };
+@@ -182,12 +182,14 @@
+ std::unique_ptr<Sexy::MemoryImage> MakeNativePortrait(GameMode mode)
+ {
+     const bool cone = mode == GAMEMODE_CHALLENGE_CONE_ZONE;
++    const bool garden = mode == GAMEMODE_CHALLENGE_GARDEN_SHUFFLE;
+     auto image = MakeBlankImage(cone ? 200 : 120, cone ? 210 : 120);
+     Sexy::Graphics graphics(image.get());
+     graphics.SetLinearBlend(true);
+     Reanimation native;
+     native.ReanimationInitializeType(cone ? 40.0f : 20.0f, cone ? 40.0f : 20.0f,
+-        cone ? REANIM_ZOMBIE : mode == GAMEMODE_CHALLENGE_NIGHT_SHIFT ? REANIM_PUFFSHROOM : REANIM_ICESHROOM);
++        cone ? REANIM_ZOMBIE : garden ? REANIM_PEASHOOTER :
++        mode == GAMEMODE_CHALLENGE_NIGHT_SHIFT ? REANIM_PUFFSHROOM : REANIM_ICESHROOM);
+     native.SetFramesForLayer("anim_idle");
+     if (cone)
+     {
+@@ -202,6 +204,18 @@
+         DrawRig(&graphics, native);
+     }
+     native.Draw(&graphics);
++    if (garden)
++    {
++        // Peashooter uses the native body and head layers separately.
++        native.SetFramesForLayer("anim_head_idle");
++        native.Draw(&graphics);
++    }
++    if (garden && Sexy::IMAGE_ZEN_GARDENGLOVE)
++    {
++        // The original glove is a subordinate cue; the same bounds-based
++        // centering used by the other cards fits the complete composition.
++        PvzpDrawImageScaledF(&graphics, Sexy::IMAGE_ZEN_GARDENGLOVE, 73.0f, 68.0f, 0.55f, 0.55f);
++    }
+     return image;
+ }
+ }
+@@ -359,13 +373,14 @@
+ Sexy::Image* GetBonusImage(GameMode mode)
+ {
+     const int index = mode == GAMEMODE_CHALLENGE_CONE_ZONE ? 0 : mode == GAMEMODE_CHALLENGE_NIGHT_SHIFT ? 1 :
+-        mode == GAMEMODE_CHALLENGE_LANTERN_GLOW ? 2 : -1;
++        mode == GAMEMODE_CHALLENGE_LANTERN_GLOW ? 2 : mode == GAMEMODE_CHALLENGE_GARDEN_SHUFFLE ? 3 : -1;
+     if (index < 0) return nullptr;
+     SpriteCache& cache = CachedSprite();
+     if (!cache.bonus[index])
+     {
+-        if (!PvzpLoadResources(index == 0 ? "DelayLoad_Background1" : "DelayLoad_Background2")) return nullptr;
+-        Sexy::Image* background = index == 0 ? Sexy::IMAGE_BACKGROUND1 : Sexy::IMAGE_BACKGROUND2;
++        const bool daytime = index == 0 || index == 3;
++        if (!PvzpLoadResources(daytime ? "DelayLoad_Background1" : "DelayLoad_Background2")) return nullptr;
++        Sexy::Image* background = daytime ? Sexy::IMAGE_BACKGROUND1 : Sexy::IMAGE_BACKGROUND2;
+         if (!background) return nullptr;
+         auto picture = MakeBlankImage(80, 65);
+         Sexy::Graphics graphics(picture.get());
+--- a/src/Lawn/Widget/ChallengeScreen.cpp
++++ b/src/Lawn/Widget/ChallengeScreen.cpp
+@@ -112,7 +112,8 @@
+ 	{ .mChallengeMode = GameMode::GAMEMODE_INTRO, .mChallengeIconIndex = 10, .mPage = ChallengePage::CHALLENGE_PAGE_LIMBO, .mRow = 2, .mCol = 3, .mChallengeName = "Intro" },
+ 	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_CONE_ZONE, .mChallengeIconIndex = 0, .mPage = ChallengePage::CHALLENGE_PAGE_BONUS, .mRow = 1, .mCol = 0, .mChallengeName = "Cone Zone" },
+ 	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_NIGHT_SHIFT, .mChallengeIconIndex = 1, .mPage = ChallengePage::CHALLENGE_PAGE_BONUS, .mRow = 1, .mCol = 1, .mChallengeName = "Night Shift" },
+-	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_LANTERN_GLOW, .mChallengeIconIndex = 1, .mPage = ChallengePage::CHALLENGE_PAGE_BONUS, .mRow = 1, .mCol = 2, .mChallengeName = "Cold Front" }
++	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_LANTERN_GLOW, .mChallengeIconIndex = 1, .mPage = ChallengePage::CHALLENGE_PAGE_BONUS, .mRow = 1, .mCol = 2, .mChallengeName = "Cold Front" },
++	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_GARDEN_SHUFFLE, .mChallengeIconIndex = 0, .mPage = ChallengePage::CHALLENGE_PAGE_BONUS, .mRow = 1, .mCol = 3, .mChallengeName = "Garden Shuffle" }
+ };
+ 
+ ChallengeScreen::ChallengeScreen(LawnApp* theApp, ChallengePage thePage)
+--- a/src/LawnApp.cpp
++++ b/src/LawnApp.cpp
+@@ -2430,6 +2430,7 @@
+ bool LawnApp::IsChallengeWithoutSeedBank()
+ {
+ 	return
++        GardenShuffle::IsMode(mGameMode) ||
+ 		mGameMode == GameMode::GAMEMODE_CHALLENGE_RAINING_SEEDS ||
+ 		mGameMode == GameMode::GAMEMODE_UPSELL ||
+ 		mGameMode == GameMode::GAMEMODE_INTRO ||

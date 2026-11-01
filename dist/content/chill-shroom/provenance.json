@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "version": "0.2.6-web-chill.9",
+  "version": "0.2.6-web-garden.1",
   "method": "Approved silhouette with a painted finish and registered shared-canvas layers",
   "imageGenerationUsed": true,
   "standaloneChallengeIllustrations": false,
@@ -15,7 +15,7 @@
   "canonicalRgbaSha256": "4aed41439898a5f777b5ccefeb97c87a96bdd81f6b3b1ece0ac7541339378eae",
   "extractionSha256": "b639b70e79eb09ba117c3ca52e54c8ce54a294ad947f44b7b75d96a41f24ba99",
   "generationSha256": "5f1279fcfa2df9cadf6f9df676d57f0805b05c8c2f288480e630e1379894cf9d",
-  "generatorSha256": "2035f561d305baf34daa9a549b8ddcc4e12f0b96c26639747148823235529757",
+  "generatorSha256": "6c460d11ece3985fd437d0308f17f1aeac165ece4cac7965ba281eead77631d2",
   "headerSha256": "c3872c66c76e3398a3db490c4200848232a6614e01e594d918e1cf931de0a6ac",
   "parts": {
     "cap": {

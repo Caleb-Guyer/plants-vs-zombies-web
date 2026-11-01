@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-chill.9
-Adds cone-armored zombie variants and giant bowling Wall-nuts to Cone Zone, plus a graveyard-control mechanic in Night Shift. Retains Cold Front, the earned Chill-shroom unlock, original content, artwork and native save layouts.
-Engine JavaScript SHA-256: e8d900ccb153376dc0a885b7371b53cb227a324b034c32140336aeefc3d7f33c
-Engine WASM SHA-256: 6e69af3cc26a776d4030c64d7cd2126fe82d8eafa5034054e6451e3ac070b488
+PvZ-Portable 0.2.6-web-garden.1
+Adds Garden Shuffle with a fixed garden and movable living plants, plus a fairer Night Shift grave warning. Retains the existing bonus modes, earned Chill-shroom unlock, original content and native save layouts.
+Engine JavaScript SHA-256: 40689d2194845d13d14e2e46dbd753a483556daeacf5c053cc133630684c83ab
+Engine WASM SHA-256: 99722b52f48e912fda7010d20f164dd819d46f251f3e1b54b6d50cfc63e6756d
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.
