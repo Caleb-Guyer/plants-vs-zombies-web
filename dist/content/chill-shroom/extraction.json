@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "inputSize": [1536, 1024],
+  "alphaThreshold": 8,
+  "expressionComposition": "Full-body variants share exact base pixels outside the eye bounds",
+  "eyeBounds": [20, 3, 46, 17],
+  "parts": {
+    "cap": {"sourceRegion": [0, 150, 665, 600], "targetCanvas": [103, 54], "targetBox": [10, 0, 84, 46], "fit": "contain"},
+    "blankBody": {"sourceRegion": [670, 200, 1045, 610], "targetCanvas": [66, 45], "targetBox": [9, 0, 48, 38], "fit": "resize"},
+    "base": {"sourceRegion": [1100, 430, 1520, 600], "targetCanvas": [75, 21], "targetBox": [18, 4, 40, 11], "fit": "contain"},
+    "openEyes": {"sourceRegion": [100, 690, 445, 885], "targetCanvas": [66, 45], "targetBox": [20, 3, 26, 14], "fit": "contain"},
+    "halfEyes": {"sourceRegion": [610, 680, 950, 885], "targetCanvas": [66, 45], "targetBox": [20, 4, 26, 13], "fit": "contain"},
+    "closedEyes": {"sourceRegion": [1100, 700, 1490, 880], "targetCanvas": [66, 45], "targetBox": [20, 8, 26, 5], "fit": "contain"}
+  }
+}

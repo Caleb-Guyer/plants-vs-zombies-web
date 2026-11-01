@@ -1,6 +1,82 @@
 # Browser parity and QA record
 
-## Chill.3 distinct custom sprite and native card compositions, 2026-10-31
+## Chill.4 plant volume and animation revision, 2026-11-01
+
+The user rejected Chill.3's flat/simple appearance and requested better
+proportions, shading and animation, explicitly allowing image generation for
+the plant. `0.2.6-web-chill.4` is based on Chill.3. One built-in image-generation
+call created a plant-parts atlas using original mushroom references. The
+restriction on separately generated challenge illustrations remains; cards
+continue to render actual Conehead/Puff/custom-Chill sprites over original grass.
+
+Independent comparison of the assembled proof with original Puff, Sun, Fume and
+Doom parts found a fuller cap silhouette, rounded shaded body and tucked feet.
+The visible cap is 84×46 rather than Chill.3's approximately 100×44 flat umbrella;
+the body is 48×38 and feet 40×11 within their native canvases. Cap/body width ratio is
+about 1.75. Highlights, midtones and a deep indigo underside give volume while
+the blue/cream identity remains distinct from Ice/Puff and has no muzzle.
+`outputs/pvz-chill4-release/sprite-proof.png` uses native idle positions and draw
+order. Separate native observations below establish bounded in-game review;
+neither establishes subjective perfection or full parity.
+
+The atlas extraction recipe records source regions, target boxes and eye
+composition. Half/closed expressions replace the full body with pixels identical
+outside the eye bounds, avoiding small gradient seams. Native motion uses
+gentler whole-plant compression, rebound and independent cap lag up to two
+texture pixels. Existing pulse timing, radial chill, saved fields, IDs,
+checkpoints, original content, worker and QoL remain the intended behavior.
+
+[Generation](dist/content/chill-shroom/generation.json),
+[extraction](dist/content/chill-shroom/extraction.json),
+[sprite provenance](dist/content/chill-shroom/provenance.json) and
+[native card provenance](dist/content/native-bonus-art.json) record the current
+inputs. Frozen-atlas extraction is reproducible; image generation itself is not
+claimed to be deterministic. All eight public PNG/JSON files plus the native
+header reproduce byte for byte from the frozen atlas and extraction recipe.
+
+Seven native suites pass **1,513 checks**: 66 speed, 90 controls, 105 decks/cooldowns,
+139 Cone Zone, 557 completion/rewards/navigation, 131 Night Shift and 425
+custom-plant/portrait checks. Source and harness pins match the current code.
+These checks cover the production behavior under controlled fixtures, with no
+audio or proof of subjective visual equivalence.
+
+Pre-publication local evidence on 2026-11-01: the coherent Emscripten Release
+build passed in **226.121 seconds**, with all **776 source files unchanged**
+during compilation. All fourteen browser integration suites pass, including
+eleven worker scenarios and current native/provenance/source-PNG pixel checks.
+The engine-source ZIP passes with **808 entries and 5,813,693 bytes**. Both full
+upstream and Chill.3 incremental patches reconstruct all 776 source files byte
+for byte. Exact artifact identities remain in manifests.
+
+Actual muted `?testing=1` review confirms centered actual-sprite Bonus pictures
+with and without earned ribbons. Hover keeps the native red title without added
+tips. Packet preview, lawn and card share the new rounded cap, compact shaded
+body and eyes. Native Continue's paused backdrop already shows the new parts;
+the existing 50-sun Sun/Chill/Puff board restores. Private proofs are
+`outputs/pvz-chill4-release/live-native-sprite.png`, `bonus-earned.png`,
+`bonus-unearned.png`, `bonus-hover.png` and `paused-save-restored.png`.
+
+Approximately six seconds of play produced only three sampled clips, at
+37, 1,069 and 4,088 ms. The third returned a partial size and is not used as
+complete animation evidence. The first two (`attack-cycle/000.png` and
+`001.png`) show idle and closed-eye wind-up with rounded shading and no visible
+expression seam. A later full Menu/paused screenshot, `after-cycle-paused.png`,
+confirms stable paint. This does **not** verify a complete visual cycle, all
+blink frames or a captured release. Detailed cap curves, blink/release and save
+phase are covered by the 1,513 production-method checks, rather than inferred
+from sparse browser samples. No full battle, earned win, fresh save cycle or
+save-transfer validation is credited.
+
+Owned muted test tabs 20 and 21 were closed. Local implementation and bounded
+checks pass; website/runtime packaging and hosted rollout are separate publisher
+records. Earlier results retain their own scope, and the formal parity goal
+remains paused and incomplete.
+
+## Historical Chill.3 custom sprite — flat appearance rejected, 2026-10-31
+
+The user subsequently rejected the sprite's flat/simple look and requested
+better proportions, shading and animation. The earlier functional results
+below are not acceptance of that art or verification of Chill.4.
 
 The user clarified that a custom plant sprite is allowed; AI-generated challenge
 pictures are forbidden. The earlier interpretation requiring an unchanged
@@ -68,7 +144,7 @@ credited to this review. The user's existing public GitHub game tab was untouche
 
 Local implementation, focused checks and native art/save criteria pass.
 Website-source/runtime packaging and hosted publication are separate release
-records. [Current criteria](CHILL-REVISION-GOAL.md) track the clarification;
+records. [Current criteria](https://github.com/Caleb-Guyer/plants-vs-zombies-web/blob/3ef11e097cd7455f3c0fb9575c8b565a5def4ad3/CHILL-REVISION-GOAL.md) track the clarification;
 the older formal parity goal remains paused. Earlier counts/screenshots do not
 establish this revision's results or exhaustive original-game parity.
 

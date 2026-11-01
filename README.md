@@ -2,7 +2,7 @@
 
 [Play on GitHub Pages](https://caleb-guyer.github.io/plants-vs-zombies-web/) · [Existing playtest](https://lawn-defense-caleb-plays.usgi.chatgpt.site) · [Deployment](DEPLOYMENT.md) · [Requirements](CURRENT-REQUIREMENTS.md) · [QA history](PARITY-QA.md)
 
-This source uses **0.2.6-web-chill.3**, based on PvZ-Portable 0.2.6 commit `396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca` and the Chill.2 parent. The user clarified that a custom plant sprite is allowed; the restriction concerns AI-generated challenge pictures. Chill-shroom's distinct sprite uses editable vector/code-drawn parts instead of copying Ice-shroom's appearance. Challenge cards remain centered native compositions of the actual game sprites. The revision preserves radial slow/attack, challenges, simplified menus, background save worker, controls, save recovery and renderer corrections. Full 1:1 parity remains unverified; broad manual validation stopped at the user's request on 2026-10-31. Earlier release evidence below remains historical.
+This source uses **0.2.6-web-chill.4**, based on PvZ-Portable 0.2.6 commit `396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca` and the Chill.3 parent. The user rejected Chill.3's flat proportions, shading and motion, and explicitly allowed image generation for the plant. Chill-shroom now has a fuller shaded cap, compact rounded body and tucked feet. Challenge cards remain centered native compositions of actual sprites, with no separately generated challenge illustration. The revision preserves radial slow mechanics, challenges, simplified menus, background save worker, controls, save recovery and renderer corrections. Full 1:1 parity remains unverified; broad manual validation stopped at the user's request on 2026-10-31. Earlier release evidence below remains historical.
 
 The Software.10 and earlier QA descriptions below are the frozen v18 evidence snapshot. They retain their original capture-time scope, including earlier limits; they are not a claim that later validation or the full parity goal is complete.
 
@@ -34,14 +34,18 @@ It has an independent checkpoint and completion record. Chill-shroom is
 introduced in this challenge; the original campaign, chooser and unlocks retain
 their familiar content.
 
-The custom sprite has a rounded, asymmetric dusty-blue frost cap,
-simple white spots, a mint/cream stem with dark pill eyes and a low organic base.
-Five [editable SVG/PNG parts](dist/content/chill-shroom/) include matching blink
-patches; [provenance](dist/content/chill-shroom/provenance.json) records the
-vector recipe and code renderer. The native
-Ice reanimation supplies motion while the art gives Chill-shroom its own
-muzzle-free identity. Its 40-tick wind-up, outward frost release and 30-tick
-recovery retain the existing attack behavior. No image-generation tool is used.
+The revised sprite has a fuller asymmetric blue cap with soft highlights and a
+deep underside, a shaded cream/mint body, expressive dark eyes and tucked feet.
+One generated plant-parts atlas supplies five [PNG parts](dist/content/chill-shroom/).
+[Generation records](dist/content/chill-shroom/generation.json),
+[extraction recipe](dist/content/chill-shroom/extraction.json) and
+[provenance](dist/content/chill-shroom/provenance.json) document the references,
+prompt and deterministic extraction from the frozen atlas.
+
+Native motion uses gentler squash, independent cap lag and rebound. Whole-body
+eye variants keep shading continuous during blink and sleep. Chill-shroom
+remains muzzle-free and distinct from Ice/Puff. Its 40-tick wind-up, outward
+frost release and 30-tick recovery preserve the existing slow mechanics.
 
 The three native 80×65 Bonus pictures stay centered compositions of actual
 sprites: original Conehead for Cone Zone, original Puff-shroom for Night Shift
@@ -101,9 +105,32 @@ Open the original **Options → More Options** dialog for these additions:
 
 The native options and deck dialogs use the original game artwork and concise labels. QoL preferences and decks travel with save exports in separate files; existing native profile and board-save formats remain unchanged. Backups is also available through the small More utility icon.
 
-## Chill.3 pre-publication evidence, 2026-10-31
+## Chill.4 pre-publication evidence, 2026-11-01
 
-[Revision criteria](CHILL-REVISION-GOAL.md) follow the clarification allowing a
+[Revision criteria](CHILL-REVISION-GOAL.md) follow the user's request for fuller
+proportions, painted volume and better motion. Reference and native review
+find improved silhouette and shading without a critical defect in the bounded
+observations. The 226.121-second coherent Release
+build kept all 776 source files unchanged. Seven native suites pass **1,513
+checks**; fourteen browser suites include eleven worker scenarios. Eight public
+PNG/JSON files and the native header reproduce byte for byte, and both source
+patches reconstruct all current source files.
+
+Muted native review confirms consistent packet/lawn/card art, centered earned/
+unearned pictures, red title hover without tips and restored new parts before
+unpausing the existing 50-sun Sun/Chill/Puff checkpoint. Reliable sampled frames
+show idle and seamless closed-eye wind-up. Complete visual-cycle coverage is
+not claimed; detailed motion/blink/release/save phase have automated checks.
+No full battle or earned win is credited. Local checks pass; website/runtime
+packaging and hosted rollout have separate publisher records.
+
+## Historical Chill.3 evidence — flat sprite rejected, 2026-10-31
+
+The user subsequently rejected this sprite's flat/simple look and asked for
+better proportions, shading and animation, explicitly permitting generated
+plant artwork. Functional observations below retain their original scope.
+
+[Revision criteria](https://github.com/Caleb-Guyer/plants-vs-zombies-web/blob/3ef11e097cd7455f3c0fb9575c8b565a5def4ad3/CHILL-REVISION-GOAL.md) follow the clarification allowing a
 distinct custom sprite while forbidding AI-generated challenge pictures.
 The tested Release build passes with 775 unchanged source files. Seven native
 suites pass **1,476 checks**; all fourteen browser suites, including eleven
@@ -284,7 +311,7 @@ python package-portable.py --output-dir outputs
 
 The approved bundle consists of six exact original runtime data files totaling 45,462,524 bytes, split into 11 verified parts. It contains no Windows executable, DLL or installed save data. To regenerate it, explicitly supply `--zip <resource-archive.zip>` or `--game-dir <installed-game-directory>`.
 
-Current corresponding source is [Chill.3 engine source](dist/source/pvz-portable-0.2.6-web-chill.3-source.zip), with [web-chill.3.patch](dist/source/web-chill.3.patch) as the full upstream patch and [chill2-to-chill3.patch](dist/source/chill2-to-chill3.patch) as the increment from [Chill.2 source](dist/source/pvz-portable-0.2.6-web-chill.2-source.zip). Final newline-normalized art/source/package identities are recorded separately by the publisher. The complete source builds without applying a patch. [Engine provenance](dist/game/engine-provenance.json) and the [build record](dist/source/build-provenance.json) pin completed release artifacts. Source packages retain complete current source, required parent/upstream inputs, tests, assets, editable art/code, dependencies and licenses; full original runtime payloads remain in the runtime distribution. Packaging uses the GitHub Pages 100 MiB per-file ceiling instead of the obsolete 25 MiB provider limit. The website source contains the save worker and shared storage core, and `dist/ui` records attribution and hashes for original save-recovery artwork.
+Current corresponding source is [Chill.4 engine source](dist/source/pvz-portable-0.2.6-web-chill.4-source.zip), with [web-chill.4.patch](dist/source/web-chill.4.patch) as the full upstream patch and [chill3-to-chill4.patch](dist/source/chill3-to-chill4.patch) as the increment from [Chill.3 source](dist/source/pvz-portable-0.2.6-web-chill.3-source.zip). The engine package and both source reconstructions pass; final website/runtime package and hosted receipts have separate publisher records. The complete source builds without applying a patch. [Engine provenance](dist/game/engine-provenance.json) and the [build record](dist/source/build-provenance.json) pin completed release artifacts. Source packages retain complete current source, required parent/upstream inputs, tests, frozen atlas/recipe, generation records, dependencies and licenses; full original runtime payloads remain in the runtime distribution. Packaging uses the GitHub Pages 100 MiB per-file ceiling instead of the obsolete 25 MiB provider limit. The website source contains the save worker and shared storage core, and `dist/ui` records attribution and hashes for original save-recovery artwork.
 
 Public v15 preserved the three approved XML resource files' original CRLF bytes in Git and added the matching attributes rule, closing the fresh-checkout checksum blocker without changing the Software.7 runtime. GitHub Pages publication succeeded on 2026-10-31 through [release workflow 41230962473](https://github.com/Caleb-Guyer/plants-vs-zombies-web/actions/runs/41230962473). The bounded hosted startup check does not establish full game parity. The user authorized publication of the current build on 2026-10-31 while full 1:1 parity remains unverified; publication does not mark that goal complete.
 

@@ -1,65 +1,67 @@
-# Chill-shroom custom sprite and native challenge pictures
+# Chill-shroom proportions, shading and animation
 
-The user clarified on 2026-10-31 that a custom plant sprite is allowed. The ban
-concerns AI-generated challenge pictures. Requiring Chill-shroom to copy
-Ice-shroom's appearance was an overly broad interpretation and is superseded.
-The older formal parity goal remains paused; the goal tool rejected a new
-objective while that unfinished goal exists. This manual record does not
-replace or falsely complete it.
-
-The current source is `0.2.6-web-chill.3`, based on Chill.2. Player-facing
-names remain **Chill-shroom** and **Cold Front**. Gameplay, seed 75, mode 75,
-record 74, checkpoint filenames and native save layouts remain compatible.
+The user rejected Chill.3 as too flat/simple and requested better proportions,
+shading and animation. Image generation is explicitly permitted for the plant.
+The restriction on separately generated challenge pictures remains. Current
+work is `0.2.6-web-chill.4`, based on Chill.3. The older formal parity goal is
+still paused; a new objective was rejected while that unfinished goal exists.
+This manual record does not replace or falsely complete it.
 
 Completion criteria:
 
-- Give Chill-shroom a distinct custom mushroom appearance: rounded asymmetric
-  dusty-blue frost cap with broad white spots, mint/cream stem, dark pill eyes
-  and low organic base. Use editable vector/code-drawn parts, not a copied Ice
-  crystal crown, yellow lantern or muzzle. No image-generation tool is used.
-- Preserve the native Ice motion carrier while binding all five custom parts
-  consistently through idle, blink, sleep, wind-up and release. Match pivots,
-  eye clearance and skin across body and separate blink reanimations. Restore
-  image overrides before the first paused draw after native Continue.
-- Keep challenge pictures as centered native compositions of actual sprites:
-  original Conehead, original Puff-shroom and actual custom Chill-shroom over
-  original grass. Use no separately AI-generated challenge illustration.
-  Retain uniform visible-alpha fitting in the 80 by 65 frame and readable
-  earned/unearned trophy states. The packet, card and lawn must show one identity.
-- Retain the 40-tick wind-up, outward cold release and 30-tick recovery, the
-  400-active-tick pulse, 150-pixel radius, 150-tick native chill, 75-sun cost,
-  750-tick recharge, enemy eligibility, stronger chill/freeze and no damage.
-  Preserve paused/sleep/dead/grabbed/squished behavior and saved pulse phase.
-- Keep added Bonus tips absent and retain original title hover, frames, trophies,
-  menus, packets, flags and discreet icons without new HUD or instruction panels.
-- Preserve original content, all IDs, serialized fields, checkpoint/completion
-  routing, schema 2, save worker, automatic saves, QoL and normal-player audio.
-- Run focused native/browser/artwork/save checks silently with `?testing=1`.
-  Inspect the assembled sprite, attack and centered cards at native game size,
-  then check existing checkpoint restoration without substituting old results.
-- Publish complete source, editable SVG/JSON and rasterization code, PNG parts,
-  provenance, dependencies and licenses to the existing GitHub repository and
-  Pages site. Keep the GitHub 100 MiB policy; record packaging/hosting separately.
+- Give Chill-shroom a fuller asymmetric blue cap, painted volume and a deep
+  underside, compact rounded cream/mint body, expressive eyes and tucked feet.
+  Keep it distinct from Ice/Puff with no muzzle or crystal-forest silhouette.
+  Use the generated plant atlas as a frozen input with transparent PNG parts.
+- Preserve the visible cap at 84 by 46, body at 48 by 38 and feet at 40 by 11
+  inside the native canvases, without stretching the fuller cap back to the
+  old approximately 100 by 44 umbrella proportions. Preserve pivots/eye clearance.
+- Use seamless full-body half/closed expressions whose pixels match the open
+  body outside the eye bounds. Restore body/owned-blink binding before paused
+  Continue drawing without resetting saved health, placement or pulse phase.
+- Improve motion with gentler whole-plant compression, independent cap lag and
+  rebound, while retaining the 40-tick wind-up and 30-tick release/recovery.
+  Do not change pulse timing, radius, chill duration, cost/recharge, eligibility,
+  stronger chill/freeze preservation, no-damage behavior or inactive guards.
+- Keep challenge pictures as centered native compositions of actual Conehead,
+  Puff-shroom and revised Chill-shroom sprites over original grass. Generate no
+  separate challenge illustration. Keep readable earned/unearned states, original
+  frames/titles/trophies/hover and no added Bonus tips or extra HUD.
+- Preserve all original content, IDs, save layouts/filenames, checkpoint and
+  completion routing, worker, schema 2, QoL and normal-player audio.
+- Run focused native/browser/artwork/save checks with testing sound off. Inspect
+  the actual sprite, idle/wind-up samples, cards and existing checkpoint at game
+  size. Verify detailed curves, blink/release and saved phase with production
+  tests; do not claim a full visual cycle from sparse samples. Do not substitute
+  historical results or claim subjective perfection.
+- Preserve frozen atlas, generation/reference records, extraction recipe/code,
+  PNG parts, provenance, complete source/dependencies/licenses and original
+  resource identities. Verify deterministic extraction separately from image
+  generation. Publish to the existing GitHub repository and Pages site, keeping
+  the 100 MiB policy and separate source-package/hosted receipts.
 
-Pre-publication local status on 2026-10-31: implementation, focused tests and
-native visual/save criteria pass. The tested 245.914-second Release snapshot
-kept all 775 source files unchanged; seven native suites pass 1,476 checks and
-fourteen browser suites include eleven worker scenarios. The sprite has editable
-SVG/JSON, PNG parts and a Pillow renderer; final LF-normalized art/source/package
-identities have a separate publisher record.
+Pre-publication local status on 2026-11-01: implementation and bounded checks
+pass. The 226.121-second coherent Release build preserves all 776 source files.
+Seven native suites pass 1,513 checks (66/90/105/139/557/131/425), with matching
+source/harness pins; fourteen browser suites include eleven worker scenarios.
+Eight public PNG/JSON files plus the native header reproduce from the frozen
+atlas/recipe. Both source patches reconstruct all 776 current files.
 
-Actual muted review confirms consistent custom art in packets/cards/lawn,
-centered earned/unearned pictures and native red hover without tips. Continue's
-paused backdrop already shows the new parts; the existing 50-sun Sun/Chill/Puff
-board restores. A bounded 168-frame/5.6-second capture shows closed-eye wind-up,
-twelve-direction frost release and idle recovery without old Ice/blue blink
-flashes. No fresh save-transfer, earned win or full playthrough is claimed.
-Publication remains, with website-source/runtime packaging and hosted rollout
-recorded separately. The user's existing public game tab was untouched.
+Actual muted review confirms centered earned/unearned pictures, red native hover
+without added tips, consistent packet/lawn/card paint and new parts already in
+the paused Continue backdrop. The existing 50-sun Sun/Chill/Puff board restores.
+Two reliable clips show idle and seamless closed-eye wind-up; the third sample
+has a partial size and is not full-cycle evidence. Detailed motion, blink/release
+and save phase are covered by production tests. No complete visual cycle,
+full battle, earned win or fresh save cycle is claimed. Owned test tabs 20/21
+are closed. Publication remains, with website/runtime package and hosted
+receipts recorded separately by the publisher.
 
-[Custom sprite provenance](dist/content/chill-shroom/provenance.json) records
-code-drawn inputs; [native card provenance](dist/content/native-bonus-art.json)
-records composition inputs. Earlier Chill.2 counts and screenshots remain
-historical, including its superseded original-Ice-only interpretation.
-Automated tests and bounded observations do not prove subjective perfection or
-exhaustive original-game parity.
+[Generation](dist/content/chill-shroom/generation.json),
+[extraction](dist/content/chill-shroom/extraction.json),
+[sprite provenance](dist/content/chill-shroom/provenance.json) and
+[native card provenance](dist/content/native-bonus-art.json) record current
+inputs. Earlier Chill.3 vector art was rejected as too flat; its functional
+results remain historical. The new atlas is plant artwork, not a generated
+challenge illustration. Deterministic extraction does not mean image generation
+itself is reproducible or prove exhaustive original-game parity.

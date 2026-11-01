@@ -1,6 +1,6 @@
 # Current requirements
 
-Updated 2026-10-31. This records the latest human clarification for continued work on the public Plants vs. Zombies browser site. It supersedes older requirements for permanent silence, a large landing page or a surrounding promotional interface. Historical QA observations remain historical evidence and must not be treated as current product requirements or instructions to resume manual validation.
+Updated 2026-11-01. This records the latest human clarification for continued work on the public Plants vs. Zombies browser site. It supersedes older requirements for permanent silence, a large landing page or a surrounding promotional interface. Historical QA observations remain historical evidence and must not be treated as current product requirements or instructions to resume manual validation.
 
 ## Current release direction
 
@@ -8,7 +8,47 @@ The user directed us on 2026-10-31 to stop manual gameplay and wrap the current 
 
 Publication status: [GitHub Pages](https://caleb-guyer.github.io/plants-vs-zombies-web/) is live after [workflow 41230962473](https://github.com/Caleb-Guyer/plants-vs-zombies-web/actions/runs/41230962473) succeeded on 2026-10-31. A silent browser check reached the original title without a file prompt; WASM returned HTTP 200 as `application/wasm`. This adds hosting/startup proof only, with no GitHub campaign gameplay or full-parity certification.
 
-## Chill.3 custom sprite clarification, 2026-10-31
+## Chill.4 proportions, shading and motion, 2026-11-01
+
+The user rejected Chill.3 as too flat/simple and asked for improved proportions,
+shading and animation. Image generation is explicitly allowed for the custom
+plant. Current source uses **0.2.6-web-chill.4**, based on Chill.3. Keep the
+ban on separately AI-generated challenge pictures: use centered native
+compositions of the actual game sprites, including the revised Chill-shroom.
+
+Use a fuller asymmetric blue cap, painted highlight/midtone/deep underside,
+compact rounded cream/mint body, expressive dark eyes and tucked feet. Preserve
+native pivots and eye clearance without copying Ice's crystal crown or Puff's
+muzzle. Use full-body half/closed expression variants with identical skin pixels
+outside the eye bounds. Motion should have gentler body squash, independent cap
+lag and rebound while preserving the mechanical attack cycle.
+
+Retain 75 sun, 750-tick recharge, 400-active-tick pulse, 150-pixel radius,
+150-tick native chill, stronger chill/freeze, eligibility and no damage. Preserve
+all IDs, saved fields, phase, checkpoint/completion routing, original content,
+workers, schema 2, QoL, minimal menus and normal-player audio. Keep added Bonus
+tips absent and testing muted with `?testing=1`.
+
+[Current criteria](CHILL-REVISION-GOAL.md) track this request. Independent
+assembled-proof review finds improved proportions and volume without a critical
+proof-level defect. Dated local evidence records a 226.121-second Release build
+with 776 unchanged source files, 1,513 native checks, fourteen browser suites/
+eleven worker scenarios, reproducible eight-file/header extraction and exact
+full/parent patch reconstruction. Muted native review confirms consistent new
+art across packets/lawn/cards, centered earned/unearned pictures, original hover
+without tips and the existing 50-sun three-plant Continue with new parts visible
+before unpausing. Two reliable samples show idle and closed-eye wind-up; sparse
+sampling does not verify a full visual cycle or all release/blink frames.
+Automated production tests cover detailed curves, expressions and saved phase.
+Local checks pass; packaging/hosted rollout have separate publisher records.
+No full battle or earned win is claimed. Preserve
+the frozen atlas, full generation/extraction provenance, reproducible asset code,
+complete source/dependencies/licenses and GitHub 100 MiB policy.
+
+## Historical Chill.3 vector-art direction — superseded, 2026-10-31
+
+The user later rejected the flat/simple appearance and allowed generated plant
+art. The vector-only restriction and observations below retain historical scope.
 
 The user clarified that a distinct custom plant sprite is allowed. The ban is
 on AI-generated challenge pictures; it does not require copying Ice-shroom's
@@ -32,7 +72,7 @@ Keep seed 75, mode 75, record 74, page IDs, native save layouts/filenames,
 checkpoint migration, original content, workers, schema 2, QoL and normal-player
 audio. Test silently with `?testing=1`; do not add HUD or instruction panels.
 
-[Current criteria](CHILL-REVISION-GOAL.md) track this clarification. Dated
+[Current criteria](https://github.com/Caleb-Guyer/plants-vs-zombies-web/blob/3ef11e097cd7455f3c0fb9575c8b565a5def4ad3/CHILL-REVISION-GOAL.md) track this clarification. Dated
 pre-publication evidence on 2026-10-31 records a 245.914-second tested Release
 build with 775 unchanged source files, 1,476 native checks and
 fourteen browser suites/eleven worker scenarios. Editable SVG/JSON, PNG parts and
@@ -359,7 +399,7 @@ The original native launch reached a Steam startup error without a game/JPEG cap
 
 The user explicitly requested immediate play without choosing game files, save-only import/export and public bundling of original assets. The six approved runtime files total 45,462,524 bytes in eleven parts, under manifest ID `sha256:b468b22439430ca4a36035b886a74bd831a86b2a1a36c39d3203396f5b75d093`. Preserve exact validated bundle bytes, separate save stores, automatic first visit/cache/retry and existing progress. No executable, native library, real save or private QA export belongs in distribution inputs.
 
-The current source target is **0.2.6-web-chill.3**; completed engine/source/patch identities belong in `dist/game/engine-provenance.json`. It retains the fileless shell, five icons, normal player audio, native profiles, save-only transfers, public storage keys and keyboard behavior. The frozen public v18 baseline uses Software.10 (source `877bbbf3f001fc2f9202700ba790e27665179e92`); Software.10's own scoped private first-level and save-transfer observations below remain historical. Earlier observations retain their actual build and private/public scope.
+The current source target is **0.2.6-web-chill.4**; completed engine/source/patch identities belong in `dist/game/engine-provenance.json`. It retains the fileless shell, five icons, normal player audio, native profiles, save-only transfers, public storage keys and keyboard behavior. The frozen public v18 baseline uses Software.10 (source `877bbbf3f001fc2f9202700ba790e27665179e92`); Software.10's own scoped private first-level and save-transfer observations below remain historical. Earlier observations retain their actual build and private/public scope.
 
 Public v15 preserved the three approved XML resource files' original CRLF bytes in Git and added the matching attributes rule, closing the fresh-checkout checksum blocker without changing the Software.7 runtime. GitHub Pages publication succeeded on 2026-10-31 through [release workflow 41230962473](https://github.com/Caleb-Guyer/plants-vs-zombies-web/actions/runs/41230962473). The bounded hosted startup check does not establish full game parity. The user authorized publication of the current build on 2026-10-31 while full 1:1 parity remains unverified; publication does not mark that goal complete.
 
