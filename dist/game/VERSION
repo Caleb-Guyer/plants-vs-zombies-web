@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-garden.1
-Adds Garden Shuffle with a fixed garden and movable living plants, plus a fairer Night Shift grave warning. Retains the existing bonus modes, earned Chill-shroom unlock, original content and native save layouts.
-Engine JavaScript SHA-256: 40689d2194845d13d14e2e46dbd753a483556daeacf5c053cc133630684c83ab
-Engine WASM SHA-256: 99722b52f48e912fda7010d20f164dd819d46f251f3e1b54b6d50cfc63e6756d
+PvZ-Portable 0.2.6-web-seedswap.1
+Adds Seed Swap with a fixed defense, native seed-packet drops and replacement-only planting. Retains the existing four bonus modes, earned Chill-shroom unlock, original content and native save layouts.
+Engine JavaScript SHA-256: ed1e74589db7ab1b8339c34e3417a182ed5188b91418d88237bd4ac1a09cd6cf
+Engine WASM SHA-256: bb23c783f3f3360ef8259a376c2d0d96efdf01eeb2554c98154b294961b89431
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.

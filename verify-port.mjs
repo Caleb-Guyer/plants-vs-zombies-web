@@ -15,17 +15,17 @@ for(const file of walk(dist).filter(file=>file.endsWith('.js'))){
 }
 console.log('PASS all browser JavaScript parses.');
 const wasm=readFileSync(join(dist,'game/pvz-portable.wasm'));
-assert.equal(sha(wasm),'99722b52f48e912fda7010d20f164dd819d46f251f3e1b54b6d50cfc63e6756d');
+assert.equal(sha(wasm),'bb23c783f3f3360ef8259a376c2d0d96efdf01eeb2554c98154b294961b89431');
 assert(WebAssembly.validate(wasm),'Engine WASM validates');
 const glue=readFileSync(join(dist,'game/pvz-portable.js'),'utf8');
-assert.equal(sha(glue),'40689d2194845d13d14e2e46dbd753a483556daeacf5c053cc133630684c83ab');
+assert.equal(sha(glue),'ed1e74589db7ab1b8339c34e3417a182ed5188b91418d88237bd4ac1a09cd6cf');
 const provenance=JSON.parse(readFileSync(join(dist,'game/engine-provenance.json'),'utf8'));
-assert.equal(provenance.id,'0.2.6-web-garden.1');
+assert.equal(provenance.id,'0.2.6-web-seedswap.1');
 assert.equal(provenance.artifacts.jsSha256,sha(glue));
 assert.equal(provenance.artifacts.wasmSha256,sha(wasm));
-assert.equal(sha(readFileSync(join(dist,'source/pvz-portable-0.2.6-web-garden.1-source.zip'))),provenance.artifacts.sourceSha256);
-assert.equal(sha(readFileSync(join(dist,'source/web-garden.1.patch'))),provenance.artifacts.patchSha256);
-console.log('PASS pinned Garden.1 engine, full corresponding source and patch provenance.');
+assert.equal(sha(readFileSync(join(dist,'source/pvz-portable-0.2.6-web-seedswap.1-source.zip'))),provenance.artifacts.sourceSha256);
+assert.equal(sha(readFileSync(join(dist,'source/web-seedswap.1.patch'))),provenance.artifacts.patchSha256);
+console.log('PASS pinned SeedSwap.1 engine, full corresponding source and patch provenance.');
 const html=readFileSync(join(dist,'index.html'),'utf8');
 for(const page of ['index.html','index-port.html'])assert(readFileSync(join(dist,page),'utf8').includes('<span id="engine-build-id">'+provenance.id+'</span>'),`${page}: displayed engine label must match the source manifest`);
 const scriptPaths=[...html.matchAll(/<script[^>]+src="([^"]+)"/g)].map(match=>match[1]);
@@ -36,7 +36,7 @@ assert.equal(scriptPaths[engineScriptIndex],'./game/pvz-portable.js?v='+provenan
 assert(scriptNames.indexOf('./save-storage-core.js')>=0&&scriptNames.indexOf('./save-storage-core.js')<scriptNames.indexOf('./save-storage.js'),'Worker fallback core must load before the adapter');
 assert(scriptNames.indexOf('./save-storage.js')<scriptNames.indexOf('./loader.js'),'Browser saves must be installed before startup');
 for(const name of ['runtime.js','loader.js','save-storage-core.js','save-storage.js','save-recovery.js']){
-  const version=['runtime.js','loader.js'].includes(name)?'garden1':'polish1';
+  const version=['runtime.js','loader.js'].includes(name)?'seedswap1':'polish1';
   for(const page of ['index.html','index-port.html'])assert(readFileSync(join(dist,page),'utf8').includes('src="./'+name+'?v='+version+'"'),`${page}: changed browser code must bypass the prior release cache`);
 }
 assert(scriptNames.indexOf('./save-transfer.js')>=0&&scriptNames.indexOf('./save-transfer.js')<scriptNames.indexOf('./loader.js'),'Save transfers must be available before loader controls');

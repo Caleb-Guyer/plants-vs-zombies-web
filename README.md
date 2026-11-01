@@ -1,5 +1,60 @@
 # Plants vs. Zombies — browser playtest
 
+## SeedSwap.1 native seed replacement minigame
+
+The user approved Seed Swap: start with a small complete defense, collect native
+seed packets from defeated zombies, and replace existing plants as the enemy mix
+changes. This fifth Bonus card uses an original Wall-nut and Repeater packet,
+without new generated artwork, extra HUD or tips below the challenge cards.
+
+A fresh game starts with ten Peashooters and five Wall-nuts: two shooters and
+one barrier per lane, with a twelve-second opening. Ten authored waves contain 48 zombies,
+including screen doors, pole-vaulters, a balloon, a digger and a football zombie.
+Drops include Repeater, Snow Pea, Cabbage-pult, Cactus, Split Pea, Kernel-pult,
+Tall-nut and Melon-pult. Counter seeds repeat around the special waves. At most
+six native packets are present. New loose packets expire after thirty simulation
+seconds; native holding and cancellation timing is retained.
+
+Click a dropped packet, then a living plant to replace that plant. There is no
+sun cost, seed bank or shovel. Empty squares cannot be filled, so a plant eaten
+by zombies leaves a permanent gap. Invalid targets consume nothing. Native
+right-click/Escape returns a held packet; cancel before opening Menu. Space
+pauses the game. The original planting animation, ghost and packet artwork stay
+in use. Existing modes, plant IDs and native serialized members are retained;
+new mode 77 owns unused profile record 76, and state 104 identifies the rules.
+The drop ordinal uses the existing serialized challenge score.
+
+The initial ten-plant preview left too little room for separate attack and
+counter roles after a barrier was lost. The final fresh opening adds a second
+Peashooter per lane. Waves, seed drops and all existing checkpoints remain
+unchanged; loading a checkpoint never creates extra plants.
+
+Final release validation passed: the unchanged 782-file source built in
+182.024 seconds. All 3,199 native checks in nine suites passed, followed by
+14 browser suites and 11 worker scenarios. The corresponding engine source ZIP
+contains 820 entries and 9,379,580 bytes, SHA-256
+`0db62a66059ebc4891181044609fa949d2c623b0a05181930c2734a0f7aeeb18`.
+Both the raw-upstream patch and exact Garden.1 delta reconstructed every source
+byte. The six accepted sprite PNGs and packed artwork header remain unchanged.
+
+A fresh final fifteen-plant Seed Swap run cleared all ten waves at 1x with
+sound off and native planning pauses. The end board had 15 living plants
+and 5 remaining mowers. Native packet selection, ghost preview, valid
+replacement, empty-target rejection and cancellation were checked. The native
+Menu/Main Menu/Leave path, full browser/engine reload and Continue restored
+15 living plants and 4 loose packets. Visible restored board state
+was checked through the game; exact saved challenge/drop-ordinal, plant, packet
+and cursor fields are covered separately by production serializer tests.
+
+The generated QA profile's earlier campaign wins and trophy ribbons were
+synthetic. The full-clear evidence is the actual native replay moneybag,
+collected reward and return to Bonus. Private player saves were not read.
+The earlier ten-plant trial informed the final opening; it is not presented as
+a final-build clear. One successful strategy with planning pauses does not
+establish universal difficulty, fun or full original-game parity. Final
+packaging, extracted-source and matching Pages publication receipts are
+recorded separately by the release process.
+
 ## Garden.1 fixed-garden minigame and completed balance checks
 
 The user approved full 1x balance runs and save/resume checks for the existing
@@ -174,7 +229,7 @@ successful strategy does not establish universal balance or original-game parity
 
 [Play on GitHub Pages](https://caleb-guyer.github.io/plants-vs-zombies-web/) · [Existing playtest](https://lawn-defense-caleb-plays.usgi.chatgpt.site) · [Deployment](DEPLOYMENT.md) · [Requirements](CURRENT-REQUIREMENTS.md) · [QA history](PARITY-QA.md)
 
-Current release **0.2.6-web-garden.1** adds Garden Shuffle and fairer grave warnings to the native Bonus minigames. Cold Front still unlocks Chill-shroom in the normal chooser. The original campaign, saved layouts and approved artwork remain. Full original-game parity is unverified. Earlier release records below are historical.
+Current release **0.2.6-web-seedswap.1** adds Seed Swap to the four existing native Bonus minigames. Cold Front still unlocks Chill-shroom in the normal chooser. The original campaign, saved layouts and approved artwork remain. Full original-game parity is unverified. Earlier release records below are historical.
 
 The Software.10 and earlier QA descriptions below are the frozen v18 evidence snapshot. They retain their original capture-time scope, including earlier limits; they are not a claim that later validation or the full parity goal is complete.
 
@@ -226,10 +281,11 @@ The shared rig retains blink/sleep, native tint/filter/flash and bounded cap
 motion, with target-aware activation and the same radial slow, cost, range and
 saved layouts.
 
-The four native 80×65 Bonus pictures stay centered compositions of actual
+The five native 80×65 Bonus pictures stay centered compositions of actual
 sprites: original Conehead for Cone Zone, original Puff-shroom for Night Shift,
 the actual custom Chill-shroom for Cold Front, and original Peashooter plus
-gardening glove for Garden Shuffle, over original grass. There is
+gardening glove for Garden Shuffle, and original Wall-nut with Repeater packet
+for Seed Swap, over original grass. There is
 no separately generated challenge illustration. Their
 [resource provenance](dist/content/native-bonus-art.json) records the inputs.
 Added Bonus tips remain absent. Original seed packets, menus and flags stay in
@@ -268,6 +324,15 @@ autosaves and save export/import include the bonus checkpoint. Existing
 checkpoints retain their old fixed-bank rules; choose **New Game** for bowling.
 The Bonus page uses the standard native challenge grid and card layout. The
 original Mini-Games grid remains available through its footer.
+
+## Bonus minigame: Seed Swap
+
+Once Mini-Games is unlocked, choose **Mini-Games → Bonus → Seed Swap**.
+Click a seed packet dropped by a zombie, then click a living plant to replace
+it. Right-click or Escape cancels the held packet. Every planting is a trade:
+replacing a Wall-nut adds firepower but removes its protection. Protect existing
+plants, because an eaten plant's empty square cannot be replanted. There is no
+sun or seed bank. The native Menu saves the game after canceling any held seed.
 
 ## Bonus minigame: Garden Shuffle
 

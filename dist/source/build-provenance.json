@@ -1,5 +1,5 @@
 {
-  "id": "0.2.6-web-garden.1",
+  "id": "0.2.6-web-seedswap.1",
   "upstream": {
     "tag": "0.2.6",
     "commit": "396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
@@ -7,98 +7,103 @@
     "officialJsSha256": "0f2d7425190e49c762f6700b68b080086e3dcb8f2dc5e9724de42ce9fb508573"
   },
   "sourceArchive": {
-    "path": "pvz-portable-0.2.6-web-garden.1-source.zip",
-    "bytes": 9342093,
-    "sha256": "34807be9b16aafc8e1e8bc9fd4da840df0ce9ae5667157cf51e61f4571d95122",
-    "crc32": "97283594",
-    "entries": 816,
-    "uncompressedBytes": 21638416
+    "path": "pvz-portable-0.2.6-web-seedswap.1-source.zip",
+    "bytes": 9379580,
+    "sha256": "0db62a66059ebc4891181044609fa949d2c623b0a05181930c2734a0f7aeeb18",
+    "crc32": "9d1eb0e2",
+    "entries": 820,
+    "uncompressedBytes": 21752228
   },
   "artifacts": [
     {
       "path": "build/pvz-portable.js",
       "bytes": 209232,
-      "sha256": "40689d2194845d13d14e2e46dbd753a483556daeacf5c053cc133630684c83ab",
-      "crc32": "d6ef20fa"
+      "sha256": "ed1e74589db7ab1b8339c34e3417a182ed5188b91418d88237bd4ac1a09cd6cf",
+      "crc32": "3cb9b5a9"
     },
     {
       "path": "build/pvz-portable.wasm",
-      "bytes": 7581592,
-      "sha256": "99722b52f48e912fda7010d20f164dd819d46f251f3e1b54b6d50cfc63e6756d",
-      "crc32": "5cf2618a"
+      "bytes": 7586969,
+      "sha256": "bb23c783f3f3360ef8259a376c2d0d96efdf01eeb2554c98154b294961b89431",
+      "crc32": "76976569"
     },
     {
       "path": "build/ProjectVersion.h",
-      "bytes": 192,
-      "sha256": "391a20234bc87f52774c3ed3d80aca615e4ee4f25933911029e5d10a102bae37",
-      "crc32": "bf359142"
+      "bytes": 194,
+      "sha256": "8663dfda8251fca399921507a9c831e8033e7d6f8b1a448cee39ba56ea07c91c",
+      "crc32": "28c3c393"
     }
   ],
-  "sourceFiles": 781,
-  "sourceBytes": 20369695,
-  "sourceDeltaVsChill9": [
+  "sourceFiles": 782,
+  "sourceBytes": 20369761,
+  "sourceDeltaVsGarden1": [
     {
       "path": "CMake/ProjectVersion.cmake",
-      "beforeSha256": "02b16d2d250a992a1d39cc1deebeac4212111c0989094b31b639c2cae78358ca",
-      "afterSha256": "efd58f144f8f6fb6649f8c3f4dc9057f768d1562915e504a94c51d14d9008652"
+      "beforeSha256": "efd58f144f8f6fb6649f8c3f4dc9057f768d1562915e504a94c51d14d9008652",
+      "afterSha256": "4bf02e36ec5af865107dcd2c17a5b17f6524683bfc3e365a9628e971c9586347"
     },
     {
       "path": "artwork/chill-shroom/render.py",
-      "beforeSha256": "2035f561d305baf34daa9a549b8ddcc4e12f0b96c26639747148823235529757",
-      "afterSha256": "6c460d11ece3985fd437d0308f17f1aeac165ece4cac7965ba281eead77631d2"
+      "beforeSha256": "6c460d11ece3985fd437d0308f17f1aeac165ece4cac7965ba281eead77631d2",
+      "afterSha256": "e58724d5d74ee5bd9301c8a6f71aad4924c06ea3b10e83e4ee13cf363c6a861b"
     },
     {
       "path": "src/ConstEnums.h",
-      "beforeSha256": "847cc4ff2993fa468be3aca600a93c251e1b000a6b569631989961bd605ec955",
-      "afterSha256": "069847070d81ef0888e315f2ca01ed7ce65ff1891fafe851d71d0e1a2482f4f3"
+      "beforeSha256": "069847070d81ef0888e315f2ca01ed7ce65ff1891fafe851d71d0e1a2482f4f3",
+      "afterSha256": "cbec36461383534d0d435d70e79c0d4abcd38203f73bee829b3e3ce34aa33d33"
     },
     {
       "path": "src/Lawn/Board.cpp",
-      "beforeSha256": "6c39b4c9022c255f5b16e2a3e4874644b7533570c9539dd26404c315321c4fb5",
-      "afterSha256": "d65221c74e1c8a47999b1fef03636fb637b9c7bee7d35cc9758ee84ab154b512"
+      "beforeSha256": "d65221c74e1c8a47999b1fef03636fb637b9c7bee7d35cc9758ee84ab154b512",
+      "afterSha256": "22263c0b4b071c87b9809a43f304383680e5dab8c098d201082f4cc10f562f7f"
     },
     {
       "path": "src/Lawn/Board.h",
-      "beforeSha256": "2813a83df089410965d2859850e2e4621a2740f9876a744946d0f7913a86c914",
-      "afterSha256": "e3b7dc431e329f2f1e4b9dda0b7a3ede9e8e367984855ac7cd6565b7cd963e7d"
+      "beforeSha256": "e3b7dc431e329f2f1e4b9dda0b7a3ede9e8e367984855ac7cd6565b7cd963e7d",
+      "afterSha256": "c56049a26f699f207766d9a1799e9e75aa26d3adc82fd89ed3338058d5d0ec82"
     },
     {
       "path": "src/Lawn/Challenge.cpp",
-      "beforeSha256": "5279e8204f781904f1af3b474b4c8d0d3557c2f06b99bd3a5af3ad28ce374561",
-      "afterSha256": "ca74884c17bf74f24b53e5577e0450b279c673bf7f73afbfc20123d10f3dfc4b"
+      "beforeSha256": "ca74884c17bf74f24b53e5577e0450b279c673bf7f73afbfc20123d10f3dfc4b",
+      "afterSha256": "60b48ad47cafb473954bcc5340bdf03addc10b930167359fb1ce33e3ab6f430e"
     },
     {
-      "path": "src/Lawn/CursorObject.cpp",
-      "beforeSha256": "71e0611a395fa2ea0328ebc4737bbe94a1dae2df66b2697930b0f852748f7d83",
-      "afterSha256": "0a503ec02ef38abc395ed501abbca4757b57e55430c95c08dc9a21a30a8a6754"
+      "path": "src/Lawn/Coin.cpp",
+      "beforeSha256": "907930052a3b4f91c1f91e930b96ee269c8f8941212e744f3b5e3bf97e8653f1",
+      "afterSha256": "02e4338ee8e754081e142ddf768a8bbc64d2f69f7615815adb96ca490fc36cdb"
     },
     {
       "path": "src/Lawn/System/BonusChallenge.h",
-      "beforeSha256": "000a816bd00d6a84997c876bd8a5b835d0e8eea73b1b92894a7de8200d77288f",
-      "afterSha256": "81611a5a5b67d63618b0f5bfd8463f6280f3bd973aee1ec3df2820af952719e9"
-    },
-    {
-      "path": "src/Lawn/System/GardenShuffle.h",
-      "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "afterSha256": "b1da6153e84ecf2c4ac2532c492e04bbb63f3cc515d085c5696b35fdd3d9672a"
+      "beforeSha256": "81611a5a5b67d63618b0f5bfd8463f6280f3bd973aee1ec3df2820af952719e9",
+      "afterSha256": "a10a00543c09efc021da1c8dd68e3b4550d841c52a94a4cf5097c7843e7c2423"
     },
     {
       "path": "src/Lawn/System/LanternShroom.cpp",
-      "beforeSha256": "10c222ec3f3545f2b1b69efa88d5e66f1b372af7a1b06fc5ff6c0812995d3f8b",
-      "afterSha256": "df7ef43bb50fabe7fbb205f28bbb9c81010ba3b8f25e4ee670a17168c0772c6f"
+      "beforeSha256": "df7ef43bb50fabe7fbb205f28bbb9c81010ba3b8f25e4ee670a17168c0772c6f",
+      "afterSha256": "64218ba3197e4e1b7e7e308f11dfa34046b5b8d5e368480b0a9f754dbebfc3e8"
+    },
+    {
+      "path": "src/Lawn/System/SeedSwap.h",
+      "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "afterSha256": "203091f20f9956bb6aabba282dcdb479f5ad4d29a4c165a99d80f20219c18b59"
     },
     {
       "path": "src/Lawn/Widget/ChallengeScreen.cpp",
-      "beforeSha256": "05a438e5a87235b6aa73ecc3575096a4a2de0eeeb55b0d638b5eb107f8254590",
-      "afterSha256": "492546b004b0561885fc048f369689185d9fea400a935a71ea6cd7ca2ce23b67"
+      "beforeSha256": "492546b004b0561885fc048f369689185d9fea400a935a71ea6cd7ca2ce23b67",
+      "afterSha256": "e99e456ef45b935b3245f30e29a8f5644d6530d46331075aca49e119ec4d0426"
+    },
+    {
+      "path": "src/Lawn/Zombie.cpp",
+      "beforeSha256": "cf87a874886b60d8482809b2eae72f592ef29efc934ec53c1744c8e6929f457d",
+      "afterSha256": "2798a6a2afb238cb92ea0d641f6d7f0a15cf80b1fc85728c4bc545b218d092d9"
     },
     {
       "path": "src/LawnApp.cpp",
-      "beforeSha256": "55179b27934ac30b1dab24b823106d7fd621d9d1c8d26e74017f117e64671158",
-      "afterSha256": "e5349f7df83732c541971263dfe01c2721223236405131ed6c932993c9220193"
+      "beforeSha256": "e5349f7df83732c541971263dfe01c2721223236405131ed6c932993c9220193",
+      "afterSha256": "9914684514de7ca4bfde1cc97d9122c8334b98881f7692c48c34062211c84e7a"
     }
   ],
-  "compiledVersionHeader": "// Generated from CMake/ProjectVersion.h.in by CMake; do not edit.\r\n#pragma once\r\n\r\n#define PVZP_VERSION \"0.2.6-web-garden.1\"\r\n#define PVZP_BUILD_NUMBER 1\r\n#define PVZP_COMMIT_DATE \"unknown\"\r\n",
+  "compiledVersionHeader": "// Generated from CMake/ProjectVersion.h.in by CMake; do not edit.\r\n#pragma once\r\n\r\n#define PVZP_VERSION \"0.2.6-web-seedswap.1\"\r\n#define PVZP_BUILD_NUMBER 1\r\n#define PVZP_COMMIT_DATE \"unknown\"\r\n",
   "checks": {
     "fullRelease": {
       "exitCode": 0,
@@ -112,71 +117,78 @@
       "receipt": {
         "path": "logs/build-result.json",
         "bytes": 581,
-        "sha256": "c6c9728010810b4481b8ea91bdc942af1cec9133bcce079030ad98964814df4e",
-        "crc32": "dbd472e5"
+        "sha256": "ff65fa4f0757108a5ba47dae72772fe2f3739fec45714106b5f9dd051e1f7d8e",
+        "crc32": "2ae88e15"
       }
     },
     "focusedNativeTests": {
       "status": "PASS focused native production tests",
       "failures": 0,
-      "checks": 2462,
+      "checks": 3199,
       "scope": "Actual extracted production methods and content, settings, deck and cooldown code. No audio device or full game starts.",
       "reports": [
         {
           "path": "tests/game-speed-results.json",
-          "bytes": 1605,
-          "sha256": "e0a6102b9ce8a7836592eb1a72567b2c909d544adb8cddb14930ffc536d3c35f",
-          "crc32": "51ff36ae",
+          "bytes": 1609,
+          "sha256": "a13ada9e5a6a55ce398cac777acc0c462b0c408c3136d74dcb306313b920ab32",
+          "crc32": "e2b8e2ee",
           "checks": 66
         },
         {
           "path": "tests/qol-controls-results.json",
           "bytes": 1687,
-          "sha256": "6b538bf1f6e6b7708dc498357d592f98e531e4bb93770a1275c91605ff850ee6",
-          "crc32": "4f97347e",
+          "sha256": "8edc2ebddde0dce966fd209ca81df7fe8b0b5ee0a3f094f0e971a7ac451629dd",
+          "crc32": "08bd8a74",
           "checks": 90
         },
         {
           "path": "tests/decks-cooldowns-results.json",
           "bytes": 1565,
-          "sha256": "2775fc11175454e6dc2487fc7f4d29791e9a20cf5e8fb3af02abb842e8ffb5f0",
-          "crc32": "7542bc98",
+          "sha256": "58947895a0a60e3587bbda262a0df5e21f77648f97db9d329ee78467890efc20",
+          "crc32": "7512810a",
           "checks": 230
         },
         {
           "path": "tests/bonus-challenge-results.json",
           "bytes": 2201,
-          "sha256": "ddccd2a7b2626e4b77b685a32d32eead932ffa8f96f0eb2251594190fc6b5ec8",
-          "crc32": "e0e010b1",
+          "sha256": "94a583dceee99ee6e1e62f88f1d66bc4c95cdecec56f727e73088d5488b64895",
+          "crc32": "1757490d",
           "checks": 387
         },
         {
           "path": "tests/bonus-completion-results.json",
           "bytes": 2053,
-          "sha256": "403b7b070d630867dfa96fc48634c903d76ed37599732eb6bcebab6bd9e3d9e1",
-          "crc32": "1454af26",
-          "checks": 726
+          "sha256": "513750f6746b26464b4e901f355f00e2a153c3cf8e0630015b8e10636cbd4417",
+          "crc32": "dbf95051",
+          "checks": 862
         },
         {
           "path": "tests/night-shift-results.json",
           "bytes": 1988,
-          "sha256": "799cb73980a5d298c1bfa5dec6436bd9777e58a7d7e91144d463d20fd34578c2",
-          "crc32": "0ca4ef31",
+          "sha256": "959ebe544aa88c44c425961691179df34db6a53e4f4e5ddfcec5fb3fe3361970",
+          "crc32": "a8b898fa",
           "checks": 231
         },
         {
           "path": "tests/lantern-shroom-results.json",
           "bytes": 5193,
-          "sha256": "07bd8b784d9e79b11f9d01248b990adc8eb381c55f03a8e1d33521089d7c1018",
-          "crc32": "918261d8",
-          "checks": 518
+          "sha256": "8cdbaa0fafc80acf7cbd774fd4377ea186f97af40ca19949df037b0384a55617",
+          "crc32": "79bcc05b",
+          "checks": 532
         },
         {
           "path": "tests/garden-shuffle-results.json",
           "bytes": 2585,
-          "sha256": "38e242b0d9a58bf17da4dae4e4738467be96da5eb2364f36042e4889428b704f",
-          "crc32": "5aed4767",
+          "sha256": "901d914b2110e3b8656ddc1b9678322116c0acec817ec34d41977cf065de9f4d",
+          "crc32": "f28d1526",
           "checks": 214
+        },
+        {
+          "path": "tests/seed-swap-results.json",
+          "bytes": 2546,
+          "sha256": "8167f8854103b5b40486831cf40fec147da5e4c2e1f436728187f58cd6bac2c0",
+          "crc32": "336d4ae9",
+          "checks": 587
         }
       ]
     },
@@ -185,38 +197,38 @@
         "gitApplyCheck": "PASS",
         "gitApply": "PASS",
         "everySourceByteMatches": true,
-        "sourceFiles": 781
+        "sourceFiles": 782
       },
-      "chill9": {
+      "garden1": {
         "gitApplyCheck": "PASS",
         "gitApply": "PASS",
         "everySourceByteMatches": true,
-        "sourceFiles": 781
+        "sourceFiles": 782
       }
     }
   },
   "combinedPatch": {
-    "path": "web-garden.1.patch",
-    "bytes": 9350755,
-    "sha256": "b0bad79599a287b9d95e286bcf8a8189ff3f041e3608275b6617a35dccbea0fc",
-    "crc32": "0158e875",
-    "sourcePaths": 63
+    "path": "web-seedswap.1.patch",
+    "bytes": 8557624,
+    "sha256": "56db7bf4ce96f80d19244a214f77024052f4c996284d82ea88c3d1733328eb93",
+    "crc32": "791d367c",
+    "sourcePaths": 65
   },
   "incrementalPatch": {
-    "path": "chill9-to-garden1.patch",
-    "bytes": 29707,
-    "sha256": "0ac613aa0ad7a2d08680468e9555833002875cb880e507649f6b7763dffe1112",
-    "crc32": "9a2c21b6",
-    "sourcePaths": 12
+    "path": "garden1-to-seedswap1.patch",
+    "bytes": 877947,
+    "sha256": "c22da18d517cc4d1c60e941b20e1f30addc5a2df4e458c8cbcf79315051df1b2",
+    "crc32": "96c89acb",
+    "sourcePaths": 13
   },
   "parent": {
-    "id": "0.2.6-web-chill.9",
-    "sourceArchiveSha256": "7fa3d16079cca928812a965ec7bdcd15c7f157570d14607895c31067d06e49f0",
-    "releaseManifestSha256": "e361835a1262f6a257a1e892a3d351e12c2bd723da855424acfe2e4f88160796",
+    "id": "0.2.6-web-garden.1",
+    "sourceArchiveSha256": "34807be9b16aafc8e1e8bc9fd4da840df0ce9ae5667157cf51e61f4571d95122",
+    "releaseManifestSha256": "da4e83f0c465fa538339728686687f8776b1fced4167dc4ab1a9063ecc2586da",
     "scope": "Complete historical parent engine metadata is preserved in the parent property of engine-provenance.json."
   },
   "limits": [
-    "Four native bonus minigames include Garden Shuffle; earlier checkpoints retain their historical rules. Accepted artwork, original IDs and serialized layouts remain. Full original parity remains unverified.",
+    "Five native bonus minigames include Seed Swap; earlier checkpoints retain their historical rules. Accepted artwork, original IDs and serialized layouts remain. Full original parity remains unverified.",
     "Focused production-method tests and build checks do not replace broad game or browser validation.",
     "Earlier results remain historical parent evidence only. No separately image-generated challenge illustrations are active."
   ]

@@ -57,6 +57,13 @@
       "hero": "REANIM_PEASHOOTER body/head with original IMAGE_ZEN_GARDENGLOVE",
       "background": "IMAGE_BACKGROUND1",
       "gameplay": "Fixed garden of three Repeaters, a Snow Pea and two Wall-nuts. Move existing living plants with the native glove; health and attack state persist. Ten rotating-lane waves, forty authored zombies, one-second move cooldown and no sun or seed economy."
+    },
+    {
+      "mode": 77,
+      "name": "Seed Swap",
+      "hero": "REANIM_WALLNUT with original Repeater seed packet",
+      "background": "IMAGE_BACKGROUND1",
+      "gameplay": "Fixed garden of two Peashooters and one Wall-nut per lane. Zombie kills drop native seed packets. Plant only by replacing a living plant; no sun economy, seed bank or shovel. Ten waves change the enemy mix."
     }
   ],
   "canvas": {
@@ -103,5 +110,5 @@
     "newGeneratedArtwork": false,
     "mechanics": "Release-time radial slow, no damage or delayed projectile hit; native puffs are the visual plume."
   },
-  "checkpointCompatibility": "State-zero existing bonus checkpoints keep their previous fixed-bank twenty-wave rules. Chill.8 arcade checkpoints retain saved boards/belts/waves and gain new mechanics on later events; New Game starts the revised opening/roster. Existing completion rewards remain valid. Garden Shuffle uses new mode76 and unused profile record75 with unchanged native object layouts; moves preserve the original plant instance."
+  "checkpointCompatibility": "State-zero existing bonus checkpoints keep their previous fixed-bank twenty-wave rules. Chill.8 arcade checkpoints retain saved boards/belts/waves and gain new mechanics on later events; New Game starts the revised opening/roster. Existing completion rewards remain valid. Garden Shuffle uses new mode76 and unused profile record75 with unchanged native object layouts; moves preserve the original plant instance. Seed Swap appends mode77 and unused profile record76; native Coin, Cursor, Plant and Challenge serialized members retain packet drops and replacement gardens."
 }

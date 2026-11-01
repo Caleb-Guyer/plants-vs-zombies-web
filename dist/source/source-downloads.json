@@ -1,15 +1,15 @@
 {
   "schema_version": 1,
-  "current_engine": "0.2.6-web-garden.1",
+  "current_engine": "0.2.6-web-seedswap.1",
   "upstream_tag": "0.2.6",
   "layout": "Site-source nests current corresponding source, its immediate parent when present, the upstream baseline and the current full patch. Other source archives and incremental/historical patches remain standalone downloads beside this index and in the full runtime distribution.",
   "nested_sources": [
     "pvz-portable-0.2.6-source.zip",
-    "pvz-portable-0.2.6-web-chill.9-source.zip",
-    "pvz-portable-0.2.6-web-garden.1-source.zip"
+    "pvz-portable-0.2.6-web-garden.1-source.zip",
+    "pvz-portable-0.2.6-web-seedswap.1-source.zip"
   ],
   "nested_patches": [
-    "web-garden.1.patch"
+    "web-seedswap.1.patch"
   ],
   "archives": [
     {
@@ -93,7 +93,7 @@
       "name": "pvz-portable-0.2.6-web-garden.1-source.zip",
       "bytes": 9342093,
       "sha256": "34807be9b16aafc8e1e8bc9fd4da840df0ce9ae5667157cf51e61f4571d95122",
-      "current": true,
+      "current": false,
       "upstream": false
     },
     {
@@ -157,6 +157,13 @@
       "bytes": 4739286,
       "sha256": "9d77a0a5e2a367630bded271996e7ccffd081bc4cf7f77e16892591812a6f841",
       "current": false,
+      "upstream": false
+    },
+    {
+      "name": "pvz-portable-0.2.6-web-seedswap.1-source.zip",
+      "bytes": 9379580,
+      "sha256": "0db62a66059ebc4891181044609fa949d2c623b0a05181930c2734a0f7aeeb18",
+      "current": true,
       "upstream": false
     },
     {
