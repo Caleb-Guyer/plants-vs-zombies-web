@@ -1,12 +1,87 @@
 # Browser parity and QA record
 
-## Chill.1 revision scope and verification, 2026-10-31
+## Chill.2 original-art and centering revision, 2026-10-31
+
+The user requested original game artwork instead of AI pictures and a centered
+Chill-shroom portrait. The `0.2.6-web-chill.2` candidate is based on Chill.1.
+Chill-shroom now uses unchanged original Ice-shroom cap/body/eyes and animation.
+The generated cap, embedded generated card images and twelve old standalone
+PNG/provenance aliases are removed from the current distribution. Historical
+source archives and pinned Git blobs retain the old evidence; they are not
+active visual resources. No image-generation call was used for this revision.
+
+Each 80×65 Bonus picture has one centered hero rendered from original game
+resources: Conehead head/cone, Puff-shroom and the actual Ice-based Chill-shroom,
+over original grass. Native CPU rendering resolves each actor's alpha bounds
+before a uniform fit into 68×57 centered at (40,32.5). This centers the visible
+art rather than the padded preview canvas. Original artwork, input identities
+and composition provenance belong in
+[native artwork provenance](dist/content/native-bonus-art.json).
+
+The Conehead actor retains original head and jaw plus cone tracks; body, neck,
+arms and other accessories are hidden. Original day/night background resources
+are loaded idempotently and copied into owned CPU pictures. No resource pointer
+is retained by a baked card. Chill's old custom cap override is cleared, so its
+native crystal contour and eye opening remain unchanged. The radial slow,
+40-tick wind-up, 30-tick release/recovery, enemy eligibility, IDs, saved fields,
+checkpoints and completion routing retain Chill.1 behavior. Added Bonus tips
+remain absent and original hover/title/frame/trophy paths stay in use.
+
+Seven fresh source-coherent native suites pass **1,431 checks**: 66 speed,
+90 controls, 105 decks/cooldowns, 139 Cone Zone, 557 completion/rewards/navigation,
+131 Night Shift and 343 new-plant/portrait checks. The last suite exercises
+sparse-alpha bounds, uniform centered fit, native hero/track selection, card
+caching, resource retry/disposal, stale cap-override clearing and portable
+native fallback while retaining attack/pulse/save migration checks. Generated
+PNG/decoder tests are removed with that renderer. These execute production
+methods under controlled fixtures, without audio or visual-perfection claims.
+
+The coherent Emscripten Release build passed in **245.717 seconds**, with all
+**771 source inputs unchanged** throughout compilation. All fourteen browser
+integration suites pass, including eleven worker scenarios, original-resource
+provenance, absence of generated-art headers and twelve standalone aliases,
+and retained catalog IDs/titles. Native source/harness pins match this build.
+
+The engine-source package passes with **803 entries and 4,570,036 bytes**.
+Both the full upstream patch and Chill.1 incremental patch reconstruct all
+771 source files byte for byte. Artifact hashes remain in release manifests.
+
+Muted native-size review confirms all three large original subjects are centered
+and readable inside their original frames both with and without trophy ribbons.
+The Conehead face/cone, Puff face and Ice cap/face remain clear. Cold Front hover
+retains the original red title without an added tip. Private proofs are
+`outputs/pvz-chill2-release/bonus-earned.jpg`, `bonus-unearned.jpg` and
+`bonus-hover.jpg`. The native original catalog was also used for comparison.
+Earned and unearned states use retained private QA fixtures; neither establishes
+an earned battle win, and no fixture edit was needed in this revision.
+
+An existing Chill.1 checkpoint was opened through Cold Front's native Continue.
+It restored 50 sun, the same Sun-shroom/Chill-shroom/Puff-shroom and native graves
+and mowers. Chill-shroom uses the unchanged original Ice cap and face, matching
+its current preview and card. Private proof is `restored-native-plant.jpg`.
+This is current-build checkpoint/art restoration, not a new full save cycle or
+completed battle. The fresh save/reload evidence below remains specific to Chill.1.
+
+Both owned test tabs 16 and 17 used `?testing=1` with mute checked and were closed.
+The user's public tab 4 was untouched. Local criteria pass; website-source
+packaging and publication remain independent release records.
+[Current criteria](CHILL-REVISION-GOAL.md) track this revision while the older
+formal parity goal remains paused. Earlier Chill.1/Lantern results do not become
+this build's results. No full original-game parity or subjective visual
+perfection is claimed.
+
+## Historical Chill.1 revision scope — AI artwork superseded, 2026-10-31
+
+The user subsequently requested original artwork instead of these generated
+pictures and a centered Chill-shroom image. The capture-time results below
+remain bounded evidence for Chill.1, not approval of its AI artwork or results
+for Chill.2.
 
 The user rejected Lantern.2's art and attack presentation after its bounded
 functional checks. The new `0.2.6-web-chill.1` candidate is based on Lantern.2.
 Its player-facing plant is Chill-shroom and its third Bonus challenge Cold Front;
 seed 75, mode 75, completion record 74 and checkpoint filenames remain unchanged.
-[Revision criteria](CHILL-REVISION-GOAL.md) track the explicit user request. The
+[Revision criteria](https://github.com/Caleb-Guyer/plants-vs-zombies-web/blob/136d440a4daa0ac4f876a7200eb13d4382405845/CHILL-REVISION-GOAL.md) track the explicit user request. The
 formal goal tool rejected a new objective while the older parity goal remains
 paused; the unfinished parity goal is not marked complete.
 
@@ -39,7 +114,7 @@ critical faces are placed below/right of it. These are source-art composition
 observations; separate final native-size observations below establish the bounded
 body/cap joining, trophy-state and attack review.
 Full prompts and exact asset identities are recorded in
-[`dist/content`](dist/content/).
+[`dist/content`](https://github.com/Caleb-Guyer/plants-vs-zombies-web/tree/136d440a4daa0ac4f876a7200eb13d4382405845/dist/content/).
 
 The final corrected Emscripten Release build passed in **117.519 seconds**, with
 all **773 source files unchanged** throughout compilation. Seven fresh,
@@ -129,7 +204,7 @@ provided exact dimensions, tracks, transforms and timing. Lantern-shroom now use
 the native Puff-shroom body/face and idle, blink and sleep animation, native
 geometry, half-size Puff shadow and height offset. A cap-only edit uses the
 original 81×53 cap canvas and exact per-pixel alpha contour; only its color
-channels change. [Cap provenance](dist/content/lantern-shroom-cap-art.json) records
+channels change. [Cap provenance](https://github.com/Caleb-Guyer/plants-vs-zombies-web/blob/136d440a4daa0ac4f876a7200eb13d4382405845/dist/content/lantern-shroom-cap-art.json) records
 the built-in image edit, original cap identity and full prompt. The old full-body
 bitmap, bespoke scaling motion and large ring are removed. Pulse presentation is
 a short native cap-track color lift, with no new HUD.
@@ -237,7 +312,7 @@ decoded and downsampled once; native image disposal runs while the app and graph
 owners are still alive. The original 53 plant definitions remain intact. Artwork
 is new, generated with the built-in image tool, and uses a transparent blue-green
 mushroom with amber light. The exact published PNG, dimensions and full prompt
-are recorded in [art provenance](dist/content/lantern-shroom-art.json); the native
+are recorded in [art provenance](https://github.com/Caleb-Guyer/plants-vs-zombies-web/blob/136d440a4daa0ac4f876a7200eb13d4382405845/dist/content/lantern-shroom-art.json); the native
 sprite header embeds those same bytes. No additional HUD is introduced.
 
 Lantern Glow appends mode 75 and reserved completion record 74 on the existing

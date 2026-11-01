@@ -2,29 +2,33 @@
 
 This clean release repository targets `Caleb-Guyer/plants-vs-zombies-web`. On 2026-10-31 the user directed publication of the current build and stopped further manual gameplay. Publication is authorized while full original-game 1:1 parity remains unverified; it does not certify parity or complete that goal. GitHub Pages publication succeeded on 2026-10-31: [release workflow 41230962473](https://github.com/Caleb-Guyer/plants-vs-zombies-web/actions/runs/41230962473) deployed commit `5ba4d0d7279145dcbdfa3e91d19b91218ef1c04a`.
 
-The current source target is `0.2.6-web-chill.1`, based on Lantern.2. The user
-rejected Lantern.2's plant identity, missing attack and card pictures. This
-revision uses player-facing Chill-shroom/Cold Front names, a native Ice-shroom
-body with a snowy muzzle-free cap, explicit wind-up/release and three separate
-painted Bonus illustrations. Gameplay, mode/seed IDs, native save layouts, prior
-checkpoints, worker, five-second persistence and schema 2 stay compatible.
-The four assets and adjacent provenance JSON files live in
-[`dist/content`](dist/content/). The [revision criteria](CHILL-REVISION-GOAL.md)
-remain separate from claims of perfect original-game parity.
+The current source target is `0.2.6-web-chill.2`, based on Chill.1. The user
+requested original artwork instead of AI pictures and a centered Chill-shroom
+portrait. This revision uses unchanged original Ice-shroom art and three native
+centered Conehead/Puff/Chill pictures over original grass. Active generated-image
+headers/bindings and twelve standalone PNG/metadata aliases are removed.
+Historical source archives and pinned Git history retain the old artwork.
+[Native artwork provenance](dist/content/native-bonus-art.json) identifies the
+original resource inputs. Gameplay, attack, IDs, native save layouts, prior
+checkpoints, worker, five-second persistence and schema 2 retain compatibility.
+The [revision criteria](CHILL-REVISION-GOAL.md) remain separate from claims of
+perfect original-game parity.
 
-Current downloads are [Chill.1 source](dist/source/pvz-portable-0.2.6-web-chill.1-source.zip),
-[complete upstream patch](dist/source/web-chill.1.patch),
-[Lantern.2 increment](dist/source/lantern2-to-chill1.patch) and retained
-[Lantern.2 parent source](dist/source/pvz-portable-0.2.6-web-lantern.2-source.zip).
-Corrected engine staging and patch reconstructions pass. Native-size plant,
-attack and earned/unearned-card review pass after correcting hidden eyes.
-Fresh current-body save/reload/Continue also restores 50 sun and the same three
-plants with clear eyes and cap. Website-source packaging and publication remain
-independent release checks.
+Current downloads are [Chill.2 source](dist/source/pvz-portable-0.2.6-web-chill.2-source.zip),
+[complete upstream patch](dist/source/web-chill.2.patch),
+[Chill.1 increment](dist/source/chill1-to-chill2.patch) and retained
+[Chill.1 parent source](dist/source/pvz-portable-0.2.6-web-chill.1-source.zip).
+The coherent Release build keeps 771 source inputs unchanged; 1,431 native
+checks, fourteen browser suites/eleven worker scenarios and engine packaging/
+both patch reconstructions pass. Muted native review passes centered earned/
+unearned cards, native hover without tips and current original art after loading
+the existing 50-sun three-plant checkpoint through Continue. Website-source
+packaging and publication remain independent release checks. Historical
+Chill.1 checks are not current verification.
 Preserve `.gitattributes`, versioned engine URLs and matching source/build
-identities. Runtime/loader tokens advance to `chill1`; unchanged storage code
+identities. Runtime/loader tokens advance to `chill2`; unchanged storage code
 keeps its existing `polish1` tokens. Exact artifact hashes belong in release
-manifests. Historical hosted records below are not Chill.1 deployment results.
+manifests. Historical hosted records below are not Chill.2 deployment results.
 
 ## What gets published
 
@@ -43,7 +47,7 @@ Release the reviewed current build after the bounded feature checks:
 3. Run **Publish game to GitHub Pages** manually from the intended branch. Pushes and pull requests do not deploy this workflow. There is no additional game or parity input flag.
 4. Review the validation job and deployment result. Open the URL recorded by the deployment environment.
 
-The workflow uses Node 24 and Python 3.13 for checkout checks and the runner's C++ compiler for seven production-method suites covering the new plant/third Bonus challenge, Night Shift, retained bonus wave/completion/navigation, speed, controls, decks and cooldowns. The corrected 117.519-second Release build kept all 773 source inputs unchanged; 1,419 native checks, fourteen browser suites including eleven worker scenarios, and engine-source/full/incremental reconstruction pass. Muted native review confirms visible eyes, body/cap join, wind-up/radial release/recovery and earned/unearned-card framing without added tips. Legacy checkpoint migration and fresh current-body full reload/Continue pass; the fresh board retains 50 sun and all three plants with the eyes and cap intact. Bounded results belong in [QA](PARITY-QA.md); website-source and hosted verification remain independent release records. No `npm install`, Emscripten SDK, original game installation or full WASM rebuild is needed in deployment. It verifies bundled resource bytes, browser shell, save recovery/worker behavior, corresponding source and native content/QoL behavior before uploading `dist`. Automated native tests do not initialize the game or audio; browser checks use `?testing=1`.
+The workflow uses Node 24 and Python 3.13 for checkout checks and the runner's C++ compiler for seven production-method suites covering the new plant/third Bonus challenge, Night Shift, retained bonus wave/completion/navigation, speed, controls, decks and cooldowns. The 245.717-second coherent Release build kept all 771 source inputs unchanged; 1,431 native checks, fourteen browser suites including eleven worker scenarios, and engine-source/full/incremental reconstruction pass. Muted native review confirms centered readable earned/unearned original-art cards, no added hover tips and the current original cap/face after Continue restores the existing 50-sun three-plant board. No new battle win or fresh full save cycle is claimed. Bounded results belong in [QA](PARITY-QA.md); website-source and hosted verification remain independent release records. No `npm install`, Emscripten SDK, original game installation or full WASM rebuild is needed in deployment. It verifies bundled resource bytes, browser shell, save recovery/worker behavior, corresponding source and native content/QoL behavior before uploading `dist`. Automated native tests do not initialize the game or audio; browser checks use `?testing=1`.
 
 The site includes the empty `.nojekyll` marker. Packaging targets GitHub Pages with a 100 MiB served-file ceiling and the 1 GB published-site ceiling. The former 25 MiB limit belonged to the earlier hosting provider; it must not cause complete current source, required parent/upstream inputs, artwork, tests, dependencies or licenses to be omitted. Final package verification records actual archive and site sizes.
 

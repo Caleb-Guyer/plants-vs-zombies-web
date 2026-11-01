@@ -2,7 +2,7 @@
 
 [Play on GitHub Pages](https://caleb-guyer.github.io/plants-vs-zombies-web/) · [Existing playtest](https://lawn-defense-caleb-plays.usgi.chatgpt.site) · [Deployment](DEPLOYMENT.md) · [Requirements](CURRENT-REQUIREMENTS.md) · [QA history](PARITY-QA.md)
 
-This source targets **0.2.6-web-chill.1**, based on PvZ-Portable 0.2.6 commit `396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca` and the Lantern.2 parent. The user rejected Lantern.2's plant identity, missing attack and challenge pictures. This revision introduces the muzzle-free **Chill-shroom**, renames its challenge **Cold Front** and replaces all three Bonus pictures with separate painted illustrations. It retains the existing challenges, simplified menus, background save worker, controls, save recovery and renderer corrections. Full 1:1 parity remains unverified; broad manual validation stopped at the user's request on 2026-10-31. Earlier release evidence below remains historical.
+This source uses **0.2.6-web-chill.2**, based on PvZ-Portable 0.2.6 commit `396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca` and the Chill.1 parent. The user requested original game artwork instead of AI pictures and a centered Chill-shroom portrait. This revision uses unchanged native Ice-shroom artwork and three centered portraits made only from original game resources. It retains Chill-shroom's radial slow/attack, existing challenges, simplified menus, background save worker, controls, save recovery and renderer corrections. Full 1:1 parity remains unverified; broad manual validation stopped at the user's request on 2026-10-31. Earlier release evidence below remains historical.
 
 The Software.10 and earlier QA descriptions below are the frozen v18 evidence snapshot. They retain their original capture-time scope, including earlier limits; they are not a claim that later validation or the full parity goal is complete.
 
@@ -34,24 +34,19 @@ It has an independent checkpoint and completion record. Chill-shroom is
 introduced in this challenge; the original campaign, chooser and unlocks retain
 their familiar content.
 
-The new design uses the original Ice-shroom body and half-lidded eyes with a
-rounded snowy cyan [cap](dist/content/chill-shroom-cap.png), fitted to the native
-103×54 cap canvas. It has no Puff muzzle or yellow lantern. A 40-tick wind-up
-leads into an outward frost release and 30-tick recovery. The
-[cap provenance](dist/content/chill-shroom-cap-art.json) records its original
-references, full built-in image-tool prompt and exact PNG identity.
+Chill-shroom uses the original Ice-shroom cap, body, half-lidded eyes and native
+animation without an AI cap or recoloring. It has no muzzle. Its 40-tick wind-up,
+outward frost release and 30-tick recovery retain the existing attack behavior.
 
-Cone Zone, Night Shift and Cold Front each have a cohesive new illustration for
-the native 80×65 card window: [conehead portrait](dist/content/cone-zone-card.png),
-[night mushrooms](dist/content/night-shift-card.png) and
-[Chill-shroom's cold pulse](dist/content/cold-front-card.png). Adjacent `-art.json`
-files record their prompts and provenance. Added Bonus rule tips remain absent.
-The original seed packets, menus and flag bar remain in use, with no extra HUD.
-Seed 75, mode 75, its checkpoint filename and completion record remain unchanged;
-older Lantern-shroom saves retain their game state while adopting the revised
-plant. Native-size review caught and corrected hidden eyes: cap content now fits
-103×46 at the top of its unchanged 103×54 canvas. The face/body join, visible
-wind-up, outward frost release and three card pictures pass the bounded review.
+The three native 80×65 Bonus pictures use original artwork only: one centered
+Conehead portrait for Cone Zone, Puff-shroom for Night Shift and the actual
+Ice-based Chill-shroom for Cold Front, over original grass. Their
+[resource provenance](dist/content/native-bonus-art.json) identifies the original
+inputs. Added Bonus rule tips remain absent. Original seed packets, menus and
+flags stay in use, with no extra HUD. Seed 75, mode 75, checkpoint filenames,
+completion records and native save layouts remain compatible. Generated-art
+runtime bindings and all twelve old standalone PNG/metadata aliases are removed;
+historical source archives and pinned Git history retain the earlier evidence.
 
 ## Bonus challenge: Night Shift
 
@@ -101,10 +96,28 @@ Open the original **Options → More Options** dialog for these additions:
 
 The native options and deck dialogs use the original game artwork and concise labels. QoL preferences and decks travel with save exports in separate files; existing native profile and board-save formats remain unchanged. Backups is also available through the small More utility icon.
 
-## Chill.1 verification status
+## Chill.2 verification status
 
-[Revision criteria](CHILL-REVISION-GOAL.md) track the explicit user request.
-Original reference extraction and independent generated-art review are complete.
+[Revision criteria](CHILL-REVISION-GOAL.md) track the original-art-only and
+centering request. Source review uses the original challenge atlas, native
+Ice/Puff/Sun assets and their reanimation pivots. Seven native suites pass
+**1,431 checks**. The coherent Release build retains 771 unchanged source inputs;
+fourteen browser suites, including eleven worker scenarios, pass. Engine-source
+packaging and both patch reconstructions pass. Muted native-size review confirms
+three centered readable portraits with and without ribbons, original red title
+hover without tips, and original Chill art in its preview, card and restored
+game. Continue restores an existing Chill.1 board with 50 sun and the same
+Sun-shroom, Chill-shroom and Puff-shroom. No new battle win or fresh full save
+cycle is claimed. Local criteria pass; website-source packaging and publication
+remain independent release records.
+Chill.1's test counts and screenshots are historical evidence for that build;
+they do not establish this revision's result.
+
+## Historical Chill.1 verification — AI artwork superseded
+
+The user subsequently requested original artwork instead of this AI-art revision
+and a centered Chill-shroom picture. The observations below retain their bounded
+functional scope. Original reference extraction and generated-art review completed.
 The corrected Release build passes with 773 unchanged source inputs. Seven
 native suites pass **1,419 checks**; fourteen browser suites include eleven
 worker scenarios. Engine-source packaging and both patch reconstructions pass.
@@ -115,8 +128,8 @@ red title and adds no tip. An older checkpoint migrates with its 50 sun and
 three plants. A fresh current-body board also saves and restores through full
 reload/Continue with 50 sun and the same Sun-shroom, Chill-shroom and Puff-shroom,
 including the visible eyes and cap. Local feature/save checks pass.
-Website-source packaging and publication remain separate release gates; the
-normal Play link will receive the update through GitHub Pages.
+Website-source packaging and publication were separate capture-time release
+records. These checks do not establish Chill.2's visual or save result.
 
 ## Historical Lantern.2 verification — visual result rejected
 
@@ -243,7 +256,7 @@ python package-portable.py --output-dir outputs
 
 The approved bundle consists of six exact original runtime data files totaling 45,462,524 bytes, split into 11 verified parts. It contains no Windows executable, DLL or installed save data. To regenerate it, explicitly supply `--zip <resource-archive.zip>` or `--game-dir <installed-game-directory>`.
 
-Current corresponding source is [Chill.1 engine source](dist/source/pvz-portable-0.2.6-web-chill.1-source.zip), with [web-chill.1.patch](dist/source/web-chill.1.patch) as the full upstream patch and [lantern2-to-chill1.patch](dist/source/lantern2-to-chill1.patch) as the increment from [Lantern.2 source](dist/source/pvz-portable-0.2.6-web-lantern.2-source.zip). The corrected engine package and both patch reconstructions pass. The complete source builds without applying a patch. [Engine provenance](dist/game/engine-provenance.json) and the [build record](dist/source/build-provenance.json) pin completed release artifacts. Source packages retain complete current source, required parent/upstream inputs, tests, assets, dependencies and licenses; full original runtime payloads remain in the runtime distribution. Packaging uses the GitHub Pages 100 MiB per-file ceiling instead of the obsolete 25 MiB provider limit. The website source contains the save worker and shared storage core, and `dist/ui` records attribution and hashes for original save-recovery artwork.
+Current corresponding source is [Chill.2 engine source](dist/source/pvz-portable-0.2.6-web-chill.2-source.zip), with [web-chill.2.patch](dist/source/web-chill.2.patch) as the full upstream patch and [chill1-to-chill2.patch](dist/source/chill1-to-chill2.patch) as the increment from [Chill.1 source](dist/source/pvz-portable-0.2.6-web-chill.1-source.zip). Engine packaging and both patch reconstructions pass. The complete source builds without applying a patch. [Engine provenance](dist/game/engine-provenance.json) and the [build record](dist/source/build-provenance.json) pin completed release artifacts. Source packages retain complete current source, required parent/upstream inputs, tests, assets, dependencies and licenses; full original runtime payloads remain in the runtime distribution. Packaging uses the GitHub Pages 100 MiB per-file ceiling instead of the obsolete 25 MiB provider limit. The website source contains the save worker and shared storage core, and `dist/ui` records attribution and hashes for original save-recovery artwork.
 
 Public v15 preserved the three approved XML resource files' original CRLF bytes in Git and added the matching attributes rule, closing the fresh-checkout checksum blocker without changing the Software.7 runtime. GitHub Pages publication succeeded on 2026-10-31 through [release workflow 41230962473](https://github.com/Caleb-Guyer/plants-vs-zombies-web/actions/runs/41230962473). The bounded hosted startup check does not establish full game parity. The user authorized publication of the current build on 2026-10-31 while full 1:1 parity remains unverified; publication does not mark that goal complete.
 

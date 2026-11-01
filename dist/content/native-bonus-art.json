@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "sourceKind": "original hand-drawn bundled game resources",
+  "assetBundleId": "sha256:b468b22439430ca4a36035b886a74bd831a86b2a1a36c39d3203396f5b75d093",
+  "assetManifest": "../game-assets/manifest.json",
+  "generatedArtworkUsed": false,
+  "plant": {
+    "displayName": "Chill-shroom",
+    "nativeReanimation": "REANIM_ICESHROOM",
+    "capOverride": null,
+    "scope": "Original Ice-shroom cap, body, eyes, base and native animation; retained custom radial attack."
+  },
+  "cards": [
+    {
+      "mode": 73,
+      "name": "Cone Zone",
+      "hero": "original conehead zombie portrait",
+      "background": "IMAGE_BACKGROUND1"
+    },
+    {
+      "mode": 74,
+      "name": "Night Shift",
+      "hero": "REANIM_PUFFSHROOM",
+      "background": "IMAGE_BACKGROUND2"
+    },
+    {
+      "mode": 75,
+      "name": "Cold Front",
+      "hero": "REANIM_ICESHROOM",
+      "background": "IMAGE_BACKGROUND2"
+    }
+  ],
+  "canvas": {
+    "width": 80,
+    "height": 65,
+    "heroCenterX": 40,
+    "heroCenterY": 32.5,
+    "maxHeroWidth": 68,
+    "maxHeroHeight": 57
+  },
+  "historicalArt": "Generated cap/card files are removed from current dist/content and the active renderer. Earlier Git commits and authenticated historical source archives retain their original evidence."
+}

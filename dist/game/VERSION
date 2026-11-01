@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-chill.1
-Replaces the yellow Lantern theme with Chill-shroom: a muzzle-free frost mushroom with native body animation, wind-up and radial frost release. Adds painted Bonus illustrations and retains concise native cards.
-Engine JavaScript SHA-256: e89a921124733a9950c19ad25c955e2a1688e4dc585107274d994fcdfb803db0
-Engine WASM SHA-256: 23a46b077d6cc1ae14e2d1cbf88463f86ee50e021aa63415702aa6cebafe4af5
+PvZ-Portable 0.2.6-web-chill.2
+Removes generated cap and card artwork. Uses original Ice-shroom visuals and centered original-sprite Bonus portraits while retaining Chill-shroom attacks and save compatibility.
+Engine JavaScript SHA-256: 87800fada3cffd882c206d08af3dad7c63c0b42a4334413edaa92b2c51062b92
+Engine WASM SHA-256: c92b05020b8421c00152e58ff8335650156f0af4f78bfe548539c3839775e715
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.

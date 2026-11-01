@@ -8,7 +8,53 @@ The user directed us on 2026-10-31 to stop manual gameplay and wrap the current 
 
 Publication status: [GitHub Pages](https://caleb-guyer.github.io/plants-vs-zombies-web/) is live after [workflow 41230962473](https://github.com/Caleb-Guyer/plants-vs-zombies-web/actions/runs/41230962473) succeeded on 2026-10-31. A silent browser check reached the original title without a file prompt; WASM returned HTTP 200 as `application/wasm`. This adds hosting/startup proof only, with no GitHub campaign gameplay or full-parity certification.
 
-## Chill.1 identity, attack and card revision, 2026-10-31
+## Chill.2 original artwork and centered pictures, 2026-10-31
+
+The user explicitly requested no AI art for the pictures and a centered
+Chill-shroom picture like the other plants. Current source targets
+**0.2.6-web-chill.2**, based on Chill.1. Use unchanged original Ice-shroom artwork
+for Chill-shroom, with no generated cap or recoloring. Give Cone Zone, Night Shift
+and Cold Front separate native 80×65 pictures with one centered original hero:
+Conehead, Puff-shroom and the actual Ice-based Chill-shroom, over original grass.
+Center visible alpha bounds and fit uniformly rather than centering a padded
+120×120 bitmap. Inspect the results with and without original trophy ribbons.
+
+Remove active generated-image headers/bindings and all twelve standalone
+AI PNG/provenance aliases from `dist/content`. Preserve exact historical source
+archives and Git history; historical artwork links must point to the pinned
+old commit. Record current original resource identities and composition in
+[native artwork provenance](dist/content/native-bonus-art.json). No artwork
+generation tool is used for this revision.
+
+Keep Chill-shroom's 75 sun, 750-tick recharge, 400-active-tick radial pulse,
+150-pixel radius, 150-tick native chill, visible wind-up/release and no damage.
+Keep enemy eligibility and stronger chill/freeze behavior. Preserve seed 75,
+mode 75, record 74, page IDs, all original content, serialized fields, save
+filenames, checkpoint migration, workers, schema 2 and normal-player audio.
+Added Bonus tips stay removed; keep original title hover, menus, packets and
+minimal icons without extra HUD or instructions.
+
+[Current revision criteria](CHILL-REVISION-GOAL.md) record this explicit request.
+The old formal parity goal remains paused; a new objective could not be created
+while that unfinished goal exists. The coherent Release build keeps all 771
+source inputs unchanged; seven native suites pass 1,431 checks, fourteen browser
+suites include eleven worker scenarios, and engine packaging/both patch
+reconstructions pass. Native-size earned/unearned views confirm centered,
+readable original subjects and native title hover without added tips. An existing
+Chill.1 checkpoint restores 50 sun, Sun-shroom/Chill-shroom/Puff-shroom and the
+original Ice art through native Continue, with graves and mowers retained.
+Local criteria pass. No new battle win or fresh full save cycle is claimed;
+website-source packaging and publication remain independent release checks.
+Earlier Chill.1 results remain historical. Test silently with `?testing=1` and
+publish the corrected complete source/runtime to the existing GitHub Pages site.
+Retain the 100 MiB served-file policy and all required source, parent/upstream,
+assets, tests, dependencies and licenses.
+
+## Historical Chill.1 identity/attack revision — AI art superseded, 2026-10-31
+
+The user later requested original artwork instead of this generated-art design
+and a centered plant portrait. Requirements/results here retain their historical
+scope and do not override the Chill.2 direction above.
 
 The user rejected Lantern.2's plant and challenge art. A yellow/brown Lantern
 with a Puff-shroom muzzle did not communicate its radial cold mechanic, and a
@@ -17,7 +63,7 @@ cap tint alone did not show an attack. The current candidate targets
 as player-facing names. Preserve internal seed 75, mode 75, completion record 74,
 existing checkpoint filenames and all other original/Bonus identities.
 
-The [Chill revision criteria](CHILL-REVISION-GOAL.md) track this explicit request.
+The [Chill revision criteria](https://github.com/Caleb-Guyer/plants-vs-zombies-web/blob/136d440a4daa0ac4f876a7200eb13d4382405845/CHILL-REVISION-GOAL.md) track this explicit request.
 The goal tool rejected a new objective because the older parity goal remains
 paused. Do not falsely mark that unfinished goal complete or claim that this
 manual revision record is a new formal goal.
@@ -36,7 +82,7 @@ They must remain readable in the native frame both before and after the trophy
 ribbon covers the upper-left triangle. Keep native titles and hover color;
 retain the removal of added Bonus tips. Add no extra HUD or instructions.
 Full prompts, reference identities and PNG hashes belong beside the four new
-assets in [`dist/content`](dist/content/).
+assets in [`dist/content`](https://github.com/Caleb-Guyer/plants-vs-zombies-web/tree/136d440a4daa0ac4f876a7200eb13d4382405845/dist/content/).
 
 Preserve native saved object layouts, schema 2, worker and automatic saves.
 Upgrade both Lantern.1 bodyless saves and Lantern.2 Puff-body saves to the new
@@ -77,7 +123,7 @@ with the original 81×53 native canvas and exact alpha contour. Keep the edited
 cap restrained and the pulse as a short native track-color lift. Remove the
 mismatched full-body bitmap, scaling motion and large ring. Preserve intended
 Lantern-shroom slowing, costs, recharge and all prior gameplay. Full edit prompt
-and reference identity belong in [cap provenance](dist/content/lantern-shroom-cap-art.json).
+and reference identity belong in [cap provenance](https://github.com/Caleb-Guyer/plants-vs-zombies-web/blob/136d440a4daa0ac4f876a7200eb13d4382405845/dist/content/lantern-shroom-cap-art.json).
 
 Give Cone Zone, Night Shift and Lantern Glow distinct pictures composed from
 original resources in their native 80×65 windows. Remove every added Bonus card
@@ -132,7 +178,7 @@ changing serialized layouts. Append seed 75 after the original special IDs;
 retain NUM_SEED_TYPES 53, original chooser 49 and all existing plant definitions.
 Use the generated transparent blue-green/amber artwork, original seed packets,
 a quiet breathing motion and short expanding pulse. The full generation prompt
-and exact PNG identity belong in [art provenance](dist/content/lantern-shroom-art.json).
+and exact PNG identity belong in [art provenance](https://github.com/Caleb-Guyer/plants-vs-zombies-web/blob/136d440a4daa0ac4f876a7200eb13d4382405845/dist/content/lantern-shroom-art.json).
 
 Lantern Glow appends mode 75, an independent checkpoint and reserved completion
 record 74. Use the native night lawn, 150 starting sun, no falling sky sun,
@@ -268,7 +314,7 @@ The original native launch reached a Steam startup error without a game/JPEG cap
 
 The user explicitly requested immediate play without choosing game files, save-only import/export and public bundling of original assets. The six approved runtime files total 45,462,524 bytes in eleven parts, under manifest ID `sha256:b468b22439430ca4a36035b886a74bd831a86b2a1a36c39d3203396f5b75d093`. Preserve exact validated bundle bytes, separate save stores, automatic first visit/cache/retry and existing progress. No executable, native library, real save or private QA export belongs in distribution inputs.
 
-The current source target is **0.2.6-web-chill.1**; completed engine/source/patch identities belong in `dist/game/engine-provenance.json`. It retains the fileless shell, five icons, normal player audio, native profiles, save-only transfers, public storage keys and keyboard behavior. The frozen public v18 baseline uses Software.10 (source `877bbbf3f001fc2f9202700ba790e27665179e92`); Software.10's own scoped private first-level and save-transfer observations below remain historical. Earlier observations retain their actual build and private/public scope.
+The current source target is **0.2.6-web-chill.2**; completed engine/source/patch identities belong in `dist/game/engine-provenance.json`. It retains the fileless shell, five icons, normal player audio, native profiles, save-only transfers, public storage keys and keyboard behavior. The frozen public v18 baseline uses Software.10 (source `877bbbf3f001fc2f9202700ba790e27665179e92`); Software.10's own scoped private first-level and save-transfer observations below remain historical. Earlier observations retain their actual build and private/public scope.
 
 Public v15 preserved the three approved XML resource files' original CRLF bytes in Git and added the matching attributes rule, closing the fresh-checkout checksum blocker without changing the Software.7 runtime. GitHub Pages publication succeeded on 2026-10-31 through [release workflow 41230962473](https://github.com/Caleb-Guyer/plants-vs-zombies-web/actions/runs/41230962473). The bounded hosted startup check does not establish full game parity. The user authorized publication of the current build on 2026-10-31 while full 1:1 parity remains unverified; publication does not mark that goal complete.
 

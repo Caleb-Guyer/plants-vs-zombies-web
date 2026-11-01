@@ -16,10 +16,10 @@ new Function('module', 'exports', 'require', fs.readFileSync(new URL('vendor/jsz
 const JSZip = vendor.exports;
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
 const engine = JSON.parse(fs.readFileSync(new URL('game/engine-provenance.json', dist)));
-assert.equal(engine.id, '0.2.6-web-chill.1');
+assert.equal(engine.id, '0.2.6-web-chill.2');
 const current = await JSZip.loadAsync(fs.readFileSync(new URL(engine.artifacts.source, new URL('game/engine-provenance.json', dist))), {checkCRC32: true});
-const parent = await JSZip.loadAsync(fs.readFileSync(new URL('source/pvz-portable-0.2.6-web-lantern.2-source.zip', dist)), {checkCRC32: true});
-const prefix = 'chill1-candidate/';
+const parent = await JSZip.loadAsync(fs.readFileSync(new URL('source/pvz-portable-0.2.6-web-chill.1-source.zip', dist)), {checkCRC32: true});
+const prefix = 'chill2-candidate/';
 const read = async name => {
   const entry = current.file(prefix + name);
   assert(entry, 'Missing current production source/test: ' + name);
@@ -42,7 +42,7 @@ for (const name of suites) {
   checks += result.checks;
   reports.set(name, result);
 }
-const parentBytes = async name => Buffer.from(await parent.file('lantern2-candidate/source/' + name).async('uint8array'));
+const parentBytes = async name => Buffer.from(await parent.file('chill1-candidate/source/' + name).async('uint8array'));
 // SeedPacket.h also defines the serialized SeedBank class.
 for (const name of ['src/Lawn/SeedPacket.h', 'src/Lawn/Plant.h', 'src/Lawn/Zombie.h', 'src/Lawn/Challenge.h', 'src/Lawn/System/SaveGame.cpp', 'src/Lawn/System/PlayerInfo.h', 'src/Lawn/System/PlayerInfo.cpp', 'src/LawnApp.h', 'src/Lawn/System/ReanimationLawn.h']) {
   assert.deepEqual(await read('source/' + name), await parentBytes(name), 'Saved data layout/serialization must remain unchanged');
@@ -107,46 +107,33 @@ function definitions(text) {
 const oldDefinitions = definitions((await parentBytes('src/Lawn/Widget/ChallengeScreen.cpp')).toString());
 const newDefinitions = definitions((await read('source/src/Lawn/Widget/ChallengeScreen.cpp')).toString());
 assert.equal(oldDefinitions.length, 75);
-assert.deepEqual(newDefinitions.slice(0, -1), oldDefinitions.slice(0, -1), 'All other challenge definitions stay unchanged');
-assert.equal(newDefinitions.at(-1), oldDefinitions.at(-1).replace('"Lantern Glow"', '"Cold Front"'), 'The existing custom mode changes only its displayed title');
+assert.deepEqual(newDefinitions, oldDefinitions, 'Every original and custom challenge definition stays unchanged');
 assert(newDefinitions.at(-1).includes('GAMEMODE_CHALLENGE_LANTERN_GLOW'));
 assert(newDefinitions.at(-1).includes('CHALLENGE_PAGE_BONUS'));
 assert(newDefinitions.at(-1).includes('.mChallengeIconIndex = 1'));
 assert(newDefinitions.at(-1).includes('.mRow = 1, .mCol = 2'));
 assert(newDefinitions.at(-1).includes('.mChallengeName = "Cold Front"'));
-console.log('PASS Chill-shroom preserves all mode/seed IDs, saved layouts, 53 original plant definitions and all challenge identities; only the custom title changes.');
+console.log('PASS Chill-shroom preserves all mode/seed IDs, saved layouts, 53 original plant definitions and all challenge identities and titles.');
 
-const artInputs = [
-  ['chill-shroom-cap', 'FrostShroomCap.h', 'kPngBase64', 'f212e7a11d59a427969c9ff7a4cac64deba25fb7a9eca544d146548012349afc', 103, 54, true],
-  ['cone-zone-card', 'BonusChallengeArt.h', 'kConeZoneBase64', '7e001ce3ecb36dde9abff949d6b87403ed44208344cdd6dc1321b4c90d352389', 80, 65, false],
-  ['night-shift-card', 'BonusChallengeArt.h', 'kNightShiftBase64', '0d8b4d15161434bf492fcc49d00f8872cd8d193579002b009fec8a00d43a3486', 80, 65, false],
-  ['cold-front-card', 'BonusChallengeArt.h', 'kColdFrontBase64', 'f03465d19bc8cdc4b92c12ce236b4d4ea9917f69ad21b767bc11cb15def574c8', 80, 65, false],
-];
-for (const [name, header, symbol, hash, width, height, needsAlpha] of artInputs) {
-  const art = fs.readFileSync(new URL('content/' + name + '.png', dist));
-  const record = JSON.parse(fs.readFileSync(new URL('content/' + name + '-art.json', dist)));
-  assert.equal(sha(art), hash);
-  assert.equal(record.asset, name + '.png');
-  assert.equal(record.tool, 'built-in image_gen');
-  assert.equal(record.sha256, hash);
-  assert.equal(record.bytes, art.length);
-  assert.equal(typeof record.prompt, 'string');
-  assert(record.prompt.length > 100);
-  assert.deepEqual(art.subarray(0, 8), Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]));
-  assert.equal(art.subarray(12, 16).toString(), 'IHDR');
-  assert.equal(record.width, art.readUInt32BE(16));
-  assert.equal(record.height, art.readUInt32BE(20));
-  assert.equal(art[24], 8);
-  if (needsAlpha) { assert.equal(art[25], 6); assert.equal(record.rgba, true); }
-  assert.equal(record.nativeWidth, width);
-  assert.equal(record.nativeHeight, height);
-  const text = (await read('source/src/Lawn/System/' + header)).toString();
-  const declaration = text.slice(text.indexOf(symbol + '[] =')).split(';')[0];
-  assert(declaration.startsWith(symbol + '[] ='), 'Missing embedded art: ' + symbol);
-  const encoded = [...declaration.matchAll(/"([A-Za-z0-9+/=]+)"/g)].map(match => match[1]).join('');
-  assert.deepEqual(Buffer.from(encoded, 'base64'), art, 'Published and native embedded PNGs match: ' + name);
+const artRecord = JSON.parse(fs.readFileSync(new URL('content/native-bonus-art.json', dist)));
+assert.equal(artRecord.sourceKind, 'original hand-drawn bundled game resources');
+assert.equal(artRecord.generatedArtworkUsed, false);
+assert.equal(artRecord.assetBundleId, engine.assetBundleId);
+assert.equal(artRecord.plant.nativeReanimation, 'REANIM_ICESHROOM');
+assert.equal(artRecord.plant.capOverride, null);
+assert.deepEqual(artRecord.canvas, {width: 80, height: 65, heroCenterX: 40, heroCenterY: 32.5, maxHeroWidth: 68, maxHeroHeight: 57});
+assert.deepEqual(artRecord.cards.map(card => card.mode), [73, 74, 75]);
+assert.deepEqual(artRecord.cards.map(card => card.name), ['Cone Zone', 'Night Shift', 'Cold Front']);
+const renderer = (await read('source/src/Lawn/System/LanternShroom.cpp')).toString();
+assert(!/FrostShroomCap|BonusChallengeArt|DecodeBase64|png_image_|DecodeImage/.test(renderer), 'Current rendering cannot load the rejected generated artwork');
+assert(renderer.includes('SetImageOverride("IceShroom_head", nullptr)'), 'Saved custom cap overrides are explicitly cleared');
+for (const header of ['FrostShroomCap.h', 'BonusChallengeArt.h']) {
+  assert.equal(current.file(prefix + 'source/src/Lawn/System/' + header), null, 'Generated artwork headers are absent from current source');
 }
-console.log('PASS four distinct painted PNGs, complete prompts, native texture dimensions and lossless embedded art match.');
+for (const name of ['chill-shroom-cap', 'cone-zone-card', 'night-shift-card', 'cold-front-card', 'lantern-shroom', 'lantern-shroom-cap']) {
+  for (const suffix of ['.png', '-art.json']) assert(!fs.existsSync(new URL('content/' + name + suffix, dist)), 'Rejected generated-art aliases stay absent: ' + name + suffix);
+}
+console.log('PASS original-resource artwork provenance, unchanged native Ice carrier, cleared custom cap overrides and removal of active generated images.');
 
 
 if (process.argv.includes('--run-native')) {

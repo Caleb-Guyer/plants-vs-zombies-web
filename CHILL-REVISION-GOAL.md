@@ -1,64 +1,58 @@
-# Chill-shroom and Bonus artwork revision
+# Chill-shroom original artwork and centered portraits
 
-The user requested this revision on 2026-10-31 after rejecting Lantern.2's
-plant and challenge pictures. The yellow/brown lantern identity, Puff-shroom
-muzzle, radial cold effect and missing attack animation did not communicate one
-coherent plant. The older parity goal remains paused. The goal tool rejected a
-new objective while that unfinished goal exists; this file tracks the requested
-revision without falsely completing or replacing the older goal.
+The user requested original game artwork instead of AI pictures and a centered
+Chill-shroom image on 2026-10-31. This supersedes Chill.1's generated cap and
+painted cards. The older parity goal remains paused. The goal tool rejected a
+new objective while that unfinished goal exists; this manual record does not
+replace or falsely complete it.
 
-The candidate is `0.2.6-web-chill.1`, based on Lantern.2. Its player-facing plant
-is **Chill-shroom** and its third Bonus challenge is **Cold Front**. Existing
-internal seed/mode IDs and save filenames remain compatible.
+The current candidate is `0.2.6-web-chill.2`, based on Chill.1. Player-facing
+names remain **Chill-shroom** and **Cold Front**. Seed 75, mode 75, record 74,
+checkpoint filenames, gameplay and save layouts stay compatible.
 
 Completion criteria:
 
-- Give Chill-shroom a distinct, squat snowy cyan cap, native Ice-shroom body and
-  eyes, and no muzzle, spout, yellow lantern or projectile outlet. Use actual
-  original mushroom resources to guide proportions, outlines and simple paint.
-- Show an intentional attack: a 40-tick wind-up, outward cold release and
-  30-tick recovery, synchronized with the existing radial slow. Preserve the
-  400-active-tick pulse, 150-pixel radius, 150-tick native chill, cost, recharge,
-  enemy eligibility and stronger-chill/freeze behavior. Add no damage.
-- Give Cone Zone, Night Shift and Cold Front separate, cohesive original-style
-  illustrations. Inspect each in the native 80 by 65 window, both with and
-  without the original trophy ribbon. Keep faces and identifying features clear.
-- Keep added Bonus tips absent and retain original title hover, menus, seed
-  packets, flags and discreet utility icons. Add no instructions or extra HUD.
-- Preserve original content, serialized object layouts, saves, checkpoint and
-  completion routing. Upgrade both older bodyless plants and Lantern.2 Puff
-  bodies without resetting saved health, placement or pulse phase; restore cap
-  binding and attack presentation correctly after a paused Continue draw.
-- Run focused automated native/browser/save and artwork-integrity checks with
-  sound off. Check the plant beside original mushrooms at actual game size,
-  correct material defects, and save/reload/Continue the resulting board.
+- Use unchanged original Ice-shroom cap, body, eyes and native animation for
+  Chill-shroom. Remove the generated cap, recoloring and active AI artwork.
+  Preserve the muzzle-free silhouette and original alpha contour/eye opening.
+- Make all three Bonus pictures from original game resources only: one centered
+  Conehead head/cone, Puff-shroom and actual Ice-based Chill-shroom over original
+  grass. Fit visible alpha bounds uniformly into the native 80 by 65 picture;
+  inspect both earned and unearned trophy states at actual game size.
+- Remove generated-image headers/runtime bindings and all twelve standalone AI
+  PNG/provenance aliases. Keep historical source archives and Git history;
+  direct historical artwork links to pinned old blobs. Record original resource
+  identities in [native artwork provenance](dist/content/native-bonus-art.json).
+- Retain the 40-tick wind-up, outward cold release and 30-tick recovery, the
+  400-active-tick pulse, 150-pixel radius, 150-tick native chill, 75-sun cost,
+  750-tick recharge, enemy eligibility and stronger-chill/freeze behavior. Deal
+  no damage. Preserve paused/sleep/dead/grabbed/squished behavior and save phase.
+- Keep added Bonus tips absent. Retain original frame, trophy, title hover,
+  menus, packets, flags and discreet utility icons, without extra HUD or panels.
+- Preserve original content, IDs, serialized fields, checkpoint/completion
+  routing, schema 2, worker and automatic saves. Verify older custom-image saves
+  return to original art without resetting health, placement or pulse phase.
+- Run focused automated/native/browser/save checks silently with `?testing=1`.
+  Check centered portraits, clear eyes and native plant art at game size; load
+  an existing checkpoint through native Continue. Keep attack/save tests and
+  earlier fresh-save observations tied to their actual build and scope.
 - Publish complete corresponding source, assets, dependencies and provenance to
-  the existing GitHub repository and Pages site. Keep normal-player audio and
-  automatic browser saves available; testing remains muted with `?testing=1`.
+  the existing GitHub repository and Pages site. Retain normal-player audio and
+  the GitHub 100 MiB per-file policy; record outer packaging/hosting separately.
 
-Status: the corrected coherent build, focused checks and native-size plant,
-attack and card reviews pass. The first cap placement hid the eyes and was
-rejected; shortening its content to 103×46 within the 103×54 canvas corrected
-the face and body join. An older Puff-body checkpoint migrates with its saved
-state. Fresh current-Ice-body save/reload also passes: a healthy new board
-retained 50 sun and the same Sun-shroom, Chill-shroom and Puff-shroom through
-full reload and native Continue, with the eyes and cap intact. Local
-implementation, test and visual/save criteria pass. Publication remains, with
-website-source packaging and hosted verification recorded independently.
-Full prompts and exact asset identities belong in
-[`dist/content`](dist/content/), rather than being repeated here.
+Status: original-reference/native-pivot review, the coherent Release build,
+focused native/browser checks and engine-source reconstruction pass. Seven
+native suites total 1,431 assertions; fourteen browser suites include eleven
+worker scenarios. The 245.717-second build kept all 771 source inputs unchanged.
+Native-size earned/unearned pictures are centered and readable around the
+original frames/ribbons; hover retains the red title without a tip. Continue
+restores an existing Chill.1 checkpoint with 50 sun, Sun-shroom/Chill-shroom/
+Puff-shroom and original Ice cap/face, graves and mowers. Local criteria pass.
+Publication remains, with website-source packaging and hosted verification
+recorded independently. No new battle win or fresh full save cycle is claimed.
+Testing stayed muted; no image-generation tool was used for this revision.
 
-Final corrected checks: seven native suites total 1,419 assertions; fourteen
-browser integration suites include eleven worker scenarios. The 117.519-second
-Release build kept all 773 source inputs unchanged. The 805-entry engine-source
-archive and both full/upstream and Lantern.2 incremental patches reconstruct the
-exact source. Decoder regression fails with the old cap height and passes with
-the corrected height. Native review observed visible eyes, the closed-eye
-wind-up, radial frost release and idle recovery. All three cards remain readable
-with and without trophy ribbons, and hover adds no tip. No earned battle win or
-precise browser timing measurement is claimed.
-
-These criteria describe a concrete revision. Automated tests and bounded visual
-observations do not prove subjective perfection or exhaustive original-game
-parity. Lantern.2's prior functional checks remain historical evidence; the user
-rejected its visual result.
+Historical Chill.1 functional results remain in QA and its exact source/Git
+record. The user superseded its AI artwork; those counts and screenshots are
+not current verification. Automated tests and bounded observations do not prove
+subjective perfection or exhaustive original-game parity.
