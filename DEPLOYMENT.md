@@ -2,25 +2,26 @@
 
 This clean release repository targets `Caleb-Guyer/plants-vs-zombies-web`. On 2026-10-31 the user directed publication of the current build and stopped further manual gameplay. Publication is authorized while full original-game 1:1 parity remains unverified; it does not certify parity or complete that goal. GitHub Pages publication succeeded on 2026-10-31: [release workflow 41230962473](https://github.com/Caleb-Guyer/plants-vs-zombies-web/actions/runs/41230962473) deployed commit `5ba4d0d7279145dcbdfa3e91d19b91218ef1c04a`.
 
-The current release files use `0.2.6-web-lantern.1`, adding Lantern-shroom and
-Lantern Glow beside the retained Night Shift and Cone Zone Bonus challenges.
-The new support mushroom uses generated transparent artwork and native chill;
-mode 75 has its own checkpoint and reserved record 74. All prior mode/seed IDs,
-original plant definitions, chooser content, saved object layouts, campaign and
-trophy routing, background save worker, five-second persistence and schema 2
-remain unchanged. The new PNG is embedded in the binary and published with
-[art provenance](dist/content/lantern-shroom-art.json); no runtime asset request
-is needed to draw it. Original resource bundles and historical engine downloads
-remain unchanged. Advance the current engine, corresponding source, metadata
-and shell cache keys together, preserving `.gitattributes`. The historical
-Software.10 hosted verification below is not a Lantern.1 deployment result.
+The current release files use `0.2.6-web-lantern.2`. This art revision follows
+the user's rejection of Lantern.1's style and feel. It uses the original
+Puff-shroom body/animation with a cap-only reference edit, removes added Bonus
+tips and gives all three Bonus cards distinct original-resource pictures.
+Gameplay, mode/seed IDs, challenge definitions, native save layouts, prior
+checkpoints, worker, five-second persistence and schema 2 stay unchanged.
+The new [cap edit](dist/content/lantern-shroom-cap.png) is embedded in the binary;
+[cap provenance](dist/content/lantern-shroom-cap-art.json) records the exact
+reference and prompt. Runtime drawing needs no separate asset request. Preserve
+`.gitattributes`, versioned engine URLs and matching source/build identities.
+Runtime/loader query tokens advance to `lantern2`; unchanged storage code keeps
+its existing `polish1` tokens. Historical hosted records below are not Lantern.2
+deployment results.
 
-Current downloads are [Lantern.1 source](dist/source/pvz-portable-0.2.6-web-lantern.1-source.zip),
-[complete upstream patch](dist/source/web-lantern.1.patch),
-[Night.1 increment](dist/source/night1-to-lantern1.patch) and the retained
-[Night.1 parent source](dist/source/pvz-portable-0.2.6-web-night.1-source.zip).
-Artifact hashes belong in [engine provenance](dist/game/engine-provenance.json)
-and the [build record](dist/source/build-provenance.json).
+Current downloads are [Lantern.2 source](dist/source/pvz-portable-0.2.6-web-lantern.2-source.zip),
+[complete upstream patch](dist/source/web-lantern.2.patch),
+[Lantern.1 increment](dist/source/lantern1-to-lantern2.patch) and the retained
+[Lantern.1 parent source](dist/source/pvz-portable-0.2.6-web-lantern.1-source.zip).
+The [revision criteria](ART-REVISION-GOAL.md) remain separate from claims of
+perfect original-game parity. Artifact hashes belong in the release manifests.
 
 ## What gets published
 
@@ -39,7 +40,7 @@ Release the reviewed current build after the bounded feature checks:
 3. Run **Publish game to GitHub Pages** manually from the intended branch. Pushes and pull requests do not deploy this workflow. There is no additional game or parity input flag.
 4. Review the validation job and deployment result. Open the URL recorded by the deployment environment.
 
-The workflow uses Node 24 and Python 3.13 for checkout checks and the runner's C++ compiler for seven production-method suites covering Lantern-shroom/Lantern Glow, Night Shift, retained bonus wave/completion/navigation, speed, controls, decks and cooldowns. Current validation passes 1,295 native checks and fourteen browser suites, including eleven dedicated-worker scenarios; results retain their actual scope in [QA](PARITY-QA.md). No `npm install`, Emscripten SDK, original game installation or full WASM rebuild is needed in deployment. It verifies the bundled resource bytes, browser shell, save recovery/worker behavior, corresponding source and native content/QoL behavior before uploading `dist`. Automated native tests do not initialize the game or audio; browser checks use `?testing=1`.
+The workflow uses Node 24 and Python 3.13 for checkout checks and the runner's C++ compiler for seven production-method suites covering Lantern-shroom/Lantern Glow, Night Shift, retained bonus wave/completion/navigation, speed, controls, decks and cooldowns. The final coordinate-corrected Release build, 1,333 source-coherent native checks, fourteen browser suites including eleven dedicated-worker scenarios, and matching engine-source packaging pass. The final muted visual check passes corrected card framing and removed hover tips; legacy and fresh-board reload/Continue restore the native plant and cap, with the fresh board retaining all three plants and 50 sun. Bounded results retain their scope in [QA](PARITY-QA.md); website-source and hosted verification remain independent release records. No `npm install`, Emscripten SDK, original game installation or full WASM rebuild is needed in deployment. It verifies the bundled resource bytes, browser shell, save recovery/worker behavior, corresponding source and native content/QoL behavior before uploading `dist`. Automated native tests do not initialize the game or audio; browser checks use `?testing=1`.
 
 The site includes the empty `.nojekyll` marker. Packaging checks every served file against a 25 MiB limit, below GitHub's 100 MiB per-file limit; the static game remains below the 1 GB published-site limit.
 
@@ -57,7 +58,7 @@ Browser saves belong to the origin. Export progress from the current playtest th
 
 Saves persist automatically on the existing five-second interval. The save worker and shared core must be deployed with the main adapter; their relative URLs work under the project path. Per-profile QoL settings and plant decks are separate files included in save export/import. Up to eight previous saved versions are retained locally for all-profile recovery; that browser-local history is not exported or migrated between origins. Recovery backs up the current version before replacing it. These additions retain schema 2 and existing native profile and board-save formats.
 
-The served `dist/source/site-source.zip` is regenerated from current website source, the corresponding engine package, its pinned immediate parent and the raw upstream baseline. The current Lantern engine-source ZIP includes complete source, recipes and test/build receipts, while its exact full and incremental patches are served separately without redundant PNG-bearing copies inside that ZIP. The parent archive makes the saved-layout and catalog regression checks runnable from the source download. Original UI extracts used by save recovery include attribution and hashes in `dist/ui`; full game resource payloads stay separate from that source download. A successful Pages deployment proves hosting success, not complete original-game parity.
+The served `dist/source/site-source.zip` is regenerated from current website source, the current complete engine package, its pinned immediate parent, the raw upstream baseline and only the current full patch. Incremental and historical patches and historical engine archives remain separately served and are included in the full runtime distribution, avoiding redundant large PNG-bearing patch copies under the 25 MiB static-file limit. The current engine-source ZIP includes complete source, recipes and test/build receipts; its exact full and incremental patches are served separately without redundant internal copies. The parent archive makes the saved-layout and catalog regression checks runnable from the source download. Original UI extracts used by save recovery include attribution and hashes in `dist/ui`; full game resource payloads stay separate from that source download. A successful Pages deployment proves hosting success, not complete original-game parity.
 
 ## Primary references
 

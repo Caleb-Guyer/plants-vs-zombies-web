@@ -1,6 +1,111 @@
 # Browser parity and QA record
 
-## Lantern.1 release scope, 2026-10-31
+## Lantern.2 art-revision scope, 2026-10-31
+
+The user rejected Lantern.1's visual style and feel, its added Bonus tips and the
+use of Survival thumbnail pictures. `0.2.6-web-lantern.2` addresses those concrete
+issues. It does not assert perfect subjective art or exhaustive original-game
+parity. [Revision criteria](ART-REVISION-GOAL.md) track the requested goal manually:
+the goal tool rejected a new objective because the older parity goal remains
+paused; that unfinished goal has not been marked complete.
+
+Reference extraction used the authenticated bundled main.pak, without modifying
+original images. Original Puff-shroom cap, body, eyes, blink and reanimation XML
+provided exact dimensions, tracks, transforms and timing. Lantern-shroom now uses
+the native Puff-shroom body/face and idle, blink and sleep animation, native
+geometry, half-size Puff shadow and height offset. A cap-only edit uses the
+original 81×53 cap canvas and exact per-pixel alpha contour; only its color
+channels change. [Cap provenance](dist/content/lantern-shroom-cap-art.json) records
+the built-in image edit, original cap identity and full prompt. The old full-body
+bitmap, bespoke scaling motion and large ring are removed. Pulse presentation is
+a short native cap-track color lift, with no new HUD.
+
+The cap override is per reanimation instance. Encoded atlas images are resolved
+through their native atlas entry to the original cap pixels. Previews render once
+to a CPU MemoryImage. Cap and preview textures are disposed before their app and
+graphics owners. Legacy Lantern.1 plants with no body reanimation reconstruct a
+native Puff body; restored custom-image overrides, which the native image codec
+stores as null, rebind before the paused Continue/background draw. These paths
+preserve the existing saved pulse counters, health, placement and other state;
+no save-field, mode, seed or challenge-definition IDs change.
+
+The three Bonus cards have distinct 80×65 pictures composed from original game
+resources: a conehead on the day lawn, mushrooms and a grave on the night lawn,
+and Lantern-shroom with a chilled zombie. The Bonus branch no longer draws the
+Survival thumbnail atlas. All added Bonus rule tips beneath/on hover over the
+cards are removed; original unlock tooltips stay on their native paths.
+
+All **seven native suites pass 1,333 checks**: 66 speed, 90 controls,
+105 decks/cooldowns, 139 Cone Zone waves, 557 completion/rewards/navigation,
+131 Night Shift and 245 Lantern-shroom. The updated suite exercises native cap
+binding and legacy-body migration, no repeated allocations across 1,000 ensures,
+portable plant-tail phase and image-null roundtrips, paused-draw cap restoration,
+dead-body guards, actual Bonus tooltip behavior and distinct thumbnail dispatch.
+It retains original Survival dispatch. These are controlled production-method
+checks with no game/audio device and no pixel-equivalence claim.
+
+The final coordinate-corrected Emscripten Release build passed in
+**97.754 seconds**, with all **772 source files unchanged** during compilation.
+The two affected native suites were rerun after the thumbnail-coordinate change;
+all **1,333 native checks** match the current production source. All **fourteen
+browser integration suites** pass, including the retained **eleven worker
+scenarios**, saved-layout/catalog invariants, exact cap PNG/provenance/header
+identity and transfer behavior.
+
+The final engine-source package passes with **804 entries and 6,037,932 bytes**.
+Both the complete upstream patch and Lantern.1 increment reconstruct every one of
+the 772 source files byte for byte. Release manifests pin the final binaries,
+source archive and patches. These results supersede the earlier 89.303-second
+pre-release snapshot whose thumbnail framing was rejected.
+
+The first native-size pixel review rejected the thumbnail framing: Cone Zone's
+portrait was obscured by the fixture's trophy ribbon and the Night Shift/Lantern
+Glow faces sat too low and clipped. Distinct pictures alone did not satisfy the
+visual criterion. Only DrawBonusIcon coordinates were then adjusted. On the
+final coordinate-corrected WASM, all three distinct pictures passed the visual
+check: cone, zombie and mushroom faces fit inside their original frames and remain
+visible around the fixture's trophy ribbons. Hover retained the native red title
+without an added tip. Private proof is `outputs/pvz-lantern2-release/bonus-cards-final.jpg`
+and `bonus-hover-final.jpg`. No initial card-framing pass is claimed.
+
+The same bounded muted preview loaded an existing Lantern.1 checkpoint through
+the native Continue flow. After Continue, the saved 50 sun, Sun-shroom, Puff-shroom
+and Lantern-shroom appeared on the same night lawn. The revised Lantern-shroom's
+native Puff body and brown cap were visible beside the original Puff-shroom with
+matching field geometry. Private working proof is
+`outputs/pvz-lantern2-release/legacy-continue.jpg` and `native-body-initial.jpg`.
+This establishes the bounded legacy-body reconstruction observation, not precise
+animation frame parity. The synthetic board later reached Game Over while code
+review continued unattended; no completed battle or earned win is claimed.
+
+The final muted preview then planted adjacent Sun-shroom, Lantern-shroom and
+original Puff-shroom on a fresh board, leaving 50 sun. The new cap and native
+body were compared at actual game size beside the original mushrooms; private
+proof is `outputs/pvz-lantern2-release/plant-comparison-final.jpg`. Native Menu →
+Main Menu → Leave saved that current-body board. After a full browser reload,
+title/profile selection and Bonus → Lantern Glow, native Continue restored the
+same 50 sun and all three plants, including the correct native body and cap.
+Private proof is `native-save-resumed.jpg`. This verifies the bounded current-body
+save/reload/cap-rebinding path alongside the separate legacy-body observation.
+It does not measure precise animation dynamics or claim a completed battle.
+
+The `?testing=1` mute indicator stayed checked through reload. The owned test tab
+was closed; the user's public game tab was left untouched. Website-source
+packaging and hosted verification are independent release records, separate from
+these observed engine/browser results. Earlier Lantern.1 evidence below is
+historical and its artwork was rejected by the user. Normal-player audio remains
+available. Broad original-game parity playthroughs remain stopped.
+
+Current source: [Lantern.2 source](dist/source/pvz-portable-0.2.6-web-lantern.2-source.zip),
+[complete upstream patch](dist/source/web-lantern.2.patch),
+[Lantern.1 increment](dist/source/lantern1-to-lantern2.patch) and retained
+[Lantern.1 parent source](dist/source/pvz-portable-0.2.6-web-lantern.1-source.zip).
+Engine and build manifests pin exact release identities.
+
+## Historical Lantern.1 release scope — artwork rejected, 2026-10-31
+
+The user subsequently rejected this release's style and feel. The earlier agent
+observations below are functional evidence, not approval of that visual match.
 
 `0.2.6-web-lantern.1` adds Lantern-shroom and the optional Lantern Glow challenge.
 The new mushroom costs 75 sun, recharges in 750 native ticks, and pulses every

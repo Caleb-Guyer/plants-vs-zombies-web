@@ -1,12 +1,15 @@
 {
   "schema_version": 1,
-  "current_engine": "0.2.6-web-lantern.1",
+  "current_engine": "0.2.6-web-lantern.2",
   "upstream_tag": "0.2.6",
-  "layout": "Site-source nests current corresponding source, its immediate parent when present, and the upstream baseline. Other exact source archives remain standalone downloads beside this index and in the full runtime distribution.",
+  "layout": "Site-source nests current corresponding source, its immediate parent when present, the upstream baseline and the current full patch. Other source archives and incremental/historical patches remain standalone downloads beside this index and in the full runtime distribution.",
   "nested_sources": [
     "pvz-portable-0.2.6-source.zip",
-    "pvz-portable-0.2.6-web-night.1-source.zip",
-    "pvz-portable-0.2.6-web-lantern.1-source.zip"
+    "pvz-portable-0.2.6-web-lantern.1-source.zip",
+    "pvz-portable-0.2.6-web-lantern.2-source.zip"
+  ],
+  "nested_patches": [
+    "web-lantern.2.patch"
   ],
   "archives": [
     {
@@ -27,6 +30,13 @@
       "name": "pvz-portable-0.2.6-web-lantern.1-source.zip",
       "bytes": 6034293,
       "sha256": "c0f1ce050347d68672afa2139fe3da05ea2934fae9ea377a9fc45a2454c55244",
+      "current": false,
+      "upstream": false
+    },
+    {
+      "name": "pvz-portable-0.2.6-web-lantern.2-source.zip",
+      "bytes": 6037932,
+      "sha256": "64da4037777bcbc12ceb0715612e2855c31da4979c66ab85455ae466f9ac64ee",
       "current": true,
       "upstream": false
     },

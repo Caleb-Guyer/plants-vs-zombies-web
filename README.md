@@ -2,7 +2,7 @@
 
 [Play on GitHub Pages](https://caleb-guyer.github.io/plants-vs-zombies-web/) · [Existing playtest](https://lawn-defense-caleb-plays.usgi.chatgpt.site) · [Deployment](DEPLOYMENT.md) · [Requirements](CURRENT-REQUIREMENTS.md) · [QA history](PARITY-QA.md)
 
-This source uses **0.2.6-web-lantern.1**, based on PvZ-Portable 0.2.6 commit `396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca`. It adds Lantern-shroom and its Lantern Glow challenge alongside Night Shift and Cone Zone on the native Bonus page, retaining the simplified menus, background save worker, earlier controls, save recovery and renderer corrections. Full 1:1 parity remains unverified; broad manual validation stopped at the user's request on 2026-10-31. Earlier release evidence below remains historical.
+This source uses **0.2.6-web-lantern.2**, based on PvZ-Portable 0.2.6 commit `396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca`. This visual revision gives Lantern-shroom the original Puff-shroom's body and animation with a cap-only texture edit, removes added Bonus rule tips and gives the three Bonus challenges distinct native-art pictures. It retains the existing challenges, simplified menus, background save worker, controls, save recovery and renderer corrections. Full 1:1 parity remains unverified; broad manual validation stopped at the user's request on 2026-10-31. Earlier release evidence below remains historical.
 
 The Software.10 and earlier QA descriptions below are the frozen v18 evidence snapshot. They retain their original capture-time scope, including earlier limits; they are not a claim that later validation or the full parity goal is complete.
 
@@ -34,11 +34,20 @@ It has an independent checkpoint and completion record. Lantern-shroom is
 introduced in this challenge; the original campaign, chooser and unlocks retain
 their familiar content.
 
-The new plant has a blue-green cap and amber light, with a small breathing motion
-and an expanding pulse. Original seed packets, menus and the native flag bar
-remain in use, with no extra HUD. Its [new artwork](dist/content/lantern-shroom.png)
-was generated with the built-in image tool; [art provenance](dist/content/lantern-shroom-art.json)
-records the full prompt and exact embedded PNG identity.
+Lantern-shroom now uses the original Puff-shroom body, face, blink, sleep, shadow
+and animation geometry. Only the cap painting changes: a restrained olive cap
+with warm spots, retaining the original 81×53 texture canvas and exact alpha
+contour. A short cap-color lift shows its pulse. The former full-body bitmap,
+scaling motion and large ring are removed. Its [cap edit](dist/content/lantern-shroom-cap.png)
+was made with the built-in image tool using the original cap as its edit target;
+[cap provenance](dist/content/lantern-shroom-cap-art.json) records the reference,
+full prompt and embedded PNG identity.
+
+Cone Zone, Night Shift and Lantern Glow each have a distinct picture composed from
+original game resources in the native 80×65 card window. Added Bonus rule tips
+are removed. The original seed packets, menus and flag bar remain in use, with no
+extra HUD. Existing Lantern.1 checkpoints reconstruct the native plant body and
+cap while retaining health, placement, pulse phase and other saved game state.
 
 ## Bonus challenge: Night Shift
 
@@ -88,7 +97,26 @@ Open the original **Options → More Options** dialog for these additions:
 
 The native options and deck dialogs use the original game artwork and concise labels. QoL preferences and decks travel with save exports in separate files; existing native profile and board-save formats remain unchanged. Backups is also available through the small More utility icon.
 
-## Lantern.1 verification
+## Lantern.2 verification
+
+The final coordinate-corrected Release build, seven native suites totaling
+**1,333 checks**, fourteen browser suites and corresponding engine-source
+packaging pass. Coverage includes native cap binding, legacy-body migration,
+save-tail phase preservation, distinct card dispatch and removed Bonus tips.
+A muted native-size comparison confirmed the revised plant beside original
+mushrooms and the corrected three-card framing, with no added hover tips. Both a
+legacy checkpoint and a fresh current-body save restored through reload/Continue;
+the fresh board retained all three plants, 50 sun and the correct cap. Observed
+scope and separate release records are in [QA](PARITY-QA.md). Automated checks do
+not certify subjective perfection or exhaustive visual equivalence.
+
+The [art revision criteria](ART-REVISION-GOAL.md) follow the user's rejection of
+Lantern.1's visual style and feel. Earlier agent observations below were bounded
+functional checks; they are not approval of that rejected artwork or proof of a
+perfect original-game match.
+
+## Historical Lantern.1 verification — artwork rejected
+
 
 The full engine build, seven native suites totaling **1,295 checks**, fourteen
 browser integration suites and corresponding engine-source packaging pass. The
@@ -194,7 +222,7 @@ python package-portable.py --output-dir outputs
 
 The approved bundle consists of six exact original runtime data files totaling 45,462,524 bytes, split into 11 verified parts. It contains no Windows executable, DLL or installed save data. To regenerate it, explicitly supply `--zip <resource-archive.zip>` or `--game-dir <installed-game-directory>`.
 
-Current corresponding source is [Lantern.1 engine source](dist/source/pvz-portable-0.2.6-web-lantern.1-source.zip); [web-lantern.1.patch](dist/source/web-lantern.1.patch) is the complete upstream patch and [night1-to-lantern1.patch](dist/source/night1-to-lantern1.patch) is the increment from [Night.1 source](dist/source/pvz-portable-0.2.6-web-night.1-source.zip). The source includes Lantern-shroom, all three bonus challenges and retained QoL implementations, build recipes and focused tests. The full source builds without applying a patch. [Engine provenance](dist/game/engine-provenance.json) and the [build record](dist/source/build-provenance.json) pin release artifacts. The website source contains the save worker and shared storage core. Historical packages, upstream baseline, build provenance and licenses remain available. Full resource payloads remain separate from source archives and are included in the full-runtime distribution. The website source includes the approved original UI artwork extracted for the save-recovery panel; `dist/ui` records its attribution and hashes.
+Current corresponding source is [Lantern.2 engine source](dist/source/pvz-portable-0.2.6-web-lantern.2-source.zip); [web-lantern.2.patch](dist/source/web-lantern.2.patch) is the complete upstream patch and [lantern1-to-lantern2.patch](dist/source/lantern1-to-lantern2.patch) is the increment from [Lantern.1 source](dist/source/pvz-portable-0.2.6-web-lantern.1-source.zip). The source includes Lantern-shroom, all three bonus challenges and retained QoL implementations, build recipes and focused tests. The full source builds without applying a patch. [Engine provenance](dist/game/engine-provenance.json) and the [build record](dist/source/build-provenance.json) pin release artifacts. The website source contains the save worker and shared storage core. Historical packages, upstream baseline, build provenance and licenses remain available. Full resource payloads remain separate from source archives and are included in the full-runtime distribution. The website source includes the approved original UI artwork extracted for the save-recovery panel; `dist/ui` records its attribution and hashes.
 
 Public v15 preserved the three approved XML resource files' original CRLF bytes in Git and added the matching attributes rule, closing the fresh-checkout checksum blocker without changing the Software.7 runtime. GitHub Pages publication succeeded on 2026-10-31 through [release workflow 41230962473](https://github.com/Caleb-Guyer/plants-vs-zombies-web/actions/runs/41230962473). The bounded hosted startup check does not establish full game parity. The user authorized publication of the current build on 2026-10-31 while full 1:1 parity remains unverified; publication does not mark that goal complete.
 

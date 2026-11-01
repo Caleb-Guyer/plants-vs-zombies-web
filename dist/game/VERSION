@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-lantern.1
-Adds Lantern-shroom, a mushroom that briefly slows nearby zombies with a glowing pulse, introduced in the independent nighttime Lantern Glow Bonus challenge.
-Engine JavaScript SHA-256: 94cc37133b75e998e6fc621cfd505f05916ed498b9609d8972b4a121f4e3e272
-Engine WASM SHA-256: f4c268f7bf5535049010ed560fac3382b80471056fdc048b611489e0832c98e4
+PvZ-Portable 0.2.6-web-lantern.2
+Rebuilds Lantern-shroom with the original mushroom body, blinking and animation plus a cap-only edit. Adds unique native-art Bonus pictures and removes added challenge tips.
+Engine JavaScript SHA-256: ba021f822a3187a385cadf68157f20af00745646d50ab4608e7234341d699403
+Engine WASM SHA-256: 2b75f8768df5777a3115e5557b66b3d2655b02bdbc7e4c62cff66a12473bae01
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.

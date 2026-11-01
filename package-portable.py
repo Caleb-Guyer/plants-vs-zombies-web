@@ -163,8 +163,9 @@ def regenerate_source_downloads():
         "schema_version": 1,
         "current_engine": engine["id"],
         "upstream_tag": engine["upstream"]["tag"],
-        "layout": "Site-source nests current corresponding source, its immediate parent when present, and the upstream baseline. Other exact source archives remain standalone downloads beside this index and in the full runtime distribution.",
+        "layout": "Site-source nests current corresponding source, its immediate parent when present, the upstream baseline and the current full patch. Other source archives and incremental/historical patches remain standalone downloads beside this index and in the full runtime distribution.",
         "nested_sources": [path.name for path in nested],
+        "nested_patches": [paths["patch"].name],
         "archives": archives,
     }
     SOURCE_DOWNLOADS.write_text(json.dumps(index, indent=2, ensure_ascii=True) + "\n", encoding="utf-8", newline="\n")
@@ -214,6 +215,9 @@ def collect_dist(include_site_source=False, source_bundle=False):
                 and path.name.startswith("pvz-portable-") and path.suffix.lower() == ".zip"
                 and path.name not in nested_source_names):
             continue  # Exact historical source downloads remain standalone in dist/source.
+        if (source_bundle and path.parent == DIST / "source"
+                and path.suffix.lower() == ".patch" and path.resolve() != paths["patch"]):
+            continue  # Complete source/current full patch suffice for checks and rebuilding.
         if forbidden(path.name):
             raise ValueError(f"Remove prohibited resource/private file from dist: {path}")
         if any(part in {".git", "node_modules", "__pycache__"} for part in path.relative_to(DIST).parts):

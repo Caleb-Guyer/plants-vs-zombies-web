@@ -8,12 +8,59 @@ The user directed us on 2026-10-31 to stop manual gameplay and wrap the current 
 
 Publication status: [GitHub Pages](https://caleb-guyer.github.io/plants-vs-zombies-web/) is live after [workflow 41230962473](https://github.com/Caleb-Guyer/plants-vs-zombies-web/actions/runs/41230962473) succeeded on 2026-10-31. A silent browser check reached the original title without a file prompt; WASM returned HTTP 200 as `application/wasm`. This adds hosting/startup proof only, with no GitHub campaign gameplay or full-parity certification.
 
-## Authorized Lantern-shroom release, 2026-10-31
+## Lantern.2 art revision, 2026-10-31
+
+The user rejected Lantern.1's art style and feel, requested removal of the added
+Bonus tips and required distinct challenge pictures instead of Survival images.
+Current source uses **0.2.6-web-lantern.2**. The [art revision criteria](ART-REVISION-GOAL.md)
+record the requested work. A new goal-tool objective was rejected because the
+older parity goal is paused; do not falsely mark that older goal complete.
+
+Use the actual original Puff-shroom body, face, eyes, blink, idle, sleep, shadow
+and geometry. Change only the cap texture, based on the original cap reference,
+with the original 81×53 native canvas and exact alpha contour. Keep the edited
+cap restrained and the pulse as a short native track-color lift. Remove the
+mismatched full-body bitmap, scaling motion and large ring. Preserve intended
+Lantern-shroom slowing, costs, recharge and all prior gameplay. Full edit prompt
+and reference identity belong in [cap provenance](dist/content/lantern-shroom-cap-art.json).
+
+Give Cone Zone, Night Shift and Lantern Glow distinct pictures composed from
+original resources in their native 80×65 windows. Remove every added Bonus card
+tip beneath or on hover. Preserve the original card titles, menus, unlock tips,
+seed packets and minimal utility rail. Do not add instruction panels or HUD.
+
+Keep every mode/seed/page ID and challenge definition, all saved object fields,
+original campaign, trophy routing, worker and schema 2. Legacy Lantern.1 saves
+must recreate missing native plant bodies and rebind custom cap overrides before
+the paused Continue/background draw without resetting health, position or pulse
+phase. Inspect the new plant beside original mushrooms at actual game size,
+correct observed discrepancies, run focused automated/save checks with sound off
+and publish the corrected source and binary to the existing GitHub Pages site.
+Earlier Lantern.1 art-match claims are historical and rejected, not acceptance
+criteria. Automated tests cannot prove subjective visual perfection.
+
+The final coordinate-corrected build and 1,333 native/fourteen browser checks pass.
+The muted native-size comparison confirmed the new body/cap beside original
+mushrooms, three corrected distinct card pictures and no added hover tips.
+Legacy reconstruction and a fresh current-body save both passed native Continue
+after reload; the fresh board retained 50 sun and all three planted mushrooms.
+These bounded observations are recorded in QA. Website-source and publication
+verification remain separate release records, not borrowed parity evidence.
+
+Publish [Lantern.2 source](dist/source/pvz-portable-0.2.6-web-lantern.2-source.zip),
+[full patch](dist/source/web-lantern.2.patch), [increment](dist/source/lantern1-to-lantern2.patch),
+retained [Lantern.1 source](dist/source/pvz-portable-0.2.6-web-lantern.1-source.zip),
+cap metadata and current website source together. The website-source ZIP retains
+current full source, parent, upstream baseline, tests and only the current full
+patch. Incremental/historical patches and old archives remain separate downloads
+and in the full runtime archive to avoid repeated PNG-bearing patch payloads.
+
+## Historical Lantern.1 authorization — visual direction superseded, 2026-10-31
 
 The user approved the proposed first new plant, **Lantern-shroom**, introduced
 through its own **Lantern Glow** Bonus challenge. Continue the established
 original-style presentation, muted automated testing and GitHub Pages release
-workflow. Current source uses **0.2.6-web-lantern.1**. Keep the normal campaign,
+workflow. That release used **0.2.6-web-lantern.1**. Keep the normal campaign,
 chooser, unlocks, native menus and five discreet utility icons familiar; introduce
 the new plant through the third standard Bonus card, with brief native hover text
 and no extra HUD or instruction panel.
@@ -46,7 +93,7 @@ results without borrowing prior-release evidence or resuming broad parity testin
 
 ## Historical authorized Night Shift release, 2026-10-31
 
-The user explicitly approved adding **Night Shift**, keeping the original game's look and feel, testing with sound off, and publishing to the existing GitHub Pages site. Current source uses **0.2.6-web-night.1**. Put the second card beside Cone Zone under **Mini-Games → Bonus** using native night artwork, fonts, the standard card layout and two-flag banner. Keep instructions to the brief native hover label; add no information panels or overlays.
+The user explicitly approved adding **Night Shift**, keeping the original game's look and feel, testing with sound off, and publishing to the existing GitHub Pages site. That release used **0.2.6-web-night.1**. Put the second card beside Cone Zone under **Mini-Games → Bonus** using native night artwork, fonts, the standard card layout and two-flag banner. Keep instructions to the brief native hover label; add no information panels or overlays.
 
 Use the original nighttime lawn with 150 starting sun, no falling sky sun and twenty authored waves. The fixed bank is Sun-shroom, Puff-shroom, Fume-shroom, Grave Buster, Ice-shroom and Doom-shroom. Preserve their normal costs, recharge and behavior. Introduce newspapers, screen doors and buckets gradually after a gentle opening; retain native graves and final-wave grave zombies. There are no new plant or zombie mechanics or new artwork.
 
@@ -164,7 +211,7 @@ The original native launch reached a Steam startup error without a game/JPEG cap
 
 The user explicitly requested immediate play without choosing game files, save-only import/export and public bundling of original assets. The six approved runtime files total 45,462,524 bytes in eleven parts, under manifest ID `sha256:b468b22439430ca4a36035b886a74bd831a86b2a1a36c39d3203396f5b75d093`. Preserve exact validated bundle bytes, separate save stores, automatic first visit/cache/retry and existing progress. No executable, native library, real save or private QA export belongs in distribution inputs.
 
-The source uses **0.2.6-web-lantern.1**, with exact engine/source/patch identities in `dist/game/engine-provenance.json`. It retains the fileless shell, five icons, normal player audio, native profiles, save-only transfers, public storage keys and keyboard behavior. The frozen public v18 baseline uses Software.10 (source `877bbbf3f001fc2f9202700ba790e27665179e92`); Software.10's own scoped private first-level and save-transfer observations below remain historical. Earlier observations retain their actual build and private/public scope.
+The source uses **0.2.6-web-lantern.2**, with exact engine/source/patch identities in `dist/game/engine-provenance.json`. It retains the fileless shell, five icons, normal player audio, native profiles, save-only transfers, public storage keys and keyboard behavior. The frozen public v18 baseline uses Software.10 (source `877bbbf3f001fc2f9202700ba790e27665179e92`); Software.10's own scoped private first-level and save-transfer observations below remain historical. Earlier observations retain their actual build and private/public scope.
 
 Public v15 preserved the three approved XML resource files' original CRLF bytes in Git and added the matching attributes rule, closing the fresh-checkout checksum blocker without changing the Software.7 runtime. GitHub Pages publication succeeded on 2026-10-31 through [release workflow 41230962473](https://github.com/Caleb-Guyer/plants-vs-zombies-web/actions/runs/41230962473). The bounded hosted startup check does not establish full game parity. The user authorized publication of the current build on 2026-10-31 while full 1:1 parity remains unverified; publication does not mark that goal complete.
 
