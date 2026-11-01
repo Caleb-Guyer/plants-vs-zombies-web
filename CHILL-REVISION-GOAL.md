@@ -1,58 +1,65 @@
-# Chill-shroom original artwork and centered portraits
+# Chill-shroom custom sprite and native challenge pictures
 
-The user requested original game artwork instead of AI pictures and a centered
-Chill-shroom image on 2026-10-31. This supersedes Chill.1's generated cap and
-painted cards. The older parity goal remains paused. The goal tool rejected a
-new objective while that unfinished goal exists; this manual record does not
+The user clarified on 2026-10-31 that a custom plant sprite is allowed. The ban
+concerns AI-generated challenge pictures. Requiring Chill-shroom to copy
+Ice-shroom's appearance was an overly broad interpretation and is superseded.
+The older formal parity goal remains paused; the goal tool rejected a new
+objective while that unfinished goal exists. This manual record does not
 replace or falsely complete it.
 
-The current candidate is `0.2.6-web-chill.2`, based on Chill.1. Player-facing
-names remain **Chill-shroom** and **Cold Front**. Seed 75, mode 75, record 74,
-checkpoint filenames, gameplay and save layouts stay compatible.
+The current source is `0.2.6-web-chill.3`, based on Chill.2. Player-facing
+names remain **Chill-shroom** and **Cold Front**. Gameplay, seed 75, mode 75,
+record 74, checkpoint filenames and native save layouts remain compatible.
 
 Completion criteria:
 
-- Use unchanged original Ice-shroom cap, body, eyes and native animation for
-  Chill-shroom. Remove the generated cap, recoloring and active AI artwork.
-  Preserve the muzzle-free silhouette and original alpha contour/eye opening.
-- Make all three Bonus pictures from original game resources only: one centered
-  Conehead head/cone, Puff-shroom and actual Ice-based Chill-shroom over original
-  grass. Fit visible alpha bounds uniformly into the native 80 by 65 picture;
-  inspect both earned and unearned trophy states at actual game size.
-- Remove generated-image headers/runtime bindings and all twelve standalone AI
-  PNG/provenance aliases. Keep historical source archives and Git history;
-  direct historical artwork links to pinned old blobs. Record original resource
-  identities in [native artwork provenance](dist/content/native-bonus-art.json).
+- Give Chill-shroom a distinct custom mushroom appearance: rounded asymmetric
+  dusty-blue frost cap with broad white spots, mint/cream stem, dark pill eyes
+  and low organic base. Use editable vector/code-drawn parts, not a copied Ice
+  crystal crown, yellow lantern or muzzle. No image-generation tool is used.
+- Preserve the native Ice motion carrier while binding all five custom parts
+  consistently through idle, blink, sleep, wind-up and release. Match pivots,
+  eye clearance and skin across body and separate blink reanimations. Restore
+  image overrides before the first paused draw after native Continue.
+- Keep challenge pictures as centered native compositions of actual sprites:
+  original Conehead, original Puff-shroom and actual custom Chill-shroom over
+  original grass. Use no separately AI-generated challenge illustration.
+  Retain uniform visible-alpha fitting in the 80 by 65 frame and readable
+  earned/unearned trophy states. The packet, card and lawn must show one identity.
 - Retain the 40-tick wind-up, outward cold release and 30-tick recovery, the
   400-active-tick pulse, 150-pixel radius, 150-tick native chill, 75-sun cost,
-  750-tick recharge, enemy eligibility and stronger-chill/freeze behavior. Deal
-  no damage. Preserve paused/sleep/dead/grabbed/squished behavior and save phase.
-- Keep added Bonus tips absent. Retain original frame, trophy, title hover,
-  menus, packets, flags and discreet utility icons, without extra HUD or panels.
-- Preserve original content, IDs, serialized fields, checkpoint/completion
-  routing, schema 2, worker and automatic saves. Verify older custom-image saves
-  return to original art without resetting health, placement or pulse phase.
-- Run focused automated/native/browser/save checks silently with `?testing=1`.
-  Check centered portraits, clear eyes and native plant art at game size; load
-  an existing checkpoint through native Continue. Keep attack/save tests and
-  earlier fresh-save observations tied to their actual build and scope.
-- Publish complete corresponding source, assets, dependencies and provenance to
-  the existing GitHub repository and Pages site. Retain normal-player audio and
-  the GitHub 100 MiB per-file policy; record outer packaging/hosting separately.
+  750-tick recharge, enemy eligibility, stronger chill/freeze and no damage.
+  Preserve paused/sleep/dead/grabbed/squished behavior and saved pulse phase.
+- Keep added Bonus tips absent and retain original title hover, frames, trophies,
+  menus, packets, flags and discreet icons without new HUD or instruction panels.
+- Preserve original content, all IDs, serialized fields, checkpoint/completion
+  routing, schema 2, save worker, automatic saves, QoL and normal-player audio.
+- Run focused native/browser/artwork/save checks silently with `?testing=1`.
+  Inspect the assembled sprite, attack and centered cards at native game size,
+  then check existing checkpoint restoration without substituting old results.
+- Publish complete source, editable SVG/JSON and rasterization code, PNG parts,
+  provenance, dependencies and licenses to the existing GitHub repository and
+  Pages site. Keep the GitHub 100 MiB policy; record packaging/hosting separately.
 
-Status: original-reference/native-pivot review, the coherent Release build,
-focused native/browser checks and engine-source reconstruction pass. Seven
-native suites total 1,431 assertions; fourteen browser suites include eleven
-worker scenarios. The 245.717-second build kept all 771 source inputs unchanged.
-Native-size earned/unearned pictures are centered and readable around the
-original frames/ribbons; hover retains the red title without a tip. Continue
-restores an existing Chill.1 checkpoint with 50 sun, Sun-shroom/Chill-shroom/
-Puff-shroom and original Ice cap/face, graves and mowers. Local criteria pass.
-Publication remains, with website-source packaging and hosted verification
-recorded independently. No new battle win or fresh full save cycle is claimed.
-Testing stayed muted; no image-generation tool was used for this revision.
+Pre-publication local status on 2026-10-31: implementation, focused tests and
+native visual/save criteria pass. The tested 245.914-second Release snapshot
+kept all 775 source files unchanged; seven native suites pass 1,476 checks and
+fourteen browser suites include eleven worker scenarios. The sprite has editable
+SVG/JSON, PNG parts and a Pillow renderer; final LF-normalized art/source/package
+identities have a separate publisher record.
 
-Historical Chill.1 functional results remain in QA and its exact source/Git
-record. The user superseded its AI artwork; those counts and screenshots are
-not current verification. Automated tests and bounded observations do not prove
-subjective perfection or exhaustive original-game parity.
+Actual muted review confirms consistent custom art in packets/cards/lawn,
+centered earned/unearned pictures and native red hover without tips. Continue's
+paused backdrop already shows the new parts; the existing 50-sun Sun/Chill/Puff
+board restores. A bounded 168-frame/5.6-second capture shows closed-eye wind-up,
+twelve-direction frost release and idle recovery without old Ice/blue blink
+flashes. No fresh save-transfer, earned win or full playthrough is claimed.
+Publication remains, with website-source/runtime packaging and hosted rollout
+recorded separately. The user's existing public game tab was untouched.
+
+[Custom sprite provenance](dist/content/chill-shroom/provenance.json) records
+code-drawn inputs; [native card provenance](dist/content/native-bonus-art.json)
+records composition inputs. Earlier Chill.2 counts and screenshots remain
+historical, including its superseded original-Ice-only interpretation.
+Automated tests and bounded observations do not prove subjective perfection or
+exhaustive original-game parity.

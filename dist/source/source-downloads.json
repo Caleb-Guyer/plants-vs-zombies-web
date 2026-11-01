@@ -1,15 +1,15 @@
 {
   "schema_version": 1,
-  "current_engine": "0.2.6-web-chill.2",
+  "current_engine": "0.2.6-web-chill.3",
   "upstream_tag": "0.2.6",
   "layout": "Site-source nests current corresponding source, its immediate parent when present, the upstream baseline and the current full patch. Other source archives and incremental/historical patches remain standalone downloads beside this index and in the full runtime distribution.",
   "nested_sources": [
     "pvz-portable-0.2.6-source.zip",
-    "pvz-portable-0.2.6-web-chill.1-source.zip",
-    "pvz-portable-0.2.6-web-chill.2-source.zip"
+    "pvz-portable-0.2.6-web-chill.2-source.zip",
+    "pvz-portable-0.2.6-web-chill.3-source.zip"
   ],
   "nested_patches": [
-    "web-chill.2.patch"
+    "web-chill.3.patch"
   ],
   "archives": [
     {
@@ -30,6 +30,13 @@
       "name": "pvz-portable-0.2.6-web-chill.2-source.zip",
       "bytes": 4570036,
       "sha256": "e9bf4039b9652cfe9817abdde2119859e033ae7af08cdf7f12c3ffb028b9f5ca",
+      "current": false,
+      "upstream": false
+    },
+    {
+      "name": "pvz-portable-0.2.6-web-chill.3-source.zip",
+      "bytes": 4603427,
+      "sha256": "3248007cf32dc65c44b5a8474f3ed8465cb5fe849697cf77695e6c830af53aca",
       "current": true,
       "upstream": false
     },

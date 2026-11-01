@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-chill.2
-Removes generated cap and card artwork. Uses original Ice-shroom visuals and centered original-sprite Bonus portraits while retaining Chill-shroom attacks and save compatibility.
-Engine JavaScript SHA-256: 87800fada3cffd882c206d08af3dad7c63c0b42a4334413edaa92b2c51062b92
-Engine WASM SHA-256: c92b05020b8421c00152e58ff8335650156f0af4f78bfe548539c3839775e715
+PvZ-Portable 0.2.6-web-chill.3
+Gives Chill-shroom a distinct editable vector sprite with matching sleep and blink frames. Centered native-sprite Bonus portraits, radial attacks and save compatibility are retained.
+Engine JavaScript SHA-256: 5eefa126cc02b7be3df2dc1d3ebd3cefad6869a488c887b9e9af645015884e26
+Engine WASM SHA-256: 904f79299c10d2534de5d6167159112e15219c7a3a65a50be2791774f5ffb7af
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.

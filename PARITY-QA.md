@@ -1,6 +1,95 @@
 # Browser parity and QA record
 
-## Chill.2 original-art and centering revision, 2026-10-31
+## Chill.3 distinct custom sprite and native card compositions, 2026-10-31
+
+The user clarified that a custom plant sprite is allowed; AI-generated challenge
+pictures are forbidden. The earlier interpretation requiring an unchanged
+Ice-shroom appearance was too broad. `0.2.6-web-chill.3` is based
+on Chill.2 and uses a distinct five-part vector/code-drawn sprite: rounded
+asymmetric dusty frost cap, mint/cream stem, dark pill eyes, organic base and
+matching blink patches. No image-generation tool is used.
+
+The native Ice reanimation remains the motion carrier, not the plant's visual
+identity. The parts match its pivots and eye clearance, including the
+image-bearing sleep track and separate blink reanimation. The native XML has
+duplicate `anim_sleep` names; assigning by the first matching name alone would
+bind the marker rather than the eyelids. Saved-null image overrides rebind
+before paused drawing, without resetting state or changing serialized fields.
+
+Challenge pictures remain centered native compositions of the actual sprites,
+not separately generated illustrations: original Conehead, original Puff-shroom
+and the new custom Chill-shroom over original grass. Existing uniform alpha-bound
+fit, 80×65 frames, trophy/hover paths and absent Bonus tips remain. The custom
+sprite is shared by the seed preview, card and lawn. Gameplay,
+attack, IDs, saves, worker and QoL retain their prior behavior.
+
+Independent part-level inspection viewed all five native-size PNGs and the
+editable vector recipe: low asymmetric cap, broad spots, muted underside,
+cream/mint waist, matching blink skin and no muzzle. No critical part-level
+style defect was found. Separate native observations below verify assembly.
+
+Seven source-coherent native suites pass **1,476 checks**: 66 speed, 90 controls,
+105 decks/cooldowns, 139 Cone Zone, 557 completion/rewards/navigation,
+131 Night Shift and 388 custom-plant/portrait checks. The last suite executes
+five-part pixel caching/binding, image-bearing duplicate sleep selection,
+blink-frame variants, owned-blink portable-null rebinding, existing-Ice upgrade,
+original-Ice isolation and shared live/preview/card rendering alongside retained
+mechanics/centering checks. These controlled production-method checks do not
+establish visual perfection or initialize audio.
+
+Pre-publication local evidence on 2026-10-31: the tested Emscripten Release
+build passed in **245.914 seconds**, with all **775 source files unchanged**
+during compilation. All fourteen browser integration suites pass, including
+eleven worker scenarios. The five-part sprite uses editable SVG/JSON and a Pillow
+renderer. After these gameplay checks, Windows-default newlines were found in
+SVG/provenance and generator writes. The LF normalization affects formatting,
+without changing sprite pixels. Final normalized source/art reproduction,
+full/parent patches and package identities have a separate publisher record.
+Exact source/binary/patch identities belong in release manifests rather than
+duplicated hash lists here.
+
+Actual muted local `?testing=1` review confirms the distinct custom sprite in
+the seed bank, lawn and centered Cold Front card. Earned and unearned Bonus
+views retain readable centered heroes; hover keeps the native red title and
+adds no tip. Private proofs are `outputs/pvz-chill3-release/live-native-sprite.png`,
+`bonus-unearned.png`, `bonus-earned.png` and `bonus-hover.png`. The assembled
+`sprite-proof.png` uses the actual native idle transforms and draw order; the
+earlier unscaled proof is not acceptance evidence.
+
+Native Continue's paused backdrop already shows the new parts. After Continue,
+the existing board restores 50 sun and Sun-shroom/Chill-shroom/Puff-shroom.
+`paused-save-restored.png` and `after-cycle-paused.png` provide private proof.
+A 168-frame, 5.6-second bounded capture shows closed-eye wind-up, a twelve-direction
+frost release and recovery to idle without an old Ice part or blue blink flash;
+`attack-contact-sheet.jpg` records sample frames. This is visible behavior, not
+a precise browser timing/range or FPS measurement. Production-method tests cover
+the exact mechanics. No fresh save-transfer, earned win or full playthrough is
+credited to this review. The user's existing public GitHub game tab was untouched.
+
+Local implementation, focused checks and native art/save criteria pass.
+Website-source/runtime packaging and hosted publication are separate release
+records. [Current criteria](CHILL-REVISION-GOAL.md) track the clarification;
+the older formal parity goal remains paused. Earlier counts/screenshots do not
+establish this revision's results or exhaustive original-game parity.
+
+Final LF-normalized artwork source was rebuilt after the pre-publication
+observations above. The 153.599-second incremental build preserves all 775
+source files and produces the exact same JS/WASM bytes as the visually tested
+build. The artwork-dependent suite was rerun: 388 checks pass; all seven current
+reports total 1,476. All eleven public SVG/PNG/provenance files and the packed
+pixel header reproduce byte for byte with Pillow 12.2.0. The final source ZIP
+contains 807 entries / 4,603,427 bytes, SHA-256
+`3248007cf32dc65c44b5a8474f3ed8465cb5fe849697cf77695e6c830af53aca`.
+Both full-upstream and Chill.2 incremental patches reconstruct all 775 source
+files exactly. Final website-package and hosted-byte receipts are checked
+separately by the publisher; no broad gameplay or original-reference parity
+claim follows from these results.
+
+## Historical Chill.2 original-art revision — interpretation superseded, 2026-10-31
+
+The user later clarified that a distinct custom plant sprite is permitted and
+that the restriction concerns generated challenge pictures. The original-Ice
+requirement and evidence below retain their historical scope.
 
 The user requested original game artwork instead of AI pictures and a centered
 Chill-shroom portrait. The `0.2.6-web-chill.2` candidate is based on Chill.1.
@@ -16,7 +105,7 @@ over original grass. Native CPU rendering resolves each actor's alpha bounds
 before a uniform fit into 68×57 centered at (40,32.5). This centers the visible
 art rather than the padded preview canvas. Original artwork, input identities
 and composition provenance belong in
-[native artwork provenance](dist/content/native-bonus-art.json).
+[native artwork provenance](https://github.com/Caleb-Guyer/plants-vs-zombies-web/blob/2737e8d76b5fa485ef4b13fc604973d46f27a67b/dist/content/native-bonus-art.json).
 
 The Conehead actor retains original head and jaw plus cone tracks; body, neck,
 arms and other accessories are hidden. Original day/night background resources
@@ -65,7 +154,7 @@ completed battle. The fresh save/reload evidence below remains specific to Chill
 Both owned test tabs 16 and 17 used `?testing=1` with mute checked and were closed.
 The user's public tab 4 was untouched. Local criteria pass; website-source
 packaging and publication remain independent release records.
-[Current criteria](CHILL-REVISION-GOAL.md) track this revision while the older
+[Current criteria](https://github.com/Caleb-Guyer/plants-vs-zombies-web/blob/2737e8d76b5fa485ef4b13fc604973d46f27a67b/CHILL-REVISION-GOAL.md) track this revision while the older
 formal parity goal remains paused. Earlier Chill.1/Lantern results do not become
 this build's results. No full original-game parity or subjective visual
 perfection is claimed.

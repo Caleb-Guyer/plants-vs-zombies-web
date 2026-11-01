@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "version": "0.2.6-web-chill.3",
+  "method": "Editable vector paths with deterministic Pillow rasterization",
+  "pillowVersion": "12.2.0",
+  "imageGenerationUsed": false,
+  "standaloneChallengeIllustrations": false,
+  "recipeSha256": "47ee5d507b892b5400ea4800b65829634fc7ada12c160b6d5fb37695d7dd450e",
+  "generatorSha256": "293db57d4b338eb190a06cb8abef9be4c6801add3582b306b269f754b8e39ce1",
+  "headerSha256": "405ead5076643139bfa507dcff942abef29cd25b4a8a3060d2552de834864506",
+  "parts": {
+    "cap": {
+      "width": 103,
+      "height": 54,
+      "pngSha256": "9256bdc558908220ec640ce86fb716cc4d637910166120097a2a7b0732500241",
+      "rgbaSha256": "9cadc2b5bfc803138e97430e37cab22761b64615d63e05bd064fb5b3afca2103"
+    },
+    "body": {
+      "width": 66,
+      "height": 45,
+      "pngSha256": "81dc0c69182787d64d5aec48b5929578a599b5bf22c82b4acf060a7608dd4ea5",
+      "rgbaSha256": "8407eba26d3d12b6e5236d5dbacc2608c2d8b15833c4a1f642b668cb70b7141d"
+    },
+    "base": {
+      "width": 75,
+      "height": 21,
+      "pngSha256": "2f6bf07ea1e43b20c59a3f5718d1be6da81fc567235dbeb8f4a20c354d00b3aa",
+      "rgbaSha256": "6633d88e060a120d075252724713800e7eb3a5d744dfb5d35d818a6f140e06bc"
+    },
+    "blink1": {
+      "width": 33,
+      "height": 9,
+      "pngSha256": "5afa334a7bb37c5ca7a63f6d29bc263a0206ed22a9dcaec7b3cb30da4c3cbc52",
+      "rgbaSha256": "0c8f3a0a16eb8ccbec5ce55cf7cdfa69add1d4c6aaff6fd85211325b4b768ef4"
+    },
+    "blink2": {
+      "width": 33,
+      "height": 9,
+      "pngSha256": "82877fc20679a0d410358e22c86d5ffe72e8fc1aef87d2b23ff5be39f848f1a8",
+      "rgbaSha256": "bfe1b0846e0f4fd0cfc9ae6d9e60a3ae397fe108810951cf5490d3edfc9207d2"
+    }
+  }
+}

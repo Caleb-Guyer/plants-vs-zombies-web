@@ -8,6 +8,7 @@ import path from 'node:path';
 import {createHash} from 'node:crypto';
 import {createRequire} from 'node:module';
 import {spawnSync} from 'node:child_process';
+import {inflateSync} from 'node:zlib';
 
 const require = createRequire(import.meta.url);
 const dist = new URL('../dist/', import.meta.url);
@@ -16,10 +17,10 @@ new Function('module', 'exports', 'require', fs.readFileSync(new URL('vendor/jsz
 const JSZip = vendor.exports;
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
 const engine = JSON.parse(fs.readFileSync(new URL('game/engine-provenance.json', dist)));
-assert.equal(engine.id, '0.2.6-web-chill.2');
+assert.equal(engine.id, '0.2.6-web-chill.3');
 const current = await JSZip.loadAsync(fs.readFileSync(new URL(engine.artifacts.source, new URL('game/engine-provenance.json', dist))), {checkCRC32: true});
-const parent = await JSZip.loadAsync(fs.readFileSync(new URL('source/pvz-portable-0.2.6-web-chill.1-source.zip', dist)), {checkCRC32: true});
-const prefix = 'chill2-candidate/';
+const parent = await JSZip.loadAsync(fs.readFileSync(new URL('source/pvz-portable-0.2.6-web-chill.2-source.zip', dist)), {checkCRC32: true});
+const prefix = 'chill3-candidate/';
 const read = async name => {
   const entry = current.file(prefix + name);
   assert(entry, 'Missing current production source/test: ' + name);
@@ -42,7 +43,7 @@ for (const name of suites) {
   checks += result.checks;
   reports.set(name, result);
 }
-const parentBytes = async name => Buffer.from(await parent.file('chill1-candidate/source/' + name).async('uint8array'));
+const parentBytes = async name => Buffer.from(await parent.file('chill2-candidate/source/' + name).async('uint8array'));
 // SeedPacket.h also defines the serialized SeedBank class.
 for (const name of ['src/Lawn/SeedPacket.h', 'src/Lawn/Plant.h', 'src/Lawn/Zombie.h', 'src/Lawn/Challenge.h', 'src/Lawn/System/SaveGame.cpp', 'src/Lawn/System/PlayerInfo.h', 'src/Lawn/System/PlayerInfo.cpp', 'src/LawnApp.h', 'src/Lawn/System/ReanimationLawn.h']) {
   assert.deepEqual(await read('source/' + name), await parentBytes(name), 'Saved data layout/serialization must remain unchanged');
@@ -116,24 +117,173 @@ assert(newDefinitions.at(-1).includes('.mChallengeName = "Cold Front"'));
 console.log('PASS Chill-shroom preserves all mode/seed IDs, saved layouts, 53 original plant definitions and all challenge identities and titles.');
 
 const artRecord = JSON.parse(fs.readFileSync(new URL('content/native-bonus-art.json', dist)));
-assert.equal(artRecord.sourceKind, 'original hand-drawn bundled game resources');
+assert.equal(artRecord.sourceKind, 'native sprite compositions with custom code-drawn vector plant parts');
 assert.equal(artRecord.generatedArtworkUsed, false);
 assert.equal(artRecord.assetBundleId, engine.assetBundleId);
 assert.equal(artRecord.plant.nativeReanimation, 'REANIM_ICESHROOM');
-assert.equal(artRecord.plant.capOverride, null);
+assert.equal(artRecord.plant.spriteOverride, 'chill-shroom/provenance.json');
 assert.deepEqual(artRecord.canvas, {width: 80, height: 65, heroCenterX: 40, heroCenterY: 32.5, maxHeroWidth: 68, maxHeroHeight: 57});
 assert.deepEqual(artRecord.cards.map(card => card.mode), [73, 74, 75]);
 assert.deepEqual(artRecord.cards.map(card => card.name), ['Cone Zone', 'Night Shift', 'Cold Front']);
 const renderer = (await read('source/src/Lawn/System/LanternShroom.cpp')).toString();
 assert(!/FrostShroomCap|BonusChallengeArt|DecodeBase64|png_image_|DecodeImage/.test(renderer), 'Current rendering cannot load the rejected generated artwork');
-assert(renderer.includes('SetImageOverride("IceShroom_head", nullptr)'), 'Saved custom cap overrides are explicitly cleared');
+assert(renderer.includes('#include "ChillShroomArt.h"') && renderer.includes('BindParts(native)'),
+  'Cold Front portraits render the same custom parts as the live plant');
 for (const header of ['FrostShroomCap.h', 'BonusChallengeArt.h']) {
   assert.equal(current.file(prefix + 'source/src/Lawn/System/' + header), null, 'Generated artwork headers are absent from current source');
 }
 for (const name of ['chill-shroom-cap', 'cone-zone-card', 'night-shift-card', 'cold-front-card', 'lantern-shroom', 'lantern-shroom-cap']) {
-  for (const suffix of ['.png', '-art.json']) assert(!fs.existsSync(new URL('content/' + name + suffix, dist)), 'Rejected generated-art aliases stay absent: ' + name + suffix);
+  for (const suffix of ['.png', '.svg', '-art.json']) assert(!fs.existsSync(new URL('content/' + name + suffix, dist)), 'Rejected generated-art aliases stay absent: ' + name + suffix);
 }
-console.log('PASS original-resource artwork provenance, unchanged native Ice carrier, cleared custom cap overrides and removal of active generated images.');
+
+// Decode the actual exported PNGs independently of Pillow and the C++ artwork
+// generator. PNG stores unassociated RGBA; the runtime header stores straight ARGB.
+function crc32(bytes) {
+  let value = 0xffffffff;
+  for (const byte of bytes) {
+    value ^= byte;
+    for (let bit = 0; bit < 8; bit++) value = (value >>> 1) ^ (value & 1 ? 0xedb88320 : 0);
+  }
+  return (value ^ 0xffffffff) >>> 0;
+}
+function decodeRgbaPng(bytes) {
+  assert.deepEqual(bytes.subarray(0, 8), Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]));
+  let offset = 8, width, height, ended = false;
+  const compressed = [];
+  while (offset < bytes.length) {
+    assert(offset + 12 <= bytes.length, 'Complete PNG chunk header');
+    const length = bytes.readUInt32BE(offset), end = offset + 12 + length;
+    assert(end <= bytes.length, 'Complete PNG chunk payload');
+    const type = bytes.toString('ascii', offset + 4, offset + 8);
+    const data = bytes.subarray(offset + 8, end - 4);
+    assert.equal(crc32(bytes.subarray(offset + 4, end - 4)), bytes.readUInt32BE(end - 4), 'PNG chunk CRC: ' + type);
+    if (type === 'IHDR') {
+      assert.equal(offset, 8, 'IHDR is the first and only header');
+      assert.equal(length, 13);
+      width = data.readUInt32BE(0); height = data.readUInt32BE(4);
+      assert(width > 0 && height > 0 && width <= 256 && height <= 256);
+      assert.deepEqual([...data.subarray(8)], [8, 6, 0, 0, 0], 'Noninterlaced RGBA8 PNG');
+    } else if (type === 'IDAT') {
+      assert(width && height && !ended);
+      compressed.push(data);
+    } else if (type === 'IEND') {
+      assert.equal(length, 0);
+      assert(compressed.length > 0);
+      assert.equal(end, bytes.length, 'No bytes follow the PNG end marker');
+      ended = true;
+    } else {
+      assert(type.charCodeAt(0) & 32, 'No unknown critical PNG chunks');
+    }
+    offset = end;
+  }
+  assert(ended, 'PNG has an end marker');
+  const stride = width * 4;
+  const scanlines = inflateSync(Buffer.concat(compressed), {maxOutputLength: height * (stride + 1)});
+  assert.equal(scanlines.length, height * (stride + 1));
+  const rgba = Buffer.alloc(width * height * 4);
+  const paeth = (left, up, upperLeft) => {
+    const prediction = left + up - upperLeft;
+    const a = Math.abs(prediction - left), b = Math.abs(prediction - up), c = Math.abs(prediction - upperLeft);
+    return a <= b && a <= c ? left : b <= c ? up : upperLeft;
+  };
+  for (let y = 0; y < height; y++) {
+    const source = y * (stride + 1), target = y * stride, filter = scanlines[source];
+    assert(filter <= 4, 'Supported PNG row filter');
+    for (let x = 0; x < stride; x++) {
+      const left = x >= 4 ? rgba[target + x - 4] : 0;
+      const up = y ? rgba[target + x - stride] : 0;
+      const upperLeft = y && x >= 4 ? rgba[target + x - stride - 4] : 0;
+      const prediction = filter === 0 ? 0 : filter === 1 ? left : filter === 2 ? up :
+        filter === 3 ? Math.floor((left + up) / 2) : paeth(left, up, upperLeft);
+      rgba[target + x] = (scanlines[source + 1 + x] + prediction) & 255;
+    }
+  }
+  return {width, height, rgba};
+}
+
+const artworkUrl = new URL('content/chill-shroom/', dist);
+const artwork = JSON.parse(fs.readFileSync(new URL('provenance.json', artworkUrl)));
+assert.equal(artwork.schema, 1);
+assert.equal(artwork.version, engine.id);
+assert.equal(artwork.method, 'Editable vector paths with deterministic Pillow rasterization');
+assert.equal(artwork.imageGenerationUsed, false);
+assert.equal(artwork.standaloneChallengeIllustrations, false);
+const headerBytes = await read('source/src/Lawn/System/ChillShroomArt.h');
+const header = headerBytes.toString();
+const recipeBytes = await read('source/artwork/chill-shroom/recipe.json');
+const recipe = JSON.parse(recipeBytes);
+const generator = await read('source/artwork/chill-shroom/render.py');
+assert.equal(sha(headerBytes), artwork.headerSha256);
+assert.equal(sha(recipeBytes), artwork.recipeSha256);
+assert.equal(sha(generator), artwork.generatorSha256);
+assert.equal(recipe.imageGenerationUsed, false);
+const sourceManifest = JSON.parse(await read('source-manifest.json'));
+assert.equal(sourceManifest.version, engine.id);
+for (const name of ['src/Lawn/System/ChillShroomArt.h', 'artwork/chill-shroom/recipe.json', 'artwork/chill-shroom/render.py', 'artwork/chill-shroom/design.py']) {
+  const bytes = await read('source/' + name), pin = sourceManifest.files[name];
+  assert(pin, 'Editable art source is included in the source manifest: ' + name);
+  assert.equal(pin.bytes, bytes.length);
+  assert.equal(pin.sha256, sha(bytes));
+}
+
+const dimensions = {cap: [103, 54], body: [66, 45], base: [75, 21], blink1: [33, 9], blink2: [33, 9]};
+assert.deepEqual(Object.keys(artwork.parts).sort(), Object.keys(dimensions).sort());
+const decodedParts = new Map();
+for (const [name, [width, height]] of Object.entries(dimensions)) {
+  const pin = artwork.parts[name], symbol = name[0].toUpperCase() + name.slice(1);
+  assert.equal(pin.width, width); assert.equal(pin.height, height);
+  const png = fs.readFileSync(new URL(name + '.png', artworkUrl));
+  assert.equal(sha(png), pin.pngSha256, 'Published PNG pin: ' + name);
+  const decoded = decodeRgbaPng(png);
+  assert.equal(decoded.width, width); assert.equal(decoded.height, height);
+  assert.equal(sha(decoded.rgba), pin.rgbaSha256, 'Decoded pixel pin: ' + name);
+  assert.equal(Number(header.match(new RegExp('k' + symbol + 'Width\\s*=\\s*(\\d+)'))?.[1]), width);
+  assert.equal(Number(header.match(new RegExp('k' + symbol + 'Height\\s*=\\s*(\\d+)'))?.[1]), height);
+  const array = header.match(new RegExp('k' + symbol + 'Argb\\[\\]\\s*=\\s*\\{([\\s\\S]*?)\\};'));
+  assert(array, 'Packed runtime pixels: ' + name);
+  const pixels = [...array[1].matchAll(/0x([0-9a-fA-F]{8})u/g)].map(match => Number.parseInt(match[1], 16));
+  assert.equal(pixels.length, width * height);
+  const rgba = Buffer.alloc(width * height * 4);
+  pixels.forEach((pixel, index) => {
+    rgba[index * 4] = (pixel >>> 16) & 255;
+    rgba[index * 4 + 1] = (pixel >>> 8) & 255;
+    rgba[index * 4 + 2] = pixel & 255;
+    rgba[index * 4 + 3] = pixel >>> 24;
+  });
+  assert.deepEqual(decoded.rgba, rgba, 'Public PNG and embedded runtime artwork are pixel-identical: ' + name);
+  decodedParts.set(name, decoded);
+
+  const svg = fs.readFileSync(new URL(name + '.svg', artworkUrl), 'utf8');
+  assert(!/<image\b|(?:href|src)\s*=|<script\b/i.test(svg), 'Editable SVG contains paths, not external or raster artwork');
+  assert.match(svg, new RegExp('<svg[^>]*\\bwidth="' + width + '"[^>]*\\bheight="' + height + '"'));
+  const shapes = name.startsWith('blink') ?
+    [...recipe.parts.body.shapes.slice(0, -recipe.openEyes.length), ...recipe[name === 'blink1' ? 'halfEyes' : 'closedEyes']] : recipe.parts[name].shapes;
+  const svgPaths = [...svg.matchAll(/<path\b([^>]*)\/?\s*>/g)];
+  assert.equal(svgPaths.length, shapes.length, 'Editable SVG path count matches the canonical recipe: ' + name);
+  svgPaths.forEach((match, index) => {
+    const attributes = new Map([...match[1].matchAll(/([\w-]+)="([^"]*)"/g)].map(value => [value[1], value[2]]));
+    const tokens = attributes.get('d').match(/[MLCZ]|[-+]?(?:\d*\.\d+|\d+\.?\d*)(?:[eE][-+]?\d+)?/g)
+      .map(value => /^[MLCZ]$/.test(value) ? value : Number(value));
+    assert.deepEqual(tokens, shapes[index].path.flat(), 'Editable SVG paths match the canonical recipe: ' + name);
+    assert.equal(attributes.get('fill'), shapes[index].fill || 'none');
+    assert.equal(attributes.get('stroke'), shapes[index].stroke);
+    if (shapes[index].stroke) assert.equal(Number(attributes.get('stroke-width')), shapes[index].width || 1);
+  });
+}
+assert(decodedParts.get('cap').rgba.subarray(46 * 103 * 4).every(value => value === 0),
+  'Native cap canvas leaves its lower eight rows clear for the face');
+const body = decodedParts.get('body').rgba, blink1 = decodedParts.get('blink1').rgba, blink2 = decodedParts.get('blink2').rgba;
+assert(!blink1.equals(blink2), 'Half and closed blink frames differ');
+for (let y = 0; y < 9; y++) {
+  for (const x of [0, 1, 14, 15, 16, 17, 31, 32]) {
+    const eyeOffset = (y * 33 + x) * 4, bodyOffset = (y * 66 + x + 17) * 4;
+    const skin = body.subarray(bodyOffset, bodyOffset + 4);
+    assert.equal(skin[3], 255, 'Blink skin samples are opaque');
+    assert.deepEqual(blink1.subarray(eyeOffset, eyeOffset + 4), skin, 'Half blink retains the same stem skin');
+    assert.deepEqual(blink2.subarray(eyeOffset, eyeOffset + 4), skin, 'Closed blink retains the same stem skin');
+  }
+}
+console.log('PASS custom editable vector-part provenance, independently decoded PNG/runtime pixel parity, matching blink skin and native portrait composition without generated challenge illustrations.');
 
 
 if (process.argv.includes('--run-native')) {
