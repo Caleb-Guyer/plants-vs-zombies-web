@@ -8,26 +8,37 @@
     "displayName": "Chill-shroom",
     "nativeReanimation": "REANIM_ICESHROOM",
     "spriteOverride": "chill-shroom/provenance.json",
-    "scope": "The accepted Chill.6 painted sprite and exact shared geometry are unchanged. Chill.7 adds saved-phase, ground-anchored breathing and target-aware wind-up while the same DrawRig renders the lawn, packet and card. Ice remains an invisible animation/save carrier."
+    "scope": "Accepted painted Chill-shroom and shared rig retained. A Cold Front win, including an existing valid win, unlocks the native addon packet for normal seed selection and saved decks.",
+    "unlock": {
+      "winMode": 75,
+      "originalSeedId": 75,
+      "runtimeChooserSlot": 49,
+      "originalChooserCountPreserved": 49,
+      "savedArrayCapacityPreserved": 53,
+      "customImitaterCopy": false
+    }
   },
   "cards": [
     {
       "mode": 73,
       "name": "Cone Zone",
       "hero": "original conehead zombie portrait",
-      "background": "IMAGE_BACKGROUND1"
+      "background": "IMAGE_BACKGROUND1",
+      "gameplay": "Native bowling conveyor, ten waves and one flag in new games."
     },
     {
       "mode": 74,
       "name": "Night Shift",
       "hero": "REANIM_PUFFSHROOM",
-      "background": "IMAGE_BACKGROUND2"
+      "background": "IMAGE_BACKGROUND2",
+      "gameplay": "Native nighttime mushroom conveyor, guaranteed opening packets, four graves and ten waves in new games."
     },
     {
       "mode": 75,
       "name": "Cold Front",
       "hero": "Approved Chill-shroom shared DrawRig",
-      "background": "IMAGE_BACKGROUND2"
+      "background": "IMAGE_BACKGROUND2",
+      "gameplay": "Native preparation and defense puzzle: 1500 sun, no graves or income, four waves; the original Lets Rock button starts combat."
     }
   ],
   "canvas": {
@@ -73,5 +84,6 @@
     ],
     "newGeneratedArtwork": false,
     "mechanics": "Release-time radial slow, no damage or delayed projectile hit; native puffs are the visual plume."
-  }
+  },
+  "checkpointCompatibility": "State-zero existing bonus checkpoints keep their previous fixed-bank twenty-wave rules; New Game starts the redesigned minigame. Existing completion rewards remain valid."
 }

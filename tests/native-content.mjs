@@ -17,12 +17,12 @@ new Function('module', 'exports', 'require', fs.readFileSync(new URL('vendor/jsz
 const JSZip = vendor.exports;
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
 const engine = JSON.parse(fs.readFileSync(new URL('game/engine-provenance.json', dist)));
-assert.equal(engine.id, '0.2.6-web-chill.7');
+assert.equal(engine.id, '0.2.6-web-chill.8');
 const current = await JSZip.loadAsync(fs.readFileSync(new URL(engine.artifacts.source, new URL('game/engine-provenance.json', dist))), {checkCRC32: true});
-const parentSourceBytes = fs.readFileSync(new URL('source/pvz-portable-0.2.6-web-chill.6-source.zip', dist));
-assert.equal(sha(parentSourceBytes), '518d779b9948ac8a2d124db8f7929f13acf1121f38953d4ebee367518da17104', 'Parent is the exact published Chill.6 source');
+const parentSourceBytes = fs.readFileSync(new URL('source/pvz-portable-0.2.6-web-chill.7-source.zip', dist));
+assert.equal(sha(parentSourceBytes), '450613f4d14df23380549081b154d40c11587151d37e749a74f5118a11534605', 'Parent is the exact published Chill.7 source');
 const parent = await JSZip.loadAsync(parentSourceBytes, {checkCRC32: true});
-const prefix = 'chill7-candidate/';
+const prefix = 'chill8-candidate/';
 const read = async name => {
   const entry = current.file(prefix + name);
   assert(entry, 'Missing current production source/test: ' + name);
@@ -45,7 +45,7 @@ for (const name of suites) {
   checks += result.checks;
   reports.set(name, result);
 }
-const parentBytes = async name => Buffer.from(await parent.file('chill6-candidate/source/' + name).async('uint8array'));
+const parentBytes = async name => Buffer.from(await parent.file('chill7-candidate/source/' + name).async('uint8array'));
 // SeedPacket.h also defines the serialized SeedBank class.
 for (const name of ['src/Lawn/SeedPacket.h', 'src/Lawn/Plant.h', 'src/Lawn/Zombie.h', 'src/Lawn/Challenge.h', 'src/Lawn/System/SaveGame.cpp', 'src/Lawn/System/PlayerInfo.h', 'src/Lawn/System/PlayerInfo.cpp', 'src/LawnApp.h', 'src/Lawn/System/ReanimationLawn.h']) {
   assert.deepEqual(await read('source/' + name), await parentBytes(name), 'Saved data layout/serialization must remain unchanged');
@@ -82,15 +82,15 @@ const oldEnums = (await parentBytes('src/ConstEnums.h')).toString();
 const newEnums = (await read('source/src/ConstEnums.h')).toString();
 const oldModes = enumValues(oldEnums, 'GameMode'), newModes = enumValues(newEnums, 'GameMode');
 assert.equal(oldModes.get('NUM_GAME_MODES'), 76);
-assert.deepEqual([...newModes], [...oldModes], 'The visual revision preserves every game mode and mode count');
+assert.deepEqual([...newModes], [...oldModes], 'The minigame revision preserves every game mode and mode count');
 assert.deepEqual([...enumValues(newEnums, 'ChallengePage')], [...enumValues(oldEnums, 'ChallengePage')],
   'Cold Front uses the existing Bonus page without changing any page IDs');
 const oldSeeds = enumValues(oldEnums, 'SeedType'), newSeeds = enumValues(newEnums, 'SeedType');
 for (const [key, value] of oldSeeds) assert.equal(newSeeds.get(key), value, 'Every original and special seed ID stays stable: ' + key);
-assert.deepEqual([...newSeeds], [...oldSeeds], 'The visual revision preserves every seed ID and sentinel');
+assert.deepEqual([...newSeeds], [...oldSeeds], 'The minigame revision preserves every seed ID and sentinel');
 assert.equal(newSeeds.get('SEED_LANTERNSHROOM'), 75);
 assert.equal(newSeeds.get('NUM_SEED_TYPES'), 53, 'Original plant cache capacity stays unchanged');
-assert.equal(newSeeds.get('NUM_SEEDS_IN_CHOOSER'), 49, 'Original chooser and unlock inventory stays unchanged');
+assert.equal(newSeeds.get('NUM_SEEDS_IN_CHOOSER'), 49, 'Original serialized chooser capacity stays unchanged; the custom entry uses a sparse UI mapping');
 function plantDefinitions(text) {
   const table = text.slice(text.indexOf('gPlantDefs['));
   const end = table.indexOf('};');
@@ -352,45 +352,83 @@ assert.deepEqual(fs.readFileSync(new URL('generation.json', artworkUrl)), genera
 
 const sourceManifest = JSON.parse(await read('source-manifest.json'));
 assert.equal(sourceManifest.version, engine.id);
-// Motion and target gating are confined to the custom plant's three runtime
-// files. Save layouts, engine/dependency code, other content and sprite inputs
-// remain the exact published parent bytes. Only release identity may change in
-// the artwork packer's otherwise unchanged deterministic source.
-const runtimeInputs = new Set(['src/Lawn/System/LanternShroom.h',
-  'src/Lawn/System/LanternShroom.cpp', 'src/Lawn/Plant.cpp']);
+// This revision changes only the three custom modes, their native setup/conveyor
+// integration, and the sparse native chooser/deck mapping. Everything outside
+// this reviewed file list remains the exact published parent source.
+const runtimeInputs = new Set([
+  'src/Lawn/Board.cpp', 'src/Lawn/Challenge.cpp', 'src/LawnApp.cpp',
+  'src/Lawn/System/BonusChallenge.h', 'src/Lawn/System/NightShift.h', 'src/Lawn/System/LanternGlow.h',
+  'src/Lawn/System/DeckPresets.h', 'src/Lawn/Widget/SeedChooserScreen.cpp', 'src/Lawn/Widget/SeedChooserScreen.h',
+]);
 const releaseIdentityInputs = new Set(['CMake/ProjectVersion.cmake', 'artwork/chill-shroom/render.py']);
 for (const entry of Object.values(parent.files)) {
-  if (entry.dir || !entry.name.startsWith('chill6-candidate/source/')) continue;
-  const name = entry.name.slice('chill6-candidate/source/'.length);
+  if (entry.dir || !entry.name.startsWith('chill7-candidate/source/')) continue;
+  const name = entry.name.slice('chill7-candidate/source/'.length);
   if (runtimeInputs.has(name)) continue;
   const before = Buffer.from(await entry.async('uint8array'));
   const after = await read('source/' + name);
   if (releaseIdentityInputs.has(name)) {
-    assert.equal(after.toString().replaceAll('0.2.6-web-chill.7', '0.2.6-web-chill.6'), before.toString(),
+    assert.equal(after.toString().replaceAll('0.2.6-web-chill.8', '0.2.6-web-chill.7'), before.toString(),
       'Only the release identity may change in metadata source: ' + name);
-  } else assert.deepEqual(after, before, 'Motion pass preserves unrelated engine/content/art bytes: ' + name);
+  } else assert.deepEqual(after, before, 'Minigame revision preserves unrelated engine/content/art bytes: ' + name);
 }
-for (const name of Object.keys(sourceManifest.files)) assert(parent.file('chill6-candidate/source/' + name),
-  'Motion pass adds no unrelated production source: ' + name);
-// Plant.cpp is shared with all original plants. Its only edits are the custom
-// ability implementation and its existing custom pose call in UpdateReanim.
+for (const name of Object.keys(sourceManifest.files)) assert(parent.file('chill7-candidate/source/' + name),
+  'Minigame revision adds no unrelated production source: ' + name);
 function omitFunction(text, signature) {
   const start = text.indexOf(signature);
-  assert(start >= 0 && text.indexOf(signature, start + signature.length) < 0, 'Unique custom ability implementation');
+  assert(start >= 0 && text.indexOf(signature, start + signature.length) < 0, 'Unique reviewed function: ' + signature);
   let cursor = text.indexOf('{', start), depth = 1;
   assert(cursor > start);
   while (depth && ++cursor < text.length) depth += Number(text[cursor] === '{') - Number(text[cursor] === '}');
   assert.equal(depth, 0);
   return text.slice(0, start) + text.slice(cursor + 1);
 }
-const originalPlant = (await parentBytes('src/Lawn/Plant.cpp')).toString();
-const currentPlant = (await read('source/src/Lawn/Plant.cpp')).toString();
-const oldPoseCall = 'LanternShroom::GetAttackPose(mStateCountdown, mDoSpecialCountdown)';
-const newPoseCall = 'LanternShroom::GetPlantPose(mStateCountdown, mDoSpecialCountdown, aBodyReanim->mAnimTime)';
-assert.equal(currentPlant.split(newPoseCall).length, 2, 'One existing custom pose hook gains the native idle clock');
-assert.equal(omitFunction(currentPlant.replace(newPoseCall, oldPoseCall), 'void UpdateLanternShroom(Plant& plant)'),
-  omitFunction(originalPlant, 'void UpdateLanternShroom(Plant& plant)'),
-  'Every byte outside the custom ability and existing custom pose hook remains unchanged in shared Plant.cpp');
+const sharedFunctionScopes = {
+  'src/Lawn/Board.cpp': ['Board::Board(', 'int Board::GetNumWavesPerFlag(', 'void Board::PickZombieWaves(',
+    'void Board::PickBackground(', 'void Board::InitLevel(', 'void Board::MouseUp(',
+    'void Board::DrawTopRightUI(', 'void Board::DrawUITop(', 'bool Board::HasConveyorBeltSeedBank(',
+    'int Board::GetNumSeedsInBank(', 'bool Board::StageHasGraveStones('],
+  'src/Lawn/Challenge.cpp': ['void Challenge::InitLevel(', 'void Challenge::StartLevel(',
+    'void Challenge::UpdateConveyorBelt(', 'void Challenge::Update(', 'bool Challenge::UpdateZombieSpawning('],
+  'src/LawnApp.cpp': ['void LawnApp::DoContinueDialog(', 'bool LawnApp::IsWallnutBowlingLevel(',
+    'bool LawnApp::HasSeedType('],
+  'src/Lawn/System/DeckPresets.h': ['static bool ValidSeed(', 'static bool ValidSeeds('],
+  'src/Lawn/Widget/SeedChooserScreen.cpp': ['SeedChooserScreen::SeedChooserScreen(',
+    'void SeedChooserScreen::GetSeedPositionInChooser(', 'void SeedChooserScreen::Draw(',
+    'void SeedChooserScreen::UpdateCursor(', 'void SeedChooserScreen::Update(',
+    'void SeedChooserScreen::PickRandomSeeds(', 'SeedType SeedChooserScreen::SeedHitTest(',
+    'SeedType SeedChooserScreen::FindSeedInBank(', 'void SeedChooserScreen::ClickedSeedInBank(',
+    'void SeedChooserScreen::ShowToolTip(', 'void SeedChooserScreen::UpdateImitaterButton(',
+    'void SeedChooserScreen::MouseDown(', 'bool SeedChooserScreen::PickedPlantType(',
+    'void SeedChooserScreen::CloseSeedChooser(', 'void SeedChooserScreen::UpdateAfterPurchase(',
+    'std::vector<DeckPresetSeed> SeedChooserScreen::CurrentDeckPreset(',
+    'DeckSelectionPlan SeedChooserScreen::ApplyDeckPreset('],
+};
+for (const [name, signatures] of Object.entries(sharedFunctionScopes)) {
+  let before = (await parentBytes(name)).toString().replace(/\r\n?/g, '\n'), after = (await read('source/' + name)).toString().replace(/\r\n?/g, '\n');
+  for (const signature of signatures) { before = omitFunction(before, signature); after = omitFunction(after, signature); }
+  assert.equal(after, before, 'Shared source changes only reviewed minigame/catalog functions: ' + name);
+}
+// The legacy 20-wave definitions/helpers remain identical after newline normalization so old native
+// checkpoints still use their original rules instead of silently changing play.
+for (const name of ['BonusChallenge', 'NightShift', 'LanternGlow']) {
+  const file = 'src/Lawn/System/' + name + '.h';
+  const before = (await parentBytes(file)).toString().replace(/\r\n?/g, '\n'), after = (await read('source/' + file)).toString().replace(/\r\n?/g, '\n');
+  const start = after.indexOf('// Revision 2');
+  const end = after.indexOf('static_assert(ZombieCount(kWaveCount - 1)', start);
+  assert(start >= 0 && end > start);
+  assert.equal(after.slice(0, start) + after.slice(end), before,
+    'New minigame rules append without changing legacy helpers/data: ' + name);
+}
+{
+  const file = 'src/Lawn/Widget/SeedChooserScreen.h';
+  const before = (await parentBytes(file)).toString().replace(/\r\n?/g, '\n'), after = (await read('source/' + file)).toString().replace(/\r\n?/g, '\n');
+  const start = after.indexOf('\t// The appended seed keeps ID 75;');
+  const end = after.indexOf('\tstatic int   PickFromWeightedArrayUsingSpecialRandSeed', start);
+  assert(start >= 0 && end > start);
+  assert.equal(after.slice(0, start) + after.slice(end), before,
+    'Chooser adds static sparse-catalog helpers without changing its member layout or native API');
+}
 
 
 for (const name of ['src/Lawn/System/ChillShroomArt.h', 'artwork/chill-shroom/extraction.json', 'artwork/chill-shroom/generation.json', 'artwork/chill-shroom/render.py', 'artwork/chill-shroom/approved-master.png.base64.txt', 'artwork/chill-shroom/closed-master.png.base64.txt', 'artwork/chill-shroom/painted-master.png.base64.txt', 'artwork/chill-shroom/painted-closed-master.png.base64.txt', 'artwork/chill-shroom/painted-base.png.base64.txt']) {
@@ -408,7 +446,7 @@ assert.equal(sha(canonicalPng), artwork.canonicalPngSha256, 'Canonical PNG byte 
 const canonical = decodeRgbaPng(canonicalPng);
 assert.deepEqual([canonical.width, canonical.height], [80, 80]);
 assert.equal(sha(canonical.rgba), expectedCanonicalRgbaSha, 'Canonical pixels match the reviewed final paint');
-assert.equal(sha(canonical.rgba), expectedParentRgbaSha, 'Motion pass preserves the exact reviewed parent paint');
+assert.equal(sha(canonical.rgba), expectedParentRgbaSha, 'Minigame revision preserves the exact reviewed parent paint');
 assert.equal(sha(alphaBytes(canonical.rgba)), expectedCanonicalAlphaSha, 'New paint preserves every approved whole-character alpha byte');
 assert.deepEqual(alphaBytes(canonical.rgba), alphaBytes(parentNeutral), 'New paint retains the exact parent silhouette, not only matching bounds');
 const names = ['cap', 'body', 'base', 'blink1', 'blink2'];
@@ -470,7 +508,7 @@ for (let y = 0; y < 80; y++) for (let x = 0; x < 80; x++) {
   else if (differs) changedPerEye[eyeIndex]++;
 }
 for (const changed of changedPerEye) assert(changed > 5, 'Both eyes have an actual expression change');
-console.log('PASS exact parent sprite pixels/geometry, scoped custom motion/target code, independent PNG/runtime pixels, neutral reconstruction, fixed-alpha eye-only expressions and native cards without standalone generated illustrations.');
+console.log('PASS exact parent sprite pixels/geometry, scoped minigame/chooser code, independent PNG/runtime pixels, neutral reconstruction, fixed-alpha eye-only expressions and native cards without standalone generated illustrations.');
 
 
 if (process.argv.includes('--run-native')) {

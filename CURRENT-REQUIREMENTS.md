@@ -1,17 +1,90 @@
 # Current requirements
 
+## Chill.8 bonus minigames and unlock — local verification
+
+The user reported Cold Front was extremely hard, asked how Chill-shroom can be
+selected in actual gameplay, and rejected three similar fixed-bank wave levels.
+Previous short animation samples and method tests were insufficient evidence of
+balance. On 2026-11-01 the user confirmed three distinct directions and the
+unlock rule: Cone Zone bowling, Night Shift conveyor play, Cold Front a short
+setup-and-defend puzzle; a Cold Front win unlocks Chill-shroom in normal native
+Adventure/Survival seed selection. Existing valid wins count toward that unlock.
+
+Fresh games use distinct native mechanics. Cold Front starts with a 1,500-sun
+preparation phase, no graves or sun economy, six non-free plant choices and four
+short waves. The native LET'S ROCK! button begins combat. Cone Zone uses
+native rolling nuts and Night Shift uses timed native conveyor deliveries,
+each with ten waves. Final source and playtest receipts establish exact tuning.
+Existing state-zero checkpoints keep their old rules and original filenames;
+the existing Continue dialog distinguishes saved challenge from new minigame.
+No old checkpoint or completion is silently discarded.
+
+Chill-shroom uses a sparse chooser mapping from seed ID75 to unused UI slot49,
+without changing original seed/mode IDs, global capacities or native saved
+object layouts. The packet uses the original addon frame above Imitater, with
+safe selection, bank, Survival repick and saved-deck paths. Original Crazy Dave
+forced picks and Imitater choices remain. Accepted plant artwork, original card
+compositions, menus and absence of added challenge tips remain unchanged.
+
+The exact parent is the published Chill.7 source ZIP, SHA-256
+`450613f4d14df23380549081b154d40c11587151d37e749a74f5118a11534605`.
+Current target is `0.2.6-web-chill.8`; full corresponding source and parent delta
+must reconstruct all current source bytes. Agent browser tests use `?testing=1`
+and isolated QA data; normal-player audio and automatic saves stay available.
+
+Chill.8 local release gates pass on 2026-11-01. The coherent 190.365-second
+Release build keeps all 780 source files unchanged during compilation. All
+1,831 source-coherent native checks, fourteen browser integration suites and
+eleven worker scenarios pass. Coverage includes sparse native chooser/deck
+mapping, actual unlock/selection handlers, fresh minigame mechanics and retained
+legacy rules. Original IDs, saved layouts and all six sprite PNG/header pixels
+remain; nine public artwork/metadata files and the header reproduce exactly.
+Both upstream and Chill.7 patches reconstruct every current source byte. The
+812-entry engine source ZIP is 9,283,046 bytes, SHA-256
+`04bd204805f83ce8322952fbba81a9e5a2d73bdf1eeafaf95b4a5c7ccf33d367`.
+
+Actual muted playtesting used an isolated local origin and a generated campaign
+fixture with all three bonus records zero. Fresh Cold Front was played through
+at 1x: 1,250 of the 1,500 sun bought five Chill-shrooms, five Fume-shrooms, ten
+Scaredy-shrooms and five Wall-nuts. All four waves/32 authored zombies cleared
+with 250 sun left, all 25 plants and all five mowers intact, and no Cherry/Squash
+use. A trophy was observed by 112.977 wall-clock seconds after combat began;
+that is an observation bound, not an exact game-time measurement. The trophy
+was collected and only Cold Front gained the native Bonus ribbon.
+
+That earned reward appeared in Adventure's native chooser and selected into
+its bank. Actual non-bonus planting used the original Last Stand: Chill cost75
+(5000 to4925), slept in daylight, then native Coffee Bean cost75 (to4850) and
+woke it. Normal Adventure planting/completion is not claimed. Separate early
+synthetic-win and zero-win fixtures verified selectable addon versus absence;
+the earned proof is the separate fresh Cold Front run. Native Cone Zone checks
+launched normal and explosive bowling nuts and observed the original explosion.
+Night Shift checks consumed/replenished conveyor packets, planted an awake
+Fume-shroom and used Grave Buster to reduce the four initial graves to three.
+These were bounded control checks, not full Cone/Night clears or balance proof.
+Legacy checkpoint rules and layouts are source-tested, without a fresh manual
+legacy restore claim. Owned test tab/server are closed; the user's public game
+tab was not reloaded. Final packages, extracted-source check and hosting results
+are recorded separately by the publisher and matching Pages workflow. One
+successful strategy does not establish universal balance or original-game parity.
+
 Updated 2026-11-01. This records the latest human clarification for continued work on the public Plants vs. Zombies browser site. It supersedes older requirements for permanent silence, a large landing page or a surrounding promotional interface. Historical QA observations remain historical evidence and must not be treated as current product requirements or instructions to resume manual validation.
 
 ## Current release direction
 
-The user directed us on 2026-10-31 to stop manual gameplay and wrap the current build for GitHub commit/push and GitHub Pages unless a known defect blocks release. Target `Caleb-Guyer/plants-vs-zombies-web`; normal Play URL: https://caleb-guyer.github.io/plants-vs-zombies-web/. Publish the reviewed current build while preserving truthful unverified-parity limits. Additional manual gameplay and completion of the full parity goal are not release gates. Keep testing silent with `?testing=1`; normal-player audio remains available.
+The user's 2026-11-01 playtesting complaint supersedes the earlier request
+to stop manual gameplay. This revision requires an actual muted fresh Cold Front
+clear and earned unlock/normal planting check, plus bounded native controls
+checks for the other two minigames. Automated checks remain necessary but do
+not establish difficulty or fun. Continue publishing verified updates to
+Caleb-Guyer/plants-vs-zombies-web and GitHub Pages while stating coverage limits.
 
-The last verified publication before this pass is Chill.6 commit
-`3dfc2e9952961fa6b02c63a6fa8aebe0f016fd55`, deployed by successful
-[workflow 41325541238](https://github.com/Caleb-Guyer/plants-vs-zombies-web/actions/runs/41325541238).
-That result does not establish Chill.7 publication or full parity.
+The last verified publication before this pass is Chill.7 commit
+`fb8b9b39d2dcf77aa183ca5f293a36cda3ed7c89`, deployed by successful
+[workflow 41328439292](https://github.com/Caleb-Guyer/plants-vs-zombies-web/actions/runs/41328439292).
+That result does not establish Chill.8 publication or full parity.
 
-## Chill.7 idle, target activation and frost request, 2026-11-01
+## Historical Chill.7 idle, target activation and frost request, 2026-11-01
 
 The user reports that Chill-shroom needs an idle animation, should attack only
 when zombies are in range, and emits frost too quickly with an abrupt disappearance.

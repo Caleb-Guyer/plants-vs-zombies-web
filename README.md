@@ -1,8 +1,76 @@
 # Plants vs. Zombies — browser playtest
 
+## Chill.8 bonus minigames and unlock — local verification
+
+The user reported Cold Front was extremely hard, asked how Chill-shroom can be
+selected in actual gameplay, and rejected three similar fixed-bank wave levels.
+Previous short animation samples and method tests were insufficient evidence of
+balance. On 2026-11-01 the user confirmed three distinct directions and the
+unlock rule: Cone Zone bowling, Night Shift conveyor play, Cold Front a short
+setup-and-defend puzzle; a Cold Front win unlocks Chill-shroom in normal native
+Adventure/Survival seed selection. Existing valid wins count toward that unlock.
+
+Fresh games use distinct native mechanics. Cold Front starts with a 1,500-sun
+preparation phase, no graves or sun economy, six non-free plant choices and four
+short waves. The native LET'S ROCK! button begins combat. Cone Zone uses
+native rolling nuts and Night Shift uses timed native conveyor deliveries,
+each with ten waves. Final source and playtest receipts establish exact tuning.
+Existing state-zero checkpoints keep their old rules and original filenames;
+the existing Continue dialog distinguishes saved challenge from new minigame.
+No old checkpoint or completion is silently discarded.
+
+Chill-shroom uses a sparse chooser mapping from seed ID75 to unused UI slot49,
+without changing original seed/mode IDs, global capacities or native saved
+object layouts. The packet uses the original addon frame above Imitater, with
+safe selection, bank, Survival repick and saved-deck paths. Original Crazy Dave
+forced picks and Imitater choices remain. Accepted plant artwork, original card
+compositions, menus and absence of added challenge tips remain unchanged.
+
+The exact parent is the published Chill.7 source ZIP, SHA-256
+`450613f4d14df23380549081b154d40c11587151d37e749a74f5118a11534605`.
+Current target is `0.2.6-web-chill.8`; full corresponding source and parent delta
+must reconstruct all current source bytes. Agent browser tests use `?testing=1`
+and isolated QA data; normal-player audio and automatic saves stay available.
+
+Chill.8 local release gates pass on 2026-11-01. The coherent 190.365-second
+Release build keeps all 780 source files unchanged during compilation. All
+1,831 source-coherent native checks, fourteen browser integration suites and
+eleven worker scenarios pass. Coverage includes sparse native chooser/deck
+mapping, actual unlock/selection handlers, fresh minigame mechanics and retained
+legacy rules. Original IDs, saved layouts and all six sprite PNG/header pixels
+remain; nine public artwork/metadata files and the header reproduce exactly.
+Both upstream and Chill.7 patches reconstruct every current source byte. The
+812-entry engine source ZIP is 9,283,046 bytes, SHA-256
+`04bd204805f83ce8322952fbba81a9e5a2d73bdf1eeafaf95b4a5c7ccf33d367`.
+
+Actual muted playtesting used an isolated local origin and a generated campaign
+fixture with all three bonus records zero. Fresh Cold Front was played through
+at 1x: 1,250 of the 1,500 sun bought five Chill-shrooms, five Fume-shrooms, ten
+Scaredy-shrooms and five Wall-nuts. All four waves/32 authored zombies cleared
+with 250 sun left, all 25 plants and all five mowers intact, and no Cherry/Squash
+use. A trophy was observed by 112.977 wall-clock seconds after combat began;
+that is an observation bound, not an exact game-time measurement. The trophy
+was collected and only Cold Front gained the native Bonus ribbon.
+
+That earned reward appeared in Adventure's native chooser and selected into
+its bank. Actual non-bonus planting used the original Last Stand: Chill cost75
+(5000 to4925), slept in daylight, then native Coffee Bean cost75 (to4850) and
+woke it. Normal Adventure planting/completion is not claimed. Separate early
+synthetic-win and zero-win fixtures verified selectable addon versus absence;
+the earned proof is the separate fresh Cold Front run. Native Cone Zone checks
+launched normal and explosive bowling nuts and observed the original explosion.
+Night Shift checks consumed/replenished conveyor packets, planted an awake
+Fume-shroom and used Grave Buster to reduce the four initial graves to three.
+These were bounded control checks, not full Cone/Night clears or balance proof.
+Legacy checkpoint rules and layouts are source-tested, without a fresh manual
+legacy restore claim. Owned test tab/server are closed; the user's public game
+tab was not reloaded. Final packages, extracted-source check and hosting results
+are recorded separately by the publisher and matching Pages workflow. One
+successful strategy does not establish universal balance or original-game parity.
+
 [Play on GitHub Pages](https://caleb-guyer.github.io/plants-vs-zombies-web/) · [Existing playtest](https://lawn-defense-caleb-plays.usgi.chatgpt.site) · [Deployment](DEPLOYMENT.md) · [Requirements](CURRENT-REQUIREMENTS.md) · [QA history](PARITY-QA.md)
 
-This source targets **0.2.6-web-chill.7**: gentle Chill-shroom idle motion, attacks gated by nearby eligible zombies, and a slower native frost plume. The accepted proportions and Chill.6 painted sprite remain unchanged. One registered rig supplies the lawn, packet and centered challenge portrait; existing saves, IDs and original content remain compatible. Full original-game 1:1 parity remains unverified. Earlier release records below are historical.
+Current release **0.2.6-web-chill.8** adds three distinct native bonus minigames and the Cold Front reward in the normal chooser. The original campaign, saved layouts and approved artwork remain. Full original-game parity is unverified. Earlier release records below are historical.
 
 The Software.10 and earlier QA descriptions below are the frozen v18 evidence snapshot. They retain their original capture-time scope, including earlier limits; they are not a claim that later validation or the full parity goal is complete.
 
@@ -29,13 +97,17 @@ per pulse. It deals no damage, so pair it with Puff-shrooms and Fume-shrooms.
 Stronger existing chill and freezing are preserved. A gentle idle motion gives
 way to the attack, whose original-game frost puffs travel outward and fade.
 
-The challenge uses the original night lawn, 150 starting sun, no falling sky sun,
-twenty authored waves and two flags. Its fixed bank is Sun-shroom, Puff-shroom,
-Fume-shroom, Chill-shroom, Grave Buster and Doom-shroom. Newspapers, poles and
-buckets arrive gradually; native graves and final-wave grave zombies remain.
-It has an independent checkpoint and completion record. Chill-shroom is
-introduced in this challenge; the original campaign, chooser and unlocks retain
-their familiar content.
+Fresh Cold Front is a setup-and-defend puzzle on the original night lawn.
+Spend **1,500 sun** before pressing **LET'S ROCK!**, then survive **four waves**
+with no new income or graves. Its bank contains Chill-shroom, Fume-shroom,
+Scaredy-shroom, Wall-nut, Cherry Bomb and Squash. Packets refresh during setup.
+It has an independent checkpoint and completion record.
+
+**Beat Cold Front to unlock Chill-shroom in Adventure/Survival's native seed
+chooser.** Its packet appears above Imitater; existing Cold Front wins count.
+It behaves like other mushrooms in daytime and needs Coffee Bean to wake.
+Old bonus checkpoints retain their previous rules. Choose **New Game** in the
+Continue dialog to play the redesigned minigame.
 
 The accepted Chill.5 silhouette has a broad rounded cap directly over a short
 wide body, without a pinched neck or separate feet. Chill.6 refined its painted
@@ -63,33 +135,28 @@ remain historical source/Git evidence and are not active card artwork.
 ## Bonus challenge: Night Shift
 
 Once Mini-Games is unlocked, choose **Mini-Games → Bonus → Night Shift**.
-Survive **twenty waves across two flags** on the original nighttime lawn, with
-**150 starting sun** and no falling sky sun. Grow Sun-shrooms to fund your defense.
-The fixed bank contains Sun-shroom, Puff-shroom, Fume-shroom, Grave Buster,
-Ice-shroom and Doom-shroom, with their normal costs, recharge and behavior.
+Fresh Night Shift is a **mushroom conveyor minigame** with **ten waves and one
+flag**, four starting graves and no sun economy. Timed native conveyor packets
+supply the defense, beginning with Puff-shrooms, Fume-shrooms and Scaredy-shrooms.
+Use delivered Grave Busters to open more planting space.
 
-Normal zombies give way to coneheads, newspapers, screen doors and later buckets.
-The native night lawn includes graves and its final-wave grave rise; the authored
-wave table is separate from those grave zombies. Night Shift uses original artwork,
-the standard challenge card and flag banner, with no extra information overlay.
-It has its own saved checkpoint and completion record. Save/resume, restart and
-save import/export include Night Shift without changing Cone Zone or original
-campaign progress, unlocks or trophy totals.
+Night Shift uses the original night lawn, native packets, challenge card and
+flag banner, with no extra information overlay. It has its own checkpoint and
+completion record. Existing checkpoints keep their old fixed-bank rules;
+choose **New Game** to play the conveyor version.
 
 ## Bonus challenge: Cone Zone
 
 Once Mini-Games is unlocked, choose **Mini-Games → Bonus → Cone Zone**.
-Cone Zone uses a daylight lawn with
-**150 starting sun, six fixed plants and twenty authored waves across two flags**.
-Sunflowers and falling sun work normally. Coneheads become the main threat,
-with a few pole-vaulters and bucketheads later in the level.
+Fresh Cone Zone is **Wall-nut bowling** on the original daylight lawn, with
+**ten waves and one flag**. Launch normal and explosive Wall-nuts from the
+native conveyor behind the red foul line.
 
-The fixed bank contains Sunflower, Peashooter, Wall-nut, Potato Mine, Snow Pea
-and Cherry Bomb. Costs and recharge times retain their normal behavior. The
-level has its own checkpoint and completion record; it does not advance the
-original campaign or original trophy totals. Save/resume, restart, autosaves
-and save export/import include the bonus checkpoint. Canceling Continue returns
-to Bonus. The Bonus page now uses the standard challenge grid/card layout; the challenge uses the native flag banner. The original Mini-Games grid remains available through its footer.
+The level has its own checkpoint and completion record. Save/resume, restart,
+autosaves and save export/import include the bonus checkpoint. Existing
+checkpoints retain their old fixed-bank rules; choose **New Game** for bowling.
+The Bonus page uses the standard native challenge grid and card layout. The
+original Mini-Games grid remains available through its footer.
 
 ## Gameplay controls
 

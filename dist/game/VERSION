@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-chill.7
-Adds a restrained idle animation, target-gated attacks and a slower native-style frost effect while retaining the approved artwork, registered rig, radial slow and saved layouts.
-Engine JavaScript SHA-256: 65b1d3545c1b70b274cec39f3bb7a56ee279bd3dbb7636873aa7d9c6c7db017e
-Engine WASM SHA-256: 6603c200aaa2e4541bfa42c0123443f704e02e6c5a96230c4657b260ee39fa3d
+PvZ-Portable 0.2.6-web-chill.8
+Adds distinct bowling, conveyor and setup-defense bonus minigames, and unlocks Chill-shroom in normal native seed selection after Cold Front. Retains original content, accepted artwork, stable IDs and saved layouts; existing bonus checkpoints keep their original rules.
+Engine JavaScript SHA-256: 76ccff746dbfc8c86996335479d865be793f56f1dc96c83c8f8ff68c27326e17
+Engine WASM SHA-256: 1e7038d9bfa460a0282731345ff6e865214f022a4f1aeb90f7494e889b694992
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.
