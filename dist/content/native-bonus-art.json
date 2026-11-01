@@ -8,7 +8,7 @@
     "displayName": "Chill-shroom",
     "nativeReanimation": "REANIM_ICESHROOM",
     "spriteOverride": "chill-shroom/provenance.json",
-    "scope": "Approved whole-character master on one registered canonical canvas. Cap/body retain shared scale and placement; Ice is an invisible clock carrier. Actual shared DrawRig renders the packet, lawn and card."
+    "scope": "Final painted finish on the exact approved Chill.5 silhouette and cap/body partition. All parts retain shared scale and placement; Ice is an invisible clock carrier. Actual shared DrawRig renders the packet, lawn and card."
   },
   "cards": [
     {
@@ -38,6 +38,6 @@
     "maxHeroWidth": 68,
     "maxHeroHeight": 57
   },
-  "historicalArt": "Chill.4 assembled-part proportions were rejected. The approved Chill.5 whole-character outline is preserved exactly at neutral pose. Cards still compose actual game sprites; no standalone generated challenge illustration is used.",
+  "historicalArt": "Chill.4 assembled-part proportions were rejected. The approved Chill.5 whole-character geometry is retained byte-for-byte in all alpha masks; Chill.6 refines surface painting only. Cards still compose actual game sprites; no standalone generated challenge illustration is used.",
   "standaloneChallengeIllustrations": false
 }

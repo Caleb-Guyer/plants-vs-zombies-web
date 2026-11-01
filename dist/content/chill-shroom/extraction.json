@@ -1,9 +1,59 @@
 {
   "schema": 2,
-  "canonical": {"canvas": [80,80], "sourceBounds": [81,134,1232,1119], "fit": [72,62], "origin": [6,10], "groundAnchor": [40,72], "alphaThreshold": 8, "filter": "Pillow Lanczos"},
-  "capPartition": {"blueMinusRed": 24, "blueMinusGreen": 4, "outlineRows": 1, "method": "Last blue cap pixel per column plus one outline row; nearest blue column fills edge columns"},
-  "eyeRegions": [[26,50,36,62], [37,50,47,62]],
+  "canonical": {
+    "canvas": [
+      80,
+      80
+    ],
+    "sourceBounds": [
+      81,
+      134,
+      1232,
+      1119
+    ],
+    "fit": [
+      72,
+      62
+    ],
+    "origin": [
+      6,
+      10
+    ],
+    "groundAnchor": [
+      40,
+      72
+    ],
+    "alphaThreshold": 8,
+    "filter": "Pillow Lanczos"
+  },
+  "capPartition": {
+    "blueMinusRed": 24,
+    "blueMinusGreen": 4,
+    "outlineRows": 1,
+    "method": "Last blue cap pixel per column plus one outline row; nearest blue column fills edge columns"
+  },
+  "eyeRegions": [
+    [
+      26,
+      50,
+      36,
+      62
+    ],
+    [
+      37,
+      50,
+      47,
+      62
+    ]
+  ],
   "eyeFeatherPixels": 1,
   "halfExpressionBlend": 0.5,
-  "registration": "All parts share the canonical canvas. Partition after the only whole-character resample; never resize parts independently. Base is transparent."
+  "registration": "All parts share the canonical canvas. Partition after the only whole-character resample; never resize parts independently. Base is transparent.",
+  "paintRegistration": {
+    "alignment": "Full generated canvas resized to approved source canvas only if needed, then the identical canonical transform. No generated bounds fitting.",
+    "alpha": "Every alpha byte and cap/body partition is copied from the approved canonical geometry.",
+    "color": "Generated RGB supplies approved pixels where both canonical alpha values are at least 240; original contour RGB is retained elsewhere. Slightly translucent interior paint remains eligible.",
+    "expressions": "Only RGB in the fixed eye rectangles may change, preserving all alpha.",
+    "interiorAlphaThreshold": 240
+  }
 }

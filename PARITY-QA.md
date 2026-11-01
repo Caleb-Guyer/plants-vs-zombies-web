@@ -1,6 +1,60 @@
 # Browser parity and QA record
 
-## Chill.5 approved whole-character registration, 2026-11-01
+## Chill.6 final style pass — local verification, 2026-11-01
+
+Target `0.2.6-web-chill.6` refines the accepted Chill.5 character's painted
+finish: cap-spot contrast/size, shading, face and bounded eye patches. Preserve
+original alpha, cap/body partition and registration exactly. Runtime code,
+mechanics, animation and save formats remain unchanged from Chill.5. Independent
+checks must distinguish fixed geometry/byte identity from new paint pixels.
+Original mushrooms are the style references; built-in image generation is scoped
+to the custom plant, with exact prompts in `generation.json`. Native cards use
+the actual sprite; no standalone AI challenge illustrations or added tips.
+
+The parent is the published Chill.5 source archive, SHA-256
+`8e97e5f49981a5e7a9a230e6651c586d6b9e3434ab22092dc30c7aa897d1c0ab`.
+Current corresponding-source targets are
+[Chill.6 source](dist/source/pvz-portable-0.2.6-web-chill.6-source.zip),
+[full upstream patch](dist/source/web-chill.6.patch),
+[Chill.5 delta](dist/source/chill5-to-chill6.patch), and
+[pinned parent](dist/source/pvz-portable-0.2.6-web-chill.5-source.zip).
+
+Chill.6 local release gates pass on 2026-11-01. The coherent 90.230-second
+Release build contains 780 source files. All 1,532 native production checks,
+fourteen browser integration suites and eleven worker scenarios pass. Independent
+parent comparisons retain every approved canonical and cap/body alpha byte and
+all runtime, mechanics, animation and save code. Nine public artwork/metadata
+files and the packed header reproduce exactly. Both the full upstream and
+Chill.5 delta patches reconstruct every current source byte. The 812-entry
+engine source ZIP is 9,249,381 bytes, SHA-256
+`518d779b9948ac8a2d124db8f7929f13acf1121f38953d4ebee367518da17104`.
+
+A muted native review inspected the centered earned-fixture card, seed packet,
+restored Sun/Chill/Puff checkpoint and 32 full-size frames over a bounded
+5.6-second idle/wind-up/release/recovery sample. The corrected paint is consistent
+across these views, with no observed seam, detached part, clipping or layer jump.
+The original Menu paused the game and the owned test tab was closed. This is
+fixture-based visual coverage, not an earned win, full battle, new save-transfer
+cycle, every animation frame, subjective perfection or full original-game parity.
+Final website-package identity, extracted-source check and hosting result are
+recorded separately by the publisher and matching Pages workflow.
+
+| Chill.6 evidence | Status |
+| --- | --- |
+| Coherent Release build, source count and artifact identities | PASS: 90.230 seconds, 780 source files; JS/WASM identities in engine provenance |
+| Native check count, current source/harness pins and browser/worker suites | PASS: 1,532 current checks; 14 browser suites; 11 worker scenarios |
+| Exact approved alpha/partition and runtime/save/animation byte identity | PASS: independent exact Chill.5 parent comparison |
+| Reproducible public artwork, header and immutable input provenance | PASS: nine files and packed header byte-identical |
+| Full upstream and Chill.5 delta reconstruction; source ZIP identity | PASS: all 780 source files match both reconstructed trees; source pin above |
+| Bounded muted lawn/packet/card review and its limits | PASS within the fixture-based 5.6-second sample described above |
+| Website-source/runtime packaging, sizes and extracted-source check | Final publisher receipt records these after packaging this documentation |
+| Commit, successful matching Pages workflow and public byte verification | See matching Pages run and final publisher receipt; local checks do not imply hosted success |
+
+## Historical Chill.5 approved whole-character registration, 2026-11-01
+
+The user accepted these proportions; the following receipts apply to Chill.5.
+Its exact neutral paint hash is historical while its shape remains the reference.
+
 
 The user rejected Chill.4 and identified shape/proportions as the main issue.
 A complete replacement preview was shown before implementation; the user replied
@@ -22,7 +76,7 @@ eligibility, QoL, workers, schema 2 and normal-player audio. Challenge pictures
 remain centered native sprite compositions, without separately generated
 challenge illustrations or added tips. Agent browser checks stay `?testing=1`.
 
-Pre-publication current evidence on 2026-11-01: all 1,532 production checks
+Historical Chill.5 pre-publication evidence on 2026-11-01: all 1,532 production checks
 pass with current source/harness pins. The final 95.879-second incremental
 Release build retains all 777 source files unchanged (the initial full build
 also passed). Nine public art/JSON files and the packed header reproduce byte
@@ -42,6 +96,12 @@ correctly. This is not full-game or every-blink/frame coverage, a full battle,
 an earned win or a fresh import/export/save cycle. Owned test tab22 is closed;
 the user's public game tab was not reloaded. Website-package and hosting
 verification have separate publisher receipts.
+
+Chill.5 was subsequently published from commit
+`b8c2049da83ed3850e9c31c78e5c55ea6d59fea8` by successful
+[Pages workflow 41279145103](https://github.com/Caleb-Guyer/plants-vs-zombies-web/actions/runs/41279145103).
+Its public byte check matched 25 served files and confirmed 12 retired artwork
+aliases returned 404. These are historical Chill.5 host results only.
 
 ## Historical Chill.4 revision — shape rejected, 2026-11-01
 

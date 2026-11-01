@@ -1,30 +1,34 @@
 {
   "schema": 2,
-  "version": "0.2.6-web-chill.5",
-  "method": "Approved whole-character master with registered shared-canvas layers",
+  "version": "0.2.6-web-chill.6",
+  "method": "Approved silhouette with a painted finish and registered shared-canvas layers",
   "imageGenerationUsed": true,
   "standaloneChallengeIllustrations": false,
   "pillowVersion": "12.2.0",
   "approvedMasterSha256": "f861148f8c57bbee31595e8fd5692aa23c1282172ab0016a159adf406f2a373d",
   "closedMasterSha256": "dd28dbc58d7e8f27bf05ed2dd1842b397de829d6c9b5ed5790e2465058e358e7",
-  "canonicalPngSha256": "48f18c3cbf561be47970cb24588bd95d87cfd189dbd779b3d8d12588676b01e7",
-  "canonicalRgbaSha256": "c00b7d93e79d2fb8f39ea2dbddd178e02d040ac1f4fd2e8bb62f105502317fb7",
-  "extractionSha256": "578eeb0aa6d5218ab511842b42bd414f25770dc954b336114b9cb5307d009cdf",
-  "generationSha256": "d8ce83974988e0c3c98faf9913892c8909a3eec73bb90a3494d20e3e162ba2e4",
-  "generatorSha256": "338b9ddf4a599803313fa31ae144613844ff6a0c658f92893c83a7851a8296d5",
-  "headerSha256": "17398a6530d6967285262788ed47c64e3ebcd88ad40b222167946f92fc05055d",
+  "paintedMasterSha256": "d00130c39fdb094950074d57aed763784741bbf6c3067525c12155fef1debe86",
+  "paintedClosedMasterSha256": "181a6dcbe55b8d23156135519bc0944da3d5dd214001fba4873420a9169f112a",
+  "approvedCanonicalRgbaSha256": "c00b7d93e79d2fb8f39ea2dbddd178e02d040ac1f4fd2e8bb62f105502317fb7",
+  "canonicalAlphaSha256": "0b1b28aa8d5489fe16a29e90c42fd1fb478bfca59a8544c9496306d825383e8e",
+  "canonicalPngSha256": "8f72af8ed59ac1e173c5d894d99369f4b6f2ed766a5db9edcb36e1d36a7aa93b",
+  "canonicalRgbaSha256": "4aed41439898a5f777b5ccefeb97c87a96bdd81f6b3b1ece0ac7541339378eae",
+  "extractionSha256": "b639b70e79eb09ba117c3ca52e54c8ce54a294ad947f44b7b75d96a41f24ba99",
+  "generationSha256": "5f1279fcfa2df9cadf6f9df676d57f0805b05c8c2f288480e630e1379894cf9d",
+  "generatorSha256": "f0fbc90c5ed00392dcd01ced908c296d89e1abc510cb7af609dd721658b277ff",
+  "headerSha256": "c3872c66c76e3398a3db490c4200848232a6614e01e594d918e1cf931de0a6ac",
   "parts": {
     "cap": {
       "width": 80,
       "height": 80,
-      "pngSha256": "da061565238eee2428ba3de350aaea8fc2b98d0d7646a3e05a2189f001af8a79",
-      "rgbaSha256": "3f557bd66b360f3c1e9ff303b2beaffd8e8a3534d2640c7ad9a286aa6da23e2e"
+      "pngSha256": "0f3ee1ecc32196ab87db381ed15293a210ee6f9b66c725ec42cb3467cf4fc506",
+      "rgbaSha256": "d7ad44cd2bb50e44c49579d7e22b7796c3c9fdfde9c23a1fc37293d07fbc159f"
     },
     "body": {
       "width": 80,
       "height": 80,
-      "pngSha256": "3821a28af8724377aad02286805aa1e3db543a79119241bf8515b222b9d5d4df",
-      "rgbaSha256": "23f863004e5007f1543d14912a1f2a716867bc9bddc8f17a5555a2a7452b1a8f"
+      "pngSha256": "c519fa620cd673b36c02a62cc892acbc06384f19487ebf1ee631c310f2c45cdd",
+      "rgbaSha256": "c602837d8b83ec1e03666b3a3b1201cc661336ea462504fbefc8e54de170b9bb"
     },
     "base": {
       "width": 80,
@@ -35,14 +39,14 @@
     "blink1": {
       "width": 80,
       "height": 80,
-      "pngSha256": "4669a8ed7699250fd512019607ac4f2247224ed3745b735d1107b04145e8845e",
-      "rgbaSha256": "5d8a6c1eaffbcad755b9d8499ec4d471e9f1b311eccb321867749ea113b9a983"
+      "pngSha256": "9512ddaf1f8575d8b4b6df58a7409014ad971838dc244700bc9ea29a0f0a7961",
+      "rgbaSha256": "223cec556d86c9f89135005128e650c9fc79ea46b2f07b6fd9bbca5cea1287c6"
     },
     "blink2": {
       "width": 80,
       "height": 80,
-      "pngSha256": "361e6ec82fb7f80b9cbd72ff56f78da45d21513cb2f5ed81b70a3ce6433e7700",
-      "rgbaSha256": "bf4ac43f2cf437241a74e27b996c73ca24fdc65cbe8485244f809b7f2e1a41ec"
+      "pngSha256": "7ec170364879d93aa8d0108c6a3afa81146a4d5b2c50bcb8caf8d7eb753a3059",
+      "rgbaSha256": "cf2579399408ac0c2420910ed1e30dc8a430781a05eb600d476bca0177a6e92e"
     }
   }
 }

@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-chill.5
-Preserves the approved whole-character shape with registered cap/body layers and a shared plant/packet/card rig independent of Ice artwork pivots. Native blink/sleep timing, radial slow and saved layouts are retained.
+PvZ-Portable 0.2.6-web-chill.6
+Refines Chill-shroom paint and expression while retaining the approved whole-character shape, registered layers and shared plant/packet/card rig. Native timing, radial slow and saved layouts are retained.
 Engine JavaScript SHA-256: 4dae3958eff86b0d1a147f8ca99af745f957f7a2335c6c9a41cc848d81fc6a2d
-Engine WASM SHA-256: 8d37d684cec98a6c34f68cc8c39517006e2ef9408956ec1ef5bdee8a347d6157
+Engine WASM SHA-256: 95cf82928f97a36e28bc19cabd971baad362529faf33ed1a1fe482a04c65aa25
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.

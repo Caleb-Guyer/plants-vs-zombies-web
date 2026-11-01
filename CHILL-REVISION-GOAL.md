@@ -1,3 +1,44 @@
+# Final Chill-shroom style pass — active
+
+Requested 2026-11-01. Preserve the exact whole-character silhouette and proportions the user approved in Chill.5. Refine only the painted finish and restrained expression/motion so the character sits naturally beside the original Sun-shroom, Puff-shroom and Fume-shroom at native game scale.
+
+Completion criteria:
+
+- Keep the approved alpha silhouette, cap/body registration, broad cap, short wide body, centered shared 80x80 rig and ground anchor. No new neck, pedestal or feet.
+- Use the authentic original sprite references to refine outlined forms, smooth painted light/mid/shadow transitions, distinct cap markings and economical facial features. Avoid large shiny highlights, watercolor bands and modern toy-like gloss.
+- Verify the same design in the lawn, seed packet and centered native Cold Front portrait. Keep existing idle/wind-up/release/recovery motion, blink/sleep ownership and fixed mechanics unless a concrete animation defect is found.
+- Reproduce all sprite/header outputs from published inputs. Test current source and the unchanged save/content/audio behavior; keep all browser testing muted with ?testing=1.
+- Commit, push and verify the tested release on the existing GitHub Pages site. Report visual judgment separately from automated correctness.
+
+The formal goal tool rejected creation because an older paused parity goal is unfinished. This scoped goal records the user’s request without falsely completing, replacing or resuming that historical goal. Target release: 0.2.6-web-chill.6.
+
+Status: final release candidate complete and locally verified. The approved silhouette and cap/body masks are byte-identical, paint and bounded eye frames are refined, all 1,532 native checks and all browser integration checks pass, and the muted lawn/packet/card review found no blocking draw defects. Publication is verified separately by the matching GitHub Pages workflow and public-byte receipt.
+
+Chill.6 local release gates pass on 2026-11-01. The coherent 90.230-second
+Release build contains 780 source files. All 1,532 native production checks,
+fourteen browser integration suites and eleven worker scenarios pass. Independent
+parent comparisons retain every approved canonical and cap/body alpha byte and
+all runtime, mechanics, animation and save code. Nine public artwork/metadata
+files and the packed header reproduce exactly. Both the full upstream and
+Chill.5 delta patches reconstruct every current source byte. The 812-entry
+engine source ZIP is 9,249,381 bytes, SHA-256
+`518d779b9948ac8a2d124db8f7929f13acf1121f38953d4ebee367518da17104`.
+
+A muted native review inspected the centered earned-fixture card, seed packet,
+restored Sun/Chill/Puff checkpoint and 32 full-size frames over a bounded
+5.6-second idle/wind-up/release/recovery sample. The corrected paint is consistent
+across these views, with no observed seam, detached part, clipping or layer jump.
+The original Menu paused the game and the owned test tab was closed. This is
+fixture-based visual coverage, not an earned win, full battle, new save-transfer
+cycle, every animation frame, subjective perfection or full original-game parity.
+Final website-package identity, extracted-source check and hosting result are
+recorded separately by the publisher and matching Pages workflow.
+
+
+---
+
+## Historical Chill.5 completion record
+
 # Chill-shroom approved proportions and registered rendering
 
 The user rejected Chill.4 and identified shape/proportions as the main issue.

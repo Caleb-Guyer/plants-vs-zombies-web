@@ -17,12 +17,12 @@ new Function('module', 'exports', 'require', fs.readFileSync(new URL('vendor/jsz
 const JSZip = vendor.exports;
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
 const engine = JSON.parse(fs.readFileSync(new URL('game/engine-provenance.json', dist)));
-assert.equal(engine.id, '0.2.6-web-chill.5');
+assert.equal(engine.id, '0.2.6-web-chill.6');
 const current = await JSZip.loadAsync(fs.readFileSync(new URL(engine.artifacts.source, new URL('game/engine-provenance.json', dist))), {checkCRC32: true});
-const parentSourceBytes = fs.readFileSync(new URL('source/pvz-portable-0.2.6-web-chill.4-source.zip', dist));
-assert.equal(sha(parentSourceBytes), 'd8551acdc9f49704634b668d5abb2b461c3f1db683e19a228d0a9dd78785edae', 'Parent is the exact published Chill.4 source');
+const parentSourceBytes = fs.readFileSync(new URL('source/pvz-portable-0.2.6-web-chill.5-source.zip', dist));
+assert.equal(sha(parentSourceBytes), '8e97e5f49981a5e7a9a230e6651c586d6b9e3434ab22092dc30c7aa897d1c0ab', 'Parent is the exact published Chill.5 source');
 const parent = await JSZip.loadAsync(parentSourceBytes, {checkCRC32: true});
-const prefix = 'chill5-candidate/';
+const prefix = 'chill6-candidate/';
 const read = async name => {
   const entry = current.file(prefix + name);
   assert(entry, 'Missing current production source/test: ' + name);
@@ -45,7 +45,7 @@ for (const name of suites) {
   checks += result.checks;
   reports.set(name, result);
 }
-const parentBytes = async name => Buffer.from(await parent.file('chill4-candidate/source/' + name).async('uint8array'));
+const parentBytes = async name => Buffer.from(await parent.file('chill5-candidate/source/' + name).async('uint8array'));
 // SeedPacket.h also defines the serialized SeedBank class.
 for (const name of ['src/Lawn/SeedPacket.h', 'src/Lawn/Plant.h', 'src/Lawn/Zombie.h', 'src/Lawn/Challenge.h', 'src/Lawn/System/SaveGame.cpp', 'src/Lawn/System/PlayerInfo.h', 'src/Lawn/System/PlayerInfo.cpp', 'src/LawnApp.h', 'src/Lawn/System/ReanimationLawn.h']) {
   assert.deepEqual(await read('source/' + name), await parentBytes(name), 'Saved data layout/serialization must remain unchanged');
@@ -217,7 +217,7 @@ const artworkUrl = new URL('content/chill-shroom/', dist);
 const artwork = JSON.parse(fs.readFileSync(new URL('provenance.json', artworkUrl)));
 assert.equal(artwork.schema, 2);
 assert.equal(artwork.version, engine.id);
-assert.equal(artwork.method, 'Approved whole-character master with registered shared-canvas layers');
+assert.equal(artwork.method, 'Approved silhouette with a painted finish and registered shared-canvas layers');
 assert.equal(artwork.imageGenerationUsed, true);
 assert.equal(artwork.standaloneChallengeIllustrations, false);
 const headerBytes = await read('source/src/Lawn/System/ChillShroomArt.h');
@@ -228,15 +228,55 @@ const generationBytes = await read('source/artwork/chill-shroom/generation.json'
 const generation = JSON.parse(generationBytes);
 const generator = await read('source/artwork/chill-shroom/render.py');
 
-// The neutral reference is independently derived from the user-approved master,
-// not from render.py or a hash supplied by its generated provenance. With Pillow
-// 12.2.0: clear source alpha <=8, crop [81,134,1232,1119], uniformly contain in
-// 72x62, Lanczos resize to the one rounded size, then composite at (6,10) on an
-// empty 80x80 canvas. This pin keeps the approved silhouette, proportions,
-// cap/body overlap and ground registration fixed without adding Pillow to CI.
+// Independently derived from the user-approved master using Pillow 12.2.0:
+// clear alpha <=8, crop [81,134,1232,1119], contain in 72x62, uniformly Lanczos
+// resize, then composite at (6,10) on 80x80. Paint may change; this alpha pin and
+// the exact pinned parent's cap/body masks keep shape and articulation fixed.
 const approvedMasterSha = 'f861148f8c57bbee31595e8fd5692aa23c1282172ab0016a159adf406f2a373d';
 const closedMasterSha = 'dd28dbc58d7e8f27bf05ed2dd1842b397de829d6c9b5ed5790e2465058e358e7';
-const expectedCanonicalRgbaSha = 'c00b7d93e79d2fb8f39ea2dbddd178e02d040ac1f4fd2e8bb62f105502317fb7';
+const expectedCanonicalAlphaSha = '0b1b28aa8d5489fe16a29e90c42fd1fb478bfca59a8544c9496306d825383e8e';
+const expectedParentRgbaSha = 'c00b7d93e79d2fb8f39ea2dbddd178e02d040ac1f4fd2e8bb62f105502317fb7';
+const expectedParentAlphaSha = {
+  cap: 'f1192c2237b44d213838d4bb2d0fc0341281f35331c5b38a029ddf73d2380dfb',
+  body: '500cd27bdd00b855b9da91af9964be82eb6a74d2ccba83406aa1d5433a3ae410',
+  base: '56a43ef88ddfcd0f56f7dd973312c0e73d62f59655c01d7b4e59aaa3be8b3fb6',
+};
+const expectedCanonicalRgbaSha = '4aed41439898a5f777b5ccefeb97c87a96bdd81f6b3b1ece0ac7541339378eae';
+const paintedMasterSha = 'd00130c39fdb094950074d57aed763784741bbf6c3067525c12155fef1debe86';
+const paintedClosedMasterSha = '181a6dcbe55b8d23156135519bc0944da3d5dd214001fba4873420a9169f112a';
+const paintedBaseSha = '50d006718af734a54c7aa414cc2e407ecb39b0bb264b9a78667ae0f624f39d4e';
+const alphaBytes = rgba => Buffer.from(rgba.filter((value, index) => index % 4 === 3));
+function packedRgba(text, name) {
+  const symbol = name[0].toUpperCase() + name.slice(1);
+  assert.equal(Number(text.match(new RegExp('k' + symbol + 'Width\\s*=\\s*(\\d+)'))?.[1]), 80);
+  assert.equal(Number(text.match(new RegExp('k' + symbol + 'Height\\s*=\\s*(\\d+)'))?.[1]), 80);
+  const array = text.match(new RegExp('k' + symbol + 'Argb\\[\\]\\s*=\\s*\\{([\\s\\S]*?)\\};'));
+  assert(array, 'Packed runtime pixels: ' + name);
+  const pixels = [...array[1].matchAll(/0x([0-9a-fA-F]{8})u/g)].map(match => Number.parseInt(match[1], 16));
+  assert.equal(pixels.length, 80 * 80);
+  const rgba = Buffer.alloc(80 * 80 * 4);
+  pixels.forEach((pixel, index) => {
+    rgba[index * 4] = (pixel >>> 16) & 255;
+    rgba[index * 4 + 1] = (pixel >>> 8) & 255;
+    rgba[index * 4 + 2] = pixel & 255;
+    rgba[index * 4 + 3] = pixel >>> 24;
+  });
+  return rgba;
+}
+const parentArtHeader = (await parentBytes('src/Lawn/System/ChillShroomArt.h')).toString();
+const parentMasks = new Map();
+const parentNeutral = Buffer.alloc(80 * 80 * 4);
+for (const name of ['cap', 'body', 'base']) {
+  const rgba = packedRgba(parentArtHeader, name), alpha = alphaBytes(rgba);
+  assert.equal(sha(alpha), expectedParentAlphaSha[name], 'Independently pinned approved part alpha: ' + name);
+  parentMasks.set(name, alpha);
+  for (let offset = 0; offset < rgba.length; offset += 4) if (rgba[offset + 3]) {
+    assert.equal(parentNeutral[offset + 3], 0, 'Parent layers partition whole approved pixels');
+    rgba.copy(parentNeutral, offset, offset, offset + 4);
+  }
+}
+assert.equal(sha(parentNeutral), expectedParentRgbaSha, 'Pinned parent parts reconstruct the accepted whole-character pixels');
+assert.equal(sha(alphaBytes(parentNeutral)), expectedCanonicalAlphaSha, 'Approved whole-character alpha was independently derived');
 async function sourcePngBase64(name) {
   const encodedBytes = await read('source/artwork/chill-shroom/' + name);
   const encoded = encodedBytes.toString().replace(/\s+/g, '');
@@ -247,11 +287,21 @@ async function sourcePngBase64(name) {
 }
 const master = await sourcePngBase64('approved-master.png.base64.txt');
 const closedMaster = await sourcePngBase64('closed-master.png.base64.txt');
+const paintedMaster = await sourcePngBase64('painted-master.png.base64.txt');
+const paintedClosedMaster = await sourcePngBase64('painted-closed-master.png.base64.txt');
+const paintedBase = await sourcePngBase64('painted-base.png.base64.txt');
+assert.equal(sha(paintedMaster.bytes), paintedMasterSha, 'The reviewed final paint has an immutable source');
+assert.equal(sha(paintedClosedMaster.bytes), paintedClosedMasterSha, 'The current bounded eye edit has an immutable source');
+assert.equal(sha(paintedBase.bytes), paintedBaseSha, 'The initial style edit remains available for prompt reproducibility');
 assert.equal(sha(master.bytes), approvedMasterSha, 'The source is the exact whole character approved by the user');
 assert.equal(sha(closedMaster.bytes), closedMasterSha, 'The bounded eye edit has an immutable source');
 assert.deepEqual([master.image.width, master.image.height], [1285, 1224]);
 assert.equal(artwork.approvedMasterSha256, approvedMasterSha);
 assert.equal(artwork.closedMasterSha256, closedMasterSha);
+assert.equal(artwork.paintedMasterSha256, paintedMasterSha);
+assert.equal(artwork.paintedClosedMasterSha256, paintedClosedMasterSha);
+assert.equal(artwork.approvedCanonicalRgbaSha256, expectedParentRgbaSha);
+assert.equal(artwork.canonicalAlphaSha256, expectedCanonicalAlphaSha);
 assert.equal(artwork.canonicalRgbaSha256, expectedCanonicalRgbaSha);
 assert.equal(sha(headerBytes), artwork.headerSha256);
 assert.equal(sha(extractionBytes), artwork.extractionSha256);
@@ -265,7 +315,13 @@ if ('standaloneChallengeIllustrations' in generation) assert.equal(generation.st
 assert.equal(generation.approvedMasterSha256, approvedMasterSha);
 assert.equal(generation.masterSource, 'approved-master.png.base64.txt');
 assert.equal(generation.closedSource, 'closed-master.png.base64.txt');
-for (const key of ['masterPrompt', 'closedEyePrompt']) {
+assert.equal(generation.paintedSource, 'painted-master.png.base64.txt');
+assert.equal(generation.paintedClosedSource, 'painted-closed-master.png.base64.txt');
+assert.equal(generation.paintedBaseSource, 'painted-base.png.base64.txt');
+assert.equal(generation.paintedMasterSha256, paintedMasterSha);
+assert.equal(generation.paintedClosedMasterSha256, paintedClosedMasterSha);
+assert.equal(generation.paintedBaseSha256, paintedBaseSha);
+for (const key of ['masterPrompt', 'closedEyePrompt', 'stylePrompt', 'spotRefinementPrompt', 'paintedClosedEyePrompt']) {
   assert(typeof generation[key] === 'string' && generation[key].length > 100, 'Actual plant generation/edit prompt: ' + key);
 }
 assert.equal(extraction.schema, 2);
@@ -277,13 +333,30 @@ assert.equal(extraction.parts, undefined, 'There is no independent per-part crop
 const eyeRegions = [[26, 50, 36, 62], [37, 50, 47, 62]];
 assert.deepEqual(extraction.eyeRegions, eyeRegions, 'Expressions may modify only the two fixed eye regions');
 assert.equal(extraction.eyeFeatherPixels, 1);
+assert.equal(extraction.paintRegistration.interiorAlphaThreshold, 240, 'Repaint all fully covered interiors while retaining true antialiased contour paint');
 assert.equal(extraction.halfExpressionBlend, 0.5);
 assert.deepEqual(fs.readFileSync(new URL('extraction.json', artworkUrl)), extractionBytes, 'Public extraction instructions match source');
 assert.deepEqual(fs.readFileSync(new URL('generation.json', artworkUrl)), generationBytes, 'Public generation/edit records match source');
 
 const sourceManifest = JSON.parse(await read('source-manifest.json'));
 assert.equal(sourceManifest.version, engine.id);
-for (const name of ['src/Lawn/System/ChillShroomArt.h', 'artwork/chill-shroom/extraction.json', 'artwork/chill-shroom/generation.json', 'artwork/chill-shroom/render.py', 'artwork/chill-shroom/approved-master.png.base64.txt', 'artwork/chill-shroom/closed-master.png.base64.txt']) {
+// This release repaints an existing rig. Every engine/dependency/source byte
+// outside the art directory, packed pixel header and version must be unchanged.
+const repaintInputs = name => name === 'CMake/ProjectVersion.cmake' ||
+  name === 'src/Lawn/System/ChillShroomArt.h' || name.startsWith('artwork/chill-shroom/');
+for (const entry of Object.values(parent.files)) {
+  if (entry.dir || !entry.name.startsWith('chill5-candidate/source/')) continue;
+  const name = entry.name.slice('chill5-candidate/source/'.length);
+  if (repaintInputs(name)) continue;
+  assert.deepEqual(await read('source/' + name), Buffer.from(await entry.async('uint8array')),
+    'A finish-only pass preserves all other engine/dependency bytes: ' + name);
+}
+for (const name of Object.keys(sourceManifest.files)) {
+  if (!repaintInputs(name)) assert(parent.file('chill5-candidate/source/' + name),
+    'A finish-only pass does not add unrelated production source: ' + name);
+}
+
+for (const name of ['src/Lawn/System/ChillShroomArt.h', 'artwork/chill-shroom/extraction.json', 'artwork/chill-shroom/generation.json', 'artwork/chill-shroom/render.py', 'artwork/chill-shroom/approved-master.png.base64.txt', 'artwork/chill-shroom/closed-master.png.base64.txt', 'artwork/chill-shroom/painted-master.png.base64.txt', 'artwork/chill-shroom/painted-closed-master.png.base64.txt', 'artwork/chill-shroom/painted-base.png.base64.txt']) {
   const bytes = await read('source/' + name), pin = sourceManifest.files[name];
   assert(pin, 'Approved master/edit/extraction input is included in the source manifest: ' + name);
   assert.equal(pin.bytes, bytes.length);
@@ -297,32 +370,36 @@ const canonicalPng = fs.readFileSync(new URL('canonical.png', artworkUrl));
 assert.equal(sha(canonicalPng), artwork.canonicalPngSha256, 'Canonical PNG byte identity');
 const canonical = decodeRgbaPng(canonicalPng);
 assert.deepEqual([canonical.width, canonical.height], [80, 80]);
-assert.equal(sha(canonical.rgba), expectedCanonicalRgbaSha, 'Canonical pixels match the independent approved-master resample');
+assert.equal(sha(canonical.rgba), expectedCanonicalRgbaSha, 'Canonical pixels match the reviewed final paint');
+assert.notEqual(sha(canonical.rgba), expectedParentRgbaSha, 'The final style pass changes actual paint');
+assert.equal(sha(alphaBytes(canonical.rgba)), expectedCanonicalAlphaSha, 'New paint preserves every approved whole-character alpha byte');
+assert.deepEqual(alphaBytes(canonical.rgba), alphaBytes(parentNeutral), 'New paint retains the exact parent silhouette, not only matching bounds');
+// Independently normalized from the immutable painted master using the same
+// full-canvas Lanczos placement described above (without importing render.py).
+// These are all pixels where parent alpha >=240 and generated alpha <240.
+const generatedEdgeFallbackPixels = new Set([1336, 1903, 1984, 2226, 2387, 2468, 2631, 2712, 2793, 2874, 2955, 3116, 3196, 3357, 3437, 3596, 3676, 3755, 3913, 4069, 4146, 4220, 4221, 4620, 5180]);
+for (let offset = 0; offset < canonical.rgba.length; offset += 4) {
+  if (parentNeutral[offset + 3] < 240 || generatedEdgeFallbackPixels.has(offset / 4)) {
+    assert.deepEqual(canonical.rgba.subarray(offset, offset + 4), parentNeutral.subarray(offset, offset + 4),
+      'Original contour RGB is retained when approved or generated coverage is below 240');
+  }
+}
+
 
 const names = ['cap', 'body', 'base', 'blink1', 'blink2'];
 assert.deepEqual(Object.keys(artwork.parts).sort(), [...names].sort());
 const decodedParts = new Map();
 for (const name of names) {
-  const pin = artwork.parts[name], symbol = name[0].toUpperCase() + name.slice(1);
+  const pin = artwork.parts[name];
   assert.equal(pin.width, 80); assert.equal(pin.height, 80, 'All runtime parts use the same registered canvas');
   const png = fs.readFileSync(new URL(name + '.png', artworkUrl));
   assert.equal(sha(png), pin.pngSha256, 'Published PNG pin: ' + name);
   const decoded = decodeRgbaPng(png);
   assert.deepEqual([decoded.width, decoded.height], [80, 80]);
   assert.equal(sha(decoded.rgba), pin.rgbaSha256, 'Decoded pixel pin: ' + name);
-  assert.equal(Number(header.match(new RegExp('k' + symbol + 'Width\\s*=\\s*(\\d+)'))?.[1]), 80);
-  assert.equal(Number(header.match(new RegExp('k' + symbol + 'Height\\s*=\\s*(\\d+)'))?.[1]), 80);
-  const array = header.match(new RegExp('k' + symbol + 'Argb\\[\\]\\s*=\\s*\\{([\\s\\S]*?)\\};'));
-  assert(array, 'Packed runtime pixels: ' + name);
-  const pixels = [...array[1].matchAll(/0x([0-9a-fA-F]{8})u/g)].map(match => Number.parseInt(match[1], 16));
-  assert.equal(pixels.length, 80 * 80);
-  const rgba = Buffer.alloc(80 * 80 * 4);
-  pixels.forEach((pixel, index) => {
-    rgba[index * 4] = (pixel >>> 16) & 255;
-    rgba[index * 4 + 1] = (pixel >>> 8) & 255;
-    rgba[index * 4 + 2] = pixel & 255;
-    rgba[index * 4 + 3] = pixel >>> 24;
-  });
+  const rgba = packedRgba(header, name);
+  const parentMask = parentMasks.get(name === 'blink1' || name === 'blink2' ? 'body' : name);
+  assert.deepEqual(alphaBytes(rgba), parentMask, 'New paint preserves the exact approved part geometry: ' + name);
   assert.deepEqual(decoded.rgba, rgba, 'Public PNG and embedded runtime artwork are pixel-identical: ' + name);
   for (let offset = 0; offset < rgba.length; offset += 4) {
     if (rgba[offset + 3] === 0) assert.equal(rgba.readUInt32BE(offset), 0, 'Transparent registered pixels have no hidden RGB: ' + name);
@@ -352,7 +429,8 @@ for (let offset = 0; offset < reconstructed.length; offset += 4) {
 }
 assert(capPixels > 0 && bodyPixels > 0, 'Both actual cap and body layers contain registered visible art');
 assert.deepEqual(reconstructed, canonical.rgba, 'Neutral cap/body union exactly reconstructs the approved whole character');
-assert.equal(sha(reconstructed), expectedCanonicalRgbaSha, 'Layer registration cannot silently change master proportions');
+assert.equal(sha(reconstructed), expectedCanonicalRgbaSha, 'Registered parts reconstruct the reviewed final paint exactly');
+assert.equal(sha(alphaBytes(reconstructed)), expectedCanonicalAlphaSha, 'Layer union retains the approved silhouette after repainting');
 assert(!body.equals(half) && !body.equals(closed) && !half.equals(closed), 'Open, half and closed expressions differ');
 const changedPerEye = eyeRegions.map(() => 0);
 for (let y = 0; y < 80; y++) for (let x = 0; x < 80; x++) {
@@ -366,7 +444,7 @@ for (let y = 0; y < 80; y++) for (let x = 0; x < 80; x++) {
   else if (differs) changedPerEye[eyeIndex]++;
 }
 for (const changed of changedPerEye) assert(changed > 5, 'Both eyes have an actual expression change');
-console.log('PASS approved-master SHA/registration, independent PNG/runtime pixels, exact neutral whole-character reconstruction, fixed-alpha eye-only expressions and native cards without standalone generated illustrations.');
+console.log('PASS exact parent alpha/part geometry, reviewed paint pins, independent PNG/runtime pixels, neutral reconstruction, fixed-alpha eye-only expressions and native cards without standalone generated illustrations.');
 
 
 if (process.argv.includes('--run-native')) {

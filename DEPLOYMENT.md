@@ -2,7 +2,54 @@
 
 This clean release repository targets `Caleb-Guyer/plants-vs-zombies-web`. On 2026-10-31 the user directed publication of the current build and stopped further manual gameplay. Publication is authorized while full original-game 1:1 parity remains unverified; it does not certify parity or complete that goal. GitHub Pages publication succeeded on 2026-10-31: [release workflow 41230962473](https://github.com/Caleb-Guyer/plants-vs-zombies-web/actions/runs/41230962473) deployed commit `5ba4d0d7279145dcbdfa3e91d19b91218ef1c04a`.
 
-The current source target is `0.2.6-web-chill.5`, based on Chill.4. The user
+## Chill.6 publication target, 2026-11-01
+
+The current source target is `0.2.6-web-chill.6`, based on the exact published
+Chill.5 source, SHA-256
+`8e97e5f49981a5e7a9a230e6651c586d6b9e3434ab22092dc30c7aa897d1c0ab`.
+The user accepted Chill.5's proportions. Keep original alpha and cap/body
+partition exactly while refining only cap markings, shading, face and bounded
+eye patches. Runtime code, mechanics, animation and save formats stay unchanged.
+Publish immutable art inputs, exact built-in image-generation prompts and the
+deterministic finish/extraction recipe. Cards compose actual sprites; no
+standalone AI challenge illustrations or added tips.
+
+Current downloads: [Chill.6 source](dist/source/pvz-portable-0.2.6-web-chill.6-source.zip),
+[full upstream patch](dist/source/web-chill.6.patch),
+[Chill.5 delta](dist/source/chill5-to-chill6.patch), and
+[pinned parent source](dist/source/pvz-portable-0.2.6-web-chill.5-source.zip).
+Runtime/loader cache tokens advance to `chill6`; unchanged storage retains
+`polish1`. Keep `.gitattributes`, complete source and matching artifact identities.
+
+Chill.6 local release gates pass on 2026-11-01. The coherent 90.230-second
+Release build contains 780 source files. All 1,532 native production checks,
+fourteen browser integration suites and eleven worker scenarios pass. Independent
+parent comparisons retain every approved canonical and cap/body alpha byte and
+all runtime, mechanics, animation and save code. Nine public artwork/metadata
+files and the packed header reproduce exactly. Both the full upstream and
+Chill.5 delta patches reconstruct every current source byte. The 812-entry
+engine source ZIP is 9,249,381 bytes, SHA-256
+`518d779b9948ac8a2d124db8f7929f13acf1121f38953d4ebee367518da17104`.
+
+A muted native review inspected the centered earned-fixture card, seed packet,
+restored Sun/Chill/Puff checkpoint and 32 full-size frames over a bounded
+5.6-second idle/wind-up/release/recovery sample. The corrected paint is consistent
+across these views, with no observed seam, detached part, clipping or layer jump.
+The original Menu paused the game and the owned test tab was closed. This is
+fixture-based visual coverage, not an earned win, full battle, new save-transfer
+cycle, every animation frame, subjective perfection or full original-game parity.
+Final website-package identity, extracted-source check and hosting result are
+recorded separately by the publisher and matching Pages workflow.
+
+The latest verified publication before this pass is Chill.5 commit
+`b8c2049da83ed3850e9c31c78e5c55ea6d59fea8`, successful
+[workflow 41279145103](https://github.com/Caleb-Guyer/plants-vs-zombies-web/actions/runs/41279145103).
+Record a new commit, successful matching workflow and public byte verification
+for Chill.6 rather than reusing that result.
+
+## Historical Chill.5 publication evidence — proportions accepted
+
+The historical source target was `0.2.6-web-chill.5`, based on Chill.4. The user
 accepted the replacement whole-character proportions before implementation.
 Keep that master and its registered canonical layers; never fit its parts
 independently to Ice artwork pivots. Source carries both original AI inputs,
@@ -15,7 +62,7 @@ Downloads: [Chill.5 source](dist/source/pvz-portable-0.2.6-web-chill.5-source.zi
 Runtime/loader cache tokens advance to `chill5`; unchanged storage retains
 `polish1`. Keep `.gitattributes`, corresponding source and artifact identities.
 
-Pre-publication current evidence on 2026-11-01: all 1,532 production checks
+Historical Chill.5 pre-publication evidence on 2026-11-01: all 1,532 production checks
 pass with current source/harness pins. The final 95.879-second incremental
 Release build retains all 777 source files unchanged (the initial full build
 also passed). Nine public art/JSON files and the packed header reproduce byte
@@ -36,8 +83,8 @@ an earned win or a fresh import/export/save cycle. Owned test tab22 is closed;
 the user's public game tab was not reloaded. Website-package and hosting
 verification have separate publisher receipts.
 
-Historical hosted records below retain their capture-time scope. The latest
-previous release was Chill.4 commit `e18a309f36c906014489a1cfabc0faa4da791ca7`,
+Historical hosted records below retain their capture-time scope. The Chill.5 parent
+release was Chill.4 commit `e18a309f36c906014489a1cfabc0faa4da791ca7`,
 workflow [41276164647](https://github.com/Caleb-Guyer/plants-vs-zombies-web/actions/runs/41276164647).
 The user subsequently rejected that sprite's proportions.
 
@@ -58,7 +105,7 @@ Release the reviewed current build after the bounded feature checks:
 3. Run **Publish game to GitHub Pages** manually from the intended branch. Pushes and pull requests do not deploy this workflow. There is no additional game or parity input flag.
 4. Review the validation job and deployment result. Open the URL recorded by the deployment environment.
 
-The workflow uses Node 24 and Python 3.13 for checkout checks and the runner's C++ compiler for seven production-method suites covering the new plant/third Bonus challenge, Night Shift, retained bonus wave/completion/navigation, speed, controls, decks and cooldowns. The coherent 226.121-second Release build, 1,513 native checks, fourteen browser suites including eleven worker scenarios, frozen-atlas reproduction and full/parent source reconstruction pass. Muted native review confirms centered earned/unearned cards, consistent new art, no added tips and existing 50-sun three-plant Continue with new parts before unpausing. Sparse clips verify idle/closed-eye wind-up only; no complete visual cycle, full battle or earned win is claimed. Detailed motion, blink/release and save phase have automated coverage. Bounded results belong in [QA](PARITY-QA.md); website-source and hosted verification remain independent release records. No `npm install`, Emscripten SDK, original game installation or full WASM rebuild is needed in deployment. It verifies bundled resource bytes, browser shell, save recovery/worker behavior, corresponding source and native content/QoL behavior before uploading `dist`. Automated native tests do not initialize the game or audio; browser checks use `?testing=1`.
+The workflow uses Node 24 and Python 3.13 for checkout checks and the runner's C++ compiler for seven production-method suites covering the new plant/third Bonus challenge, Night Shift, retained bonus wave/completion/navigation, speed, controls, decks and cooldowns. For Chill.6, record current coherent-build, native/source-harness, browser/worker, exact geometry/runtime-byte, artwork reproduction and upstream/Chill.5 reconstruction results before release. Keep the bounded muted visual review separate from automated correctness and historical captures. Current results belong in [QA](PARITY-QA.md); website-source packaging and hosted verification require their own receipts. No `npm install`, Emscripten SDK, original game installation or full WASM rebuild is needed in deployment. It verifies bundled resource bytes, browser shell, save recovery/worker behavior, corresponding source and native content/QoL behavior before uploading `dist`. Automated native tests do not initialize the game or audio; browser checks use `?testing=1`.
 
 The site includes the empty `.nojekyll` marker. Packaging targets GitHub Pages with a 100 MiB served-file ceiling and the 1 GB published-site ceiling. The former 25 MiB limit belonged to the earlier hosting provider; it must not cause complete current source, required parent/upstream inputs, artwork, tests, dependencies or licenses to be omitted. Final package verification records actual archive and site sizes.
 

@@ -2,7 +2,7 @@
 
 [Play on GitHub Pages](https://caleb-guyer.github.io/plants-vs-zombies-web/) · [Existing playtest](https://lawn-defense-caleb-plays.usgi.chatgpt.site) · [Deployment](DEPLOYMENT.md) · [Requirements](CURRENT-REQUIREMENTS.md) · [QA history](PARITY-QA.md)
 
-This source targets **0.2.6-web-chill.5**, based on the Chill.4 parent and PvZ-Portable 0.2.6. It preserves the whole-character proportions the user accepted, using one registered rig across the lawn, packet and centered challenge portrait. Gameplay, saves, QoL, audio and original content are retained. Full original-game 1:1 parity remains unverified. Earlier release records below are historical.
+This source targets **0.2.6-web-chill.6**, a final painted style pass based on the accepted Chill.5 proportions and PvZ-Portable 0.2.6. Preserve the original alpha silhouette and cap/body partition, with one registered rig across the lawn, packet and centered challenge portrait. The scope is cap-spot contrast/size, shading, face and bounded eye patches; runtime logic, mechanics, animation and save formats remain unchanged from Chill.5. Full original-game 1:1 parity remains unverified. Earlier release records below are historical.
 
 The Software.10 and earlier QA descriptions below are the frozen v18 evidence snapshot. They retain their original capture-time scope, including earlier limits; they are not a claim that later validation or the full parity goal is complete.
 
@@ -34,11 +34,12 @@ It has an independent checkpoint and completion record. Chill-shroom is
 introduced in this challenge; the original campaign, chooser and unlocks retain
 their familiar content.
 
-The new silhouette has a broad rounded cap directly over a short wide body,
-without the old pinched neck or separate feet. Its proportions were accepted
-as a complete character before the art was split into animation layers.
-All layers keep one scale and registration, instead of being fitted independently
-to Ice-shroom parts. [Canonical artwork](dist/content/chill-shroom/canonical.png),
+The accepted Chill.5 silhouette has a broad rounded cap directly over a short
+wide body, without a pinched neck or separate feet. Chill.6 keeps its original
+alpha and cap/body partition exactly; the final pass refines only the painted
+finish and bounded eye patches beside original mushroom references. All layers
+keep the same scale, registration and ground anchor. Runtime animation remains
+unchanged. [Canonical artwork](dist/content/chill-shroom/canonical.png),
 [generation prompts](dist/content/chill-shroom/generation.json),
 [extraction recipe](dist/content/chill-shroom/extraction.json) and
 [provenance](dist/content/chill-shroom/provenance.json) preserve the exact inputs.
@@ -103,9 +104,40 @@ Open the original **Options → More Options** dialog for these additions:
 
 The native options and deck dialogs use the original game artwork and concise labels. QoL preferences and decks travel with save exports in separate files; existing native profile and board-save formats remain unchanged. Backups is also available through the small More utility icon.
 
-## Chill.5 current verification, 2026-11-01
+## Chill.6 final style pass, 2026-11-01
 
-Pre-publication current evidence on 2026-11-01: all 1,532 production checks
+[Scoped goal](CHILL-REVISION-GOAL.md) records the accepted geometry, original-plant
+style references and muted verification criteria. Built-in image generation is
+limited to the custom plant; exact prompts and immutable inputs are published in
+[generation.json](dist/content/chill-shroom/generation.json). Native challenge
+cards compose the actual sprite, with no standalone AI challenge illustration.
+
+Chill.6 local release gates pass on 2026-11-01. The coherent 90.230-second
+Release build contains 780 source files. All 1,532 native production checks,
+fourteen browser integration suites and eleven worker scenarios pass. Independent
+parent comparisons retain every approved canonical and cap/body alpha byte and
+all runtime, mechanics, animation and save code. Nine public artwork/metadata
+files and the packed header reproduce exactly. Both the full upstream and
+Chill.5 delta patches reconstruct every current source byte. The 812-entry
+engine source ZIP is 9,249,381 bytes, SHA-256
+`518d779b9948ac8a2d124db8f7929f13acf1121f38953d4ebee367518da17104`.
+
+A muted native review inspected the centered earned-fixture card, seed packet,
+restored Sun/Chill/Puff checkpoint and 32 full-size frames over a bounded
+5.6-second idle/wind-up/release/recovery sample. The corrected paint is consistent
+across these views, with no observed seam, detached part, clipping or layer jump.
+The original Menu paused the game and the owned test tab was closed. This is
+fixture-based visual coverage, not an earned win, full battle, new save-transfer
+cycle, every animation frame, subjective perfection or full original-game parity.
+Final website-package identity, extracted-source check and hosting result are
+recorded separately by the publisher and matching Pages workflow.
+
+## Historical Chill.5 verification — proportions accepted, 2026-11-01
+
+The user accepted the proportions in this release. Its paint and verification
+record are retained below while Chill.6 refines the finish without reshaping him.
+
+Historical Chill.5 pre-publication evidence on 2026-11-01: all 1,532 production checks
 pass with current source/harness pins. The final 95.879-second incremental
 Release build retains all 777 source files unchanged (the initial full build
 also passed). Nine public art/JSON files and the packed header reproduce byte
