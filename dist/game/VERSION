@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-chill.4
-Refines Chill-shroom with a rounder painted cap, squat shaded body, seam-free full-body eye states and independent cap follow-through. Centered native challenge portraits, radial slow and saved layouts are retained.
-Engine JavaScript SHA-256: 0602f3868ca9c937bdedf84fcd83e8c140d8ea0dbb947b78cd4924064d5b91e9
-Engine WASM SHA-256: 085aa044c83bca3ba3729514361859c6482272846060e0505f0a265ba76e0486
+PvZ-Portable 0.2.6-web-chill.5
+Preserves the approved whole-character shape with registered cap/body layers and a shared plant/packet/card rig independent of Ice artwork pivots. Native blink/sleep timing, radial slow and saved layouts are retained.
+Engine JavaScript SHA-256: 4dae3958eff86b0d1a147f8ca99af745f957f7a2335c6c9a41cc848d81fc6a2d
+Engine WASM SHA-256: 8d37d684cec98a6c34f68cc8c39517006e2ef9408956ec1ef5bdee8a347d6157
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.

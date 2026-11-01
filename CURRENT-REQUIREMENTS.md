@@ -8,7 +8,54 @@ The user directed us on 2026-10-31 to stop manual gameplay and wrap the current 
 
 Publication status: [GitHub Pages](https://caleb-guyer.github.io/plants-vs-zombies-web/) is live after [workflow 41230962473](https://github.com/Caleb-Guyer/plants-vs-zombies-web/actions/runs/41230962473) succeeded on 2026-10-31. A silent browser check reached the original title without a file prompt; WASM returned HTTP 200 as `application/wasm`. This adds hosting/startup proof only, with no GitHub campaign gameplay or full-parity certification.
 
-## Chill.4 proportions, shading and motion, 2026-11-01
+## Chill.5 approved shape, 2026-11-01
+
+The user rejected Chill.4 and identified shape/proportions as the main issue.
+A complete replacement preview was shown before implementation; the user replied
+“Proportions look right.” Chill.5 locks that approved whole-character silhouette:
+a broad asymmetric rounded cap, short wide body, no pinched neck and no feet.
+The approved master SHA is
+`f861148f8c57bbee31595e8fd5692aa23c1282172ab0016a159adf406f2a373d`.
+
+One uniform resize places the character on a shared 80×80 canvas. The registered
+cap/body neutral union must equal the approved canonical pixels exactly, SHA
+`c00b7d93e79d2fb8f39ea2dbddd178e02d040ac1f4fd2e8bb62f105502317fb7`.
+Individual parts are never resized to Ice-shroom pivots. A shared DrawRig renders
+the live plant, packet and Cold Front card; the invisible native carrier retains
+blink/sleep clocks, attachments and save ownership. Eye edits are bounded to the
+face, keeping the approved outline/alpha and all other paint unchanged.
+
+Keep all original content, IDs, save layouts, pulse/range/chill/cost/recharge,
+eligibility, QoL, workers, schema 2 and normal-player audio. Challenge pictures
+remain centered native sprite compositions, without separately generated
+challenge illustrations or added tips. Agent browser checks stay `?testing=1`.
+
+Pre-publication current evidence on 2026-11-01: all 1,532 production checks
+pass with current source/harness pins. The final 95.879-second incremental
+Release build retains all 777 source files unchanged (the initial full build
+also passed). Nine public art/JSON files and the packed header reproduce byte
+for byte. The canonical neutral pixels independently match the accepted master.
+Both upstream and Chill.4 delta patches reconstruct all 777 current source
+files. The 809-entry source ZIP is 6,500,652 bytes, SHA-256
+`8e97e5f49981a5e7a9a230e6651c586d6b9e3434ab22092dc30c7aa897d1c0ab`.
+All fourteen browser integration suites and eleven worker scenarios pass.
+
+Actual muted native review shows the same accepted proportions in the packet,
+centered earned Cold Front portrait and restored 50-sun Sun/Chill/Puff board.
+The new art is already present behind paused Continue. Original title hover is
+red and no added Bonus tips appear. A bounded5.6-second sample captured33 valid
+1280×720 frames showing idle, wind-up, release and recovery; sampled phases keep
+the short body connected and show no old Ice artwork. The native Menu pauses
+correctly. This is not full-game or every-blink/frame coverage, a full battle,
+an earned win or a fresh import/export/save cycle. Owned test tab22 is closed;
+the user's public game tab was not reloaded. Website-package and hosting
+verification have separate publisher receipts.
+
+## Historical Chill.4 proportions — shape rejected, 2026-11-01
+
+The user rejected the shape below; its earlier technical observations retain
+their original scope and do not validate the Chill.5 appearance.
+
 
 The user rejected Chill.3 as too flat/simple and asked for improved proportions,
 shading and animation. Image generation is explicitly allowed for the custom

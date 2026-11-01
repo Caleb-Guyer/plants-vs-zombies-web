@@ -2,39 +2,44 @@
 
 This clean release repository targets `Caleb-Guyer/plants-vs-zombies-web`. On 2026-10-31 the user directed publication of the current build and stopped further manual gameplay. Publication is authorized while full original-game 1:1 parity remains unverified; it does not certify parity or complete that goal. GitHub Pages publication succeeded on 2026-10-31: [release workflow 41230962473](https://github.com/Caleb-Guyer/plants-vs-zombies-web/actions/runs/41230962473) deployed commit `5ba4d0d7279145dcbdfa3e91d19b91218ef1c04a`.
 
-The current source uses `0.2.6-web-chill.4`, based on Chill.3. The user
-rejected flat/simple proportions, shading and motion and explicitly allowed
-image generation for the plant. One generated parts atlas supplies a fuller
-blue cap, compact shaded cream/mint body, tucked feet and seamless full-body
-expressions. Centered native cards still compose actual Conehead/Puff/custom-Chill
-sprites over original grass, without a separately generated challenge painting.
-[Sprite provenance](dist/content/chill-shroom/provenance.json),
-[generation](dist/content/chill-shroom/generation.json),
-[extraction](dist/content/chill-shroom/extraction.json) and
-[card provenance](dist/content/native-bonus-art.json) accompany the current art.
-Preserve the frozen atlas and deterministic extractor with corresponding source.
-Gameplay, attack timing, IDs, native save layouts, prior checkpoints,
-worker, five-second persistence and schema 2 retain compatibility.
-The [revision criteria](CHILL-REVISION-GOAL.md) remain separate from claims of
-perfect original-game parity.
+The current source target is `0.2.6-web-chill.5`, based on Chill.4. The user
+accepted the replacement whole-character proportions before implementation.
+Keep that master and its registered canonical layers; never fit its parts
+independently to Ice artwork pivots. Source carries both original AI inputs,
+exact prompts and deterministic extraction. Cards compose actual game sprites.
 
-Current downloads are [Chill.4 source](dist/source/pvz-portable-0.2.6-web-chill.4-source.zip),
-[complete upstream patch](dist/source/web-chill.4.patch),
-[Chill.3 increment](dist/source/chill3-to-chill4.patch) and retained
-[Chill.3 parent source](dist/source/pvz-portable-0.2.6-web-chill.3-source.zip).
-Independent assembled-proof review finds improved proportions/volume without
-a critical defect in the bounded native view. Pre-publication local evidence
-records the 226.121-second coherent build with 776 unchanged source files,
-1,513 native checks, fourteen browser suites/eleven worker scenarios,
-eight-file/header reproduction and both patch reconstructions. Native card,
-preview/lawn and existing-checkpoint first-draw review pass. Reliable samples
-show idle/wind-up; a full visual cycle is not claimed. Website/runtime package
-and hosted rollout receipts are separate publisher records. Earlier evidence
-retains its own scope.
-Preserve `.gitattributes`, versioned engine URLs and matching source/build
-identities. Runtime/loader tokens advance to `chill4`; unchanged storage code
-keeps its existing `polish1` tokens. Exact artifact hashes belong in release
-manifests. Historical hosted records below are not Chill.4 deployment results.
+Downloads: [Chill.5 source](dist/source/pvz-portable-0.2.6-web-chill.5-source.zip),
+[upstream patch](dist/source/web-chill.5.patch),
+[Chill.4 delta](dist/source/chill4-to-chill5.patch), and retained
+[parent source](dist/source/pvz-portable-0.2.6-web-chill.4-source.zip).
+Runtime/loader cache tokens advance to `chill5`; unchanged storage retains
+`polish1`. Keep `.gitattributes`, corresponding source and artifact identities.
+
+Pre-publication current evidence on 2026-11-01: all 1,532 production checks
+pass with current source/harness pins. The final 95.879-second incremental
+Release build retains all 777 source files unchanged (the initial full build
+also passed). Nine public art/JSON files and the packed header reproduce byte
+for byte. The canonical neutral pixels independently match the accepted master.
+Both upstream and Chill.4 delta patches reconstruct all 777 current source
+files. The 809-entry source ZIP is 6,500,652 bytes, SHA-256
+`8e97e5f49981a5e7a9a230e6651c586d6b9e3434ab22092dc30c7aa897d1c0ab`.
+All fourteen browser integration suites and eleven worker scenarios pass.
+
+Actual muted native review shows the same accepted proportions in the packet,
+centered earned Cold Front portrait and restored 50-sun Sun/Chill/Puff board.
+The new art is already present behind paused Continue. Original title hover is
+red and no added Bonus tips appear. A bounded5.6-second sample captured33 valid
+1280×720 frames showing idle, wind-up, release and recovery; sampled phases keep
+the short body connected and show no old Ice artwork. The native Menu pauses
+correctly. This is not full-game or every-blink/frame coverage, a full battle,
+an earned win or a fresh import/export/save cycle. Owned test tab22 is closed;
+the user's public game tab was not reloaded. Website-package and hosting
+verification have separate publisher receipts.
+
+Historical hosted records below retain their capture-time scope. The latest
+previous release was Chill.4 commit `e18a309f36c906014489a1cfabc0faa4da791ca7`,
+workflow [41276164647](https://github.com/Caleb-Guyer/plants-vs-zombies-web/actions/runs/41276164647).
+The user subsequently rejected that sprite's proportions.
 
 ## What gets published
 

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "sourceKind": "native sprite compositions with an AI-assisted plant sprite",
+  "sourceKind": "native sprite compositions using the approved whole-character plant rig",
   "assetBundleId": "sha256:b468b22439430ca4a36035b886a74bd831a86b2a1a36c39d3203396f5b75d093",
   "assetManifest": "../game-assets/manifest.json",
   "generatedArtworkUsed": true,
@@ -8,7 +8,7 @@
     "displayName": "Chill-shroom",
     "nativeReanimation": "REANIM_ICESHROOM",
     "spriteOverride": "chill-shroom/provenance.json",
-    "scope": "Original AI-assisted rounded shaded cap, squat cream/mint stem, tucked roots and full-body expression variants on the native animation rig; no separately generated challenge illustration."
+    "scope": "Approved whole-character master on one registered canonical canvas. Cap/body retain shared scale and placement; Ice is an invisible clock carrier. Actual shared DrawRig renders the packet, lawn and card."
   },
   "cards": [
     {
@@ -26,7 +26,7 @@
     {
       "mode": 75,
       "name": "Cold Front",
-      "hero": "Chill-shroom actual shaded game sprite on REANIM_ICESHROOM rig",
+      "hero": "Approved Chill-shroom shared DrawRig",
       "background": "IMAGE_BACKGROUND2"
     }
   ],
@@ -38,6 +38,6 @@
     "maxHeroWidth": 68,
     "maxHeroHeight": 57
   },
-  "historicalArt": "Current cards compose actual native sprites over original lawns. Only the custom plant parts use AI-assisted artwork. Chill.3 flat vector parts and older standalone generated challenge illustrations are superseded; historical source archives retain their evidence.",
+  "historicalArt": "Chill.4 assembled-part proportions were rejected. The approved Chill.5 whole-character outline is preserved exactly at neutral pose. Cards still compose actual game sprites; no standalone generated challenge illustration is used.",
   "standaloneChallengeIllustrations": false
 }

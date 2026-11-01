@@ -1,57 +1,11 @@
 {
   "schema": 1,
   "tool": "built-in image_gen.imagegen",
-  "useCase": "stylized-concept",
-  "scope": "Chill-shroom plant sprite parts only",
-  "standaloneChallengeIllustrations": false,
-  "transparentBackground": true,
-  "atlasSha256": "05f4bad003184465d9055f30b6f3fca033170ee5996658516cfa6f242b970358",
-  "references": [
-    {
-      "name": "live-native-sprite.png",
-      "role": "rejected prior in-game sprite",
-      "sha256": "b4a5fc29ba27655c74060f20a7724d1e006332022091c868f6ab5bd09c90f948",
-      "size": [
-        1280,
-        720
-      ]
-    },
-    {
-      "name": "SunShroom_head.png",
-      "role": "original game style reference",
-      "sha256": "551dfc5e509961f1eac1bb79b35da7827a1544034ed90a96d6d539c9425b7e64",
-      "size": [
-        96,
-        64
-      ]
-    },
-    {
-      "name": "SunShroom_body.png",
-      "role": "original game style reference",
-      "sha256": "ea006e755ddcddc0bae1f0ee6eabe3a085c345b5853f0af1bf655cfb2687db78",
-      "size": [
-        59,
-        49
-      ]
-    },
-    {
-      "name": "PuffShroom_head.png",
-      "role": "original game style reference",
-      "sha256": "5f8071f541bd510fb2e2e7ab4e364dd597ac6b107981317f5609f6d7453fcf46",
-      "size": [
-        81,
-        53
-      ]
-    },
-    {
-      "name": "FumeShroom_head.png",
-      "role": "original game style reference",
-      "sha256": "9221cbdbe7e5713cefdba58e5a09e39f13a3d893272263c81b38c5e853ef197e",
-      "size": [
-        92,
-        71
-      ]
-    }
-  ],
-  "prompt": "Use case: stylized-concept.\nAsset type: ONE production sprite-parts atlas for a custom Plants vs. Zombies (2009 PC) mushroom plant called Chill-shroom.\nInput images: Image 1 is the current IN-GAME result whose flat/simple silhouette needs replacement; DO NOT copy its flat illustration. Images 2–5 are authentic original Sun-shroom/Puff-shroom/Fume-shroom parts, STYLE REFERENCES ONLY. Match their hand-painted cartoon volume, chunky organic outlines, simple expressive eyes, broad warm highlights and deep colored shadows. This is new plant artwork, not a challenge card illustration.\nOutput: a genuinely TRANSPARENT 1536×1024 atlas laid out as a precise 3-column by 2-row invisible grid of six 512×512 cells. NO grid lines, labels, lettering, backdrop, floor, effects, or extra objects. Each part fully isolated with clear transparent margins. Do not render a complete assembled character anywhere.\nTop-left cell: isolated plump mushroom CAP ONLY. Width:height approximately 1.7:1, a slightly lopsided domed rounded cap, not a flat umbrella. Dusty blue-teal midtones, broad soft upper-left pale cyan highlight, curved deep desaturated indigo underside, subtle thick drooping rim. Three to five irregular pale frosty spots wrapping the rounded surface; no tiny decorative snowflake emblems. Thick but varied dark blue-brown outline with warm painterly edge softness. A tiny glimpse of underside at the lower rim adds depth. No face, no stem, no spikes, no muzzle, no crystal crown. Cap centered about (256,256) inside its cell, approximately 420 wide by 245 high.\nTop-middle cell: isolated STEM/BODY ONLY, NO FACE OR EYES. Short, squat, soft pear shape, gently rounded shoulders tapering into a plump wider belly. Creamy ivory on upper-left/front, warm pale ochre low midtone and mint/teal right shade; deep teal cast shadow across the top just beneath a mushroom cap. Rounded bottom. Variable dark brown/green outline, softly painted gradients, a few broad volume strokes. No long straight column, no lamp pedestal, no limbs, no mouth. About 260 wide by 230 high, centered in cell.\nTop-right cell: isolated tucked root/base ONLY, a single very low rounded organic mint-cream cushion with two tiny natural root lobes, like the foot of a mushroom. Subtle dark contact shading, broad creamy front highlight. About 300 wide by 65 high. No hard pedestal or separate shoes.\nBottom-left cell: isolated pair of OPEN EYES only on transparency. Simple original-game dark oval eyes, a mildly asymmetrical curious/wary expression, small ivory highlight on upper-left of each eye. No eyebrows, face skin, mouth or cap. Pair about 230 wide by 90 high, eyes separated by a large clear gap. Large simple readable dark ovals, not realistic irises or anime eyes.\nBottom-middle cell: isolated SAME pair of eyes HALF CLOSED, same pair width and eye center positions as bottom-left, heavier gently lowered upper eyelids, dark oval lower halves. No skin or other artwork.\nBottom-right cell: isolated SAME eyes FULLY CLOSED, two short expressive curved dark eyelid strokes at exactly corresponding eye centers, same spacing as bottom-left. No skin or other artwork.\nArt direction: this must look like a polished native 2009 PvZ sprite, with the original reference images' depth, weight, irregularity and graphic clarity at 80 pixels tall. A restrained hand-painted cartoon sprite, not vector clipart, not a modern glossy 3D render, not pixel art, not a children's sticker. Avoid flat fill, perfect symmetry, thin uniform outlines, ornamental surface detail, glass shine, electric glow, duplicated Ice-shroom or Puff-shroom anatomy. Truly transparent background with preserved antialiasing, no checkerboard baked into pixels."
+  "scope": "custom plant only; no standalone challenge illustrations",
+  "geometryLocked": true,
+  "approvedMasterSha256": "f861148f8c57bbee31595e8fd5692aa23c1282172ab0016a159adf406f2a373d",
+  "masterSource": "approved-master.png.base64.txt",
+  "closedSource": "closed-master.png.base64.txt",
+  "masterPrompt": "Use case: stylized-concept.\nAsset type: one complete, cohesive transparent game-character sprite preview, not a sprite atlas, not a challenge illustration.\nPrimary request: redesign ONLY the shape and proportions of the custom blue Chill-shroom so it belongs among the original 2009 Plants vs. Zombies PC mushrooms. The current in-game plant in input image 1 was REJECTED for its shape. Its pinched vase-shaped stem, two little feet, triangular umbrella cap and disconnected construction must be replaced.\nReferences: Image 1 is the rejected current identity/color direction ONLY. Images 2–5 are authentic original Sun-shroom cap/body, Puff-shroom cap and Fume-shroom cap STYLE AND SHAPE references. Their mildly irregular rounded silhouettes, thick brown outlines and simple 2D cartoon construction matter more than realism.\nDraw ONE whole mouthless mushroom, centered, mild three-quarter orientation, complete from cap top to rounded stem bottom, all connected as one character. Total silhouette broad and squat, approximately 1.05 times as wide as tall.\nCAP: a broad chunky lopsided oval/bun shape with a rounded off-center bulge and one subtly drooping side, like the soft asymmetric ORIGINAL mushroom caps in the references. Cap width about 1.65 times the visible body width; cap height about twice the visible body height. Rounded contour with no apex or pointed triangular roof, no straight lampshade edges, no flared umbrella tip, no oversized hollow gill bowl. The underside should be just a narrow dark curved lip, NOT a second thick object stacked on the body. Dusty medium blue cap, three or four uneven pale frost spots, restrained curved highlight and rich blue shaded right side. Preserve useful painted volume, not extra gloss.\nBODY: a very short, WIDE, softly rounded cream cylinder/barrel directly tucked beneath the cap, its top disappearing into the cap shadow. Broad shoulders and almost parallel slightly curved sides; its width is nearly constant rather than a narrow neck and huge flared belly. Visible body width about twice its height. Rounded body bottom rests directly on the ground. NO feet, shoes, root cushion, separate pedestal, bottom platform or second lower mushroom part. NO neck, hourglass waist, vase, pear body, thin stalk or visible skinny connection.\nFACE: two small simple original-game dark oval eyes placed on the front of the short wide cream body, with a tiny highlight, same quiet expression. No mouth or directional muzzle. Keep eyes proportionate; NOT huge glossy jellybean eyes or realistic eye sockets. No face on the cap.\nStyle: original 2009 PvZ hand-painted 2D cartoon sprite quality. Vary outline thickness naturally. Broad soft painted light/mid/shadow shapes, readable at around 65 pixels tall. Do not create a modern glossy toy, ceramic figurine, generic toadstool sticker, vector clipart, 3D render, photoreal mushroom or Ice-shroom crystal crown. No extra decorative snowflakes, accessories, limbs, particles, text, shadows beyond the character, scene or labels. Genuinely transparent background. One coherent finished character only, no separated parts or alternate views.",
+  "closedEyePrompt": "Use case: precise-object-edit.\nAsset type: exact registered CLOSED-EYE blink frame for this approved whole-character Plants vs. Zombies-style mushroom sprite.\nEdit target: the attached complete blue-and-cream mushroom. Its shape and proportions have been explicitly approved. Preserve its EXACT canvas size, transparency, character bounds, cap contour, cap/body overlap, body contour, colors, shading, spots, outline, registration and every pixel outside the two eye regions.\nChange ONLY the two open dark oval eyes on the cream body into two small gently curved closed eyelid strokes in the original 2009 PvZ cartoon style. Use the same dark brown as the original eyes. Keep their centers and spacing. Restore the cream body shading where the open tall ovals used to be, without rectangular patches or new eye sockets. Calm closed-eyes expression, no mouth.\nNothing else changes. One sprite, same camera, same position, same size. No feet, neck, new shape, changed cap, particles, glow, text, background, shadow or alternate views. Genuinely transparent background. This is an animation frame, so exact alignment with the original is essential."
 }

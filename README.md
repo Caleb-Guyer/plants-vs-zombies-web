@@ -2,7 +2,7 @@
 
 [Play on GitHub Pages](https://caleb-guyer.github.io/plants-vs-zombies-web/) · [Existing playtest](https://lawn-defense-caleb-plays.usgi.chatgpt.site) · [Deployment](DEPLOYMENT.md) · [Requirements](CURRENT-REQUIREMENTS.md) · [QA history](PARITY-QA.md)
 
-This source uses **0.2.6-web-chill.4**, based on PvZ-Portable 0.2.6 commit `396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca` and the Chill.3 parent. The user rejected Chill.3's flat proportions, shading and motion, and explicitly allowed image generation for the plant. Chill-shroom now has a fuller shaded cap, compact rounded body and tucked feet. Challenge cards remain centered native compositions of actual sprites, with no separately generated challenge illustration. The revision preserves radial slow mechanics, challenges, simplified menus, background save worker, controls, save recovery and renderer corrections. Full 1:1 parity remains unverified; broad manual validation stopped at the user's request on 2026-10-31. Earlier release evidence below remains historical.
+This source targets **0.2.6-web-chill.5**, based on the Chill.4 parent and PvZ-Portable 0.2.6. It preserves the whole-character proportions the user accepted, using one registered rig across the lawn, packet and centered challenge portrait. Gameplay, saves, QoL, audio and original content are retained. Full original-game 1:1 parity remains unverified. Earlier release records below are historical.
 
 The Software.10 and earlier QA descriptions below are the frozen v18 evidence snapshot. They retain their original capture-time scope, including earlier limits; they are not a claim that later validation or the full parity goal is complete.
 
@@ -34,18 +34,16 @@ It has an independent checkpoint and completion record. Chill-shroom is
 introduced in this challenge; the original campaign, chooser and unlocks retain
 their familiar content.
 
-The revised sprite has a fuller asymmetric blue cap with soft highlights and a
-deep underside, a shaded cream/mint body, expressive dark eyes and tucked feet.
-One generated plant-parts atlas supplies five [PNG parts](dist/content/chill-shroom/).
-[Generation records](dist/content/chill-shroom/generation.json),
+The new silhouette has a broad rounded cap directly over a short wide body,
+without the old pinched neck or separate feet. Its proportions were accepted
+as a complete character before the art was split into animation layers.
+All layers keep one scale and registration, instead of being fitted independently
+to Ice-shroom parts. [Canonical artwork](dist/content/chill-shroom/canonical.png),
+[generation prompts](dist/content/chill-shroom/generation.json),
 [extraction recipe](dist/content/chill-shroom/extraction.json) and
-[provenance](dist/content/chill-shroom/provenance.json) document the references,
-prompt and deterministic extraction from the frozen atlas.
-
-Native motion uses gentler squash, independent cap lag and rebound. Whole-body
-eye variants keep shading continuous during blink and sleep. Chill-shroom
-remains muzzle-free and distinct from Ice/Puff. Its 40-tick wind-up, outward
-frost release and 30-tick recovery preserve the existing slow mechanics.
+[provenance](dist/content/chill-shroom/provenance.json) preserve the exact inputs.
+The shared rig retains blink/sleep, native tint/filter/flash and bounded cap
+motion, with no change to radial slow mechanics or saved layouts.
 
 The three native 80×65 Bonus pictures stay centered compositions of actual
 sprites: original Conehead for Cone Zone, original Puff-shroom for Night Shift
@@ -105,7 +103,34 @@ Open the original **Options → More Options** dialog for these additions:
 
 The native options and deck dialogs use the original game artwork and concise labels. QoL preferences and decks travel with save exports in separate files; existing native profile and board-save formats remain unchanged. Backups is also available through the small More utility icon.
 
-## Chill.4 pre-publication evidence, 2026-11-01
+## Chill.5 current verification, 2026-11-01
+
+Pre-publication current evidence on 2026-11-01: all 1,532 production checks
+pass with current source/harness pins. The final 95.879-second incremental
+Release build retains all 777 source files unchanged (the initial full build
+also passed). Nine public art/JSON files and the packed header reproduce byte
+for byte. The canonical neutral pixels independently match the accepted master.
+Both upstream and Chill.4 delta patches reconstruct all 777 current source
+files. The 809-entry source ZIP is 6,500,652 bytes, SHA-256
+`8e97e5f49981a5e7a9a230e6651c586d6b9e3434ab22092dc30c7aa897d1c0ab`.
+All fourteen browser integration suites and eleven worker scenarios pass.
+
+Actual muted native review shows the same accepted proportions in the packet,
+centered earned Cold Front portrait and restored 50-sun Sun/Chill/Puff board.
+The new art is already present behind paused Continue. Original title hover is
+red and no added Bonus tips appear. A bounded5.6-second sample captured33 valid
+1280×720 frames showing idle, wind-up, release and recovery; sampled phases keep
+the short body connected and show no old Ice artwork. The native Menu pauses
+correctly. This is not full-game or every-blink/frame coverage, a full battle,
+an earned win or a fresh import/export/save cycle. Owned test tab22 is closed;
+the user's public game tab was not reloaded. Website-package and hosting
+verification have separate publisher receipts.
+
+## Historical Chill.4 evidence — shape rejected, 2026-11-01
+
+The user rejected these proportions after the earlier review. Technical results
+below remain historical and do not establish visual acceptance.
+
 
 [Revision criteria](CHILL-REVISION-GOAL.md) follow the user's request for fuller
 proportions, painted volume and better motion. Reference and native review

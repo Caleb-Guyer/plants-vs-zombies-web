@@ -17,12 +17,12 @@ new Function('module', 'exports', 'require', fs.readFileSync(new URL('vendor/jsz
 const JSZip = vendor.exports;
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
 const engine = JSON.parse(fs.readFileSync(new URL('game/engine-provenance.json', dist)));
-assert.equal(engine.id, '0.2.6-web-chill.4');
+assert.equal(engine.id, '0.2.6-web-chill.5');
 const current = await JSZip.loadAsync(fs.readFileSync(new URL(engine.artifacts.source, new URL('game/engine-provenance.json', dist))), {checkCRC32: true});
-const parentSourceBytes = fs.readFileSync(new URL('source/pvz-portable-0.2.6-web-chill.3-source.zip', dist));
-assert.equal(sha(parentSourceBytes), '3248007cf32dc65c44b5a8474f3ed8465cb5fe849697cf77695e6c830af53aca', 'Parent is the exact published Chill.3 source');
+const parentSourceBytes = fs.readFileSync(new URL('source/pvz-portable-0.2.6-web-chill.4-source.zip', dist));
+assert.equal(sha(parentSourceBytes), 'd8551acdc9f49704634b668d5abb2b461c3f1db683e19a228d0a9dd78785edae', 'Parent is the exact published Chill.4 source');
 const parent = await JSZip.loadAsync(parentSourceBytes, {checkCRC32: true});
-const prefix = 'chill4-candidate/';
+const prefix = 'chill5-candidate/';
 const read = async name => {
   const entry = current.file(prefix + name);
   assert(entry, 'Missing current production source/test: ' + name);
@@ -45,7 +45,7 @@ for (const name of suites) {
   checks += result.checks;
   reports.set(name, result);
 }
-const parentBytes = async name => Buffer.from(await parent.file('chill3-candidate/source/' + name).async('uint8array'));
+const parentBytes = async name => Buffer.from(await parent.file('chill4-candidate/source/' + name).async('uint8array'));
 // SeedPacket.h also defines the serialized SeedBank class.
 for (const name of ['src/Lawn/SeedPacket.h', 'src/Lawn/Plant.h', 'src/Lawn/Zombie.h', 'src/Lawn/Challenge.h', 'src/Lawn/System/SaveGame.cpp', 'src/Lawn/System/PlayerInfo.h', 'src/Lawn/System/PlayerInfo.cpp', 'src/LawnApp.h', 'src/Lawn/System/ReanimationLawn.h']) {
   assert.deepEqual(await read('source/' + name), await parentBytes(name), 'Saved data layout/serialization must remain unchanged');
@@ -121,6 +121,7 @@ console.log('PASS Chill-shroom preserves all mode/seed IDs, saved layouts, 53 or
 const artRecord = JSON.parse(fs.readFileSync(new URL('content/native-bonus-art.json', dist)));
 assert.match(artRecord.sourceKind, /native sprite compositions/);
 assert.equal(artRecord.generatedArtworkUsed, true, 'Generated artwork is scoped to the permitted plant sprite');
+assert.equal(artRecord.standaloneChallengeIllustrations, false, 'Cards contain actual sprites, not separately generated illustrations');
 assert.equal(artRecord.assetBundleId, engine.assetBundleId);
 assert.equal(artRecord.plant.nativeReanimation, 'REANIM_ICESHROOM');
 assert.equal(artRecord.plant.spriteOverride, 'chill-shroom/provenance.json');
@@ -214,9 +215,9 @@ function decodeRgbaPng(bytes, allowRgb = false, maxDimension = 256) {
 
 const artworkUrl = new URL('content/chill-shroom/', dist);
 const artwork = JSON.parse(fs.readFileSync(new URL('provenance.json', artworkUrl)));
-assert.equal(artwork.schema, 1);
+assert.equal(artwork.schema, 2);
 assert.equal(artwork.version, engine.id);
-assert.equal(artwork.method, 'AI-assisted plant sprite atlas with deterministic extraction and compositing');
+assert.equal(artwork.method, 'Approved whole-character master with registered shared-canvas layers');
 assert.equal(artwork.imageGenerationUsed, true);
 assert.equal(artwork.standaloneChallengeIllustrations, false);
 const headerBytes = await read('source/src/Lawn/System/ChillShroomArt.h');
@@ -226,80 +227,96 @@ const extraction = JSON.parse(extractionBytes);
 const generationBytes = await read('source/artwork/chill-shroom/generation.json');
 const generation = JSON.parse(generationBytes);
 const generator = await read('source/artwork/chill-shroom/render.py');
-const atlasBase64Bytes = await read('source/artwork/chill-shroom/sprite-atlas.png.base64.txt');
-const atlasBase64 = atlasBase64Bytes.toString().replace(/\s+/g, '');
-assert.match(atlasBase64, /^[A-Za-z0-9+/]+={0,2}$/);
-const atlasBytes = Buffer.from(atlasBase64, 'base64');
-assert.equal(atlasBytes.toString('base64'), atlasBase64, 'Atlas source is canonical complete Base64');
-assert.equal(sha(atlasBytes), artwork.atlasSha256);
-assert.equal(sha(atlasBytes), generation.atlasSha256);
+
+// The neutral reference is independently derived from the user-approved master,
+// not from render.py or a hash supplied by its generated provenance. With Pillow
+// 12.2.0: clear source alpha <=8, crop [81,134,1232,1119], uniformly contain in
+// 72x62, Lanczos resize to the one rounded size, then composite at (6,10) on an
+// empty 80x80 canvas. This pin keeps the approved silhouette, proportions,
+// cap/body overlap and ground registration fixed without adding Pillow to CI.
+const approvedMasterSha = 'f861148f8c57bbee31595e8fd5692aa23c1282172ab0016a159adf406f2a373d';
+const closedMasterSha = 'dd28dbc58d7e8f27bf05ed2dd1842b397de829d6c9b5ed5790e2465058e358e7';
+const expectedCanonicalRgbaSha = 'c00b7d93e79d2fb8f39ea2dbddd178e02d040ac1f4fd2e8bb62f105502317fb7';
+async function sourcePngBase64(name) {
+  const encodedBytes = await read('source/artwork/chill-shroom/' + name);
+  const encoded = encodedBytes.toString().replace(/\s+/g, '');
+  assert.match(encoded, /^[A-Za-z0-9+/]+={0,2}$/);
+  const bytes = Buffer.from(encoded, 'base64');
+  assert.equal(bytes.toString('base64'), encoded, 'Canonical complete source Base64: ' + name);
+  return {bytes, image: decodeRgbaPng(bytes, true, 4096)};
+}
+const master = await sourcePngBase64('approved-master.png.base64.txt');
+const closedMaster = await sourcePngBase64('closed-master.png.base64.txt');
+assert.equal(sha(master.bytes), approvedMasterSha, 'The source is the exact whole character approved by the user');
+assert.equal(sha(closedMaster.bytes), closedMasterSha, 'The bounded eye edit has an immutable source');
+assert.deepEqual([master.image.width, master.image.height], [1285, 1224]);
+assert.equal(artwork.approvedMasterSha256, approvedMasterSha);
+assert.equal(artwork.closedMasterSha256, closedMasterSha);
+assert.equal(artwork.canonicalRgbaSha256, expectedCanonicalRgbaSha);
 assert.equal(sha(headerBytes), artwork.headerSha256);
 assert.equal(sha(extractionBytes), artwork.extractionSha256);
 assert.equal(sha(generationBytes), artwork.generationSha256);
 assert.equal(sha(generator), artwork.generatorSha256);
 assert.equal(generation.schema, 1);
 assert.equal(generation.tool, 'built-in image_gen.imagegen');
-assert.equal(generation.scope, 'Chill-shroom plant sprite parts only');
-assert.equal(generation.standaloneChallengeIllustrations, false);
-assert.equal(generation.transparentBackground, true);
-assert(typeof generation.prompt === 'string' && generation.prompt.length > 100, 'Source includes the actual plant-art generation prompt');
-assert.equal(extraction.schema, 1);
-assert.equal(extraction.alphaThreshold, 8);
-assert.deepEqual(extraction.inputSize, [1536, 1024]);
-assert.equal(extraction.expressionComposition, 'Full-body variants share exact base pixels outside the eye bounds');
-assert.equal(extraction.blinkCrop, undefined, 'Full-body expressions avoid shaded-skin rectangle overlays');
-const atlas = decodeRgbaPng(atlasBytes, true, 4096);
-assert.deepEqual([atlas.width, atlas.height], extraction.inputSize);
-assert.deepEqual(Object.keys(extraction.parts).sort(), ['base', 'blankBody', 'cap', 'closedEyes', 'halfEyes', 'openEyes'].sort());
-for (const [name, spec] of Object.entries(extraction.parts)) {
-  assert.equal(spec.sourceRegion.length, 4); assert.equal(spec.targetCanvas.length, 2); assert.equal(spec.targetBox.length, 4);
-  const [left, top, right, bottom] = spec.sourceRegion;
-  const [width, height] = spec.targetCanvas;
-  const [x, y, drawWidth, drawHeight] = spec.targetBox;
-  assert([...spec.sourceRegion, ...spec.targetCanvas, ...spec.targetBox].every(Number.isInteger));
-  assert(left >= 0 && top >= 0 && right > left && bottom > top && right <= atlas.width && bottom <= atlas.height, 'Source atlas crop bounds: ' + name);
-  assert(width > 0 && height > 0 && x >= 0 && y >= 0 && drawWidth > 0 && drawHeight > 0 && x + drawWidth <= width && y + drawHeight <= height, 'Native target bounds: ' + name);
-  assert(['contain', 'resize'].includes(spec.fit));
-  let visible = false;
-  for (let sourceY = top; sourceY < bottom && !visible; sourceY++)
-    for (let sourceX = left; sourceX < right; sourceX++)
-      if (atlas.rgba[(sourceY * atlas.width + sourceX) * 4 + 3] > extraction.alphaThreshold) {visible = true; break;}
-  assert(visible, 'Every declared source region contains visible plant pixels: ' + name);
+assert.equal(generation.scope, 'custom plant only; no standalone challenge illustrations');
+assert.equal(generation.geometryLocked, true);
+if ('standaloneChallengeIllustrations' in generation) assert.equal(generation.standaloneChallengeIllustrations, false);
+assert.equal(generation.approvedMasterSha256, approvedMasterSha);
+assert.equal(generation.masterSource, 'approved-master.png.base64.txt');
+assert.equal(generation.closedSource, 'closed-master.png.base64.txt');
+for (const key of ['masterPrompt', 'closedEyePrompt']) {
+  assert(typeof generation[key] === 'string' && generation[key].length > 100, 'Actual plant generation/edit prompt: ' + key);
 }
-assert.deepEqual(extraction.parts.cap.targetCanvas, [103, 54]);
-assert.deepEqual(extraction.parts.blankBody.targetCanvas, [66, 45]);
-assert.deepEqual(extraction.parts.base.targetCanvas, [75, 21]);
-for (const name of ['openEyes', 'halfEyes', 'closedEyes']) assert.deepEqual(extraction.parts[name].targetCanvas, [66, 45]);
+assert.equal(extraction.schema, 2);
+assert.deepEqual(extraction.canonical, {
+  canvas: [80, 80], sourceBounds: [81, 134, 1232, 1119], fit: [72, 62], origin: [6, 10],
+  groundAnchor: [40, 72], alphaThreshold: 8, filter: 'Pillow Lanczos',
+}, 'One approved whole-character transform fixes all layer registration');
+assert.equal(extraction.parts, undefined, 'There is no independent per-part crop/fitting recipe');
+const eyeRegions = [[26, 50, 36, 62], [37, 50, 47, 62]];
+assert.deepEqual(extraction.eyeRegions, eyeRegions, 'Expressions may modify only the two fixed eye regions');
+assert.equal(extraction.eyeFeatherPixels, 1);
+assert.equal(extraction.halfExpressionBlend, 0.5);
 assert.deepEqual(fs.readFileSync(new URL('extraction.json', artworkUrl)), extractionBytes, 'Public extraction instructions match source');
-assert.deepEqual(fs.readFileSync(new URL('generation.json', artworkUrl)), generationBytes, 'Public generation record and prompt match source');
+assert.deepEqual(fs.readFileSync(new URL('generation.json', artworkUrl)), generationBytes, 'Public generation/edit records match source');
+
 const sourceManifest = JSON.parse(await read('source-manifest.json'));
 assert.equal(sourceManifest.version, engine.id);
-for (const name of ['src/Lawn/System/ChillShroomArt.h', 'artwork/chill-shroom/extraction.json', 'artwork/chill-shroom/generation.json', 'artwork/chill-shroom/render.py', 'artwork/chill-shroom/sprite-atlas.png.base64.txt']) {
+for (const name of ['src/Lawn/System/ChillShroomArt.h', 'artwork/chill-shroom/extraction.json', 'artwork/chill-shroom/generation.json', 'artwork/chill-shroom/render.py', 'artwork/chill-shroom/approved-master.png.base64.txt', 'artwork/chill-shroom/closed-master.png.base64.txt']) {
   const bytes = await read('source/' + name), pin = sourceManifest.files[name];
-  assert(pin, 'Reproducible plant atlas/extraction source is included in the source manifest: ' + name);
+  assert(pin, 'Approved master/edit/extraction input is included in the source manifest: ' + name);
   assert.equal(pin.bytes, bytes.length);
   assert.equal(pin.sha256, sha(bytes));
 }
-for (const obsolete of ['recipe.json', 'design.py']) assert.equal(current.file(prefix + 'source/artwork/chill-shroom/' + obsolete), null, 'Superseded vector-only art source is absent');
+for (const obsolete of ['recipe.json', 'design.py', 'sprite-atlas.png.base64.txt']) {
+  assert.equal(current.file(prefix + 'source/artwork/chill-shroom/' + obsolete), null, 'Superseded separately fitted artwork source is absent');
+}
 
-const dimensions = {cap: [103, 54], body: [66, 45], base: [75, 21], blink1: [66, 45], blink2: [66, 45]};
-assert.deepEqual(Object.keys(artwork.parts).sort(), Object.keys(dimensions).sort());
+const canonicalPng = fs.readFileSync(new URL('canonical.png', artworkUrl));
+assert.equal(sha(canonicalPng), artwork.canonicalPngSha256, 'Canonical PNG byte identity');
+const canonical = decodeRgbaPng(canonicalPng);
+assert.deepEqual([canonical.width, canonical.height], [80, 80]);
+assert.equal(sha(canonical.rgba), expectedCanonicalRgbaSha, 'Canonical pixels match the independent approved-master resample');
+
+const names = ['cap', 'body', 'base', 'blink1', 'blink2'];
+assert.deepEqual(Object.keys(artwork.parts).sort(), [...names].sort());
 const decodedParts = new Map();
-for (const [name, [width, height]] of Object.entries(dimensions)) {
+for (const name of names) {
   const pin = artwork.parts[name], symbol = name[0].toUpperCase() + name.slice(1);
-  assert.equal(pin.width, width); assert.equal(pin.height, height);
+  assert.equal(pin.width, 80); assert.equal(pin.height, 80, 'All runtime parts use the same registered canvas');
   const png = fs.readFileSync(new URL(name + '.png', artworkUrl));
   assert.equal(sha(png), pin.pngSha256, 'Published PNG pin: ' + name);
   const decoded = decodeRgbaPng(png);
-  assert.equal(decoded.width, width); assert.equal(decoded.height, height);
+  assert.deepEqual([decoded.width, decoded.height], [80, 80]);
   assert.equal(sha(decoded.rgba), pin.rgbaSha256, 'Decoded pixel pin: ' + name);
-  assert.equal(Number(header.match(new RegExp('k' + symbol + 'Width\\s*=\\s*(\\d+)'))?.[1]), width);
-  assert.equal(Number(header.match(new RegExp('k' + symbol + 'Height\\s*=\\s*(\\d+)'))?.[1]), height);
+  assert.equal(Number(header.match(new RegExp('k' + symbol + 'Width\\s*=\\s*(\\d+)'))?.[1]), 80);
+  assert.equal(Number(header.match(new RegExp('k' + symbol + 'Height\\s*=\\s*(\\d+)'))?.[1]), 80);
   const array = header.match(new RegExp('k' + symbol + 'Argb\\[\\]\\s*=\\s*\\{([\\s\\S]*?)\\};'));
   assert(array, 'Packed runtime pixels: ' + name);
   const pixels = [...array[1].matchAll(/0x([0-9a-fA-F]{8})u/g)].map(match => Number.parseInt(match[1], 16));
-  assert.equal(pixels.length, width * height);
-  const rgba = Buffer.alloc(width * height * 4);
+  assert.equal(pixels.length, 80 * 80);
+  const rgba = Buffer.alloc(80 * 80 * 4);
   pixels.forEach((pixel, index) => {
     rgba[index * 4] = (pixel >>> 16) & 255;
     rgba[index * 4 + 1] = (pixel >>> 8) & 255;
@@ -307,8 +324,10 @@ for (const [name, [width, height]] of Object.entries(dimensions)) {
     rgba[index * 4 + 3] = pixel >>> 24;
   });
   assert.deepEqual(decoded.rgba, rgba, 'Public PNG and embedded runtime artwork are pixel-identical: ' + name);
+  for (let offset = 0; offset < rgba.length; offset += 4) {
+    if (rgba[offset + 3] === 0) assert.equal(rgba.readUInt32BE(offset), 0, 'Transparent registered pixels have no hidden RGB: ' + name);
+  }
   decodedParts.set(name, decoded);
-
 }
 function visibleBounds(image) {
   let left = image.width, top = image.height, right = -1, bottom = -1;
@@ -316,30 +335,38 @@ function visibleBounds(image) {
     left = Math.min(left, x); top = Math.min(top, y); right = Math.max(right, x); bottom = Math.max(bottom, y);
   }
   assert(right >= left && bottom >= top);
-  return {left, top, width: right - left + 1, height: bottom - top + 1};
+  return [left, top, right + 1, bottom + 1];
 }
-const capBounds = visibleBounds(decodedParts.get('cap'));
-assert(capBounds.width >= 78 && capBounds.width <= 84 && capBounds.height >= 44 && capBounds.height <= 46,
-  'Fuller painted cap retains the intended readable native silhouette');
-assert(decodedParts.get('cap').rgba.subarray(46 * 103 * 4).every(value => value === 0),
-  'Native cap canvas leaves its lower eight rows clear for the face');
-const bodyBounds = visibleBounds(decodedParts.get('body'));
-assert(bodyBounds.width >= 48 && bodyBounds.width <= 52 && bodyBounds.height >= 34 && bodyBounds.height <= 38,
-  'Shaded stem retains the intended short full-body proportions');
-const body = decodedParts.get('body').rgba, half = decodedParts.get('blink1').rgba, closed = decodedParts.get('blink2').rgba;
-assert(!body.equals(half) && !body.equals(closed) && !half.equals(closed), 'Open, half and closed whole-body expressions differ');
-const eyeBoxes = ['openEyes', 'halfEyes', 'closedEyes'].map(name => extraction.parts[name].targetBox);
-let changedPixels = 0;
-for (let y = 0; y < 45; y++) for (let x = 0; x < 66; x++) {
-  const offset = (y * 66 + x) * 4;
-  const inEyes = eyeBoxes.some(([left, top, width, height]) => x >= left && x < left + width && y >= top && y < top + height);
-  if (!inEyes) {
-    assert.deepEqual(half.subarray(offset, offset + 4), body.subarray(offset, offset + 4), 'Half expression retains exact painted stem gradients outside eyes');
-    assert.deepEqual(closed.subarray(offset, offset + 4), body.subarray(offset, offset + 4), 'Closed expression retains exact painted stem gradients outside eyes');
-  } else if (!body.subarray(offset, offset + 4).equals(half.subarray(offset, offset + 4)) || !body.subarray(offset, offset + 4).equals(closed.subarray(offset, offset + 4))) changedPixels++;
+assert.deepEqual(visibleBounds(master.image), [81, 134, 1232, 1119], 'Approved source alpha bounds are not independently re-fitted');
+assert.deepEqual(visibleBounds(canonical), [6, 10, 78, 72], 'The single scale and placement retain the approved ground registration');
+assert(decodedParts.get('base').rgba.every(value => value === 0), 'No separate feet/base can alter the approved silhouette');
+const cap = decodedParts.get('cap').rgba, body = decodedParts.get('body').rgba;
+const half = decodedParts.get('blink1').rgba, closed = decodedParts.get('blink2').rgba;
+const reconstructed = Buffer.alloc(canonical.rgba.length);
+let capPixels = 0, bodyPixels = 0;
+for (let offset = 0; offset < reconstructed.length; offset += 4) {
+  const capAlpha = cap[offset + 3], bodyAlpha = body[offset + 3];
+  assert(!(capAlpha && bodyAlpha), 'Registered neutral layers partition whole pixels without overlapping alpha');
+  if (capAlpha) {cap.copy(reconstructed, offset, offset, offset + 4); capPixels++;}
+  else if (bodyAlpha) {body.copy(reconstructed, offset, offset, offset + 4); bodyPixels++;}
 }
-assert(changedPixels > 10, 'Expression variants contain an actual readable eye change');
-console.log('PASS source-pinned plant-only generated atlas/extraction provenance, independent PNG/runtime pixel parity, seamless full-body expressions and native portrait composition without generated challenge illustrations.');
+assert(capPixels > 0 && bodyPixels > 0, 'Both actual cap and body layers contain registered visible art');
+assert.deepEqual(reconstructed, canonical.rgba, 'Neutral cap/body union exactly reconstructs the approved whole character');
+assert.equal(sha(reconstructed), expectedCanonicalRgbaSha, 'Layer registration cannot silently change master proportions');
+assert(!body.equals(half) && !body.equals(closed) && !half.equals(closed), 'Open, half and closed expressions differ');
+const changedPerEye = eyeRegions.map(() => 0);
+for (let y = 0; y < 80; y++) for (let x = 0; x < 80; x++) {
+  const offset = (y * 80 + x) * 4;
+  assert.equal(half[offset + 3], body[offset + 3], 'Half expression retains approved alpha');
+  assert.equal(closed[offset + 3], body[offset + 3], 'Closed expression retains approved alpha');
+  const eyeIndex = eyeRegions.findIndex(([left, top, right, bottom]) => x >= left && x < right && y >= top && y < bottom);
+  const differs = !body.subarray(offset, offset + 4).equals(half.subarray(offset, offset + 4)) ||
+    !body.subarray(offset, offset + 4).equals(closed.subarray(offset, offset + 4));
+  if (eyeIndex < 0) assert(!differs, 'Expressions retain exact approved pixels outside the fixed eye regions');
+  else if (differs) changedPerEye[eyeIndex]++;
+}
+for (const changed of changedPerEye) assert(changed > 5, 'Both eyes have an actual expression change');
+console.log('PASS approved-master SHA/registration, independent PNG/runtime pixels, exact neutral whole-character reconstruction, fixed-alpha eye-only expressions and native cards without standalone generated illustrations.');
 
 
 if (process.argv.includes('--run-native')) {
