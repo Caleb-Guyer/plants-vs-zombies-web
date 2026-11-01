@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-seedswap.1
-Adds Seed Swap with a fixed defense, native seed-packet drops and replacement-only planting. Retains the existing four bonus modes, earned Chill-shroom unlock, original content and native save layouts.
-Engine JavaScript SHA-256: ed1e74589db7ab1b8339c34e3417a182ed5188b91418d88237bd4ac1a09cd6cf
-Engine WASM SHA-256: bb23c783f3f3360ef8259a376c2d0d96efdf01eeb2554c98154b294961b89431
+PvZ-Portable 0.2.6-web-mender.1
+Adds Mender-bloom, a support plant earned by beating Seed Swap that slowly heals adjacent plants, plus native Almanac entries for Mender-bloom and Chill-shroom. Retains all five bonus minigames, original content and native save layouts.
+Engine JavaScript SHA-256: 823f52b735230fba6a15bd0c6581486d27df069671338972d5337bb12d8a6c79
+Engine WASM SHA-256: 7456cecda0dce7e0cd18d50828bf5b64b87866fd38c9f6651558537a7ca38843
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.

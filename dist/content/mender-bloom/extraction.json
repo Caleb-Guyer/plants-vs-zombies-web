@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "sourceCanvas": [1254,1254],
+  "crop": [211,80,1092,1170],
+  "discardAlphaAtMost": 1,
+  "canvas": [80,80],
+  "normalizedSize": [55,68],
+  "offset": [12,6],
+  "greenStartRow": 45,
+  "stemOnlyFromRow": 58,
+  "eyeRegions": [[38,28,45,34],[48,27,53,33]],
+  "invariants": "All layers have identical canvas and registration. Head/stem partition recomposes canonical pixels exactly. Only the fixed face-eye areas differ in blink, with canonical alpha preserved."
+}

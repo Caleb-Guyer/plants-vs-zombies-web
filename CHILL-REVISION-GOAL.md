@@ -1,5 +1,43 @@
 # Bonus minigames, balance and Chill-shroom unlock — locally verified release candidate
 
+## Mender.1 support flower and missing Almanac entry repair
+
+`0.2.6-web-mender.1` fixes the omitted Chill-shroom Almanac entry and adds
+Mender-bloom's entry using the existing packet, portrait, description and animated
+preview presentation. Chill-shroom remains unlocked by Cold Front; Mender-bloom
+is unlocked by Seed Swap. Existing valid completion records count for both,
+with no reset or repeat win. Original Almanac positions, seed IDs/cache ranges,
+serialized object layouts and automatic saves remain unchanged.
+
+Mender-bloom is a support plant available in the normal seed chooser after
+unlocking. It costs 125 sun, has a 15-second recharge, and restores 10 health to
+eligible damaged plants in the eight neighboring squares every three simulation
+seconds. Healing is capped at maximum health; it never attacks, heals itself or
+revives dead plants. Healing pauses outside active gameplay, and existing Plant
+counters preserve its cooldown and healing pose through saves.
+
+The distinct coral-and-cream flower has native-size registered head/stem art,
+gentle idle motion, blinking and a brief healing lift. Its sprite used the
+built-in image generation tool with original flower references; prompts, source
+masters and the deterministic extraction recipe are retained with the source
+and [art provenance](dist/content/mender-bloom/provenance.json). No challenge
+illustration was generated. All five existing Bonus modes, card illustrations,
+rules and balance remain unchanged, including the absence of extra card tips.
+
+All 3,769 native checks in ten suites, 14 browser suites, 11 worker scenarios
+and the full build of 795 unchanged source inputs passed. Corresponding source
+packaging and both binary patch reconstructions were verified. Muted local
+browser checks confirmed both custom Almanac entries fit and open, have accurate
+cost/recharge and animated portraits, and permit original Sunflower reselection.
+Mender-bloom was selectable in Survival, planted for 125 sun and seen idling.
+Native Menu/Leave, full reload and Continue restored Sunflower, Wall-nut and
+Mender-bloom with the saved bank, zombies and suns. The QA profile's unlock wins
+were synthetic, not newly earned clears. Healing amounts are covered by
+production-method tests, not a visual battle claim. Public Pages publication and
+hosted source-download receipts are controlled by the existing release workflow.
+Prior release results below retain their original scope; this update does not
+prove exhaustive parity, universal balance or subjective art perfection.
+
 ## SeedSwap.1 native seed replacement minigame
 
 The user approved Seed Swap: start with a small complete defense, collect native

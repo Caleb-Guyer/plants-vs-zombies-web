@@ -1,5 +1,48 @@
 # Plants vs. Zombies — browser playtest
 
+## Mender.1 support plant and Almanac entries
+
+`0.2.6-web-mender.1` adds Mender-bloom, a support flower unlocked by a Seed Swap
+win. An existing valid win already qualifies; no profile reset or repeat win is
+required. It joins the normal seed chooser after unlocking, costs 125 sun, and
+recharges in 15 seconds. Every three simulation seconds it restores 10 health
+to each eligible damaged plant in the eight adjacent squares, capped at that
+plant's maximum health. It does not attack, heal itself or revive dead plants.
+
+Mender-bloom has a distinct matte coral-and-cream flower sprite, gentle idle
+motion, blinking and a short healing lift. Native sparkles appear only when a
+plant is actually repaired. Both Mender-bloom and the previously missing
+Chill-shroom now have native animated Almanac entries with descriptions, cost
+and recharge details. Chill-shroom's entry follows its existing Cold Front win
+unlock; Mender-bloom's follows Seed Swap. Existing valid wins count for both.
+The original Almanac entries and their positions remain intact.
+
+The five Bonus modes, their rules and card illustrations are unchanged. No new
+challenge illustration was generated. Original seed IDs, native plant/cache
+ranges, save-object layouts and automatic browser saves remain unchanged.
+Mender-bloom uses existing serialized counters for its healing cooldown and pose.
+The plant artwork used the built-in image generation tool with original flowers
+as style references; its prompts, source images, registered layer recipe and
+hashes are retained in the corresponding source and
+[art provenance](dist/content/mender-bloom/provenance.json).
+
+All 3,769 native checks in ten suites, 14 browser suites and 11 worker scenarios
+passed. The full build passed with 795 unchanged source inputs. The corresponding
+engine source ZIP contains 836 entries and 11,905,661 bytes, SHA-256
+`d91f663297f7787be7063f478027cd4935ff4285c9dbed600c1c71703d1e08a3`;
+both binary patches reconstructed every source byte.
+
+Muted local browser checks confirmed both custom Almanac entries fit and open,
+display accurate cost/recharge and animated portraits, and allow returning to
+Sunflower. Survival seed selection, the 125-sun planting cost and Mender-bloom's
+idle animation worked. Native Menu/Leave, a full reload and Continue restored
+Sunflower, Wall-nut and Mender-bloom with the saved bank, zombies and suns.
+Unlock visibility used a generated QA profile with synthetic wins; this was not
+a newly earned minigame clear. Healing amounts are covered by production-method
+tests rather than a visual battle claim. Public Pages and hosted source-download
+receipts belong to the release workflow. These scoped checks establish neither
+subjective art perfection nor exhaustive original-game parity.
+
 ## SeedSwap.1 native seed replacement minigame
 
 The user approved Seed Swap: start with a small complete defense, collect native

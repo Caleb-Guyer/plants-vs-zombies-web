@@ -1,0 +1,78 @@
+{
+  "schema": 1,
+  "version": "0.2.6-web-mender.1",
+  "displayName": "Mender-bloom",
+  "imageGenerationUsed": true,
+  "standaloneChallengeIllustrations": false,
+  "method": "Generated matte-painted flower; registered head/stem masks and eye-only blink expression",
+  "pillowVersion": "12.2.0",
+  "sourceMasterSha256": "22c912c59fedbad0fd1c006164374e90b04010f8da2fe021e6c012d3184cbc14",
+  "sourceClosedSha256": "d5d17c1b545a0b1a71265cf32afcde2d0996c57a5742c108bc09c305a74e4c24",
+  "generationSha256": "4fe800a8dcf1a9d6d368e2f294ac1f61d074762e5ca9543a87a9afda00f66cdc",
+  "extractionSha256": "8fba7dac19820988886d48aff6ffb9c76737428e231cea75b821455bf32b91f6",
+  "generatorSha256": "18e4bf5dd454ac203cfa0f2fbb1c6cc4a65f10e419bdada7e8f67a0c1c821acf",
+  "headerSha256": "6c8a3ba505aa69fb95ad3972be77bbb3e7b0c4faf2f4d003db275865359295c8",
+  "canonicalRgbaSha256": "042db58ae7d45ccd9e3d3b25884c4c0809d1e1dad9aa5580a7fc83fcaf839399",
+  "parts": {
+    "canonical": {
+      "pngSha256": "53d9bab162e2e18fd56b99af3fbd4a445b9fc1bdebd616ed9b97d8da87db2993",
+      "rgbaSha256": "042db58ae7d45ccd9e3d3b25884c4c0809d1e1dad9aa5580a7fc83fcaf839399",
+      "visibleBounds": [
+        12,
+        6,
+        67,
+        74
+      ],
+      "width": 80,
+      "height": 80
+    },
+    "head": {
+      "pngSha256": "9cb19e5c41e891cabe3eb483f1ba180f1348d4a90b9e024c9d1ecfbe7952eae8",
+      "rgbaSha256": "8d8bcbd87357e93cc218ae14580aa86dc20ff79fbba76eefd7c421b83fabcf29",
+      "visibleBounds": [
+        12,
+        6,
+        67,
+        58
+      ],
+      "width": 80,
+      "height": 80
+    },
+    "stem": {
+      "pngSha256": "37e912049a16759eb97ab7ca584bfa1439c4154ad28e80b4a3975fe370365e15",
+      "rgbaSha256": "f6b0bd68c64e3911b2f340bc42d7e47f220bdbc4d44dd171a1ef99523fc425f4",
+      "visibleBounds": [
+        12,
+        48,
+        58,
+        74
+      ],
+      "width": 80,
+      "height": 80
+    },
+    "head-blink": {
+      "pngSha256": "8919fb4c2b5acff545b83a0e1287cba021e8d8a5f5c034dc024a7f6140fa6f68",
+      "rgbaSha256": "781a5ab3796e67d1911c8727b60b2ca3bab0a957e887e6c7553d60c455dce263",
+      "visibleBounds": [
+        12,
+        6,
+        67,
+        58
+      ],
+      "width": 80,
+      "height": 80
+    },
+    "blink": {
+      "pngSha256": "b6b153ba5538728e13ed8fd81ac26791b612fefa2bfe02ab1a7c0eca416bd9da",
+      "rgbaSha256": "d388b5c6567b6c5334febe7cbdcddf9cae66e05c09d40f3c94e18a145a1abae0",
+      "visibleBounds": [
+        12,
+        6,
+        67,
+        74
+      ],
+      "width": 80,
+      "height": 80
+    }
+  }
+}

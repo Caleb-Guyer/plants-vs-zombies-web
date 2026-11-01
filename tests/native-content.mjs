@@ -17,18 +17,18 @@ new Function('module', 'exports', 'require', fs.readFileSync(new URL('vendor/jsz
 const JSZip = vendor.exports;
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
 const engine = JSON.parse(fs.readFileSync(new URL('game/engine-provenance.json', dist)));
-assert.equal(engine.id, '0.2.6-web-seedswap.1');
+assert.equal(engine.id, '0.2.6-web-mender.1');
 const current = await JSZip.loadAsync(fs.readFileSync(new URL(engine.artifacts.source, new URL('game/engine-provenance.json', dist))), {checkCRC32: true});
-const parentSourceBytes = fs.readFileSync(new URL('source/pvz-portable-0.2.6-web-garden.1-source.zip', dist));
-assert.equal(sha(parentSourceBytes), '34807be9b16aafc8e1e8bc9fd4da840df0ce9ae5667157cf51e61f4571d95122', 'Parent is the exact published Garden.1 source');
+const parentSourceBytes = fs.readFileSync(new URL('source/pvz-portable-0.2.6-web-seedswap.1-source.zip', dist));
+assert.equal(sha(parentSourceBytes), '0db62a66059ebc4891181044609fa949d2c623b0a05181930c2734a0f7aeeb18', 'Parent is the exact published SeedSwap.1 source');
 const parent = await JSZip.loadAsync(parentSourceBytes, {checkCRC32: true});
-const prefix = 'seedswap1-candidate/';
+const prefix = 'mender1-candidate/';
 const read = async name => {
   const entry = current.file(prefix + name);
   assert(entry, 'Missing current production source/test: ' + name);
   return Buffer.from(await entry.async('uint8array'));
 };
-const suites = ['game-speed', 'qol-controls', 'decks-cooldowns', 'bonus-challenge', 'bonus-completion', 'night-shift', 'lantern-shroom', 'garden-shuffle', 'seed-swap'];
+const suites = ['game-speed', 'qol-controls', 'decks-cooldowns', 'bonus-challenge', 'bonus-completion', 'night-shift', 'lantern-shroom', 'garden-shuffle', 'seed-swap', 'mender-bloom'];
 const reports = new Map();
 let checks = 0;
 for (const name of suites) {
@@ -45,7 +45,7 @@ for (const name of suites) {
   checks += result.checks;
   reports.set(name, result);
 }
-const parentBytes = async name => Buffer.from(await parent.file('garden1-candidate/source/' + name).async('uint8array'));
+const parentBytes = async name => Buffer.from(await parent.file('seedswap1-candidate/source/' + name).async('uint8array'));
 // SeedPacket.h also defines the serialized SeedBank class.
 for (const name of ['src/Lawn/SeedPacket.h', 'src/Lawn/Plant.h', 'src/Lawn/Challenge.h', 'src/Lawn/System/SaveGame.cpp', 'src/Lawn/System/PlayerInfo.h', 'src/Lawn/System/PlayerInfo.cpp', 'src/LawnApp.h', 'src/Lawn/System/ReanimationLawn.h']) {
   assert.deepEqual(await read('source/' + name), await parentBytes(name), 'Saved data layout/serialization must remain unchanged');
@@ -81,16 +81,14 @@ function enumValues(text, name) {
 const oldEnums = (await parentBytes('src/ConstEnums.h')).toString();
 const newEnums = (await read('source/src/ConstEnums.h')).toString();
 const oldModes = enumValues(oldEnums, 'GameMode'), newModes = enumValues(newEnums, 'GameMode');
-assert.equal(oldModes.get('NUM_GAME_MODES'), 77);
-for (const [key,value] of oldModes) if (key !== 'NUM_GAME_MODES') assert.equal(newModes.get(key),value,'Every prior mode ID stays stable: '+key);
-assert.equal(newModes.get('GAMEMODE_CHALLENGE_SEED_SWAP'),77);
-assert.equal(newModes.get('NUM_GAME_MODES'),78);
-assert.equal(newModes.size,oldModes.size+1,'Exactly one new mode is appended');
+assert.equal(oldModes.get('NUM_GAME_MODES'), 78);
+assert.deepEqual([...newModes], [...oldModes], 'Mender adds no game mode or changes any original/custom mode ID');
 assert.deepEqual([...enumValues(newEnums, 'ChallengePage')], [...enumValues(oldEnums, 'ChallengePage')],
   'Cold Front uses the existing Bonus page without changing any page IDs');
 const oldSeeds = enumValues(oldEnums, 'SeedType'), newSeeds = enumValues(newEnums, 'SeedType');
 for (const [key, value] of oldSeeds) assert.equal(newSeeds.get(key), value, 'Every original and special seed ID stays stable: ' + key);
-assert.deepEqual([...newSeeds], [...oldSeeds], 'The minigame revision preserves every seed ID and sentinel');
+assert.equal(newSeeds.get('SEED_MENDERBLOOM'), 76);
+assert.equal(newSeeds.size, oldSeeds.size + 1, 'Exactly one external custom plant ID is appended');
 assert.equal(newSeeds.get('SEED_LANTERNSHROOM'), 75);
 assert.equal(newSeeds.get('NUM_SEED_TYPES'), 53, 'Original plant cache capacity stays unchanged');
 assert.equal(newSeeds.get('NUM_SEEDS_IN_CHOOSER'), 49, 'Original serialized chooser capacity stays unchanged; the custom entry uses a sparse UI mapping');
@@ -112,14 +110,8 @@ function definitions(text) {
 }
 const oldDefinitions = definitions((await parentBytes('src/Lawn/Widget/ChallengeScreen.cpp')).toString());
 const newDefinitions = definitions((await read('source/src/Lawn/Widget/ChallengeScreen.cpp')).toString());
-assert.equal(oldDefinitions.length, 76);
-assert.deepEqual(newDefinitions.slice(0,oldDefinitions.length), oldDefinitions, 'Every original and earlier custom challenge definition stays unchanged');
-assert.equal(newDefinitions.length,oldDefinitions.length+1,'Exactly one native challenge definition is appended');
-assert(newDefinitions.at(-1).includes('GAMEMODE_CHALLENGE_SEED_SWAP'));
-assert(newDefinitions.at(-1).includes('CHALLENGE_PAGE_BONUS'));
-assert(newDefinitions.at(-1).includes('.mChallengeIconIndex = 0'));
-assert(newDefinitions.at(-1).includes('.mRow = 1, .mCol = 4'));
-assert(newDefinitions.at(-1).includes('.mChallengeName = "Seed Swap"'));
+assert.equal(oldDefinitions.length, 77);
+assert.deepEqual(newDefinitions, oldDefinitions, 'Mender preserves every original and five Bonus challenge definition');
 console.log('PASS Chill-shroom preserves all mode/seed IDs, saved layouts, 53 original plant definitions and all challenge identities and titles.');
 
 const artRecord = JSON.parse(fs.readFileSync(new URL('content/native-bonus-art.json', dist)));
@@ -356,27 +348,29 @@ assert.deepEqual(fs.readFileSync(new URL('generation.json', artworkUrl)), genera
 
 const sourceManifest = JSON.parse(await read('source-manifest.json'));
 assert.equal(sourceManifest.version, engine.id);
-// Seed Swap adds one fixed-garden rules header and reviewed mode-gated paths.
-// Every other production/artwork byte remains the exact published Garden.1 parent.
+// Mender and the sparse Almanac repair are isolated to reviewed plant/UI paths.
+// Every unrelated engine, existing minigame and old artwork byte is preserved.
 const runtimeInputs = new Set([
-  'src/ConstEnums.h', 'src/Lawn/Board.cpp', 'src/Lawn/Board.h', 'src/Lawn/Challenge.cpp',
-  'src/Lawn/Coin.cpp', 'src/Lawn/Zombie.cpp', 'src/Lawn/System/BonusChallenge.h',
-  'src/Lawn/System/LanternShroom.cpp', 'src/Lawn/Widget/ChallengeScreen.cpp', 'src/LawnApp.cpp',
+  'src/ConstEnums.h', 'src/Lawn/Plant.cpp', 'src/LawnApp.cpp', 'src/Lawn/SeedPacket.cpp',
+  'src/Lawn/Widget/SeedChooserScreen.cpp', 'src/Lawn/Widget/SeedChooserScreen.h',
+  'src/Lawn/Widget/AlmanacDialog.cpp', 'src/Lawn/Widget/AlmanacDialog.h', 'src/Lawn/System/DeckPresets.h',
 ]);
 const releaseIdentityInputs = new Set(['CMake/ProjectVersion.cmake', 'artwork/chill-shroom/render.py']);
 for (const entry of Object.values(parent.files)) {
-  if (entry.dir || !entry.name.startsWith('garden1-candidate/source/')) continue;
-  const name = entry.name.slice('garden1-candidate/source/'.length);
+  if (entry.dir || !entry.name.startsWith('seedswap1-candidate/source/')) continue;
+  const name = entry.name.slice('seedswap1-candidate/source/'.length);
   if (runtimeInputs.has(name)) continue;
   const before = Buffer.from(await entry.async('uint8array'));
   const after = await read('source/' + name);
   if (releaseIdentityInputs.has(name)) {
-    assert.equal(after.toString().replaceAll('0.2.6-web-seedswap.1', '0.2.6-web-garden.1'), before.toString(),
+    assert.equal(after.toString().replaceAll('0.2.6-web-mender.1', '0.2.6-web-seedswap.1'), before.toString(),
       'Only the release identity may change in metadata source: ' + name);
-  } else assert.deepEqual(after, before, 'Seed Swap preserves unrelated engine/content/art bytes: ' + name);
+  } else assert.deepEqual(after, before, 'Mender preserves unrelated engine/content/art bytes: ' + name);
 }
-const addedProduction = Object.keys(sourceManifest.files).filter(name => !parent.file('garden1-candidate/source/' + name));
-assert.deepEqual(addedProduction, ['src/Lawn/System/SeedSwap.h'], 'Exactly one focused rules header is added');
+const addedProduction = Object.keys(sourceManifest.files).filter(name => !parent.file('seedswap1-candidate/source/' + name));
+const newCode = ['src/Lawn/System/MenderBloom.h', 'src/Lawn/System/MenderBloom.cpp', 'src/Lawn/System/MenderBloomArt.h'];
+assert.deepEqual(addedProduction.filter(name => name.startsWith('src/')).sort(), newCode.sort(), 'Exactly the focused Mender implementation and registered artwork header are added to engine code');
+for (const name of addedProduction) assert(newCode.includes(name) || name.startsWith('artwork/mender-bloom/'), 'New source inputs are restricted to the Mender implementation/artwork recipe: ' + name);
 function omitFunction(text, signature) {
   const start = text.indexOf(signature);
   assert(start >= 0 && text.indexOf(signature, start + signature.length) < 0, 'Unique reviewed function: ' + signature);
@@ -387,21 +381,18 @@ function omitFunction(text, signature) {
   return text.slice(0, start) + text.slice(cursor + 1);
 }
 const sharedFunctionScopes = {
-  'src/Lawn/Board.cpp': ['void Board::PickBackground(', 'void Board::InitLevel(', 'void Board::PlaceRake(',
-    'void Board::RefreshSeedPacketFromCursor(', 'PlantingReason Board::CanPlantAt(',
-    'void Board::MouseDownWithPlant(', 'void Board::PickUpTool(', 'void Board::SpawnZombieWave(',
-    'void Board::UpdateSunSpawning(', 'void Board::DrawUIBottom('],
-  'src/Lawn/Challenge.cpp': ['void Challenge::InitLevel(', 'void Challenge::StartLevel('],
-  'src/Lawn/Coin.cpp': ['int Coin::GetDisappearTime('],
-  'src/Lawn/Zombie.cpp': ['void Zombie::DropLoot('],
-  'src/Lawn/System/LanternShroom.cpp': ['std::unique_ptr<Sexy::MemoryImage> MakeNativePortrait(',
-    'Sexy::Image* GetBonusImage('],
-  'src/Lawn/Widget/ChallengeScreen.cpp': ['constinit const ChallengeDefinition gChallengeDefs['],
-  'src/LawnApp.cpp': ['bool LawnApp::IsChallengeWithoutSeedBank('],
+  'src/Lawn/Plant.cpp': ['void Plant::PlantInitialize(', 'void Plant::UpdateAbilities(', 'void Plant::UpdateReanim(',
+    'Image* Plant::GetImage(', 'void Plant::Draw(', 'void Plant::DrawSeedType(', 'const PlantDefinition& GetPlantDefinition(',
+    'std::string Plant::GetNameString(', 'std::string Plant::GetToolTip('],
+  'src/LawnApp.cpp': ['LawnApp::~LawnApp()', 'bool LawnApp::HasSeedType('],
+  'src/Lawn/SeedPacket.cpp': ['void SeedPacket::Draw('],
+  'src/Lawn/Widget/SeedChooserScreen.cpp': ['void SeedChooserScreen::GetSeedPositionInChooser(', 'void SeedChooserScreen::Draw('],
+  'src/Lawn/Widget/SeedChooserScreen.h': ['static constexpr int ChooserSeedCount()', 'static constexpr SeedType ChooserSeedType(',
+    'static constexpr bool IsChooserSeed(', 'static constexpr int ChosenSeedIndex('],
+  'src/Lawn/Widget/AlmanacDialog.cpp': ['void AlmanacDialog::DrawPlants(', 'void AlmanacDialog::GetSeedPosition(', 'SeedType AlmanacDialog::SeedHitTest('],
+  'src/Lawn/System/DeckPresets.h': ['static bool ValidSeed(', 'static bool ValidSeeds('],
 };
-const addedFunctionScopes = {'src/Lawn/Board.cpp': [
-  'bool Board::CanReplaceSeedSwapPlant(', 'bool Board::ReplaceSeedSwapPlant(', 'bool Board::DropSeedSwapPacket(',
-]};
+const addedFunctionScopes = {'src/Lawn/Widget/AlmanacDialog.cpp': ['const char* AlmanacDialog::GetAddonAlmanacDescription(']};
 for (const [name, signatures] of Object.entries(sharedFunctionScopes)) {
   let before = (await parentBytes(name)).toString().replace(/\r\n?/g, '\n'), after = (await read('source/' + name)).toString().replace(/\r\n?/g, '\n');
   for (const signature of signatures) { before = omitFunction(before, signature); after = omitFunction(after, signature); }
@@ -409,41 +400,28 @@ for (const [name, signatures] of Object.entries(sharedFunctionScopes)) {
     assert(!before.includes(signature), 'New helper must not replace a parent method: ' + signature);
     after = omitFunction(after, signature);
   }
-  if (name === 'src/Lawn/Board.cpp') after = after.replace('#include <climits>\n', '').replace('// Only an owned native packet and a surviving, ordinary plant can take part.\n// Empty/eaten squares never grow the garden, and invalid clicks consume nothing.\n', '');
-  if (name === 'src/Lawn/Coin.cpp') after = after.replace('#include "System/SeedSwap.h"\n', '');
-  if (name === 'src/Lawn/System/LanternShroom.cpp') after = after.replace('#include "../SeedPacket.h"\n', '').replace('std::array<std::unique_ptr<Sexy::MemoryImage>, 5> bonus;', 'std::array<std::unique_ptr<Sexy::MemoryImage>, 4> bonus;');
-  assert.equal(after.replace(/\n{3,}/g, '\n\n'), before.replace(/\n{3,}/g, '\n\n'), 'Shared source changes only reviewed mode-gated Seed Swap functions: ' + name);
+  if (name === 'src/Lawn/Plant.cpp') after = after.replace('#include "System/MenderBloom.h"\n', '');
+  if (name === 'src/LawnApp.cpp') after = after.replace('#include "Lawn/System/MenderBloom.h"\n', '');
+  if (name === 'src/Lawn/Widget/SeedChooserScreen.h') after = after
+    .replace('// Appended seeds keep IDs 75/76; unused runtime chooser slots store them.', '// The appended seed keeps ID 75; an unused runtime chooser slot stores it.')
+    .replace('static_assert(NUM_SEEDS_IN_CHOOSER + 2 <= NUM_SEED_TYPES);', 'static_assert(NUM_SEEDS_IN_CHOOSER < NUM_SEED_TYPES);');
+  assert.equal(after.replace(/\n{3,}/g, '\n\n'), before.replace(/\n{3,}/g, '\n\n'), 'Shared source changes only reviewed Mender/Almanac functions: ' + name);
 }
 {
   const before = (await parentBytes('src/ConstEnums.h')).toString().replace(/\r\n?/g, '\n');
   const after = (await read('source/src/ConstEnums.h')).toString().replace(/\r\n?/g, '\n');
-  assert.equal(after.replace(/^.*GAMEMODE_CHALLENGE_SEED_SWAP.*\n/m, ''), before, 'Only the appended mode changes any native enum source');
+  assert.equal(after.replace(/^.*SEED_MENDERBLOOM.*\n/m, ''), before, 'Only the appended seed76 changes native enum source');
 }
 {
-  const name = 'src/Lawn/Board.h';
-  const before = (await parentBytes(name)).toString().replace(/\r\n?/g, '\n');
-  const after = (await read('source/' + name)).toString().replace(/\r\n?/g, '\n');
-  assert.equal(after.replace(/^.*(?:CanReplaceSeedSwapPlant|ReplaceSeedSwapPlant|DropSeedSwapPacket).*\n/gm, ''), before,
-    'Board header adds only the three non-serialized Seed Swap helper declarations');
-}
-// Reverse precisely the new Seed Swap routing clauses, requiring every prior
-// legacy/current helper, conveyor roster, cost and authored schedule to remain.
-{
-  const name = 'src/Lawn/System/BonusChallenge.h';
+  const name = 'src/Lawn/Widget/AlmanacDialog.h';
   const before = (await parentBytes(name)).toString().replace(/\r\n?/g, '\n');
   let after = (await read('source/' + name)).toString().replace(/\r\n?/g, '\n');
-  after = after.replace('#include "SeedSwap.h"\n', '')
-    .replace(' || SeedSwap::IsMode(mode)', '')
-    .replaceAll('SeedSwap::IsMode(mode) ? 0 : ', '')
-    .replaceAll('    if (SeedSwap::IsMode(mode)) return SeedSwap::PopulateWaves(output);\n', '')
-    .replace('    if (SeedSwap::IsMode(mode)) SeedSwap::PopulateAllowedZombies(output);\n    else if (GardenShuffle::IsMode(mode))', '    if (GardenShuffle::IsMode(mode))')
-    .replace('    if (SeedSwap::IsMode(mode)) bank.mNumPackets = 0;\n    else if (GardenShuffle::IsMode(mode))', '    if (GardenShuffle::IsMode(mode))')
-    .replace('    if (SeedSwap::IsMode(mode)) return SeedSwap::IsCurrentRules(mode, state);\n', '')
-    .replace('    if (SeedSwap::IsMode(mode)) return SeedSwap::kWaveCount;\n', '')
-    .replace('    if (SeedSwap::IsMode(mode)) { bank.mNumPackets = 0; return; }\n', '');
-  assert.equal(after, before, 'Seed Swap routing preserves every prior minigame helper and data byte');
+  after = omitFunction(omitFunction(after, 'static constexpr int AlmanacSeedCount()'), 'static constexpr SeedType AlmanacSeedType(')
+    .replace(/^.*static const char\* GetAddonAlmanacDescription.*\n/m, '')
+    .replace('\t// Original entries retain all IDs and positions; addon packets use the\n\t// unused header space beside the native Imitater entry.\n', '');
+  const nonempty = text => text.split('\n').filter(line => line.trim()).join('\n');
+  assert.equal(nonempty(after), nonempty(before), 'Almanac header adds methods only and preserves all existing fields and declarations');
 }
-
 
 for (const name of ['src/Lawn/System/ChillShroomArt.h', 'artwork/chill-shroom/extraction.json', 'artwork/chill-shroom/generation.json', 'artwork/chill-shroom/render.py', 'artwork/chill-shroom/approved-master.png.base64.txt', 'artwork/chill-shroom/closed-master.png.base64.txt', 'artwork/chill-shroom/painted-master.png.base64.txt', 'artwork/chill-shroom/painted-closed-master.png.base64.txt', 'artwork/chill-shroom/painted-base.png.base64.txt']) {
   const bytes = await read('source/' + name), pin = sourceManifest.files[name];
@@ -522,7 +500,91 @@ for (let y = 0; y < 80; y++) for (let x = 0; x < 80; x++) {
   else if (differs) changedPerEye[eyeIndex]++;
 }
 for (const changed of changedPerEye) assert(changed > 5, 'Both eyes have an actual expression change');
-console.log('PASS exact parent sprite pixels/geometry, scoped cone/grave-control code, independent PNG/runtime pixels, neutral reconstruction, fixed-alpha eye-only expressions and native cards without standalone generated illustrations.');
+console.log('PASS exact parent Chill pixels/geometry, scoped plant/Almanac changes, independent PNG/runtime pixels, neutral reconstruction, fixed-alpha eye-only expressions and native cards without standalone generated illustrations.');
+
+// Independently decode Mender PNGs and the compiled straight-alpha ARGB arrays.
+// Public/source hashes alone cannot establish the actual exported pixel layout.
+{
+  const artUrl = new URL('content/mender-bloom/', dist);
+  const provenance = JSON.parse(fs.readFileSync(new URL('provenance.json', artUrl)));
+  assert.equal(provenance.schema, 1);
+  assert.equal(provenance.version, engine.id);
+  assert.equal(provenance.displayName, 'Mender-bloom');
+  assert.equal(provenance.imageGenerationUsed, true);
+  assert.equal(provenance.standaloneChallengeIllustrations, false);
+  assert.equal(provenance.sourceMasterSha256, '22c912c59fedbad0fd1c006164374e90b04010f8da2fe021e6c012d3184cbc14', 'Reviewed Mender master is independently pinned');
+  assert.equal(provenance.sourceClosedSha256, 'd5d17c1b545a0b1a71265cf32afcde2d0996c57a5742c108bc09c305a74e4c24', 'Reviewed closed-eye source is independently pinned');
+  assert.equal(provenance.canonicalRgbaSha256, '042db58ae7d45ccd9e3d3b25884c4c0809d1e1dad9aa5580a7fc83fcaf839399', 'Reviewed final Mender pixels are independently pinned');
+  const pins = {
+    'artwork/mender-bloom/master.png': provenance.sourceMasterSha256,
+    'artwork/mender-bloom/closed.png': provenance.sourceClosedSha256,
+    'artwork/mender-bloom/generation.json': provenance.generationSha256,
+    'artwork/mender-bloom/extraction.json': provenance.extractionSha256,
+    'artwork/mender-bloom/render.py': provenance.generatorSha256,
+    'src/Lawn/System/MenderBloomArt.h': provenance.headerSha256,
+  };
+  for (const [name, expected] of Object.entries(pins)) {
+    const bytes = await read('source/' + name);
+    assert.equal(sha(bytes), expected, 'Mender provenance identifies exact archived source input: ' + name);
+    assert.equal(sourceManifest.files[name]?.sha256, expected);
+    assert.equal(sourceManifest.files[name]?.bytes, bytes.length);
+  }
+  for (const name of ['generation.json', 'extraction.json']) assert.deepEqual(fs.readFileSync(new URL(name, artUrl)), await read('source/artwork/mender-bloom/' + name));
+  const recipe = JSON.parse(await read('source/artwork/mender-bloom/extraction.json'));
+  assert.deepEqual(recipe.canvas, [80, 80]);
+  assert.deepEqual(recipe.eyeRegions, [[38,28,45,34],[48,27,53,33]], 'Mender expressions stay inside the reviewed eye regions');
+  assert.deepEqual(recipe.normalizedSize, [55,68]);
+  assert.deepEqual(recipe.offset, [12,6], 'Mender maintains its shared native ground registration');
+  const menderHeader = (await read('source/src/Lawn/System/MenderBloomArt.h')).toString();
+  assert.equal(Number(menderHeader.match(/kWidth\s*=\s*(\d+)/)?.[1]), 80);
+  assert.equal(Number(menderHeader.match(/kHeight\s*=\s*(\d+)/)?.[1]), 80);
+  const arrays = {canonical: 'kArgb', head: 'kHeadArgb', stem: 'kStemArgb', 'head-blink': 'kHeadBlinkArgb'};
+  const parts = new Map();
+  for (const name of ['canonical', 'head', 'stem', 'head-blink', 'blink']) {
+    const png = fs.readFileSync(new URL(name + '.png', artUrl)), pin = provenance.parts[name];
+    const decoded = decodeRgbaPng(png);
+    assert.deepEqual([decoded.width, decoded.height, pin.width, pin.height], [80, 80, 80, 80]);
+    assert.equal(sha(png), pin.pngSha256);
+    assert.equal(sha(decoded.rgba), pin.rgbaSha256);
+    for (let p = 0; p < decoded.rgba.length; p += 4) if (!decoded.rgba[p + 3]) assert.equal(decoded.rgba.readUInt32BE(p), 0, 'Transparent Mender pixels have no hidden RGB');
+    if (arrays[name]) {
+      const values = menderHeader.match(new RegExp(arrays[name] + '\\[\\]\\s*=\\s*\\{([\\s\\S]*?)\\};'));
+      assert(values, 'Mender packed array is present: ' + name);
+      const pixels = [...values[1].matchAll(/0x([0-9a-fA-F]{8})u/g)].map(value => Number.parseInt(value[1], 16));
+      assert.equal(pixels.length, 6400);
+      const rgba = Buffer.alloc(25600);
+      for (let i = 0; i < pixels.length; i++) {
+        rgba[i * 4] = pixels[i] >>> 16 & 255; rgba[i * 4 + 1] = pixels[i] >>> 8 & 255;
+        rgba[i * 4 + 2] = pixels[i] & 255; rgba[i * 4 + 3] = pixels[i] >>> 24;
+      }
+      assert.deepEqual(rgba, decoded.rgba, 'Mender public and compiled sprite pixels match exactly: ' + name);
+    }
+    parts.set(name, decoded.rgba);
+  }
+  const neutral = parts.get('canonical'), head = parts.get('head'), stem = parts.get('stem'), blink = parts.get('blink'), blinkHead = parts.get('head-blink');
+  const reconstructed = Buffer.alloc(neutral.length), closed = Buffer.alloc(neutral.length);
+  const changed = recipe.eyeRegions.map(() => 0); let headPixels = 0, stemPixels = 0;
+  for (let p = 0; p < neutral.length; p += 4) {
+    const ha = head[p + 3], sa = stem[p + 3];
+    assert(!(ha && sa), 'Mender neutral layers partition pixels without overlapping alpha');
+    if (ha) {head.copy(reconstructed, p, p, p + 4); blinkHead.copy(closed, p, p, p + 4); headPixels++;}
+    else if (sa) {stem.copy(reconstructed, p, p, p + 4); stem.copy(closed, p, p, p + 4); stemPixels++;}
+    assert.equal(blink[p + 3], neutral[p + 3], 'Mender blink retains canonical alpha');
+    assert.equal(blinkHead[p + 3], head[p + 3], 'Mender head expression retains registered layer alpha');
+    const x = p / 4 % 80, y = Math.floor(p / 4 / 80);
+    const eye = recipe.eyeRegions.findIndex(([l,t,r,b]) => x >= l && x < r && y >= t && y < b);
+    if (!neutral.subarray(p, p + 4).equals(blink.subarray(p, p + 4))) {
+      assert(eye >= 0, 'Mender expression changes only the fixed eye regions');
+      changed[eye]++;
+    }
+  }
+  assert(headPixels > 0 && stemPixels > 0);
+  assert.deepEqual(reconstructed, neutral, 'Mender head/stem union exactly reconstructs the canonical whole sprite');
+  assert.deepEqual(closed, blink, 'Mender head-blink/stem union exactly reconstructs its closed expression');
+  assert.equal(sha(neutral), provenance.canonicalRgbaSha256);
+  for (const pixels of changed) assert(pixels > 5, 'Both Mender eyes have actual animation artwork');
+  console.log('PASS Mender exact source provenance, independent PNG/runtime pixels, registered head/stem reconstruction and fixed-alpha eye-only blink.');
+}
 
 
 if (process.argv.includes('--run-native')) {

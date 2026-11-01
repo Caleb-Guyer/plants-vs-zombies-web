@@ -16,7 +16,8 @@
       "originalChooserCountPreserved": 49,
       "savedArrayCapacityPreserved": 53,
       "customImitaterCopy": false
-    }
+    },
+    "almanac": "Native animated entry after a Cold Front win, including an existing valid win."
   },
   "cards": [
     {
@@ -110,5 +111,18 @@
     "newGeneratedArtwork": false,
     "mechanics": "Release-time radial slow, no damage or delayed projectile hit; native puffs are the visual plume."
   },
-  "checkpointCompatibility": "State-zero existing bonus checkpoints keep their previous fixed-bank twenty-wave rules. Chill.8 arcade checkpoints retain saved boards/belts/waves and gain new mechanics on later events; New Game starts the revised opening/roster. Existing completion rewards remain valid. Garden Shuffle uses new mode76 and unused profile record75 with unchanged native object layouts; moves preserve the original plant instance. Seed Swap appends mode77 and unused profile record76; native Coin, Cursor, Plant and Challenge serialized members retain packet drops and replacement gardens."
+  "checkpointCompatibility": "State-zero existing bonus checkpoints keep their previous fixed-bank twenty-wave rules. Chill.8 arcade checkpoints retain saved boards/belts/waves and gain new mechanics on later events; New Game starts the revised opening/roster. Existing completion rewards remain valid. Garden Shuffle uses new mode76 and unused profile record75 with unchanged native object layouts; moves preserve the original plant instance. Seed Swap appends mode77 and unused profile record76; native Coin, Cursor, Plant and Challenge serialized members retain packet drops and replacement gardens.",
+  "supportPlant": {
+    "displayName": "Mender-bloom",
+    "spriteOverride": "mender-bloom/provenance.json",
+    "unlock": {
+      "winMode": 77,
+      "profileRecord": 76,
+      "originalSeedId": 76,
+      "runtimeChooserSlot": 50
+    },
+    "almanac": "Native animated entry after a Seed Swap win, including an existing valid win.",
+    "gameplay": "125 sun, 15-second recharge; heals each eligible living persistent plant in the eight adjacent squares by 10 HP every three simulation seconds, capped at maximum health. No self healing or damage.",
+    "artwork": "Generated plant artwork packed into shared registered head/stem/eye layers, with idle motion, blinking and a short healing lift. Existing native sparkles appear only after actual healing."
+  }
 }
