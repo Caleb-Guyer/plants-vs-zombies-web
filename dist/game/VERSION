@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-chill.8
-Adds distinct bowling, conveyor and setup-defense bonus minigames, and unlocks Chill-shroom in normal native seed selection after Cold Front. Retains original content, accepted artwork, stable IDs and saved layouts; existing bonus checkpoints keep their original rules.
-Engine JavaScript SHA-256: 76ccff746dbfc8c86996335479d865be793f56f1dc96c83c8f8ff68c27326e17
-Engine WASM SHA-256: 1e7038d9bfa460a0282731345ff6e865214f022a4f1aeb90f7494e889b694992
+PvZ-Portable 0.2.6-web-chill.9
+Adds cone-armored zombie variants and giant bowling Wall-nuts to Cone Zone, plus a graveyard-control mechanic in Night Shift. Retains Cold Front, the earned Chill-shroom unlock, original content, artwork and native save layouts.
+Engine JavaScript SHA-256: e8d900ccb153376dc0a885b7371b53cb227a324b034c32140336aeefc3d7f33c
+Engine WASM SHA-256: 6e69af3cc26a776d4030c64d7cd2126fe82d8eafa5034054e6451e3ac070b488
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.

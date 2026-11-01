@@ -17,12 +17,12 @@ new Function('module', 'exports', 'require', fs.readFileSync(new URL('vendor/jsz
 const JSZip = vendor.exports;
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
 const engine = JSON.parse(fs.readFileSync(new URL('game/engine-provenance.json', dist)));
-assert.equal(engine.id, '0.2.6-web-chill.8');
+assert.equal(engine.id, '0.2.6-web-chill.9');
 const current = await JSZip.loadAsync(fs.readFileSync(new URL(engine.artifacts.source, new URL('game/engine-provenance.json', dist))), {checkCRC32: true});
-const parentSourceBytes = fs.readFileSync(new URL('source/pvz-portable-0.2.6-web-chill.7-source.zip', dist));
-assert.equal(sha(parentSourceBytes), '450613f4d14df23380549081b154d40c11587151d37e749a74f5118a11534605', 'Parent is the exact published Chill.7 source');
+const parentSourceBytes = fs.readFileSync(new URL('source/pvz-portable-0.2.6-web-chill.8-source.zip', dist));
+assert.equal(sha(parentSourceBytes), '04bd204805f83ce8322952fbba81a9e5a2d73bdf1eeafaf95b4a5c7ccf33d367', 'Parent is the exact published Chill.8 source');
 const parent = await JSZip.loadAsync(parentSourceBytes, {checkCRC32: true});
-const prefix = 'chill8-candidate/';
+const prefix = 'chill9-candidate/';
 const read = async name => {
   const entry = current.file(prefix + name);
   assert(entry, 'Missing current production source/test: ' + name);
@@ -45,9 +45,9 @@ for (const name of suites) {
   checks += result.checks;
   reports.set(name, result);
 }
-const parentBytes = async name => Buffer.from(await parent.file('chill7-candidate/source/' + name).async('uint8array'));
+const parentBytes = async name => Buffer.from(await parent.file('chill8-candidate/source/' + name).async('uint8array'));
 // SeedPacket.h also defines the serialized SeedBank class.
-for (const name of ['src/Lawn/SeedPacket.h', 'src/Lawn/Plant.h', 'src/Lawn/Zombie.h', 'src/Lawn/Challenge.h', 'src/Lawn/System/SaveGame.cpp', 'src/Lawn/System/PlayerInfo.h', 'src/Lawn/System/PlayerInfo.cpp', 'src/LawnApp.h', 'src/Lawn/System/ReanimationLawn.h']) {
+for (const name of ['src/Lawn/SeedPacket.h', 'src/Lawn/Plant.h', 'src/Lawn/Challenge.h', 'src/Lawn/System/SaveGame.cpp', 'src/Lawn/System/PlayerInfo.h', 'src/Lawn/System/PlayerInfo.cpp', 'src/LawnApp.h', 'src/Lawn/System/ReanimationLawn.h']) {
   assert.deepEqual(await read('source/' + name), await parentBytes(name), 'Saved data layout/serialization must remain unchanged');
 }
 function boardData(bytes) {
@@ -352,27 +352,25 @@ assert.deepEqual(fs.readFileSync(new URL('generation.json', artworkUrl)), genera
 
 const sourceManifest = JSON.parse(await read('source-manifest.json'));
 assert.equal(sourceManifest.version, engine.id);
-// This revision changes only the three custom modes, their native setup/conveyor
-// integration, and the sparse native chooser/deck mapping. Everything outside
-// this reviewed file list remains the exact published parent source.
+// This revision changes only the Cone Zone variants/bowling supply and Night Shift grave control.
+// Everything outside this reviewed file list remains the exact published parent source.
 const runtimeInputs = new Set([
-  'src/Lawn/Board.cpp', 'src/Lawn/Challenge.cpp', 'src/LawnApp.cpp',
-  'src/Lawn/System/BonusChallenge.h', 'src/Lawn/System/NightShift.h', 'src/Lawn/System/LanternGlow.h',
-  'src/Lawn/System/DeckPresets.h', 'src/Lawn/Widget/SeedChooserScreen.cpp', 'src/Lawn/Widget/SeedChooserScreen.h',
+  'src/Lawn/Board.cpp', 'src/Lawn/Challenge.cpp', 'src/Lawn/Zombie.cpp', 'src/Lawn/Zombie.h',
+  'src/Lawn/System/BonusChallenge.h', 'src/Lawn/System/NightShift.h',
 ]);
 const releaseIdentityInputs = new Set(['CMake/ProjectVersion.cmake', 'artwork/chill-shroom/render.py']);
 for (const entry of Object.values(parent.files)) {
-  if (entry.dir || !entry.name.startsWith('chill7-candidate/source/')) continue;
-  const name = entry.name.slice('chill7-candidate/source/'.length);
+  if (entry.dir || !entry.name.startsWith('chill8-candidate/source/')) continue;
+  const name = entry.name.slice('chill8-candidate/source/'.length);
   if (runtimeInputs.has(name)) continue;
   const before = Buffer.from(await entry.async('uint8array'));
   const after = await read('source/' + name);
   if (releaseIdentityInputs.has(name)) {
-    assert.equal(after.toString().replaceAll('0.2.6-web-chill.8', '0.2.6-web-chill.7'), before.toString(),
+    assert.equal(after.toString().replaceAll('0.2.6-web-chill.9', '0.2.6-web-chill.8'), before.toString(),
       'Only the release identity may change in metadata source: ' + name);
   } else assert.deepEqual(after, before, 'Minigame revision preserves unrelated engine/content/art bytes: ' + name);
 }
-for (const name of Object.keys(sourceManifest.files)) assert(parent.file('chill7-candidate/source/' + name),
+for (const name of Object.keys(sourceManifest.files)) assert(parent.file('chill8-candidate/source/' + name),
   'Minigame revision adds no unrelated production source: ' + name);
 function omitFunction(text, signature) {
   const start = text.indexOf(signature);
@@ -384,50 +382,53 @@ function omitFunction(text, signature) {
   return text.slice(0, start) + text.slice(cursor + 1);
 }
 const sharedFunctionScopes = {
-  'src/Lawn/Board.cpp': ['Board::Board(', 'int Board::GetNumWavesPerFlag(', 'void Board::PickZombieWaves(',
-    'void Board::PickBackground(', 'void Board::InitLevel(', 'void Board::MouseUp(',
-    'void Board::DrawTopRightUI(', 'void Board::DrawUITop(', 'bool Board::HasConveyorBeltSeedBank(',
-    'int Board::GetNumSeedsInBank(', 'bool Board::StageHasGraveStones('],
-  'src/Lawn/Challenge.cpp': ['void Challenge::InitLevel(', 'void Challenge::StartLevel(',
-    'void Challenge::UpdateConveyorBelt(', 'void Challenge::Update(', 'bool Challenge::UpdateZombieSpawning('],
-  'src/LawnApp.cpp': ['void LawnApp::DoContinueDialog(', 'bool LawnApp::IsWallnutBowlingLevel(',
-    'bool LawnApp::HasSeedType('],
-  'src/Lawn/System/DeckPresets.h': ['static bool ValidSeed(', 'static bool ValidSeeds('],
-  'src/Lawn/Widget/SeedChooserScreen.cpp': ['SeedChooserScreen::SeedChooserScreen(',
-    'void SeedChooserScreen::GetSeedPositionInChooser(', 'void SeedChooserScreen::Draw(',
-    'void SeedChooserScreen::UpdateCursor(', 'void SeedChooserScreen::Update(',
-    'void SeedChooserScreen::PickRandomSeeds(', 'SeedType SeedChooserScreen::SeedHitTest(',
-    'SeedType SeedChooserScreen::FindSeedInBank(', 'void SeedChooserScreen::ClickedSeedInBank(',
-    'void SeedChooserScreen::ShowToolTip(', 'void SeedChooserScreen::UpdateImitaterButton(',
-    'void SeedChooserScreen::MouseDown(', 'bool SeedChooserScreen::PickedPlantType(',
-    'void SeedChooserScreen::CloseSeedChooser(', 'void SeedChooserScreen::UpdateAfterPurchase(',
-    'std::vector<DeckPresetSeed> SeedChooserScreen::CurrentDeckPreset(',
-    'DeckSelectionPlan SeedChooserScreen::ApplyDeckPreset('],
+  'src/Lawn/Board.cpp': ['bool Board::AreEnemyZombiesOnScreen(', 'void Board::SpawnZombiesFromGraves(',
+    'void Board::SpawnZombieWave(', 'void Board::UpdateZombieSpawning('],
+  'src/Lawn/Challenge.cpp': ['void Challenge::InitLevel(', 'void Challenge::InitZombieWaves(',
+    'void Challenge::StartLevel(', 'void Challenge::UpdateConveyorBelt(', 'void Challenge::SpawnZombieWave('],
+  'src/Lawn/Zombie.cpp': ['void Zombie::ZombieInitialize(', 'void Zombie::SetupReanimForLostHead(',
+    'void Zombie::DropHead(', 'void Zombie::UpdateReanim(', 'void Zombie::DrawReanim(',
+    'void Zombie::DropHelm(', 'int Zombie::TakeHelmDamage('],
 };
+const addedFunctionScopes = {'src/Lawn/Zombie.cpp': [
+  'void Zombie::InitializeConeZoneHelm(', 'Reanimation* Zombie::GetConeReanim(', 'void Zombie::RemoveConeReanim(',
+]};
 for (const [name, signatures] of Object.entries(sharedFunctionScopes)) {
   let before = (await parentBytes(name)).toString().replace(/\r\n?/g, '\n'), after = (await read('source/' + name)).toString().replace(/\r\n?/g, '\n');
   for (const signature of signatures) { before = omitFunction(before, signature); after = omitFunction(after, signature); }
-  assert.equal(after, before, 'Shared source changes only reviewed minigame/catalog functions: ' + name);
+  for (const signature of addedFunctionScopes[name] || []) {
+    assert(!before.includes(signature), 'New helper must not replace a parent method: ' + signature);
+    after = omitFunction(after, signature);
+  }
+  if (name === 'src/Lawn/Zombie.cpp') after = after.replace('// Use existing helmet health and serialized reanimation IDs. Common zombies\n// already have the native cone track; other bodies borrow just that track and\n// attach it to their animated head, retaining their own arms, shields and gait.\n', '');
+  assert.equal(after.replace(/\n{3,}/g, '\n\n'), before.replace(/\n{3,}/g, '\n\n'), 'Shared source changes only reviewed variety functions and their helpers: ' + name);
 }
-// The legacy 20-wave definitions/helpers remain identical after newline normalization so old native
-// checkpoints still use their original rules instead of silently changing play.
+// Legacy state-zero definitions remain byte-equivalent after newline normalization.
+// The current-rule appendix already existed in the exact .8 parent.
 for (const name of ['BonusChallenge', 'NightShift', 'LanternGlow']) {
   const file = 'src/Lawn/System/' + name + '.h';
-  const before = (await parentBytes(file)).toString().replace(/\r\n?/g, '\n'), after = (await read('source/' + file)).toString().replace(/\r\n?/g, '\n');
-  const start = after.indexOf('// Revision 2');
-  const end = after.indexOf('static_assert(ZombieCount(kWaveCount - 1)', start);
-  assert(start >= 0 && end > start);
-  assert.equal(after.slice(0, start) + after.slice(end), before,
-    'New minigame rules append without changing legacy helpers/data: ' + name);
+  const before = (await parentBytes(file)).toString().replace(/\r\n?/g, '\n');
+  const after = (await read('source/' + file)).toString().replace(/\r\n?/g, '\n');
+  const legacyEnd = text => {
+    const marker = text.indexOf('static_assert(static_cast<int>(kMode) == ');
+    assert(marker >= 0);
+    return text.indexOf('\n', marker) + 1;
+  };
+  const beforeStart = legacyEnd(before), afterStart = legacyEnd(after);
+  assert.equal(after.slice(0, afterStart), before.slice(0, beforeStart),
+    'Variety revision preserves legacy helpers/data: ' + name);
 }
 {
-  const file = 'src/Lawn/Widget/SeedChooserScreen.h';
-  const before = (await parentBytes(file)).toString().replace(/\r\n?/g, '\n'), after = (await read('source/' + file)).toString().replace(/\r\n?/g, '\n');
-  const start = after.indexOf('\t// The appended seed keeps ID 75;');
-  const end = after.indexOf('\tstatic int   PickFromWeightedArrayUsingSpecialRandSeed', start);
-  assert(start >= 0 && end > start);
-  assert.equal(after.slice(0, start) + after.slice(end), before,
-    'Chooser adds static sparse-catalog helpers without changing its member layout or native API');
+  const file = 'src/Lawn/Zombie.h';
+  const savedData = bytes => {
+    const source = bytes.toString().replace(/\r\n?/g, '\n');
+    const start = source.indexOf('class Zombie : public GameObject');
+    const end = source.indexOf('Zombie();', start);
+    assert(start >= 0 && end > start);
+    return source.slice(start, end);
+  };
+  assert.equal(savedData(await read('source/' + file)), savedData(await parentBytes(file)),
+    'Cone variants reuse serialized helmet fields; Zombie member layout stays byte-equivalent');
 }
 
 
@@ -508,7 +509,7 @@ for (let y = 0; y < 80; y++) for (let x = 0; x < 80; x++) {
   else if (differs) changedPerEye[eyeIndex]++;
 }
 for (const changed of changedPerEye) assert(changed > 5, 'Both eyes have an actual expression change');
-console.log('PASS exact parent sprite pixels/geometry, scoped minigame/chooser code, independent PNG/runtime pixels, neutral reconstruction, fixed-alpha eye-only expressions and native cards without standalone generated illustrations.');
+console.log('PASS exact parent sprite pixels/geometry, scoped cone/grave-control code, independent PNG/runtime pixels, neutral reconstruction, fixed-alpha eye-only expressions and native cards without standalone generated illustrations.');
 
 
 if (process.argv.includes('--run-native')) {

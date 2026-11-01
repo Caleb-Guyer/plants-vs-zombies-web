@@ -1,5 +1,64 @@
 # Browser parity and QA record
 
+## Chill.9 Cone Zone variety and Night Shift graveyard control
+
+The user requested many cone-wearing zombie combinations, native giant bowling
+Wall-nuts, and a more distinctive Night Shift. They approved graveyard control:
+new graves between waves, zombies emerging from them, and Grave Busters plus a
+wider mushroom conveyor. The existing native presentation and absence of added
+challenge tips remain.
+
+Cone Zone now combines native cones with screen-door, newspaper, pole-vaulter,
+ladder, jack-in-the-box and football zombies, plus regular coneheads and a cone
+flag zombie. Cone armor has 370 health, native damage stages and a knocked-off
+cone; shields and special behaviors remain. Football uses the cone in place of
+its football helmet. Ten waves contain 80 authored zombies. The native giant
+Wall-nut from Bowling 2 is in the five-packet opening, weighted deliveries and
+every eighth successful delivery. Its original straight rolling and damage
+behavior is retained.
+
+Night Shift retains ten authored waves/66 zombies. Four starting graves can
+be joined by one safe new grave before waves 2, 4, 6 and 8, capped at six live
+graves and confined to empty right-side tiles. Before waves 4, 7 and 10, native
+dirt effects warn of a six-second countdown; at most three normal zombies rise
+from mature surviving graves. Grave Busters reduce that pressure. Two are in
+the opening bank, and another is supplied when graves remain with none waiting
+or working. The wider conveyor includes Doom-, Magnet-, Hypno-, Ice- and
+Chill-shrooms. Existing plant/crater tiles are preserved.
+
+Cold Front and its earned normal-chooser unlock are retained. No seed or mode
+IDs, serialized fields or accepted sprite pixels change. State-zero legacy
+checkpoints keep their old fixed-bank rules. Chill.8 arcade checkpoints retain
+their saved board/belt/wave and gain the new mechanics on later events; new
+games get the revised opening and wave roster.
+
+Local release gates pass on 2026-11-01: the coherent 120.732-second Release
+build left all 780 source files unchanged. All 2,084 native checks, fourteen
+browser integration suites and eleven worker scenarios pass. Tests execute the
+new armor/damage/drop, original giant-nut physics, safe grave placement, bounded
+rises, pending-rise award gate and no-graves final completion path. Original
+IDs, serialized member layouts, legacy content and accepted sprite pixels stay
+verified. Both upstream and exact Chill.8 patches reconstruct every source byte.
+The 812-entry corresponding-source ZIP is 9,308,592 bytes, SHA-256
+`7fa3d16079cca928812a965ec7bdcd15c7f157570d14607895c31067d06e49f0`.
+
+Muted browser checks used the isolated `127.0.0.1:4215/?testing=1` origin and
+built-in generated QA - Boss! profile. Its campaign and Bonus trophies are
+synthetic fixtures, not earned results. Browser file-chooser transport for a
+separate generated fixture failed; built-in profile addition succeeded. No
+private user saves were read. Actual Cone Zone play verified native giant,
+normal and explosive launches, visible door/newspaper/pole/ladder/jack/football
+cones, the replaced football helmet and knocked-off cones. Night Shift verified
+an added grave between waves, Grave Busters working on graves, at least one
+completed removal and a replacement packet, plus awake Chill-/Magnet-shrooms
+and the wider native conveyor. These are bounded visual/control checks: no full
+clear, universal balance, manual grave-burst timing or manual checkpoint restore
+is claimed. Both runs saved through the native menu; the owned test tab/server
+are closed. The user's public game tab was not reloaded. Final source-download
+extraction and public hosting receipts are recorded separately with the matching
+release commit and Pages workflow.
+
+
 ## Chill.8 bonus minigames and unlock — local verification
 
 The user reported Cold Front was extremely hard, asked how Chill-shroom can be

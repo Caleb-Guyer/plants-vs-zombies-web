@@ -24,14 +24,25 @@
       "name": "Cone Zone",
       "hero": "original conehead zombie portrait",
       "background": "IMAGE_BACKGROUND1",
-      "gameplay": "Native bowling conveyor, ten waves and one flag in new games."
+      "gameplay": "Native bowling conveyor, ten waves and one flag; cone-armored native variants and normal, explosive and giant Wall-nuts. Giant physics are unchanged from native Bowling 2.",
+      "variants": [
+        "regular conehead",
+        "screen door with cone",
+        "newspaper with cone",
+        "pole-vaulter with cone",
+        "ladder with cone",
+        "jack-in-the-box with cone",
+        "football with cone",
+        "flag with cone"
+      ],
+      "coneArmorHealth": 370
     },
     {
       "mode": 74,
       "name": "Night Shift",
       "hero": "REANIM_PUFFSHROOM",
       "background": "IMAGE_BACKGROUND2",
-      "gameplay": "Native nighttime mushroom conveyor, guaranteed opening packets, four graves and ten waves in new games."
+      "gameplay": "Native nighttime graveyard-control conveyor. Four initial graves, safe empty-tile growth capped at six, warned rises before waves 4/7/10 of at most three normal zombies, guaranteed Grave Busters and a wider mushroom mix. Ten waves and one flag."
     },
     {
       "mode": 75,
@@ -85,5 +96,5 @@
     "newGeneratedArtwork": false,
     "mechanics": "Release-time radial slow, no damage or delayed projectile hit; native puffs are the visual plume."
   },
-  "checkpointCompatibility": "State-zero existing bonus checkpoints keep their previous fixed-bank twenty-wave rules; New Game starts the redesigned minigame. Existing completion rewards remain valid."
+  "checkpointCompatibility": "State-zero existing bonus checkpoints keep their previous fixed-bank twenty-wave rules. Chill.8 arcade checkpoints retain saved boards/belts/waves and gain new mechanics on later events; New Game starts the revised opening/roster. Existing completion rewards remain valid."
 }
