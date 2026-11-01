@@ -2,7 +2,75 @@
 
 This clean release repository targets `Caleb-Guyer/plants-vs-zombies-web`. On 2026-10-31 the user directed publication of the current build and stopped further manual gameplay. Publication is authorized while full original-game 1:1 parity remains unverified; it does not certify parity or complete that goal. GitHub Pages publication succeeded on 2026-10-31: [release workflow 41230962473](https://github.com/Caleb-Guyer/plants-vs-zombies-web/actions/runs/41230962473) deployed commit `5ba4d0d7279145dcbdfa3e91d19b91218ef1c04a`.
 
-## Chill.6 publication target, 2026-11-01
+## Chill.7 publication target, 2026-11-01
+
+Target `0.2.6-web-chill.7` adds gentle idle breathing, attacks only while an
+eligible zombie is within the existing 150-pixel radius, and a slower frost
+plume with readable outward movement and fade. The accepted Chill.5 proportions
+and published Chill.6 paint are preserved: all six sprite PNGs and the packed
+artwork header stay unchanged. The shared rig, centered packet/native card,
+original menus and absence of added challenge tips remain.
+
+A ready plant waits at counter 41 without a target, then begins a 40-tick
+wind-up when an eligible zombie enters range. Recheck eligibility during that
+wind-up and cancel if every target leaves. Pulses remain at least 400 ticks
+apart, with the existing 75-sun cost, 750-tick recharge, 150-tick slow and no
+damage. Stronger chill/freeze is preserved. Keep idle movement gentle, about
+one to two percent, ground-anchored and derived from the saved native carrier phase.
+
+Use the original Snow Pea puff artwork for the frost plume, with staggered
+outward movement over 55 ticks and a fading tail lasting 100 ticks in total
+(about one second at normal speed). Keep the 30-tick recoil separate from the
+longer visual tail. Preserve pause, 1x/2x speed, saved phase and native tint,
+filter, flash, blink/sleep and attachment ownership. Add no serialized fields,
+new plant/challenge IDs, gameplay HUD or new image-generated artwork.
+
+The exact parent is the published Chill.6 source ZIP, SHA-256
+`518d779b9948ac8a2d124db8f7929f13acf1121f38953d4ebee367518da17104`.
+Current source targets are [Chill.7 source](dist/source/pvz-portable-0.2.6-web-chill.7-source.zip),
+[full upstream patch](dist/source/web-chill.7.patch),
+[Chill.6 delta](dist/source/chill6-to-chill7.patch), and
+[pinned parent](dist/source/pvz-portable-0.2.6-web-chill.6-source.zip).
+All agent browser checks remain silent with `?testing=1`; normal-player audio
+and automatic saves remain available. Historical art prompts and inputs are
+retained; this motion/effect revision does not generate new plant or card art.
+
+Runtime/loader cache tokens advance to `chill7`; unchanged storage retains
+`polish1`. Keep `.gitattributes`, complete source and matching artifact identities.
+
+The last verified publication before this pass is Chill.6 commit
+`3dfc2e9952961fa6b02c63a6fa8aebe0f016fd55`, deployed by successful
+[workflow 41325541238](https://github.com/Caleb-Guyer/plants-vs-zombies-web/actions/runs/41325541238).
+That result does not establish Chill.7 publication or full parity.
+
+Chill.7 local release gates pass on 2026-11-01. The coherent 113.347-second
+Release build retains all 780 source files unchanged while building. All 1,577
+native checks, fourteen browser integration suites and eleven worker scenarios
+pass with current source/harness pins. New coverage includes empty-lawn ready
+hold, exact range entry, interrupted wind-up/reacquisition, eligibility, unchanged
+cadence/slow, skipped long-cooldown scans, saved-phase grounded breathing and
+actual native puff centering, staggered travel, late visibility and fading.
+No new serialized fields or IDs are introduced. Original plant logic outside
+the reviewed custom update/pose hook remains byte-identical to the exact parent.
+
+All six artwork PNGs and the packed header are unchanged from Chill.6. Nine
+public artwork/metadata files and that header reproduce exactly. Both upstream
+and Chill.6 delta patches reconstruct all 780 source files. The current engine
+source ZIP has 812 entries and 9,257,802 bytes, SHA-256
+`450613f4d14df23380549081b154d40c11587151d37e749a74f5118a11534605`.
+
+The muted native review restored the existing Sun/Chill/Puff fixture and
+captured 74 full 1280x720 frames over 8.2 seconds. Sampled idle poses, two frost
+releases, outward plume travel and dissipation are coherent; there are no
+observed detached parts, plant seams, clipping or paint changes. Packet and
+centered native Bonus card remain consistent. Menu paused the game; the owned
+test tab and server were closed without reloading the user's public game tab.
+Empty-range gating is automated coverage, not a separate browser observation.
+This is not an earned win, full battle, every-frame/style equivalence or new
+save-transfer cycle. Final website-package identity, extracted-source check and
+hosting result are recorded by the publisher and matching Pages workflow.
+
+## Historical Chill.6 publication target, 2026-11-01
 
 The current source target is `0.2.6-web-chill.6`, based on the exact published
 Chill.5 source, SHA-256
@@ -21,7 +89,7 @@ Current downloads: [Chill.6 source](dist/source/pvz-portable-0.2.6-web-chill.6-s
 Runtime/loader cache tokens advance to `chill6`; unchanged storage retains
 `polish1`. Keep `.gitattributes`, complete source and matching artifact identities.
 
-Chill.6 local release gates pass on 2026-11-01. The coherent 90.230-second
+Historical Chill.6 local release gates passed on 2026-11-01. The coherent 90.230-second
 Release build contains 780 source files. All 1,532 native production checks,
 fourteen browser integration suites and eleven worker scenarios pass. Independent
 parent comparisons retain every approved canonical and cap/body alpha byte and
@@ -41,7 +109,7 @@ cycle, every animation frame, subjective perfection or full original-game parity
 Final website-package identity, extracted-source check and hosting result are
 recorded separately by the publisher and matching Pages workflow.
 
-The latest verified publication before this pass is Chill.5 commit
+For that historical Chill.6 pass, the latest verified publication was Chill.5 commit
 `b8c2049da83ed3850e9c31c78e5c55ea6d59fea8`, successful
 [workflow 41279145103](https://github.com/Caleb-Guyer/plants-vs-zombies-web/actions/runs/41279145103).
 Record a new commit, successful matching workflow and public byte verification
@@ -105,7 +173,7 @@ Release the reviewed current build after the bounded feature checks:
 3. Run **Publish game to GitHub Pages** manually from the intended branch. Pushes and pull requests do not deploy this workflow. There is no additional game or parity input flag.
 4. Review the validation job and deployment result. Open the URL recorded by the deployment environment.
 
-The workflow uses Node 24 and Python 3.13 for checkout checks and the runner's C++ compiler for seven production-method suites covering the new plant/third Bonus challenge, Night Shift, retained bonus wave/completion/navigation, speed, controls, decks and cooldowns. For Chill.6, record current coherent-build, native/source-harness, browser/worker, exact geometry/runtime-byte, artwork reproduction and upstream/Chill.5 reconstruction results before release. Keep the bounded muted visual review separate from automated correctness and historical captures. Current results belong in [QA](PARITY-QA.md); website-source packaging and hosted verification require their own receipts. No `npm install`, Emscripten SDK, original game installation or full WASM rebuild is needed in deployment. It verifies bundled resource bytes, browser shell, save recovery/worker behavior, corresponding source and native content/QoL behavior before uploading `dist`. Automated native tests do not initialize the game or audio; browser checks use `?testing=1`.
+The workflow uses Node 24 and Python 3.13 for checkout checks and the runner's C++ compiler for seven production-method suites covering the new plant/third Bonus challenge, Night Shift, retained bonus wave/completion/navigation, speed, controls, decks and cooldowns. For Chill.7, record current coherent-build, native/source-harness, browser/worker, target-gating, idle/effect timing, unchanged artwork/save/ID and upstream/Chill.6 reconstruction results before release. Keep the bounded muted visual review separate from automated correctness and historical captures. Current results belong in [QA](PARITY-QA.md); website-source packaging and hosted verification require their own receipts. No `npm install`, Emscripten SDK, original game installation or full WASM rebuild is needed in deployment. It verifies bundled resource bytes, browser shell, save recovery/worker behavior, corresponding source and native content/QoL behavior before uploading `dist`. Automated native tests do not initialize the game or audio; browser checks use `?testing=1`.
 
 The site includes the empty `.nojekyll` marker. Packaging targets GitHub Pages with a 100 MiB served-file ceiling and the 1 GB published-site ceiling. The former 25 MiB limit belonged to the earlier hosting provider; it must not cause complete current source, required parent/upstream inputs, artwork, tests, dependencies or licenses to be omitted. Final package verification records actual archive and site sizes.
 

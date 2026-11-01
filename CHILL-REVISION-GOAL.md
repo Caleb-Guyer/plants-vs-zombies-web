@@ -1,4 +1,97 @@
-# Final Chill-shroom style pass — active
+# Chill-shroom idle, target activation and frost refinement — locally verified release candidate
+
+Requested 2026-11-01. Add restrained idle animation, attack only while an eligible
+zombie is within range, and replace the overly fast, abruptly ending frost
+presentation with the original game's puff artwork and a readable fading plume.
+Preserve the user's accepted proportions, painted character and native UI.
+
+Target `0.2.6-web-chill.7` adds gentle idle breathing, attacks only while an
+eligible zombie is within the existing 150-pixel radius, and a slower frost
+plume with readable outward movement and fade. The accepted Chill.5 proportions
+and published Chill.6 paint are preserved: all six sprite PNGs and the packed
+artwork header stay unchanged. The shared rig, centered packet/native card,
+original menus and absence of added challenge tips remain.
+
+A ready plant waits at counter 41 without a target, then begins a 40-tick
+wind-up when an eligible zombie enters range. Recheck eligibility during that
+wind-up and cancel if every target leaves. Pulses remain at least 400 ticks
+apart, with the existing 75-sun cost, 750-tick recharge, 150-tick slow and no
+damage. Stronger chill/freeze is preserved. Keep idle movement gentle, about
+one to two percent, ground-anchored and derived from the saved native carrier phase.
+
+Use the original Snow Pea puff artwork for the frost plume, with staggered
+outward movement over 55 ticks and a fading tail lasting 100 ticks in total
+(about one second at normal speed). Keep the 30-tick recoil separate from the
+longer visual tail. Preserve pause, 1x/2x speed, saved phase and native tint,
+filter, flash, blink/sleep and attachment ownership. Add no serialized fields,
+new plant/challenge IDs, gameplay HUD or new image-generated artwork.
+
+The exact parent is the published Chill.6 source ZIP, SHA-256
+`518d779b9948ac8a2d124db8f7929f13acf1121f38953d4ebee367518da17104`.
+Current source targets are [Chill.7 source](dist/source/pvz-portable-0.2.6-web-chill.7-source.zip),
+[full upstream patch](dist/source/web-chill.7.patch),
+[Chill.6 delta](dist/source/chill6-to-chill7.patch), and
+[pinned parent](dist/source/pvz-portable-0.2.6-web-chill.6-source.zip).
+All agent browser checks remain silent with `?testing=1`; normal-player audio
+and automatic saves remain available. Historical art prompts and inputs are
+retained; this motion/effect revision does not generate new plant or card art.
+
+Completion criteria:
+
+- Keep the exact published Chill.6 canonical paint and six PNG/header pixels,
+  registered cap/body geometry, packet/card compositions and original content.
+- Hold ready without targets; begin wind-up only with an eligible zombie in
+  range, cancel when all targets leave, and preserve the existing minimum pulse
+  interval, cost/recharge, slow duration, no-damage behavior and stronger chill.
+- Add subtle saved-phase breathing with fixed ground contact, coherent blink,
+  sleep and attack poses, and no per-frame image allocation or visual seams.
+- Give the native frost puffs staggered outward movement and a lingering fade,
+  separate from recoil, with no abrupt cutoff or HUD spill.
+- Verify targeting/cancellation/boundaries, idle/effect timing, saved phase and
+  unchanged layouts/IDs with meaningful current-source tests; keep browser
+  testing silent and report the limits of the bounded visual sample.
+- Publish matching binaries, complete source, tests, patches and provenance;
+  commit/push and verify the matching Pages run and served release bytes.
+
+Status: implementation and validation in progress. The scoped work is recorded
+here without new formal-goal actions. The older formal parity goal remains
+paused and unfinished; this task does not complete, replace or resume it.
+
+The last verified publication before this pass is Chill.6 commit
+`3dfc2e9952961fa6b02c63a6fa8aebe0f016fd55`, deployed by successful
+[workflow 41325541238](https://github.com/Caleb-Guyer/plants-vs-zombies-web/actions/runs/41325541238).
+That result does not establish Chill.7 publication or full parity.
+
+Chill.7 local release gates pass on 2026-11-01. The coherent 113.347-second
+Release build retains all 780 source files unchanged while building. All 1,577
+native checks, fourteen browser integration suites and eleven worker scenarios
+pass with current source/harness pins. New coverage includes empty-lawn ready
+hold, exact range entry, interrupted wind-up/reacquisition, eligibility, unchanged
+cadence/slow, skipped long-cooldown scans, saved-phase grounded breathing and
+actual native puff centering, staggered travel, late visibility and fading.
+No new serialized fields or IDs are introduced. Original plant logic outside
+the reviewed custom update/pose hook remains byte-identical to the exact parent.
+
+All six artwork PNGs and the packed header are unchanged from Chill.6. Nine
+public artwork/metadata files and that header reproduce exactly. Both upstream
+and Chill.6 delta patches reconstruct all 780 source files. The current engine
+source ZIP has 812 entries and 9,257,802 bytes, SHA-256
+`450613f4d14df23380549081b154d40c11587151d37e749a74f5118a11534605`.
+
+The muted native review restored the existing Sun/Chill/Puff fixture and
+captured 74 full 1280x720 frames over 8.2 seconds. Sampled idle poses, two frost
+releases, outward plume travel and dissipation are coherent; there are no
+observed detached parts, plant seams, clipping or paint changes. Packet and
+centered native Bonus card remain consistent. Menu paused the game; the owned
+test tab and server were closed without reloading the user's public game tab.
+Empty-range gating is automated coverage, not a separate browser observation.
+This is not an earned win, full battle, every-frame/style equivalence or new
+save-transfer cycle. Final website-package identity, extracted-source check and
+hosting result are recorded by the publisher and matching Pages workflow.
+
+---
+
+## Historical Chill.6 final style pass
 
 Requested 2026-11-01. Preserve the exact whole-character silhouette and proportions the user approved in Chill.5. Refine only the painted finish and restrained expression/motion so the character sits naturally beside the original Sun-shroom, Puff-shroom and Fume-shroom at native game scale.
 

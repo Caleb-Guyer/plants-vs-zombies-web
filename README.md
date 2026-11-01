@@ -2,7 +2,7 @@
 
 [Play on GitHub Pages](https://caleb-guyer.github.io/plants-vs-zombies-web/) · [Existing playtest](https://lawn-defense-caleb-plays.usgi.chatgpt.site) · [Deployment](DEPLOYMENT.md) · [Requirements](CURRENT-REQUIREMENTS.md) · [QA history](PARITY-QA.md)
 
-This source targets **0.2.6-web-chill.6**, a final painted style pass based on the accepted Chill.5 proportions and PvZ-Portable 0.2.6. Preserve the original alpha silhouette and cap/body partition, with one registered rig across the lawn, packet and centered challenge portrait. The scope is cap-spot contrast/size, shading, face and bounded eye patches; runtime logic, mechanics, animation and save formats remain unchanged from Chill.5. Full original-game 1:1 parity remains unverified. Earlier release records below are historical.
+This source targets **0.2.6-web-chill.7**: gentle Chill-shroom idle motion, attacks gated by nearby eligible zombies, and a slower native frost plume. The accepted proportions and Chill.6 painted sprite remain unchanged. One registered rig supplies the lawn, packet and centered challenge portrait; existing saves, IDs and original content remain compatible. Full original-game 1:1 parity remains unverified. Earlier release records below are historical.
 
 The Software.10 and earlier QA descriptions below are the frozen v18 evidence snapshot. They retain their original capture-time scope, including earlier limits; they are not a claim that later validation or the full parity goal is complete.
 
@@ -21,10 +21,13 @@ Normal players have music and sound effects, subject to browser autoplay rules a
 ## New plant and Bonus challenge: Cold Front
 
 Once Mini-Games is unlocked, choose **Mini-Games → Bonus → Cold Front**.
-Chill-shroom is a support mushroom: every four seconds its cold pulse briefly slows
-nearby grounded zombies. It costs **75 sun**, recharges in **7.5 seconds** and
-slows for **1.5 seconds** per pulse. It deals no damage, so pair it with Puff-shrooms
-and Fume-shrooms. Stronger existing chill and freezing are preserved.
+Chill-shroom is a support mushroom. When charged, it winds up only if an
+eligible grounded zombie is nearby, then releases a frost pulse. If all targets
+leave range during wind-up, it returns to idle. Pulses are at least **four seconds**
+apart. It costs **75 sun**, recharges in **7.5 seconds** and slows for **1.5 seconds**
+per pulse. It deals no damage, so pair it with Puff-shrooms and Fume-shrooms.
+Stronger existing chill and freezing are preserved. A gentle idle motion gives
+way to the attack, whose original-game frost puffs travel outward and fade.
 
 The challenge uses the original night lawn, 150 starting sun, no falling sky sun,
 twenty authored waves and two flags. Its fixed bank is Sun-shroom, Puff-shroom,
@@ -35,16 +38,17 @@ introduced in this challenge; the original campaign, chooser and unlocks retain
 their familiar content.
 
 The accepted Chill.5 silhouette has a broad rounded cap directly over a short
-wide body, without a pinched neck or separate feet. Chill.6 keeps its original
-alpha and cap/body partition exactly; the final pass refines only the painted
-finish and bounded eye patches beside original mushroom references. All layers
-keep the same scale, registration and ground anchor. Runtime animation remains
-unchanged. [Canonical artwork](dist/content/chill-shroom/canonical.png),
+wide body, without a pinched neck or separate feet. Chill.6 refined its painted
+finish and bounded eye patches beside original mushroom references. Chill.7
+keeps all six sprite PNGs and the packed artwork unchanged while adding gentle
+idle motion, target-aware wind-up and a longer native frost effect. All layers
+keep their shared scale, registration and ground anchor. [Canonical artwork](dist/content/chill-shroom/canonical.png),
 [generation prompts](dist/content/chill-shroom/generation.json),
 [extraction recipe](dist/content/chill-shroom/extraction.json) and
 [provenance](dist/content/chill-shroom/provenance.json) preserve the exact inputs.
 The shared rig retains blink/sleep, native tint/filter/flash and bounded cap
-motion, with no change to radial slow mechanics or saved layouts.
+motion, with target-aware activation and the same radial slow, cost, range and
+saved layouts.
 
 The three native 80×65 Bonus pictures stay centered compositions of actual
 sprites: original Conehead for Cone Zone, original Puff-shroom for Night Shift
@@ -104,7 +108,72 @@ Open the original **Options → More Options** dialog for these additions:
 
 The native options and deck dialogs use the original game artwork and concise labels. QoL preferences and decks travel with save exports in separate files; existing native profile and board-save formats remain unchanged. Backups is also available through the small More utility icon.
 
-## Chill.6 final style pass, 2026-11-01
+## Chill.7 idle and frost revision, 2026-11-01
+
+Target `0.2.6-web-chill.7` adds gentle idle breathing, attacks only while an
+eligible zombie is within the existing 150-pixel radius, and a slower frost
+plume with readable outward movement and fade. The accepted Chill.5 proportions
+and published Chill.6 paint are preserved: all six sprite PNGs and the packed
+artwork header stay unchanged. The shared rig, centered packet/native card,
+original menus and absence of added challenge tips remain.
+
+A ready plant waits at counter 41 without a target, then begins a 40-tick
+wind-up when an eligible zombie enters range. Recheck eligibility during that
+wind-up and cancel if every target leaves. Pulses remain at least 400 ticks
+apart, with the existing 75-sun cost, 750-tick recharge, 150-tick slow and no
+damage. Stronger chill/freeze is preserved. Keep idle movement gentle, about
+one to two percent, ground-anchored and derived from the saved native carrier phase.
+
+Use the original Snow Pea puff artwork for the frost plume, with staggered
+outward movement over 55 ticks and a fading tail lasting 100 ticks in total
+(about one second at normal speed). Keep the 30-tick recoil separate from the
+longer visual tail. Preserve pause, 1x/2x speed, saved phase and native tint,
+filter, flash, blink/sleep and attachment ownership. Add no serialized fields,
+new plant/challenge IDs, gameplay HUD or new image-generated artwork.
+
+The exact parent is the published Chill.6 source ZIP, SHA-256
+`518d779b9948ac8a2d124db8f7929f13acf1121f38953d4ebee367518da17104`.
+Current source targets are [Chill.7 source](dist/source/pvz-portable-0.2.6-web-chill.7-source.zip),
+[full upstream patch](dist/source/web-chill.7.patch),
+[Chill.6 delta](dist/source/chill6-to-chill7.patch), and
+[pinned parent](dist/source/pvz-portable-0.2.6-web-chill.6-source.zip).
+All agent browser checks remain silent with `?testing=1`; normal-player audio
+and automatic saves remain available. Historical art prompts and inputs are
+retained; this motion/effect revision does not generate new plant or card art.
+
+The last verified publication before this pass is Chill.6 commit
+`3dfc2e9952961fa6b02c63a6fa8aebe0f016fd55`, deployed by successful
+[workflow 41325541238](https://github.com/Caleb-Guyer/plants-vs-zombies-web/actions/runs/41325541238).
+That result does not establish Chill.7 publication or full parity.
+
+Chill.7 local release gates pass on 2026-11-01. The coherent 113.347-second
+Release build retains all 780 source files unchanged while building. All 1,577
+native checks, fourteen browser integration suites and eleven worker scenarios
+pass with current source/harness pins. New coverage includes empty-lawn ready
+hold, exact range entry, interrupted wind-up/reacquisition, eligibility, unchanged
+cadence/slow, skipped long-cooldown scans, saved-phase grounded breathing and
+actual native puff centering, staggered travel, late visibility and fading.
+No new serialized fields or IDs are introduced. Original plant logic outside
+the reviewed custom update/pose hook remains byte-identical to the exact parent.
+
+All six artwork PNGs and the packed header are unchanged from Chill.6. Nine
+public artwork/metadata files and that header reproduce exactly. Both upstream
+and Chill.6 delta patches reconstruct all 780 source files. The current engine
+source ZIP has 812 entries and 9,257,802 bytes, SHA-256
+`450613f4d14df23380549081b154d40c11587151d37e749a74f5118a11534605`.
+
+The muted native review restored the existing Sun/Chill/Puff fixture and
+captured 74 full 1280x720 frames over 8.2 seconds. Sampled idle poses, two frost
+releases, outward plume travel and dissipation are coherent; there are no
+observed detached parts, plant seams, clipping or paint changes. Packet and
+centered native Bonus card remain consistent. Menu paused the game; the owned
+test tab and server were closed without reloading the user's public game tab.
+Empty-range gating is automated coverage, not a separate browser observation.
+This is not an earned win, full battle, every-frame/style equivalence or new
+save-transfer cycle. Final website-package identity, extracted-source check and
+hosting result are recorded by the publisher and matching Pages workflow.
+
+## Historical Chill.6 final style pass, 2026-11-01
 
 [Scoped goal](CHILL-REVISION-GOAL.md) records the accepted geometry, original-plant
 style references and muted verification criteria. Built-in image generation is
@@ -112,7 +181,7 @@ limited to the custom plant; exact prompts and immutable inputs are published in
 [generation.json](dist/content/chill-shroom/generation.json). Native challenge
 cards compose the actual sprite, with no standalone AI challenge illustration.
 
-Chill.6 local release gates pass on 2026-11-01. The coherent 90.230-second
+Historical Chill.6 local release gates passed on 2026-11-01. The coherent 90.230-second
 Release build contains 780 source files. All 1,532 native production checks,
 fourteen browser integration suites and eleven worker scenarios pass. Independent
 parent comparisons retain every approved canonical and cap/body alpha byte and

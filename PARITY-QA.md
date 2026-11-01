@@ -1,6 +1,77 @@
 # Browser parity and QA record
 
-## Chill.6 final style pass — local verification, 2026-11-01
+## Chill.7 behavior and effect revision — local verification, 2026-11-01
+
+Target `0.2.6-web-chill.7` adds gentle idle breathing, attacks only while an
+eligible zombie is within the existing 150-pixel radius, and a slower frost
+plume with readable outward movement and fade. The accepted Chill.5 proportions
+and published Chill.6 paint are preserved: all six sprite PNGs and the packed
+artwork header stay unchanged. The shared rig, centered packet/native card,
+original menus and absence of added challenge tips remain.
+
+A ready plant waits at counter 41 without a target, then begins a 40-tick
+wind-up when an eligible zombie enters range. Recheck eligibility during that
+wind-up and cancel if every target leaves. Pulses remain at least 400 ticks
+apart, with the existing 75-sun cost, 750-tick recharge, 150-tick slow and no
+damage. Stronger chill/freeze is preserved. Keep idle movement gentle, about
+one to two percent, ground-anchored and derived from the saved native carrier phase.
+
+Use the original Snow Pea puff artwork for the frost plume, with staggered
+outward movement over 55 ticks and a fading tail lasting 100 ticks in total
+(about one second at normal speed). Keep the 30-tick recoil separate from the
+longer visual tail. Preserve pause, 1x/2x speed, saved phase and native tint,
+filter, flash, blink/sleep and attachment ownership. Add no serialized fields,
+new plant/challenge IDs, gameplay HUD or new image-generated artwork.
+
+The exact parent is the published Chill.6 source ZIP, SHA-256
+`518d779b9948ac8a2d124db8f7929f13acf1121f38953d4ebee367518da17104`.
+Current source targets are [Chill.7 source](dist/source/pvz-portable-0.2.6-web-chill.7-source.zip),
+[full upstream patch](dist/source/web-chill.7.patch),
+[Chill.6 delta](dist/source/chill6-to-chill7.patch), and
+[pinned parent](dist/source/pvz-portable-0.2.6-web-chill.6-source.zip).
+All agent browser checks remain silent with `?testing=1`; normal-player audio
+and automatic saves remain available. Historical art prompts and inputs are
+retained; this motion/effect revision does not generate new plant or card art.
+
+Chill.7 local release gates pass on 2026-11-01. The coherent 113.347-second
+Release build retains all 780 source files unchanged while building. All 1,577
+native checks, fourteen browser integration suites and eleven worker scenarios
+pass with current source/harness pins. New coverage includes empty-lawn ready
+hold, exact range entry, interrupted wind-up/reacquisition, eligibility, unchanged
+cadence/slow, skipped long-cooldown scans, saved-phase grounded breathing and
+actual native puff centering, staggered travel, late visibility and fading.
+No new serialized fields or IDs are introduced. Original plant logic outside
+the reviewed custom update/pose hook remains byte-identical to the exact parent.
+
+All six artwork PNGs and the packed header are unchanged from Chill.6. Nine
+public artwork/metadata files and that header reproduce exactly. Both upstream
+and Chill.6 delta patches reconstruct all 780 source files. The current engine
+source ZIP has 812 entries and 9,257,802 bytes, SHA-256
+`450613f4d14df23380549081b154d40c11587151d37e749a74f5118a11534605`.
+
+The muted native review restored the existing Sun/Chill/Puff fixture and
+captured 74 full 1280x720 frames over 8.2 seconds. Sampled idle poses, two frost
+releases, outward plume travel and dissipation are coherent; there are no
+observed detached parts, plant seams, clipping or paint changes. Packet and
+centered native Bonus card remain consistent. Menu paused the game; the owned
+test tab and server were closed without reloading the user's public game tab.
+Empty-range gating is automated coverage, not a separate browser observation.
+This is not an earned win, full battle, every-frame/style equivalence or new
+save-transfer cycle. Final website-package identity, extracted-source check and
+hosting result are recorded by the publisher and matching Pages workflow.
+
+| Chill.7 evidence | Status |
+| --- | --- |
+| Coherent Release build, source count and artifact identities | PASS: 113.347 seconds, 780 source files; pinned JS/WASM in engine provenance |
+| Current native/source-harness checks and browser/worker suites | PASS: 1,577 source-coherent native checks; 14 integration suites and 11 worker scenarios |
+| Target-ready waiting, in-range wind-up, cancellation and pulse cadence | PASS: target/idle/plume production coverage and exact saved-layout/ID checks |
+| Ground-anchored saved-phase idle; frost travel, stagger, tail and fade | PASS: original six PNGs/header unchanged; nine public files and header reproduced |
+| Unchanged sprite PNG/header pixels, save layouts, IDs and original content | PASS: both patches reconstruct all 780 files; current source ZIP pinned above |
+| Full upstream and Chill.6 delta reconstruction; source ZIP identity | PASS within the 8.2-second muted fixture sample described above |
+| Bounded muted idle/target/attack/packet/card review and its limits | Final publisher receipt records package sizes and extracted-source check after packaging these docs |
+| Website packages, extracted-source check, matching Pages run and public bytes | See matching Pages run and final publisher receipt; local checks do not imply hosted success |
+
+## Historical Chill.6 final style pass — local verification, 2026-11-01
 
 Target `0.2.6-web-chill.6` refines the accepted Chill.5 character's painted
 finish: cap-spot contrast/size, shading, face and bounded eye patches. Preserve
@@ -19,7 +90,7 @@ Current corresponding-source targets are
 [Chill.5 delta](dist/source/chill5-to-chill6.patch), and
 [pinned parent](dist/source/pvz-portable-0.2.6-web-chill.5-source.zip).
 
-Chill.6 local release gates pass on 2026-11-01. The coherent 90.230-second
+Historical Chill.6 local release gates passed on 2026-11-01. The coherent 90.230-second
 Release build contains 780 source files. All 1,532 native production checks,
 fourteen browser integration suites and eleven worker scenarios pass. Independent
 parent comparisons retain every approved canonical and cap/body alpha byte and

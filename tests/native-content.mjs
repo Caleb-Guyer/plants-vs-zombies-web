@@ -17,12 +17,12 @@ new Function('module', 'exports', 'require', fs.readFileSync(new URL('vendor/jsz
 const JSZip = vendor.exports;
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
 const engine = JSON.parse(fs.readFileSync(new URL('game/engine-provenance.json', dist)));
-assert.equal(engine.id, '0.2.6-web-chill.6');
+assert.equal(engine.id, '0.2.6-web-chill.7');
 const current = await JSZip.loadAsync(fs.readFileSync(new URL(engine.artifacts.source, new URL('game/engine-provenance.json', dist))), {checkCRC32: true});
-const parentSourceBytes = fs.readFileSync(new URL('source/pvz-portable-0.2.6-web-chill.5-source.zip', dist));
-assert.equal(sha(parentSourceBytes), '8e97e5f49981a5e7a9a230e6651c586d6b9e3434ab22092dc30c7aa897d1c0ab', 'Parent is the exact published Chill.5 source');
+const parentSourceBytes = fs.readFileSync(new URL('source/pvz-portable-0.2.6-web-chill.6-source.zip', dist));
+assert.equal(sha(parentSourceBytes), '518d779b9948ac8a2d124db8f7929f13acf1121f38953d4ebee367518da17104', 'Parent is the exact published Chill.6 source');
 const parent = await JSZip.loadAsync(parentSourceBytes, {checkCRC32: true});
-const prefix = 'chill6-candidate/';
+const prefix = 'chill7-candidate/';
 const read = async name => {
   const entry = current.file(prefix + name);
   assert(entry, 'Missing current production source/test: ' + name);
@@ -45,7 +45,7 @@ for (const name of suites) {
   checks += result.checks;
   reports.set(name, result);
 }
-const parentBytes = async name => Buffer.from(await parent.file('chill5-candidate/source/' + name).async('uint8array'));
+const parentBytes = async name => Buffer.from(await parent.file('chill6-candidate/source/' + name).async('uint8array'));
 // SeedPacket.h also defines the serialized SeedBank class.
 for (const name of ['src/Lawn/SeedPacket.h', 'src/Lawn/Plant.h', 'src/Lawn/Zombie.h', 'src/Lawn/Challenge.h', 'src/Lawn/System/SaveGame.cpp', 'src/Lawn/System/PlayerInfo.h', 'src/Lawn/System/PlayerInfo.cpp', 'src/LawnApp.h', 'src/Lawn/System/ReanimationLawn.h']) {
   assert.deepEqual(await read('source/' + name), await parentBytes(name), 'Saved data layout/serialization must remain unchanged');
@@ -128,6 +128,17 @@ assert.equal(artRecord.plant.spriteOverride, 'chill-shroom/provenance.json');
 assert.deepEqual(artRecord.canvas, {width: 80, height: 65, heroCenterX: 40, heroCenterY: 32.5, maxHeroWidth: 68, maxHeroHeight: 57});
 assert.deepEqual(artRecord.cards.map(card => card.mode), [73, 74, 75]);
 assert.deepEqual(artRecord.cards.map(card => card.name), ['Cone Zone', 'Night Shift', 'Cold Front']);
+assert.equal(artRecord.animation.newGeneratedArtwork, false, 'Motion uses existing sprite/effect assets');
+assert.equal(artRecord.animation.idlePeriodSeconds, 2.4);
+assert.deepEqual(artRecord.animation.idleScaleX, [1, 1.012]);
+assert.deepEqual(artRecord.animation.idleScaleY, [0.98, 1]);
+assert.deepEqual(artRecord.animation.idleCapCompressionPixels, [0, 0.8]);
+for (const [name, expected] of Object.entries({windupTicks: 40, recoilTicks: 30, frostEffectTicks: 100,
+  frostTravelTicks: 55, targetRadiusPixels: 150})) assert.equal(artRecord.animation[name], expected);
+assert.deepEqual(artRecord.animation.nativeFrostAssets, [
+  {resource: 'IMAGE_SNOWPEA_PUFF', originalPath: 'particles/SnowPea_puff.png', sha256: '26e4fd3e388ddc1dfe5a1f7eddfdfc1fbd98850fc50716b57c7ceffce306d308'},
+  {resource: 'IMAGE_SNOWFLAKES', originalPath: 'particles/SnowFlakes.png', sha256: '864e8dddb14dd8fcff235d22f5c0d5a9c925aa5cf856f5c855b9a8dbe23a1f03'},
+], 'Frost provenance identifies the exact already-bundled original images');
 const renderer = (await read('source/src/Lawn/System/LanternShroom.cpp')).toString();
 assert(!/FrostShroomCap|BonusChallengeArt|DecodeBase64|png_image_|DecodeImage/.test(renderer), 'Current rendering cannot load the rejected generated artwork');
 assert(renderer.includes('#include "ChillShroomArt.h"') && renderer.includes('BindParts(native)'),
@@ -235,7 +246,8 @@ const generator = await read('source/artwork/chill-shroom/render.py');
 const approvedMasterSha = 'f861148f8c57bbee31595e8fd5692aa23c1282172ab0016a159adf406f2a373d';
 const closedMasterSha = 'dd28dbc58d7e8f27bf05ed2dd1842b397de829d6c9b5ed5790e2465058e358e7';
 const expectedCanonicalAlphaSha = '0b1b28aa8d5489fe16a29e90c42fd1fb478bfca59a8544c9496306d825383e8e';
-const expectedParentRgbaSha = 'c00b7d93e79d2fb8f39ea2dbddd178e02d040ac1f4fd2e8bb62f105502317fb7';
+const expectedApprovedRgbaSha = 'c00b7d93e79d2fb8f39ea2dbddd178e02d040ac1f4fd2e8bb62f105502317fb7';
+const expectedParentRgbaSha = '4aed41439898a5f777b5ccefeb97c87a96bdd81f6b3b1ece0ac7541339378eae';
 const expectedParentAlphaSha = {
   cap: 'f1192c2237b44d213838d4bb2d0fc0341281f35331c5b38a029ddf73d2380dfb',
   body: '500cd27bdd00b855b9da91af9964be82eb6a74d2ccba83406aa1d5433a3ae410',
@@ -275,7 +287,7 @@ for (const name of ['cap', 'body', 'base']) {
     rgba.copy(parentNeutral, offset, offset, offset + 4);
   }
 }
-assert.equal(sha(parentNeutral), expectedParentRgbaSha, 'Pinned parent parts reconstruct the accepted whole-character pixels');
+assert.equal(sha(parentNeutral), expectedParentRgbaSha, 'Pinned parent parts reconstruct the reviewed final paint');
 assert.equal(sha(alphaBytes(parentNeutral)), expectedCanonicalAlphaSha, 'Approved whole-character alpha was independently derived');
 async function sourcePngBase64(name) {
   const encodedBytes = await read('source/artwork/chill-shroom/' + name);
@@ -300,7 +312,7 @@ assert.equal(artwork.approvedMasterSha256, approvedMasterSha);
 assert.equal(artwork.closedMasterSha256, closedMasterSha);
 assert.equal(artwork.paintedMasterSha256, paintedMasterSha);
 assert.equal(artwork.paintedClosedMasterSha256, paintedClosedMasterSha);
-assert.equal(artwork.approvedCanonicalRgbaSha256, expectedParentRgbaSha);
+assert.equal(artwork.approvedCanonicalRgbaSha256, expectedApprovedRgbaSha);
 assert.equal(artwork.canonicalAlphaSha256, expectedCanonicalAlphaSha);
 assert.equal(artwork.canonicalRgbaSha256, expectedCanonicalRgbaSha);
 assert.equal(sha(headerBytes), artwork.headerSha256);
@@ -340,21 +352,46 @@ assert.deepEqual(fs.readFileSync(new URL('generation.json', artworkUrl)), genera
 
 const sourceManifest = JSON.parse(await read('source-manifest.json'));
 assert.equal(sourceManifest.version, engine.id);
-// This release repaints an existing rig. Every engine/dependency/source byte
-// outside the art directory, packed pixel header and version must be unchanged.
-const repaintInputs = name => name === 'CMake/ProjectVersion.cmake' ||
-  name === 'src/Lawn/System/ChillShroomArt.h' || name.startsWith('artwork/chill-shroom/');
+// Motion and target gating are confined to the custom plant's three runtime
+// files. Save layouts, engine/dependency code, other content and sprite inputs
+// remain the exact published parent bytes. Only release identity may change in
+// the artwork packer's otherwise unchanged deterministic source.
+const runtimeInputs = new Set(['src/Lawn/System/LanternShroom.h',
+  'src/Lawn/System/LanternShroom.cpp', 'src/Lawn/Plant.cpp']);
+const releaseIdentityInputs = new Set(['CMake/ProjectVersion.cmake', 'artwork/chill-shroom/render.py']);
 for (const entry of Object.values(parent.files)) {
-  if (entry.dir || !entry.name.startsWith('chill5-candidate/source/')) continue;
-  const name = entry.name.slice('chill5-candidate/source/'.length);
-  if (repaintInputs(name)) continue;
-  assert.deepEqual(await read('source/' + name), Buffer.from(await entry.async('uint8array')),
-    'A finish-only pass preserves all other engine/dependency bytes: ' + name);
+  if (entry.dir || !entry.name.startsWith('chill6-candidate/source/')) continue;
+  const name = entry.name.slice('chill6-candidate/source/'.length);
+  if (runtimeInputs.has(name)) continue;
+  const before = Buffer.from(await entry.async('uint8array'));
+  const after = await read('source/' + name);
+  if (releaseIdentityInputs.has(name)) {
+    assert.equal(after.toString().replaceAll('0.2.6-web-chill.7', '0.2.6-web-chill.6'), before.toString(),
+      'Only the release identity may change in metadata source: ' + name);
+  } else assert.deepEqual(after, before, 'Motion pass preserves unrelated engine/content/art bytes: ' + name);
 }
-for (const name of Object.keys(sourceManifest.files)) {
-  if (!repaintInputs(name)) assert(parent.file('chill5-candidate/source/' + name),
-    'A finish-only pass does not add unrelated production source: ' + name);
+for (const name of Object.keys(sourceManifest.files)) assert(parent.file('chill6-candidate/source/' + name),
+  'Motion pass adds no unrelated production source: ' + name);
+// Plant.cpp is shared with all original plants. Its only edits are the custom
+// ability implementation and its existing custom pose call in UpdateReanim.
+function omitFunction(text, signature) {
+  const start = text.indexOf(signature);
+  assert(start >= 0 && text.indexOf(signature, start + signature.length) < 0, 'Unique custom ability implementation');
+  let cursor = text.indexOf('{', start), depth = 1;
+  assert(cursor > start);
+  while (depth && ++cursor < text.length) depth += Number(text[cursor] === '{') - Number(text[cursor] === '}');
+  assert.equal(depth, 0);
+  return text.slice(0, start) + text.slice(cursor + 1);
 }
+const originalPlant = (await parentBytes('src/Lawn/Plant.cpp')).toString();
+const currentPlant = (await read('source/src/Lawn/Plant.cpp')).toString();
+const oldPoseCall = 'LanternShroom::GetAttackPose(mStateCountdown, mDoSpecialCountdown)';
+const newPoseCall = 'LanternShroom::GetPlantPose(mStateCountdown, mDoSpecialCountdown, aBodyReanim->mAnimTime)';
+assert.equal(currentPlant.split(newPoseCall).length, 2, 'One existing custom pose hook gains the native idle clock');
+assert.equal(omitFunction(currentPlant.replace(newPoseCall, oldPoseCall), 'void UpdateLanternShroom(Plant& plant)'),
+  omitFunction(originalPlant, 'void UpdateLanternShroom(Plant& plant)'),
+  'Every byte outside the custom ability and existing custom pose hook remains unchanged in shared Plant.cpp');
+
 
 for (const name of ['src/Lawn/System/ChillShroomArt.h', 'artwork/chill-shroom/extraction.json', 'artwork/chill-shroom/generation.json', 'artwork/chill-shroom/render.py', 'artwork/chill-shroom/approved-master.png.base64.txt', 'artwork/chill-shroom/closed-master.png.base64.txt', 'artwork/chill-shroom/painted-master.png.base64.txt', 'artwork/chill-shroom/painted-closed-master.png.base64.txt', 'artwork/chill-shroom/painted-base.png.base64.txt']) {
   const bytes = await read('source/' + name), pin = sourceManifest.files[name];
@@ -371,21 +408,9 @@ assert.equal(sha(canonicalPng), artwork.canonicalPngSha256, 'Canonical PNG byte 
 const canonical = decodeRgbaPng(canonicalPng);
 assert.deepEqual([canonical.width, canonical.height], [80, 80]);
 assert.equal(sha(canonical.rgba), expectedCanonicalRgbaSha, 'Canonical pixels match the reviewed final paint');
-assert.notEqual(sha(canonical.rgba), expectedParentRgbaSha, 'The final style pass changes actual paint');
+assert.equal(sha(canonical.rgba), expectedParentRgbaSha, 'Motion pass preserves the exact reviewed parent paint');
 assert.equal(sha(alphaBytes(canonical.rgba)), expectedCanonicalAlphaSha, 'New paint preserves every approved whole-character alpha byte');
 assert.deepEqual(alphaBytes(canonical.rgba), alphaBytes(parentNeutral), 'New paint retains the exact parent silhouette, not only matching bounds');
-// Independently normalized from the immutable painted master using the same
-// full-canvas Lanczos placement described above (without importing render.py).
-// These are all pixels where parent alpha >=240 and generated alpha <240.
-const generatedEdgeFallbackPixels = new Set([1336, 1903, 1984, 2226, 2387, 2468, 2631, 2712, 2793, 2874, 2955, 3116, 3196, 3357, 3437, 3596, 3676, 3755, 3913, 4069, 4146, 4220, 4221, 4620, 5180]);
-for (let offset = 0; offset < canonical.rgba.length; offset += 4) {
-  if (parentNeutral[offset + 3] < 240 || generatedEdgeFallbackPixels.has(offset / 4)) {
-    assert.deepEqual(canonical.rgba.subarray(offset, offset + 4), parentNeutral.subarray(offset, offset + 4),
-      'Original contour RGB is retained when approved or generated coverage is below 240');
-  }
-}
-
-
 const names = ['cap', 'body', 'base', 'blink1', 'blink2'];
 assert.deepEqual(Object.keys(artwork.parts).sort(), [...names].sort());
 const decodedParts = new Map();
@@ -399,7 +424,8 @@ for (const name of names) {
   assert.equal(sha(decoded.rgba), pin.rgbaSha256, 'Decoded pixel pin: ' + name);
   const rgba = packedRgba(header, name);
   const parentMask = parentMasks.get(name === 'blink1' || name === 'blink2' ? 'body' : name);
-  assert.deepEqual(alphaBytes(rgba), parentMask, 'New paint preserves the exact approved part geometry: ' + name);
+  assert.deepEqual(alphaBytes(rgba), parentMask, 'Motion preserves the exact approved part geometry: ' + name);
+  assert.deepEqual(rgba, packedRgba(parentArtHeader, name), 'Motion preserves every reviewed runtime sprite pixel: ' + name);
   assert.deepEqual(decoded.rgba, rgba, 'Public PNG and embedded runtime artwork are pixel-identical: ' + name);
   for (let offset = 0; offset < rgba.length; offset += 4) {
     if (rgba[offset + 3] === 0) assert.equal(rgba.readUInt32BE(offset), 0, 'Transparent registered pixels have no hidden RGB: ' + name);
@@ -444,7 +470,7 @@ for (let y = 0; y < 80; y++) for (let x = 0; x < 80; x++) {
   else if (differs) changedPerEye[eyeIndex]++;
 }
 for (const changed of changedPerEye) assert(changed > 5, 'Both eyes have an actual expression change');
-console.log('PASS exact parent alpha/part geometry, reviewed paint pins, independent PNG/runtime pixels, neutral reconstruction, fixed-alpha eye-only expressions and native cards without standalone generated illustrations.');
+console.log('PASS exact parent sprite pixels/geometry, scoped custom motion/target code, independent PNG/runtime pixels, neutral reconstruction, fixed-alpha eye-only expressions and native cards without standalone generated illustrations.');
 
 
 if (process.argv.includes('--run-native')) {

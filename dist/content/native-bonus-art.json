@@ -8,7 +8,7 @@
     "displayName": "Chill-shroom",
     "nativeReanimation": "REANIM_ICESHROOM",
     "spriteOverride": "chill-shroom/provenance.json",
-    "scope": "Final painted finish on the exact approved Chill.5 silhouette and cap/body partition. All parts retain shared scale and placement; Ice is an invisible clock carrier. Actual shared DrawRig renders the packet, lawn and card."
+    "scope": "The accepted Chill.6 painted sprite and exact shared geometry are unchanged. Chill.7 adds saved-phase, ground-anchored breathing and target-aware wind-up while the same DrawRig renders the lawn, packet and card. Ice remains an invisible animation/save carrier."
   },
   "cards": [
     {
@@ -39,5 +39,39 @@
     "maxHeroHeight": 57
   },
   "historicalArt": "Chill.4 assembled-part proportions were rejected. The approved Chill.5 whole-character geometry is retained byte-for-byte in all alpha masks; Chill.6 refines surface painting only. Cards still compose actual game sprites; no standalone generated challenge illustration is used.",
-  "standaloneChallengeIllustrations": false
+  "standaloneChallengeIllustrations": false,
+  "animation": {
+    "idlePeriodSeconds": 2.4,
+    "idleScaleX": [
+      1.0,
+      1.012
+    ],
+    "idleScaleY": [
+      0.98,
+      1.0
+    ],
+    "idleCapCompressionPixels": [
+      0.0,
+      0.8
+    ],
+    "windupTicks": 40,
+    "recoilTicks": 30,
+    "frostEffectTicks": 100,
+    "frostTravelTicks": 55,
+    "targetRadiusPixels": 150,
+    "nativeFrostAssets": [
+      {
+        "resource": "IMAGE_SNOWPEA_PUFF",
+        "originalPath": "particles/SnowPea_puff.png",
+        "sha256": "26e4fd3e388ddc1dfe5a1f7eddfdfc1fbd98850fc50716b57c7ceffce306d308"
+      },
+      {
+        "resource": "IMAGE_SNOWFLAKES",
+        "originalPath": "particles/SnowFlakes.png",
+        "sha256": "864e8dddb14dd8fcff235d22f5c0d5a9c925aa5cf856f5c855b9a8dbe23a1f03"
+      }
+    ],
+    "newGeneratedArtwork": false,
+    "mechanics": "Release-time radial slow, no damage or delayed projectile hit; native puffs are the visual plume."
+  }
 }

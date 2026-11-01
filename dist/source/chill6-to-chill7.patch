@@ -1,0 +1,317 @@
+--- a/CMake/ProjectVersion.cmake
++++ b/CMake/ProjectVersion.cmake
+@@ -66,6 +66,6 @@
+ endif()
+ 
+ # Browser release identity; keep binary and corresponding-source manifests aligned.
+-set(PVZP_VERSION "0.2.6-web-chill.6")
++set(PVZP_VERSION "0.2.6-web-chill.7")
+ set(PVZP_VERSION_PLAIN "0.2.6")
+ configure_file("${PROJECT_SOURCE_DIR}/CMake/ProjectVersion.h.in" "${PROJECT_BINARY_DIR}/ProjectVersion.h" @ONLY)
+--- a/artwork/chill-shroom/render.py
++++ b/artwork/chill-shroom/render.py
+@@ -136,7 +136,7 @@
+         records[key]={'width':img.width,'height':img.height,'pngSha256':sha(target.read_bytes()),'rgbaSha256':sha(rgba)}
+     header.append('}');args.header.parent.mkdir(parents=True,exist_ok=True)
+     args.header.write_text('\n'.join(header)+'\n',encoding='utf-8',newline='\n')
+-    manifest={'schema':2,'version':'0.2.6-web-chill.6',
++    manifest={'schema':2,'version':'0.2.6-web-chill.7',
+         'method':'Approved silhouette with a painted finish and registered shared-canvas layers',
+         'imageGenerationUsed':True,'standaloneChallengeIllustrations':False,'pillowVersion':PILLOW_VERSION,
+         'approvedMasterSha256':sha(master_raw),'closedMasterSha256':sha(historical_closed_raw),
+--- a/src/Lawn/Plant.cpp
++++ b/src/Lawn/Plant.cpp
+@@ -2521,18 +2521,32 @@
+         plant.mPlantHealth < 0 || plant.mIsAsleep || plant.mSquished ||
+         plant.mOnBungeeState != NOT_ON_BUNGEE)
+         return;
+-    if (!LanternShroom::AdvancePulse(plant.mStateCountdown, plant.mDoSpecialCountdown))
+-        return;
+-
+-    for (Zombie* zombie : plant.mBoard->mZombies)
++    const auto canTarget = [&plant](Zombie* zombie)
+     {
+         if (!zombie->IsOnBoard() || zombie->IsDeadOrDying() || zombie->mMindControlled ||
+             zombie->IsFlying() || !zombie->CanBeChilled() || !zombie->CanBeFrozen())
+-            continue;
++            return false;
+         const Rect bounds = zombie->GetZombieRect();
+         const float dx = bounds.mX + bounds.mWidth * 0.5f - (plant.mX + 40.0f);
+         const float dy = bounds.mY + bounds.mHeight * 0.5f - (plant.mY + 40.0f);
+-        if (!LanternShroom::InRange(dx, dy))
++        return LanternShroom::InRange(dx, dy);
++    };
++    bool hasTarget = false;
++    // Target presence cannot affect the long recharge portion of the cycle.
++    // Only scan when a shot can begin or a wind-up needs to be revalidated.
++    if (plant.mStateCountdown <= LanternShroom::kReadyCountdown)
++        for (Zombie* zombie : plant.mBoard->mZombies)
++            if (canTarget(zombie))
++            {
++                hasTarget = true;
++                break;
++            }
++    if (!LanternShroom::AdvancePulse(plant.mStateCountdown, plant.mDoSpecialCountdown, hasTarget))
++        return;
++
++    for (Zombie* zombie : plant.mBoard->mZombies)
++    {
++        if (!canTarget(zombie))
+             continue;
+         const int previousChill = zombie->mChilledCounter;
+         zombie->ApplyChill(false);
+@@ -2887,7 +2901,7 @@
+ 
+     if (mSeedType == SEED_LANTERNSHROOM && !mIsAsleep && !mSquished && mOnBungeeState == NOT_ON_BUNGEE)
+     {
+-        const LanternShroom::AttackPose pose = LanternShroom::GetAttackPose(mStateCountdown, mDoSpecialCountdown);
++        const LanternShroom::AttackPose pose = LanternShroom::GetPlantPose(mStateCountdown, mDoSpecialCountdown, aBodyReanim->mAnimTime);
+         aOffsetX += pose.offsetX * aScaleX;
+         aOffsetY += pose.offsetY * aScaleY;
+         aScaleX *= pose.scaleX;
+--- a/src/Lawn/System/LanternShroom.cpp
++++ b/src/Lawn/System/LanternShroom.cpp
+@@ -280,7 +280,7 @@
+     {
+         motion = GetPartMotion(plant.mStateCountdown, plant.mDoSpecialCountdown);
+         if (GetAttackPhase(plant.mStateCountdown, plant.mDoSpecialCountdown) == AttackPhase::Idle)
+-            motion.capY = 0.175f * (1.0f - std::cos(carrier.mAnimTime * 6.28318530718f));
++            motion = GetIdlePartMotion(carrier.mAnimTime);
+     }
+     DrawRig(graphics, carrier, GetPlantBodyExpression(plant, carrier), motion);
+ }
+@@ -294,6 +294,11 @@
+         GetAttackPhase(plant.mStateCountdown, plant.mDoSpecialCountdown) == AttackPhase::Windup;
+     const char* layer = plant.mIsAsleep || winding ? "anim_sleep" : "anim_idle";
+     if (!body->IsAnimPlaying(layer)) body->PlayReanim(layer, REANIM_LOOP, 6, 12.0f);
++    // The invisible carrier's native saved phase is also the breathing clock.
++    // Reanimation advances by seconds * rate / frameCount, giving a calm loop
++    // independent of how many frames the original idle layer contains.
++    const bool breathing = !plant.mIsAsleep && !winding && plant.mOnBungeeState == NOT_ON_BUNGEE;
++    body->mAnimRate = breathing ? std::max(1, body->mFrameCount) / kIdlePeriodSeconds : 12.0f;
+     if (winding)
+     {
+         plant.EndBlink();
+@@ -325,7 +330,7 @@
+         if (plant.mBlinkCountdown <= 0) plant.mBlinkCountdown = 400;
+         if (!plant.mIsAsleep && plant.mOnBungeeState == NOT_ON_BUNGEE)
+         {
+-            const AttackPose pose = GetAttackPose(plant.mStateCountdown, plant.mDoSpecialCountdown);
++            const AttackPose pose = GetPlantPose(plant.mStateCountdown, plant.mDoSpecialCountdown, body->mAnimTime);
+             body->SetPosition(pose.offsetX, offsetY + pose.offsetY);
+             body->OverrideScale(pose.scaleX, pose.scaleY);
+         }
+@@ -336,7 +341,7 @@
+     {
+         // Refresh older saved squash poses before the first paused draw.
+         const float offsetY = PlantDrawHeightOffset(plant.mBoard, &plant, plant.mSeedType, plant.mPlantCol, plant.mRow);
+-        const AttackPose pose = GetAttackPose(plant.mStateCountdown, plant.mDoSpecialCountdown);
++        const AttackPose pose = GetPlantPose(plant.mStateCountdown, plant.mDoSpecialCountdown, body->mAnimTime);
+         body->SetPosition(plant.mShakeOffsetX + pose.offsetX, offsetY + pose.offsetY);
+         body->OverrideScale(pose.scaleX, pose.scaleY);
+     }
+@@ -383,7 +388,7 @@
+ {
+     if (plant.mDead || plant.mPlantHealth < 0 || plant.mSquished || plant.mIsAsleep || plant.mOnBungeeState != NOT_ON_BUNGEE) return;
+     const AttackPhase phase = GetAttackPhase(plant.mStateCountdown, plant.mDoSpecialCountdown);
+-    if (phase == AttackPhase::Idle) return;
++    if (phase != AttackPhase::Windup && plant.mDoSpecialCountdown <= 0) return;
+     Sexy::Graphics frost(*graphics);
+     // Keep transient frost on the lawn, clear of the seed bank and menu.
+     frost.ClipRect(-plant.mX, 80 - plant.mY, 800, 520);
+@@ -393,30 +398,42 @@
+         {1,0},{0.8660254f,0.5f},{0.5f,0.8660254f},{0,1},{-0.5f,0.8660254f},{-0.8660254f,0.5f},
+         {-1,0},{-0.8660254f,-0.5f},{-0.5f,-0.8660254f},{0,-1},{0.5f,-0.8660254f},{0.8660254f,-0.5f}
+     };
++    const auto drawCel = [&frost](Sexy::Image* image, float centerX, float centerY, int cel, float scale)
++    {
++        if (!image) return;
++        // This helper takes the unscaled cel's top-left even though its name
++        // contains Center. Anchor every tuft to the actual radial origin.
++        PvzpDrawImageCelCenterScaledF(&frost, image,
++            centerX - image->GetCelWidth() * 0.5f, centerY - image->GetCelHeight() * 0.5f,
++            cel, scale, scale);
++    };
+     if (phase == AttackPhase::Windup)
+     {
+         const float progress = (kWindupTicks - plant.mStateCountdown) / static_cast<float>(kWindupTicks);
+         const float radius = 20.0f - 14.0f * progress;
+-        frost.SetColor(Sexy::Color(210, 240, 255, 80 + static_cast<int>(progress * 100.0f)));
++        frost.SetColor(Sexy::Color(225, 245, 255, 50 + static_cast<int>(progress * 70.0f)));
+         if (Sexy::IMAGE_SNOWFLAKES)
+             for (int i = 0; i < 12; i += 3)
+-                PvzpDrawImageCelCenterScaledF(&frost, Sexy::IMAGE_SNOWFLAKES, 40.0f + directions[i].x * radius,
+-                    32.0f + offsetY + directions[i].y * radius * 0.65f, i % 3, 0.35f, 0.35f);
++                drawCel(Sexy::IMAGE_SNOWFLAKES, 40.0f + directions[i].x * radius,
++                    36.0f + offsetY + directions[i].y * radius * 0.65f, (i / 3) % 3, 0.35f);
+         return;
+     }
+-    const float progress = 1.0f - std::clamp(plant.mDoSpecialCountdown, 0, kPulseFrames) / static_cast<float>(kPulseFrames);
+-    const float radius = 18.0f + (kRadius - 18.0f) * progress * (2.0f - progress);
+-    frost.SetColor(Sexy::Color(210, 240, 255, static_cast<int>((1.0f - progress) * 200.0f)));
++    // Native snowpea clouds carry the plume. Staggered emission, slower eased
++    // travel and a long fade read as drifting frost rather than a fast ring of
++    // snowflake icons. The existing radial chill remains a release-time pulse.
+     for (int i = 0; i < 12; ++i)
+     {
+-        const float distance = radius * (0.82f + (i % 3) * 0.09f);
+-        if (Sexy::IMAGE_SNOWFLAKES)
+-            PvzpDrawImageCelCenterScaledF(&frost, Sexy::IMAGE_SNOWFLAKES, 40.0f + directions[i].x * distance,
+-                40.0f + offsetY + directions[i].y * distance, i % 3, 0.45f + progress * 0.15f, 0.45f + progress * 0.15f);
+-        if (i % 2 == 0 && Sexy::IMAGE_SNOWPEA_PUFF)
+-            PvzpDrawImageCelCenterScaledF(&frost, Sexy::IMAGE_SNOWPEA_PUFF, 40.0f + directions[i].x * radius * 0.7f,
+-                40.0f + offsetY + directions[i].y * radius * 0.7f, std::min(5, static_cast<int>(progress * 6)),
+-                0.60f + progress * 0.25f, 0.60f + progress * 0.25f);
+-    }
+-}
+-}
++        const FrostTuft tuft = GetFrostTuft(plant.mDoSpecialCountdown, i);
++        if (tuft.alpha <= 0) continue;
++        const float centerX = 40.0f + directions[i].x * tuft.distance;
++        const float centerY = 40.0f + offsetY + directions[i].y * tuft.distance;
++        frost.SetColor(Sexy::Color(215, 240, 255, tuft.alpha));
++        drawCel(Sexy::IMAGE_SNOWPEA_PUFF, centerX, centerY, tuft.cel, tuft.scale);
++        if (i % 3 == 0)
++        {
++            frost.SetColor(Sexy::Color(230, 248, 255, tuft.alpha / 2));
++            drawCel(Sexy::IMAGE_SNOWFLAKES, centerX, centerY, (i / 3) % 3, 0.30f);
++        }
++    }
++}
++}
+--- a/src/Lawn/System/LanternShroom.h
++++ b/src/Lawn/System/LanternShroom.h
+@@ -1,6 +1,8 @@
+ // SPDX-License-Identifier: LGPL-3.0-or-later
+ #pragma once
+ #include "../../ConstEnums.h"
++#include <algorithm>
++#include <cmath>
+ 
+ namespace Sexy { class Image; class Graphics; }
+ class Plant;
+@@ -35,8 +37,11 @@
+ inline constexpr int kPulseInterval = 400;
+ inline constexpr int kSlowDuration = 150;
+ inline constexpr int kRadius = 150;
+-inline constexpr int kPulseFrames = 30;
++inline constexpr int kPulseFrames = 100;
++inline constexpr int kRecoilTicks = 30;
+ inline constexpr int kWindupTicks = 40;
++inline constexpr int kReadyCountdown = kWindupTicks + 1;
++inline constexpr float kIdlePeriodSeconds = 2.4f;
+ 
+ enum class AttackPhase { Idle, Windup, Release };
+ struct AttackPose
+@@ -48,7 +53,8 @@
+ };
+ constexpr AttackPhase GetAttackPhase(int cooldown, int glow)
+ {
+-    if (glow > 0) return AttackPhase::Release;
++    // The plume outlives the recoil; breathing resumes while the mist fades.
++    if (glow > kPulseFrames - kRecoilTicks) return AttackPhase::Release;
+     if (cooldown > 0 && cooldown <= kWindupTicks) return AttackPhase::Windup;
+     return AttackPhase::Idle;
+ }
+@@ -64,8 +70,7 @@
+     }
+     else if (GetAttackPhase(cooldown, glow) == AttackPhase::Release)
+     {
+-        const int remaining = glow > kPulseFrames ? kPulseFrames : glow;
+-        const float progress = 1.0f - remaining / static_cast<float>(kPulseFrames);
++        const float progress = std::clamp(kPulseFrames - glow, 0, kRecoilTicks) / static_cast<float>(kRecoilTicks);
+         if (progress < 1.0f / 3.0f)
+         {
+             const float amount = Ease(progress * 3.0f);
+@@ -84,6 +89,31 @@
+     return pose;
+ }
+ 
++inline AttackPose GetIdlePose(float animTime)
++{
++    AttackPose pose;
++    const float breath = 0.5f - 0.5f * std::cos(animTime * 6.28318530718f);
++    pose.scaleX = 1.0f + 0.012f * breath;
++    pose.scaleY = 1.0f - 0.020f * breath;
++    // Squash around the body's ground contact instead of bobbing off the lawn.
++    pose.offsetX = 40.0f * (1.0f - pose.scaleX);
++    pose.offsetY = 72.0f * (1.0f - pose.scaleY);
++    return pose;
++}
++
++inline AttackPose GetPlantPose(int cooldown, int glow, float animTime)
++{
++    return GetAttackPhase(cooldown, glow) == AttackPhase::Idle ? GetIdlePose(animTime) : GetAttackPose(cooldown, glow);
++}
++
++inline PartMotion GetIdlePartMotion(float animTime)
++{
++    PartMotion motion;
++    // A little cap compression is visible at native size and never opens a seam.
++    motion.capY = 0.4f * (1.0f - std::cos(animTime * 6.28318530718f));
++    return motion;
++}
++
+ constexpr PartMotion GetPartMotion(int cooldown, int glow)
+ {
+     PartMotion motion;
+@@ -94,8 +124,7 @@
+     }
+     else if (GetAttackPhase(cooldown, glow) == AttackPhase::Release)
+     {
+-        const int remaining = glow > kPulseFrames ? kPulseFrames : glow;
+-        const float progress = 1.0f - remaining / static_cast<float>(kPulseFrames);
++        const float progress = std::clamp(kPulseFrames - glow, 0, kRecoilTicks) / static_cast<float>(kRecoilTicks);
+         if (progress < 0.4f)
+         {
+             const float amount = Ease(progress / 0.4f);
+@@ -110,14 +139,48 @@
+     return motion;
+ }
+ 
+-constexpr bool AdvancePulse(int& cooldown, int& glow)
++constexpr bool AdvancePulse(int& cooldown, int& glow, bool hasTarget)
+ {
+     if (glow > 0) --glow;
++    // Let the cooldown expire on an empty lawn, but reserve the wind-up for an
++    // actual target. Recheck each tick so a departing target cancels the shot.
++    if (!hasTarget && cooldown <= kReadyCountdown)
++    {
++        cooldown = kReadyCountdown;
++        return false;
++    }
+     if (cooldown > 0) --cooldown;
+     if (cooldown != 0) return false;
+     cooldown = kPulseInterval;
+     glow = kPulseFrames;
+     return true;
++}
++
++struct FrostTuft
++{
++    float distance = 0.0f;
++    float scale = 0.0f;
++    int alpha = 0;
++    int cel = 0;
++};
++
++constexpr FrostTuft GetFrostTuft(int glow, int index)
++{
++    FrostTuft tuft;
++    if (index < 0 || index >= 12 || glow <= 0) return tuft;
++    const int age = kPulseFrames - std::clamp(glow, 0, kPulseFrames);
++    const int delay = (index % 3) * 6;
++    const int localAge = age - delay;
++    const int life = kPulseFrames - delay;
++    if (localAge <= 0 || localAge >= life) return tuft;
++    const float travel = Ease(std::clamp(localAge / 55.0f, 0.0f, 1.0f));
++    const float fadeIn = std::clamp(localAge / 6.0f, 0.0f, 1.0f);
++    const float fadeOut = 1.0f - Ease(std::clamp((localAge - 45.0f) / (life - 45.0f), 0.0f, 1.0f));
++    tuft.distance = 12.0f + (kRadius - 12.0f) * travel;
++    tuft.scale = 0.35f + 0.25f * Ease(std::clamp(localAge / 55.0f, 0.0f, 1.0f));
++    tuft.alpha = static_cast<int>(160.0f * fadeIn * fadeOut);
++    tuft.cel = std::min(5, localAge / 16);
++    return tuft;
+ }
+ constexpr bool InRange(float dx, float dy)
+ {

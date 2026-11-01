@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-chill.6
-Refines Chill-shroom paint and expression while retaining the approved whole-character shape, registered layers and shared plant/packet/card rig. Native timing, radial slow and saved layouts are retained.
-Engine JavaScript SHA-256: 4dae3958eff86b0d1a147f8ca99af745f957f7a2335c6c9a41cc848d81fc6a2d
-Engine WASM SHA-256: 95cf82928f97a36e28bc19cabd971baad362529faf33ed1a1fe482a04c65aa25
+PvZ-Portable 0.2.6-web-chill.7
+Adds a restrained idle animation, target-gated attacks and a slower native-style frost effect while retaining the approved artwork, registered rig, radial slow and saved layouts.
+Engine JavaScript SHA-256: 65b1d3545c1b70b274cec39f3bb7a56ee279bd3dbb7636873aa7d9c6c7db017e
+Engine WASM SHA-256: 6603c200aaa2e4541bfa42c0123443f704e02e6c5a96230c4657b260ee39fa3d
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.

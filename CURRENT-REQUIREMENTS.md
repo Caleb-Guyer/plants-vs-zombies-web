@@ -6,9 +6,81 @@ Updated 2026-11-01. This records the latest human clarification for continued wo
 
 The user directed us on 2026-10-31 to stop manual gameplay and wrap the current build for GitHub commit/push and GitHub Pages unless a known defect blocks release. Target `Caleb-Guyer/plants-vs-zombies-web`; normal Play URL: https://caleb-guyer.github.io/plants-vs-zombies-web/. Publish the reviewed current build while preserving truthful unverified-parity limits. Additional manual gameplay and completion of the full parity goal are not release gates. Keep testing silent with `?testing=1`; normal-player audio remains available.
 
-Publication status before this pass: Chill.5 was published to [GitHub Pages](https://caleb-guyer.github.io/plants-vs-zombies-web/) from commit `b8c2049da83ed3850e9c31c78e5c55ea6d59fea8` by successful [workflow 41279145103](https://github.com/Caleb-Guyer/plants-vs-zombies-web/actions/runs/41279145103). That historical deployment does not establish Chill.6 publication or full parity.
+The last verified publication before this pass is Chill.6 commit
+`3dfc2e9952961fa6b02c63a6fa8aebe0f016fd55`, deployed by successful
+[workflow 41325541238](https://github.com/Caleb-Guyer/plants-vs-zombies-web/actions/runs/41325541238).
+That result does not establish Chill.7 publication or full parity.
 
-## Chill.6 final painted style pass, 2026-11-01
+## Chill.7 idle, target activation and frost request, 2026-11-01
+
+The user reports that Chill-shroom needs an idle animation, should attack only
+when zombies are in range, and emits frost too quickly with an abrupt disappearance.
+The current task is to correct those observed behaviors while retaining the
+accepted appearance and original game's restrained presentation.
+
+Target `0.2.6-web-chill.7` adds gentle idle breathing, attacks only while an
+eligible zombie is within the existing 150-pixel radius, and a slower frost
+plume with readable outward movement and fade. The accepted Chill.5 proportions
+and published Chill.6 paint are preserved: all six sprite PNGs and the packed
+artwork header stay unchanged. The shared rig, centered packet/native card,
+original menus and absence of added challenge tips remain.
+
+A ready plant waits at counter 41 without a target, then begins a 40-tick
+wind-up when an eligible zombie enters range. Recheck eligibility during that
+wind-up and cancel if every target leaves. Pulses remain at least 400 ticks
+apart, with the existing 75-sun cost, 750-tick recharge, 150-tick slow and no
+damage. Stronger chill/freeze is preserved. Keep idle movement gentle, about
+one to two percent, ground-anchored and derived from the saved native carrier phase.
+
+Use the original Snow Pea puff artwork for the frost plume, with staggered
+outward movement over 55 ticks and a fading tail lasting 100 ticks in total
+(about one second at normal speed). Keep the 30-tick recoil separate from the
+longer visual tail. Preserve pause, 1x/2x speed, saved phase and native tint,
+filter, flash, blink/sleep and attachment ownership. Add no serialized fields,
+new plant/challenge IDs, gameplay HUD or new image-generated artwork.
+
+The exact parent is the published Chill.6 source ZIP, SHA-256
+`518d779b9948ac8a2d124db8f7929f13acf1121f38953d4ebee367518da17104`.
+Current source targets are [Chill.7 source](dist/source/pvz-portable-0.2.6-web-chill.7-source.zip),
+[full upstream patch](dist/source/web-chill.7.patch),
+[Chill.6 delta](dist/source/chill6-to-chill7.patch), and
+[pinned parent](dist/source/pvz-portable-0.2.6-web-chill.6-source.zip).
+All agent browser checks remain silent with `?testing=1`; normal-player audio
+and automatic saves remain available. Historical art prompts and inputs are
+retained; this motion/effect revision does not generate new plant or card art.
+
+[Scoped current work](CHILL-REVISION-GOAL.md) records the acceptance criteria.
+The older formal parity goal remains paused; this task does not complete,
+replace or resume that historical goal.
+
+Chill.7 local release gates pass on 2026-11-01. The coherent 113.347-second
+Release build retains all 780 source files unchanged while building. All 1,577
+native checks, fourteen browser integration suites and eleven worker scenarios
+pass with current source/harness pins. New coverage includes empty-lawn ready
+hold, exact range entry, interrupted wind-up/reacquisition, eligibility, unchanged
+cadence/slow, skipped long-cooldown scans, saved-phase grounded breathing and
+actual native puff centering, staggered travel, late visibility and fading.
+No new serialized fields or IDs are introduced. Original plant logic outside
+the reviewed custom update/pose hook remains byte-identical to the exact parent.
+
+All six artwork PNGs and the packed header are unchanged from Chill.6. Nine
+public artwork/metadata files and that header reproduce exactly. Both upstream
+and Chill.6 delta patches reconstruct all 780 source files. The current engine
+source ZIP has 812 entries and 9,257,802 bytes, SHA-256
+`450613f4d14df23380549081b154d40c11587151d37e749a74f5118a11534605`.
+
+The muted native review restored the existing Sun/Chill/Puff fixture and
+captured 74 full 1280x720 frames over 8.2 seconds. Sampled idle poses, two frost
+releases, outward plume travel and dissipation are coherent; there are no
+observed detached parts, plant seams, clipping or paint changes. Packet and
+centered native Bonus card remain consistent. Menu paused the game; the owned
+test tab and server were closed without reloading the user's public game tab.
+Empty-range gating is automated coverage, not a separate browser observation.
+This is not an earned win, full battle, every-frame/style equivalence or new
+save-transfer cycle. Final website-package identity, extracted-source check and
+hosting result are recorded by the publisher and matching Pages workflow.
+
+## Historical Chill.6 painted style pass, 2026-11-01
 
 The user accepted Chill.5's proportions and requested one final pass matching the
 other plants' style. Target **0.2.6-web-chill.6**, based on the exact published
@@ -31,7 +103,7 @@ Keep QoL, workers, schema 2, normal-player audio and silent `?testing=1` testing
 tool cannot create another goal while the older paused parity goal is unfinished;
 this scope does not complete, replace or resume that historical goal.
 
-Chill.6 local release gates pass on 2026-11-01. The coherent 90.230-second
+Historical Chill.6 local release gates passed on 2026-11-01. The coherent 90.230-second
 Release build contains 780 source files. All 1,532 native production checks,
 fourteen browser integration suites and eleven worker scenarios pass. Independent
 parent comparisons retain every approved canonical and cap/body alpha byte and
