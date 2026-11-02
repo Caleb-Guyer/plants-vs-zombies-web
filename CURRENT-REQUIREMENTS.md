@@ -1,5 +1,16 @@
 # Current requirements
 
+## Chain.1 - Chain Reaction
+
+`0.2.6-web-chain.1` adds **Chain Reaction** under **Mini-Games > Bonus**. Clear five hand-arranged boards with a limited supply of Cherry Bombs, Jalapenos and Potato Mines. Place the plants, then press the original Let's Rock button. Retry restarts the current board; a first complete clear earns one trophy. Its seventh Bonus card combines the original three plant sprites.
+
+Planning holds zombies and explosive fuses while the finite seed supply is arranged. Let's Rock commits the plan; the original explosions, zombie movement and armor resolve it. Five different spatial layouts introduce the three tools, then combine them. There is no sun economy, mower rescue or bonus loot. The standard footer shows board progress, and the original stone button and brief native hint carry the instructions.
+
+Chain Reaction appends mode 79 and uses reserved profile record 78. Only completion of the fifth board creates the final native award and records one win; the first clear receives the trophy and replays use the native replay reward. Try Again and in-game Restart reset the current puzzle, while a fresh New Game begins at board one. Native save/Continue preserves planning, live resolution and the transition between boards. Existing saved-object layouts, serializers, original mode/plant IDs, the six earlier Bonus games and accepted plant art remain unchanged. The new card composes original game sprites; no separate AI-generated challenge illustration is used.
+
+All fifteen silent native suites passed: 119,694 checks, zero failures. The thirteen focused suites contribute 37,423 checks. Native layout now has 7,187 checks: the previous 6,862 remain, with 315 new Chain UI checks and ten fixed-layout authoring checks. The new checks execute the actual button, footer and advice helpers with independently pinned original 28-point and 16-point font alpha. They cover all five footer labels, pause, both speeds and six viewport shapes. The hint uses one line with ink ending at y=512. Omitting its draw-local offset must obstruct the start button; copying the native Last Stand footer-button position must clip the canvas. Both negative controls fail as intended. All five authored layouts reserve the top lawn row; inserting the observed pre-fix row-zero conehead into each layout must be rejected. This is a fixed-content authoring guard under the unchanged native lane geometry, not a complete raster check of zombie animation frames. Another 115 focused checks execute the actual Options Restart case and Chain ResetStage/Populate with controlled modal, allocation and actor collaborators. Acceptance restores each current puzzle and its full finite inventory; cancellation preserves its old state. Five retained mode paths keep their native Restart captions and routing.
+
+
 ## Care.3 - fatigue cues and complete-engine battles
 
 `0.2.6-web-care.3` makes Intensive Lawn Care fatigue visible in the original plant rigs. Plants begin to droop at 180 HP, settle into a low breathing rest at 60 HP, and rise as Menders heal them. Native attack poses remain aligned with their projectiles. Fatigue no longer borrows the white bite flash; there are no extra status bars or floating icons. The accepted artwork, challenge layout and balance remain unchanged.

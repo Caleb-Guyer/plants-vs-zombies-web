@@ -1,15 +1,15 @@
 {
   "schema_version": 1,
-  "current_engine": "0.2.6-web-care.3",
+  "current_engine": "0.2.6-web-chain.1",
   "upstream_tag": "0.2.6",
   "layout": "Site-source nests current corresponding source, its immediate parent when present, the upstream baseline and the current full patch. Other source archives and incremental/historical patches remain standalone downloads beside this index and in the full runtime distribution.",
   "nested_sources": [
     "pvz-portable-0.2.6-source.zip",
-    "pvz-portable-0.2.6-web-care.2-source.zip",
-    "pvz-portable-0.2.6-web-care.3-source.zip"
+    "pvz-portable-0.2.6-web-care.3-source.zip",
+    "pvz-portable-0.2.6-web-chain.1-source.zip"
   ],
   "nested_patches": [
-    "web-care.3.patch"
+    "web-chain.1.patch"
   ],
   "archives": [
     {
@@ -37,6 +37,13 @@
       "name": "pvz-portable-0.2.6-web-care.3-source.zip",
       "bytes": 16224578,
       "sha256": "50d01dd1bbd793e1cda1dfbc74a70ca6724eee8741dab9260d188b3f49c882d4",
+      "current": false,
+      "upstream": false
+    },
+    {
+      "name": "pvz-portable-0.2.6-web-chain.1-source.zip",
+      "bytes": 18774227,
+      "sha256": "2794ff25f7427a2d3c1032bb9e2671f5b425701d7944d274f7c94e26ffb132a7",
       "current": true,
       "upstream": false
     },

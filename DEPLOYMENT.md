@@ -1,5 +1,18 @@
 # GitHub Pages release: Caleb-Guyer/plants-vs-zombies-web
 
+## Chain.1 - Chain Reaction
+
+`0.2.6-web-chain.1` adds **Chain Reaction** under **Mini-Games > Bonus**. Clear five hand-arranged boards with a limited supply of Cherry Bombs, Jalapenos and Potato Mines. Place the plants, then press the original Let's Rock button. Retry restarts the current board; a first complete clear earns one trophy. Its seventh Bonus card combines the original three plant sprites.
+
+All fifteen silent native suites passed (119,694 checks). Tests include 24 complete five-board puzzle runs, bad-plan recovery and save/Continue at 1x and 2x.
+
+24 current-engine puzzle runs and 18 retained Care cases passed; their complete reports remain with the corresponding source.
+
+The [corresponding source archive](dist/source/pvz-portable-0.2.6-web-chain.1-source.zip) contains 820 production files, 888 ZIP entries and 18,774,227 bytes, SHA-256 `2794ff25f7427a2d3c1032bb9e2671f5b425701d7944d274f7c94e26ffb132a7`. The full upstream patch and the Care.3 increment reconstruct every production source byte. The source includes the reproducible, test-only complete-engine Node/WASM backends and authenticated execution reports. Actual scenario execution requires the approved game asset bundle and has no approximate-model fallback.
+
+Commit, push, the exact-commit GitHub Pages workflow and public-byte verification receive separate receipts after publication. The source-download check separately extracts and verifies the packaged code-only website source.
+
+
 ## Care.3 - fatigue cues and complete-engine battles
 
 `0.2.6-web-care.3` makes Intensive Lawn Care fatigue visible in the original plant rigs. Plants begin to droop at 180 HP, settle into a low breathing rest at 60 HP, and rise as Menders heal them. Native attack poses remain aligned with their projectiles. Fatigue no longer borrows the white bite flash; there are no extra status bars or floating icons. The accepted artwork, challenge layout and balance remain unchanged.

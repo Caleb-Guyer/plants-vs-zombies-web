@@ -1,5 +1,12 @@
 # Plants vs. Zombies — browser playtest
 
+## Chain.1 - Chain Reaction
+
+`0.2.6-web-chain.1` adds **Chain Reaction** under **Mini-Games > Bonus**. Clear five hand-arranged boards with a limited supply of Cherry Bombs, Jalapenos and Potato Mines. Place the plants, then press the original Let's Rock button. Retry restarts the current board; a first complete clear earns one trophy. Its seventh Bonus card combines the original three plant sprites.
+
+All fifteen silent native suites passed (119,694 checks). Tests include 24 complete five-board puzzle runs, bad-plan recovery and save/Continue at 1x and 2x. See [QA scope](PARITY-QA.md) and [release receipts](DEPLOYMENT.md). Earlier sections describe their named historical builds.
+
+
 ## Care.3 - fatigue cues and complete-engine battles
 
 `0.2.6-web-care.3` makes Intensive Lawn Care fatigue visible in the original plant rigs. Plants begin to droop at 180 HP, settle into a low breathing rest at 60 HP, and rise as Menders heal them. Native attack poses remain aligned with their projectiles. Fatigue no longer borrows the white bite flash; there are no extra status bars or floating icons. The accepted artwork, challenge layout and balance remain unchanged.

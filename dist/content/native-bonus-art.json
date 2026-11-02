@@ -72,6 +72,14 @@
       "hero": "Approved Mender-bloom DrawRig with original Flower Pot and IMAGE_ZEN_GARDENGLOVE",
       "background": "IMAGE_BACKGROUND1",
       "gameplay": "Conveyor patients start wounded. Move the same living combat plants between a protected Flower Pot healing bed beside fixed Mender-blooms and the front lines with the native glove. Active combat tires deployed plants; bed patients recover with normal Mender healing and cannot fire. Ten authored waves, five starting Repeaters and Wall-nuts, one-second move cooldown and no sun economy."
+    },
+    {
+      "mode": 79,
+      "name": "Chain Reaction",
+      "hero": "Original REANIM_CHERRYBOMB and REANIM_JALAPENO idle sprites with armed REANIM_POTATOMINE",
+      "background": "IMAGE_BACKGROUND1",
+      "generatedArtworkUsed": false,
+      "gameplay": "Five hand-arranged explosive puzzles. Place a finite supply of Cherry Bombs, Jalapenos and Potato Mines, then use the native Let's Rock button. Native blasts and walking zombies resolve each arrangement; one trophy follows the fifth board."
     }
   ],
   "canvas": {

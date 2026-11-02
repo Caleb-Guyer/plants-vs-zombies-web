@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-care.3
-Adds complete-engine Intensive Lawn Care battles at native 1x and 2x, visible tired and exhausted poses using the original plant rigs, and finite native healing sparkles with legacy-checkpoint cleanup. Existing balance, artwork, toolbar layout and serialized formats remain unchanged.
-Engine JavaScript SHA-256: a52baa0c50f4c2b01aa22f07f023fa646c4075553e402f91593e49e6bc0a8c2b
-Engine WASM SHA-256: 1eed40964da459c6f5d5e741902e856c6d2ce025fb445edae82842a3b467f2b1
+PvZ-Portable 0.2.6-web-chain.1
+Adds Chain Reaction: five handcrafted explosive-plant puzzles using native artwork, finite seeds, planning and native explosions. Existing game modes, custom plants, recovery poses and serialized layouts are retained.
+Engine JavaScript SHA-256: 9cb03594c99f4a562a4305ca3a3e9f3673aac5766a1b2d2cc66cb44f95be9048
+Engine WASM SHA-256: 42124bdb2d4748a0e13c21b18b822eca588ac89630360f2a8f9d8b741df46ac6
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.

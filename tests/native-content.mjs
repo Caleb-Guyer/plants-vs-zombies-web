@@ -19,23 +19,23 @@ new Function('module', 'exports', 'require', fs.readFileSync(new URL('vendor/jsz
 const JSZip = vendor.exports;
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
 const engine = JSON.parse(fs.readFileSync(new URL('game/engine-provenance.json', dist)));
-assert.equal(engine.id, '0.2.6-web-care.3');
+assert.equal(engine.id, '0.2.6-web-chain.1');
 const currentSourceBytes = fs.readFileSync(new URL(engine.artifacts.source, new URL('game/engine-provenance.json', dist)));
 assert.equal(sha(currentSourceBytes), engine.artifacts.sourceSha256, 'Current source archive matches the engine provenance pin');
 const current = await JSZip.loadAsync(currentSourceBytes, {checkCRC32: true});
-const parentSourceBytes = fs.readFileSync(new URL('source/pvz-portable-0.2.6-web-care.2-source.zip', dist));
-assert.equal(sha(parentSourceBytes), 'd8c52ecbb0f4f417b871137fb2a27017a2cb8699b1f6702fb363399a7ea7bf98', 'Parent is the exact published Care.2 source');
+const parentSourceBytes = fs.readFileSync(new URL('source/pvz-portable-0.2.6-web-care.3-source.zip', dist));
+assert.equal(sha(parentSourceBytes), '50d01dd1bbd793e1cda1dfbc74a70ca6724eee8741dab9260d188b3f49c882d4', 'Parent is the exact published Care.3 source');
 const parent = await JSZip.loadAsync(parentSourceBytes, {checkCRC32: true});
-const prefix = 'care3-candidate/';
+const prefix = 'chain1-candidate/';
 const read = async name => {
   const entry = current.file(prefix + name);
   assert(entry, 'Missing current production source/test: ' + name);
   return Buffer.from(await entry.async('uint8array'));
 };
 const retainedChecks = {'game-speed':66, 'qol-controls':90, 'decks-cooldowns':274,
-  'bonus-challenge':387, 'bonus-completion':1023, 'night-shift':231, 'lantern-shroom':548,
-  'garden-shuffle':214, 'seed-swap':587, 'mender-bloom':523, 'intensive-care':1135, 'native-layout':6862};
-const suites = [...Object.keys(retainedChecks), 'care-fatigue', 'care-full-run'];
+  'bonus-challenge':387, 'bonus-completion':1139, 'night-shift':231, 'lantern-shroom':548,
+  'garden-shuffle':214, 'seed-swap':587, 'mender-bloom':523, 'intensive-care':1135, 'native-layout':7187};
+const suites = [...Object.keys(retainedChecks), 'care-fatigue', 'care-full-run', 'chain-reaction'];
 const reports = new Map();
 let checks = 0;
 for (const name of suites) {
@@ -53,17 +53,19 @@ for (const name of suites) {
   reports.set(name, result);
 }
 for (const [name, count] of Object.entries(retainedChecks))
-  assert.equal(reports.get(name).checks, count, 'Every retained suite preserves its checks: ' + name);
-assert.equal(Object.values(retainedChecks).reduce((sum, count) => sum + count, 0), 11940);
+  assert.equal(reports.get(name).checks, count, 'Every retained suite keeps its old assertions and reviewed appended coverage: ' + name);
+// Original 11,940 checks remain, plus one appended table iteration, 315 native
+// layout checks, ten authoring controls and 115 actual Options restart checks.
+assert.equal(Object.values(retainedChecks).reduce((sum, count) => sum + count, 0), 12381);
 assert.equal(reports.get('care-fatigue').checks, 25042,
   'Fatigue rig coverage retains every crew pose, scoped state and restoration check');
 const fullRunReport = reports.get('care-full-run');
-assert.equal(fullRunReport.checks, 970, 'Complete-engine provenance and required native scenario checks are retained');
+assert.equal(fullRunReport.checks, Object.keys(fullRunReport.sourceSha256).length + 152, 'Complete-engine provenance and required native scenario checks are retained');
 assert.equal(fullRunReport.execution, 'complete-production-engine',
   'Care scenarios execute the complete linked engine, not an extracted combat model');
 assert(Number.isInteger(fullRunReport.productionObjectCount) && fullRunReport.productionObjectCount >= 100,
   'The full-run backend links the complete production object graph');
-assert.equal(Object.keys(fullRunReport.sourceSha256).length, 818,
+assert.equal(Object.keys(fullRunReport.sourceSha256).length, 820,
   'Complete engine scenarios pin every production source input, not an extracted combat model');
 const fullRunArtifactNames = ['care-full-run-engine.js', 'care-full-run-engine.wasm'];
 assert.deepEqual(Object.keys(fullRunReport.testArtifactSha256).sort(), [...fullRunArtifactNames].sort());
@@ -148,12 +150,76 @@ for (const parity of fullRunReport.speedParity) {
     'Native 1x/2x simulation outcomes match: ' + parity.name + '/' + field);
 }
 console.log('PASS 16 complete native Care battles (12 wins, 4 no-care defeats), 2 separate legacy-particle migration fixtures and native 1x/2x outcome parity.');
+const chainReport = reports.get('chain-reaction');
+assert.equal(chainReport.execution, 'complete-production-engine');
+assert.equal(chainReport.optimization, 'O2', 'Development probes cannot stand in for a final puzzle matrix');
+assert.equal(chainReport.productionObjectCount, fullRunReport.productionObjectCount);
+assert.deepEqual(chainReport.sourceSha256, fullRunReport.sourceSha256);
+assert.deepEqual(chainReport.productionObjectSha256, fullRunReport.productionObjectSha256,
+  'Both full-engine drivers link the exact same unchanged production objects');
+assert.equal(chainReport.productionBuildReceiptSha256, sha(fullRunProductionBuildBytes));
+for (const [filename, pin] of Object.entries(chainReport.testArtifactSha256))
+  assert.equal(sha(await read('tests/' + filename)), pin, 'Exact executed puzzle artifact: ' + filename);
+assert.deepEqual(Object.keys(chainReport.testArtifactSha256).sort(), ['chain-reaction-engine.js', 'chain-reaction-engine.wasm']);
+assert(WebAssembly.validate(await read('tests/chain-reaction-engine.wasm')));
+assert.equal(sha(await read('tests/build-chain-reaction.py')), chainReport.builderSha256);
+assert.equal(sha(await read('tests/test-chain-reaction.py')), chainReport.runnerSha256);
+const chainBuild = JSON.parse(await read('tests/chain-reaction-build.json'));
+for (const field of ['execution', 'optimization', 'productionObjectCount', 'productionBuildReceiptSha256',
+  'generatedHarnessSha256', 'builderSha256', 'testArtifactSha256', 'sourceSha256', 'productionObjectSha256'])
+  assert.deepEqual(chainReport[field], chainBuild[field], 'Puzzle results bind current build metadata: ' + field);
+assert.equal(sha(await read('tests/chain-reaction-assets.json')), chainReport.assetFixtureSha256);
+assert.equal(chainReport.assetBundleId, engine.assetBundleId);
+assert.equal(JSON.parse(await read('tests/chain-reaction-assets.json')).assetBundleId, engine.assetBundleId);
+const chainNames = ['solution', 'save-planning', 'save-resolution', 'save-transition', 'retry-misplaced', 'retry-unused'];
+const chainCases = [1729, 7331].flatMap(seed => chainNames.flatMap(name => [1, 2].map(speed => scenarioKey({name, speed, seed}))));
+assert.equal(chainReport.scenarios.length, 24);
+assert.deepEqual(chainReport.scenarios.map(scenarioKey).sort(), chainCases.sort());
+for (const result of chainReport.scenarios) {
+  assert.equal(result.execution, 'complete-production-engine');
+  assert.equal(result.outcome, 'win');
+  assert.equal(result.boardsSolved, 5);
+  assert.equal(result.nativeZombies, 26);
+  assert.equal(result.toolbarSafeZombies, 26, 'Every actual authored zombie stays below the conveyor row');
+  assert.equal(result.legalPlacements, 9);
+  assert.equal(result.profileIndex, 78);
+  assert.equal(result.profileCredits, 1);
+  assert.equal(result.awardCollected, true);
+  assert.equal(result.planningHeld, true);
+  assert.equal(result.invalidPlacementRejected, true);
+  assert.equal(result.failureAndRetry, result.name.startsWith('retry-'));
+  assert.equal(result.bonusBackNavigation, result.name === 'retry-unused');
+  assert.equal(result.resourceCapacityWarnings, 0);
+  assert.match(result.logSha256, /^[a-f0-9]{64}$/);
+  assert(result.checks > 0);
+  assert.equal(result.stageSimulationTicks.length, 5);
+  assert(result.stageSimulationTicks.every(ticks => Number.isInteger(ticks) && ticks > 0));
+  assert.equal(result.checkpoint.performed, result.name.startsWith('save-'));
+  if (result.name.startsWith('save-')) {
+    assert.equal(result.checkpoint.combatGraphPreserved, true);
+    const field = result.name === 'save-planning' ? 'planningTick' : result.name === 'save-resolution' ? 'resolutionTick' : 'transitionTick';
+    assert(result.checkpoint[field] > 0, 'Checkpoint occurs in the requested live native phase: ' + field);
+  }
+}
+assert.equal(chainReport.speedParity.length, 12);
+assert.deepEqual(chainReport.speedParity.map(result => `${result.name}/${result.seed}`).sort(),
+  [1729, 7331].flatMap(seed => chainNames.map(name => `${name}/${seed}`)).sort());
+for (const parity of chainReport.speedParity) {
+  assert.equal(parity.sameNativeOutcome, true);
+  assert.deepEqual(parity.comparedFields, ['outcome','boardsSolved','nativeZombies','toolbarSafeZombies','legalPlacements',
+    'profileIndex','profileCredits','awardCollected','planningHeld','invalidPlacementRejected','failureAndRetry','bonusBackNavigation']);
+  const pair = chainReport.scenarios.filter(result => result.name === parity.name && result.seed === parity.seed);
+  for (const field of parity.comparedFields) assert.deepEqual(pair[0][field], pair[1][field]);
+}
+assert.equal(chainReport.checks, Object.keys(chainReport.sourceSha256).length +
+  chainReport.scenarios.reduce((sum, result) => sum + result.checks, 0) + chainReport.speedParity.length);
+console.log('PASS 24 complete native five-board Chain Reaction runs, save/Continue in three phases, genuine failed-plan retries, final-only credit and 1x/2x outcomes.');
 const careBalance = reports.get('intensive-care').balanceModel;
 assert.equal(careBalance.kind, 'native healing/fatigue capacity bound; not a battle clear');
 assert(careBalance.allBedsHealHpPerSecond > careBalance.maximumCrewFatigueHpPerSecond);
 assert(careBalance.slowestSuppliedRecoveryTicks < 3000);
 assert.equal(careBalance.authoredEnemies, 40);
-const parentPrefix = 'care2-candidate/source/';
+const parentPrefix = 'care3-candidate/source/';
 const parentBytes = async name => Buffer.from(await parent.file(parentPrefix + name).async('uint8array'));
 const layoutReport = reports.get('native-layout');
 assert.equal(layoutReport.hintLines, 1);
@@ -162,6 +228,12 @@ assert.equal(layoutReport.legacyHintLines, 2);
 assert.equal(layoutReport.legacyHintInkBottom, 596);
 assert.equal(layoutReport.legacyOverlapReproduced, true);
 assert.equal(layoutReport.parentTranslationMutationRejected, true);
+assert.equal(layoutReport.chainHintLines, 1);
+assert.equal(layoutReport.chainHintInkBottom, 512);
+assert.equal(layoutReport.chainHintOffsetMutationRejected, true);
+assert.equal(layoutReport.chainCopiedButtonPlacementRejected, true);
+assert.equal(layoutReport.chainHudSafeBoards, 5);
+assert.equal(layoutReport.chainHudRejectedBoards, 5);
 const layoutFixtureBytes = await read('tests/native-layout-assets.json');
 assert.equal(sha(layoutFixtureBytes), layoutReport.fixturesSha256['native-layout-assets.json'],
   'Layout report pins the exact original font/sprite and legacy-regression fixture');
@@ -170,10 +242,10 @@ assert.equal(layoutFixture.schema, 1);
 assert.equal(layoutFixture.assetBundleId, engine.assetBundleId);
 assert.equal(layoutFixture.parentSourceSha256, '540f1ee365b558e10304995692485976e91f23bb1b28c305e6ade6cd17f1ed11',
   'The preserved layout negative-control fixture identifies its original Care.1 source');
-const parentLayoutFixtureEntry = parent.file('care2-candidate/tests/native-layout-assets.json');
-assert(parentLayoutFixtureEntry, 'Authenticated Care.2 parent retains the exact layout regression fixture');
+const parentLayoutFixtureEntry = parent.file('care3-candidate/tests/native-layout-assets.json');
+assert(parentLayoutFixtureEntry, 'Authenticated Care.3 parent retains the exact layout regression fixture');
 assert.deepEqual(layoutFixtureBytes, Buffer.from(await parentLayoutFixtureEntry.async('uint8array')),
-  'Historical Care.1 negative methods and native asset fixtures retain every authenticated Care.2 fixture byte');
+  'Historical Care.1 negative methods and native asset fixtures retain every authenticated Care.3 fixture byte');
 const approvedLayoutHashes = {
   'data/HouseofTerror28.txt':'08d9d6773edc9033512463b33be7c6604b675fadabd1729bb4fda4bed1966d0b',
   'data/HouseofTerror28.png':'e9913355ecccf2840761ce1a2a356067990deb44b326a7eb7d95c012126b9486',
@@ -257,7 +329,10 @@ const oldEnums = (await parentBytes('src/ConstEnums.h')).toString();
 const newEnums = (await read('source/src/ConstEnums.h')).toString();
 const oldModes = enumValues(oldEnums, 'GameMode'), newModes = enumValues(newEnums, 'GameMode');
 assert.equal(oldModes.get('NUM_GAME_MODES'), 79);
-assert.deepEqual([...newModes], [...oldModes], 'Full-run validation preserves every original and Bonus mode ID without appending a mode');
+for (const [key, value] of oldModes) if (key !== 'NUM_GAME_MODES') assert.equal(newModes.get(key), value, 'Every existing mode ID remains stable: ' + key);
+assert.equal(newModes.get('GAMEMODE_CHALLENGE_CHAIN_REACTION'), 79);
+assert.equal(newModes.get('NUM_GAME_MODES'), 80);
+assert.equal(newModes.size, oldModes.size + 1);
 assert.deepEqual([...enumValues(newEnums, 'ChallengePage')], [...enumValues(oldEnums, 'ChallengePage')],
   'Cold Front uses the existing Bonus page without changing any page IDs');
 const oldSeeds = enumValues(oldEnums, 'SeedType'), newSeeds = enumValues(newEnums, 'SeedType');
@@ -286,8 +361,14 @@ function definitions(text) {
 const oldDefinitions = definitions((await parentBytes('src/Lawn/Widget/ChallengeScreen.cpp')).toString());
 const newDefinitions = definitions((await read('source/src/Lawn/Widget/ChallengeScreen.cpp')).toString());
 assert.equal(oldDefinitions.length, 78);
-assert.deepEqual(newDefinitions, oldDefinitions, 'Full-run validation preserves all original and six Bonus challenge definitions exactly');
-console.log('PASS full-run revision preserves every mode/seed ID, saved layout, plant and challenge identity.');
+assert.deepEqual(newDefinitions.slice(0, oldDefinitions.length), oldDefinitions, 'Every original and six existing Bonus challenge definitions remain exact');
+assert.equal(newDefinitions.length, oldDefinitions.length + 1);
+assert.match(newDefinitions.at(-1), /GAMEMODE_CHALLENGE_CHAIN_REACTION/);
+assert.match(newDefinitions.at(-1), /Chain Reaction/);
+assert.match(newDefinitions.at(-1), /CHALLENGE_PAGE_BONUS/);
+assert.match(newDefinitions.at(-1), /\.mRow = 2/);
+assert.match(newDefinitions.at(-1), /\.mCol = 1/);
+console.log('PASS Chain Reaction appends one mode and challenge while preserving every existing mode/seed ID, saved layout, plant and challenge identity.');
 
 const artRecord = JSON.parse(fs.readFileSync(new URL('content/native-bonus-art.json', dist)));
 assert.match(artRecord.sourceKind, /native sprite compositions/);
@@ -297,8 +378,17 @@ assert.equal(artRecord.assetBundleId, engine.assetBundleId);
 assert.equal(artRecord.plant.nativeReanimation, 'REANIM_ICESHROOM');
 assert.equal(artRecord.plant.spriteOverride, 'chill-shroom/provenance.json');
 assert.deepEqual(artRecord.canvas, {width: 80, height: 65, heroCenterX: 40, heroCenterY: 32.5, maxHeroWidth: 68, maxHeroHeight: 57});
-assert.deepEqual(artRecord.cards.map(card => card.mode), [73, 74, 75, 76, 77, 78]);
-assert.deepEqual(artRecord.cards.map(card => card.name), ['Cone Zone', 'Night Shift', 'Cold Front', 'Garden Shuffle', 'Seed Swap', 'Intensive Lawn Care']);
+assert.deepEqual(artRecord.cards.map(card => card.mode), [73, 74, 75, 76, 77, 78, 79]);
+assert.deepEqual(artRecord.cards.map(card => card.name), ['Cone Zone', 'Night Shift', 'Cold Front', 'Garden Shuffle', 'Seed Swap', 'Intensive Lawn Care', 'Chain Reaction']);
+
+const parentArtBytes = await read('tests/chain-parent-native-art.json');
+assert.equal(sha(parentArtBytes), '4256b324e953162b861c04c72c5686e1cc0b137b76ae1a218144ea875bfa927b', 'Independent exact published Care.3 card metadata fixture');
+const parentArtRecord = JSON.parse(parentArtBytes);
+assert.deepEqual(artRecord.cards.slice(0, 6), parentArtRecord.cards, 'Every existing card retains all original metadata');
+for (const [key, value] of Object.entries(parentArtRecord))
+  if (!['cards', 'checkpointCompatibility'].includes(key)) assert.deepEqual(artRecord[key], value, 'Existing art metadata remains unchanged: ' + key);
+assert(artRecord.checkpointCompatibility.startsWith(parentArtRecord.checkpointCompatibility));
+assert.equal(artRecord.cards.at(-1).mode, 79);
 assert.equal(artRecord.animation.newGeneratedArtwork, false, 'Motion uses existing sprite/effect assets');
 assert.equal(artRecord.animation.idlePeriodSeconds, 2.2);
 assert.deepEqual(artRecord.animation.idleScaleX, [1, 1.045]);
@@ -538,16 +628,14 @@ const archivedSourceNames = Object.values(current.files).filter(entry => !entry.
   .map(entry => entry.name.slice((prefix + 'source/').length));
 assert.deepEqual(archivedSourceNames.sort(), Object.keys(sourceManifest.files).sort(),
   'Every corresponding-source archive member is represented exactly once in its manifest');
-// Any actual Care balance or test-engine source changes must be individually
-// reviewed here before publication; unrelated production/artwork stays exact.
-const runtimeInputs = new Set(['src/Lawn/Board.cpp', 'src/Lawn/Plant.cpp',
-  'src/Lawn/System/MenderBloom.cpp', 'src/Lawn/System/MenderBloom.h']);
+// Exact reviewed Chain Reaction source delta is installed after core freeze.
+const runtimeInputs = new Set(["src/ConstEnums.h", "src/Lawn/Board.cpp", "src/Lawn/Challenge.cpp", "src/Lawn/Plant.cpp", "src/Lawn/System/BonusChallenge.h", "src/Lawn/System/LanternShroom.cpp", "src/Lawn/Widget/ChallengeScreen.cpp", "src/Lawn/Widget/LawnDialog.cpp", "src/Lawn/Widget/NewOptionsDialog.cpp", "src/Lawn/Zombie.cpp", "src/LawnApp.cpp"]);
 const releaseIdentityInputs = new Set(['CMake/ProjectVersion.cmake']);
+const addedChainInputs = ["src/Lawn/System/ChainReaction.cpp", "src/Lawn/System/ChainReaction.h"];
 const nativeNames = ['PeaShooter_backleaf.png', 'PeaShooter_backleaf_lefttip.png', 'PeaShooter_backleaf_righttip.png',
   'PeaShooter_stalk_bottom.png', 'PeaShooter_stalk_top.png', 'PeaShooter_frontleaf.png',
   'PeaShooter_frontleaf_righttip.png', 'PeaShooter_frontleaf_lefttip.png', 'SunFlower_head.png',
   'SunFlower_blink1.png', 'SunFlower_leftpetal3.png', 'SunFlower_leftpetal4.png', 'SunFlower.reanim'];
-const addedCareInputs = ['src/Lawn/System/CareFatigue.h'];
 let parentSourceCount = 0;
 for (const entry of Object.values(parent.files)) {
   if (entry.dir || !entry.name.startsWith(parentPrefix)) continue;
@@ -556,67 +644,35 @@ for (const entry of Object.values(parent.files)) {
   const before = Buffer.from(await entry.async('uint8array'));
   const after = await read('source/' + name);
   const pin = sourceManifest.files[name];
-  assert(pin && pin.bytes === after.length && pin.sha256 === sha(after), 'Manifest pins actual current source bytes: ' + name);
+  assert(pin && pin.bytes === after.length && pin.sha256 === sha(after));
   if (runtimeInputs.has(name)) {
-    assert(!after.equals(before), 'Every allowed gameplay/UI change is an actual reviewed change: ' + name);
+    assert(!after.equals(before), 'Every allowed existing source delta is an actual reviewed change: ' + name);
     continue;
   }
-  if (releaseIdentityInputs.has(name)) {
-    assert.equal(after.toString().replaceAll('0.2.6-web-care.3', '0.2.6-web-care.2'), before.toString(),
-      'Only the release identity may change in metadata source: ' + name);
-  } else assert.deepEqual(after, before, 'Care revision preserves every unrelated source/artwork byte: ' + name);
+  if (releaseIdentityInputs.has(name))
+    assert.equal(after.toString().replaceAll('0.2.6-web-chain.1', '0.2.6-web-care.3'), before.toString());
+  else assert.deepEqual(after, before, 'Every unrelated source/artwork byte remains exact: ' + name);
 }
-assert.equal(parentSourceCount, 817, 'Authenticated Care.2 parent contains all 817 source inputs');
-const normalizeSource = bytes => bytes.toString().replace(/\r\n?/g, '\n');
-function replaceExactlyOnce(text, before, after) {
-  assert.equal(text.split(before).length, 2, 'Reviewed source span appears exactly once');
-  return text.replace(before, after);
-}
-const menderHeader = normalizeSource(await read('source/src/Lawn/System/MenderBloom.h'));
-assert.equal(menderHeader.replace('class Board;\n', '').replace('void RetireLegacyHealingParticles(Board& board);\n', ''),
-  normalizeSource(await parentBytes('src/Lawn/System/MenderBloom.h')),
-  'Mender public header changes only the forward declaration and load-migration entry point; every balance constant stays exact');
-let scopedBoard = normalizeSource(await read('source/src/Lawn/Board.cpp'));
-scopedBoard = replaceExactlyOnce(scopedBoard, '#include "System/MenderBloom.h"\n', '');
-scopedBoard = replaceExactlyOnce(scopedBoard, '\tMenderBloom::RetireLegacyHealingParticles(*this);\n', '');
-scopedBoard = replaceExactlyOnce(scopedBoard,
-  '        plant->mPlantHealth = IntensiveCare::FatiguedHealth(plant->mPlantHealth);\n',
-  '        plant->mPlantHealth = IntensiveCare::FatiguedHealth(plant->mPlantHealth);\n' +
-  '        if (plant->mPlantHealth <= IntensiveCare::kWarningHealth && mMainCounter % 100 == 0)\n' +
-  '            plant->mEatenFlashCountdown = std::max(plant->mEatenFlashCountdown, 30);\n');
-assert.equal(scopedBoard, normalizeSource(await parentBytes('src/Lawn/Board.cpp')),
-  'Board changes only finite legacy-particle load migration and removal of artificial fatigue bite flashes');
-let scopedPlant = normalizeSource(await read('source/src/Lawn/Plant.cpp'));
-scopedPlant = replaceExactlyOnce(scopedPlant, '#include "System/CareFatigue.h"\n', '');
-const fatigueDrawNamespace = extractLegacyFunction(scopedPlant,
-  "namespace\n{\n// Reanimation's matrix draw path does not use Graphics::SetScale.");
-scopedPlant = replaceExactlyOnce(scopedPlant, fatigueDrawNamespace + '\n\n', '');
-scopedPlant = replaceExactlyOnce(scopedPlant, 'DrawCareFatigue(g, *this, *aBodyReanim, aOffsetY);', 'aBodyReanim->Draw(g);');
-assert.equal(scopedPlant, normalizeSource(await parentBytes('src/Lawn/Plant.cpp')),
-  'Plant changes only scoped fatigue drawing; every combat, update, launch and save clock remains byte exact');
-let scopedMender = normalizeSource(await read('source/src/Lawn/System/MenderBloom.cpp'));
-const parentMender = normalizeSource(await parentBytes('src/Lawn/System/MenderBloom.cpp'));
-scopedMender = replaceExactlyOnce(scopedMender, '#include "../../PvzpLib/PvzpParticle.h"\n', '');
-scopedMender = replaceExactlyOnce(scopedMender, '#include "../../PvzpLib/EffectSystem.h"\n', '');
-scopedMender = replaceExactlyOnce(scopedMender,
-  extractLegacyFunction(scopedMender, 'void RetireLegacyHealingParticles(Board& board)') + '\n\n', '');
-const pulseStart = scopedMender.indexOf('        // The native trophy sparkle loops.');
-const pulseEnd = scopedMender.indexOf('        if (target->mSeedType == SEED_GARLIC', pulseStart);
-const oldPulseStart = parentMender.indexOf('        // Native sparkle particles');
-const oldPulseEnd = parentMender.indexOf('        if (target->mSeedType == SEED_GARLIC', oldPulseStart);
-assert(pulseStart >= 0 && pulseEnd > pulseStart && oldPulseStart >= 0 && oldPulseEnd > oldPulseStart);
-scopedMender = scopedMender.slice(0, pulseStart) + parentMender.slice(oldPulseStart, oldPulseEnd) + scopedMender.slice(pulseEnd);
-assert.equal(scopedMender, parentMender,
-  'Mender changes only finite particle lifetimes and load migration; healing, range, artwork and all other behavior stay exact');
+assert.equal(parentSourceCount, 818);
 const addedProduction = Object.keys(sourceManifest.files).filter(name => !parent.file(parentPrefix + name));
-assert.deepEqual(addedProduction.sort(), [...addedCareInputs].sort(),
-  'Only the reviewed native fatigue presentation helper is added to production');
-assert.equal(Object.keys(sourceManifest.files).length, parentSourceCount + addedCareInputs.length,
-  'Complete source inventory retains every parent member and exactly the care additions');
-for (const name of addedCareInputs) {
-  const bytes = await read('source/' + name), pin = sourceManifest.files[name];
-  assert(pin && pin.bytes === bytes.length && pin.sha256 === sha(bytes), 'New care rules are exactly pinned in the complete source manifest');
-}
+assert.deepEqual(addedProduction.sort(), [...addedChainInputs].sort(), 'Only reviewed Chain implementation files are added');
+assert.equal(Object.keys(sourceManifest.files).length, parentSourceCount + addedChainInputs.length);
+const normalizeSource = bytes => bytes.toString().replace(/\r\n?/g, '\n');
+const beforePlant = normalizeSource(await parentBytes('src/Lawn/Plant.cpp'));
+const afterPlant = normalizeSource(await read('source/src/Lawn/Plant.cpp'));
+for (const signature of ['void DrawCareFatigue(Graphics* g, Plant& plant, Reanimation& body, float baseY)',
+  "namespace\n{\n// Reanimation's matrix draw path does not use Graphics::SetScale."])
+  assert.equal(extractLegacyFunction(afterPlant, signature), extractLegacyFunction(beforePlant, signature), 'Care fatigue rendering remains exact');
+const beforeBoard = normalizeSource(await parentBytes('src/Lawn/Board.cpp'));
+const afterBoard = normalizeSource(await read('source/src/Lawn/Board.cpp'));
+for (const signature of ['void Board::UpdateIntensiveCare()', 'bool Board::MoveIntensiveCarePlant(Plant* thePlant, int theGridX, int theGridY)'])
+  assert.equal(extractLegacyFunction(afterBoard, signature), extractLegacyFunction(beforeBoard, signature), 'Existing Care mechanics stay exact');
+
+const beforeLantern = normalizeSource(await parentBytes('src/Lawn/System/LanternShroom.cpp'));
+const afterLantern = normalizeSource(await read('source/src/Lawn/System/LanternShroom.cpp'));
+for (const signature of ['void ConfigureAttackAnimation(Plant& plant)', 'void EnsurePlantReanimation(Plant& plant)',
+  'Sexy::Image* GetImage()', 'void DrawAttackPulse(Sexy::Graphics* graphics, const Plant& plant, float offsetY)'])
+  assert.equal(extractLegacyFunction(afterLantern, signature), extractLegacyFunction(beforeLantern, signature), 'Accepted Chill-shroom motion and frost stay exact');
 
 for (const name of ['src/Lawn/System/ChillShroomArt.h', 'artwork/chill-shroom/extraction.json', 'artwork/chill-shroom/generation.json', 'artwork/chill-shroom/render.py', 'artwork/chill-shroom/approved-master.png.base64.txt', 'artwork/chill-shroom/closed-master.png.base64.txt', 'artwork/chill-shroom/painted-master.png.base64.txt', 'artwork/chill-shroom/painted-closed-master.png.base64.txt', 'artwork/chill-shroom/painted-base.png.base64.txt']) {
   const bytes = await read('source/' + name), pin = sourceManifest.files[name];
@@ -963,7 +1019,7 @@ if (process.argv.includes('--run-native')) {
     }
     for (const name of suites) {
       const args = [path.join(temporary, 'tests/test-' + name + '.py'), '--native'];
-      if (name === 'care-full-run') args.push('--asset-root', fileURLToPath(new URL('game-assets/', dist)));
+      if (name === 'care-full-run' || name === 'chain-reaction') args.push('--asset-root', fileURLToPath(new URL('game-assets/', dist)));
       const run = spawnSync('python', args, {encoding: 'utf8'});
       assert.equal(run.status, 0, (run.error?.message || '') + run.stdout + run.stderr);
       const actual = JSON.parse(fs.readFileSync(path.join(temporary, 'tests/' + name + '-results.json')));
