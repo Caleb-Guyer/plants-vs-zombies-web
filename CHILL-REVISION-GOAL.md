@@ -1,5 +1,43 @@
 # Bonus minigames, balance and Chill-shroom unlock — locally verified release candidate
 
+## Mender.3 head-only art correction
+
+`0.2.6-web-mender.3` replaces the rejected Sunflower-like Mender-bloom head
+with a distinct coral cupped blossom and its own expression. The original
+stem and leaves remain, while the head avoids Sunflower's brown center disk
+and radial petal ring. The intended finish follows the game's painted outlines
+and shaded forms without reusing Sunflower's face.
+
+Built-in image generation is limited to the new Mender-bloom head. The source
+retains its masters, prompt record and registered extraction recipe. No new
+challenge illustration is generated. The accepted Mender.2 idle motion,
+Almanac formatting and compact chooser layout remain. Costs, healing, frost,
+unlock rules, original IDs, serialized data and Chill-shroom artwork are unchanged.
+
+The full build passed in 147.676 seconds with all 816 source inputs unchanged.
+All 3,799 native checks in ten suites, 14 browser suites and 11 worker scenarios
+passed. The corresponding source ZIP has 857 entries and 13,544,751 bytes, SHA-256
+`5a6392e1d5415c3d7f5d3f2bad3114abb54a35bc13df5366be84b718c2d5bd1f`.
+Both binary patches reconstruct every source byte.
+
+Final wrappers verify the selected head, its three exact generation prompts and
+draft/master/closed source images, reference pins, compiled/public pixels and
+closed-eye alpha. The original stem PNG and RGBA remain byte-identical. All
+non-art gameplay/rendering sources, including motion, UI and Chill-shroom, match
+Mender.2; the release identity is updated.
+
+Muted browser checks on isolated origin 4226 used a synthetic QA-Boss profile.
+The new cupped coral head was compared with the original Sunflower entry; its
+Almanac description fits. A 6.2-second idle recording shows the head and stem
+connected and grounded. Open/closed source frames were checked. The compact
+Almanac portrait and normal Survival chooser footer packet fit, show 125 sun,
+select into a full-size bank packet and leave the zombie roster clear. These
+checks claim no new battle, healing or gameplay save/resume observation.
+
+Publication and source-download validation use the existing release process;
+their separate receipts are recorded after those steps. Earlier Mender.2 results
+below describe that historical build.
+
 ## Mender.2 Chill-shroom and Mender-bloom presentation
 
 `0.2.6-web-mender.2` updates both custom plants after feedback that their

@@ -1,12 +1,13 @@
 {
-  "schema": 2,
-  "version": "0.2.6-web-mender.2",
+  "schema": 3,
+  "version": "0.2.6-web-mender.3",
   "displayName": "Mender-bloom",
-  "imageGenerationUsed": false,
+  "imageGenerationUsed": true,
   "historicalImageGenerationUsed": true,
   "historicalGeneratedArtworkActive": false,
+  "historicalNativeHeadActive": false,
   "standaloneChallengeIllustrations": false,
-  "method": "Native Sunflower face, blink, stem and leaves; six recolored original petal pieces",
+  "method": "Distinct generated cupped-blossom head and expression over unchanged original stem and leaves",
   "pillowVersion": "12.2.0",
   "sourceInputs": [
     {
@@ -50,6 +51,13 @@
       "sha256": "fac7ced98626e9a9f91aa9746025e3713496cde453c1999ab89bdad6ed966f4d"
     },
     {
+      "path": "native/SunFlower.reanim",
+      "originalPath": "reanim/SunFlower.reanim",
+      "sha256": "c1f67f3784cd199d36feb0a7a44426d180acb289ca4c2a2e308ca2b26e0008dd"
+    }
+  ],
+  "historicalNativeInputs": [
+    {
       "path": "native/SunFlower_head.png",
       "originalPath": "reanim/SunFlower_head.png",
       "sha256": "3813ea881b25465dec25e75b7fa2a20fde4b421e7dd7c3b1ffabf4eb1fd61fb3"
@@ -68,42 +76,51 @@
       "path": "native/SunFlower_leftpetal4.png",
       "originalPath": "reanim/SunFlower_leftpetal4.png",
       "sha256": "346abc1f138aac79eb7d0ec2aeb2e655a7cbd8473592854f2e0c3a9a2c23993c"
-    },
-    {
-      "path": "native/SunFlower.reanim",
-      "originalPath": "reanim/SunFlower.reanim",
-      "sha256": "c1f67f3784cd199d36feb0a7a44426d180acb289ca4c2a2e308ca2b26e0008dd"
     }
   ],
   "assetBundleId": "sha256:b468b22439430ca4a36035b886a74bd831a86b2a1a36c39d3203396f5b75d093",
   "nativeInputsSha256": "e6833e91f2c8d6bf1a37055f3aa5653c90e553f31e97518612b56cc105196345",
-  "generationSha256": "78b2bcbfb5504ef855f06c3493026a056e64994d582e0a5bbcf94d238964f7d2",
-  "extractionSha256": "55f2ddd97672343879838f1c4210a097421df6b501988cabcc8115574c671e33",
+  "sourceMasterSha256": "f4bd5415a6da077ff55d92aebfec23ba46d12209b99172d6b37bbdee3eb5ca36",
+  "sourceClosedSha256": "4c7c7a4b43bafb6ccbdbb7637b27dcee4ed416707c5200b95fa343fffd24c0e0",
+  "generatedHead": {
+    "masterPath": "head-master.png",
+    "closedPath": "head-closed.png",
+    "masterSha256": "f4bd5415a6da077ff55d92aebfec23ba46d12209b99172d6b37bbdee3eb5ca36",
+    "closedSha256": "4c7c7a4b43bafb6ccbdbb7637b27dcee4ed416707c5200b95fa343fffd24c0e0"
+  },
+  "unchangedStem": {
+    "parentVersion": "0.2.6-web-mender.2",
+    "pngSha256": "e23f660180de218dca4ca7692f005b67115d7998e0303a7b1a68b4e9a78b2f02",
+    "rgbaSha256": "d306df9ab8d66cf3d7854bb599341525550b0f665cc529d2d708ad3cc18da2c1"
+  },
+  "generationSha256": "c2d5a614b9c9059bd79e3a9d3c439ea02bb20adb35d660b05e24e5e45a50a5a3",
+  "extractionSha256": "904c59e1ec6e487ef1c902d4dbf96eaf44cdb153fc08f4cfd8a3df5785fc1ab4",
   "historicalGenerationSha256": "4fe800a8dcf1a9d6d368e2f294ac1f61d074762e5ca9543a87a9afda00f66cdc",
-  "generatorSha256": "8611494b2204e30109bf28308c690a9998aead0bbc6d6af67569242b955d6b63",
-  "headerSha256": "d299ece91909918d5a0d7d233792e35b56637fc1eb8417443cb53a92199c7e51",
-  "canonicalRgbaSha256": "b0ce45fde943aec4bdd37cee4b25e7786022d285ed29388e4f81c49766dafb1c",
+  "historicalNativeGenerationSha256": "78b2bcbfb5504ef855f06c3493026a056e64994d582e0a5bbcf94d238964f7d2",
+  "generatorSha256": "decf60cb570923d149acc7315da5831b038b44b944ccb67892a32c960d33f4a6",
+  "headerSha256": "4000e3a9bfadc91a4de1501ed65ff1847fad25f6582a29dee4b27085ae77aa5e",
+  "canonicalRgbaSha256": "9d4c9c41d2870640b6464ca308fed57cb6ecbfcb62aa3d78a9e298f7963e6602",
   "parts": {
     "canonical": {
-      "pngSha256": "78bde978e1e181945c6ceb836b3ab1b74322c78d973bb7d4558957247d68a8ab",
-      "rgbaSha256": "b0ce45fde943aec4bdd37cee4b25e7786022d285ed29388e4f81c49766dafb1c",
+      "pngSha256": "23be52c6b86e50a19dee75fd55851d97d394d0674e418c5b4946c9bbe7f2aa0b",
+      "rgbaSha256": "9d4c9c41d2870640b6464ca308fed57cb6ecbfcb62aa3d78a9e298f7963e6602",
       "visibleBounds": [
-        8,
-        1,
-        72,
+        15,
+        4,
+        73,
         73
       ],
       "width": 80,
       "height": 80
     },
     "head": {
-      "pngSha256": "914f27531b175bef8e91332563eb3d04f2f894102652ca3c7f9f87fd1111a24c",
-      "rgbaSha256": "fab1f7111ac206a3d5a99acf536c269b9f0652365f215928e39dbc3f48780cab",
+      "pngSha256": "30f867a3bd5f14d6e14cf57ad0bc9000a69d3a0cabb1a0026a516d9cd38bac5b",
+      "rgbaSha256": "f87909db90f54aabb8c0fd64bffa630beb8a20a5dafe9eadffc4770bd7efd6d8",
       "visibleBounds": [
-        8,
-        1,
-        72,
-        58
+        15,
+        4,
+        73,
+        51
       ],
       "width": 80,
       "height": 80
@@ -121,24 +138,24 @@
       "height": 80
     },
     "head-blink": {
-      "pngSha256": "672cf5fa69a753bdff276a0854268c40d4c4ab6426de233f42c4e02021b56d60",
-      "rgbaSha256": "283b534139af89f0c66213e7f988fd96a35deb239433bd4307926a0f802b6edc",
+      "pngSha256": "8b8c60f37f116e46ecf35e21e382ba11f3e99299aa009c4ef516434b8115a58d",
+      "rgbaSha256": "04fa37df05f4a7fd2e37571eba65938dd4183879fee392f1d6c0b0762164956f",
       "visibleBounds": [
-        8,
-        1,
-        72,
-        58
+        15,
+        4,
+        73,
+        51
       ],
       "width": 80,
       "height": 80
     },
     "blink": {
-      "pngSha256": "0cef1eed5765d9c33e642f25ba0e99e717b933801433b1c47c20a56cb6508aab",
-      "rgbaSha256": "266480b14d117b20d5c58fb2336288a3a0622a6d39b7e7e0e1c498684c2e2198",
+      "pngSha256": "1f52b3f1145c0aa0a512509b92f4743d159549784c33634ae69b9d3a74193502",
+      "rgbaSha256": "4426f677359a2fccf2da95e33feea15ce349ff01c6edd77c39a7ebadd810b656",
       "visibleBounds": [
-        8,
-        1,
-        72,
+        15,
+        4,
+        73,
         73
       ],
       "width": 80,

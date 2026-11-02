@@ -1,20 +1,62 @@
 {
-  "schema": 2,
-  "tool": "Deterministic composition of original game sprite textures",
-  "imageGenerationUsed": false,
+  "schema": 3,
+  "tool": "Built-in image_gen tool",
+  "imageGenerationUsed": true,
   "cliOrApiKeyUsed": false,
-  "purpose": "Current Mender-bloom sprite only; no challenge illustration or new image-generation call",
-  "nativeComposition": "Original Sunflower face, eyes, smile, blink, stalk and leaves, with six wider recolored native Sunflower petal pieces.",
-  "historicalGeneratedArtwork": {
+  "purpose": "Distinct Mender-bloom head only; existing original stem/leaves retained; no generated challenge illustration",
+  "mode": "generate head using style references, targeted finish edit, eye-expression edit",
+  "calls": [
+    {
+      "output": "head-draft.png",
+      "referencedImages": [
+        "head-style-game.jpg",
+        "head-style-stem.png"
+      ],
+      "transparentBackground": true,
+      "prompt": "Use case: stylized-concept. Asset type: one new transparent 2D game sprite HEAD ONLY for Mender-bloom, a healing flower in a 2009 Plants vs. Zombies-style lawn game. Image1 is a STYLE REFERENCE ONLY: match the original game's matte modeled color, bold slightly irregular dark brown outlines, restrained warm highlights, hand-painted cartoon shading, simple expressive face, and readable chunky organic forms. Image2 is a STEM/LEAF STYLE AND ATTACHMENT REFERENCE ONLY; do NOT include or redraw those leaves or stem. The delivered image must contain just a new flower head with a short narrow base ready to attach to that original stem.\nCreate a DISTINCTIVE UPRIGHT CUP-SHAPED CORAL BLOSSOM: three large fleshy overlapping petals make a rounded tulip-like cup, a broad upper half with two off-center notches and uneven rounded petal tips, tapering into a narrow bottom neck. The front petal folds diagonally over a darker side petal, creating a strong asymmetrical curved silhouette and clear layered painted depth. One outer petal tip leans gently outward. The little face is ON THE CORAL FRONT PETAL itself, not on a separate disk: two small uneven dark oval eyes, a slight caring lopsided smile, a tiny relaxed brow; expression quietly attentive and capable. Petal colors are muted warm coral/salmon with dusky rose shadows and small soft peach highlights. The head is three-quarter facing slightly right, with a narrow dark green sepal collar only at the very bottom. Strong original-game-style light/dark modeling and confident readable outlines; make it look like a real in-game plant sprite at 55 pixels high.\nCRITICAL IDENTITY CONSTRAINTS: no Sunflower face, no brown center disk, no circular yellow/cream face, no radial petal ring, no six-petal star, no daisy or sunflower shape, no muzzle, no medical props, no badges/crosses/symbols or bandages, no hands. This must read as a cupped blossom with a face on its petal, unlike Sunflower. No glossy plastic, 3D render, vector-flat look, excessive shine, brush texture noise, or anime/kawaii eyes. No ground, no shadow, no stem or leaves, no labels, no surrounding scene. Genuinely transparent background. One isolated head, centered with generous transparent padding around every edge, all petals visible, no clipping.",
+      "sha256": "248ec8817f77b869478ac8a351ca78c6a6926d57673d5a7f35f8861df823b89e",
+      "referencedSha256": {
+        "head-style-game.jpg": "efa379dda990972337989fe5e4285391d9316194a9f12f5e6349a05acbc04fde",
+        "head-style-stem.png": "e23f660180de218dca4ca7692f005b67115d7998e0303a7b1a68b4e9a78b2f02"
+      }
+    },
+    {
+      "output": "head-master.png",
+      "referencedImages": [
+        "head-draft.png",
+        "head-style-game.jpg"
+      ],
+      "transparentBackground": true,
+      "prompt": "Use case: style-transfer. Image1 is the EDIT TARGET: Mender-bloom's new coral cup-shaped blossom HEAD. Image2 is an original Plants vs. Zombies STYLE REFERENCE ONLY. Preserve Image1's exact cupped three-petal silhouette, all proportions, facing direction, petal folds, two notches, face placement, concerned caring brow expression, small smile, bottom sepal collar and transparent alpha. Do not add a stem or leaves. Change ONLY the surface painting: remove the conspicuous angular brushstroke bands and streaky posterized patches on the coral petals and green collar. Replace them with the original game's smooth matte shaded color, broad softly blended warm highlights and gently blended dusky shadows, like the original Sunflower face/Wall-nut surfaces in Image2. Keep enough strong dark/light modeling that the overlapping fleshy petals feel rounded, not vector-flat. Preserve the readable dark brown outline; it should be organic and confident, not an extra-thick sticker border. Keep the eyes small dark ovals with one tiny original-game-like muted glint. No glossy plastic/specular white blobs, no 3D render, no surface-grain noise, no extra facial details or props, no radial petal ring, no brown face disk. Same single head, same canvas/registration, genuinely transparent background. The result is the SAME distinctive cupped flower head with a simpler smoother original-game finish.",
+      "sha256": "f4bd5415a6da077ff55d92aebfec23ba46d12209b99172d6b37bbdee3eb5ca36",
+      "referencedSha256": {
+        "head-draft.png": "248ec8817f77b869478ac8a351ca78c6a6926d57673d5a7f35f8861df823b89e",
+        "head-style-game.jpg": "efa379dda990972337989fe5e4285391d9316194a9f12f5e6349a05acbc04fde"
+      }
+    },
+    {
+      "output": "head-closed.png",
+      "referencedImages": [
+        "head-master.png"
+      ],
+      "transparentBackground": true,
+      "prompt": "Use case: precise-object-edit. This image is Mender-bloom's FINAL CORAL CUPPED BLOSSOM HEAD, the edit target. Make its blink expression. Change ONLY the two small dark oval eyes into relaxed narrow curved closed-eyelid strokes at the exact same eye positions. Keep the caring eyebrows and the small lopsided smile exactly unchanged. Preserve every other pixel feature: same exact canvas, position, transparent alpha, cup silhouette, all overlapping petal folds and tips/notches, proportions, facing direction, green sepal collar, colors, matte smooth shading, outlines and highlights. No new expression changes elsewhere, no new marks, no glow, props, leaves, stem, background or shadow. The closed image will supply ONLY the two eye-region RGB areas to an otherwise unchanged registered animation frame. Genuine transparency, identical framing.",
+      "sha256": "4c7c7a4b43bafb6ccbdbb7637b27dcee4ed416707c5200b95fa343fffd24c0e0",
+      "referencedSha256": {
+        "head-master.png": "f4bd5415a6da077ff55d92aebfec23ba46d12209b99172d6b37bbdee3eb5ca36"
+      }
+    }
+  ],
+  "canonicalHeadMaster": "head-master.png",
+  "closedExpressionSource": "head-closed.png",
+  "headOnly": true,
+  "originalStemLeavesBytePreserved": true,
+  "historicalNativeComposition": {
     "active": false,
-    "imageGenerationUsed": true,
-    "generationRecord": "generation-history.json",
-    "masters": [
-      "initial.png",
-      "master.png",
-      "closed.png"
-    ]
+    "generationRecord": "generation-mender2-history.json"
   },
-  "sourceInputsRecord": "native-provenance.json",
-  "recipe": "extraction.json"
+  "historicalWholeFlowerGeneration": {
+    "active": false,
+    "generationRecord": "generation-history.json"
+  }
 }

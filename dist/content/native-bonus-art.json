@@ -127,15 +127,16 @@
     },
     "almanac": "Native compact catalog packet, formatted statistics, brown italic character biography and animated portrait; unlocks after Seed Swap including an existing valid win.",
     "gameplay": "125 sun, 15-second recharge; heals each eligible living persistent plant in the eight adjacent squares by 10 HP every three simulation seconds, capped at maximum health. No self healing or damage.",
-    "artwork": "Original plant sprite parts composed into a distinct flower, with original painted outlines, face, stem and leaves. Registered layers share a grounded stem flex, head sway, blinking and healing lift.",
+    "artwork": "Distinct coral cupped-blossom head with a face on the front petal, generated using original-game style references. Original native stem and leaves remain byte-identical; the shared idle, blink and healing rig is retained.",
     "animation": {
       "idlePeriodSeconds": 2.8,
       "stemAngleRadians": [
         -0.055,
         0.055
       ],
-      "nativeParts": true
-    }
+      "nativeStemLeaves": true
+    },
+    "generatedHead": true
   },
   "chooserPresentation": {
     "customPacketSize": [

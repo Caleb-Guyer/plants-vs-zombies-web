@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-mender.2
-Gives Chill-shroom and Mender-bloom expressive idle animations and original-style Almanac formatting, compact catalog portraits and character-specific descriptions. Rebuilds Mender-bloom from original sprite parts and moves custom seed packets inside the chooser panel. Preserves abilities, unlocks, Chill-shroom pixels, all five bonus minigames and native save layouts.
+PvZ-Portable 0.2.6-web-mender.3
+Replaces Mender-bloom's Sunflower-like head with a distinct coral cupped blossom and its own expression. Retains the original stem and leaves, accepted idle animations, Almanac and chooser presentation, gameplay mechanics, unlocks, Chill-shroom artwork and native save layouts.
 Engine JavaScript SHA-256: f016c3f256ff234542c34fcea8a3cc927e2ad0ea6f5498b70897ce7d47750045
-Engine WASM SHA-256: f81303e6bc051a46bd6d08f9e42e089960b0bec37a1f87b9bba20335240e4b5d
+Engine WASM SHA-256: 7a65f7f873e63e584b511ff5c079f38fa03f56e58d978295dddc8ebc3ccd27c1
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.
