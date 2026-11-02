@@ -1,5 +1,14 @@
 # Current requirements
 
+## Care.3 - fatigue cues and complete-engine battles
+
+`0.2.6-web-care.3` makes Intensive Lawn Care fatigue visible in the original plant rigs. Plants begin to droop at 180 HP, settle into a low breathing rest at 60 HP, and rise as Menders heal them. Native attack poses remain aligned with their projectiles. Fatigue no longer borrows the white bite flash; there are no extra status bars or floating icons. The accepted artwork, challenge layout and balance remain unchanged.
+
+Mender healing sparkles now retire after their native 60-tick pulse instead of accumulating looping emitters. A one-time board-load cleanup also retires old zero-cutoff healing effects while preserving finite saved lifetimes. Shared trophy artwork and serialized layouts remain unchanged.
+
+All fourteen silent native suites passed: 37,952 checks, zero failures, including 25,042 fatigue rendering/state checks. The complete linked production engine ran sixteen battles: normal play, an 18-second recovery lapse, save/Continue and no recovery, at 1x and 2x across two fixed seeds. All twelve required recovery strategies earned the native award; all four no-recovery controls reached actual game over. No battle exhausted the particle pool. Separate migration fixtures exercise real save/load of legacy looping particles. The normal strategy deploys cover at the visible 180-HP cue before resting its predecessor. Two additional strategies (waiting until 100 HP, or withdrawing lone defenders immediately at 180 HP) lost on one seed; their failure receipts and logs are retained locally as characterization limits and excluded from passing battle counts. These are bounded reactive test strategies, not a claim about every player's difficulty or exhaustive parity.
+
+
 ## Care.2 - presentation bounds
 
 `0.2.6-web-care.2` fixes the reported Intensive Lawn Care overlaps while retaining original assets. The complete conveyor backdrop, including its seed-bank parent translation, must be clear of the glove frame and icon; the glove must also clear the native menu/speed controls. Drawing and hit-testing use the same tool rectangle. The original-font opening hint must fit above the footer and must not remain over the pause dialog.

@@ -1,5 +1,18 @@
 # Browser parity and QA record
 
+## Care.3 - fatigue cues and complete-engine battles
+
+`0.2.6-web-care.3` makes Intensive Lawn Care fatigue visible in the original plant rigs. Plants begin to droop at 180 HP, settle into a low breathing rest at 60 HP, and rise as Menders heal them. Native attack poses remain aligned with their projectiles. Fatigue no longer borrows the white bite flash; there are no extra status bars or floating icons. The accepted artwork, challenge layout and balance remain unchanged.
+
+Mender healing sparkles now retire after their native 60-tick pulse instead of accumulating looping emitters. A one-time board-load cleanup also retires old zero-cutoff healing effects while preserving finite saved lifetimes. Shared trophy artwork and serialized layouts remain unchanged.
+
+All fourteen silent native suites passed: 37,952 checks, zero failures, including 25,042 fatigue rendering/state checks. The complete linked production engine ran sixteen battles: normal play, an 18-second recovery lapse, save/Continue and no recovery, at 1x and 2x across two fixed seeds. All twelve required recovery strategies earned the native award; all four no-recovery controls reached actual game over. No battle exhausted the particle pool. Separate migration fixtures exercise real save/load of legacy looping particles. The normal strategy deploys cover at the visible 180-HP cue before resting its predecessor. Two additional strategies (waiting until 100 HP, or withdrawing lone defenders immediately at 180 HP) lost on one seed; their failure receipts and logs are retained locally as characterization limits and excluded from passing battle counts. These are bounded reactive test strategies, not a claim about every player's difficulty or exhaustive parity.
+
+The [corresponding source archive](dist/source/pvz-portable-0.2.6-web-care.3-source.zip) contains 818 production files and 877 ZIP entries, SHA-256 `50d01dd1bbd793e1cda1dfbc74a70ca6724eee8741dab9260d188b3f49c882d4`. Both the full upstream patch and the Care.2 increment reconstruct every production source byte. The test-only complete-engine Node/WASM driver and its reproducible recipe accompany the source; actual battle execution requires the authenticated game asset bundle and has no approximate-model fallback.
+
+Muted browser inspection used an explicit synthetic visual checkpoint imported through the supported ZIP flow, then native Continue. At 1280x720 and 800x600, healthy, tired and exhausted Repeater poses were distinct; actual glove input moved the exhausted actor into a pot and its pose rose as native healing progressed. Both speed settings and clear toolbar/hint layout were observed. The temporary preview served the exact frozen Release binaries; no browser runtime injection was used. This fixture is visual evidence, not another battle clear.
+
+
 ## Care.2 layout regression scope
 
 `0.2.6-web-care.2` repairs two Care.1 presentation defects: the glove overlapped the full translated conveyor frame, and a long original-font hint wrapped beyond its native message band into the footer and pause view.

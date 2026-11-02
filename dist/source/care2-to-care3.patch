@@ -1,0 +1,298 @@
+diff --git a/CMake/ProjectVersion.cmake b/CMake/ProjectVersion.cmake
+index e0a697a04dd203be5b89013ff695358f6f594643..7dbbb41bb1813ea78223c0481de7a7f8e4735d9f 100644
+--- a/CMake/ProjectVersion.cmake
++++ b/CMake/ProjectVersion.cmake
+@@ -66,6 +66,6 @@ if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
+ endif()
+ 
+ # Browser release identity; keep binary and corresponding-source manifests aligned.
+-set(PVZP_VERSION "0.2.6-web-care.2")
++set(PVZP_VERSION "0.2.6-web-care.3")
+ set(PVZP_VERSION_PLAIN "0.2.6")
+ configure_file("${PROJECT_SOURCE_DIR}/CMake/ProjectVersion.h.in" "${PROJECT_BINARY_DIR}/ProjectVersion.h" @ONLY)
+diff --git a/src/Lawn/Board.cpp b/src/Lawn/Board.cpp
+index 1de82b9e90698fb7c53bc567b8badcddf73f2828..de8140af9bd5b044b648014db5912f23fae45f57 100644
+--- a/src/Lawn/Board.cpp
++++ b/src/Lawn/Board.cpp
+@@ -26,6 +26,7 @@
+ #include <format>
+ #include "ZenGarden.h"
+ #include "BoardInclude.h"
++#include "System/MenderBloom.h"
+ #include "LawnCommon.h"
+ #include "System/Music.h"
+ #include "System/SaveGame.h"
+@@ -370,6 +371,7 @@ bool Board::LoadGame(const std::string& theFileName)
+ 	if (!LawnLoadGame(this, theFileName))
+ 		return false;
+ 
++	MenderBloom::RetireLegacyHealingParticles(*this);
+ 	LoadBackgroundImages();
+ 	mApp->ClearUpdateBacklog();
+ 	ResetFPSStats();
+@@ -4299,8 +4301,6 @@ void Board::UpdateIntensiveCare()
+             !IntensiveCare::IsCrewSeed(plant->mSeedType) ||
+             !IntensiveCare::CanDeployAt(plant->mPlantCol, plant->mRow)) continue;
+         plant->mPlantHealth = IntensiveCare::FatiguedHealth(plant->mPlantHealth);
+-        if (plant->mPlantHealth <= IntensiveCare::kWarningHealth && mMainCounter % 100 == 0)
+-            plant->mEatenFlashCountdown = std::max(plant->mEatenFlashCountdown, 30);
+     }
+ }
+ 
+diff --git a/src/Lawn/Plant.cpp b/src/Lawn/Plant.cpp
+index 4731e30f9171d3b9ad16d0724ca6a1d4896bf452..3155e2b7080de1ee99cf40194f0272e16941b6a1 100644
+--- a/src/Lawn/Plant.cpp
++++ b/src/Lawn/Plant.cpp
+@@ -36,6 +36,7 @@
+ #include "System/LanternShroom.h"
+ #include "System/MenderBloom.h"
+ #include "System/IntensiveCare.h"
++#include "System/CareFatigue.h"
+ #include "System/ReanimationLawn.h"
+ #include "../PvzpLib/PvzpFoley.h"
+ #include "../PvzpLib/PvzpDebug.h"
+@@ -4012,6 +4013,85 @@ void Plant::DrawShadow(Sexy::Graphics* g, float theOffsetX, float theOffsetY)
+ 	}
+ }
+ 
++namespace
++{
++// Reanimation's matrix draw path does not use Graphics::SetScale. Transform
++// the native rig together for this draw, then restore every matrix exactly.
++// No update, projectile launch or save operation can observe the visual pose.
++class CareFatigueDraw
++{
++    struct Part { Reanimation* mReanim; SexyTransform2D mMatrix; };
++    std::array<Part, 32> mParts;
++    size_t mCount = 0;
++    LawnApp& mApp;
++    const CareFatigue::Pose& mPose;
++    float mPivotX;
++    float mPivotY;
++
++    void AddAttachment(AttachmentID id, int depth)
++    {
++        if (id == AttachmentID::ATTACHMENTID_NULL || depth > 8 || !gEffectSystem || !gEffectSystem->mAttachmentHolder) return;
++        Attachment* attachment = gEffectSystem->mAttachmentHolder->mAttachments.DataArrayTryToGet(id);
++        if (!attachment) return;
++        for (int i = 0; i < attachment->mNumEffects; ++i)
++        {
++            const AttachEffect& effect = attachment->mEffectArray[i];
++            if (effect.mEffectType == EffectType::EFFECT_REANIM)
++                Add(mApp.ReanimationTryToGet(static_cast<ReanimationID>(effect.mEffectID)), depth + 1);
++            else if (effect.mEffectType == EffectType::EFFECT_ATTACHMENT)
++                AddAttachment(static_cast<AttachmentID>(effect.mEffectID), depth + 1);
++        }
++    }
++
++    void Add(Reanimation* reanim, int depth)
++    {
++        if (!reanim || depth > 8 || mCount == mParts.size()) return;
++        for (size_t i = 0; i < mCount; ++i) if (mParts[i].mReanim == reanim) return;
++        mParts[mCount++] = {reanim, reanim->mOverlayMatrix};
++        reanim->mOverlayMatrix = CareFatigue::Transform(mPose, mPivotX, mPivotY, reanim->mOverlayMatrix);
++        for (int i = 0; i < reanim->mDefinition->mTracks.count; ++i)
++            AddAttachment(reanim->mTrackInstances[i].mAttachmentID, depth + 1);
++    }
++
++public:
++    CareFatigueDraw(LawnApp& app, Reanimation& body, const CareFatigue::Pose& pose, float baseY) :
++        mApp(app), mPose(pose), mPivotX(40.0f), mPivotY(baseY + 76.0f)
++    {
++        Add(&body, 0);
++    }
++    ~CareFatigueDraw()
++    {
++        for (size_t i = 0; i < mCount; ++i) mParts[i].mReanim->mOverlayMatrix = mParts[i].mMatrix;
++    }
++};
++
++void DrawCareFatigue(Graphics* g, Plant& plant, Reanimation& body, float baseY)
++{
++    if (!plant.mBoard || !plant.mIsOnBoard || !IntensiveCare::IsMode(plant.mApp->mGameMode) ||
++        !IntensiveCare::IsCrewSeed(plant.mSeedType) || plant.mDead || plant.mSquished ||
++        plant.mIsAsleep || plant.mOnBungeeState != NOT_ON_BUNGEE)
++    {
++        body.Draw(g);
++        return;
++    }
++    const CareFatigue::Pose pose = CareFatigue::GetPose(plant.mPlantHealth, plant.mShootingCounter,
++        plant.mBoard->mMainCounter, plant.mRow, plant.mPlantCol);
++    if (!pose.mActive)
++    {
++        body.Draw(g);
++        return;
++    }
++    CareFatigueDraw rig(*plant.mApp, body, pose, baseY);
++    Graphics shaded(*g);
++    const int shade = static_cast<int>(255.0f * pose.mShade);
++    const Color color = g->GetColorizeImages() ? g->GetColor() : Color::White;
++    shaded.SetColor(Color(color.mRed * shade / 255, color.mGreen * shade / 255,
++        color.mBlue * shade / 255, color.mAlpha));
++    shaded.SetColorizeImages(true);
++    body.Draw(&shaded);
++}
++}
++
+ void Plant::Draw(Graphics* g)
+ {
+ 	if (mSeedType == SEED_LANTERNSHROOM) LanternShroom::EnsurePlantReanimation(*this);
+@@ -4125,7 +4205,7 @@ void Plant::Draw(Graphics* g)
+ 					else
+ 					{
+ 						if (mSeedType == SEED_LANTERNSHROOM) LanternShroom::DrawPlantRig(g, *this, *aBodyReanim);
+-						aBodyReanim->Draw(g);
++						DrawCareFatigue(g, *this, *aBodyReanim, aOffsetY);
+ 					}
+ 				}
+ 			}
+diff --git a/src/Lawn/System/CareFatigue.h b/src/Lawn/System/CareFatigue.h
+new file mode 100644
+index 0000000000000000000000000000000000000000..d570b956b21a488c147a82514fddf760603839aa
+--- /dev/null
++++ b/src/Lawn/System/CareFatigue.h
+@@ -0,0 +1,61 @@
++// SPDX-License-Identifier: LGPL-3.0-or-later
++#pragma once
++
++#include "IntensiveCare.h"
++#include <cmath>
++#include <cstdint>
++
++// A rendering pose, never a plant state. Native attack, health, targeting,
++// attachment clocks and save data remain the authority for the actual plant.
++namespace CareFatigue
++{
++inline constexpr int kTiredHealth = 180;
++
++struct Pose
++{
++    float mLean = 0.0f;
++    float mScaleY = 1.0f;
++    float mShade = 1.0f;
++    bool mActive = false;
++};
++
++inline Pose GetPose(int health, int shootingCounter, uint32_t counter, int row, int col)
++{
++    if (health > kTiredHealth || health <= 0) return {};
++    const float phase = static_cast<float>((counter + row * 73 + col * 41) % 600) * 0.010471976f;
++    const float breath = (1.0f + std::sin(phase)) * 0.5f;
++    if (health <= IntensiveCare::kExhaustedHealth)
++    {
++        // A low resting silhouette and slow breathing stay legible at lawn
++        // scale without borrowing the sleeping mushrooms' floating Zs.
++        return {0.56f + breath * 0.018f, 0.60f + breath * 0.018f, 0.86f, true};
++    }
++
++    const float tired = static_cast<float>(kTiredHealth - health) /
++        static_cast<float>(kTiredHealth - IntensiveCare::kExhaustedHealth);
++    const float amount = 0.18f + tired * 0.82f;
++    // Let native attack poses reach the unchanged projectile launch point.
++    // The droop is strongest between attacks, when the plant catches its breath.
++    const float idle = shootingCounter > 0 ? 0.0f : 1.0f;
++    return {(0.10f + breath * 0.08f) * amount * idle,
++        1.0f - (0.12f + breath * 0.04f) * amount * idle,
++        1.0f - 0.045f * amount, true};
++}
++
++template<class Matrix>
++Matrix Transform(const Pose& pose, float pivotX, float pivotY, const Matrix& original)
++{
++    const float c = std::cos(pose.mLean);
++    const float s = std::sin(pose.mLean);
++    Matrix result = original;
++    // Clockwise lean and a shorter stalk, hinged at the planted base. Compose
++    // with every native part's existing matrix, including attached blink art.
++    result.m00 = c * original.m00 - s * pose.mScaleY * original.m10;
++    result.m01 = c * original.m01 - s * pose.mScaleY * original.m11;
++    result.m02 = pivotX + c * (original.m02 - pivotX) - s * pose.mScaleY * (original.m12 - pivotY);
++    result.m10 = s * original.m00 + c * pose.mScaleY * original.m10;
++    result.m11 = s * original.m01 + c * pose.mScaleY * original.m11;
++    result.m12 = pivotY + s * (original.m02 - pivotX) + c * pose.mScaleY * (original.m12 - pivotY);
++    return result;
++}
++}
+diff --git a/src/Lawn/System/MenderBloom.cpp b/src/Lawn/System/MenderBloom.cpp
+index 008b8e90645e700f21663f0ed4725d3df9d3d9e9..470d6455ac91a45a024d4020f8b873ee5830a24f 100644
+--- a/src/Lawn/System/MenderBloom.cpp
++++ b/src/Lawn/System/MenderBloom.cpp
+@@ -7,6 +7,8 @@
+ #include "../../SexyAppFramework/graphics/MemoryImage.h"
+ #include "../../SexyAppFramework/graphics/Graphics.h"
+ #include "../../PvzpLib/PvzpCommon.h"
++#include "../../PvzpLib/PvzpParticle.h"
++#include "../../PvzpLib/EffectSystem.h"
+ #include "../../PvzpLib/Reanimator.h"
+ #include "../../PvzpLib/FilterEffect.h"
+ #include <array>
+@@ -26,6 +28,27 @@ bool IsEligibleTarget(const Plant& healer, const Plant& target)
+         InRange(target.mPlantCol - healer.mPlantCol, target.mRow - healer.mRow);
+ }
+ 
++void RetireLegacyHealingParticles(Board& board)
++{
++    if (!board.mApp || !board.mApp->mEffectSystem || !board.mApp->mEffectSystem->mParticleHolder)
++        return;
++    // Called once after loading a board. Menu trophy effects were discarded
++    // when the board was created; these unowned sparkles are old healing pulses.
++    // Preserve a pending finite pulse's saved lifetime rather than restarting it.
++    for (PvzpParticleSystem* sparkle : board.mApp->mEffectSystem->mParticleHolder->mParticleSystems)
++    {
++        if (sparkle->mDead || sparkle->mIsAttachment || sparkle->mEffectType != PARTICLE_TROPHY_SPARKLE)
++            continue;
++        for (auto* node = sparkle->mEmitterList.mHead; node; node = node->mNext)
++        {
++            PvzpParticleEmitter* emitter = sparkle->mParticleHolder->mEmitters.DataArrayGet(
++                static_cast<unsigned int>(node->mValue));
++            if (!emitter->mDead && emitter->mEmitterCrossFadeCountDown == 0)
++                emitter->mEmitterCrossFadeCountDown = kHealingFrames;
++        }
++    }
++}
++
+ void Update(Plant& healer)
+ {
+     if (healer.mSeedType != kSeed || !healer.mBoard || !healer.mApp ||
+@@ -47,10 +70,17 @@ void Update(Plant& healer)
+         target->mPlantHealth = BoundedHeal(previous, target->mPlantMaxHealth);
+         if (target->mPlantHealth == previous) continue;
+         healed = true;
+-        // Native sparkle particles are short-lived and occur only on an actual
+-        // repair. They do not add persistent range circles or health labels.
+-        healer.mApp->AddPvzpParticle(target->mX + 40, target->mY + 28,
+-            target->mRenderOrder + 2, PARTICLE_TROPHY_SPARKLE);
++        // The native trophy sparkle loops. Its existing per-emitter cutoff
++        // gives this repair pulse a finite lifetime without changing the shared
++        // trophy definition, artwork or serialized particle layout.
++        if (PvzpParticleSystem* sparkle = healer.mApp->AddPvzpParticle(
++            target->mX + 40, target->mY + 28, target->mRenderOrder + 2, PARTICLE_TROPHY_SPARKLE))
++            for (auto* node = sparkle->mEmitterList.mHead; node; node = node->mNext)
++            {
++                PvzpParticleEmitter* emitter = sparkle->mParticleHolder->mEmitters.DataArrayGet(
++                    static_cast<unsigned int>(node->mValue));
++                emitter->mEmitterCrossFadeCountDown = kHealingFrames;
++            }
+         if (target->mSeedType == SEED_GARLIC && previous < target->mPlantMaxHealth / 3 &&
+             target->mPlantHealth >= target->mPlantMaxHealth / 3)
+             if (Reanimation* body = healer.mApp->ReanimationTryToGet(target->mBodyReanimID))
+diff --git a/src/Lawn/System/MenderBloom.h b/src/Lawn/System/MenderBloom.h
+index 650be5bbdcd65a36a28c6586f4c7188a9102831b..20344aad51aa97c6e9e41de0aa9e3bb8b9f17016 100644
+--- a/src/Lawn/System/MenderBloom.h
++++ b/src/Lawn/System/MenderBloom.h
+@@ -7,6 +7,7 @@
+ 
+ namespace Sexy { class Image; class Graphics; }
+ class Plant;
++class Board;
+ class Reanimation;
+ 
+ // The native Plant's existing state/glow counters carry this ability through
+@@ -101,6 +102,7 @@ inline LayerPose GetHeadPose(float animTime, int glow)
+ }
+ 
+ bool IsEligibleTarget(const Plant& healer, const Plant& target);
++void RetireLegacyHealingParticles(Board& board);
+ void Update(Plant& healer);
+ Sexy::Image* GetImage();
+ void DisposeImage();

@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-care.2
-Repairs Intensive Lawn Care presentation: separate native glove and full conveyor frame, fit the original-font opening hint above the footer, and hide it while paused. Adds native layout regression checks. Game rules, save layouts and artwork remain unchanged.
+PvZ-Portable 0.2.6-web-care.3
+Adds complete-engine Intensive Lawn Care battles at native 1x and 2x, visible tired and exhausted poses using the original plant rigs, and finite native healing sparkles with legacy-checkpoint cleanup. Existing balance, artwork, toolbar layout and serialized formats remain unchanged.
 Engine JavaScript SHA-256: a52baa0c50f4c2b01aa22f07f023fa646c4075553e402f91593e49e6bc0a8c2b
-Engine WASM SHA-256: 8926a54cd9b7a778cc6f5b61692515012372e3356f93fb0715ce118d76eda467
+Engine WASM SHA-256: 1eed40964da459c6f5d5e741902e856c6d2ce025fb445edae82842a3b467f2b1
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.
