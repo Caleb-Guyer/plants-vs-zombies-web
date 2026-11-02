@@ -10,7 +10,7 @@
     "jsSha256": "251ec8d9bc301f1245a631e8a3dc932f9bcc37d7358d804c07cdf1c6cf867d8e",
     "wasmSha256": "f7c31bb243b7b6823782f416a8c3f438e6a7376b48782e6a1257a1ba8a11b8d3",
     "source": "../source/pvz-portable-0.2.6-web-care.1-source.zip",
-    "sourceSha256": "497b9d468ddee62db3cab9d111dd10d230c33c4032ba8b2ebc1eafc3733c7d62",
+    "sourceSha256": "540f1ee365b558e10304995692485976e91f23bb1b28c305e6ade6cd17f1ed11",
     "patch": "../source/web-care.1.patch",
     "patchSha256": "9a6513daec1a10a338e8689d13b2f7e2bed1f28a8e305fad9317dd46f33283eb"
   },

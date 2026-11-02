@@ -8,11 +8,11 @@
   },
   "sourceArchive": {
     "path": "pvz-portable-0.2.6-web-care.1-source.zip",
-    "bytes": 13584241,
-    "sha256": "497b9d468ddee62db3cab9d111dd10d230c33c4032ba8b2ebc1eafc3733c7d62",
-    "crc32": "1d4c658d",
+    "bytes": 13584266,
+    "sha256": "540f1ee365b558e10304995692485976e91f23bb1b28c305e6ade6cd17f1ed11",
+    "crc32": "811f4c26",
     "entries": 861,
-    "uncompressedBytes": 27255384
+    "uncompressedBytes": 27255481
   },
   "artifacts": [
     {
@@ -200,8 +200,8 @@
         {
           "path": "tests/intensive-care-results.json",
           "bytes": 3295,
-          "sha256": "e0955f2ea87663b99253ba0029fce17d2d2ceabba08ef26ee2eef6b137ad2821",
-          "crc32": "2c2bd0f4",
+          "sha256": "d0a06f53fc4add39570cd9ff9f3c93f8f5733714350e07d3f2de338ff36e992f",
+          "crc32": "4d67d9bd",
           "checks": 1135
         }
       ]
