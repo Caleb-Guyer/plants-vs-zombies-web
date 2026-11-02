@@ -80,6 +80,16 @@
       "background": "IMAGE_BACKGROUND1",
       "generatedArtworkUsed": false,
       "gameplay": "Five hand-arranged explosive puzzles. Place a finite supply of Cherry Bombs, Jalapenos and Potato Mines, then use the native Let's Rock button. Native blasts and walking zombies resolve each arrangement; one trophy follows the fifth board."
+    },
+    {
+      "mode": 80,
+      "name": "Rally Point",
+      "hero": "Original REANIM_ZOMBIE body and articulated original arm tracks, with native-coded shaded megaphone",
+      "background": "IMAGE_BACKGROUND1",
+      "generatedArtworkUsed": false,
+      "gameplay": "Ten authored day-lawn waves built around Rally Zombie groups. A fixed six-plant bank and seven starting plants provide immediate counterplay; native sun, planting, recharge, mowers, armor and victory rules remain active. Calls briefly raise eligible nearby walkers to 1.45 times their base speed, do not stack and stop when their source is frozen, buttered, eating, headless or armless.",
+      "artwork": "The unmodified native head, body, legs and arm images supply the character. The original reaching arm pose is blended into each walking pose to raise and lower a shaded ivory megaphone with a brick-red rim. The 80 by 65 card is rendered from this actual rig, fitted to the existing centered portrait bounds.",
+      "almanac": "One additional native zombie window in the unused bottom-left space; original zombie positions and Dr. Zomboss are retained. The portrait animates using the same rig and call clock, with native formatted statistics and brown italic character biography."
     }
   ],
   "canvas": {
@@ -130,7 +140,7 @@
       0.07
     ]
   },
-  "checkpointCompatibility": "State-zero existing bonus checkpoints keep their previous fixed-bank twenty-wave rules. Chill.8 arcade checkpoints retain saved boards/belts/waves and gain new mechanics on later events; New Game starts the revised opening/roster. Existing completion rewards remain valid. Garden Shuffle uses new mode76 and unused profile record75 with unchanged native object layouts; moves preserve the original plant instance. Seed Swap appends mode77 and unused profile record76; native Coin, Cursor, Plant and Challenge serialized members retain packet drops and replacement gardens. Intensive Lawn Care appends mode78 and unused profile record77; native cursor, plant, conveyor and challenge fields preserve wounded crew, moves, fatigue, supply and recovery without serialized layout changes.",
+  "checkpointCompatibility": "State-zero existing bonus checkpoints keep their previous fixed-bank twenty-wave rules. Chill.8 arcade checkpoints retain saved boards/belts/waves and gain new mechanics on later events; New Game starts the revised opening/roster. Existing completion rewards remain valid. Garden Shuffle uses new mode76 and unused profile record75 with unchanged native object layouts; moves preserve the original plant instance. Seed Swap appends mode77 and unused profile record76; native Coin, Cursor, Plant and Challenge serialized members retain packet drops and replacement gardens. Intensive Lawn Care appends mode78 and unused profile record77; native cursor, plant, conveyor and challenge fields preserve wounded crew, moves, fatigue, supply and recovery without serialized layout changes. Rally Point appends mode80 and unused profile record79; Rally Zombie appends type33. Existing Board, Challenge, Zombie and profile saved layouts are unchanged; its existing native summon counter preserves the call cadence.",
   "supportPlant": {
     "displayName": "Mender-bloom",
     "spriteOverride": "mender-bloom/provenance.json",

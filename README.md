@@ -1,5 +1,12 @@
 # Plants vs. Zombies — browser playtest
 
+## Rally.1 - Rally Zombie
+
+`0.2.6-web-rally.1` adds **Rally Zombie** and **Rally Point** under **Mini-Games > Bonus**. The megaphone carrier periodically rallies nearby walkers; killing or freezing the caller interrupts its shout. Overlapping callers do not stack their speed boosts. A new native Almanac entry explains its behavior.
+
+All sixteen muted native suites passed (437,949 checks), including the current Rally scenarios and retained complete-engine Care and Chain Reaction runs. Existing levels, custom plant artwork and saved actor layouts are preserved. See [QA scope](PARITY-QA.md) and [release receipts](DEPLOYMENT.md).
+
+
 ## Chain.1 - Chain Reaction
 
 `0.2.6-web-chain.1` adds **Chain Reaction** under **Mini-Games > Bonus**. Clear five hand-arranged boards with a limited supply of Cherry Bombs, Jalapenos and Potato Mines. Place the plants, then press the original Let's Rock button. Retry restarts the current board; a first complete clear earns one trophy. Its seventh Bonus card combines the original three plant sprites.

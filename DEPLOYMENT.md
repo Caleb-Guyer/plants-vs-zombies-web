@@ -1,5 +1,19 @@
 # GitHub Pages release: Caleb-Guyer/plants-vs-zombies-web
 
+## Rally.1 - tested release inputs
+
+Current engine: `0.2.6-web-rally.1`.
+
+- Normal JavaScript SHA-256: `3efa16733b86653613e71e55bd160432c149fbb735c66d01a87c1685e1190e38`.
+- Normal WebAssembly SHA-256: `a3c8539b728ce0dbee3868f5375e0622d8cac2f3ac78b0e34f1d86cd364a5e71`.
+- Corresponding source: `pvz-portable-0.2.6-web-rally.1-source.zip`, 21,343,650 bytes, 901 entries, SHA-256 `a37ba37528139bc38df887a027c7c54aadfb2065897f32a48a556b3dc15df63e`.
+- Published Chain.1 parent source SHA-256: `2794ff25f7427a2d3c1032bb9e2671f5b425701d7944d274f7c94e26ffb132a7`.
+- Full and incremental patches: `web-rally.1.patch`, `chain1-to-rally1.patch`. Both reconstruct every current production byte.
+- Native suites: 16; 437,949 checks, zero failures. The build receipt records unchanged production source before/after compilation; executed full-engine artifacts bind that exact receipt.
+
+Push and manual Pages publication use the repository's existing workflow. The workflow reruns source/browser checks, native suites and authenticated asset verification before deploying. Final deployment identity and public-byte comparisons are retained in the local release evidence.
+
+
 ## Chain.1 - Chain Reaction
 
 `0.2.6-web-chain.1` adds **Chain Reaction** under **Mini-Games > Bonus**. Clear five hand-arranged boards with a limited supply of Cherry Bombs, Jalapenos and Potato Mines. Place the plants, then press the original Let's Rock button. Retry restarts the current board; a first complete clear earns one trophy. Its seventh Bonus card combines the original three plant sprites.

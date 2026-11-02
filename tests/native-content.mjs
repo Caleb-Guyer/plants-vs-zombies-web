@@ -19,23 +19,23 @@ new Function('module', 'exports', 'require', fs.readFileSync(new URL('vendor/jsz
 const JSZip = vendor.exports;
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
 const engine = JSON.parse(fs.readFileSync(new URL('game/engine-provenance.json', dist)));
-assert.equal(engine.id, '0.2.6-web-chain.1');
+assert.equal(engine.id, '0.2.6-web-rally.1');
 const currentSourceBytes = fs.readFileSync(new URL(engine.artifacts.source, new URL('game/engine-provenance.json', dist)));
 assert.equal(sha(currentSourceBytes), engine.artifacts.sourceSha256, 'Current source archive matches the engine provenance pin');
 const current = await JSZip.loadAsync(currentSourceBytes, {checkCRC32: true});
-const parentSourceBytes = fs.readFileSync(new URL('source/pvz-portable-0.2.6-web-care.3-source.zip', dist));
-assert.equal(sha(parentSourceBytes), '50d01dd1bbd793e1cda1dfbc74a70ca6724eee8741dab9260d188b3f49c882d4', 'Parent is the exact published Care.3 source');
+const parentSourceBytes = fs.readFileSync(new URL('source/pvz-portable-0.2.6-web-chain.1-source.zip', dist));
+assert.equal(sha(parentSourceBytes), '2794ff25f7427a2d3c1032bb9e2671f5b425701d7944d274f7c94e26ffb132a7', 'Parent is the exact published Chain.1 source');
 const parent = await JSZip.loadAsync(parentSourceBytes, {checkCRC32: true});
-const prefix = 'chain1-candidate/';
+const prefix = 'rally1-candidate/';
 const read = async name => {
   const entry = current.file(prefix + name);
   assert(entry, 'Missing current production source/test: ' + name);
   return Buffer.from(await entry.async('uint8array'));
 };
 const retainedChecks = {'game-speed':66, 'qol-controls':90, 'decks-cooldowns':274,
-  'bonus-challenge':387, 'bonus-completion':1139, 'night-shift':231, 'lantern-shroom':548,
-  'garden-shuffle':214, 'seed-swap':587, 'mender-bloom':523, 'intensive-care':1135, 'native-layout':7187};
-const suites = [...Object.keys(retainedChecks), 'care-fatigue', 'care-full-run', 'chain-reaction'];
+  'bonus-challenge':387, 'bonus-completion':1272, 'night-shift':231, 'lantern-shroom':548,
+  'garden-shuffle':214, 'seed-swap':587, 'mender-bloom':523, 'intensive-care':1135, 'native-layout':7947};
+const suites = [...Object.keys(retainedChecks), 'care-fatigue', 'care-full-run', 'chain-reaction', 'rally-zombie'];
 const reports = new Map();
 let checks = 0;
 for (const name of suites) {
@@ -56,7 +56,7 @@ for (const [name, count] of Object.entries(retainedChecks))
   assert.equal(reports.get(name).checks, count, 'Every retained suite keeps its old assertions and reviewed appended coverage: ' + name);
 // Original 11,940 checks remain, plus one appended table iteration, 315 native
 // layout checks, ten authoring controls and 115 actual Options restart checks.
-assert.equal(Object.values(retainedChecks).reduce((sum, count) => sum + count, 0), 12381);
+assert.equal(Object.values(retainedChecks).reduce((sum, count) => sum + count, 0), 13274);
 assert.equal(reports.get('care-fatigue').checks, 25042,
   'Fatigue rig coverage retains every crew pose, scoped state and restoration check');
 const fullRunReport = reports.get('care-full-run');
@@ -65,7 +65,7 @@ assert.equal(fullRunReport.execution, 'complete-production-engine',
   'Care scenarios execute the complete linked engine, not an extracted combat model');
 assert(Number.isInteger(fullRunReport.productionObjectCount) && fullRunReport.productionObjectCount >= 100,
   'The full-run backend links the complete production object graph');
-assert.equal(Object.keys(fullRunReport.sourceSha256).length, 820,
+assert.equal(Object.keys(fullRunReport.sourceSha256).length, 824,
   'Complete engine scenarios pin every production source input, not an extracted combat model');
 const fullRunArtifactNames = ['care-full-run-engine.js', 'care-full-run-engine.wasm'];
 assert.deepEqual(Object.keys(fullRunReport.testArtifactSha256).sort(), [...fullRunArtifactNames].sort());
@@ -214,12 +214,74 @@ for (const parity of chainReport.speedParity) {
 assert.equal(chainReport.checks, Object.keys(chainReport.sourceSha256).length +
   chainReport.scenarios.reduce((sum, result) => sum + result.checks, 0) + chainReport.speedParity.length);
 console.log('PASS 24 complete native five-board Chain Reaction runs, save/Continue in three phases, genuine failed-plan retries, final-only credit and 1x/2x outcomes.');
+const rallyReport=reports.get('rally-zombie');
+assert.equal(rallyReport.execution,'complete-production-engine');
+assert.equal(rallyReport.optimization,'O2');
+assert.equal(rallyReport.productionObjectCount,fullRunReport.productionObjectCount);
+assert.deepEqual(rallyReport.sourceSha256,fullRunReport.sourceSha256);
+assert.deepEqual(rallyReport.productionObjectSha256,fullRunReport.productionObjectSha256);
+assert.equal(rallyReport.productionBuildReceiptSha256,sha(fullRunProductionBuildBytes));
+assert.deepEqual(Object.keys(rallyReport.testArtifactSha256).sort(),['rally-zombie-engine.js','rally-zombie-engine.wasm']);
+for(const [filename,pin] of Object.entries(rallyReport.testArtifactSha256))
+  assert.equal(sha(await read('tests/'+filename)),pin,'Executed Rally artifact: '+filename);
+assert(WebAssembly.validate(await read('tests/rally-zombie-engine.wasm')));
+assert.equal(sha(await read('tests/build-rally-zombie.py')),rallyReport.builderSha256);
+assert.equal(sha(await read('tests/test-rally-zombie.py')),rallyReport.runnerSha256);
+assert.equal(sha(await read('tests/rally-zombie-assets.json')),rallyReport.assetFixtureSha256);
+assert.equal(rallyReport.assetBundleId,engine.assetBundleId);
+const rallyBuild=JSON.parse(await read('tests/rally-zombie-build.json'));
+for(const field of ['execution','optimization','productionObjectCount','productionBuildReceiptSha256',
+ 'generatedHarnessSha256','builderSha256','testArtifactSha256','sourceSha256','productionObjectSha256'])
+  assert.deepEqual(rallyReport[field],rallyBuild[field],'Rally current production build: '+field);
+const rallyNames=['normal','save-continue','retry-no-defense','no-defense','mechanics'];
+const rallyCases=[1729,7331].flatMap(seed=>rallyNames.flatMap(name=>[1,2].map(speed=>scenarioKey({name,speed,seed}))));
+assert.equal(rallyReport.scenarios.length,20);
+assert.deepEqual(rallyReport.scenarios.map(scenarioKey).sort(),rallyCases.sort());
+for(const result of rallyReport.scenarios) {
+ assert.equal(result.execution,'complete-production-engine');
+ assert.equal(result.resourceCapacityWarnings,0);
+ assert.match(result.logSha256,/^[a-f0-9]{64}$/);
+ assert(result.checks>0);
+ if(result.name==='mechanics') {
+  assert.equal(result.outcome,'controls-pass');
+  assert.equal(result.syntheticActorControls,true);
+  assert.equal(result.actualNativeWalking,true);
+  assert.deepEqual(result.checkpoint,{performed:true,combatGraphPreserved:true});
+  continue;
+ }
+ const won=result.name!=='no-defense';
+ assert.equal(result.outcome,won?'win':'loss');
+ assert(result.rallyObservations>0 && result.boostObservations>0 && result.maxProjectiles>0);
+ assert.equal(result.profileIndex,79);
+ assert.equal(result.profileCredits,won?1:0);
+ assert.equal(result.awardCollected,won);
+ assert.equal(result.failureAndRetry,result.name==='retry-no-defense');
+ assert.equal(result.checkpoint.performed,result.name==='save-continue');
+ if(won) {
+  assert.equal(result.waves,10);assert.equal(result.nativeZombies,55);assert.equal(result.rallyZombies,13);
+  assert(result.legalPlacements>0);
+ }
+ if(result.name==='save-continue') assert.equal(result.checkpoint.combatGraphPreserved,true);
+}
+assert.equal(rallyReport.speedParity.length,10);
+assert.deepEqual(rallyReport.speedParity.map(r=>`${r.name}/${r.seed}`).sort(),
+ [1729,7331].flatMap(seed=>rallyNames.map(name=>`${name}/${seed}`)).sort());
+for(const parity of rallyReport.speedParity) {
+ assert.equal(parity.sameNativeOutcome,true);
+ const fields=parity.name==='mechanics'?['outcome']:['outcome','waves','nativeZombies','rallyZombies','profileIndex','profileCredits','awardCollected','failureAndRetry'];
+ assert.deepEqual(parity.comparedFields,fields);
+ const pair=rallyReport.scenarios.filter(r=>r.name===parity.name && r.seed===parity.seed);
+ for(const field of fields) assert.deepEqual(pair[0][field],pair[1][field]);
+}
+assert.equal(rallyReport.checks,Object.keys(rallyReport.sourceSha256).length+
+ rallyReport.scenarios.reduce((sum,r)=>sum+r.checks,0)+rallyReport.speedParity.length);
+console.log('PASS twelve complete native Rally wins, four unattended gameovers, four separately labeled actor-control suites and ten native speed outcome pairs.');
 const careBalance = reports.get('intensive-care').balanceModel;
 assert.equal(careBalance.kind, 'native healing/fatigue capacity bound; not a battle clear');
 assert(careBalance.allBedsHealHpPerSecond > careBalance.maximumCrewFatigueHpPerSecond);
 assert(careBalance.slowestSuppliedRecoveryTicks < 3000);
 assert.equal(careBalance.authoredEnemies, 40);
-const parentPrefix = 'care3-candidate/source/';
+const parentPrefix = 'chain1-candidate/source/';
 const parentBytes = async name => Buffer.from(await parent.file(parentPrefix + name).async('uint8array'));
 const layoutReport = reports.get('native-layout');
 assert.equal(layoutReport.hintLines, 1);
@@ -234,6 +296,9 @@ assert.equal(layoutReport.chainHintOffsetMutationRejected, true);
 assert.equal(layoutReport.chainCopiedButtonPlacementRejected, true);
 assert.equal(layoutReport.chainHudSafeBoards, 5);
 assert.equal(layoutReport.chainHudRejectedBoards, 5);
+assert.equal(layoutReport.rallyAlmanacChecks, 760);
+assert.equal(layoutReport.rallyAlmanacWindows, 27);
+assert.equal(layoutReport.rallyNaiveCatalogMutationRejected, true);
 const layoutFixtureBytes = await read('tests/native-layout-assets.json');
 assert.equal(sha(layoutFixtureBytes), layoutReport.fixturesSha256['native-layout-assets.json'],
   'Layout report pins the exact original font/sprite and legacy-regression fixture');
@@ -242,10 +307,10 @@ assert.equal(layoutFixture.schema, 1);
 assert.equal(layoutFixture.assetBundleId, engine.assetBundleId);
 assert.equal(layoutFixture.parentSourceSha256, '540f1ee365b558e10304995692485976e91f23bb1b28c305e6ade6cd17f1ed11',
   'The preserved layout negative-control fixture identifies its original Care.1 source');
-const parentLayoutFixtureEntry = parent.file('care3-candidate/tests/native-layout-assets.json');
-assert(parentLayoutFixtureEntry, 'Authenticated Care.3 parent retains the exact layout regression fixture');
+const parentLayoutFixtureEntry = parent.file('chain1-candidate/tests/native-layout-assets.json');
+assert(parentLayoutFixtureEntry, 'Authenticated Chain.1 parent retains the exact layout regression fixture');
 assert.deepEqual(layoutFixtureBytes, Buffer.from(await parentLayoutFixtureEntry.async('uint8array')),
-  'Historical Care.1 negative methods and native asset fixtures retain every authenticated Care.3 fixture byte');
+  'Historical Care.1 negative methods and native asset fixtures retain every authenticated Chain.1 fixture byte');
 const approvedLayoutHashes = {
   'data/HouseofTerror28.txt':'08d9d6773edc9033512463b33be7c6604b675fadabd1729bb4fda4bed1966d0b',
   'data/HouseofTerror28.png':'e9913355ecccf2840761ce1a2a356067990deb44b326a7eb7d95c012126b9486',
@@ -306,6 +371,15 @@ function challengeData(bytes) {
 }
 assert.equal(challengeData(await read('source/src/Lawn/Challenge.h')), challengeData(await parentBytes('src/Lawn/Challenge.h')),
   'Challenge saved data members stay unchanged; care adds methods only');
+const zombieData = bytes => {
+  const text = bytes.toString().replace(/\r\n?/g, '\n');
+  const start = text.indexOf('class Zombie : public');
+  const end = text.indexOf('Zombie();', start);
+  assert(start >= 0 && end > start);
+  return text.slice(start, end);
+};
+assert.equal(zombieData(await read('source/src/Lawn/Zombie.h')), zombieData(await parentBytes('src/Lawn/Zombie.h')),
+  'Saved Zombie actor data members remain unchanged');
 console.log(`PASS ${checks} published native content/QoL checks match their production source; saved object layouts and serializer are preserved.`);
 
 // New IDs append to the catalog. Every original serialized mode and challenge
@@ -328,13 +402,31 @@ function enumValues(text, name) {
 const oldEnums = (await parentBytes('src/ConstEnums.h')).toString();
 const newEnums = (await read('source/src/ConstEnums.h')).toString();
 const oldModes = enumValues(oldEnums, 'GameMode'), newModes = enumValues(newEnums, 'GameMode');
-assert.equal(oldModes.get('NUM_GAME_MODES'), 79);
+assert.equal(oldModes.get('NUM_GAME_MODES'), 80);
 for (const [key, value] of oldModes) if (key !== 'NUM_GAME_MODES') assert.equal(newModes.get(key), value, 'Every existing mode ID remains stable: ' + key);
-assert.equal(newModes.get('GAMEMODE_CHALLENGE_CHAIN_REACTION'), 79);
-assert.equal(newModes.get('NUM_GAME_MODES'), 80);
+assert.equal(newModes.get('GAMEMODE_CHALLENGE_RALLY_POINT'), 80);
+assert.equal(newModes.get('NUM_GAME_MODES'), 81);
 assert.equal(newModes.size, oldModes.size + 1);
 assert.deepEqual([...enumValues(newEnums, 'ChallengePage')], [...enumValues(oldEnums, 'ChallengePage')],
   'Cold Front uses the existing Bonus page without changing any page IDs');
+const oldZombieIds = enumValues(oldEnums, 'ZombieType'), newZombieIds = enumValues(newEnums, 'ZombieType');
+for (const [key,value] of oldZombieIds) if (!['NUM_ZOMBIE_TYPES','ZOMBIE_CACHED_POLEVAULTER_WITH_POLE','NUM_CACHED_ZOMBIE_TYPES'].includes(key))
+  assert.equal(newZombieIds.get(key), value, 'Every original gameplay zombie ID remains stable: '+key);
+assert.equal(oldZombieIds.get('NUM_ZOMBIE_TYPES'),33);
+assert.equal(newZombieIds.get('ZOMBIE_RALLY'),33);
+assert.equal(newZombieIds.get('NUM_ZOMBIE_TYPES'),34);
+assert.equal(newZombieIds.size,oldZombieIds.size+1);
+function zombieDefinitions(text) {
+  const table=text.slice(text.indexOf('gZombieDefs['));
+  return [...table.slice(0,table.indexOf('};')).matchAll(/\{\s*\.mZombieType\s*=[^}]+\}/g)].map(m=>m[0].replace(/\s+/g,' ').trim());
+}
+const parentZombieDefs=zombieDefinitions((await parentBytes('src/Lawn/Zombie.cpp')).toString());
+const currentZombieDefs=zombieDefinitions((await read('source/src/Lawn/Zombie.cpp')).toString());
+assert.equal(parentZombieDefs.length,33);
+assert.deepEqual(currentZombieDefs.slice(0,33),parentZombieDefs);
+assert.equal(currentZombieDefs.length,34);
+assert.match(currentZombieDefs.at(-1),/ZOMBIE_RALLY/);
+assert.match(currentZombieDefs.at(-1),/mPickWeight = 0/);
 const oldSeeds = enumValues(oldEnums, 'SeedType'), newSeeds = enumValues(newEnums, 'SeedType');
 for (const [key, value] of oldSeeds) assert.equal(newSeeds.get(key), value, 'Every original and special seed ID stays stable: ' + key);
 assert.equal(newSeeds.get('SEED_MENDERBLOOM'), 76);
@@ -360,15 +452,15 @@ function definitions(text) {
 }
 const oldDefinitions = definitions((await parentBytes('src/Lawn/Widget/ChallengeScreen.cpp')).toString());
 const newDefinitions = definitions((await read('source/src/Lawn/Widget/ChallengeScreen.cpp')).toString());
-assert.equal(oldDefinitions.length, 78);
-assert.deepEqual(newDefinitions.slice(0, oldDefinitions.length), oldDefinitions, 'Every original and six existing Bonus challenge definitions remain exact');
+assert.equal(oldDefinitions.length, 79);
+assert.deepEqual(newDefinitions.slice(0, oldDefinitions.length), oldDefinitions, 'Every original and seven existing Bonus challenge definitions remain exact');
 assert.equal(newDefinitions.length, oldDefinitions.length + 1);
-assert.match(newDefinitions.at(-1), /GAMEMODE_CHALLENGE_CHAIN_REACTION/);
-assert.match(newDefinitions.at(-1), /Chain Reaction/);
+assert.match(newDefinitions.at(-1), /GAMEMODE_CHALLENGE_RALLY_POINT/);
+assert.match(newDefinitions.at(-1), /Rally Point/);
 assert.match(newDefinitions.at(-1), /CHALLENGE_PAGE_BONUS/);
 assert.match(newDefinitions.at(-1), /\.mRow = 2/);
-assert.match(newDefinitions.at(-1), /\.mCol = 1/);
-console.log('PASS Chain Reaction appends one mode and challenge while preserving every existing mode/seed ID, saved layout, plant and challenge identity.');
+assert.match(newDefinitions.at(-1), /\.mCol = 2/);
+console.log('PASS Rally Point appends one mode and challenge while preserving every existing mode/seed ID, saved layout, plant and challenge identity.');
 
 const artRecord = JSON.parse(fs.readFileSync(new URL('content/native-bonus-art.json', dist)));
 assert.match(artRecord.sourceKind, /native sprite compositions/);
@@ -378,17 +470,17 @@ assert.equal(artRecord.assetBundleId, engine.assetBundleId);
 assert.equal(artRecord.plant.nativeReanimation, 'REANIM_ICESHROOM');
 assert.equal(artRecord.plant.spriteOverride, 'chill-shroom/provenance.json');
 assert.deepEqual(artRecord.canvas, {width: 80, height: 65, heroCenterX: 40, heroCenterY: 32.5, maxHeroWidth: 68, maxHeroHeight: 57});
-assert.deepEqual(artRecord.cards.map(card => card.mode), [73, 74, 75, 76, 77, 78, 79]);
-assert.deepEqual(artRecord.cards.map(card => card.name), ['Cone Zone', 'Night Shift', 'Cold Front', 'Garden Shuffle', 'Seed Swap', 'Intensive Lawn Care', 'Chain Reaction']);
+assert.deepEqual(artRecord.cards.map(card => card.mode), [73, 74, 75, 76, 77, 78, 79, 80]);
+assert.deepEqual(artRecord.cards.map(card => card.name), ['Cone Zone', 'Night Shift', 'Cold Front', 'Garden Shuffle', 'Seed Swap', 'Intensive Lawn Care', 'Chain Reaction', 'Rally Point']);
 
-const parentArtBytes = await read('tests/chain-parent-native-art.json');
-assert.equal(sha(parentArtBytes), '4256b324e953162b861c04c72c5686e1cc0b137b76ae1a218144ea875bfa927b', 'Independent exact published Care.3 card metadata fixture');
+const parentArtBytes = await read('tests/rally-parent-native-art.json');
+assert.equal(sha(parentArtBytes), 'eaf0107b30b9a347aedac65a0ce202cba8ca85a3bacdb595839b492bad9d8462', 'Independent exact published Chain.1 card metadata fixture');
 const parentArtRecord = JSON.parse(parentArtBytes);
-assert.deepEqual(artRecord.cards.slice(0, 6), parentArtRecord.cards, 'Every existing card retains all original metadata');
+assert.deepEqual(artRecord.cards.slice(0, 7), parentArtRecord.cards, 'Every existing card retains all original metadata');
 for (const [key, value] of Object.entries(parentArtRecord))
   if (!['cards', 'checkpointCompatibility'].includes(key)) assert.deepEqual(artRecord[key], value, 'Existing art metadata remains unchanged: ' + key);
 assert(artRecord.checkpointCompatibility.startsWith(parentArtRecord.checkpointCompatibility));
-assert.equal(artRecord.cards.at(-1).mode, 79);
+assert.equal(artRecord.cards.at(-1).mode, 80);
 assert.equal(artRecord.animation.newGeneratedArtwork, false, 'Motion uses existing sprite/effect assets');
 assert.equal(artRecord.animation.idlePeriodSeconds, 2.2);
 assert.deepEqual(artRecord.animation.idleScaleX, [1, 1.045]);
@@ -628,10 +720,10 @@ const archivedSourceNames = Object.values(current.files).filter(entry => !entry.
   .map(entry => entry.name.slice((prefix + 'source/').length));
 assert.deepEqual(archivedSourceNames.sort(), Object.keys(sourceManifest.files).sort(),
   'Every corresponding-source archive member is represented exactly once in its manifest');
-// Exact reviewed Chain Reaction source delta is installed after core freeze.
-const runtimeInputs = new Set(["src/ConstEnums.h", "src/Lawn/Board.cpp", "src/Lawn/Challenge.cpp", "src/Lawn/Plant.cpp", "src/Lawn/System/BonusChallenge.h", "src/Lawn/System/LanternShroom.cpp", "src/Lawn/Widget/ChallengeScreen.cpp", "src/Lawn/Widget/LawnDialog.cpp", "src/Lawn/Widget/NewOptionsDialog.cpp", "src/Lawn/Zombie.cpp", "src/LawnApp.cpp"]);
+// Exact reviewed Rally Zombie source delta is installed after production freeze.
+const runtimeInputs = new Set(["src/ConstEnums.h", "src/Lawn/Board.cpp", "src/Lawn/Challenge.cpp", "src/Lawn/Challenge.h", "src/Lawn/System/BonusChallenge.h", "src/Lawn/System/ReanimationLawn.cpp", "src/Lawn/Widget/AlmanacDialog.cpp", "src/Lawn/Widget/AlmanacDialog.h", "src/Lawn/Widget/ChallengeScreen.cpp", "src/Lawn/Zombie.cpp", "src/LawnApp.cpp"]);
 const releaseIdentityInputs = new Set(['CMake/ProjectVersion.cmake']);
-const addedChainInputs = ["src/Lawn/System/ChainReaction.cpp", "src/Lawn/System/ChainReaction.h"];
+const addedChainInputs = ["src/Lawn/System/RallyPresentation.cpp", "src/Lawn/System/RallyPresentation.h", "src/Lawn/System/RallyZombie.cpp", "src/Lawn/System/RallyZombie.h"];
 const nativeNames = ['PeaShooter_backleaf.png', 'PeaShooter_backleaf_lefttip.png', 'PeaShooter_backleaf_righttip.png',
   'PeaShooter_stalk_bottom.png', 'PeaShooter_stalk_top.png', 'PeaShooter_frontleaf.png',
   'PeaShooter_frontleaf_righttip.png', 'PeaShooter_frontleaf_lefttip.png', 'SunFlower_head.png',
@@ -650,10 +742,10 @@ for (const entry of Object.values(parent.files)) {
     continue;
   }
   if (releaseIdentityInputs.has(name))
-    assert.equal(after.toString().replaceAll('0.2.6-web-chain.1', '0.2.6-web-care.3'), before.toString());
+    assert.equal(after.toString().replaceAll('0.2.6-web-rally.1', '0.2.6-web-chain.1'), before.toString());
   else assert.deepEqual(after, before, 'Every unrelated source/artwork byte remains exact: ' + name);
 }
-assert.equal(parentSourceCount, 818);
+assert.equal(parentSourceCount, 820);
 const addedProduction = Object.keys(sourceManifest.files).filter(name => !parent.file(parentPrefix + name));
 assert.deepEqual(addedProduction.sort(), [...addedChainInputs].sort(), 'Only reviewed Chain implementation files are added');
 assert.equal(Object.keys(sourceManifest.files).length, parentSourceCount + addedChainInputs.length);
@@ -1019,7 +1111,7 @@ if (process.argv.includes('--run-native')) {
     }
     for (const name of suites) {
       const args = [path.join(temporary, 'tests/test-' + name + '.py'), '--native'];
-      if (name === 'care-full-run' || name === 'chain-reaction') args.push('--asset-root', fileURLToPath(new URL('game-assets/', dist)));
+      if (name === 'care-full-run' || name === 'chain-reaction' || name === 'rally-zombie') args.push('--asset-root', fileURLToPath(new URL('game-assets/', dist)));
       const run = spawnSync('python', args, {encoding: 'utf8'});
       assert.equal(run.status, 0, (run.error?.message || '') + run.stdout + run.stderr);
       const actual = JSON.parse(fs.readFileSync(path.join(temporary, 'tests/' + name + '-results.json')));
