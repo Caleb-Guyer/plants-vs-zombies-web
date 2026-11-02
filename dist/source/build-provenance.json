@@ -1,5 +1,5 @@
 {
-  "id": "0.2.6-web-mender.3",
+  "id": "0.2.6-web-care.1",
   "upstream": {
     "tag": "0.2.6",
     "commit": "396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
@@ -7,93 +7,103 @@
     "officialJsSha256": "0f2d7425190e49c762f6700b68b080086e3dcb8f2dc5e9724de42ce9fb508573"
   },
   "sourceArchive": {
-    "path": "pvz-portable-0.2.6-web-mender.3-source.zip",
-    "bytes": 13544751,
-    "sha256": "5a6392e1d5415c3d7f5d3f2bad3114abb54a35bc13df5366be84b718c2d5bd1f",
-    "crc32": "7c584f7b",
-    "entries": 857,
-    "uncompressedBytes": 27095481
+    "path": "pvz-portable-0.2.6-web-care.1-source.zip",
+    "bytes": 13584241,
+    "sha256": "497b9d468ddee62db3cab9d111dd10d230c33c4032ba8b2ebc1eafc3733c7d62",
+    "crc32": "1d4c658d",
+    "entries": 861,
+    "uncompressedBytes": 27255384
   },
   "artifacts": [
     {
       "path": "build/pvz-portable.js",
       "bytes": 209242,
-      "sha256": "f016c3f256ff234542c34fcea8a3cc927e2ad0ea6f5498b70897ce7d47750045",
-      "crc32": "e5a680d8"
+      "sha256": "251ec8d9bc301f1245a631e8a3dc932f9bcc37d7358d804c07cdf1c6cf867d8e",
+      "crc32": "c7f9b951"
     },
     {
       "path": "build/pvz-portable.wasm",
-      "bytes": 7635652,
-      "sha256": "7a65f7f873e63e584b511ff5c079f38fa03f56e58d978295dddc8ebc3ccd27c1",
-      "crc32": "6991b410"
+      "bytes": 7646785,
+      "sha256": "f7c31bb243b7b6823782f416a8c3f438e6a7376b48782e6a1257a1ba8a11b8d3",
+      "crc32": "3c1224a7"
     },
     {
       "path": "build/ProjectVersion.h",
-      "bytes": 192,
-      "sha256": "cd5edcd2b58cca1dd5777f8f27d80cb3dcea73236c7cd6afdf8578a555635420",
-      "crc32": "438977e1"
+      "bytes": 190,
+      "sha256": "fd3ea3a3b82035fec8eb01c2ac9d320a88c03e10371b90c9f994fb97f8a13465",
+      "crc32": "5286fe37"
     }
   ],
-  "sourceFiles": 816,
-  "sourceBytes": 25570726,
-  "sourceDeltaVsMender2": [
+  "sourceFiles": 817,
+  "sourceBytes": 25593060,
+  "sourceDeltaVsMender3": [
     {
       "path": "CMake/ProjectVersion.cmake",
-      "beforeSha256": "4336613927df97429cd9100e23412141f218c56c7c871b60f3198f2ab595af43",
-      "afterSha256": "bd3fe99213bd332fa39e8cfb557d7b6a1bdb7eba5e74ba98b026c1b1de9324f9"
+      "beforeSha256": "bd3fe99213bd332fa39e8cfb557d7b6a1bdb7eba5e74ba98b026c1b1de9324f9",
+      "afterSha256": "58fef8bd72ea21892cb2b9535bf31dc4552c285a5eeed7950808ff5fea0d93f9"
     },
     {
-      "path": "artwork/mender-bloom/extraction.json",
-      "beforeSha256": "55f2ddd97672343879838f1c4210a097421df6b501988cabcc8115574c671e33",
-      "afterSha256": "904c59e1ec6e487ef1c902d4dbf96eaf44cdb153fc08f4cfd8a3df5785fc1ab4"
+      "path": "src/ConstEnums.h",
+      "beforeSha256": "ea217e19877d4ccfa6053bdc9490f664f10f1536f507b76f67032a381568c74c",
+      "afterSha256": "5de40e3f320d0b349d53529352164280b64c4a678e98e0626de95adb6c9e088f"
     },
     {
-      "path": "artwork/mender-bloom/generation-mender2-history.json",
+      "path": "src/Lawn/Board.cpp",
+      "beforeSha256": "22263c0b4b071c87b9809a43f304383680e5dab8c098d201082f4cc10f562f7f",
+      "afterSha256": "c6030e635981cb1dca0a30aa2101a0a8b6bdb4760eada1c158fd331a1c00d5ec"
+    },
+    {
+      "path": "src/Lawn/Board.h",
+      "beforeSha256": "c56049a26f699f207766d9a1799e9e75aa26d3adc82fd89ed3338058d5d0ec82",
+      "afterSha256": "deae00255ac8bc1c215d8f9a96b8dd434d5c8f8b4d718d7ccb3385259605719e"
+    },
+    {
+      "path": "src/Lawn/Challenge.cpp",
+      "beforeSha256": "60b48ad47cafb473954bcc5340bdf03addc10b930167359fb1ce33e3ab6f430e",
+      "afterSha256": "68d0f678004a720fea98d3007ca6373906d3a765c1f985b29d01359d2fcd6c52"
+    },
+    {
+      "path": "src/Lawn/Challenge.h",
+      "beforeSha256": "9b8b44507d394e131decb4df7d443b691d955d8c7af35751279f5c4e530365e7",
+      "afterSha256": "1e65bfb51c9978ede356e01a026d897a415ca2d36e44677d865ec44276aa46fa"
+    },
+    {
+      "path": "src/Lawn/CursorObject.cpp",
+      "beforeSha256": "0a503ec02ef38abc395ed501abbca4757b57e55430c95c08dc9a21a30a8a6754",
+      "afterSha256": "7ce8857fb2a191a07a2f3f4285849abb9b84959b2ca41bc4175135603a0955e2"
+    },
+    {
+      "path": "src/Lawn/Plant.cpp",
+      "beforeSha256": "e3e0dab46e764d15beb97491ef04ac9496793d548fa565f309f870b09d0f2275",
+      "afterSha256": "4a10b6ed28925f4f72093877a2facc3ceeb67ed2e6e18cd5140f17f205743f9e"
+    },
+    {
+      "path": "src/Lawn/System/BonusChallenge.h",
+      "beforeSha256": "a10a00543c09efc021da1c8dd68e3b4550d841c52a94a4cf5097c7843e7c2423",
+      "afterSha256": "3465570a5e354f6846ae60ef184e0aea0697ee62ef3f279731770101bb7925fc"
+    },
+    {
+      "path": "src/Lawn/System/IntensiveCare.h",
       "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "afterSha256": "78b2bcbfb5504ef855f06c3493026a056e64994d582e0a5bbcf94d238964f7d2"
+      "afterSha256": "b634f9bb867035f4cd9bfc43296c4206a21afc85a0eee74be78b9793d9a0fa12"
     },
     {
-      "path": "artwork/mender-bloom/generation.json",
-      "beforeSha256": "78b2bcbfb5504ef855f06c3493026a056e64994d582e0a5bbcf94d238964f7d2",
-      "afterSha256": "c2d5a614b9c9059bd79e3a9d3c439ea02bb20adb35d660b05e24e5e45a50a5a3"
+      "path": "src/Lawn/System/LanternShroom.cpp",
+      "beforeSha256": "eaab8a365287ed3b2de6298fe04dcb8969b92911a3806b990104bc52013fa7bd",
+      "afterSha256": "185f08d577f702d6e956546663eedf02a04ceee142eca04afd80b45c116bc0cc"
     },
     {
-      "path": "artwork/mender-bloom/head-closed.png",
-      "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "afterSha256": "4c7c7a4b43bafb6ccbdbb7637b27dcee4ed416707c5200b95fa343fffd24c0e0"
+      "path": "src/Lawn/Widget/ChallengeScreen.cpp",
+      "beforeSha256": "e99e456ef45b935b3245f30e29a8f5644d6530d46331075aca49e119ec4d0426",
+      "afterSha256": "c0f58a8106b0f9f2cdc6e7ba01a17a7c9a9587e953fd5b62b079ec9ea78c0ca4"
     },
     {
-      "path": "artwork/mender-bloom/head-draft.png",
-      "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "afterSha256": "248ec8817f77b869478ac8a351ca78c6a6926d57673d5a7f35f8861df823b89e"
-    },
-    {
-      "path": "artwork/mender-bloom/head-master.png",
-      "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "afterSha256": "f4bd5415a6da077ff55d92aebfec23ba46d12209b99172d6b37bbdee3eb5ca36"
-    },
-    {
-      "path": "artwork/mender-bloom/head-style-game.jpg",
-      "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "afterSha256": "efa379dda990972337989fe5e4285391d9316194a9f12f5e6349a05acbc04fde"
-    },
-    {
-      "path": "artwork/mender-bloom/head-style-stem.png",
-      "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "afterSha256": "e23f660180de218dca4ca7692f005b67115d7998e0303a7b1a68b4e9a78b2f02"
-    },
-    {
-      "path": "artwork/mender-bloom/render.py",
-      "beforeSha256": "8611494b2204e30109bf28308c690a9998aead0bbc6d6af67569242b955d6b63",
-      "afterSha256": "decf60cb570923d149acc7315da5831b038b44b944ccb67892a32c960d33f4a6"
-    },
-    {
-      "path": "src/Lawn/System/MenderBloomArt.h",
-      "beforeSha256": "d299ece91909918d5a0d7d233792e35b56637fc1eb8417443cb53a92199c7e51",
-      "afterSha256": "4000e3a9bfadc91a4de1501ed65ff1847fad25f6582a29dee4b27085ae77aa5e"
+      "path": "src/Lawn/Zombie.cpp",
+      "beforeSha256": "2798a6a2afb238cb92ea0d641f6d7f0a15cf80b1fc85728c4bc545b218d092d9",
+      "afterSha256": "2e3b0da3c4e6bfa0d81b29f33b09ee81019585def673618e12fc67bc08b79597"
     }
   ],
-  "compiledVersionHeader": "// Generated from CMake/ProjectVersion.h.in by CMake; do not edit.\r\n#pragma once\r\n\r\n#define PVZP_VERSION \"0.2.6-web-mender.3\"\r\n#define PVZP_BUILD_NUMBER 1\r\n#define PVZP_COMMIT_DATE \"unknown\"\r\n",
+  "compiledVersionHeader": "// Generated from CMake/ProjectVersion.h.in by CMake; do not edit.\r\n#pragma once\r\n\r\n#define PVZP_VERSION \"0.2.6-web-care.1\"\r\n#define PVZP_BUILD_NUMBER 1\r\n#define PVZP_COMMIT_DATE \"unknown\"\r\n",
   "checks": {
     "fullRelease": {
       "exitCode": 0,
@@ -107,85 +117,92 @@
       "receipt": {
         "path": "logs/build-result.json",
         "bytes": 581,
-        "sha256": "97e1a330fa7a77be237bd62f2e93245f11d0e271ec6ad74721452196b9766177",
-        "crc32": "f5569ac2"
+        "sha256": "219e54bddc5506cc716c41d5fd54259c2868394a7b035ea762ad40115b15ca1b",
+        "crc32": "a78c3a37"
       }
     },
     "focusedNativeTests": {
       "status": "PASS focused native production tests",
       "failures": 0,
-      "checks": 3799,
-      "scope": "Actual extracted production methods and content, settings, deck, cooldown, Mender healing and custom Almanac code. No audio device or full game starts.",
+      "checks": 5078,
+      "scope": "Actual extracted production methods and content, settings, deck, cooldown, Mender healing, Intensive Lawn Care and custom Almanac code. No audio device or full game starts.",
       "reports": [
         {
           "path": "tests/game-speed-results.json",
-          "bytes": 1605,
-          "sha256": "1769a3484ef6d62d8c783fd3b0a39f9acc1a7e945e0fd8c0e28a4a3a72bc6e3d",
-          "crc32": "2f5e630b",
+          "bytes": 1601,
+          "sha256": "7c653d3875deddeeb90b738cef51810c87c2be9cd40a2356683d3c877493f1cd",
+          "crc32": "231856d1",
           "checks": 66
         },
         {
           "path": "tests/qol-controls-results.json",
           "bytes": 1687,
-          "sha256": "19b6f64bc8e46e6d9625b3fd9cd006cf24081629d68073dcfeac1e2596011962",
-          "crc32": "aa770b13",
+          "sha256": "a10967f0832eebc0c5666c13aca5ef04efc500b475d6a282768dd968ab248e9e",
+          "crc32": "6d3a6075",
           "checks": 90
         },
         {
           "path": "tests/decks-cooldowns-results.json",
           "bytes": 1783,
-          "sha256": "14ecfdc2805033abab31d516e993d18092cf74627992e573bce81b277514fd19",
-          "crc32": "07eabb7a",
+          "sha256": "0369d9768bebccd5d868a2dde78620f1ffa3214bf24a87baf7e3c8f4d2142339",
+          "crc32": "ae220892",
           "checks": 274
         },
         {
           "path": "tests/bonus-challenge-results.json",
-          "bytes": 2201,
-          "sha256": "7f5c01c05e7694b842c79310ad2af459ba0f1d4d34bfe9918b768cd441f61748",
-          "crc32": "7e70c365",
+          "bytes": 2315,
+          "sha256": "9d32a31b6382c46fe6a3bccc70bb774b05ecccf1abe769f44c7c63af68e45a27",
+          "crc32": "42b52dbe",
           "checks": 387
         },
         {
           "path": "tests/bonus-completion-results.json",
-          "bytes": 2053,
-          "sha256": "b9275f37ae6749c2b2fd4c29fd4721b00f1cd16ad924c5548431d841ea633664",
-          "crc32": "a9cc0484",
-          "checks": 886
+          "bytes": 2391,
+          "sha256": "6804538833cf1f9e9f37e1ef88e5e7c6e45f525d5953804d7299e7fb2d13e44f",
+          "crc32": "b537d265",
+          "checks": 1023
         },
         {
           "path": "tests/night-shift-results.json",
-          "bytes": 1988,
-          "sha256": "b4cb9a3d8dd1902e631a1eccce16da9b0c4e3d8333aeb13805aeffb3f5b96d3e",
-          "crc32": "87195cc7",
+          "bytes": 2102,
+          "sha256": "12e08fea90852da24875304dc5516e7a51c26962ab35c92cd64e8d8c2fbd8d67",
+          "crc32": "98fc8ce4",
           "checks": 231
         },
         {
           "path": "tests/lantern-shroom-results.json",
-          "bytes": 5305,
-          "sha256": "4947bbced04de1268a1eb5e1803b9899b0e5e6b4c90e5e8364e7ec66940a8bb6",
-          "crc32": "ba9b26a2",
-          "checks": 541
+          "bytes": 5419,
+          "sha256": "d689fbb552f3eb155ec4fc1e68666ac5f60fe6c3dcfe2302f37d0c12eb42c82f",
+          "crc32": "88a8c188",
+          "checks": 548
         },
         {
           "path": "tests/garden-shuffle-results.json",
-          "bytes": 2585,
-          "sha256": "5646ebbb443fa7f24bb95fb400b48ad471b31a63d30bd96f6b1a38bdcdf52b0e",
-          "crc32": "20d3f440",
+          "bytes": 2699,
+          "sha256": "c64365de611ec41be419493f597bcb2af06987e3d7047ee58e1d14d443846fc7",
+          "crc32": "5e25d622",
           "checks": 214
         },
         {
           "path": "tests/seed-swap-results.json",
-          "bytes": 2546,
-          "sha256": "0da4c6e28bccefe4ff6640e53f49414aff1eadf1b1c426ad5b213db8c399fde9",
-          "crc32": "0dc3cad5",
+          "bytes": 2660,
+          "sha256": "3790cfc7c8698669f419a6420b12ce8a10d3a5eb73589aefa09f8fad9dcbf04f",
+          "crc32": "7566ff76",
           "checks": 587
         },
         {
           "path": "tests/mender-bloom-results.json",
-          "bytes": 1608,
-          "sha256": "9a7538bc53abd4b8cad1c74a0fdbc788e08c8e188cdf998adbb11b61cb9a74ce",
-          "crc32": "dcba4612",
+          "bytes": 1722,
+          "sha256": "9cdf4b289fc127610474f060320f59338b5e9d83e94ac0015007ecbbf77fd806",
+          "crc32": "82c0d92d",
           "checks": 523
+        },
+        {
+          "path": "tests/intensive-care-results.json",
+          "bytes": 3295,
+          "sha256": "e0955f2ea87663b99253ba0029fce17d2d2ceabba08ef26ee2eef6b137ad2821",
+          "crc32": "2c2bd0f4",
+          "checks": 1135
         }
       ]
     },
@@ -194,38 +211,38 @@
         "gitApplyCheck": "PASS",
         "gitApply": "PASS",
         "everySourceByteMatches": true,
-        "sourceFiles": 816
+        "sourceFiles": 817
       },
-      "mender2": {
+      "mender3": {
         "gitApplyCheck": "PASS",
         "gitApply": "PASS",
         "everySourceByteMatches": true,
-        "sourceFiles": 816
+        "sourceFiles": 817
       }
     }
   },
   "combinedPatch": {
-    "path": "web-mender.3.patch",
-    "bytes": 14218699,
-    "sha256": "32c988fd44b4b66b4a2df1cbb9e2afc105a92679310ce747b4b734962da30e22",
-    "crc32": "8682e3fd",
-    "sourcePaths": 101
+    "path": "web-care.1.patch",
+    "bytes": 14244035,
+    "sha256": "9a6513daec1a10a338e8689d13b2f7e2bed1f28a8e305fad9317dd46f33283eb",
+    "crc32": "9fd8b96e",
+    "sourcePaths": 103
   },
   "incrementalPatch": {
-    "path": "mender2-to-mender3.patch",
-    "bytes": 2372353,
-    "sha256": "1fac30513705352bd0bb26478d00ad9f2f3da9f2fe0967025caf60feadfb7b2b",
-    "crc32": "1da97db0",
-    "sourcePaths": 11
+    "path": "mender3-to-care1.patch",
+    "bytes": 47211,
+    "sha256": "01d6a0dcd78caeff85b97a0d986329c998e1e69e5dc0a363398fd685dfbccbe5",
+    "crc32": "2b25f5f6",
+    "sourcePaths": 13
   },
   "parent": {
-    "id": "0.2.6-web-mender.2",
-    "sourceArchiveSha256": "2d40f382100860e1f64e3475ee2e0b299875df5458e488099b226c19a3d6ee24",
-    "releaseManifestSha256": "03a66ad3d502151ad3283add79049aca84495346cee9a95c5c507f5e253d3573",
+    "id": "0.2.6-web-mender.3",
+    "sourceArchiveSha256": "5a6392e1d5415c3d7f5d3f2bad3114abb54a35bc13df5366be84b718c2d5bd1f",
+    "releaseManifestSha256": "3746a9794242f9af592dbe0e43534209a76e33b632b3f252d51db7c47102011e",
     "scope": "Complete historical parent engine metadata is preserved in the parent property of engine-provenance.json."
   },
   "limits": [
-    "Mender-bloom unlocks after Seed Swap; Mender-bloom and Chill-shroom have native Almanac entries. All five existing bonus minigames, original IDs and serialized layouts remain. Full original parity remains unverified.",
+    "Mender-bloom unlocks after Seed Swap; Mender-bloom and Chill-shroom have native Almanac entries. All five existing bonus minigames, original IDs and serialized layouts remain; Intensive Lawn Care is appended as mode 78. Full original parity remains unverified.",
     "Focused production-method tests and build checks do not replace broad game or browser validation.",
     "Earlier results remain historical parent evidence only. No separately image-generated challenge illustrations are active."
   ]

@@ -3,4 +3,4 @@
  * The current engine build is documented in /game/engine-provenance.json.
  */
 window.moduleReadyPromise=new Promise(function(n,e){window._resolveModuleReady=n,window._rejectModuleReady=e});var Module={canvas:document.getElementById("canvas"),noInitialRun:!0,onRuntimeInitialized:function(){window._resolveModuleReady()},onAbort:function(n){window._rejectModuleReady(new Error(n))},print:function(n){console.log(n)},printErr:function(n){console.warn(n)}};Module.canvas.addEventListener("contextmenu",function(n){n.preventDefault()})
-Module.locateFile=function(name,prefix){return (prefix||"./game/")+name+"?v=7a65f7f873e6";};
+Module.locateFile=function(name,prefix){return (prefix||"./game/")+name+"?v=f7c31bb243b7";};

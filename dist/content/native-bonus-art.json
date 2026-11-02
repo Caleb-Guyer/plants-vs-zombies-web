@@ -65,6 +65,13 @@
       "hero": "REANIM_WALLNUT with original Repeater seed packet",
       "background": "IMAGE_BACKGROUND1",
       "gameplay": "Fixed garden of two Peashooters and one Wall-nut per lane. Zombie kills drop native seed packets. Plant only by replacing a living plant; no sun economy, seed bank or shovel. Ten waves change the enemy mix."
+    },
+    {
+      "mode": 78,
+      "name": "Intensive Lawn Care",
+      "hero": "Approved Mender-bloom DrawRig with original Flower Pot and IMAGE_ZEN_GARDENGLOVE",
+      "background": "IMAGE_BACKGROUND1",
+      "gameplay": "Conveyor patients start wounded. Move the same living combat plants between a protected Flower Pot healing bed beside fixed Mender-blooms and the front lines with the native glove. Active combat tires deployed plants; bed patients recover with normal Mender healing and cannot fire. Ten authored waves, five starting Repeaters and Wall-nuts, one-second move cooldown and no sun economy."
     }
   ],
   "canvas": {
@@ -115,7 +122,7 @@
       0.07
     ]
   },
-  "checkpointCompatibility": "State-zero existing bonus checkpoints keep their previous fixed-bank twenty-wave rules. Chill.8 arcade checkpoints retain saved boards/belts/waves and gain new mechanics on later events; New Game starts the revised opening/roster. Existing completion rewards remain valid. Garden Shuffle uses new mode76 and unused profile record75 with unchanged native object layouts; moves preserve the original plant instance. Seed Swap appends mode77 and unused profile record76; native Coin, Cursor, Plant and Challenge serialized members retain packet drops and replacement gardens.",
+  "checkpointCompatibility": "State-zero existing bonus checkpoints keep their previous fixed-bank twenty-wave rules. Chill.8 arcade checkpoints retain saved boards/belts/waves and gain new mechanics on later events; New Game starts the revised opening/roster. Existing completion rewards remain valid. Garden Shuffle uses new mode76 and unused profile record75 with unchanged native object layouts; moves preserve the original plant instance. Seed Swap appends mode77 and unused profile record76; native Coin, Cursor, Plant and Challenge serialized members retain packet drops and replacement gardens. Intensive Lawn Care appends mode78 and unused profile record77; native cursor, plant, conveyor and challenge fields preserve wounded crew, moves, fatigue, supply and recovery without serialized layout changes.",
   "supportPlant": {
     "displayName": "Mender-bloom",
     "spriteOverride": "mender-bloom/provenance.json",

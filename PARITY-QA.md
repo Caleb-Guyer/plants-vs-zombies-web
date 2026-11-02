@@ -1,5 +1,13 @@
 # Browser parity and QA record
 
+## Care.1 validation scope
+
+`0.2.6-web-care.1` passed 5,078 checks with zero failures in eleven silent native suites, including 1,135 Intensive Lawn Care checks, plus fourteen browser integration suites. Checks cover mode/state routing, conveyor and recovery rules, glove identity, fatigue and attack gating, ordinary Mender healing, authored waves, native checkpoint data, isolated completion/replay records and retained content. The final revision starts five Repeaters at 240 HP.
+
+Muted manual browser sessions exercised the native card, wounded-plant admission, healing, movement across lanes, protected-bed targeting, fatigue and wilt, resupply after losing a patient, 2x, and a full checkpoint reload/Continue on the Care save path. Play reached the final huge-wave banner. Input and approval delays repeatedly left the game unattended; the final run was paused near its end. This is not a completed battle clear or a final difficulty verdict.
+
+The 817-file source archive has 861 ZIP entries, SHA-256 `497b9d468ddee62db3cab9d111dd10d230c33c4032ba8b2ebc1eafc3733c7d62`. Full and delta patches reconstruct the exact source. Accepted plant art, motion, normal unlock rules and existing five challenge definitions/data remain. All browser testing is muted. Earlier receipts below apply to their named historical builds.
+
 ## Mender.3 artwork validation scope
 
 `0.2.6-web-mender.3` replaces the rejected Sunflower-like Mender-bloom head

@@ -1,15 +1,15 @@
 {
   "schema_version": 1,
-  "current_engine": "0.2.6-web-mender.3",
+  "current_engine": "0.2.6-web-care.1",
   "upstream_tag": "0.2.6",
   "layout": "Site-source nests current corresponding source, its immediate parent when present, the upstream baseline and the current full patch. Other source archives and incremental/historical patches remain standalone downloads beside this index and in the full runtime distribution.",
   "nested_sources": [
     "pvz-portable-0.2.6-source.zip",
-    "pvz-portable-0.2.6-web-mender.2-source.zip",
-    "pvz-portable-0.2.6-web-mender.3-source.zip"
+    "pvz-portable-0.2.6-web-mender.3-source.zip",
+    "pvz-portable-0.2.6-web-care.1-source.zip"
   ],
   "nested_patches": [
-    "web-mender.3.patch"
+    "web-care.1.patch"
   ],
   "archives": [
     {
@@ -18,6 +18,13 @@
       "sha256": "40af59aa49d936ad21756a1a28ee14d8db51e6aaccbee44c647c2913e9c83556",
       "current": false,
       "upstream": true
+    },
+    {
+      "name": "pvz-portable-0.2.6-web-care.1-source.zip",
+      "bytes": 13584241,
+      "sha256": "497b9d468ddee62db3cab9d111dd10d230c33c4032ba8b2ebc1eafc3733c7d62",
+      "current": true,
+      "upstream": false
     },
     {
       "name": "pvz-portable-0.2.6-web-chill.1-source.zip",
@@ -128,7 +135,7 @@
       "name": "pvz-portable-0.2.6-web-mender.3-source.zip",
       "bytes": 13544751,
       "sha256": "5a6392e1d5415c3d7f5d3f2bad3114abb54a35bc13df5366be84b718c2d5bd1f",
-      "current": true,
+      "current": false,
       "upstream": false
     },
     {

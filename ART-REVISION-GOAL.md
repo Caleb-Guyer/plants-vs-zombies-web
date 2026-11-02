@@ -1,5 +1,13 @@
 # Lantern-shroom art revision
 
+## Care.1 — native minigame card
+
+`0.2.6-web-care.1` retains the accepted Mender.3 coral blossom and original stem/leaf assembly, along with Chill-shroom's accepted artwork and motion. Intensive Lawn Care adds one distinct card composed from that exact Mender sprite, the original Flower Pot reanimation and gardening glove over the original day lawn. No new artwork or standalone challenge illustration is generated.
+
+The composition uses the same 80 by 65 window and bounds-based centering as the other Bonus cards. The native title wraps as “Intensive” / “Lawn Care”; its 55- and 66-pixel lines fit without shrinking the original font. The rendered sixth card fits its frame, and the original glove toolbar remains clear of the conveyor, menu and speed button. Existing five cards and compact chooser/Almanac layouts remain.
+
+All eleven silent native suites passed: 5,078 checks, zero failures. All fourteen browser integration suites passed. Existing Mender-bloom and Chill-shroom artwork remains byte-identical to Mender.3; no plant art or motion revision is part of Care.1.
+
 ## Mender.3 custom blossom instead of Sunflower face
 
 `0.2.6-web-mender.3` replaces the rejected Sunflower-like Mender-bloom head

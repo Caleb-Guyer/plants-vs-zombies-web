@@ -1,5 +1,15 @@
 # Plants vs. Zombies — browser playtest
 
+## Care.1 — Intensive Lawn Care
+
+`0.2.6-web-care.1` adds a sixth Bonus minigame. A native conveyor delivers wounded combat plants to protected recovery pots. Use the gardening glove to rotate the same living plants between the Mender bed and the front lines, preserving health and attack clocks. Five Repeaters defend the opening; ten authored waves end in one flag.
+
+The original challenge frames, conveyor, glove, warning flash and healing sparkles carry the presentation. The new card combines the accepted Mender-bloom sprite with the original Flower Pot and glove on the day lawn. Existing plant artwork, motion and normal unlock rules remain.
+
+All eleven silent native suites passed: 5,078 checks, zero failures. All fourteen browser integration suites passed. The 817-file source archive and both reconstruction patches were verified byte-for-byte. Muted manual play reached the final huge-wave banner and checked the repair loop, 2x and checkpoint Continue; a completed battle is not claimed. See [QA scope](PARITY-QA.md) and [release receipts](DEPLOYMENT.md).
+
+Earlier sections below record their named historical releases.
+
 ## Mender.3 distinct blossom head
 
 `0.2.6-web-mender.3` replaces the rejected Sunflower-like Mender-bloom head

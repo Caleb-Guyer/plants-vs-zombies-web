@@ -17,18 +17,20 @@ new Function('module', 'exports', 'require', fs.readFileSync(new URL('vendor/jsz
 const JSZip = vendor.exports;
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
 const engine = JSON.parse(fs.readFileSync(new URL('game/engine-provenance.json', dist)));
-assert.equal(engine.id, '0.2.6-web-mender.3');
-const current = await JSZip.loadAsync(fs.readFileSync(new URL(engine.artifacts.source, new URL('game/engine-provenance.json', dist))), {checkCRC32: true});
-const parentSourceBytes = fs.readFileSync(new URL('source/pvz-portable-0.2.6-web-mender.2-source.zip', dist));
-assert.equal(sha(parentSourceBytes), '2d40f382100860e1f64e3475ee2e0b299875df5458e488099b226c19a3d6ee24', 'Parent is the exact published Mender.2 source');
+assert.equal(engine.id, '0.2.6-web-care.1');
+const currentSourceBytes = fs.readFileSync(new URL(engine.artifacts.source, new URL('game/engine-provenance.json', dist)));
+assert.equal(sha(currentSourceBytes), engine.artifacts.sourceSha256, 'Current source archive matches the engine provenance pin');
+const current = await JSZip.loadAsync(currentSourceBytes, {checkCRC32: true});
+const parentSourceBytes = fs.readFileSync(new URL('source/pvz-portable-0.2.6-web-mender.3-source.zip', dist));
+assert.equal(sha(parentSourceBytes), '5a6392e1d5415c3d7f5d3f2bad3114abb54a35bc13df5366be84b718c2d5bd1f', 'Parent is the exact published Mender.3 source');
 const parent = await JSZip.loadAsync(parentSourceBytes, {checkCRC32: true});
-const prefix = 'mender3-candidate/';
+const prefix = 'care1-candidate/';
 const read = async name => {
   const entry = current.file(prefix + name);
   assert(entry, 'Missing current production source/test: ' + name);
   return Buffer.from(await entry.async('uint8array'));
 };
-const suites = ['game-speed', 'qol-controls', 'decks-cooldowns', 'bonus-challenge', 'bonus-completion', 'night-shift', 'lantern-shroom', 'garden-shuffle', 'seed-swap', 'mender-bloom'];
+const suites = ['game-speed', 'qol-controls', 'decks-cooldowns', 'bonus-challenge', 'bonus-completion', 'night-shift', 'lantern-shroom', 'garden-shuffle', 'seed-swap', 'mender-bloom', 'intensive-care'];
 const reports = new Map();
 let checks = 0;
 for (const name of suites) {
@@ -45,10 +47,15 @@ for (const name of suites) {
   checks += result.checks;
   reports.set(name, result);
 }
-const parentPrefix = 'mender2-candidate/source/';
+const careBalance = reports.get('intensive-care').balanceModel;
+assert.equal(careBalance.kind, 'native healing/fatigue capacity bound; not a battle clear');
+assert(careBalance.allBedsHealHpPerSecond > careBalance.maximumCrewFatigueHpPerSecond);
+assert(careBalance.slowestSuppliedRecoveryTicks < 3000);
+assert.equal(careBalance.authoredEnemies, 40);
+const parentPrefix = 'mender3-candidate/source/';
 const parentBytes = async name => Buffer.from(await parent.file(parentPrefix + name).async('uint8array'));
 // SeedPacket.h also defines the serialized SeedBank class.
-for (const name of ['src/Lawn/SeedPacket.h', 'src/Lawn/Plant.h', 'src/Lawn/Challenge.h', 'src/Lawn/System/SaveGame.cpp', 'src/Lawn/System/PlayerInfo.h', 'src/Lawn/System/PlayerInfo.cpp', 'src/LawnApp.h', 'src/Lawn/System/ReanimationLawn.h']) {
+for (const name of ['src/Lawn/SeedPacket.h', 'src/Lawn/Plant.h', 'src/Lawn/System/SaveGame.cpp', 'src/Lawn/System/PlayerInfo.h', 'src/Lawn/System/PlayerInfo.cpp', 'src/LawnApp.h', 'src/Lawn/System/ReanimationLawn.h']) {
   assert.deepEqual(await read('source/' + name), await parentBytes(name), 'Saved data layout/serialization must remain unchanged');
 }
 function boardData(bytes) {
@@ -60,6 +67,15 @@ function boardData(bytes) {
 }
 assert.equal(boardData(await read('source/src/Lawn/Board.h')), boardData(await parentBytes('src/Lawn/Board.h')),
   'Board saved data members stay unchanged; the existing KeyUp method may gain an implementation');
+function challengeData(bytes) {
+  const text = bytes.toString().replace(/\r\n?/g, '\n');
+  const start = text.indexOf('class Challenge\n{');
+  const end = text.indexOf('\npublic:', text.indexOf('\npublic:', start) + 1);
+  assert(start >= 0 && end > start);
+  return text.slice(start, end);
+}
+assert.equal(challengeData(await read('source/src/Lawn/Challenge.h')), challengeData(await parentBytes('src/Lawn/Challenge.h')),
+  'Challenge saved data members stay unchanged; care adds methods only');
 console.log(`PASS ${checks} published native content/QoL checks match their production source; saved object layouts and serializer are preserved.`);
 
 // New IDs append to the catalog. Every original serialized mode and challenge
@@ -83,7 +99,11 @@ const oldEnums = (await parentBytes('src/ConstEnums.h')).toString();
 const newEnums = (await read('source/src/ConstEnums.h')).toString();
 const oldModes = enumValues(oldEnums, 'GameMode'), newModes = enumValues(newEnums, 'GameMode');
 assert.equal(oldModes.get('NUM_GAME_MODES'), 78);
-assert.deepEqual([...newModes], [...oldModes], 'Mender adds no game mode or changes any original/custom mode ID');
+for (const [name, value] of oldModes) if (name !== 'NUM_GAME_MODES')
+  assert.equal(newModes.get(name), value, 'Every existing mode keeps its serialized identity: ' + name);
+assert.equal(newModes.get('GAMEMODE_CHALLENGE_INTENSIVE_CARE'), 78);
+assert.equal(newModes.get('NUM_GAME_MODES'), 79);
+assert.equal(newModes.size, oldModes.size + 1, 'Exactly one reviewed minigame mode is appended');
 assert.deepEqual([...enumValues(newEnums, 'ChallengePage')], [...enumValues(oldEnums, 'ChallengePage')],
   'Cold Front uses the existing Bonus page without changing any page IDs');
 const oldSeeds = enumValues(oldEnums, 'SeedType'), newSeeds = enumValues(newEnums, 'SeedType');
@@ -112,8 +132,11 @@ function definitions(text) {
 const oldDefinitions = definitions((await parentBytes('src/Lawn/Widget/ChallengeScreen.cpp')).toString());
 const newDefinitions = definitions((await read('source/src/Lawn/Widget/ChallengeScreen.cpp')).toString());
 assert.equal(oldDefinitions.length, 77);
-assert.deepEqual(newDefinitions, oldDefinitions, 'Mender preserves every original and five Bonus challenge definition');
-console.log('PASS Chill-shroom preserves all mode/seed IDs, saved layouts, 53 original plant definitions and all challenge identities and titles.');
+assert.deepEqual(newDefinitions.slice(0, 77), oldDefinitions, 'Every original and five Bonus challenge definition is byte-for-byte stable after whitespace normalization');
+assert.equal(newDefinitions.length, 78);
+assert.match(newDefinitions[77], /mChallengeMode = GameMode::GAMEMODE_CHALLENGE_INTENSIVE_CARE/);
+assert.match(newDefinitions[77], /mChallengeName = "Intensive Lawn Care"/);
+console.log('PASS one appended care mode preserves every prior mode/seed ID, saved layout, original plant definition and challenge identity.');
 
 const artRecord = JSON.parse(fs.readFileSync(new URL('content/native-bonus-art.json', dist)));
 assert.match(artRecord.sourceKind, /native sprite compositions/);
@@ -123,8 +146,8 @@ assert.equal(artRecord.assetBundleId, engine.assetBundleId);
 assert.equal(artRecord.plant.nativeReanimation, 'REANIM_ICESHROOM');
 assert.equal(artRecord.plant.spriteOverride, 'chill-shroom/provenance.json');
 assert.deepEqual(artRecord.canvas, {width: 80, height: 65, heroCenterX: 40, heroCenterY: 32.5, maxHeroWidth: 68, maxHeroHeight: 57});
-assert.deepEqual(artRecord.cards.map(card => card.mode), [73, 74, 75, 76, 77]);
-assert.deepEqual(artRecord.cards.map(card => card.name), ['Cone Zone', 'Night Shift', 'Cold Front', 'Garden Shuffle', 'Seed Swap']);
+assert.deepEqual(artRecord.cards.map(card => card.mode), [73, 74, 75, 76, 77, 78]);
+assert.deepEqual(artRecord.cards.map(card => card.name), ['Cone Zone', 'Night Shift', 'Cold Front', 'Garden Shuffle', 'Seed Swap', 'Intensive Lawn Care']);
 assert.equal(artRecord.animation.newGeneratedArtwork, false, 'Motion uses existing sprite/effect assets');
 assert.equal(artRecord.animation.idlePeriodSeconds, 2.2);
 assert.deepEqual(artRecord.animation.idleScaleX, [1, 1.045]);
@@ -354,45 +377,49 @@ const archivedSourceNames = Object.values(current.files).filter(entry => !entry.
   .map(entry => entry.name.slice((prefix + 'source/').length));
 assert.deepEqual(archivedSourceNames.sort(), Object.keys(sourceManifest.files).sort(),
   'Every corresponding-source archive member is represented exactly once in its manifest');
-// This is a head-art revision only. All gameplay, animations, original and
-// custom Almanac/chooser code, save layouts and other artwork retain every byte
-// of the exact published Mender.2 parent.
-const runtimeInputs = new Set(['src/Lawn/System/MenderBloomArt.h']);
-const headArtInputs = new Set([
-  'artwork/mender-bloom/render.py', 'artwork/mender-bloom/extraction.json',
-  'artwork/mender-bloom/generation.json',
+// Care is one mode-scoped gameplay addition. Every unreviewed production input,
+// including both accepted custom plants and all artwork, retains exact parent bytes.
+const runtimeInputs = new Set([
+  'src/ConstEnums.h', 'src/Lawn/Board.cpp', 'src/Lawn/Board.h',
+  'src/Lawn/Challenge.cpp', 'src/Lawn/Challenge.h', 'src/Lawn/Plant.cpp',
+  'src/Lawn/Zombie.cpp', 'src/Lawn/CursorObject.cpp',
+  'src/Lawn/System/BonusChallenge.h', 'src/Lawn/System/LanternShroom.cpp',
+  'src/Lawn/Widget/ChallengeScreen.cpp',
 ]);
 const releaseIdentityInputs = new Set(['CMake/ProjectVersion.cmake']);
 const nativeNames = ['PeaShooter_backleaf.png', 'PeaShooter_backleaf_lefttip.png', 'PeaShooter_backleaf_righttip.png',
   'PeaShooter_stalk_bottom.png', 'PeaShooter_stalk_top.png', 'PeaShooter_frontleaf.png',
   'PeaShooter_frontleaf_righttip.png', 'PeaShooter_frontleaf_lefttip.png', 'SunFlower_head.png',
   'SunFlower_blink1.png', 'SunFlower_leftpetal3.png', 'SunFlower_leftpetal4.png', 'SunFlower.reanim'];
-// Filled with the exact reviewed head sources after artwork freezes.
-const addedHeadInputs = [
-  'artwork/mender-bloom/generation-mender2-history.json',
-  'artwork/mender-bloom/head-draft.png', 'artwork/mender-bloom/head-master.png',
-  'artwork/mender-bloom/head-closed.png', 'artwork/mender-bloom/head-style-game.jpg',
-  'artwork/mender-bloom/head-style-stem.png',
-];
+const addedCareInputs = ['src/Lawn/System/IntensiveCare.h'];
 let parentSourceCount = 0;
 for (const entry of Object.values(parent.files)) {
   if (entry.dir || !entry.name.startsWith(parentPrefix)) continue;
   parentSourceCount++;
   const name = entry.name.slice(parentPrefix.length);
-  if (runtimeInputs.has(name) || headArtInputs.has(name)) continue;
   const before = Buffer.from(await entry.async('uint8array'));
   const after = await read('source/' + name);
+  const pin = sourceManifest.files[name];
+  assert(pin && pin.bytes === after.length && pin.sha256 === sha(after), 'Manifest pins actual current source bytes: ' + name);
+  if (runtimeInputs.has(name)) {
+    assert(!after.equals(before), 'Every allowed gameplay/UI change is an actual reviewed change: ' + name);
+    continue;
+  }
   if (releaseIdentityInputs.has(name)) {
-    assert.equal(after.toString().replaceAll('0.2.6-web-mender.3', '0.2.6-web-mender.2'), before.toString(),
+    assert.equal(after.toString().replaceAll('0.2.6-web-care.1', '0.2.6-web-mender.3'), before.toString(),
       'Only the release identity may change in metadata source: ' + name);
-  } else assert.deepEqual(after, before, 'Distinct-head revision preserves all other source bytes: ' + name);
+  } else assert.deepEqual(after, before, 'Care revision preserves every unrelated source/artwork byte: ' + name);
 }
-assert.equal(parentSourceCount, 810, 'Authenticated parent contains all 810 source inputs');
+assert.equal(parentSourceCount, 816, 'Authenticated parent contains all 816 source inputs');
 const addedProduction = Object.keys(sourceManifest.files).filter(name => !parent.file(parentPrefix + name));
-assert.deepEqual(addedProduction.sort(), [...addedHeadInputs].sort(),
-  'Only the exact reviewed head-image sources may be appended; no gameplay or UI code is added');
-assert.equal(Object.keys(sourceManifest.files).length, parentSourceCount + addedHeadInputs.length,
-  'Complete source inventory retains every parent member and exactly the reviewed head inputs');
+assert.deepEqual(addedProduction.sort(), [...addedCareInputs].sort(),
+  'Exactly the reviewed care rules header is appended');
+assert.equal(Object.keys(sourceManifest.files).length, parentSourceCount + addedCareInputs.length,
+  'Complete source inventory retains every parent member and exactly the care additions');
+for (const name of addedCareInputs) {
+  const bytes = await read('source/' + name), pin = sourceManifest.files[name];
+  assert(pin && pin.bytes === bytes.length && pin.sha256 === sha(bytes), 'New care rules are exactly pinned in the complete source manifest');
+}
 
 for (const name of ['src/Lawn/System/ChillShroomArt.h', 'artwork/chill-shroom/extraction.json', 'artwork/chill-shroom/generation.json', 'artwork/chill-shroom/render.py', 'artwork/chill-shroom/approved-master.png.base64.txt', 'artwork/chill-shroom/closed-master.png.base64.txt', 'artwork/chill-shroom/painted-master.png.base64.txt', 'artwork/chill-shroom/painted-closed-master.png.base64.txt', 'artwork/chill-shroom/painted-base.png.base64.txt']) {
   const bytes = await read('source/' + name), pin = sourceManifest.files[name];
@@ -471,7 +498,7 @@ for (let y = 0; y < 80; y++) for (let x = 0; x < 80; x++) {
   else if (differs) changedPerEye[eyeIndex]++;
 }
 for (const changed of changedPerEye) assert(changed > 5, 'Both eyes have an actual expression change');
-console.log('PASS exact parent gameplay, motion, Almanac/chooser and Chill pixels; independent PNG/runtime pixels, fixed-alpha eye expressions and native cards remain intact.');
+console.log('PASS exact parent custom-plant motion, Almanac/chooser and Chill pixels; independent PNG/runtime pixels and fixed-alpha eye expressions remain intact.');
 
 function sourceOver(back, front) {
   assert.equal(back.length, front.length); const result = Buffer.alloc(back.length);
@@ -494,7 +521,7 @@ function sourceOver(back, front) {
   const artUrl = new URL('content/mender-bloom/', dist);
   const provenance = JSON.parse(fs.readFileSync(new URL('provenance.json', artUrl)));
   assert.equal(provenance.schema, 3);
-  assert.equal(provenance.version, engine.id);
+  assert.equal(provenance.version, '0.2.6-web-mender.3', 'Unchanged accepted art keeps its original provenance identity');
   assert.equal(provenance.displayName, 'Mender-bloom');
   assert.equal(provenance.imageGenerationUsed, true, 'The distinct blossom head uses the permitted built-in image tool');
   assert.equal(provenance.historicalImageGenerationUsed, true);
@@ -533,7 +560,7 @@ function sourceOver(back, front) {
   assert.deepEqual(await read('source/artwork/mender-bloom/generation-history.json'),
     await parentBytes('artwork/mender-bloom/generation-history.json'), 'Historical first generated draft stays unchanged and inactive');
   assert.deepEqual(await read('source/artwork/mender-bloom/generation-mender2-history.json'),
-    await parentBytes('artwork/mender-bloom/generation.json'), 'Prior native-head record is retained accurately as inactive history');
+    await parentBytes('artwork/mender-bloom/generation-mender2-history.json'), 'Prior native-head record is retained accurately as inactive history');
   for (const name of ['generation.json', 'extraction.json'])
     assert.deepEqual(fs.readFileSync(new URL(name, artUrl)), await read('source/artwork/mender-bloom/' + name));
   const recipe = JSON.parse(await read('source/artwork/mender-bloom/extraction.json'));
@@ -689,9 +716,9 @@ function sourceOver(back, front) {
   assert.equal(sha(fs.readFileSync(new URL('stem.png',artUrl))),provenance.unchangedStem.pngSha256);
   assert.equal(sha(parts.get('stem')),provenance.unchangedStem.rgbaSha256);
   assert.deepEqual(parts.get('stem'),unpack(parentMenderHeader,'kStemArgb'),
-    'Every original stem/leaf output pixel is identical to the published Mender.2 parent');
-  assert(!parts.get('head').equals(unpack(parentMenderHeader,'kHeadArgb')),
-    'A distinct head replaces the rejected Sunflower-like face and petals');
+    'Every original stem/leaf output pixel is identical to the published Mender.3 parent');
+  assert.deepEqual(parts.get('head'),unpack(parentMenderHeader,'kHeadArgb'),
+    'The accepted distinct blossom head remains exactly the Mender.3 artwork');
   const neutral=parts.get('canonical'),head=parts.get('head'),stem=parts.get('stem'),blink=parts.get('blink'),blinkHead=parts.get('head-blink');
   const reconstructed=sourceOver(stem,head),closed=sourceOver(stem,blinkHead);
   const changed=recipe.eyeRegions.map(()=>0); let headPixels=0,stemPixels=0,overlap=0;

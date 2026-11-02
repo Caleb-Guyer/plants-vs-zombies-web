@@ -1,5 +1,15 @@
 # GitHub Pages release: Caleb-Guyer/plants-vs-zombies-web
 
+## Care.1 release
+
+`0.2.6-web-care.1` adds Intensive Lawn Care as Bonus mode 78 with completion record 77. Its source starts from the exact published Mender.3 archive, SHA-256 `5a6392e1d5415c3d7f5d3f2bad3114abb54a35bc13df5366be84b718c2d5bd1f`.
+
+All eleven silent native suites passed: 5,078 checks, zero failures. All fourteen browser integration suites passed. The new [source archive](dist/source/pvz-portable-0.2.6-web-care.1-source.zip) contains 817 source files and 861 ZIP entries, SHA-256 `497b9d468ddee62db3cab9d111dd10d230c33c4032ba8b2ebc1eafc3733c7d62`. Both full and delta reconstruction patches reproduce every source byte.
+
+Muted manual play reached wave 10 and exercised recovery, movement, 2x and a full reload/Continue on the Care save path. Input and approval delays left unattended stretches; the final run ended paused near its end. Battle completion and final difficulty balance remain unverified.
+
+Commit, push, Pages deployment and public source-download validation receive separate receipts after those steps. Prior release records remain below.
+
 ## Mender.3 release candidate
 
 `0.2.6-web-mender.3` replaces the rejected Sunflower-like Mender-bloom head

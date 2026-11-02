@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-mender.3
-Replaces Mender-bloom's Sunflower-like head with a distinct coral cupped blossom and its own expression. Retains the original stem and leaves, accepted idle animations, Almanac and chooser presentation, gameplay mechanics, unlocks, Chill-shroom artwork and native save layouts.
-Engine JavaScript SHA-256: f016c3f256ff234542c34fcea8a3cc927e2ad0ea6f5498b70897ce7d47750045
-Engine WASM SHA-256: 7a65f7f873e63e584b511ff5c079f38fa03f56e58d978295dddc8ebc3ccd27c1
+PvZ-Portable 0.2.6-web-care.1
+Adds Intensive Lawn Care: rotate wounded conveyor plants through a protected Mender-bloom healing bed with the native gardening glove. Retains accepted plant artwork, existing minigames, normal unlocks and native save layouts.
+Engine JavaScript SHA-256: 251ec8d9bc301f1245a631e8a3dc932f9bcc37d7358d804c07cdf1c6cf867d8e
+Engine WASM SHA-256: f7c31bb243b7b6823782f416a8c3f438e6a7376b48782e6a1257a1ba8a11b8d3
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.

@@ -1,5 +1,13 @@
 # Current requirements
 
+## Care.1 — Intensive Lawn Care
+
+`0.2.6-web-care.1` adds the repair-and-redeploy minigame: five fixed Menders, five protected recovery pots, five opening Repeaters, a wounded-plant conveyor, native glove movement and ten authored waves. Recovery-bed plants cannot attack. Front-line combat plants lose four HP per second while live zombies are present and stop attacking at 60 HP or below. The ordinary Mender pulse restores ten HP every three seconds. Moving a patient preserves the native plant instance.
+
+Mode 78 and state 105 use existing serialized fields. Completion and replay use reserved profile record 77. Original IDs, saved layouts, the existing five Bonus modes and plant unlock rules remain. The sixth card uses actual sprite parts; there are no card tips, extra panels or health bars.
+
+All eleven silent native suites passed: 5,078 checks, zero failures. All fourteen browser integration suites passed. The accepted Mender.3 and Chill-shroom art and existing challenge data remain byte-identical. The manual-play validation limit is recorded in [PARITY-QA.md](PARITY-QA.md).
+
 ## Mender.3 distinct Mender-bloom identity
 
 `0.2.6-web-mender.3` replaces the rejected Sunflower-like Mender-bloom head
