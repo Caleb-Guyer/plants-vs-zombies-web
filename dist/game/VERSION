@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-mender.1
-Adds Mender-bloom, a support plant earned by beating Seed Swap that slowly heals adjacent plants, plus native Almanac entries for Mender-bloom and Chill-shroom. Retains all five bonus minigames, original content and native save layouts.
-Engine JavaScript SHA-256: 823f52b735230fba6a15bd0c6581486d27df069671338972d5337bb12d8a6c79
-Engine WASM SHA-256: 7456cecda0dce7e0cd18d50828bf5b64b87866fd38c9f6651558537a7ca38843
+PvZ-Portable 0.2.6-web-mender.2
+Gives Chill-shroom and Mender-bloom expressive idle animations and original-style Almanac formatting, compact catalog portraits and character-specific descriptions. Rebuilds Mender-bloom from original sprite parts and moves custom seed packets inside the chooser panel. Preserves abilities, unlocks, Chill-shroom pixels, all five bonus minigames and native save layouts.
+Engine JavaScript SHA-256: f016c3f256ff234542c34fcea8a3cc927e2ad0ea6f5498b70897ce7d47750045
+Engine WASM SHA-256: f81303e6bc051a46bd6d08f9e42e089960b0bec37a1f87b9bba20335240e4b5d
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.

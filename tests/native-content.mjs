@@ -17,12 +17,12 @@ new Function('module', 'exports', 'require', fs.readFileSync(new URL('vendor/jsz
 const JSZip = vendor.exports;
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
 const engine = JSON.parse(fs.readFileSync(new URL('game/engine-provenance.json', dist)));
-assert.equal(engine.id, '0.2.6-web-mender.1');
+assert.equal(engine.id, '0.2.6-web-mender.2');
 const current = await JSZip.loadAsync(fs.readFileSync(new URL(engine.artifacts.source, new URL('game/engine-provenance.json', dist))), {checkCRC32: true});
-const parentSourceBytes = fs.readFileSync(new URL('source/pvz-portable-0.2.6-web-seedswap.1-source.zip', dist));
-assert.equal(sha(parentSourceBytes), '0db62a66059ebc4891181044609fa949d2c623b0a05181930c2734a0f7aeeb18', 'Parent is the exact published SeedSwap.1 source');
+const parentSourceBytes = fs.readFileSync(new URL('source/pvz-portable-0.2.6-web-mender.1-source.zip', dist));
+assert.equal(sha(parentSourceBytes), 'd91f663297f7787be7063f478027cd4935ff4285c9dbed600c1c71703d1e08a3', 'Parent is the exact published Mender.1 source');
 const parent = await JSZip.loadAsync(parentSourceBytes, {checkCRC32: true});
-const prefix = 'mender1-candidate/';
+const prefix = 'mender2-candidate/';
 const read = async name => {
   const entry = current.file(prefix + name);
   assert(entry, 'Missing current production source/test: ' + name);
@@ -45,7 +45,8 @@ for (const name of suites) {
   checks += result.checks;
   reports.set(name, result);
 }
-const parentBytes = async name => Buffer.from(await parent.file('seedswap1-candidate/source/' + name).async('uint8array'));
+const parentPrefix = 'mender1-candidate/source/';
+const parentBytes = async name => Buffer.from(await parent.file(parentPrefix + name).async('uint8array'));
 // SeedPacket.h also defines the serialized SeedBank class.
 for (const name of ['src/Lawn/SeedPacket.h', 'src/Lawn/Plant.h', 'src/Lawn/Challenge.h', 'src/Lawn/System/SaveGame.cpp', 'src/Lawn/System/PlayerInfo.h', 'src/Lawn/System/PlayerInfo.cpp', 'src/LawnApp.h', 'src/Lawn/System/ReanimationLawn.h']) {
   assert.deepEqual(await read('source/' + name), await parentBytes(name), 'Saved data layout/serialization must remain unchanged');
@@ -88,7 +89,7 @@ assert.deepEqual([...enumValues(newEnums, 'ChallengePage')], [...enumValues(oldE
 const oldSeeds = enumValues(oldEnums, 'SeedType'), newSeeds = enumValues(newEnums, 'SeedType');
 for (const [key, value] of oldSeeds) assert.equal(newSeeds.get(key), value, 'Every original and special seed ID stays stable: ' + key);
 assert.equal(newSeeds.get('SEED_MENDERBLOOM'), 76);
-assert.equal(newSeeds.size, oldSeeds.size + 1, 'Exactly one external custom plant ID is appended');
+assert.deepEqual([...newSeeds], [...oldSeeds], 'Animation and Almanac refinements preserve all native and custom seed IDs');
 assert.equal(newSeeds.get('SEED_LANTERNSHROOM'), 75);
 assert.equal(newSeeds.get('NUM_SEED_TYPES'), 53, 'Original plant cache capacity stays unchanged');
 assert.equal(newSeeds.get('NUM_SEEDS_IN_CHOOSER'), 49, 'Original serialized chooser capacity stays unchanged; the custom entry uses a sparse UI mapping');
@@ -125,10 +126,11 @@ assert.deepEqual(artRecord.canvas, {width: 80, height: 65, heroCenterX: 40, hero
 assert.deepEqual(artRecord.cards.map(card => card.mode), [73, 74, 75, 76, 77]);
 assert.deepEqual(artRecord.cards.map(card => card.name), ['Cone Zone', 'Night Shift', 'Cold Front', 'Garden Shuffle', 'Seed Swap']);
 assert.equal(artRecord.animation.newGeneratedArtwork, false, 'Motion uses existing sprite/effect assets');
-assert.equal(artRecord.animation.idlePeriodSeconds, 2.4);
-assert.deepEqual(artRecord.animation.idleScaleX, [1, 1.012]);
-assert.deepEqual(artRecord.animation.idleScaleY, [0.98, 1]);
-assert.deepEqual(artRecord.animation.idleCapCompressionPixels, [0, 0.8]);
+assert.equal(artRecord.animation.idlePeriodSeconds, 2.2);
+assert.deepEqual(artRecord.animation.idleScaleX, [1, 1.045]);
+assert.deepEqual(artRecord.animation.idleScaleY, [0.935, 1]);
+assert.deepEqual(artRecord.animation.idleCapCompressionPixels, [0, 1.6]);
+assert.deepEqual(artRecord.animation.idleBodyAngleRadians, [-0.07, 0.07]);
 for (const [name, expected] of Object.entries({windupTicks: 40, recoilTicks: 30, frostEffectTicks: 100,
   frostTravelTicks: 55, targetRadiusPixels: 150})) assert.equal(artRecord.animation[name], expected);
 assert.deepEqual(artRecord.animation.nativeFrostAssets, [
@@ -223,7 +225,7 @@ function decodeRgbaPng(bytes, allowRgb = false, maxDimension = 256) {
 const artworkUrl = new URL('content/chill-shroom/', dist);
 const artwork = JSON.parse(fs.readFileSync(new URL('provenance.json', artworkUrl)));
 assert.equal(artwork.schema, 2);
-assert.equal(artwork.version, engine.id);
+assert.equal(artwork.version, '0.2.6-web-mender.1', 'Unchanged artwork retains its original release provenance');
 assert.equal(artwork.method, 'Approved silhouette with a painted finish and registered shared-canvas layers');
 assert.equal(artwork.imageGenerationUsed, true);
 assert.equal(artwork.standaloneChallengeIllustrations, false);
@@ -348,79 +350,68 @@ assert.deepEqual(fs.readFileSync(new URL('generation.json', artworkUrl)), genera
 
 const sourceManifest = JSON.parse(await read('source-manifest.json'));
 assert.equal(sourceManifest.version, engine.id);
-// Mender and the sparse Almanac repair are isolated to reviewed plant/UI paths.
-// Every unrelated engine, existing minigame and old artwork byte is preserved.
+// The refinement changes only the two plant motion rigs and native Almanac.
+// Every unrelated engine/content/art byte remains equal to the exact Mender.1 parent.
 const runtimeInputs = new Set([
-  'src/ConstEnums.h', 'src/Lawn/Plant.cpp', 'src/LawnApp.cpp', 'src/Lawn/SeedPacket.cpp',
+  'src/Lawn/System/LanternShroom.h', 'src/Lawn/System/LanternShroom.cpp',
+  'src/Lawn/System/MenderBloom.h', 'src/Lawn/System/MenderBloom.cpp', 'src/Lawn/System/MenderBloomArt.h',
+  'src/Lawn/Widget/AlmanacDialog.cpp', 'src/Lawn/Widget/AlmanacDialog.h',
   'src/Lawn/Widget/SeedChooserScreen.cpp', 'src/Lawn/Widget/SeedChooserScreen.h',
-  'src/Lawn/Widget/AlmanacDialog.cpp', 'src/Lawn/Widget/AlmanacDialog.h', 'src/Lawn/System/DeckPresets.h',
 ]);
-const releaseIdentityInputs = new Set(['CMake/ProjectVersion.cmake', 'artwork/chill-shroom/render.py']);
+const nativeArtInputs = new Set(['artwork/mender-bloom/render.py', 'artwork/mender-bloom/extraction.json', 'artwork/mender-bloom/generation.json']);
+const releaseIdentityInputs = new Set(['CMake/ProjectVersion.cmake']);
 for (const entry of Object.values(parent.files)) {
-  if (entry.dir || !entry.name.startsWith('seedswap1-candidate/source/')) continue;
-  const name = entry.name.slice('seedswap1-candidate/source/'.length);
-  if (runtimeInputs.has(name)) continue;
+  if (entry.dir || !entry.name.startsWith(parentPrefix)) continue;
+  const name = entry.name.slice(parentPrefix.length);
+  if (runtimeInputs.has(name) || nativeArtInputs.has(name)) continue;
   const before = Buffer.from(await entry.async('uint8array'));
   const after = await read('source/' + name);
   if (releaseIdentityInputs.has(name)) {
-    assert.equal(after.toString().replaceAll('0.2.6-web-mender.1', '0.2.6-web-seedswap.1'), before.toString(),
+    assert.equal(after.toString().replaceAll('0.2.6-web-mender.2', '0.2.6-web-mender.1'), before.toString(),
       'Only the release identity may change in metadata source: ' + name);
-  } else assert.deepEqual(after, before, 'Mender preserves unrelated engine/content/art bytes: ' + name);
+  } else assert.deepEqual(after, before, 'Motion/Almanac refinement preserves unrelated engine/content/art bytes: ' + name);
 }
-const addedProduction = Object.keys(sourceManifest.files).filter(name => !parent.file('seedswap1-candidate/source/' + name));
-const newCode = ['src/Lawn/System/MenderBloom.h', 'src/Lawn/System/MenderBloom.cpp', 'src/Lawn/System/MenderBloomArt.h'];
-assert.deepEqual(addedProduction.filter(name => name.startsWith('src/')).sort(), newCode.sort(), 'Exactly the focused Mender implementation and registered artwork header are added to engine code');
-for (const name of addedProduction) assert(newCode.includes(name) || name.startsWith('artwork/mender-bloom/'), 'New source inputs are restricted to the Mender implementation/artwork recipe: ' + name);
-function omitFunction(text, signature) {
+const addedProduction = Object.keys(sourceManifest.files).filter(name => !parent.file(parentPrefix + name));
+const nativeNames = ['PeaShooter_backleaf.png', 'PeaShooter_backleaf_lefttip.png', 'PeaShooter_backleaf_righttip.png',
+  'PeaShooter_stalk_bottom.png', 'PeaShooter_stalk_top.png', 'PeaShooter_frontleaf.png',
+  'PeaShooter_frontleaf_righttip.png', 'PeaShooter_frontleaf_lefttip.png', 'SunFlower_head.png',
+  'SunFlower_blink1.png', 'SunFlower_leftpetal3.png', 'SunFlower_leftpetal4.png', 'SunFlower.reanim'];
+assert.deepEqual(addedProduction.sort(), [
+  ...nativeNames.map(name => 'artwork/mender-bloom/native/' + name),
+  'artwork/mender-bloom/native-provenance.json', 'artwork/mender-bloom/generation-history.json',
+].sort(), 'Exactly the reviewed original sprite inputs and historical generation record are appended; no code/mode/seed is added');
+assert.equal(Object.keys(sourceManifest.files).length, 810, 'Complete parent source plus fifteen reviewed native art inputs is present');
+function functionText(text, signature) {
   const start = text.indexOf(signature);
   assert(start >= 0 && text.indexOf(signature, start + signature.length) < 0, 'Unique reviewed function: ' + signature);
   let cursor = text.indexOf('{', start), depth = 1;
   assert(cursor > start);
   while (depth && ++cursor < text.length) depth += Number(text[cursor] === '{') - Number(text[cursor] === '}');
   assert.equal(depth, 0);
-  return text.slice(0, start) + text.slice(cursor + 1);
+  return text.slice(start, cursor + 1);
 }
-const sharedFunctionScopes = {
-  'src/Lawn/Plant.cpp': ['void Plant::PlantInitialize(', 'void Plant::UpdateAbilities(', 'void Plant::UpdateReanim(',
-    'Image* Plant::GetImage(', 'void Plant::Draw(', 'void Plant::DrawSeedType(', 'const PlantDefinition& GetPlantDefinition(',
-    'std::string Plant::GetNameString(', 'std::string Plant::GetToolTip('],
-  'src/LawnApp.cpp': ['LawnApp::~LawnApp()', 'bool LawnApp::HasSeedType('],
-  'src/Lawn/SeedPacket.cpp': ['void SeedPacket::Draw('],
-  'src/Lawn/Widget/SeedChooserScreen.cpp': ['void SeedChooserScreen::GetSeedPositionInChooser(', 'void SeedChooserScreen::Draw('],
-  'src/Lawn/Widget/SeedChooserScreen.h': ['static constexpr int ChooserSeedCount()', 'static constexpr SeedType ChooserSeedType(',
-    'static constexpr bool IsChooserSeed(', 'static constexpr int ChosenSeedIndex('],
-  'src/Lawn/Widget/AlmanacDialog.cpp': ['void AlmanacDialog::DrawPlants(', 'void AlmanacDialog::GetSeedPosition(', 'SeedType AlmanacDialog::SeedHitTest('],
-  'src/Lawn/System/DeckPresets.h': ['static bool ValidSeed(', 'static bool ValidSeeds('],
+// Animation and writing changes cannot quietly alter support abilities or damage.
+const unchangedMechanics = {
+  'src/Lawn/System/MenderBloom.h': ['constexpr bool InRange(', 'constexpr int BoundedHeal(', 'constexpr bool IsPersistentTargetSeed('],
+  'src/Lawn/System/MenderBloom.cpp': ['bool IsEligibleTarget(', 'void Update(Plant&'],
+  'src/Lawn/System/LanternShroom.h': ['constexpr AttackPhase GetAttackPhase(', 'constexpr AttackPose GetAttackPose(', 'constexpr PartMotion GetPartMotion(', 'constexpr bool AdvancePulse(', 'constexpr FrostTuft GetFrostTuft(', 'constexpr bool InRange('],
+  'src/Lawn/System/LanternShroom.cpp': ['void DrawAttackPulse('],
 };
-const addedFunctionScopes = {'src/Lawn/Widget/AlmanacDialog.cpp': ['const char* AlmanacDialog::GetAddonAlmanacDescription(']};
-for (const [name, signatures] of Object.entries(sharedFunctionScopes)) {
-  let before = (await parentBytes(name)).toString().replace(/\r\n?/g, '\n'), after = (await read('source/' + name)).toString().replace(/\r\n?/g, '\n');
-  for (const signature of signatures) { before = omitFunction(before, signature); after = omitFunction(after, signature); }
-  for (const signature of addedFunctionScopes[name] || []) {
-    assert(!before.includes(signature), 'New helper must not replace a parent method: ' + signature);
-    after = omitFunction(after, signature);
-  }
-  if (name === 'src/Lawn/Plant.cpp') after = after.replace('#include "System/MenderBloom.h"\n', '');
-  if (name === 'src/LawnApp.cpp') after = after.replace('#include "Lawn/System/MenderBloom.h"\n', '');
-  if (name === 'src/Lawn/Widget/SeedChooserScreen.h') after = after
-    .replace('// Appended seeds keep IDs 75/76; unused runtime chooser slots store them.', '// The appended seed keeps ID 75; an unused runtime chooser slot stores it.')
-    .replace('static_assert(NUM_SEEDS_IN_CHOOSER + 2 <= NUM_SEED_TYPES);', 'static_assert(NUM_SEEDS_IN_CHOOSER < NUM_SEED_TYPES);');
-  assert.equal(after.replace(/\n{3,}/g, '\n\n'), before.replace(/\n{3,}/g, '\n\n'), 'Shared source changes only reviewed Mender/Almanac functions: ' + name);
-}
-{
-  const before = (await parentBytes('src/ConstEnums.h')).toString().replace(/\r\n?/g, '\n');
-  const after = (await read('source/src/ConstEnums.h')).toString().replace(/\r\n?/g, '\n');
-  assert.equal(after.replace(/^.*SEED_MENDERBLOOM.*\n/m, ''), before, 'Only the appended seed76 changes native enum source');
-}
-{
-  const name = 'src/Lawn/Widget/AlmanacDialog.h';
+for (const [name, signatures] of Object.entries(unchangedMechanics)) {
   const before = (await parentBytes(name)).toString().replace(/\r\n?/g, '\n');
+  const after = (await read('source/' + name)).toString().replace(/\r\n?/g, '\n');
+  for (const signature of signatures) assert.equal(functionText(after, signature), functionText(before, signature),
+    'Existing ability/attack logic remains byte-identical: ' + signature);
+}
+{
+  const name = 'src/Lawn/Widget/AlmanacDialog.cpp';
+  let before = (await parentBytes(name)).toString().replace(/\r\n?/g, '\n');
   let after = (await read('source/' + name)).toString().replace(/\r\n?/g, '\n');
-  after = omitFunction(omitFunction(after, 'static constexpr int AlmanacSeedCount()'), 'static constexpr SeedType AlmanacSeedType(')
-    .replace(/^.*static const char\* GetAddonAlmanacDescription.*\n/m, '')
-    .replace('\t// Original entries retain all IDs and positions; addon packets use the\n\t// unused header space beside the native Imitater entry.\n', '');
-  const nonempty = text => text.split('\n').filter(line => line.trim()).join('\n');
-  assert.equal(nonempty(after), nonempty(before), 'Almanac header adds methods only and preserves all existing fields and declarations');
+  for (const signature of ['const char* AlmanacDialog::GetAddonAlmanacDescription(', 'void AlmanacDialog::DrawPlants(', 'void AlmanacDialog::GetSeedPosition(', 'SeedType AlmanacDialog::SeedHitTest(']) {
+    before = before.replace(functionText(before, signature), '');
+    after = after.replace(functionText(after, signature), '');
+  }
+  assert.equal(after, before, 'Almanac changes only addon description, packet presentation and matching hit boxes; original index/zombie/setup behavior stays byte-identical');
 }
 
 for (const name of ['src/Lawn/System/ChillShroomArt.h', 'artwork/chill-shroom/extraction.json', 'artwork/chill-shroom/generation.json', 'artwork/chill-shroom/render.py', 'artwork/chill-shroom/approved-master.png.base64.txt', 'artwork/chill-shroom/closed-master.png.base64.txt', 'artwork/chill-shroom/painted-master.png.base64.txt', 'artwork/chill-shroom/painted-closed-master.png.base64.txt', 'artwork/chill-shroom/painted-base.png.base64.txt']) {
@@ -502,25 +493,40 @@ for (let y = 0; y < 80; y++) for (let x = 0; x < 80; x++) {
 for (const changed of changedPerEye) assert(changed > 5, 'Both eyes have an actual expression change');
 console.log('PASS exact parent Chill pixels/geometry, scoped plant/Almanac changes, independent PNG/runtime pixels, neutral reconstruction, fixed-alpha eye-only expressions and native cards without standalone generated illustrations.');
 
+function sourceOver(back, front) {
+  assert.equal(back.length, front.length); const result = Buffer.alloc(back.length);
+  const div255 = value => ((value >>> 8) + value) >>> 8;
+  for (let p = 0; p < back.length; p += 4) {
+    const af = front[p+3], ab = back[p+3];
+    if (!af) {back.copy(result, p, p, p+4); continue;}
+    const outA255 = af*255 + ab*(255-af);
+    const cf = Math.floor(af*255*255*128/outA255), cb = 255*128-cf;
+    for (let c=0;c<3;c++) result[p+c] = div255(front[p+c]*cf + back[p+c]*cb + 16384) >>> 7;
+    result[p+3] = div255(outA255 + 128);
+  }
+  return result;
+}
+
 // Independently decode Mender PNGs and the compiled straight-alpha ARGB arrays.
 // Public/source hashes alone cannot establish the actual exported pixel layout.
 {
   const artUrl = new URL('content/mender-bloom/', dist);
   const provenance = JSON.parse(fs.readFileSync(new URL('provenance.json', artUrl)));
-  assert.equal(provenance.schema, 1);
+  assert.equal(provenance.schema, 2);
   assert.equal(provenance.version, engine.id);
   assert.equal(provenance.displayName, 'Mender-bloom');
-  assert.equal(provenance.imageGenerationUsed, true);
+  assert.equal(provenance.imageGenerationUsed, false, 'Current Mender artwork composes original textures without new generated pixels');
+  assert.equal(provenance.historicalImageGenerationUsed, true);
+  assert.equal(provenance.historicalGeneratedArtworkActive, false);
   assert.equal(provenance.standaloneChallengeIllustrations, false);
-  assert.equal(provenance.sourceMasterSha256, '22c912c59fedbad0fd1c006164374e90b04010f8da2fe021e6c012d3184cbc14', 'Reviewed Mender master is independently pinned');
-  assert.equal(provenance.sourceClosedSha256, 'd5d17c1b545a0b1a71265cf32afcde2d0996c57a5742c108bc09c305a74e4c24', 'Reviewed closed-eye source is independently pinned');
-  assert.equal(provenance.canonicalRgbaSha256, '042db58ae7d45ccd9e3d3b25884c4c0809d1e1dad9aa5580a7fc83fcaf839399', 'Reviewed final Mender pixels are independently pinned');
+  assert.equal(provenance.assetBundleId, engine.assetBundleId);
+  assert.equal(provenance.canonicalRgbaSha256, 'b0ce45fde943aec4bdd37cee4b25e7786022d285ed29388e4f81c49766dafb1c', 'Reviewed native-parts composition is independently pinned');
   const pins = {
-    'artwork/mender-bloom/master.png': provenance.sourceMasterSha256,
-    'artwork/mender-bloom/closed.png': provenance.sourceClosedSha256,
     'artwork/mender-bloom/generation.json': provenance.generationSha256,
     'artwork/mender-bloom/extraction.json': provenance.extractionSha256,
     'artwork/mender-bloom/render.py': provenance.generatorSha256,
+    'artwork/mender-bloom/native-provenance.json': provenance.nativeInputsSha256,
+    'artwork/mender-bloom/generation-history.json': provenance.historicalGenerationSha256,
     'src/Lawn/System/MenderBloomArt.h': provenance.headerSha256,
   };
   for (const [name, expected] of Object.entries(pins)) {
@@ -529,12 +535,85 @@ console.log('PASS exact parent Chill pixels/geometry, scoped plant/Almanac chang
     assert.equal(sourceManifest.files[name]?.sha256, expected);
     assert.equal(sourceManifest.files[name]?.bytes, bytes.length);
   }
+  assert.deepEqual(await read('source/artwork/mender-bloom/generation-history.json'), await parentBytes('artwork/mender-bloom/generation.json'), 'Prior generation is retained accurately as inactive history');
   for (const name of ['generation.json', 'extraction.json']) assert.deepEqual(fs.readFileSync(new URL(name, artUrl)), await read('source/artwork/mender-bloom/' + name));
   const recipe = JSON.parse(await read('source/artwork/mender-bloom/extraction.json'));
+  const artGeneration = JSON.parse(await read('source/artwork/mender-bloom/generation.json'));
+  assert.equal(recipe.schema, 3);
   assert.deepEqual(recipe.canvas, [80, 80]);
-  assert.deepEqual(recipe.eyeRegions, [[38,28,45,34],[48,27,53,33]], 'Mender expressions stay inside the reviewed eye regions');
-  assert.deepEqual(recipe.normalizedSize, [55,68]);
-  assert.deepEqual(recipe.offset, [12,6], 'Mender maintains its shared native ground registration');
+  assert.deepEqual(recipe.groundAnchor, [40, 72]);
+  assert.deepEqual(recipe.headStemJoint, [40, 50]);
+  assert.deepEqual(recipe.eyeRegions, [[30,20,40,33],[43,20,54,33]], 'Only the registered original face eye regions may animate');
+  assert.equal(recipe.stem.originalReanimation, 'native/SunFlower.reanim');
+  assert.equal(recipe.stem.nativeFrame, 4);
+  assert.equal(recipe.stem.tracks.length, 8);
+  assert.equal(recipe.face.source, 'SunFlower_head.png');
+  assert.equal(recipe.blink.source, 'SunFlower_blink1.png');
+  assert.deepEqual(recipe.petals.angles, [0,60,120,180,240,300]);
+  assert.equal(artGeneration.imageGenerationUsed, false);
+  assert.equal(artGeneration.historicalGeneratedArtwork.active, false);
+  const nativeRecord = JSON.parse(await read('source/artwork/mender-bloom/native-provenance.json'));
+  assert.equal(nativeRecord.assetBundleId, engine.assetBundleId);
+  assert.deepEqual(nativeRecord.sourceInputs, provenance.sourceInputs);
+  assert.deepEqual(provenance.sourceInputs.map(item => item.path).sort(), nativeNames.map(name => 'native/' + name).sort());
+  // These hashes were independently authenticated against the approved PAK.
+  // They also authenticate code-only source downloads, which intentionally
+  // contain asset metadata and composition inputs without the large PAK parts.
+  const approvedNativeHashes = {
+    'PeaShooter_backleaf.png': 'db925b5ce54fec6324cde2a635d160353fa06511948429636601011f25a0dab3',
+    'PeaShooter_backleaf_lefttip.png': 'feb34aa6cc279ca31156f924c54a53861b9a79cb70c35aa7aeea3c6e79cb77f2',
+    'PeaShooter_backleaf_righttip.png': '60419cd6e7b7619077078ddd35aada8fc4fc9fbc2ea5fb4917e8c777ce49bf03',
+    'PeaShooter_stalk_bottom.png': '79de9bd29cb7297fc218e564676a36ea0cbb3738e16b47da16b3dbc1ec5cfbd4',
+    'PeaShooter_stalk_top.png': '0628a9cf3676bc78a8532ac97266091aff348611f162318a069e13db46b37f67',
+    'PeaShooter_frontleaf.png': '26ce3afa0788a624d8a1747dab2ba51223489a04aed61f08a453c0d073bfbddd',
+    'PeaShooter_frontleaf_righttip.png': 'a5a5245bd884c6cc90ff13666f147b9ece85c6e6453dbeb56857c5d50caf785d',
+    'PeaShooter_frontleaf_lefttip.png': 'fac7ced98626e9a9f91aa9746025e3713496cde453c1999ab89bdad6ed966f4d',
+    'SunFlower_head.png': '3813ea881b25465dec25e75b7fa2a20fde4b421e7dd7c3b1ffabf4eb1fd61fb3',
+    'SunFlower_blink1.png': '5a6238d1ecc8a59f47fdc66fdbd6b83823d1c9fd00d7a4707cb1111dc129fefa',
+    'SunFlower_leftpetal3.png': '93bad940e7841f7758768b036e1cd89d068727e4cffdfacce231754b1bf03ec8',
+    'SunFlower_leftpetal4.png': '346abc1f138aac79eb7d0ec2aeb2e655a7cbd8473592854f2e0c3a9a2c23993c',
+    'SunFlower.reanim': 'c1f67f3784cd199d36feb0a7a44426d180acb289ca4c2a2e308ca2b26e0008dd',
+  };
+  assert.deepEqual(Object.keys(approvedNativeHashes).sort(), [...nativeNames].sort());
+  for (const input of provenance.sourceInputs) {
+    const name = input.path.slice('native/'.length);
+    assert.equal(input.originalPath, 'reanim/' + name);
+    assert.equal(input.sha256, approvedNativeHashes[name], 'Native source metadata matches the independently approved input hash: ' + name);
+    assert.equal(sha(await read('source/artwork/mender-bloom/' + input.path)), approvedNativeHashes[name], 'Native composition source bytes match the independently approved original: ' + name);
+  }
+  // When the full runtime asset bundle is present, additionally reauthenticate
+  // those same inputs against their exact original resource payloads.
+  const assetManifest = JSON.parse(fs.readFileSync(new URL('game-assets/manifest.json', dist)));
+  assert.equal(assetManifest.id, engine.assetBundleId);
+  const pakRecord = assetManifest.files.find(item => item.path === 'main.pak');
+  assert(pakRecord && pakRecord.parts.length > 0);
+  const presentParts = pakRecord.parts.map(part => fs.existsSync(new URL('game-assets/' + part.url, dist)));
+  assert(presentParts.every(Boolean) || presentParts.every(value => !value), 'A partially present runtime PAK is invalid; only complete runtime or metadata-only source packaging is supported');
+  if (presentParts.every(Boolean)) {
+    const pak = Buffer.concat(pakRecord.parts.map(part => fs.readFileSync(new URL('game-assets/' + part.url, dist))));
+    assert.equal(sha(pak), pakRecord.sha256);
+    for (let i = 0; i < pak.length; i++) pak[i] ^= 0xf7;
+    assert.deepEqual([...pak.subarray(0,8)], [0xc0,0x4a,0xc0,0xba,0,0,0,0]);
+    let cursor = 8, payloadOffset = 0; const entries = new Map();
+    for (;;) {
+      assert(cursor < pak.length); const flag = pak[cursor++]; if (flag & 0x80) break;
+      const length = pak[cursor++]; assert(cursor + length + 12 <= pak.length);
+      const name = pak.toString('utf8', cursor, cursor + length).replaceAll('\\', '/'); cursor += length;
+      const size = pak.readUInt32LE(cursor); cursor += 12;
+      assert(!entries.has(name)); entries.set(name, {offset: payloadOffset, size}); payloadOffset += size;
+    }
+    assert(cursor + payloadOffset <= pak.length);
+    for (const input of provenance.sourceInputs) {
+      const entry = entries.get(input.originalPath); assert(entry, 'Original native resource exists: ' + input.originalPath);
+      const original = pak.subarray(cursor + entry.offset, cursor + entry.offset + entry.size);
+      const archived = await read('source/artwork/mender-bloom/' + input.path);
+      assert.equal(sha(original), input.sha256);
+      assert.deepEqual(archived, original, 'Composition uses exact approved original resource bytes: ' + input.originalPath);
+    }
+    console.log('PASS full runtime PAK reauthentication of all thirteen approved native composition inputs.');
+  } else {
+    console.log('PASS code-only source package: all thirteen native composition inputs match independently approved original hashes; large runtime PAK payloads are intentionally absent.');
+  }
   const menderHeader = (await read('source/src/Lawn/System/MenderBloomArt.h')).toString();
   assert.equal(Number(menderHeader.match(/kWidth\s*=\s*(\d+)/)?.[1]), 80);
   assert.equal(Number(menderHeader.match(/kHeight\s*=\s*(\d+)/)?.[1]), 80);
@@ -562,28 +641,25 @@ console.log('PASS exact parent Chill pixels/geometry, scoped plant/Almanac chang
     parts.set(name, decoded.rgba);
   }
   const neutral = parts.get('canonical'), head = parts.get('head'), stem = parts.get('stem'), blink = parts.get('blink'), blinkHead = parts.get('head-blink');
-  const reconstructed = Buffer.alloc(neutral.length), closed = Buffer.alloc(neutral.length);
-  const changed = recipe.eyeRegions.map(() => 0); let headPixels = 0, stemPixels = 0;
+  const reconstructed = sourceOver(stem, head), closed = sourceOver(stem, blinkHead);
+  const changed = recipe.eyeRegions.map(() => 0); let headPixels = 0, stemPixels = 0, overlap = 0;
   for (let p = 0; p < neutral.length; p += 4) {
-    const ha = head[p + 3], sa = stem[p + 3];
-    assert(!(ha && sa), 'Mender neutral layers partition pixels without overlapping alpha');
-    if (ha) {head.copy(reconstructed, p, p, p + 4); blinkHead.copy(closed, p, p, p + 4); headPixels++;}
-    else if (sa) {stem.copy(reconstructed, p, p, p + 4); stem.copy(closed, p, p, p + 4); stemPixels++;}
+    if (head[p+3]) headPixels++; if (stem[p+3]) stemPixels++; if (head[p+3] && stem[p+3]) overlap++;
     assert.equal(blink[p + 3], neutral[p + 3], 'Mender blink retains canonical alpha');
     assert.equal(blinkHead[p + 3], head[p + 3], 'Mender head expression retains registered layer alpha');
     const x = p / 4 % 80, y = Math.floor(p / 4 / 80);
     const eye = recipe.eyeRegions.findIndex(([l,t,r,b]) => x >= l && x < r && y >= t && y < b);
     if (!neutral.subarray(p, p + 4).equals(blink.subarray(p, p + 4))) {
-      assert(eye >= 0, 'Mender expression changes only the fixed eye regions');
+      assert(eye >= 0, 'Mender expression changes only the fixed original eye regions');
       changed[eye]++;
     }
   }
-  assert(headPixels > 0 && stemPixels > 0);
-  assert.deepEqual(reconstructed, neutral, 'Mender head/stem union exactly reconstructs the canonical whole sprite');
-  assert.deepEqual(closed, blink, 'Mender head-blink/stem union exactly reconstructs its closed expression');
+  assert(headPixels > 0 && stemPixels > 0 && overlap > 0, 'Native flower layers overlap at the shared neck instead of detaching the head');
+  assert.deepEqual(reconstructed, neutral, 'Independent source-over reconstruction matches every canonical native-composition byte');
+  assert.deepEqual(closed, blink, 'Independent source-over reconstruction matches every closed expression byte');
   assert.equal(sha(neutral), provenance.canonicalRgbaSha256);
-  for (const pixels of changed) assert(pixels > 5, 'Both Mender eyes have actual animation artwork');
-  console.log('PASS Mender exact source provenance, independent PNG/runtime pixels, registered head/stem reconstruction and fixed-alpha eye-only blink.');
+  for (const pixels of changed) assert(pixels > 5, 'Both Mender eyes use actual original blink artwork');
+  console.log('PASS exact approved native sprite inputs, inactive generation history, independent Mender PNG/runtime pixels and source-over layer reconstruction, and fixed-alpha original eye blink.');
 }
 
 

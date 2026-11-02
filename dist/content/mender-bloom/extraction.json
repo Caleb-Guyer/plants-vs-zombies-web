@@ -1,13 +1,161 @@
 {
-  "schema": 1,
-  "sourceCanvas": [1254,1254],
-  "crop": [211,80,1092,1170],
-  "discardAlphaAtMost": 1,
-  "canvas": [80,80],
-  "normalizedSize": [55,68],
-  "offset": [12,6],
-  "greenStartRow": 45,
-  "stemOnlyFromRow": 58,
-  "eyeRegions": [[38,28,45,34],[48,27,53,33]],
-  "invariants": "All layers have identical canvas and registration. Head/stem partition recomposes canonical pixels exactly. Only the fixed face-eye areas differ in blink, with canonical alpha preserved."
+  "schema": 3,
+  "canvas": [
+    80,
+    80
+  ],
+  "oversample": 4,
+  "discardAlphaAtMost": 2,
+  "groundAnchor": [
+    40,
+    72
+  ],
+  "headStemJoint": [
+    40,
+    50
+  ],
+  "stem": {
+    "originalReanimation": "native/SunFlower.reanim",
+    "nativeFrame": 4,
+    "translation": [
+      2,
+      -4.6
+    ],
+    "tracks": [
+      {
+        "track": "backleaf",
+        "source": "PeaShooter_backleaf.png",
+        "x": 27.7,
+        "y": 53.0,
+        "sx": 0.555,
+        "sy": 0.555
+      },
+      {
+        "track": "backleaf_left_tip",
+        "source": "PeaShooter_backleaf_lefttip.png",
+        "x": 25.0,
+        "y": 53.9,
+        "sx": 0.555,
+        "sy": 0.555
+      },
+      {
+        "track": "backleaf_right_tip",
+        "source": "PeaShooter_backleaf_righttip.png",
+        "x": 47.1,
+        "y": 52.9,
+        "sx": 0.555,
+        "sy": 0.555
+      },
+      {
+        "track": "stalk_bottom",
+        "source": "PeaShooter_stalk_bottom.png",
+        "x": 36.1,
+        "y": 52.6,
+        "sx": 0.555,
+        "sy": 0.555
+      },
+      {
+        "track": "stalk_top",
+        "source": "PeaShooter_stalk_top.png",
+        "x": 31.0,
+        "y": 45.3,
+        "sx": 0.555,
+        "sy": 0.555
+      },
+      {
+        "track": "frontleaf",
+        "source": "PeaShooter_frontleaf.png",
+        "x": 22.8,
+        "y": 54.4,
+        "sx": 0.555,
+        "sy": 0.555
+      },
+      {
+        "track": "frontleaf_right_tip",
+        "source": "PeaShooter_frontleaf_righttip.png",
+        "x": 56.3,
+        "y": 56.0,
+        "sx": 0.555,
+        "sy": 0.555
+      },
+      {
+        "track": "frontleaf_left_tip",
+        "source": "PeaShooter_frontleaf_lefttip.png",
+        "x": 19.4,
+        "y": 61.6,
+        "sx": 0.555,
+        "sy": 0.555
+      }
+    ]
+  },
+  "petals": {
+    "sources": [
+      "SunFlower_leftpetal3.png",
+      "SunFlower_leftpetal4.png"
+    ],
+    "angles": [
+      0,
+      60,
+      120,
+      180,
+      240,
+      300
+    ],
+    "size": [
+      22,
+      23
+    ],
+    "axisCorrectionDegrees": -35,
+    "center": [
+      40,
+      30
+    ],
+    "radius": [
+      22,
+      15
+    ],
+    "tint": {
+      "hueShift": -0.075,
+      "saturationScale": 0.94,
+      "valueScale": 0.98
+    }
+  },
+  "face": {
+    "source": "SunFlower_head.png",
+    "position": [
+      21,
+      16
+    ],
+    "size": [
+      38,
+      29
+    ]
+  },
+  "blink": {
+    "source": "SunFlower_blink1.png",
+    "facePosition": [
+      16,
+      6.6011235955056184
+    ],
+    "faceScale": [
+      1,
+      1.1235955056179776
+    ],
+    "originalNativeTransform": "Open head x14.3 y20.4 sx.8 sy.712; closed eye patch x27.1 y25.1 sx.8 sy.8 from original SunFlower.reanim."
+  },
+  "eyeRegions": [
+    [
+      30,
+      20,
+      40,
+      33
+    ],
+    [
+      43,
+      20,
+      54,
+      33
+    ]
+  ],
+  "invariants": "Original leaf, stalk, face and blink colors retained through registered affine resampling; only petal HSV is explicitly recolored. Current outputs never read historical generated masters. Head/stem recomposes canonical pixels exactly, blink changes only fixed eye-region RGB and preserves canonical alpha."
 }

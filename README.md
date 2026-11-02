@@ -1,5 +1,76 @@
 # Plants vs. Zombies — browser playtest
 
+## Mender.2 animation and Almanac presentation
+
+`0.2.6-web-mender.2` updates both custom plants after feedback that their
+idle motion was too subtle and their Almanac presentation did not fit the game.
+
+Chill-shroom now has a more visible 2.2-second rocking and squash cycle.
+Mender-bloom's 2.8-second cycle flexes the planted stem and sways the head with
+it. The layers stay connected, and their ground contact stays fixed. Attack and
+healing poses remain distinct from idle motion; no combat timer or saved member
+was added.
+
+Both Almanac entries use the original blue introduction, brown keyword labels,
+red stat values, short-line spacing and brown flavor text. Chill-shroom's sleep
+notice uses the native purple nocturnal style. The bios give the plants specific
+quirks: Chill-shroom outwaits a snowman in a staring contest, while Mender-bloom
+finds that Wall-nut keeps eating his bandages. Mender-bloom uses the native
+recharge label "fast"; her actual recharge remains 15 seconds.
+
+The custom Almanac packets use 34 by 46 thumbnails beside the native Imitater.
+The normal chooser puts Chill-shroom at (332,545) and Mender-bloom at (376,545)
+in the left panel's footer, with no custom side frames over the zombie preview.
+Compact hit areas match the thumbnails. Their native flight expands them to full
+bank size and shrinks them on return, using the existing floating-point easing
+curve and flight timer. Bank-to-bank reordering keeps full size. Their own
+footer tooltips appear above the packets and stay within the left panel.
+Original plant positions, Let's Rock, View Lawn and Imitater remain intact.
+Only the cheat-only Debug Play button moves to make room for the earned packets.
+
+Mender-bloom's current artwork is composed from checksum-pinned original game
+parts: Sunflower's face, blink, stem and leaves, with six native petals recolored
+coral. The current sprite does not use image-generated pixels. The earlier
+generated masters and prompt record remain historical source inputs and are not
+read by the active composer. The deterministic recipe and native-part provenance
+are retained with the corresponding source and
+[art provenance](dist/content/mender-bloom/provenance.json).
+
+Costs, cooldowns, healing and frost mechanics, earned Cold Front/Seed Swap
+unlocks, original IDs, serialized layouts and automatic saves are unchanged.
+All five Bonus modes retain their rules and cards. No extra HUD or card tips
+were added.
+
+The full build passed in 121.518 seconds with all 810 source inputs unchanged.
+All 3,799 checks in ten native suites, 14 browser suites and 11 worker scenarios
+passed. Release wrappers authenticate the 13 original native artwork inputs and
+the 810-file source tree. The corresponding source ZIP has 851 entries, SHA-256
+`2d40f382100860e1f64e3475ee2e0b299875df5458e488099b226c19a3d6ee24`.
+Both binary patches reconstruct every source byte.
+
+Muted local browser checks on the isolated 4224 origin used a generated QA-Boss
+profile with synthetic existing wins. Both Almanac descriptions fit, with brown
+flavor text, Chill-shroom's purple sleep notice and native recharge wording.
+The original Sunflower entry remains selectable and served as an on-screen style
+reference. Full 2.8-second Mender-bloom and 2.2-second Chill-shroom idle cycles
+were observed and recorded: the motion is visible, grounded and keeps the layers
+connected.
+
+The normal Survival chooser shows both compact footer packets inside the panel.
+The zombie preview and its native click-to-view tooltip stay clear. Both packets
+select into the bank at full size; removing Mender-bloom returns her to compact
+size while Chill-shroom reorders at full bank size. Mender-bloom's own tooltip
+fits above her footer packet within the panel. This presentation pass claims no
+new battle clear, newly earned unlock or gameplay save/resume observation;
+retained mechanics and serialized layouts are checked separately by production
+tests.
+
+Publication is handled by the existing GitHub Pages workflow. Hosted package,
+source-download and public-byte receipts belong to the release process and are
+recorded after those steps. Earlier release records below describe their own
+builds. These checks do not establish subjective perfection or exhaustive
+original-game parity.
+
 ## Mender.1 support plant and Almanac entries
 
 `0.2.6-web-mender.1` adds Mender-bloom, a support flower unlocked by a Seed Swap

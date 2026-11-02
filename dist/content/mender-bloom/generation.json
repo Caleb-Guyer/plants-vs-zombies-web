@@ -1,41 +1,20 @@
 {
-  "schema": 1,
-  "tool": "Built-in image_gen tool",
+  "schema": 2,
+  "tool": "Deterministic composition of original game sprite textures",
+  "imageGenerationUsed": false,
   "cliOrApiKeyUsed": false,
-  "purpose": "Mender-bloom plant sprite only; no generated challenge illustration",
-  "calls": [
-    {
-      "output": "initial.png",
-      "sha256": "c2dca74ff35fce222ed7b314ffe3e5de236555c788218f4dbc753367825031ed",
-      "referencedImages": [
-        "reference-game.jpg",
-        "reference-sunflower.png",
-        "reference-marigold.png"
-      ],
-      "transparentBackground": true,
-      "prompt": "Use case: stylized-concept. Asset type: one full-body transparent-background 2D game plant sprite, called Mender-bloom, for the original 2009 Plants vs. Zombies lawn. The input images are STYLE REFERENCES ONLY: match the original game's appealing chunky silhouette, dark brown variable-width painted outlines, restrained soft modeled shading and tiny simple oval eyes; do not redraw the screenshots or copy an existing character. Primary subject: a new friendly healing flower with a large cream-colored rounded central face, a small simple curved smile and two small dark vertical oval eyes, surrounded by SIX broad rounded coral-orange/pale salmon petals. Its head forms a compact slightly irregular six-petal rosette, visibly different from the many thin yellow petals of Sunflower and the mushroom silhouette of Chill-shroom. Short curved sturdy green stem and two plump bright-green basal leaves, grounded and squat with the original plants' head-heavy proportions. Slightly three-quarter facing toward screen right, eyes attentive, personality gentle and capable. Full plant centered on a square canvas with generous transparent padding around every edge; head including petals about two-thirds of overall plant height, short visible stem, leaf feet form a broad stable base. Native original-style matte painted volume, warm upper-left light with richer darker lower-right shading, enough form to read at 70 pixels high. Thick clean readable outlines and colored internal contours, a few large smooth highlight shapes, absolutely no micro-texture, no thin fussy detail. Keep the flower head distinct from the stem/leaves below, so it can later sway gently on its stem. No medical symbols, no crosses, no bandages, no props, no text, no logo, no UI, no frame, no extra characters, no hearts, no sparkles, no glowing aura, no drop shadow backdrop. Avoid glossy 3D/plastic, anime eyes, giant white eye highlights, flat SVG/vector clipart, photorealistic petals. Output only the single finished Mender-bloom sprite with genuine transparent alpha."
-    },
-    {
-      "output": "master.png",
-      "sha256": "22c912c59fedbad0fd1c006164374e90b04010f8da2fe021e6c012d3184cbc14",
-      "referencedImages": [
-        "initial.png",
-        "reference-game.jpg",
-        "reference-sunflower.png"
-      ],
-      "transparentBackground": true,
-      "prompt": "Use case: style-transfer. Image1 is the EDIT TARGET, Mender-bloom. Images2 and3 are original 2009 Plants vs. Zombies STYLE REFERENCES ONLY. Preserve Mender-bloom's exact six-petal silhouette, all geometry/proportions, eye positions, smile, face size, stem and leaf shape, composition and genuine transparent alpha. Change only its painted surface finish so it belongs beside the original game's plants. Remove the glossy plastic/specular look: no big bright reflective highlight blobs on petals or face or leaves. Replace those glossy patches with subdued broad hand-painted warm highlights and soft simple dark shading like the original Sunflower's face, which has a matte 2D shaded finish. The coral-orange six-petal flower and warm cream face should keep clear three-dimensional form through gentle value changes, not shiny reflections. Slightly mute saturation to the original game's warm palette. Keep dark brown outlines readable but slightly softer/less uniformly heavy. Eyes remain tiny black-brown vertical ovals with at most one very small muted cream glint; no oversized glossy shine. Keep a friendly restrained smile. No new details or markings, no skin texture/no brush-grain noise, no background or shadow, no text/symbols/medical props/effects. The result must remain the same identifiable plant sprite, just with original-game-like matte painted finish."
-    },
-    {
-      "output": "closed.png",
-      "sha256": "d5d17c1b545a0b1a71265cf32afcde2d0996c57a5742c108bc09c305a74e4c24",
-      "referencedImages": [
-        "master.png"
-      ],
-      "transparentBackground": true,
-      "prompt": "Use case: precise-object-edit. This is the final canonical Mender-bloom game sprite. Produce its closed-eye blink expression only. Change ONLY the two small dark oval eyes into two relaxed narrow curved closed-eyelid strokes in the exact same eye locations. Keep the small smile exactly as is. Preserve every other feature and the exact overall canvas, transparent alpha, geometry, silhouette, proportions, registration, face shape, all six petals, stem, leaves, colors, matte shading, outline thickness and facing direction. Same full-body centered plant with all edges/padding preserved. No new glow, effects, props, symbols, text or background. This image will supply only the tiny eye areas to a registered animation frame; do not change the face's expression anywhere outside those two eyes."
-    }
-  ],
-  "canonicalMaster": "master.png",
-  "closedExpressionSource": "closed.png"
+  "purpose": "Current Mender-bloom sprite only; no challenge illustration or new image-generation call",
+  "nativeComposition": "Original Sunflower face, eyes, smile, blink, stalk and leaves, with six wider recolored native Sunflower petal pieces.",
+  "historicalGeneratedArtwork": {
+    "active": false,
+    "imageGenerationUsed": true,
+    "generationRecord": "generation-history.json",
+    "masters": [
+      "initial.png",
+      "master.png",
+      "closed.png"
+    ]
+  },
+  "sourceInputsRecord": "native-provenance.json",
+  "recipe": "extraction.json"
 }

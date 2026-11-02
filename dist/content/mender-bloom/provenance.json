@@ -1,75 +1,145 @@
 {
-  "schema": 1,
-  "version": "0.2.6-web-mender.1",
+  "schema": 2,
+  "version": "0.2.6-web-mender.2",
   "displayName": "Mender-bloom",
-  "imageGenerationUsed": true,
+  "imageGenerationUsed": false,
+  "historicalImageGenerationUsed": true,
+  "historicalGeneratedArtworkActive": false,
   "standaloneChallengeIllustrations": false,
-  "method": "Generated matte-painted flower; registered head/stem masks and eye-only blink expression",
+  "method": "Native Sunflower face, blink, stem and leaves; six recolored original petal pieces",
   "pillowVersion": "12.2.0",
-  "sourceMasterSha256": "22c912c59fedbad0fd1c006164374e90b04010f8da2fe021e6c012d3184cbc14",
-  "sourceClosedSha256": "d5d17c1b545a0b1a71265cf32afcde2d0996c57a5742c108bc09c305a74e4c24",
-  "generationSha256": "4fe800a8dcf1a9d6d368e2f294ac1f61d074762e5ca9543a87a9afda00f66cdc",
-  "extractionSha256": "8fba7dac19820988886d48aff6ffb9c76737428e231cea75b821455bf32b91f6",
-  "generatorSha256": "18e4bf5dd454ac203cfa0f2fbb1c6cc4a65f10e419bdada7e8f67a0c1c821acf",
-  "headerSha256": "6c8a3ba505aa69fb95ad3972be77bbb3e7b0c4faf2f4d003db275865359295c8",
-  "canonicalRgbaSha256": "042db58ae7d45ccd9e3d3b25884c4c0809d1e1dad9aa5580a7fc83fcaf839399",
+  "sourceInputs": [
+    {
+      "path": "native/PeaShooter_backleaf.png",
+      "originalPath": "reanim/PeaShooter_backleaf.png",
+      "sha256": "db925b5ce54fec6324cde2a635d160353fa06511948429636601011f25a0dab3"
+    },
+    {
+      "path": "native/PeaShooter_backleaf_lefttip.png",
+      "originalPath": "reanim/PeaShooter_backleaf_lefttip.png",
+      "sha256": "feb34aa6cc279ca31156f924c54a53861b9a79cb70c35aa7aeea3c6e79cb77f2"
+    },
+    {
+      "path": "native/PeaShooter_backleaf_righttip.png",
+      "originalPath": "reanim/PeaShooter_backleaf_righttip.png",
+      "sha256": "60419cd6e7b7619077078ddd35aada8fc4fc9fbc2ea5fb4917e8c777ce49bf03"
+    },
+    {
+      "path": "native/PeaShooter_stalk_bottom.png",
+      "originalPath": "reanim/PeaShooter_stalk_bottom.png",
+      "sha256": "79de9bd29cb7297fc218e564676a36ea0cbb3738e16b47da16b3dbc1ec5cfbd4"
+    },
+    {
+      "path": "native/PeaShooter_stalk_top.png",
+      "originalPath": "reanim/PeaShooter_stalk_top.png",
+      "sha256": "0628a9cf3676bc78a8532ac97266091aff348611f162318a069e13db46b37f67"
+    },
+    {
+      "path": "native/PeaShooter_frontleaf.png",
+      "originalPath": "reanim/PeaShooter_frontleaf.png",
+      "sha256": "26ce3afa0788a624d8a1747dab2ba51223489a04aed61f08a453c0d073bfbddd"
+    },
+    {
+      "path": "native/PeaShooter_frontleaf_righttip.png",
+      "originalPath": "reanim/PeaShooter_frontleaf_righttip.png",
+      "sha256": "a5a5245bd884c6cc90ff13666f147b9ece85c6e6453dbeb56857c5d50caf785d"
+    },
+    {
+      "path": "native/PeaShooter_frontleaf_lefttip.png",
+      "originalPath": "reanim/PeaShooter_frontleaf_lefttip.png",
+      "sha256": "fac7ced98626e9a9f91aa9746025e3713496cde453c1999ab89bdad6ed966f4d"
+    },
+    {
+      "path": "native/SunFlower_head.png",
+      "originalPath": "reanim/SunFlower_head.png",
+      "sha256": "3813ea881b25465dec25e75b7fa2a20fde4b421e7dd7c3b1ffabf4eb1fd61fb3"
+    },
+    {
+      "path": "native/SunFlower_blink1.png",
+      "originalPath": "reanim/SunFlower_blink1.png",
+      "sha256": "5a6238d1ecc8a59f47fdc66fdbd6b83823d1c9fd00d7a4707cb1111dc129fefa"
+    },
+    {
+      "path": "native/SunFlower_leftpetal3.png",
+      "originalPath": "reanim/SunFlower_leftpetal3.png",
+      "sha256": "93bad940e7841f7758768b036e1cd89d068727e4cffdfacce231754b1bf03ec8"
+    },
+    {
+      "path": "native/SunFlower_leftpetal4.png",
+      "originalPath": "reanim/SunFlower_leftpetal4.png",
+      "sha256": "346abc1f138aac79eb7d0ec2aeb2e655a7cbd8473592854f2e0c3a9a2c23993c"
+    },
+    {
+      "path": "native/SunFlower.reanim",
+      "originalPath": "reanim/SunFlower.reanim",
+      "sha256": "c1f67f3784cd199d36feb0a7a44426d180acb289ca4c2a2e308ca2b26e0008dd"
+    }
+  ],
+  "assetBundleId": "sha256:b468b22439430ca4a36035b886a74bd831a86b2a1a36c39d3203396f5b75d093",
+  "nativeInputsSha256": "e6833e91f2c8d6bf1a37055f3aa5653c90e553f31e97518612b56cc105196345",
+  "generationSha256": "78b2bcbfb5504ef855f06c3493026a056e64994d582e0a5bbcf94d238964f7d2",
+  "extractionSha256": "55f2ddd97672343879838f1c4210a097421df6b501988cabcc8115574c671e33",
+  "historicalGenerationSha256": "4fe800a8dcf1a9d6d368e2f294ac1f61d074762e5ca9543a87a9afda00f66cdc",
+  "generatorSha256": "8611494b2204e30109bf28308c690a9998aead0bbc6d6af67569242b955d6b63",
+  "headerSha256": "d299ece91909918d5a0d7d233792e35b56637fc1eb8417443cb53a92199c7e51",
+  "canonicalRgbaSha256": "b0ce45fde943aec4bdd37cee4b25e7786022d285ed29388e4f81c49766dafb1c",
   "parts": {
     "canonical": {
-      "pngSha256": "53d9bab162e2e18fd56b99af3fbd4a445b9fc1bdebd616ed9b97d8da87db2993",
-      "rgbaSha256": "042db58ae7d45ccd9e3d3b25884c4c0809d1e1dad9aa5580a7fc83fcaf839399",
+      "pngSha256": "78bde978e1e181945c6ceb836b3ab1b74322c78d973bb7d4558957247d68a8ab",
+      "rgbaSha256": "b0ce45fde943aec4bdd37cee4b25e7786022d285ed29388e4f81c49766dafb1c",
       "visibleBounds": [
-        12,
-        6,
-        67,
-        74
+        8,
+        1,
+        72,
+        73
       ],
       "width": 80,
       "height": 80
     },
     "head": {
-      "pngSha256": "9cb19e5c41e891cabe3eb483f1ba180f1348d4a90b9e024c9d1ecfbe7952eae8",
-      "rgbaSha256": "8d8bcbd87357e93cc218ae14580aa86dc20ff79fbba76eefd7c421b83fabcf29",
+      "pngSha256": "914f27531b175bef8e91332563eb3d04f2f894102652ca3c7f9f87fd1111a24c",
+      "rgbaSha256": "fab1f7111ac206a3d5a99acf536c269b9f0652365f215928e39dbc3f48780cab",
       "visibleBounds": [
-        12,
-        6,
-        67,
+        8,
+        1,
+        72,
         58
       ],
       "width": 80,
       "height": 80
     },
     "stem": {
-      "pngSha256": "37e912049a16759eb97ab7ca584bfa1439c4154ad28e80b4a3975fe370365e15",
-      "rgbaSha256": "f6b0bd68c64e3911b2f340bc42d7e47f220bdbc4d44dd171a1ef99523fc425f4",
+      "pngSha256": "e23f660180de218dca4ca7692f005b67115d7998e0303a7b1a68b4e9a78b2f02",
+      "rgbaSha256": "d306df9ab8d66cf3d7854bb599341525550b0f665cc529d2d708ad3cc18da2c1",
       "visibleBounds": [
-        12,
-        48,
-        58,
-        74
+        21,
+        43,
+        67,
+        73
       ],
       "width": 80,
       "height": 80
     },
     "head-blink": {
-      "pngSha256": "8919fb4c2b5acff545b83a0e1287cba021e8d8a5f5c034dc024a7f6140fa6f68",
-      "rgbaSha256": "781a5ab3796e67d1911c8727b60b2ca3bab0a957e887e6c7553d60c455dce263",
+      "pngSha256": "672cf5fa69a753bdff276a0854268c40d4c4ab6426de233f42c4e02021b56d60",
+      "rgbaSha256": "283b534139af89f0c66213e7f988fd96a35deb239433bd4307926a0f802b6edc",
       "visibleBounds": [
-        12,
-        6,
-        67,
+        8,
+        1,
+        72,
         58
       ],
       "width": 80,
       "height": 80
     },
     "blink": {
-      "pngSha256": "b6b153ba5538728e13ed8fd81ac26791b612fefa2bfe02ab1a7c0eca416bd9da",
-      "rgbaSha256": "d388b5c6567b6c5334febe7cbdcddf9cae66e05c09d40f3c94e18a145a1abae0",
+      "pngSha256": "0cef1eed5765d9c33e642f25ba0e99e717b933801433b1c47c20a56cb6508aab",
+      "rgbaSha256": "266480b14d117b20d5c58fb2336288a3a0622a6d39b7e7e0e1c498684c2e2198",
       "visibleBounds": [
-        12,
-        6,
-        67,
-        74
+        8,
+        1,
+        72,
+        73
       ],
       "width": 80,
       "height": 80
