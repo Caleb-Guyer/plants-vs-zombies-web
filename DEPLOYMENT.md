@@ -1,5 +1,16 @@
 # GitHub Pages release: Caleb-Guyer/plants-vs-zombies-web
 
+## Care.2 release
+
+`0.2.6-web-care.2` repairs the Intensive Lawn Care toolbar and opening-hint layout. Its parent is the exact published Care.1 source archive, SHA-256 `540f1ee365b558e10304995692485976e91f23bb1b28c305e6ade6cd17f1ed11`. Production changes are confined to the version identity, three native Board presentation methods, the opening hint in Challenge and a draw-local legacy-hint compatibility rule in MessageWidget.
+
+All twelve silent native suites passed: 11,940 checks, zero failures, including 6,862 layout checks. The layout harness also passed with the installed native compiler; all fourteen browser integration suites passed. The Release build passed with all 817 source inputs unchanged.
+
+The [corresponding source archive](dist/source/pvz-portable-0.2.6-web-care.2-source.zip) contains 817 production files, 865 ZIP entries and 13,696,830 bytes, SHA-256 `d8c52ecbb0f4f417b871137fb2a27017a2cb8699b1f6702fb363399a7ea7bf98`. Full and incremental patches reconstruct every production source byte.
+
+Muted browser checks at 800 by 600 and 1280 by 720 verified the live one-line hint, pausing while it was active, its return on resume, clear conveyor/glove/menu spacing and actual glove movement. Both 1x and 2x were observed; additional viewport and intro-camera combinations are covered by the automated layout matrix. Commit, push, Pages deployment and public byte checks receive separate receipts after publication. No new battle-clear claim is made for this presentation-only correction. Prior release records remain below.
+
+
 ## Care.1 release
 
 `0.2.6-web-care.1` adds Intensive Lawn Care as Bonus mode 78 with completion record 77. Its source starts from the exact published Mender.3 archive, SHA-256 `5a6392e1d5415c3d7f5d3f2bad3114abb54a35bc13df5366be84b718c2d5bd1f`.

@@ -1,5 +1,12 @@
 # Plants vs. Zombies — browser playtest
 
+## Care.2 - repaired native minigame layout
+
+`0.2.6-web-care.2` fixes Intensive Lawn Care's overlapping glove and bottom hint. The native glove now fits between the complete conveyor frame and the menu/speed controls, including the seed bank's parent offset. The opening hint fits on one line above the footer and is hidden while paused. Old checkpoints also render the concise hint without rewriting their saved text or timers. Existing artwork and game rules remain.
+
+All twelve silent native suites passed: 11,940 checks, zero failures, including 6,862 layout checks. The layout harness also passed with the installed native compiler; all fourteen browser integration suites passed. The Release build passed with all 817 source inputs unchanged. See [layout QA scope](PARITY-QA.md) and [release receipts](DEPLOYMENT.md). Earlier sections below apply to their named historical builds.
+
+
 ## Care.1 — Intensive Lawn Care
 
 `0.2.6-web-care.1` adds a sixth Bonus minigame. A native conveyor delivers wounded combat plants to protected recovery pots. Use the gardening glove to rotate the same living plants between the Mender bed and the front lines, preserving health and attack clocks. Five Repeaters defend the opening; ten authored waves end in one flag.

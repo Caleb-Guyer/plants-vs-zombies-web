@@ -1,0 +1,143 @@
+diff --git a/CMake/ProjectVersion.cmake b/CMake/ProjectVersion.cmake
+index 1beb0ee333bf1c838534936bdd095fb3f79bd1a7..e0a697a04dd203be5b89013ff695358f6f594643 100644
+--- a/CMake/ProjectVersion.cmake
++++ b/CMake/ProjectVersion.cmake
+@@ -66,6 +66,6 @@ if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
+ endif()
+ 
+ # Browser release identity; keep binary and corresponding-source manifests aligned.
+-set(PVZP_VERSION "0.2.6-web-care.1")
++set(PVZP_VERSION "0.2.6-web-care.2")
+ set(PVZP_VERSION_PLAIN "0.2.6")
+ configure_file("${PROJECT_SOURCE_DIR}/CMake/ProjectVersion.h.in" "${PROJECT_BINARY_DIR}/ProjectVersion.h" @ONLY)
+diff --git a/src/Lawn/Board.cpp b/src/Lawn/Board.cpp
+index 04bb66d1b1bef2a89e6e16ec261c7da77dcfc27c..1de82b9e90698fb7c53bc567b8badcddf73f2828 100644
+--- a/src/Lawn/Board.cpp
++++ b/src/Lawn/Board.cpp
+@@ -1304,8 +1304,23 @@ void Board::InitSurvivalStage()
+ 
+ Rect Board::GetShovelButtonRect()
+ {
+-	Rect aRect(GetSeedBankExtraWidth() + 456, 0, Sexy::IMAGE_SHOVELBANK->GetWidth(), Sexy::IMAGE_SHOVELBANK->GetHeight());
+-	if (mApp->IsSlotMachineLevel() || mApp->IsSquirrelLevel() || IntensiveCare::IsMode(mApp->mGameMode))
++	const bool aCareTool = IntensiveCare::IsMode(mApp->mGameMode);
++	Rect aRect(aCareTool ? 0 : GetSeedBankExtraWidth() + 456, 0,
++        Sexy::IMAGE_SHOVELBANK->GetWidth(), Sexy::IMAGE_SHOVELBANK->GetHeight());
++	if (aCareTool)
++	{
++		// The backdrop is drawn in seed-bank space, including its native slide.
++		// Keep the complete tool frame clear of both it and the menu/speed bank.
++		const int aBankX = mSeedBank ? mSeedBank->mX : SEED_BANK_OFFSET_X_END;
++		const int aMenuX = mMenuButton && mMenuButton->mX > 0 ? mMenuButton->mX : 681;
++		const int aBackdropWidth = Sexy::IMAGE_CONVEYORBELT_BACKDROP ?
++            Sexy::IMAGE_CONVEYORBELT_BACKDROP->GetWidth() : 516;
++		aRect.mX = aBankX + 83 + aBackdropWidth + 6;
++		const int aNativeWidth = aRect.mWidth;
++		aRect.mWidth = std::min(aNativeWidth, std::max(1, aMenuX - 2 - aRect.mX));
++		aRect.mHeight = (aRect.mHeight * aRect.mWidth + aNativeWidth / 2) / aNativeWidth;
++	}
++	else if (mApp->IsSlotMachineLevel() || mApp->IsSquirrelLevel())
+ 	{
+ 		aRect.mX = 600;
+ 	}
+@@ -7360,14 +7375,43 @@ void Board::DrawShovel(Graphics* g)
+     if (GardenShuffle::IsMode(mApp->mGameMode) || IntensiveCare::IsMode(mApp->mGameMode))
+     {
+         Rect rect = GetShovelButtonRect();
+-        g->DrawImage(IMAGE_SHOVELBANK, rect.mX, rect.mY);
++        const bool aCareTool = IntensiveCare::IsMode(mApp->mGameMode);
++        Graphics aCareGraphics(*g);
++        if (aCareTool && mApp->mGameScene != GameScenes::SCENE_PLAYING)
++        {
++            // Match SeedBank::Draw while the intro camera pans the lawn.
++            aCareGraphics.mTransX -= mX;
++            aCareGraphics.mTransY -= mY;
++        }
++        Graphics* aToolGraphics = aCareTool ? &aCareGraphics : g;
++        if (aCareTool)
++            aToolGraphics->DrawImage(IMAGE_SHOVELBANK, rect,
++                Rect(0, 0, IMAGE_SHOVELBANK->GetWidth(), IMAGE_SHOVELBANK->GetHeight()));
++        else
++            aToolGraphics->DrawImage(IMAGE_SHOVELBANK, rect.mX, rect.mY);
+         if (mChallenge->mChallengeStateCounter > 0)
+         {
+-            g->SetColorizeImages(true);
+-            g->SetColor(Color(140, 140, 140));
++            aToolGraphics->SetColorizeImages(true);
++            aToolGraphics->SetColor(Color(140, 140, 140));
++        }
++        if (aCareTool && rect.mWidth > 4 && rect.mHeight > 4)
++        {
++            // Fit the complete original icon inside the same frame used by
++            // hit-testing; its native 80px canvas must not overhang the belt.
++            const int aPadding = 2;
++            const float aScale = std::min(
++                (rect.mWidth - aPadding * 2) / static_cast<float>(IMAGE_ZEN_GARDENGLOVE->GetWidth()),
++                (rect.mHeight - aPadding * 2) / static_cast<float>(IMAGE_ZEN_GARDENGLOVE->GetHeight()));
++            const int aWidth = FloatRoundToInt(IMAGE_ZEN_GARDENGLOVE->GetWidth() * aScale);
++            const int aHeight = FloatRoundToInt(IMAGE_ZEN_GARDENGLOVE->GetHeight() * aScale);
++            const Rect aIconRect(rect.mX + (rect.mWidth - aWidth) / 2,
++                rect.mY + (rect.mHeight - aHeight) / 2, aWidth, aHeight);
++            aToolGraphics->DrawImage(IMAGE_ZEN_GARDENGLOVE, aIconRect,
++                Rect(0, 0, IMAGE_ZEN_GARDENGLOVE->GetWidth(), IMAGE_ZEN_GARDENGLOVE->GetHeight()));
+         }
+-        g->DrawImage(IMAGE_ZEN_GARDENGLOVE, rect.mX - 6, rect.mY - 4);
+-        g->SetColorizeImages(false);
++        else if (!aCareTool)
++            aToolGraphics->DrawImage(IMAGE_ZEN_GARDENGLOVE, rect.mX - 6, rect.mY - 4);
++        aToolGraphics->SetColorizeImages(false);
+         return;
+     }
+ 	if (mApp->mGameMode != GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN && mApp->mGameMode != GameMode::GAMEMODE_TREE_OF_WISDOM)
+@@ -7939,7 +7983,8 @@ void Board::DrawUITop(Graphics* g)
+ 		mApp->DrawCrazyDave(&aScreenSpace);
+ 	}
+ 
+-	if (mAdvice->mMessageStyle != MessageStyle::MESSAGE_STYLE_SLOT_MACHINE)
++	if (mAdvice->mMessageStyle != MessageStyle::MESSAGE_STYLE_SLOT_MACHINE &&
++        !(IntensiveCare::IsMode(mApp->mGameMode) && mPaused))
+ 	{
+ 		mAdvice->Draw(g);
+ 	}
+diff --git a/src/Lawn/Challenge.cpp b/src/Lawn/Challenge.cpp
+index 6c003754ddf85b7ce7deb8a550dcac5a3655f874..c5fda8466924aa023264c2b32ee6eb38c423dd19 100644
+--- a/src/Lawn/Challenge.cpp
++++ b/src/Lawn/Challenge.cpp
+@@ -255,7 +255,7 @@ void Challenge::StartLevel()
+         mBoard->mZombieCountDown = IntensiveCare::kOpeningDelay;
+         mBoard->mZombieCountDownStart = IntensiveCare::kOpeningDelay;
+         mBoard->mShowShovel = false;
+-        mBoard->DisplayAdvice("Use the glove to rotate tired plants through the Mender bed.", MESSAGE_STYLE_HINT_FAST, ADVICE_NONE);
++        mBoard->DisplayAdvice("Move tired plants into the pots.", MESSAGE_STYLE_HINT_FAST, ADVICE_NONE);
+     }
+     if (SeedSwap::IsMode(aGameMode))
+     {
+diff --git a/src/Lawn/MessageWidget.cpp b/src/Lawn/MessageWidget.cpp
+index 3c661351f76afebc1bf173679f487960c2b37dd3..2898b822a4d0837d44fcae9e41a7ad366a415c9b 100644
+--- a/src/Lawn/MessageWidget.cpp
++++ b/src/Lawn/MessageWidget.cpp
+@@ -24,6 +24,7 @@
+ #include "../LawnApp.h"
+ #include "../Resources.h"
+ #include "MessageWidget.h"
++#include "System/IntensiveCare.h"
+ #include "graphics/Font.h"
+ #include "../PvzpLib/PvzpCommon.h"
+ #include "../PvzpLib/Reanimator.h"
+@@ -482,7 +483,15 @@ void MessageWidget::Draw(Graphics* g)
+ 			g->FillRect(aRect);
+ 
+ 			aRect.mY += aTextOffsetY;
+-			PvzpDrawStringWrapped(g, mLabel, aRect, aFont, aColor, DrawStringJustification::DS_ALIGN_CENTER_VERTICAL_MIDDLE);
++            // Older Care checkpoints keep their original saved hint bytes.
++            // Fit that exact legacy prompt at render time without editing the
++            // current/queued label, countdown or any serialized message state.
++            const char* aRenderLabel = mLabel;
++            if (IntensiveCare::IsMode(mApp->mGameMode) &&
++                mMessageStyle == MessageStyle::MESSAGE_STYLE_HINT_FAST &&
++                std::string_view(mLabel) == "Use the glove to rotate tired plants through the Mender bed.")
++                aRenderLabel = "Move tired plants into the pots.";
++			PvzpDrawStringWrapped(g, aRenderLabel, aRect, aFont, aColor, DrawStringJustification::DS_ALIGN_CENTER_VERTICAL_MIDDLE);
+ 		}
+ 		else
+ 		{

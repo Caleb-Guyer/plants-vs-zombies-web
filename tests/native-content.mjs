@@ -17,20 +17,20 @@ new Function('module', 'exports', 'require', fs.readFileSync(new URL('vendor/jsz
 const JSZip = vendor.exports;
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
 const engine = JSON.parse(fs.readFileSync(new URL('game/engine-provenance.json', dist)));
-assert.equal(engine.id, '0.2.6-web-care.1');
+assert.equal(engine.id, '0.2.6-web-care.2');
 const currentSourceBytes = fs.readFileSync(new URL(engine.artifacts.source, new URL('game/engine-provenance.json', dist)));
 assert.equal(sha(currentSourceBytes), engine.artifacts.sourceSha256, 'Current source archive matches the engine provenance pin');
 const current = await JSZip.loadAsync(currentSourceBytes, {checkCRC32: true});
-const parentSourceBytes = fs.readFileSync(new URL('source/pvz-portable-0.2.6-web-mender.3-source.zip', dist));
-assert.equal(sha(parentSourceBytes), '5a6392e1d5415c3d7f5d3f2bad3114abb54a35bc13df5366be84b718c2d5bd1f', 'Parent is the exact published Mender.3 source');
+const parentSourceBytes = fs.readFileSync(new URL('source/pvz-portable-0.2.6-web-care.1-source.zip', dist));
+assert.equal(sha(parentSourceBytes), '540f1ee365b558e10304995692485976e91f23bb1b28c305e6ade6cd17f1ed11', 'Parent is the exact published Care.1 source');
 const parent = await JSZip.loadAsync(parentSourceBytes, {checkCRC32: true});
-const prefix = 'care1-candidate/';
+const prefix = 'care2-candidate/';
 const read = async name => {
   const entry = current.file(prefix + name);
   assert(entry, 'Missing current production source/test: ' + name);
   return Buffer.from(await entry.async('uint8array'));
 };
-const suites = ['game-speed', 'qol-controls', 'decks-cooldowns', 'bonus-challenge', 'bonus-completion', 'night-shift', 'lantern-shroom', 'garden-shuffle', 'seed-swap', 'mender-bloom', 'intensive-care'];
+const suites = ['game-speed', 'qol-controls', 'decks-cooldowns', 'bonus-challenge', 'bonus-completion', 'night-shift', 'lantern-shroom', 'garden-shuffle', 'seed-swap', 'mender-bloom', 'intensive-care', 'native-layout'];
 const reports = new Map();
 let checks = 0;
 for (const name of suites) {
@@ -52,8 +52,61 @@ assert.equal(careBalance.kind, 'native healing/fatigue capacity bound; not a bat
 assert(careBalance.allBedsHealHpPerSecond > careBalance.maximumCrewFatigueHpPerSecond);
 assert(careBalance.slowestSuppliedRecoveryTicks < 3000);
 assert.equal(careBalance.authoredEnemies, 40);
-const parentPrefix = 'mender3-candidate/source/';
+const parentPrefix = 'care1-candidate/source/';
 const parentBytes = async name => Buffer.from(await parent.file(parentPrefix + name).async('uint8array'));
+const layoutReport = reports.get('native-layout');
+assert.equal(layoutReport.hintLines, 1);
+assert.equal(layoutReport.hintInkBottom, 576);
+assert.equal(layoutReport.legacyHintLines, 2);
+assert.equal(layoutReport.legacyHintInkBottom, 596);
+assert.equal(layoutReport.legacyOverlapReproduced, true);
+assert.equal(layoutReport.parentTranslationMutationRejected, true);
+const layoutFixtureBytes = await read('tests/native-layout-assets.json');
+assert.equal(sha(layoutFixtureBytes), layoutReport.fixturesSha256['native-layout-assets.json'],
+  'Layout report pins the exact original font/sprite and legacy-regression fixture');
+const layoutFixture = JSON.parse(layoutFixtureBytes);
+assert.equal(layoutFixture.schema, 1);
+assert.equal(layoutFixture.assetBundleId, engine.assetBundleId);
+assert.equal(layoutFixture.parentSourceSha256, sha(parentSourceBytes));
+const approvedLayoutHashes = {
+  'data/HouseofTerror28.txt':'08d9d6773edc9033512463b33be7c6604b675fadabd1729bb4fda4bed1966d0b',
+  'data/HouseofTerror28.png':'e9913355ecccf2840761ce1a2a356067990deb44b326a7eb7d95c012126b9486',
+  'images/ConveyorBelt.png':'b945135bd2a18f301f4c42c6d6724fbf797e087286948b987890c0e5a6724611',
+  'images/ConveyorBelt_backdrop.png':'7ce8f28f45ba83afa463db197c3f7e9b8f81d14a875c4182988a9c5dd42c34a8',
+  'images/SeedBank.png':'6313852cc2b66226a3f112f3077639a75b3714a4f6a6da9c2d4c45a4b55e7fdc',
+  'images/ShovelBank.png':'b374366cb607966ab11329fddea3debf695eb60bb3f387b67d918b73748f09dd',
+  'images/Zen_GardenGlove.png':'b9f95ce2542e2bee51bde3b5919406fbbaba853fff0c1cb0fe1b022e7b93c329',
+  'data/HouseofTerror16.txt':'3435e4111074b4db16c7519ecc972a0786756aeaaeb756f368e4616494958b5c',
+  'data/HouseofTerror16Outline.png':'0ab3397e7e60d5e6d07f9c387346c37ac0255a20e479e4d3b0826a0b458cefb1',
+  'data/_HouseofTerror16.png':'9de6b80fb8d9f0405db21b0d5c6871a24cb68029f29c983c531e748147bc4cbe',
+};
+assert.deepEqual(Object.keys(layoutFixture.assets).sort(), Object.keys(approvedLayoutHashes).sort());
+assert.deepEqual(layoutReport.nativeAssetSha256, approvedLayoutHashes);
+for (const [name, expected] of Object.entries(approvedLayoutHashes)) {
+  assert.equal(layoutFixture.assets[name].sha256, expected);
+  assert.equal(sha(Buffer.from(layoutFixture.assets[name].base64, 'base64')), expected,
+    'Layout measurements use the exact independently pinned native font/sprite: ' + name);
+}
+function extractLegacyFunction(text, signature) {
+  text = text.replace(/\r\n?/g, '\n');
+  const start = text.indexOf(signature), first = text.indexOf('{', start);
+  assert(start >= 0 && first > start);
+  let depth = 1, end = first + 1;
+  while (depth) { assert(end < text.length); depth += (text[end] === '{') - (text[end] === '}'); end++; }
+  return text.slice(start, end);
+}
+const legacyBoard = (await parentBytes('src/Lawn/Board.cpp')).toString();
+const legacyMessage = (await parentBytes('src/Lawn/MessageWidget.cpp')).toString();
+const legacySignatures = ['Rect Board::GetShovelButtonRect()', 'void Board::DrawShovel(Graphics* g)',
+  'void Board::DrawUITop(Graphics* g)', 'void MessageWidget::Draw(Graphics* g)'];
+assert.deepEqual(Object.keys(layoutFixture.legacyMethods).sort(), [...legacySignatures].sort());
+for (const signature of legacySignatures)
+  assert.equal(layoutFixture.legacyMethods[signature], extractLegacyFunction(signature.includes('MessageWidget::') ? legacyMessage : legacyBoard, signature),
+    'Layout negative control is actual published Care.1 code: ' + signature);
+assert.equal(layoutFixture.legacyHint, 'Use the glove to rotate tired plants through the Mender bed.');
+assert((await parentBytes('src/Lawn/Challenge.cpp')).toString().includes('DisplayAdvice("' + layoutFixture.legacyHint + '"'),
+  'Long-hint regression control is the actual published intro text');
+console.log('PASS native layout uses exact original font/sprite bytes, real parent regression controls and missing-parent-origin mutation checks.');
 // SeedPacket.h also defines the serialized SeedBank class.
 for (const name of ['src/Lawn/SeedPacket.h', 'src/Lawn/Plant.h', 'src/Lawn/System/SaveGame.cpp', 'src/Lawn/System/PlayerInfo.h', 'src/Lawn/System/PlayerInfo.cpp', 'src/LawnApp.h', 'src/Lawn/System/ReanimationLawn.h']) {
   assert.deepEqual(await read('source/' + name), await parentBytes(name), 'Saved data layout/serialization must remain unchanged');
@@ -98,12 +151,8 @@ function enumValues(text, name) {
 const oldEnums = (await parentBytes('src/ConstEnums.h')).toString();
 const newEnums = (await read('source/src/ConstEnums.h')).toString();
 const oldModes = enumValues(oldEnums, 'GameMode'), newModes = enumValues(newEnums, 'GameMode');
-assert.equal(oldModes.get('NUM_GAME_MODES'), 78);
-for (const [name, value] of oldModes) if (name !== 'NUM_GAME_MODES')
-  assert.equal(newModes.get(name), value, 'Every existing mode keeps its serialized identity: ' + name);
-assert.equal(newModes.get('GAMEMODE_CHALLENGE_INTENSIVE_CARE'), 78);
-assert.equal(newModes.get('NUM_GAME_MODES'), 79);
-assert.equal(newModes.size, oldModes.size + 1, 'Exactly one reviewed minigame mode is appended');
+assert.equal(oldModes.get('NUM_GAME_MODES'), 79);
+assert.deepEqual([...newModes], [...oldModes], 'Layout repair preserves every original and Bonus mode ID without appending a mode');
 assert.deepEqual([...enumValues(newEnums, 'ChallengePage')], [...enumValues(oldEnums, 'ChallengePage')],
   'Cold Front uses the existing Bonus page without changing any page IDs');
 const oldSeeds = enumValues(oldEnums, 'SeedType'), newSeeds = enumValues(newEnums, 'SeedType');
@@ -131,12 +180,9 @@ function definitions(text) {
 }
 const oldDefinitions = definitions((await parentBytes('src/Lawn/Widget/ChallengeScreen.cpp')).toString());
 const newDefinitions = definitions((await read('source/src/Lawn/Widget/ChallengeScreen.cpp')).toString());
-assert.equal(oldDefinitions.length, 77);
-assert.deepEqual(newDefinitions.slice(0, 77), oldDefinitions, 'Every original and five Bonus challenge definition is byte-for-byte stable after whitespace normalization');
-assert.equal(newDefinitions.length, 78);
-assert.match(newDefinitions[77], /mChallengeMode = GameMode::GAMEMODE_CHALLENGE_INTENSIVE_CARE/);
-assert.match(newDefinitions[77], /mChallengeName = "Intensive Lawn Care"/);
-console.log('PASS one appended care mode preserves every prior mode/seed ID, saved layout, original plant definition and challenge identity.');
+assert.equal(oldDefinitions.length, 78);
+assert.deepEqual(newDefinitions, oldDefinitions, 'Layout repair preserves all original and six Bonus challenge definitions exactly');
+console.log('PASS native layout repair preserves every mode/seed ID, saved layout, plant and challenge identity.');
 
 const artRecord = JSON.parse(fs.readFileSync(new URL('content/native-bonus-art.json', dist)));
 assert.match(artRecord.sourceKind, /native sprite compositions/);
@@ -377,21 +423,15 @@ const archivedSourceNames = Object.values(current.files).filter(entry => !entry.
   .map(entry => entry.name.slice((prefix + 'source/').length));
 assert.deepEqual(archivedSourceNames.sort(), Object.keys(sourceManifest.files).sort(),
   'Every corresponding-source archive member is represented exactly once in its manifest');
-// Care is one mode-scoped gameplay addition. Every unreviewed production input,
-// including both accepted custom plants and all artwork, retains exact parent bytes.
-const runtimeInputs = new Set([
-  'src/ConstEnums.h', 'src/Lawn/Board.cpp', 'src/Lawn/Board.h',
-  'src/Lawn/Challenge.cpp', 'src/Lawn/Challenge.h', 'src/Lawn/Plant.cpp',
-  'src/Lawn/Zombie.cpp', 'src/Lawn/CursorObject.cpp',
-  'src/Lawn/System/BonusChallenge.h', 'src/Lawn/System/LanternShroom.cpp',
-  'src/Lawn/Widget/ChallengeScreen.cpp',
-]);
+// This repair changes only Care tool geometry, its intro text/paused visibility,
+// and presentation-only rendering of a saved old Care intro. All other bytes stay exact.
+const runtimeInputs = new Set(['src/Lawn/Board.cpp', 'src/Lawn/Challenge.cpp', 'src/Lawn/MessageWidget.cpp']);
 const releaseIdentityInputs = new Set(['CMake/ProjectVersion.cmake']);
 const nativeNames = ['PeaShooter_backleaf.png', 'PeaShooter_backleaf_lefttip.png', 'PeaShooter_backleaf_righttip.png',
   'PeaShooter_stalk_bottom.png', 'PeaShooter_stalk_top.png', 'PeaShooter_frontleaf.png',
   'PeaShooter_frontleaf_righttip.png', 'PeaShooter_frontleaf_lefttip.png', 'SunFlower_head.png',
   'SunFlower_blink1.png', 'SunFlower_leftpetal3.png', 'SunFlower_leftpetal4.png', 'SunFlower.reanim'];
-const addedCareInputs = ['src/Lawn/System/IntensiveCare.h'];
+const addedCareInputs = [];
 let parentSourceCount = 0;
 for (const entry of Object.values(parent.files)) {
   if (entry.dir || !entry.name.startsWith(parentPrefix)) continue;
@@ -406,14 +446,14 @@ for (const entry of Object.values(parent.files)) {
     continue;
   }
   if (releaseIdentityInputs.has(name)) {
-    assert.equal(after.toString().replaceAll('0.2.6-web-care.1', '0.2.6-web-mender.3'), before.toString(),
+    assert.equal(after.toString().replaceAll('0.2.6-web-care.2', '0.2.6-web-care.1'), before.toString(),
       'Only the release identity may change in metadata source: ' + name);
   } else assert.deepEqual(after, before, 'Care revision preserves every unrelated source/artwork byte: ' + name);
 }
-assert.equal(parentSourceCount, 816, 'Authenticated parent contains all 816 source inputs');
+assert.equal(parentSourceCount, 817, 'Authenticated Care.1 parent contains all 817 source inputs');
 const addedProduction = Object.keys(sourceManifest.files).filter(name => !parent.file(parentPrefix + name));
 assert.deepEqual(addedProduction.sort(), [...addedCareInputs].sort(),
-  'Exactly the reviewed care rules header is appended');
+  'Layout repair adds no production files');
 assert.equal(Object.keys(sourceManifest.files).length, parentSourceCount + addedCareInputs.length,
   'Complete source inventory retains every parent member and exactly the care additions');
 for (const name of addedCareInputs) {
@@ -678,8 +718,17 @@ function sourceOver(back, front) {
       assert.equal(sha(original), input.sha256);
       assert.deepEqual(archived, original, 'Catalog retains exact approved original resource bytes: ' + input.originalPath);
     }
+    for (const [name, expected] of Object.entries(approvedLayoutHashes)) {
+      const entry = entries.get(name); assert(entry, 'Original layout font/sprite exists in runtime PAK: ' + name);
+      const original = pak.subarray(cursor + entry.offset, cursor + entry.offset + entry.size);
+      assert.equal(sha(original), expected);
+      assert.deepEqual(original, Buffer.from(layoutFixture.assets[name].base64, 'base64'),
+        'Layout fixture retains exact original runtime resource bytes: ' + name);
+    }
+    console.log('PASS full runtime PAK reauthentication of all ten original layout font/sprite inputs.');
     console.log('PASS full runtime PAK reauthentication of all thirteen approved native catalog inputs.');
   } else {
+    console.log('PASS code-only source package: all ten layout font/sprite fixtures match independently pinned original payload hashes.');
     console.log('PASS code-only source package: all thirteen native catalog inputs match independently approved original hashes; large runtime PAK payloads are intentionally absent.');
   }
 

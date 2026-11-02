@@ -1,5 +1,12 @@
 # Lantern-shroom art revision
 
+## Care.2 - native layout correction
+
+`0.2.6-web-care.2` fixes the glove placement and opening hint using the existing native bank, glove and font assets. The complete original icon is fitted inside its compact native frame without covering the conveyor, and the hint is shortened rather than changing its font or introducing another panel. Accepted Mender-bloom and Chill-shroom artwork, animation and challenge card pixels remain unchanged. No artwork is generated.
+
+All twelve silent native suites passed: 11,940 checks, zero failures, including 6,862 layout checks. The layout harness also passed with the installed native compiler; all fourteen browser integration suites passed. The Release build passed with all 817 source inputs unchanged. Muted browser checks at 800 by 600 and 1280 by 720 verified the live one-line hint, pausing while it was active, its return on resume, clear conveyor/glove/menu spacing and actual glove movement. Both 1x and 2x were observed; additional viewport and intro-camera combinations are covered by the automated layout matrix. Earlier art records below remain historical evidence for their named releases.
+
+
 ## Care.1 — native minigame card
 
 `0.2.6-web-care.1` retains the accepted Mender.3 coral blossom and original stem/leaf assembly, along with Chill-shroom's accepted artwork and motion. Intensive Lawn Care adds one distinct card composed from that exact Mender sprite, the original Flower Pot reanimation and gardening glove over the original day lawn. No new artwork or standalone challenge illustration is generated.

@@ -1,5 +1,12 @@
 # Current requirements
 
+## Care.2 - presentation bounds
+
+`0.2.6-web-care.2` fixes the reported Intensive Lawn Care overlaps while retaining original assets. The complete conveyor backdrop, including its seed-bank parent translation, must be clear of the glove frame and icon; the glove must also clear the native menu/speed controls. Drawing and hit-testing use the same tool rectangle. The original-font opening hint must fit above the footer and must not remain over the pause dialog.
+
+All twelve silent native suites passed: 11,940 checks, zero failures, including 6,862 layout checks. The layout harness also passed with the installed native compiler; all fourteen browser integration suites passed. The Release build passed with all 817 source inputs unchanged. Native layout regressions are part of the release gate. Existing modes, artwork, rules, unlocks and serialized layouts remain unchanged.
+
+
 ## Care.1 — Intensive Lawn Care
 
 `0.2.6-web-care.1` adds the repair-and-redeploy minigame: five fixed Menders, five protected recovery pots, five opening Repeaters, a wounded-plant conveyor, native glove movement and ten authored waves. Recovery-bed plants cannot attack. Front-line combat plants lose four HP per second while live zombies are present and stop attacking at 60 HP or below. The ordinary Mender pulse restores ten HP every three seconds. Moving a patient preserves the native plant instance.

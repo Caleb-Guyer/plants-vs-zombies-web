@@ -1,5 +1,12 @@
 # Bonus minigames, balance and Chill-shroom unlock — locally verified release candidate
 
+## Care.2 - restrained minigame presentation
+
+`0.2.6-web-care.2` corrects Intensive Lawn Care's toolbar spacing and original-font hint placement, including the paused view. Native layout checks cover the full drawn assets and parent translations that were missing from Care.1's presentation review. Chill-shroom, Mender-bloom and all six Bonus game rules remain unchanged.
+
+All twelve silent native suites passed: 11,940 checks, zero failures, including 6,862 layout checks. The layout harness also passed with the installed native compiler; all fourteen browser integration suites passed. The Release build passed with all 817 source inputs unchanged. See [QA scope](PARITY-QA.md) for the verified layout coverage. Earlier sections below retain their named release history.
+
+
 ## Care.1 — sixth Bonus minigame
 
 `0.2.6-web-care.1` adds Intensive Lawn Care alongside the existing five Bonus minigames. Its repair-and-redeploy loop uses ordinary Mender healing, protected pots and the original gardening glove. Completion occupies profile record 77 and adds no plant unlock gate. Chill-shroom still unlocks through Cold Front, and Mender-bloom still unlocks through Seed Swap.

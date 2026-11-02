@@ -1,5 +1,14 @@
 # Browser parity and QA record
 
+## Care.2 layout regression scope
+
+`0.2.6-web-care.2` repairs two Care.1 presentation defects: the glove overlapped the full translated conveyor frame, and a long original-font hint wrapped beyond its native message band into the footer and pause view.
+
+All twelve silent native suites passed: 11,940 checks, zero failures, including 6,862 layout checks. The layout harness also passed with the installed native compiler; all fourteen browser integration suites passed. The Release build passed with all 817 source inputs unchanged. Layout checks use authenticated original image dimensions and font data with the production draw, hit and wrapping paths, including parent translations, complete icon bounds and paused visibility. They explicitly reject the previous overlapping geometry and overflowing hint. Old current/queued checkpoint hints receive the compact rendering without changing serialized text or clocks.
+
+Muted browser checks at 800 by 600 and 1280 by 720 verified the live one-line hint, pausing while it was active, its return on resume, clear conveyor/glove/menu spacing and actual glove movement. Both 1x and 2x were observed; additional viewport and intro-camera combinations are covered by the automated layout matrix. The [corresponding source archive](dist/source/pvz-portable-0.2.6-web-care.2-source.zip) contains 817 production files, 865 ZIP entries and 13,696,830 bytes, SHA-256 `d8c52ecbb0f4f417b871137fb2a27017a2cb8699b1f6702fb363399a7ea7bf98`. Full and incremental patches reconstruct every production source byte. This presentation-only update retains the existing gameplay, art and save layouts. It does not claim a new complete battle clear or exhaustive original-game parity. Earlier receipts below apply to their named historical builds.
+
+
 ## Care.1 validation scope
 
 `0.2.6-web-care.1` passed 5,078 checks with zero failures in eleven silent native suites, including 1,135 Intensive Lawn Care checks, plus fourteen browser integration suites. Checks cover mode/state routing, conveyor and recovery rules, glove identity, fatigue and attack gating, ordinary Mender healing, authored waves, native checkpoint data, isolated completion/replay records and retained content. The final revision starts five Repeaters at 240 HP.

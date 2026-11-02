@@ -1,5 +1,5 @@
 {
-  "id": "0.2.6-web-care.1",
+  "id": "0.2.6-web-care.2",
   "upstream": {
     "tag": "0.2.6",
     "commit": "396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
@@ -7,103 +7,58 @@
     "officialJsSha256": "0f2d7425190e49c762f6700b68b080086e3dcb8f2dc5e9724de42ce9fb508573"
   },
   "sourceArchive": {
-    "path": "pvz-portable-0.2.6-web-care.1-source.zip",
-    "bytes": 13584266,
-    "sha256": "540f1ee365b558e10304995692485976e91f23bb1b28c305e6ade6cd17f1ed11",
-    "crc32": "811f4c26",
-    "entries": 861,
-    "uncompressedBytes": 27255481
+    "path": "pvz-portable-0.2.6-web-care.2-source.zip",
+    "bytes": 13696830,
+    "sha256": "d8c52ecbb0f4f417b871137fb2a27017a2cb8699b1f6702fb363399a7ea7bf98",
+    "crc32": "616879fd",
+    "entries": 865,
+    "uncompressedBytes": 27489914
   },
   "artifacts": [
     {
       "path": "build/pvz-portable.js",
       "bytes": 209242,
-      "sha256": "251ec8d9bc301f1245a631e8a3dc932f9bcc37d7358d804c07cdf1c6cf867d8e",
-      "crc32": "c7f9b951"
+      "sha256": "a52baa0c50f4c2b01aa22f07f023fa646c4075553e402f91593e49e6bc0a8c2b",
+      "crc32": "b3614fb4"
     },
     {
       "path": "build/pvz-portable.wasm",
-      "bytes": 7646785,
-      "sha256": "f7c31bb243b7b6823782f416a8c3f438e6a7376b48782e6a1257a1ba8a11b8d3",
-      "crc32": "3c1224a7"
+      "bytes": 7648185,
+      "sha256": "8926a54cd9b7a778cc6f5b61692515012372e3356f93fb0715ce118d76eda467",
+      "crc32": "eed54b25"
     },
     {
       "path": "build/ProjectVersion.h",
       "bytes": 190,
-      "sha256": "fd3ea3a3b82035fec8eb01c2ac9d320a88c03e10371b90c9f994fb97f8a13465",
-      "crc32": "5286fe37"
+      "sha256": "2f369421b7461ac2133877b9770b0d97f5797fa98ac9e95df4e45e6de2a4e575",
+      "crc32": "f6f87cf2"
     }
   ],
   "sourceFiles": 817,
-  "sourceBytes": 25593060,
-  "sourceDeltaVsMender3": [
+  "sourceBytes": 25596212,
+  "sourceDeltaVsCare1": [
     {
       "path": "CMake/ProjectVersion.cmake",
-      "beforeSha256": "bd3fe99213bd332fa39e8cfb557d7b6a1bdb7eba5e74ba98b026c1b1de9324f9",
-      "afterSha256": "58fef8bd72ea21892cb2b9535bf31dc4552c285a5eeed7950808ff5fea0d93f9"
-    },
-    {
-      "path": "src/ConstEnums.h",
-      "beforeSha256": "ea217e19877d4ccfa6053bdc9490f664f10f1536f507b76f67032a381568c74c",
-      "afterSha256": "5de40e3f320d0b349d53529352164280b64c4a678e98e0626de95adb6c9e088f"
+      "beforeSha256": "58fef8bd72ea21892cb2b9535bf31dc4552c285a5eeed7950808ff5fea0d93f9",
+      "afterSha256": "9a3379a5a2ae1997fcd54d882e71d29c6188ae18b0a8937d69864dea66f0ea62"
     },
     {
       "path": "src/Lawn/Board.cpp",
-      "beforeSha256": "22263c0b4b071c87b9809a43f304383680e5dab8c098d201082f4cc10f562f7f",
-      "afterSha256": "c6030e635981cb1dca0a30aa2101a0a8b6bdb4760eada1c158fd331a1c00d5ec"
-    },
-    {
-      "path": "src/Lawn/Board.h",
-      "beforeSha256": "c56049a26f699f207766d9a1799e9e75aa26d3adc82fd89ed3338058d5d0ec82",
-      "afterSha256": "deae00255ac8bc1c215d8f9a96b8dd434d5c8f8b4d718d7ccb3385259605719e"
+      "beforeSha256": "c6030e635981cb1dca0a30aa2101a0a8b6bdb4760eada1c158fd331a1c00d5ec",
+      "afterSha256": "b2396379d450dd7c30a86d56e397038f46d7d9281bd311a4c247f1b779351fbc"
     },
     {
       "path": "src/Lawn/Challenge.cpp",
-      "beforeSha256": "60b48ad47cafb473954bcc5340bdf03addc10b930167359fb1ce33e3ab6f430e",
-      "afterSha256": "68d0f678004a720fea98d3007ca6373906d3a765c1f985b29d01359d2fcd6c52"
+      "beforeSha256": "68d0f678004a720fea98d3007ca6373906d3a765c1f985b29d01359d2fcd6c52",
+      "afterSha256": "8e6253facbc3e42528e3e92ca270e4f82d402ff5fa090d5eda8abd0a5f04648a"
     },
     {
-      "path": "src/Lawn/Challenge.h",
-      "beforeSha256": "9b8b44507d394e131decb4df7d443b691d955d8c7af35751279f5c4e530365e7",
-      "afterSha256": "1e65bfb51c9978ede356e01a026d897a415ca2d36e44677d865ec44276aa46fa"
-    },
-    {
-      "path": "src/Lawn/CursorObject.cpp",
-      "beforeSha256": "0a503ec02ef38abc395ed501abbca4757b57e55430c95c08dc9a21a30a8a6754",
-      "afterSha256": "7ce8857fb2a191a07a2f3f4285849abb9b84959b2ca41bc4175135603a0955e2"
-    },
-    {
-      "path": "src/Lawn/Plant.cpp",
-      "beforeSha256": "e3e0dab46e764d15beb97491ef04ac9496793d548fa565f309f870b09d0f2275",
-      "afterSha256": "4a10b6ed28925f4f72093877a2facc3ceeb67ed2e6e18cd5140f17f205743f9e"
-    },
-    {
-      "path": "src/Lawn/System/BonusChallenge.h",
-      "beforeSha256": "a10a00543c09efc021da1c8dd68e3b4550d841c52a94a4cf5097c7843e7c2423",
-      "afterSha256": "3465570a5e354f6846ae60ef184e0aea0697ee62ef3f279731770101bb7925fc"
-    },
-    {
-      "path": "src/Lawn/System/IntensiveCare.h",
-      "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "afterSha256": "b634f9bb867035f4cd9bfc43296c4206a21afc85a0eee74be78b9793d9a0fa12"
-    },
-    {
-      "path": "src/Lawn/System/LanternShroom.cpp",
-      "beforeSha256": "eaab8a365287ed3b2de6298fe04dcb8969b92911a3806b990104bc52013fa7bd",
-      "afterSha256": "185f08d577f702d6e956546663eedf02a04ceee142eca04afd80b45c116bc0cc"
-    },
-    {
-      "path": "src/Lawn/Widget/ChallengeScreen.cpp",
-      "beforeSha256": "e99e456ef45b935b3245f30e29a8f5644d6530d46331075aca49e119ec4d0426",
-      "afterSha256": "c0f58a8106b0f9f2cdc6e7ba01a17a7c9a9587e953fd5b62b079ec9ea78c0ca4"
-    },
-    {
-      "path": "src/Lawn/Zombie.cpp",
-      "beforeSha256": "2798a6a2afb238cb92ea0d641f6d7f0a15cf80b1fc85728c4bc545b218d092d9",
-      "afterSha256": "2e3b0da3c4e6bfa0d81b29f33b09ee81019585def673618e12fc67bc08b79597"
+      "path": "src/Lawn/MessageWidget.cpp",
+      "beforeSha256": "f5cb12d10bf46eecc3b57e718e5ed35f062c7f3f65b7de24ab66d4bed7444316",
+      "afterSha256": "cdabc29ba5d6488a3c14da319f54f21a0115a7d0e7ec97cd2c1dd3b19c448d57"
     }
   ],
-  "compiledVersionHeader": "// Generated from CMake/ProjectVersion.h.in by CMake; do not edit.\r\n#pragma once\r\n\r\n#define PVZP_VERSION \"0.2.6-web-care.1\"\r\n#define PVZP_BUILD_NUMBER 1\r\n#define PVZP_COMMIT_DATE \"unknown\"\r\n",
+  "compiledVersionHeader": "// Generated from CMake/ProjectVersion.h.in by CMake; do not edit.\r\n#pragma once\r\n\r\n#define PVZP_VERSION \"0.2.6-web-care.2\"\r\n#define PVZP_BUILD_NUMBER 1\r\n#define PVZP_COMMIT_DATE \"unknown\"\r\n",
   "checks": {
     "fullRelease": {
       "exitCode": 0,
@@ -116,29 +71,29 @@
       "sourceUnchangedDuringBuild": true,
       "receipt": {
         "path": "logs/build-result.json",
-        "bytes": 581,
-        "sha256": "219e54bddc5506cc716c41d5fd54259c2868394a7b035ea762ad40115b15ca1b",
-        "crc32": "a78c3a37"
+        "bytes": 580,
+        "sha256": "f8e666c9824ecb2fee6afbf8d3b3412e2a0f3596b6c583736154f5a6114a2537",
+        "crc32": "8c17e1c2"
       }
     },
     "focusedNativeTests": {
       "status": "PASS focused native production tests",
       "failures": 0,
-      "checks": 5078,
-      "scope": "Actual extracted production methods and content, settings, deck, cooldown, Mender healing, Intensive Lawn Care and custom Almanac code. No audio device or full game starts.",
+      "checks": 11940,
+      "scope": "Actual extracted production methods and content, settings, deck, cooldown, Mender healing, Intensive Lawn Care, native layout bounds and custom Almanac code. No audio device or full game starts.",
       "reports": [
         {
           "path": "tests/game-speed-results.json",
           "bytes": 1601,
-          "sha256": "7c653d3875deddeeb90b738cef51810c87c2be9cd40a2356683d3c877493f1cd",
-          "crc32": "231856d1",
+          "sha256": "b06a58b90cb7fb73dd867c43b72cf79e1050e21a0f6aecf3d089722762bde434",
+          "crc32": "03817f5d",
           "checks": 66
         },
         {
           "path": "tests/qol-controls-results.json",
           "bytes": 1687,
-          "sha256": "a10967f0832eebc0c5666c13aca5ef04efc500b475d6a282768dd968ab248e9e",
-          "crc32": "6d3a6075",
+          "sha256": "9bf3dd0d96f19bffcb845d21deec1a8cc4ab8398a21f34502d7c8edb6abef1d1",
+          "crc32": "494fd3a2",
           "checks": 90
         },
         {
@@ -151,8 +106,8 @@
         {
           "path": "tests/bonus-challenge-results.json",
           "bytes": 2315,
-          "sha256": "9d32a31b6382c46fe6a3bccc70bb774b05ecccf1abe769f44c7c63af68e45a27",
-          "crc32": "42b52dbe",
+          "sha256": "f4f3f95d14a07d73afc24afdc88e7e626e0981240a626869711d525f9011bc6c",
+          "crc32": "6e97428b",
           "checks": 387
         },
         {
@@ -165,29 +120,29 @@
         {
           "path": "tests/night-shift-results.json",
           "bytes": 2102,
-          "sha256": "12e08fea90852da24875304dc5516e7a51c26962ab35c92cd64e8d8c2fbd8d67",
-          "crc32": "98fc8ce4",
+          "sha256": "9e0d9a5d48a15045d389e27f75a90ec5d391de135eea936256c809306acc7f0c",
+          "crc32": "19218125",
           "checks": 231
         },
         {
           "path": "tests/lantern-shroom-results.json",
           "bytes": 5419,
-          "sha256": "d689fbb552f3eb155ec4fc1e68666ac5f60fe6c3dcfe2302f37d0c12eb42c82f",
-          "crc32": "88a8c188",
+          "sha256": "f245ef9529aa4cb80594fa1adc4f442577e357e9050ccaef24c2c7a8806c83f7",
+          "crc32": "bc254789",
           "checks": 548
         },
         {
           "path": "tests/garden-shuffle-results.json",
           "bytes": 2699,
-          "sha256": "c64365de611ec41be419493f597bcb2af06987e3d7047ee58e1d14d443846fc7",
-          "crc32": "5e25d622",
+          "sha256": "2c9e6166c3c977592479042a61bb8075b350930494538c18a9046a060f7b40d5",
+          "crc32": "bcafc831",
           "checks": 214
         },
         {
           "path": "tests/seed-swap-results.json",
           "bytes": 2660,
-          "sha256": "3790cfc7c8698669f419a6420b12ce8a10d3a5eb73589aefa09f8fad9dcbf04f",
-          "crc32": "7566ff76",
+          "sha256": "477f520195f5eebb71b81b0da8dd45b033a650bc754894ab429d7be6d51db181",
+          "crc32": "875a437d",
           "checks": 587
         },
         {
@@ -200,9 +155,16 @@
         {
           "path": "tests/intensive-care-results.json",
           "bytes": 3295,
-          "sha256": "d0a06f53fc4add39570cd9ff9f3c93f8f5733714350e07d3f2de338ff36e992f",
-          "crc32": "4d67d9bd",
+          "sha256": "4d7ba495b234a17dce7d6057c5257c032696bebc942d257a5bdfe4848be1d9ce",
+          "crc32": "689d4ec3",
           "checks": 1135
+        },
+        {
+          "path": "tests/native-layout-results.json",
+          "bytes": 3893,
+          "sha256": "09eaf19bf8c67e640fe7e6b15d02dd09f60cd5306eedb54258f285074c1c3cf7",
+          "crc32": "b2beeb55",
+          "checks": 6862
         }
       ]
     },
@@ -213,7 +175,7 @@
         "everySourceByteMatches": true,
         "sourceFiles": 817
       },
-      "mender3": {
+      "care1": {
         "gitApplyCheck": "PASS",
         "gitApply": "PASS",
         "everySourceByteMatches": true,
@@ -222,23 +184,23 @@
     }
   },
   "combinedPatch": {
-    "path": "web-care.1.patch",
-    "bytes": 14244035,
-    "sha256": "9a6513daec1a10a338e8689d13b2f7e2bed1f28a8e305fad9317dd46f33283eb",
-    "crc32": "9fd8b96e",
-    "sourcePaths": 103
+    "path": "web-care.2.patch",
+    "bytes": 14248442,
+    "sha256": "0d3c3fdfe5b4b18358e5a7965fc0b57ecda370ad9145ae88991eac3679416c55",
+    "crc32": "9de53bb2",
+    "sourcePaths": 104
   },
   "incrementalPatch": {
-    "path": "mender3-to-care1.patch",
-    "bytes": 47211,
-    "sha256": "01d6a0dcd78caeff85b97a0d986329c998e1e69e5dc0a363398fd685dfbccbe5",
-    "crc32": "2b25f5f6",
-    "sourcePaths": 13
+    "path": "care1-to-care2.patch",
+    "bytes": 7372,
+    "sha256": "06b8021b9ba59bb24f40c6dd9a356cae95e0c8d9ca317c8fdf6deec2fd69cf1c",
+    "crc32": "5265960b",
+    "sourcePaths": 4
   },
   "parent": {
-    "id": "0.2.6-web-mender.3",
-    "sourceArchiveSha256": "5a6392e1d5415c3d7f5d3f2bad3114abb54a35bc13df5366be84b718c2d5bd1f",
-    "releaseManifestSha256": "3746a9794242f9af592dbe0e43534209a76e33b632b3f252d51db7c47102011e",
+    "id": "0.2.6-web-care.1",
+    "sourceArchiveSha256": "540f1ee365b558e10304995692485976e91f23bb1b28c305e6ade6cd17f1ed11",
+    "releaseManifestSha256": "6ad67c9547367d8b271f4f0db392c9c81b40e5575abd1fee4672b324b5dcc8d4",
     "scope": "Complete historical parent engine metadata is preserved in the parent property of engine-provenance.json."
   },
   "limits": [
