@@ -91,9 +91,16 @@ def parent_source_input(engine):
 
 
 def nested_source_inputs(engine, paths, baseline):
-    """Keep only the current, immediate-parent and raw-upstream source packages."""
+    """Include current, parent, upstream and the authenticated native-UI reference."""
     parent = parent_source_input(engine)
-    return list(dict.fromkeys([baseline, *([parent] if parent else []), paths["source"]]))
+    # The native restoration checks read this exact release as an independent
+    # stock I, Zombie reference. Keep fresh source downloads self-contained.
+    native_ui = DIST / "source/pvz-portable-0.2.6-web-rally.3-source.zip"
+    if (not native_ui.is_file() or native_ui.is_symlink()
+            or hashlib.sha256(native_ui.read_bytes()).hexdigest()
+            != "2deb50f9a38d8599453f567f5458a20505d552956df0bc442e649e49ea1c5c24"):
+        raise ValueError("Authenticated native I, Zombie UI reference is missing or changed")
+    return list(dict.fromkeys([baseline, *([parent] if parent else []), native_ui.resolve(), paths["source"]]))
 
 
 def validate_engine_inputs():
@@ -162,7 +169,7 @@ def regenerate_source_downloads():
         "schema_version": 1,
         "current_engine": engine["id"],
         "upstream_tag": engine["upstream"]["tag"],
-        "layout": "Site-source nests current corresponding source, its immediate parent when present, the upstream baseline and the current full patch. Other source archives and incremental/historical patches remain standalone downloads beside this index and in the full runtime distribution.",
+        "layout": "Site-source nests current corresponding source, its immediate parent when present, the upstream baseline, the authenticated Rally.3 native I, Zombie UI reference and the current full patch. Other source archives and incremental/historical patches remain standalone downloads beside this index and in the full runtime distribution.",
         "nested_sources": [path.name for path in nested],
         "nested_patches": [paths["patch"].name],
         "archives": archives,

@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-raid.1
-Adds Rally Raid: five hand-authored I, Zombie puzzles with a deployable Rally Zombie and Chill-shroom/Mender-bloom defenses, finite native sun economy and final-board-only completion. Existing content, original IDs, repaired artwork and serialized layouts are retained.
+PvZ-Portable 0.2.6-web-raid.2
+Restores the original I, Zombie UI and packet render routing in Rally Raid: the bank and non-fog Menu/speed controls use the native lower layer, and pick/ready effects use their original layers. Geometry, artwork, puzzle layouts, budgets, combat, IDs and serialized layouts are unchanged.
 Engine JavaScript SHA-256: 149cde88e398e1e3a08ae2d43c77a1eed6701299d783c78ac8a610573c268f0f
-Engine WASM SHA-256: bb64f196f81294ab56f8d4b9cda0d1e7f81af3545bfaf9656573e4f861ff49d6
+Engine WASM SHA-256: 4262b50e1fc6511565e76039fc6c79814bf4c6619867d2fb8c9a3e1c56f94989
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.

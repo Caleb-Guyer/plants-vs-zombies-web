@@ -1,5 +1,14 @@
 # Current requirements
 
+## Raid.2 - native I, Zombie routing
+
+Rally Raid uses the original I, Zombie rendering paths. The bank draws through the normal lower UI path, and non-fog Menu/speed controls draw there too; fog retains the native top path. Tall lawn actors may draw in front of the bank exactly as in I, Zombie. Packet-pick and ready-flash particles use their original render layers.
+
+The four methods are restored byte-for-byte from the authenticated published Rally.3 source. Only version metadata, Board.cpp and SeedPacket.cpp differ from Raid.1 across all 828 production files. No sprite, geometry, footer, board, economy, combat, content ID, unlock or saved layout changes accompany this correction. The ninth card's interface description is updated; every other card/content metadata field and accepted bitmap remains unchanged.
+
+All seventeen muted native suites passed: 1,474,524 checks, zero failures, along with all fifteen browser integration suites. The Raid suite contributes 1,031,532 checks in the retained 28 scenarios: 24 legal winning runs and four separate native-render controls. The focused layout suite passes 10,693 checks.
+
+
 ## Raid.1 - Rally Raid
 
 The finite `0.2.6-web-raid.1` addition is Rally Raid, the ninth Mini-Games > Bonus card. It contains five fixed I, Zombie boards with the original bank, brains, deployment line, cardboard plant treatment and footer progress. The card combines the repaired native Rally Zombie rig with the original brain artwork. It introduces no separate generated challenge illustration, extra HUD or challenge-card tips.

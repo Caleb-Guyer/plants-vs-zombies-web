@@ -1,5 +1,20 @@
 # Browser parity and QA record
 
+## Raid.2 - original I, Zombie render regression
+
+Engine: `0.2.6-web-raid.2`. All 17 muted native suites passed: 1,474,524 checks, zero failures. All 15 browser integration suites passed. The Raid suite contributes 1,031,532 checks; focused native layout contributes 10,693. This correction restores Board::DrawUIBottom, Board::DrawUITop, Board::TutorialArrowShow and SeedPacket::FlashIfReady exactly from the authenticated published Rally.3 source. Across all 828 production inputs, only the version file and the two UI source files differ from Raid.1.
+
+The native reference is I, Zombie's original drawing order: lawn actors may cover the bank. Raid.1's foreground bank, which hides a top-row zombie's head, is the regression negative. This change preserves actor/control geometry, accepted artwork, authored puzzles, budgets, combat and saved layouts. The retained Raid matrix passes all 28 scenarios and 14 speed pairs: 24 legal winning runs and four separate synthetic HUD controls, at 1x/2x across two fixed seeds. The winning runs retain preparation/combat/transition Save/Continue, real defeat/Retry, native final-award/Bonus replay, scripted Restart Yes/Cancel and untimed thinking coverage. The four muted complete-engine backends and all retained Care, Chain Reaction and Rally Zombie regressions use the same 828 production inputs.
+
+The [corresponding source archive](dist/source/pvz-portable-0.2.6-web-raid.2-source.zip) contains 828 production files, 918 ZIP entries and 23,967,714 bytes, SHA-256 `0bb8e6ae265488e1d1da8b472c10730f0bd17df9a56337c8acc34c4c3911a225`. The full upstream patch and Raid.1 increment reconstruct every production source byte.
+
+Each HUD control compares 27 same-frame native I, Zombie renders: 22 full frames and five top bands, totaling 11,229,246 pixel comparisons per case with zero mismatches. Five head types and 18 head samples retain the native visible head pixels. Three actual Raid.1 foreground-routing negatives reproduce head occlusion and fail as intended. These controls establish native render equivalence for the sampled states, without moving actors or hiding them behind a new bank layer.
+
+
+A muted private preview at `http://127.0.0.1:4231/?testing=1` served the exact normal Raid.2 engine with disposable QA-Boss data. An existing Raid.1 save reached the native Continue dialog without migration. A new test game accepted normal and Rally Zombies in top-row column four, reducing sun 450 to 400 to 300; their complete heads and the Rally prop drew in front of the bank. The original Menu was clicked and its native pause screenshot reviewed. The final installed Information panel displayed `0.2.6-web-raid.2` and the matching Engine Source URL. Unmute sound remained checked (Value 1), including after this final identity check; error-level console logs were empty. The completed preview tab and private server were closed.
+
+Site-source packaging retains the pinned Rally.3 source archive required by the native-UI validation wrapper; runtime assets are unchanged. These are bounded native render, gameplay and browser checks, without a claim of exhaustive original-game parity or a frame-time benchmark.
+
 ## Raid.1 - finite I, Zombie puzzle validation
 
 Engine: `0.2.6-web-raid.1`. All 17 muted native suites passed: 1,194,484 checks, zero failures. All 15 browser integration suites passed. The Raid suite contributes 751,506 checks; retained Care, Chain Reaction and Rally Zombie matrices are freshly executed against the same 828 production inputs.

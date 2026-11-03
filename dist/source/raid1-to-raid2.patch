@@ -1,0 +1,82 @@
+diff --git a/CMake/ProjectVersion.cmake b/CMake/ProjectVersion.cmake
+index 2ae0490fe0f3027f5a95577f7540b3ecf935c37d..3e78f89c46b2998e680aaf3a836e6424afa38e1d 100644
+--- a/CMake/ProjectVersion.cmake
++++ b/CMake/ProjectVersion.cmake
+@@ -66,6 +66,6 @@ if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
+ endif()
+ 
+ # Browser release identity; keep binary and corresponding-source manifests aligned.
+-set(PVZP_VERSION "0.2.6-web-raid.1")
++set(PVZP_VERSION "0.2.6-web-raid.2")
+ set(PVZP_VERSION_PLAIN "0.2.6")
+ configure_file("${PROJECT_SOURCE_DIR}/CMake/ProjectVersion.h.in" "${PROJECT_BINARY_DIR}/ProjectVersion.h" @ONLY)
+diff --git a/src/Lawn/Board.cpp b/src/Lawn/Board.cpp
+index 499841375ad0ba339343ac890072c3d36806b657..8fe1a1ee77ae07723d6ec6fae9526e6a875e527f 100644
+--- a/src/Lawn/Board.cpp
++++ b/src/Lawn/Board.cpp
+@@ -4072,7 +4072,7 @@ Plant* Board::ToolHitTest(int theX, int theY)
+ void Board::TutorialArrowShow(int theX, int theY)
+ {
+ 	TutorialArrowRemove();
+-	PvzpParticleSystem* aParticle = mApp->AddPvzpParticle(theX, theY, MakeRenderOrder(RallyRaid::IsMode(mApp->mGameMode) ? RenderLayer::RENDER_LAYER_ABOVE_UI : RenderLayer::RENDER_LAYER_TOP, 0, 0), ParticleEffect::PARTICLE_SEED_PACKET_PICK);
++	PvzpParticleSystem* aParticle = mApp->AddPvzpParticle(theX, theY, MakeRenderOrder(RenderLayer::RENDER_LAYER_TOP, 0, 0), ParticleEffect::PARTICLE_SEED_PACKET_PICK);
+ 	mTutorialParticleID = mApp->ParticleGetID(aParticle);
+ }
+ 
+@@ -7779,7 +7779,7 @@ void Board::DrawUIBottom(Graphics* g)
+ 
+ 	if (mApp->mGameScene != GameScenes::SCENE_ZOMBIES_WON)
+ 	{
+-		if (!RallyRaid::IsMode(mApp->mGameMode) && !GardenShuffle::IsMode(mApp->mGameMode) && !SeedSwap::IsMode(mApp->mGameMode) && mSeedBank->BeginDraw(g))
++		if (!GardenShuffle::IsMode(mApp->mGameMode) && !SeedSwap::IsMode(mApp->mGameMode) && mSeedBank->BeginDraw(g))
+ 		{
+ 			mSeedBank->Draw(g);
+ 			mSeedBank->EndDraw(g);
+@@ -7792,7 +7792,7 @@ void Board::DrawUIBottom(Graphics* g)
+ 	}
+ 
+ 	DrawShovel(g);
+-	if (!StageHasFog() && !RallyRaid::IsMode(mApp->mGameMode))
++	if (!StageHasFog())
+ 	{
+ 		DrawTopRightUI(g);
+ 	}
+@@ -7976,15 +7976,7 @@ bool Board::IsScaryPotterDaveTalking()
+ 
+ void Board::DrawUITop(Graphics* g)
+ {
+-    // Raid can deploy tall actors into the top row. Keep the original HUD
+-    // above those lawn sprites without moving its appearance or hit targets.
+-    if (RallyRaid::IsMode(mApp->mGameMode) && mApp->mGameScene != GameScenes::SCENE_ZOMBIES_WON &&
+-        mSeedBank->BeginDraw(g))
+-    {
+-        mSeedBank->Draw(g);
+-        mSeedBank->EndDraw(g);
+-    }
+-	if (StageHasFog() || RallyRaid::IsMode(mApp->mGameMode))
++	if (StageHasFog())
+ 	{
+ 		DrawTopRightUI(g);
+ 	}
+diff --git a/src/Lawn/SeedPacket.cpp b/src/Lawn/SeedPacket.cpp
+index 6e83c9c3848cf0b69cfe3e516dc99dec944327a3..34b67cb57e29550c948877d1e5282910059cd434 100644
+--- a/src/Lawn/SeedPacket.cpp
++++ b/src/Lawn/SeedPacket.cpp
+@@ -26,7 +26,6 @@
+ #include "Challenge.h"
+ #include "SeedPacket.h"
+ #include "SeedPacketCooldown.h"
+-#include "System/RallyRaid.h"
+ #include "../LawnApp.h"
+ #include "CursorObject.h"
+ #include "../Resources.h"
+@@ -116,8 +115,7 @@ void SeedPacket::FlashIfReady()
+ 
+ 	if (!mBoard->HasConveyorBeltSeedBank())
+ 	{
+-		const RenderLayer aLayer = RallyRaid::IsMode(mApp->mGameMode) ? RenderLayer::RENDER_LAYER_ABOVE_UI : RenderLayer::RENDER_LAYER_UI_BOTTOM;
+-		int aRenderPosition = Board::MakeRenderOrder(aLayer, 0, 2);
++		int aRenderPosition = Board::MakeRenderOrder(RenderLayer::RENDER_LAYER_UI_BOTTOM, 0, 2);
+ 		mApp->AddPvzpParticle(mX + mBoard->mSeedBank->mX, mY + mBoard->mSeedBank->mY, aRenderPosition, ParticleEffect::PARTICLE_SEED_PACKET_FLASH);
+ 	}
+ 

@@ -1,5 +1,12 @@
 # Plants vs. Zombies — browser playtest
 
+## Raid.2 - original I, Zombie drawing order
+
+`0.2.6-web-raid.2` restores the original I, Zombie drawing order in Rally Raid. Top-row zombies draw in front of the native bank, and the Menu/speed controls and packet effects use their original layers. Plants, zombies and controls retain their existing positions and sizes.
+
+Puzzle layouts, sun budgets, combat, artwork, unlocks and saves are unchanged. All seventeen muted native suites passed: 1,474,524 checks, zero failures, including exact native I, Zombie render comparisons. All fifteen browser integration suites passed. Normal game audio remains available. Validation and artifact identities are recorded in [QA scope](PARITY-QA.md) and [release receipts](DEPLOYMENT.md).
+
+
 ## Raid.1 - Rally Raid
 
 `0.2.6-web-raid.1` adds **Rally Raid** under **Mini-Games > Bonus**: five hand-arranged I, Zombie puzzles. Deploy a 100-sun Rally Zombie to support nearby attackers against the original cardboard defenders, then face Chill-shroom and Mender-bloom defenses. The native bank, brains, placement line and puzzle presentation carry the game.

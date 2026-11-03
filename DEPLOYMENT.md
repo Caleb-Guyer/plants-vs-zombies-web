@@ -1,5 +1,20 @@
 # GitHub Pages release: Caleb-Guyer/plants-vs-zombies-web
 
+## Raid.2 - native I, Zombie restoration inputs
+
+Current engine: `0.2.6-web-raid.2`. The release restores the original bank/control and packet-effect routing without changing geometry, artwork, gameplay or save layouts.
+
+- Normal JavaScript: 209,496 bytes, SHA-256 `149cde88e398e1e3a08ae2d43c77a1eed6701299d783c78ac8a610573c268f0f`.
+- Normal WebAssembly: 7,702,521 bytes, SHA-256 `4262b50e1fc6511565e76039fc6c79814bf4c6619867d2fb8c9a3e1c56f94989`.
+- Published Raid.1 parent source: `pvz-portable-0.2.6-web-raid.1-source.zip`, 23,958,264 bytes, 916 entries, SHA-256 `50e122044bb767eb9c78cf8c38c9cd48de022f8b3f966b69b3bd29a7bbafdb8c`.
+- Production inputs: 828 files; only CMake/ProjectVersion.cmake, Board.cpp and SeedPacket.cpp differ from the parent. No files are added or removed.
+- Corresponding source: `pvz-portable-0.2.6-web-raid.2-source.zip`, 23,967,714 bytes, 918 entries, SHA-256 `0bb8e6ae265488e1d1da8b472c10730f0bd17df9a56337c8acc34c4c3911a225`.
+- Full and incremental patches: `web-raid.2.patch` and `raid1-to-raid2.patch`. Both reconstruct all 828 production files byte-for-byte.
+- All 17 muted native suites passed: 1,474,524 checks, zero failures. Raid contributes 1,031,532 checks across 24 legal winning runs and four separate native-render controls. All 15 browser integration suites passed. Muted private browser inspection verified the final Raid.2 Information label and matching Engine Source URL, with no error-level console logs.
+
+Site-source packaging includes the authenticated Rally.3 source archive used as the stock I, Zombie rendering reference; no runtime assets change. The existing manual GitHub Pages workflow reruns source/browser checks, native suites and asset verification before deployment. Earlier sections describe their named historical builds.
+
+
 ## Raid.1 - release inputs and publication
 
 Current engine: `0.2.6-web-raid.1`. The following pins identify the packaged, tested normal Release build.

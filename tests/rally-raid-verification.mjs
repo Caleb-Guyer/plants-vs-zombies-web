@@ -8,10 +8,9 @@ const key = result => `${result.name}/${result.speed}/${result.seed}`;
 const outcomeFields = ['outcome','boardsSolved','brainsConsumed','legalPlacements','profileIndex',
   'profileCredits','awardCollected','failureAndRetry','scriptedModalRestart',
   'invalidPlacementRejected','thinkingTimeObserved','replayRewardChecked'];
-const hudFields = ['outcome','syntheticUIControls','hudSamples','hudOpaquePixels',
-  'hudPixelComparisons','hudMismatchPixels','hudUnderlayNegatives','nativeControlSamples',
-  'nativeControlMismatchPixels',
-  'nativeControlOracle','hudOracle'];
+const hudFields = ['outcome','syntheticUIControls','hudOracle','nativeIZMode',
+  'nativeIZSamples','nativeIZFullFrameSamples','nativeIZTopBandSamples','nativeIZMismatchPixels',
+  'nativeIZHeadTypes','nativeIZHeadSamples','foregroundRegressionNegatives','nativePauseSamples'];
 
 // Respect strings/comments so this audits actual production method bodies.
 function body(text, signature) {
@@ -70,16 +69,22 @@ export async function verifyRallyRaid({report, read, sha, engine, fullRunReport,
     if(result.name==='hud-controls') {
       assert.equal(result.outcome,'controls-pass');
       assert.equal(result.syntheticUIControls,true);
-      assert.equal(result.hudSamples,11);
-      assert.equal(result.hudOracle,'black-white-independent-native-opaque');
-      assert(result.hudOpaquePixels>15000 && result.hudPixelComparisons>150000);
-      assert.equal(result.hudMismatchPixels,0);
-      assert.equal(result.hudUnderlayNegatives,3,'Actual Fume/Rally/bank and Rally/Menu underdraw controls must fail');
-      assert.equal(result.nativeControlSamples,3);
-      assert(result.nativeControlCoveredPixels>2000 && result.nativeControlPixelComparisons>6000);
-      assert.equal(result.nativeControlOpaquePixels,undefined,'The original translucent buttons are checked using exact scene composition');
-      assert.equal(result.nativeControlOracle,'same-state-native-composite');
-      assert.equal(result.nativeControlMismatchPixels,0);
+      assert.equal(result.hudOracle,'same-frame-native-i-zombie');
+      assert.equal(result.nativeIZMode,61,'Native I,Zombie1 provides the actual same-state render reference');
+      assert.equal(result.nativeIZSamples,27);
+      assert.equal(result.nativeIZFullFrameSamples,22);
+      assert.equal(result.nativeIZTopBandSamples,5);
+      assert(result.nativeIZPixelComparisons>10000000);
+      assert.equal(result.nativeIZMismatchPixels,0);
+      assert.equal(result.nativeIZHeadTypes,5);
+      assert.equal(result.nativeIZHeadSamples,18);
+      assert(result.nativeIZVisibleHeadPixels>0);
+      assert.equal(result.foregroundRegressionNegatives,3);
+      assert(result.foregroundHeadOcclusionPixels>0,'Actual Raid.1 foreground redraws must obscure native zombie heads');
+      assert.equal(result.nativePauseSamples,2);
+      assert(result.rallyCallStateSamples>0 && result.rallyIdleStateSamples>0);
+      for(const field of ['hudOpaquePixels','hudUnderlayNegatives','nativeControlOracle'])
+        assert.equal(result[field],undefined,'Foreground-bank coverage is superseded by native I,Zombie image equivalence');
       for(const field of ['boardsSolved','brainsConsumed','profileCredits','awardCollected'])
         assert.equal(result[field],undefined,'Synthetic HUD fixture must not claim a battle/reward: '+field);
       continue;
@@ -131,7 +136,9 @@ export async function verifyRallyRaid({report, read, sha, engine, fullRunReport,
   assert.match(raid,/kRallyCost = 100;/);
   assert.match(body(plant,'int Plant::GetRefreshTime('),/Challenge::IsZombieSeedType\(theSeedType\)\)\s*\{\s*return 0;/);
   assert.match(body(packet,'void DrawSeedPacket('),/FONT_PICO129/);
-  assert.match(body(packet,'void SeedPacket::FlashIfReady('),/RallyRaid::IsMode[\s\S]*RENDER_LAYER_ABOVE_UI[\s\S]*RENDER_LAYER_UI_BOTTOM/);
+  const flash=body(packet,'void SeedPacket::FlashIfReady(');
+  assert.match(flash,/MakeRenderOrder\(RenderLayer::RENDER_LAYER_UI_BOTTOM, 0, 2\)/);
+  assert(!flash.includes('RallyRaid::IsMode'),'Native packet feedback has no Raid-specific foreground override');
   const card=body(presentation,'Sexy::Image* GetBonusImage(');
   assert.match(card,/RallyPresentation::PrepareRig[\s\S]*RallyPresentation::DrawRig/);
   assert.match(card,/Blank\(80,65\)/);
@@ -153,5 +160,5 @@ export async function verifyRallyRaid({report, read, sha, engine, fullRunReport,
   assert.match(checkpoint,/LawnSaveGame\([\s\S]*Graph\(b\)[\s\S]*TryLoadGame\(\)[\s\S]*Graph\(app->mBoard\)==graph/);
   assert.match(checkpoint,/ContinueDialog_Continue/);
   assert.match(harness,/GetNumTrophies\(CHALLENGE_PAGE_BONUS\)==1/);
-  console.log('PASS 24 legal native Rally Raid wins, 4 separate synthetic HUD controls, 14 native speed pairs, three save phases, budget-loss Retry and final-only first/replay credit.');
+  console.log('PASS 24 legal native Rally Raid wins, 4 separate exact native I,Zombie render controls, 14 native speed pairs, three save phases, budget-loss Retry and final-only first/replay credit.');
 }
