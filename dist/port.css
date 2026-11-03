@@ -6,7 +6,8 @@ button,a,summary{-webkit-tap-highlight-color:transparent}
 button{font:inherit;cursor:pointer}
 button:disabled{cursor:wait;opacity:.4}
 button:focus-visible,a:focus-visible,summary:focus-visible,[tabindex]:focus-visible{outline:2px solid #e8dc99;outline-offset:4px}
-#canvas-container{display:none;position:fixed;inset:0;align-items:center;justify-content:center;background:#000;overflow:hidden}
+#canvas-container{display:block;position:fixed;inset:0;background:#000;overflow:hidden}
+#game-viewport{display:none;position:fixed;inset:0;align-items:center;justify-content:center;background:#000;overflow:hidden}
 #canvas{display:block;background:#000;max-width:100%;max-height:100%;touch-action:none}
 #canvas:focus{outline:none}
 #canvas:focus-visible{outline:1px solid #ffffff40;outline-offset:-1px}

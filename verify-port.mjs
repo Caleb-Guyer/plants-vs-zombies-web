@@ -15,18 +15,19 @@ for(const file of walk(dist).filter(file=>file.endsWith('.js'))){
 }
 console.log('PASS all browser JavaScript parses.');
 const wasm=readFileSync(join(dist,'game/pvz-portable.wasm'));
-assert.equal(sha(wasm),'a3c8539b728ce0dbee3868f5375e0622d8cac2f3ac78b0e34f1d86cd364a5e71');
+assert.equal(sha(wasm),'8207dcd75c93e999e31b520c41b88d9e4024277b1a043a77918b53379ec6c7e1');
 assert(WebAssembly.validate(wasm),'Engine WASM validates');
 const glue=readFileSync(join(dist,'game/pvz-portable.js'),'utf8');
 assert.equal(sha(glue),'3efa16733b86653613e71e55bd160432c149fbb735c66d01a87c1685e1190e38');
 const provenance=JSON.parse(readFileSync(join(dist,'game/engine-provenance.json'),'utf8'));
-assert.equal(provenance.id,'0.2.6-web-rally.1');
+assert.equal(provenance.id,'0.2.6-web-rally.2');
 assert.equal(provenance.artifacts.jsSha256,sha(glue));
 assert.equal(provenance.artifacts.wasmSha256,sha(wasm));
-assert.equal(sha(readFileSync(join(dist,'source/pvz-portable-0.2.6-web-rally.1-source.zip'))),provenance.artifacts.sourceSha256);
-assert.equal(sha(readFileSync(join(dist,'source/web-rally.1.patch'))),provenance.artifacts.patchSha256);
-console.log('PASS pinned Rally.1 engine, full corresponding source and patch provenance.');
+assert.equal(sha(readFileSync(join(dist,'source/pvz-portable-0.2.6-web-rally.2-source.zip'))),provenance.artifacts.sourceSha256);
+assert.equal(sha(readFileSync(join(dist,'source/web-rally.2.patch'))),provenance.artifacts.patchSha256);
+console.log('PASS pinned Rally.2 engine, full corresponding source and patch provenance.');
 const html=readFileSync(join(dist,'index.html'),'utf8');
+for(const page of ['index.html','index-port.html'])assert(readFileSync(join(dist,page),'utf8').includes('href="./port.css?v=fullscreen2"'),`${page}: fullscreen shell styles bypass the earlier cache`);
 for(const page of ['index.html','index-port.html'])assert(readFileSync(join(dist,page),'utf8').includes('<span id="engine-build-id">'+provenance.id+'</span>'),`${page}: displayed engine label must match the source manifest`);
 const scriptPaths=[...html.matchAll(/<script[^>]+src="([^"]+)"/g)].map(match=>match[1]);
 const scriptNames=scriptPaths.map(path=>path.split('?')[0]);
@@ -36,7 +37,7 @@ assert.equal(scriptPaths[engineScriptIndex],'./game/pvz-portable.js?v='+provenan
 assert(scriptNames.indexOf('./save-storage-core.js')>=0&&scriptNames.indexOf('./save-storage-core.js')<scriptNames.indexOf('./save-storage.js'),'Worker fallback core must load before the adapter');
 assert(scriptNames.indexOf('./save-storage.js')<scriptNames.indexOf('./loader.js'),'Browser saves must be installed before startup');
 for(const name of ['runtime.js','loader.js','save-storage-core.js','save-storage.js','save-recovery.js']){
-  const version=['runtime.js','loader.js'].includes(name)?'rally1':'polish1';
+  const version=['runtime.js','loader.js'].includes(name)?'rally2':'polish1';
   for(const page of ['index.html','index-port.html'])assert(readFileSync(join(dist,page),'utf8').includes('src="./'+name+'?v='+version+'"'),`${page}: changed browser code must bypass the prior release cache`);
 }
 assert(scriptNames.indexOf('./save-transfer.js')>=0&&scriptNames.indexOf('./save-transfer.js')<scriptNames.indexOf('./loader.js'),'Save transfers must be available before loader controls');
@@ -58,7 +59,7 @@ const assetManifest=JSON.parse(readFileSync(join(dist,'game-assets/manifest.json
 environment.PVZAssetBundle.validateManifest(assetManifest,'https://test.example/game-assets/manifest.json');
 assert.equal(assetManifest.id,provenance.assetBundleId);
 console.log('PASS actual shipping asset manifest validation and matching bundle identity.');
-for(const test of ['tests/audio-controls.mjs','tests/generator-fileless.mjs','tests/bundled-assets.mjs','tests/fileless-startup.mjs','tests/shell-keyboard.mjs','tests/save-storage.mjs','tests/save-worker.mjs','tests/save-recovery.mjs','tests/save-sync.mjs','tests/save-transfer.mjs','tests/zombatar-export.mjs','tests/steam-compat.mjs','tests/test-profile-merge.mjs','tests/native-content.mjs']){
+for(const test of ['tests/audio-controls.mjs','tests/generator-fileless.mjs','tests/bundled-assets.mjs','tests/fileless-startup.mjs','tests/shell-keyboard.mjs','tests/fullscreen-controls.mjs','tests/save-storage.mjs','tests/save-worker.mjs','tests/save-recovery.mjs','tests/save-sync.mjs','tests/save-transfer.mjs','tests/zombatar-export.mjs','tests/steam-compat.mjs','tests/test-profile-merge.mjs','tests/native-content.mjs']){
   const result=spawnSync(process.execPath,[join(root,test)],{encoding:'utf8'});
   if(result.stdout)process.stdout.write(result.stdout);
   assert.equal(result.status,0,result.stderr);

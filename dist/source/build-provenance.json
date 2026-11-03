@@ -1,5 +1,5 @@
 {
-  "id": "0.2.6-web-rally.1",
+  "id": "0.2.6-web-rally.2",
   "upstream": {
     "tag": "0.2.6",
     "commit": "396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
@@ -7,12 +7,12 @@
     "officialJsSha256": "0f2d7425190e49c762f6700b68b080086e3dcb8f2dc5e9724de42ce9fb508573"
   },
   "sourceArchive": {
-    "path": "pvz-portable-0.2.6-web-rally.1-source.zip",
-    "bytes": 21343650,
-    "sha256": "a37ba37528139bc38df887a027c7c54aadfb2065897f32a48a556b3dc15df63e",
-    "crc32": "164abc1c",
-    "entries": 901,
-    "uncompressedBytes": 53183095
+    "path": "pvz-portable-0.2.6-web-rally.2-source.zip",
+    "bytes": 21354025,
+    "sha256": "8d7c3d5a54bdebb57d36cd1b8a6d33f87ca68e7c0b39c905838f1a83173f8b82",
+    "crc32": "364dc8ea",
+    "entries": 902,
+    "uncompressedBytes": 53212953
   },
   "artifacts": [
     {
@@ -23,102 +23,37 @@
     },
     {
       "path": "build/pvz-portable.wasm",
-      "bytes": 7684169,
-      "sha256": "a3c8539b728ce0dbee3868f5375e0622d8cac2f3ac78b0e34f1d86cd364a5e71",
-      "crc32": "d1d930af"
+      "bytes": 7684540,
+      "sha256": "8207dcd75c93e999e31b520c41b88d9e4024277b1a043a77918b53379ec6c7e1",
+      "crc32": "dffa2c7b"
     },
     {
       "path": "build/ProjectVersion.h",
       "bytes": 191,
-      "sha256": "c230a98aaa377b517058ffe5b425da69ac9c792edc499552c825fd048251f3a9",
-      "crc32": "418db457"
+      "sha256": "3bd9e4d48f8eecdf00b8ae8b5fb8917ac832dbfbc74ac7ef8c00a8fdbde50c1a",
+      "crc32": "e5f33692"
     }
   ],
   "sourceFiles": 824,
-  "sourceBytes": 25645394,
-  "sourceDeltaVsChain1": [
+  "sourceBytes": 25646182,
+  "sourceDeltaVsRally1": [
     {
       "path": "CMake/ProjectVersion.cmake",
-      "beforeSha256": "abe2015dd85b56328616182909bd6d07861e1ce65fcf7ee0cf66bdcbc1b27cd3",
-      "afterSha256": "a0cc2e6e5c78498b6056af272bb796a987b2ccebadb18034fc4f527c38bdb498"
-    },
-    {
-      "path": "src/ConstEnums.h",
-      "beforeSha256": "bf7629c481222f2b17982a8a0861db4185c0c81b40811672e150d2f5be6058d2",
-      "afterSha256": "7aba81f7ff36b40be4261bf700880e4abe9e11178b1e71c3e81e421175546f60"
+      "beforeSha256": "a0cc2e6e5c78498b6056af272bb796a987b2ccebadb18034fc4f527c38bdb498",
+      "afterSha256": "0927904b131603ee8144d6a810e6911d71e0c2f2b4a5eb3d7e19a5c4e65aa3cf"
     },
     {
       "path": "src/Lawn/Board.cpp",
-      "beforeSha256": "d158edb7a360d27d1c1dcc1676d75a7e85c71393fcbd0ac76008fa0ffcd4d169",
-      "afterSha256": "8fbd5969ff8996a45b889e3bac5846d81fdf8c66a037225b6df205853587fa65"
-    },
-    {
-      "path": "src/Lawn/Challenge.cpp",
-      "beforeSha256": "f4584eda435ef15bbd14f39c155b4a0f74830b475bba0948613e99595fa9685c",
-      "afterSha256": "3ac7fd6aad15c3e63a6fed3a2d09071daa3bd68c3e5e298cc82fd361939657b8"
-    },
-    {
-      "path": "src/Lawn/Challenge.h",
-      "beforeSha256": "1e65bfb51c9978ede356e01a026d897a415ca2d36e44677d865ec44276aa46fa",
-      "afterSha256": "35fb912d35db7788fcd2d3d71099cb6fdd1313964b57e11fcfc06dd458053936"
-    },
-    {
-      "path": "src/Lawn/System/BonusChallenge.h",
-      "beforeSha256": "43ec2558d1205098ac2389307ecc227959bda40dd68452c3de746196dfb756a5",
-      "afterSha256": "5414d3c00e792bb92314e233957d5aac423a2c307a386011d3dce71bd82267cc"
+      "beforeSha256": "8fbd5969ff8996a45b889e3bac5846d81fdf8c66a037225b6df205853587fa65",
+      "afterSha256": "6996143c45dd1dbee6f5d9a092d7d05c3b1ea9b72b79c8fb0ce5ac44bf8fa31c"
     },
     {
       "path": "src/Lawn/System/RallyPresentation.cpp",
-      "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "afterSha256": "b4314403ff6ad427d24665b8d89b8950b3bf5a3be418c513142a9bb3d4186695"
-    },
-    {
-      "path": "src/Lawn/System/RallyPresentation.h",
-      "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "afterSha256": "86bcb4ea530a66dbb89b41f999c0ba099aef6b4458da88d2b9fef4e7a45e4132"
-    },
-    {
-      "path": "src/Lawn/System/RallyZombie.cpp",
-      "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "afterSha256": "c0fad9085797598e96c6f73984a3f9b86e4cf4ee52269d882b49a62ea3d2e26f"
-    },
-    {
-      "path": "src/Lawn/System/RallyZombie.h",
-      "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "afterSha256": "2489063a911f2521483a6932a55146bdb1044ae6482a73236e39ccfe1fe41f5f"
-    },
-    {
-      "path": "src/Lawn/System/ReanimationLawn.cpp",
-      "beforeSha256": "c0e2e2a785d7913f457264df6d1d42d050582bca15c9e7a4574b4bea8035d79a",
-      "afterSha256": "8fd681576add544b797fe6d5b6faeecde671f8180d7548df4a337a6b85e35ebc"
-    },
-    {
-      "path": "src/Lawn/Widget/AlmanacDialog.cpp",
-      "beforeSha256": "8d0d1034f990f2bc869389818f7f6369ec37947464b82579d784c1f8791041a1",
-      "afterSha256": "069056c348b80a52ab454cdfff9b2632d773089c2e7fa45f4ebd6094c90cdda3"
-    },
-    {
-      "path": "src/Lawn/Widget/AlmanacDialog.h",
-      "beforeSha256": "e3f69c89f42982fd940f19bed0afa0fe1a01467382000917f3642f7dbc257097",
-      "afterSha256": "197489e4a9b83345946d4cf124f675c3ff9348211acf01b66d5112f85578c5c5"
-    },
-    {
-      "path": "src/Lawn/Widget/ChallengeScreen.cpp",
-      "beforeSha256": "a580ec341b44cb5cc838be0a22e4c6731f45bb3f2318f784346836e96e32b22d",
-      "afterSha256": "65b1dbda0bf10a6f8865e10d63e35f8f97d1c99bbf346b8e47999f5f30294f55"
-    },
-    {
-      "path": "src/Lawn/Zombie.cpp",
-      "beforeSha256": "bfcd281412b7e264e1af2904f354d4421cb54c274329b7c29ffcd565311b0462",
-      "afterSha256": "ba411d42019d3f089c2e96ffe50126cebe16550b480881eb2ecb58e3961ca371"
-    },
-    {
-      "path": "src/LawnApp.cpp",
-      "beforeSha256": "1e261be3607cf7c84a1861c3c247029a60739c7e2a22affc350a2001d77e802e",
-      "afterSha256": "360d6b9cedbc5a27721263db4b91a4e1825255f737bbea1ced83594ca8f1b300"
+      "beforeSha256": "b4314403ff6ad427d24665b8d89b8950b3bf5a3be418c513142a9bb3d4186695",
+      "afterSha256": "e9ec2dc36168fc730cc0cf308e4ed3f9b3942e556bb5254ff660cd58c629daed"
     }
   ],
-  "compiledVersionHeader": "// Generated from CMake/ProjectVersion.h.in by CMake; do not edit.\r\n#pragma once\r\n\r\n#define PVZP_VERSION \"0.2.6-web-rally.1\"\r\n#define PVZP_BUILD_NUMBER 1\r\n#define PVZP_COMMIT_DATE \"unknown\"\r\n",
+  "compiledVersionHeader": "// Generated from CMake/ProjectVersion.h.in by CMake; do not edit.\r\n#pragma once\r\n\r\n#define PVZP_VERSION \"0.2.6-web-rally.2\"\r\n#define PVZP_BUILD_NUMBER 1\r\n#define PVZP_COMMIT_DATE \"unknown\"\r\n",
   "checks": {
     "fullRelease": {
       "exitCode": 0,
@@ -132,28 +67,28 @@
       "receipt": {
         "path": "logs/build-result.json",
         "bytes": 580,
-        "sha256": "01f4f71eba061dd53d9354fdb27160724ad5d56f5bd52c0b4d22fcdca64b3dce",
-        "crc32": "6eff92bd"
+        "sha256": "2882b977df35c0e3cc5e805b1d2cc522b0130ebfbcfef8ff7b1ea24f6a08cd91",
+        "crc32": "e36f8e46"
       }
     },
     "focusedNativeTests": {
       "status": "PASS focused native production tests",
       "failures": 0,
-      "checks": 437949,
+      "checks": 438561,
       "scope": "Extracted production tests plus complete linked-engine Care, Chain Reaction and Rally Point scenarios, rally state, save/continue, speed parity and original regressions. Audio output is disabled.",
       "reports": [
         {
           "path": "tests/game-speed-results.json",
           "bytes": 1603,
-          "sha256": "ad89c635b88904e35d180a4aa39669fc95625c5da9a6bd6b9d843491bcb3cb90",
-          "crc32": "6ffc9f26",
+          "sha256": "0641201e788bd1bf8242d32d1a7dab7e80598358f09adfd53e3ca7533ad751c2",
+          "crc32": "4f91b9a8",
           "checks": 66
         },
         {
           "path": "tests/qol-controls-results.json",
           "bytes": 1687,
-          "sha256": "5d6f9c7ab9cb98a4846534f1257ffdef7d7db707df64f512f04106e5fad64a61",
-          "crc32": "ffc75ff4",
+          "sha256": "786f6d704a04d363c8dd3eadaa5ef8dbf8b6596891288486a593fd8474fbbd97",
+          "crc32": "678f8352",
           "checks": 90
         },
         {
@@ -166,8 +101,8 @@
         {
           "path": "tests/bonus-challenge-results.json",
           "bytes": 2315,
-          "sha256": "31a4015ed50020d10cc31a07c502edf0ec9e947326d36415e9b07c46dcb2d466",
-          "crc32": "13e363c9",
+          "sha256": "605275e6a82c23f2d332510cc24002dba851fec4220082dec6671d7e639815be",
+          "crc32": "9f9963cd",
           "checks": 387
         },
         {
@@ -180,29 +115,29 @@
         {
           "path": "tests/night-shift-results.json",
           "bytes": 2102,
-          "sha256": "8839a6b6f8a2f36e2dac13b967c88d8b699d55b4ee34749373c7240df4ec72d8",
-          "crc32": "cc520009",
+          "sha256": "373715c0d8806dfb9d258ccfaf37cffb5dd1e0d7efd7966c76c228b855a3dd7d",
+          "crc32": "64b0aa47",
           "checks": 231
         },
         {
           "path": "tests/lantern-shroom-results.json",
           "bytes": 5419,
-          "sha256": "b6c8b439859210c3642e5765d7cbf49572752b816e2d2e2cfb4ad96568b7f91c",
-          "crc32": "deb17ed4",
+          "sha256": "cbfc53e098954bab51bedd8ca70ba345eb3bc8a96363c977ebafd4723a456a74",
+          "crc32": "183675d6",
           "checks": 548
         },
         {
           "path": "tests/garden-shuffle-results.json",
           "bytes": 2699,
-          "sha256": "756cb1a24a49ee0722040b5ff11b3d999446cd81bb5261e824155fe73faa7bb0",
-          "crc32": "9a2dbb5a",
+          "sha256": "270eea584f2870e99a7cf2e646597e22cb117b9fa2e7dd0531c8a92baa3d5b04",
+          "crc32": "c01f278d",
           "checks": 214
         },
         {
           "path": "tests/seed-swap-results.json",
           "bytes": 2660,
-          "sha256": "5047a9982cf6978e151ab0aa81e5bd3cfae2137b0cc9b51346c03852077c5262",
-          "crc32": "603d60c2",
+          "sha256": "c889de0ba38acf7a76a4e690da8846d822e2a12fe5c97f407bcaa76f7ee4a5bb",
+          "crc32": "e9052180",
           "checks": 587
         },
         {
@@ -215,44 +150,44 @@
         {
           "path": "tests/intensive-care-results.json",
           "bytes": 3525,
-          "sha256": "6a6eb0db79c431bd91fede24359153896f106daefc7fc781dd81c3a12034c577",
-          "crc32": "0ea19b22",
+          "sha256": "303fb67dd2a7214a632bb13461ec384b9ce637639a22dfd90ba07699aefec8d7",
+          "crc32": "69413b94",
           "checks": 1135
         },
         {
           "path": "tests/native-layout-results.json",
           "bytes": 5852,
-          "sha256": "31de7b22ec2d9b6b1b181ad595086f3001e5f760ce8d78b32eb434d37e220cd2",
-          "crc32": "a63d5306",
+          "sha256": "59ee8747ec1132ece9387035062f055cf4fb37a877b450df0dc8115050c135f1",
+          "crc32": "382c4f55",
           "checks": 7947
         },
         {
           "path": "tests/care-fatigue-results.json",
           "bytes": 1225,
-          "sha256": "50d0906749f7b13133e52253ea4dc5729aa144373b546bc2efd5aa290d36a47b",
-          "crc32": "4d1342b0",
+          "sha256": "be57a67b8cda5d72658819c6239b5f4b2a1a874c00a4bd567dcd9aeadcb581a7",
+          "crc32": "a904a52d",
           "checks": 25042
         },
         {
           "path": "tests/care-full-run-results.json",
           "bytes": 151765,
-          "sha256": "265d495f85f28827e0481dcc3911c6cb5f1a1cc14aa672eaa6157b30b07d0f71",
-          "crc32": "d58cb2f0",
+          "sha256": "bd8555a2ae36ee14d23b8cfa893415c5151c08dafe312b290dbe0e031a9c84c2",
+          "crc32": "6e43dc31",
           "checks": 976
         },
         {
           "path": "tests/chain-reaction-results.json",
           "bytes": 162332,
-          "sha256": "6a3f1248c663fea7942ce0390391e0a111543e923c72eecee14b553a6070b848",
-          "crc32": "db6a0e61",
+          "sha256": "bb80977667c9c0c8afa82912b2183cc66d43d6f9d9567a4c664257093516965d",
+          "crc32": "b5962e7e",
           "checks": 81303
         },
         {
           "path": "tests/rally-zombie-results.json",
-          "bytes": 152941,
-          "sha256": "a4c793091a5d4197a63636687d0c56fa8d50ec6ab11699aa9ffdfd6baf118b2c",
-          "crc32": "ffa95c09",
-          "checks": 317354
+          "bytes": 153944,
+          "sha256": "edbf6286b059431336282d6ccb6fe6d3d7eca331cc49dc5982d7f95016c143ff",
+          "crc32": "4f0702a4",
+          "checks": 317966
         }
       ]
     },
@@ -263,7 +198,7 @@
         "everySourceByteMatches": true,
         "sourceFiles": 824
       },
-      "chain1": {
+      "rally1": {
         "gitApplyCheck": "PASS",
         "gitApply": "PASS",
         "everySourceByteMatches": true,
@@ -272,23 +207,23 @@
     }
   },
   "combinedPatch": {
-    "path": "web-rally.1.patch",
-    "bytes": 14311893,
-    "sha256": "bbccf072ee001c5c847dc0629376534ec26f7a2c86991898469b650a4df8c47f",
-    "crc32": "c537a802",
+    "path": "web-rally.2.patch",
+    "bytes": 14312970,
+    "sha256": "246d6236ef04a453b0cba978ee3012aab68651ae227f329fc090674093d322e0",
+    "crc32": "37b65f66",
     "sourcePaths": 113
   },
   "incrementalPatch": {
-    "path": "chain1-to-rally1.patch",
-    "bytes": 47188,
-    "sha256": "5865fb38743c7cc0f879301f71b8f104c30dfb49f461dbcda5a4dbbfd3f984db",
-    "crc32": "2c2123b1",
-    "sourcePaths": 16
+    "path": "rally1-to-rally2.patch",
+    "bytes": 3288,
+    "sha256": "7bc77b0b37784b38d6ec4a247bb389a589a5146cf884ddeeaa330a1e31476474",
+    "crc32": "95c5c35b",
+    "sourcePaths": 3
   },
   "parent": {
-    "id": "0.2.6-web-chain.1",
-    "sourceArchiveSha256": "2794ff25f7427a2d3c1032bb9e2671f5b425701d7944d274f7c94e26ffb132a7",
-    "releaseManifestSha256": "c84fa8bdef5401ba81019b2ef067c4216f224c473df8c3b3b3a25af7d97d1caa",
+    "id": "0.2.6-web-rally.1",
+    "sourceArchiveSha256": "a37ba37528139bc38df887a027c7c54aadfb2065897f32a48a556b3dc15df63e",
+    "releaseManifestSha256": "fd973815a1d81926b9f10157bd584c3395c8b06a6efed40705ca9cbbeb5d6355",
     "scope": "Complete historical parent engine metadata is preserved in the parent property of engine-provenance.json."
   },
   "limits": [

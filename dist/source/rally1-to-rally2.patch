@@ -1,0 +1,65 @@
+diff --git a/CMake/ProjectVersion.cmake b/CMake/ProjectVersion.cmake
+index 694adf523dbc2d17f3e0bf77fe5604dd304e5825..ba952a1476e85c47f6d3d8cf6709a237b47faba0 100644
+--- a/CMake/ProjectVersion.cmake
++++ b/CMake/ProjectVersion.cmake
+@@ -66,6 +66,6 @@ if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
+ endif()
+ 
+ # Browser release identity; keep binary and corresponding-source manifests aligned.
+-set(PVZP_VERSION "0.2.6-web-rally.1")
++set(PVZP_VERSION "0.2.6-web-rally.2")
+ set(PVZP_VERSION_PLAIN "0.2.6")
+ configure_file("${PROJECT_SOURCE_DIR}/CMake/ProjectVersion.h.in" "${PROJECT_BINARY_DIR}/ProjectVersion.h" @ONLY)
+diff --git a/src/Lawn/Board.cpp b/src/Lawn/Board.cpp
+index 4f579ecf53d725c7a4fc32ef8d8150d2e95ba615..0ab2e2f5e1739540184414d4d73a7ef6f73ef431 100644
+--- a/src/Lawn/Board.cpp
++++ b/src/Lawn/Board.cpp
+@@ -188,6 +188,10 @@ Board::Board(LawnApp* theApp)
+ 	mAdvice = std::make_unique<MessageWidget>(mApp);
+ 	mBackground = BackgroundType::BACKGROUND_1_DAY;
+ 	mMainCounter = 0;
++	// Fresh Survival wave selection queries completed flags before InitZombieWaves
++	// resets these counters. Do not let recycled board memory choose its difficulty.
++	mCurrentWave = 0;
++	mTotalSpawnedWaves = 0;
+ 	mBoardUpdateCounter = 0;
+ 	mTutorialState = TutorialState::TUTORIAL_OFF;
+ 	mTutorialTimer = -1;
+diff --git a/src/Lawn/System/RallyPresentation.cpp b/src/Lawn/System/RallyPresentation.cpp
+index e00f15fef3af91086ae2158fa7cd4518048a5565..ce50e605692fa845c8ef316db59aa2d59857afe7 100644
+--- a/src/Lawn/System/RallyPresentation.cpp
++++ b/src/Lawn/System/RallyPresentation.cpp
+@@ -170,12 +170,27 @@ void DrawRig(Sexy::Graphics* graphics, Reanimation& carrier, bool rallying,
+         auto& track=arms.mTrackInstances[index];
+         track.mRenderGroup=(i==0 || hasArm) ?
+             (i==2 ? kHandRenderGroup : RENDER_GROUP_NORMAL) : RENDER_GROUP_HIDDEN;
+-        carrier.GetCurrentTransform(original,&track.mBlendTransform);
+-        track.mBlendTime=100;
+-        track.mBlendCounter=lift>0 ? static_cast<int>((1.0f-lift)*100) : 0;
+-        track.mImageOverride=carrier.mTrackInstances[original].mImageOverride;
+-        track.mShakeX=0;
+-        track.mShakeY=i>0 ? lift*11.0f : 0.0f;
++        const auto& source=carrier.mTrackInstances[original];
++        if (lift>0)
++        {
++            carrier.GetCurrentTransform(original,&track.mBlendTransform);
++            track.mBlendTime=100;
++            track.mBlendCounter=static_cast<int>((1.0f-lift)*100);
++            track.mShakeX=0;
++            track.mShakeY=i>0 ? lift*11.0f : 0.0f;
++        }
++        else
++        {
++            // The body can still be blending from walking into eating or
++            // death. Keep that original transition instead of jumping the
++            // visible arm and held prop directly to the new raw frame.
++            track.mBlendTransform=source.mBlendTransform;
++            track.mBlendTime=source.mBlendTime;
++            track.mBlendCounter=source.mBlendCounter;
++            track.mShakeX=source.mShakeX;
++            track.mShakeY=source.mShakeY;
++        }
++        track.mImageOverride=source.mImageOverride;
+     }
+     // The upper sleeve and original skin/hand pieces are the actual game's
+     // drawing tracks, blended into its reaching pose rather than replacement art.

@@ -96,7 +96,7 @@ loader=loader.slice(0,loader.indexOf(exitStart))+`window.onGameExit=async functi
   gameStarted=false;
   if(saveSyncIntervalId!==null){clearInterval(saveSyncIntervalId);saveSyncIntervalId=null;}
   if(document.fullscreenElement)document.exitFullscreen().catch(()=>{});
-  document.getElementById('canvas-container').style.display='none';
+  document.getElementById('game-viewport').style.display='none';
   document.getElementById('upload-screen').style.display='';
   document.body.classList.remove('game-mode');
   document.body.classList.add('upload-mode');
@@ -123,6 +123,11 @@ loader=loader.slice(0,loader.indexOf(exitStart))+`window.onGameExit=async functi
     loadStatus.appendChild(retry);
   }
 }\n`;
+// The native fullscreen target also contains browser controls. Hide only the
+// inner game viewport during startup/error/save management, keeping those
+// controls and modal focus targets available in every shell state.
+loader=replaceOnce(loader,'document.getElementById("canvas-container").style.display="flex"','document.getElementById("game-viewport").style.display="flex"');
+loader=replaceOnce(loader,'document.getElementById("canvas-container").style.display="none"','document.getElementById("game-viewport").style.display="none"');
 // Transfer native bytes without losing the root registry or misrouting wrapped
 // userdata directories. Persistence/exit routines above remain independent.
 loader=replaceBetween(loader,'async function exportSaves(){','async function importSaves(',`async function exportSaves(){
@@ -176,7 +181,8 @@ for(const path of ['dist/index.html','dist/index-port.html']){
   if(/id="(?:file-input|resource-zip-input|browse-folder-btn|browse-zip-btn|files-btn|cache-forget)"/.test(html))throw new Error('Fileless browser shell input required: '+path);
   if(!html.includes('<script src="./bundled-assets.js"></script>'))throw new Error('Bundled asset loader missing from '+path);
   const revised=html.replace(/src="\.\/game\/pvz-portable\.js(?:\?v=[^"]*)?"/,'src="./game/pvz-portable.js?v='+engine.artifacts.jsSha256.slice(0,12)+'"')
-    .replace(/src="\.\/(runtime|loader)\.js(?:\?v=[^"]*)?"/g,'src="./$1.js?v=rally1"')
+    .replace(/href="\.\/port\.css(?:\?v=[^"]*)?"/,'href="./port.css?v=fullscreen2"')
+    .replace(/src="\.\/(runtime|loader)\.js(?:\?v=[^"]*)?"/g,'src="./$1.js?v=rally2"')
     .replace(/href="\.\/source\/[^"]+" download>Engine source/,'href="'+sourceHref+'" download>Engine source')
     .replace(/(<span id="engine-build-id">)[^<]*(<\/span>)/,'$1'+engine.id+'$2')
     .replace(/(<span id="engine-build-id">[^<]*<\/span>)[^<]*(?= © 2026)/,'$1 '+engine.caption);

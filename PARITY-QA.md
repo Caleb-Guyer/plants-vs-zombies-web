@@ -1,5 +1,20 @@
 # Browser parity and QA record
 
+## Rally.2 - bounded maintenance validation
+
+Current engine: `0.2.6-web-rally.2`. All **16 native suites** passed, **438,561 checks**, zero failures. Reports authenticate the exact normal production build. The retained complete-engine matrices cover 18 Care cases, 24 five-board Chain Reaction cases and 20 Rally cases (12 wins, four genuine unattended losses and four separately labeled synthetic control cases).
+
+The Rally controls add 96 comparisons of actual rendered arm transitions to the original rig, with 96 rejected legacy-snap controls. Sixteen poisoned actual Board constructions verify both fresh wave counters are zero before use. The fourteen accepted Rally presentation fixtures remain byte-for-byte identical. Existing art, actor layouts, serializers, IDs and authored balance are unchanged.
+
+A separate private stock-game audit compared eight original environments at native 1x and 2x for 12,000 simulation ticks per case on one fixed seed: day, night, pool, fog, roof, original bowling, Raining Seeds and Survival. Seven environments matched unchanged historical engine traces. Survival exposed the old undefined startup counters; the repaired natural startup matches the old engine with only those two fresh counters explicitly defined as zero. Across the 16 comparisons, 144,016 selected per-update digest pairs matched. Raining Seeds had zero placements and covers unattended progression only. These partial traces are retained locally and are **not an additional CI suite**, full wins or proof of identical rendering.
+
+The fifteen browser integration suites include actual HTML ancestry checks tied to the authenticated native fullscreen selector, the exact published-parent negative fixture, and misplaced loading/toolbar controls. Existing keyboard, audio, startup, failure, save transfer and rollback checks remain active.
+
+Browser/presentation scope: An isolated http://127.0.0.1:4232/?testing=1 preview preserved public-origin saves. All browser tests remained muted; repeated accessibility states showed Unmute sound checked (Value 1). The exact published parent HTML reproduced missing utility controls after entering fullscreen through native Options. The native Full Screen checkbox and expanded viewport established actual fullscreen; a read-only DOM fullscreenElement query was inconclusive and is not evidence. With the revised shell and the unchanged native fullscreen API, all five existing toolbar buttons remained visible in native fullscreen. More opened a visible modal; Import opened the save confirmation and was canceled without importing files. The fullscreen icon restored the ordinary viewport. Those before/after fullscreen checks used the published Rally.1 native engine, whose Window.cpp fullscreen implementation is unchanged in Rally.2. Their screenshots document the shell fix rather than claiming a separate Rally.2 battle test. A final normal Rally.2 Release startup loaded the canvas without a game-file import. The Information panel showed 0.2.6-web-rally.2 and its matching source link; the original title screen remained clear at 1280 by 720. Error-level console capture was empty. Automated shell fixtures separately exercise startup, failure and return-to-files visibility. No pre-engine More-dialog interaction, uninterrupted browser battle win, public-save migration or browser frame-time benchmark is claimed. Owned preview tabs were closed, with no viewport override or browser settings changed.
+
+These are bounded regressions and visual checks, not exhaustive original-game parity or a frame-time benchmark. Testing disables sound; ordinary game audio remains available.
+
+
 ## Rally.1 - bounded Rally Zombie validation
 
 Current engine: `0.2.6-web-rally.1`. All **16** native suites passed, **437,949** checks, zero failures. Every report authenticates current production inputs. The silent complete-engine Rally backend links the same production objects used by the normal browser build and retained Care/Chain drivers; no simulated combat fallback is used.

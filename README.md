@@ -1,5 +1,12 @@
 # Plants vs. Zombies — browser playtest
 
+## Rally.2 - animation, Survival startup and fullscreen repairs
+
+`0.2.6-web-rally.2` preserves Rally Zombie's native arm blending during walk, eat and death transitions. Fresh Survival boards now initialize their wave counters before choosing waves, removing an allocator-dependent difficulty change. Fullscreen keeps the existing discreet sound, save and information controls available, including their dialogs.
+
+All sixteen muted native suites passed (438,561 checks), along with the fifteen browser integration suites. Original artwork, authored challenge balance, saved layouts and content IDs are unchanged. See [QA scope](PARITY-QA.md) and [release receipts](DEPLOYMENT.md).
+
+
 ## Rally.1 - Rally Zombie
 
 `0.2.6-web-rally.1` adds **Rally Zombie** and **Rally Point** under **Mini-Games > Bonus**. The megaphone carrier periodically rallies nearby walkers; killing or freezing the caller interrupts its shout. Overlapping callers do not stack their speed boosts. A new native Almanac entry explains its behavior.

@@ -1,5 +1,20 @@
 # GitHub Pages release: Caleb-Guyer/plants-vs-zombies-web
 
+## Rally.2 - tested maintenance release inputs
+
+Current engine: `0.2.6-web-rally.2`.
+
+- Normal JavaScript SHA-256: `3efa16733b86653613e71e55bd160432c149fbb735c66d01a87c1685e1190e38`.
+- Normal WebAssembly SHA-256: `8207dcd75c93e999e31b520c41b88d9e4024277b1a043a77918b53379ec6c7e1`.
+- Corresponding source: `pvz-portable-0.2.6-web-rally.2-source.zip`, 21,354,025 bytes, 902 entries, SHA-256 `8d7c3d5a54bdebb57d36cd1b8a6d33f87ca68e7c0b39c905838f1a83173f8b82`.
+- Published Rally.1 parent source SHA-256: `a37ba37528139bc38df887a027c7c54aadfb2065897f32a48a556b3dc15df63e`.
+- Full and incremental patches: `web-rally.2.patch`, `rally1-to-rally2.patch`. Both reconstruct every current production byte.
+- Native suites: 16; 438,561 checks, zero failures. The normal build receipt records all 824 production files unchanged during compilation; the three full-engine test backends bind that exact receipt.
+- Browser integration suites: 15. Native Options fullscreen was visually compared before/after the shell repair, and final Rally.2 startup was checked muted.
+
+Push and manual Pages publication use the existing workflow. It reruns source/browser checks, the sixteen native suites and authenticated asset verification before deployment. The bounded stock trace audit is private characterization, not a workflow step. Final deployment identity, public-byte comparisons and screenshot identities remain in local release evidence.
+
+
 ## Rally.1 - tested release inputs
 
 Current engine: `0.2.6-web-rally.1`.

@@ -92,6 +92,8 @@ console.log('PASS interval, visibility, pagehide and unload flush errors are cau
 const exit = browser();
 const earlier = exit.flush();
 const leaving = exit.exit(); await exit.exit();
+assert.equal(exit.elements.get('game-viewport').style.display, 'none', 'Native exit hides only the game viewport');
+assert.equal(exit.elements.get('canvas-container')?.style.display, undefined, 'Native exit leaves browser controls in a visible shell');
 assert.equal(exit.pending.length, 1); assert.equal(exit.timers.length, 0);
 exit.finish(); await turns();
 assert.equal(exit.pending.length, 1); assert.equal(exit.timers.length, 0, 'No reload before final queued sync');
@@ -104,6 +106,8 @@ console.log('PASS native onGameExit waits for its final queued flush and schedul
 const exitFailure = browser();
 const leavingWithFailure = exitFailure.exit();
 exitFailure.finish(new Error('disk unavailable')); await leavingWithFailure;
+assert.equal(exitFailure.elements.get('game-viewport').style.display, 'none');
+assert.equal(exitFailure.elements.get('canvas-container')?.style.display, undefined, 'Failed exit keeps the retry/save management shell visible');
 assert.equal(exitFailure.timers.length, 0); assert.equal(exitFailure.reloads(), 0);
 const status = exitFailure.elements.get('loading-drop-zone');
 assert(status.classList.contains('has-error')); assert.match(status.textContent, /Keep this page open/);
@@ -138,4 +142,6 @@ const started = fallback.context.startGame(); await turns();
 assert.equal(installations, 1); assert.equal(fallback.mounts(), 0); assert.equal(fallback.mainCalls(), 0);
 fallback.finish(); await started;
 assert.equal(hookCalls, 1); assert.equal(fallback.mainCalls(), 1);
+assert.equal(fallback.elements.get('game-viewport').style.display, 'flex');
+assert.equal(fallback.elements.get('canvas-container')?.style.display, undefined, 'Successful start only shows the inner game viewport');
 console.log('PASS fallback restoration completes before beforePvZStart and untouched engine callMain.');

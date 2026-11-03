@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-rally.1
-Adds Rally Zombie and the Rally Point bonus minigame, using the original zombie rig, a temporary non-stacking nearby movement boost and native Almanac/card presentation. Existing game modes, custom plants, recovery poses and saved layouts are retained.
+PvZ-Portable 0.2.6-web-rally.2
+Preserves the original arm animation blends during Rally Zombie eating, walking and death transitions, and initializes fresh Survival wave counters before wave selection. Existing artwork, authored balance values, content and saved layouts are retained.
 Engine JavaScript SHA-256: 3efa16733b86653613e71e55bd160432c149fbb735c66d01a87c1685e1190e38
-Engine WASM SHA-256: a3c8539b728ce0dbee3868f5375e0622d8cac2f3ac78b0e34f1d86cd364a5e71
+Engine WASM SHA-256: 8207dcd75c93e999e31b520c41b88d9e4024277b1a043a77918b53379ec6c7e1
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.

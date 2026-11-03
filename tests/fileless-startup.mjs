@@ -117,6 +117,8 @@ for (const existingSave of [false, true]) {
   assert.equal(page.main(), 0);
   page.finish(true); await page.context.PVZLaunch.ready;
   assert.equal(page.main(), 1);
+  assert.equal(page.el('game-viewport').style.display, 'flex', 'Actual native startup shows only the game viewport');
+  assert.equal(page.el('canvas-container').style.display, undefined, 'Native startup leaves the whole fullscreen shell visible');
   assert.deepEqual(page.files.get('/main.pak'), pak);
   assert.deepEqual(page.files.get('/properties/default.xml'), properties);
   assert(page.events.indexOf('restore-saves') < page.events.indexOf('steam-compat'));
@@ -136,6 +138,19 @@ const retrying = retry.el('retry-load').click();
 await wait(() => retry.pending.some(item => item.populate), 'Retry reaches native save restore');
 retry.finish(true); await retrying; assert.equal(retry.main(), 1);
 console.log('PASS actual visible fetch failure and one-click retry; engine never starts from partial/failed resources.');
+
+{
+  const page = browser(); page.resolveModule();
+  await wait(() => page.pending.some(item => item.populate), 'Startup visibility control reaches native save restoration');
+  page.finish(true, Error('Saved data could not be restored'));
+  await page.context.PVZLaunch.ready;
+  assert.equal(page.main(), 0);
+  assert.equal(page.el('game-viewport').style.display, 'none', 'Actual startup catch hides the failed game viewport');
+  assert.equal(page.el('canvas-container').style.display, undefined, 'Startup failure keeps the browser controls available');
+  page.el('more-btn').click();
+  assert.equal(page.el('more-dialog').open, true, 'More remains usable after failed startup');
+}
+console.log('PASS actual native startup and failure hide only the canvas viewport, leaving save/recovery controls usable.');
 
 const importing = browser({importFirst: true}); importing.resolveModule();
 await importing.context.PVZLaunch.ready;
@@ -157,6 +172,8 @@ importing.el('import-btn').click(); assert.equal(importing.el('return-files-dial
 const leaving = importing.el('return-files-confirm').click();
 assert.equal(importing.reloads(), 0); assert.equal(importing.storage.has('pvz-show-import'), false);
 await wait(() => importing.pending.some(item => !item.populate), 'Live import waits for final durable save flush');
+assert.equal(importing.el('game-viewport').style.display, 'flex', 'Live import keeps the current game behind its dialog until durable reload');
+assert.equal(importing.el('canvas-container').style.display, undefined, 'Save management never hides the fullscreen shell controls');
 importing.finish(false); await leaving;
 assert.equal(importing.reloads(), 1); assert.equal(importing.storage.get('pvz-show-import'), '1');
 assert.equal(input.clicks, 1, 'Live import did not open a resource or save picker against stale native RAM');

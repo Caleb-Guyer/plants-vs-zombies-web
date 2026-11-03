@@ -3,6 +3,7 @@
 import fs from 'node:fs';
 import vm from 'node:vm';
 import assert from 'node:assert/strict';
+import {readShellTree} from './html-structure.mjs';
 
 const source = fs.readFileSync(process.argv[2] || new URL('../dist/launcher.js', import.meta.url), 'utf8');
 const html = fs.readFileSync(new URL('../dist/index.html', import.meta.url), 'utf8');
@@ -33,17 +34,16 @@ function browser() {
   document.parent = windowNode;
   const body = new Node('body', 'body'); body.parent = document; document.body = body;
   const nodes = new Map();
-  for (const match of html.matchAll(/<([a-z]+)[^>]*\bid="([^"]+)"/gi)) {
-    const node = new Node(match[2], match[1]); node.parent = body; nodes.set(node.id, node);
+  const tree = readShellTree(html);
+  for (const [id, element] of tree.ids) nodes.set(id, new Node(id, element.tag));
+  // Use shipping HTML ancestry, including the native fullscreen shell and its
+  // separate game viewport, rather than reconstructing a convenient DOM model.
+  for (const [id, element] of tree.ids) {
+    let parent = element.parent;
+    while (parent && !parent.attributes.has('id')) parent = parent.parent;
+    nodes.get(id).parent = parent ? nodes.get(parent.attributes.get('id')) : body;
   }
   const el = id => { assert(nodes.has(id), `Real HTML contains ${id}`); return nodes.get(id); };
-  const connect = (parent, ...ids) => { for (const id of ids) el(id).parent = el(parent); };
-  connect('save-toolbar', 'fullscreen-btn', 'mute-btn', 'import-btn', 'save-export-btn', 'more-btn');
-  connect('upload-screen', 'drop-zone');
-  connect('drop-zone', 'retry-load');
-  connect('more-dialog', 'more-close', 'upload-save-import-btn', 'upload-save-import-dir-btn', 'upload-save-clear-btn', 'add-test-profiles');
-  connect('return-files-dialog', 'return-files-cancel', 'return-files-confirm');
-  connect('canvas-container', 'canvas');
   document.getElementById = id => nodes.get(id) || null;
   const counters = { fullscreen: 0, exits: 0, resumes: 0, paused: 0, sdl: [], resize: 0 };
   document.fullscreenElement = null;
