@@ -1,5 +1,20 @@
 # GitHub Pages release: Caleb-Guyer/plants-vs-zombies-web
 
+## Raid.3 - live cardboard animation inputs
+
+Current engine: `0.2.6-web-raid.3`. Current custom-plant rigs replace cached snapshots in Rally Raid's original cardboard passes. The native I, Zombie UI fix, shared plant rigs, accepted content, gameplay and saved layouts remain.
+
+- Normal JavaScript: 209,496 bytes, SHA-256 `451f7f209d71a518f0bc9313ae070bddd1f9f4c6e04174e96b912ee90fc74db6`.
+- Normal WebAssembly: 7,703,685 bytes, SHA-256 `5852a90efec452dfaa8abfc54922131ad9a000a468caf956fa6c5c49c791667e`.
+- Published Raid.2 parent source: `pvz-portable-0.2.6-web-raid.2-source.zip`, 23,967,714 bytes, 918 entries, SHA-256 `0bb8e6ae265488e1d1da8b472c10730f0bd17df9a56337c8acc34c4c3911a225`.
+- Production inputs: 828 files; only CMake/ProjectVersion.cmake and RallyRaidPresentation.cpp differ. No source files are added or removed.
+- Corresponding source: `pvz-portable-0.2.6-web-raid.3-source.zip`, 23,994,234 bytes, 919 entries, SHA-256 `dc02a3d87a227e3b6b890cd03894999dea831c62a6d184fc2a0bc281425e51a3`.
+- Full and incremental patches: `web-raid.3.patch` and `raid2-to-raid3.patch`. Both reconstruct all 828 production files byte-for-byte.
+- All 17 muted native suites passed: 1,483,032 checks, zero failures. Raid contributes 1,039,708 checks in 32 scenarios / 16 speed pairs: 24 legal winning runs, four native-UI controls and four plant-animation controls. All eight backend JS/WASM artifacts are authenticated. All 15 browser integration suites passed. Muted private browser inspection confirmed current attack motion and the final Raid.3 Information label with its matching Engine Source URL; error-level console logs were empty.
+
+Every dist/content file, including native-bonus-art.json, is retained byte-for-byte. Existing site-source packaging preserves the pinned Rally.3 native-UI reference. Earlier sections describe their named historical builds.
+
+
 ## Raid.2 - native I, Zombie restoration inputs
 
 Current engine: `0.2.6-web-raid.2`. The release restores the original bank/control and packet-effect routing without changing geometry, artwork, gameplay or save layouts.

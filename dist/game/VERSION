@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-raid.2
-Restores the original I, Zombie UI and packet render routing in Rally Raid: the bank and non-fog Menu/speed controls use the native lower layer, and pick/ready effects use their original layers. Geometry, artwork, puzzle layouts, budgets, combat, IDs and serialized layouts are unchanged.
-Engine JavaScript SHA-256: 149cde88e398e1e3a08ae2d43c77a1eed6701299d783c78ac8a610573c268f0f
-Engine WASM SHA-256: 4262b50e1fc6511565e76039fc6c79814bf4c6619867d2fb8c9a3e1c56f94989
+PvZ-Portable 0.2.6-web-raid.3
+Restores live Chill-shroom and Mender-bloom animation in Rally Raid by drawing their existing current rigs through the native cardboard passes instead of cached static previews. Idle, attack, blink and healing poses use the existing saved plant/carrier state. Native I, Zombie UI routing, artwork, shared normal-mode rigs, puzzle layouts, budgets, combat, IDs and serialized layouts are unchanged.
+Engine JavaScript SHA-256: 451f7f209d71a518f0bc9313ae070bddd1f9f4c6e04174e96b912ee90fc74db6
+Engine WASM SHA-256: 5852a90efec452dfaa8abfc54922131ad9a000a468caf956fa6c5c49c791667e
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.

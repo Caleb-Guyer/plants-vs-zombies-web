@@ -1,5 +1,14 @@
 # Current requirements
 
+## Raid.3 - current cardboard plant rigs
+
+Rally Raid's custom defenders use the existing live Chill-shroom and Mender-bloom rigs for all four native cardboard passes. Current plant counters and the saved carrier phase supply idle, attack, blink and healing poses. The renderer retains the original colors and offsets, restores the carrier filter, and preserves the caller's graphics state. It creates no per-frame image buffers, new clocks or unbounded filter-cache entries.
+
+Only CMake/ProjectVersion.cmake and RallyRaidPresentation.cpp differ from Raid.2 across all 828 production files. Shared normal-mode plant rigs, the native I, Zombie head/UI routing, accepted artwork and all content metadata remain byte-identical. Authored boards, budgets, combat, IDs, unlocks and saved layouts are unchanged.
+
+All seventeen muted native suites passed: 1,483,032 checks, zero failures, along with all fifteen browser integration suites. Raid contributes 1,039,708 checks in 32 scenarios and 16 speed pairs: 24 legal winning runs, four separate native-UI controls and four separate plant-animation controls. The Lantern suite passes 880 checks, retaining its original 548 and adding 332; native layout passes 10,693.
+
+
 ## Raid.2 - native I, Zombie routing
 
 Rally Raid uses the original I, Zombie rendering paths. The bank draws through the normal lower UI path, and non-fog Menu/speed controls draw there too; fog retains the native top path. Tall lawn actors may draw in front of the bank exactly as in I, Zombie. Packet-pick and ready-flash particles use their original render layers.

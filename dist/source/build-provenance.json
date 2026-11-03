@@ -1,5 +1,5 @@
 {
-  "id": "0.2.6-web-raid.2",
+  "id": "0.2.6-web-raid.3",
   "upstream": {
     "tag": "0.2.6",
     "commit": "396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
@@ -7,53 +7,48 @@
     "officialJsSha256": "0f2d7425190e49c762f6700b68b080086e3dcb8f2dc5e9724de42ce9fb508573"
   },
   "sourceArchive": {
-    "path": "pvz-portable-0.2.6-web-raid.2-source.zip",
-    "bytes": 23967714,
-    "sha256": "0bb8e6ae265488e1d1da8b472c10730f0bd17df9a56337c8acc34c4c3911a225",
-    "crc32": "44012210",
-    "entries": 918,
-    "uncompressedBytes": 62006889
+    "path": "pvz-portable-0.2.6-web-raid.3-source.zip",
+    "bytes": 23994234,
+    "sha256": "dc02a3d87a227e3b6b890cd03894999dea831c62a6d184fc2a0bc281425e51a3",
+    "crc32": "75e06654",
+    "entries": 919,
+    "uncompressedBytes": 62115109
   },
   "artifacts": [
     {
       "path": "build/pvz-portable.js",
       "bytes": 209496,
-      "sha256": "149cde88e398e1e3a08ae2d43c77a1eed6701299d783c78ac8a610573c268f0f",
-      "crc32": "abdc88d5"
+      "sha256": "451f7f209d71a518f0bc9313ae070bddd1f9f4c6e04174e96b912ee90fc74db6",
+      "crc32": "40b9cdb9"
     },
     {
       "path": "build/pvz-portable.wasm",
-      "bytes": 7702521,
-      "sha256": "4262b50e1fc6511565e76039fc6c79814bf4c6619867d2fb8c9a3e1c56f94989",
-      "crc32": "86d9ccf7"
+      "bytes": 7703685,
+      "sha256": "5852a90efec452dfaa8abfc54922131ad9a000a468caf956fa6c5c49c791667e",
+      "crc32": "36cacd19"
     },
     {
       "path": "build/ProjectVersion.h",
       "bytes": 190,
-      "sha256": "a22f156af13f583e417b2c11b0fb85f28a51156a175bb3e907119e7d88264168",
-      "crc32": "dd8207ad"
+      "sha256": "be39bc376bddc23b4c480343db8938c137173888e7cdb663ba636eeb1f1aa627",
+      "crc32": "08877bd1"
     }
   ],
   "sourceFiles": 828,
-  "sourceBytes": 25665970,
-  "sourceDeltaVsRaid1": [
+  "sourceBytes": 25666382,
+  "sourceDeltaVsRaid2": [
     {
       "path": "CMake/ProjectVersion.cmake",
-      "beforeSha256": "975fe9242bbade7eb74eee1846c11bcbf3d6572205957c81ebcfa8897d037ebb",
-      "afterSha256": "7fe6ff42860992c5b1e0cdf75ff7fffc989f8b643e914166bf18de298d7fd78c"
+      "beforeSha256": "7fe6ff42860992c5b1e0cdf75ff7fffc989f8b643e914166bf18de298d7fd78c",
+      "afterSha256": "cdb969696da9736795adbc5f9c10e51c30fdd71eecf4405f9408f8d8fe4421a7"
     },
     {
-      "path": "src/Lawn/Board.cpp",
-      "beforeSha256": "f646f6fabad03e985cc766bd50d19529841b1ca62b9fff7011b981e9029b83bf",
-      "afterSha256": "3e70df4c999ef4b26b8649d6ce71689a8478343f8a0429411fc85e00e9f28fcb"
-    },
-    {
-      "path": "src/Lawn/SeedPacket.cpp",
-      "beforeSha256": "26c133d0179f530e2d0f319c0056e146c9e82badfa466d41716e797c4a645e86",
-      "afterSha256": "0f1edf84948d23b13353a4d21a57836dfc308fb3b9fe53318aee3466697b81a5"
+      "path": "src/Lawn/System/RallyRaidPresentation.cpp",
+      "beforeSha256": "73457e7a952c6d44785324582b1e90d41eb9fe70141be192841b89eef275f3cc",
+      "afterSha256": "a17e666d49adfa007746149222cf9e71160e1b75c0931d20c407a281201c0afa"
     }
   ],
-  "compiledVersionHeader": "// Generated from CMake/ProjectVersion.h.in by CMake; do not edit.\r\n#pragma once\r\n\r\n#define PVZP_VERSION \"0.2.6-web-raid.2\"\r\n#define PVZP_BUILD_NUMBER 1\r\n#define PVZP_COMMIT_DATE \"unknown\"\r\n",
+  "compiledVersionHeader": "// Generated from CMake/ProjectVersion.h.in by CMake; do not edit.\r\n#pragma once\r\n\r\n#define PVZP_VERSION \"0.2.6-web-raid.3\"\r\n#define PVZP_BUILD_NUMBER 1\r\n#define PVZP_COMMIT_DATE \"unknown\"\r\n",
   "checks": {
     "fullRelease": {
       "exitCode": 0,
@@ -67,21 +62,21 @@
       "receipt": {
         "path": "logs/build-result.json",
         "bytes": 581,
-        "sha256": "2fe969e2c3fd90800d9ac0292b21a8bc0802dc0b5dc03e7d6fc295703509569d",
-        "crc32": "86e0cc28"
+        "sha256": "092733023a7b71d9c321f887fce0c6b288e2c1aef4849402a17908f8970bf3fe",
+        "crc32": "d625c507"
       }
     },
     "focusedNativeTests": {
       "status": "PASS focused native production tests",
       "failures": 0,
-      "checks": 1474524,
-      "scope": "Extracted production tests plus complete linked-engine Care, Chain Reaction, Rally Point and Rally Raid scenarios, native placement, budgets, save/continue, speed parity and original regressions. Audio output is disabled.",
+      "checks": 1483032,
+      "scope": "Extracted production tests plus complete linked-engine Care, Chain Reaction, Rally Point and Rally Raid scenarios, native placement, budgets, save/continue, speed parity, live custom-plant body animation and original regressions. Audio output is disabled.",
       "reports": [
         {
           "path": "tests/game-speed-results.json",
           "bytes": 1601,
-          "sha256": "ba1c6773fc888f5548b38aecf449190b2617fa6e6b088fc6ea1e4d20897e4d1f",
-          "crc32": "167f5c8b",
+          "sha256": "2d9ca8ded59aee45d9d940e3a8992462b9b51cfb2134793cd57af0c16c405345",
+          "crc32": "4b7156b1",
           "checks": 66
         },
         {
@@ -121,10 +116,10 @@
         },
         {
           "path": "tests/lantern-shroom-results.json",
-          "bytes": 5529,
-          "sha256": "2b73bb589694c7a729036cd7e06596eacfa95c4f2ebfab8ca72354196a6c7c6d",
-          "crc32": "4d30ae59",
-          "checks": 548
+          "bytes": 6594,
+          "sha256": "b8c4c2e8f34846b182a8c5de9ad06ed247a18fdb65efa7006b4755acc3eff074",
+          "crc32": "fb251293",
+          "checks": 880
         },
         {
           "path": "tests/garden-shuffle-results.json",
@@ -157,8 +152,8 @@
         {
           "path": "tests/native-layout-results.json",
           "bytes": 8144,
-          "sha256": "c4f62c5b2e5d1be2e96591d0f530ffd945734f75be4b3372ede6e2d6cae57c96",
-          "crc32": "5a7b493b",
+          "sha256": "7ebad28dc89338e00d1310594c3123df4f7eee825e7b27fd5854e36971aafe42",
+          "crc32": "0bdaab1d",
           "checks": 10693
         },
         {
@@ -171,30 +166,30 @@
         {
           "path": "tests/care-full-run-results.json",
           "bytes": 152521,
-          "sha256": "efe7a9d9c6d6162ea3e8acaefc3aec7ac2c3f6c158b1b5b4d477aa576b43f5ed",
-          "crc32": "c9044448",
+          "sha256": "65fd97846526ca3502a6e2625104cfe1ec9aa2830369bbf3dd88033dd801a718",
+          "crc32": "087d2ccc",
           "checks": 980
         },
         {
           "path": "tests/chain-reaction-results.json",
           "bytes": 163088,
-          "sha256": "b7fb81da7b375f0e1152e5729f3bbb6f7eba2b13e0a0268fbaaf47bbbf55a8dd",
-          "crc32": "4b5bf622",
+          "sha256": "c5b8891b13cce7e65ade1eabd8698c576a665aa0a4f03f19e60544c4424b5e38",
+          "crc32": "52ece8d4",
           "checks": 81307
         },
         {
           "path": "tests/rally-zombie-results.json",
           "bytes": 155464,
-          "sha256": "57ad6a3dfb132ffbb7c850568e93844a57e81a1caa415d3fb93f55240f29b1df",
-          "crc32": "bb68fb78",
+          "sha256": "0571fe24a53dcdba9b2d20c54280d4ff647749f3e7b4d138ff289fb23602cf70",
+          "crc32": "45386cca",
           "checks": 319642
         },
         {
           "path": "tests/rally-raid-results.json",
-          "bytes": 167826,
-          "sha256": "8fb18c50b94b82844e29e7cfb3574ed8d2b927095ebc01f1cc3599f832240496",
-          "crc32": "4f4e49b2",
-          "checks": 1031532
+          "bytes": 175574,
+          "sha256": "c19feefc521dd9130bf7185d27b4499a972e072784146e672ac3a010a1a5b89a",
+          "crc32": "85d749f8",
+          "checks": 1039708
         }
       ]
     },
@@ -205,7 +200,7 @@
         "everySourceByteMatches": true,
         "sourceFiles": 828
       },
-      "raid1": {
+      "raid2": {
         "gitApplyCheck": "PASS",
         "gitApply": "PASS",
         "everySourceByteMatches": true,
@@ -214,27 +209,27 @@
     }
   },
   "combinedPatch": {
-    "path": "web-raid.2.patch",
-    "bytes": 14337142,
-    "sha256": "64400d6c04296908a2aa840856fa5e7db2dae1764c4717bfe8fdfc86987361d7",
-    "crc32": "bd0dc69e",
+    "path": "web-raid.3.patch",
+    "bytes": 14337570,
+    "sha256": "206cfc5ae7848eeff9a35510f4102449bf1b3f48c05fd592e1606cbff4be96fc",
+    "crc32": "78653a44",
     "sourcePaths": 117
   },
   "incrementalPatch": {
-    "path": "raid1-to-raid2.patch",
-    "bytes": 3626,
-    "sha256": "16609686923c93f5e8e7b41b9e3621b73342f054acb40fdcc6415703426ebdda",
-    "crc32": "0ab4bf61",
-    "sourcePaths": 3
+    "path": "raid2-to-raid3.patch",
+    "bytes": 3605,
+    "sha256": "f53345ccd17361fb1e3c2a56b02e7cba908f610ea267bad1d4e0dc2f4918e4b9",
+    "crc32": "0edd48cc",
+    "sourcePaths": 2
   },
   "parent": {
-    "id": "0.2.6-web-raid.1",
-    "sourceArchiveSha256": "50e122044bb767eb9c78cf8c38c9cd48de022f8b3f966b69b3bd29a7bbafdb8c",
-    "releaseManifestSha256": "07dc6281fa83c58a446c2f2784ecbf77514d5a9fb93c31d1be80d70bd675eec6",
+    "id": "0.2.6-web-raid.2",
+    "sourceArchiveSha256": "0bb8e6ae265488e1d1da8b472c10730f0bd17df9a56337c8acc34c4c3911a225",
+    "releaseManifestSha256": "e49ce3d034cbab684bfa26c477a7fed7685726072bc42b7aaf57c7a7287f5294",
     "scope": "Complete historical parent engine metadata is preserved in the parent property of engine-provenance.json."
   },
   "limits": [
-    "All nine Bonus minigames, accepted plant artwork, authored boards, budgets, original IDs, unlock rules and serialized layouts remain unchanged. Rally Raid restores the original I, Zombie bank/control and packet-effect routing without moving or resizing actors or controls. Full original parity remains unverified.",
+    "All nine Bonus minigames, accepted plant artwork, native I, Zombie UI routing, authored boards, budgets, combat, original IDs, unlock rules and serialized layouts remain unchanged. Rally Raid custom defenders use their existing current live rigs through the original cardboard passes, without new animation clocks or per-frame image buffers. Full original parity remains unverified.",
     "Focused production-method tests and build checks do not replace broad game or browser validation.",
     "Earlier results remain historical parent evidence only. No separately image-generated challenge illustrations are active."
   ]

@@ -1,5 +1,12 @@
 # Plants vs. Zombies — browser playtest
 
+## Raid.3 - live custom-plant animation
+
+`0.2.6-web-raid.3` draws Chill-shroom and Mender-bloom from their current live rigs in Rally Raid. Their idle, attack, blink and healing poses now carry through the original cardboard styling instead of using a frozen packet preview.
+
+The native I, Zombie head/UI fix, shared normal-game rigs, artwork, puzzle rules and saves are unchanged. All seventeen muted native suites passed: 1,483,032 checks, zero failures, including direct plant-body animation checks at 1x and 2x. All fifteen browser integration suites passed, and muted browser inspection confirmed the attack motion. Normal game audio remains available. See [QA scope](PARITY-QA.md) and [release receipts](DEPLOYMENT.md).
+
+
 ## Raid.2 - original I, Zombie drawing order
 
 `0.2.6-web-raid.2` restores the original I, Zombie drawing order in Rally Raid. Top-row zombies draw in front of the native bank, and the Menu/speed controls and packet effects use their original layers. Plants, zombies and controls retain their existing positions and sizes.

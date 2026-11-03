@@ -104,6 +104,8 @@ console.log('PASS actual shipping manifest schema and strict resource/URL/part-l
 
 // Execute the default IndexedDB adapter: request success is not durable commit.
 let value, commit, completed = false;
+let signalWriteStarted;
+const writeStarted = new Promise(resolve => { signalWriteStarted = resolve; });
 const databases = [];
 const db = {close() {}, transaction(storeName, mode) {
   assert.equal(storeName, 'bundles'); const transaction = {};
@@ -111,7 +113,7 @@ const db = {close() {}, transaction(storeName, mode) {
     get(key) { assert.equal(key, 'current'); const request = {};
       queueMicrotask(() => { request.result = value; request.onsuccess(); transaction.oncomplete(); }); return request; },
     put(next, key) { assert.equal(key, 'current'); const request = {};
-      queueMicrotask(() => { request.onsuccess(); commit = () => { value = next; transaction.oncomplete(); }; }); return request; },
+      queueMicrotask(() => { request.onsuccess(); commit = () => { value = next; transaction.oncomplete(); }; signalWriteStarted(); }); return request; },
   }); return transaction;
 }};
 const context = vm.createContext({console, Blob, URL, TextEncoder, Uint8Array, AbortController, setTimeout, clearTimeout, crypto: webcrypto,
@@ -122,7 +124,25 @@ const actual = fixture();
 const request = async url => url === base ? {ok: true, json: async () => actual.manifest} :
   {ok: true, arrayBuffer: async () => actual.parts.get(new URL(url).pathname.replace('/game-assets/', '')).buffer};
 const pending = context.PVZAssetBundle.createLoader({fetch: request}).load().then(result => { completed = true; return result; });
-for (let i = 0; i < 100 && !commit; i++) await new Promise(resolve => setImmediate(resolve));
+let writeStartTimer;
+const writeStartTimeout = new Promise(resolve => {
+  writeStartTimer = setTimeout(() => resolve({kind: 'timeout'}), 10000);
+});
+let writeStart;
+try {
+  writeStart = await Promise.race([
+    writeStarted.then(() => ({kind: 'started'})),
+    pending.then(() => ({kind: 'completed'}), error => ({kind: 'failed', error})),
+    writeStartTimeout,
+  ]);
+} finally {
+  clearTimeout(writeStartTimer);
+}
+assert.equal(writeStart.kind, 'started', writeStart.kind === 'failed'
+  ? 'Bundle load failed before the IndexedDB write: ' + writeStart.error
+  : 'Bundle load must reach its IndexedDB write before completing or timing out');
+// Drain the loader's success chain so a request-success/commit regression is visible.
+await new Promise(resolve => setImmediate(resolve));
 assert(commit); assert.equal(completed, false); assert.equal(value, undefined);
 commit(); await pending;
 assert(databases.every(name => name === 'pvz-bundled-assets-v1'), 'Resource adapter never opens the save or legacy imported-resource databases');

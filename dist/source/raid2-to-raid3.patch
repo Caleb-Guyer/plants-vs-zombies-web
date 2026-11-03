@@ -1,0 +1,73 @@
+diff --git a/CMake/ProjectVersion.cmake b/CMake/ProjectVersion.cmake
+index 3e78f89c46b2998e680aaf3a836e6424afa38e1d..3dba70226345e7369f88679b3effe3a254a12a3a 100644
+--- a/CMake/ProjectVersion.cmake
++++ b/CMake/ProjectVersion.cmake
+@@ -66,6 +66,6 @@ if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
+ endif()
+ 
+ # Browser release identity; keep binary and corresponding-source manifests aligned.
+-set(PVZP_VERSION "0.2.6-web-raid.2")
++set(PVZP_VERSION "0.2.6-web-raid.3")
+ set(PVZP_VERSION_PLAIN "0.2.6")
+ configure_file("${PROJECT_SOURCE_DIR}/CMake/ProjectVersion.h.in" "${PROJECT_BINARY_DIR}/ProjectVersion.h" @ONLY)
+diff --git a/src/Lawn/System/RallyRaidPresentation.cpp b/src/Lawn/System/RallyRaidPresentation.cpp
+index f6deb8accac681df9f7bc50faaf5a967081d432d..0975e98db416b7153424af356b524295fd55931c 100644
+--- a/src/Lawn/System/RallyRaidPresentation.cpp
++++ b/src/Lawn/System/RallyRaidPresentation.cpp
+@@ -2,6 +2,9 @@
+ #include "RallyRaidPresentation.h"
+ #include "RallyPresentation.h"
+ #include "RallyRaid.h"
++#include "LanternShroom.h"
++#include "MenderBloom.h"
++#include "../../LawnApp.h"
+ #include "../Plant.h"
+ #include "../Zombie.h"
+ #include "../../Resources.h"
+@@ -85,21 +88,34 @@ Sexy::Image* GetBonusImage()
+ bool DrawCustomPlant(Sexy::Graphics* graphics,Plant& plant)
+ {
+     if (plant.mSeedType!=SEED_LANTERNSHROOM && plant.mSeedType!=SEED_MENDERBLOOM) return false;
+-    Sexy::Image* image=Plant::GetImage(plant.mSeedType);
+-    if (!image) return true;
+-    Sexy::Image* silhouette=FilterEffectGetImage(image,FILTER_EFFECT_WHITE);
++    Reanimation* body=plant.mApp ? plant.mApp->ReanimationTryToGet(plant.mBodyReanimID) : nullptr;
++    if (!body) return true;
++    struct RestoreFilter
++    {
++        Reanimation& body;
++        FilterEffect previous;
++        ~RestoreFilter() { body.mFilterEffect=previous; }
++    } restore{*body,body->mFilterEffect};
+     Sexy::Graphics cutout(*graphics);
+     cutout.SetDrawMode(Sexy::Graphics::DRAWMODE_NORMAL);
+     cutout.SetColorizeImages(true);
+-    // Chill-shroom's existing preview has20px of transparent registration
+-    // padding; Mender-bloom uses its80px plant canvas directly.
+-    const float origin=plant.mSeedType==SEED_LANTERNSHROOM ? -20.0f : 0.0f;
+-    const float x=plant.mShakeOffsetX+origin;
+-    const float y=PlantDrawHeightOffset(plant.mBoard,&plant,plant.mSeedType,plant.mPlantCol,plant.mRow)+plant.mShakeOffsetY+origin;
+-    cutout.SetColor(Sexy::Color(122,86,58));cutout.DrawImageF(silhouette,x+4,y+4);
+-    cutout.SetColor(Sexy::Color(171,135,107));cutout.DrawImageF(silhouette,x+2,y+2);
+-    cutout.DrawImageF(silhouette,x-2,y-2);
+-    cutout.SetColor(Sexy::Color(255,201,160));cutout.DrawImageF(image,x,y);
++    // Reuse the current registered rig and its bounded part/filter images.
++    // The carrier already supplies the live pose, height and shake offsets.
++    const auto drawPass=[&](float offset,const Sexy::Color& color,FilterEffect filter)
++    {
++        cutout.mTransX=graphics->mTransX+offset;
++        cutout.mTransY=graphics->mTransY+offset;
++        cutout.SetColor(color);
++        body->mFilterEffect=filter;
++        if (plant.mSeedType==SEED_LANTERNSHROOM)
++            LanternShroom::DrawPlantRig(&cutout,plant,*body);
++        else
++            MenderBloom::DrawPlantRig(&cutout,plant,*body);
++    };
++    drawPass(4.0f,Sexy::Color(122,86,58),FILTER_EFFECT_WHITE);
++    drawPass(2.0f,Sexy::Color(171,135,107),FILTER_EFFECT_WHITE);
++    drawPass(-2.0f,Sexy::Color(171,135,107),FILTER_EFFECT_WHITE);
++    drawPass(0.0f,Sexy::Color(255,201,160),FILTER_EFFECT_NONE);
+     return true;
+ }
+ 

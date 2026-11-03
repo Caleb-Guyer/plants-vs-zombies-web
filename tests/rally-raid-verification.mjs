@@ -11,6 +11,15 @@ const outcomeFields = ['outcome','boardsSolved','brainsConsumed','legalPlacement
 const hudFields = ['outcome','syntheticUIControls','hudOracle','nativeIZMode',
   'nativeIZSamples','nativeIZFullFrameSamples','nativeIZTopBandSamples','nativeIZMismatchPixels',
   'nativeIZHeadTypes','nativeIZHeadSamples','foregroundRegressionNegatives','nativePauseSamples'];
+const controlNames=['hud-controls','plant-animation-controls'];
+const phaseLabels=['idle-a','idle-b','idle-c','windup-early','windup-late','release','recoil','cooldown',
+  'mender-idle-a','mender-idle-b','mender-heal-a','mender-heal-b'];
+const animationBooleans=['idleGeometryChanged','attackGeometryChanged','nativeEyesClosedObserved',
+  'noTargetHeld','inRangePulseObserved','nativePausePreserved','attackSaveGraphPreserved',
+  'attackSaveBodyPreserved','menderIdleChanged','menderHealObserved','menderHealChanged'];
+const animationFields=['outcome','syntheticAnimationControls','animationOracle','phaseLabels',
+  'geometryMismatchPixels','opaqueInteriorMismatchPixels','raid2StaticNegatives','legalPlacements',
+  ...animationBooleans];
 
 // Respect strings/comments so this audits actual production method bodies.
 function body(text, signature) {
@@ -54,18 +63,35 @@ export async function verifyRallyRaid({report, read, sha, engine, fullRunReport,
     'generatedHarnessSha256','builderSha256','testArtifactSha256','sourceSha256','productionObjectSha256'])
     assert.deepEqual(report[field],build[field],'Raid report binds exact build metadata: '+field);
 
-  const matrix=[1729,7331].flatMap(seed=>[...names,'hud-controls'].flatMap(name=>[1,2].map(speed=>key({name,speed,seed}))));
-  assert.equal(report.scenarios.length,28);
+  const matrix=[1729,7331].flatMap(seed=>[...names,...controlNames].flatMap(name=>[1,2].map(speed=>key({name,speed,seed}))));
+  assert.equal(report.scenarios.length,32);
   assert.deepEqual(report.scenarios.map(key).sort(),matrix.sort());
-  const wins=report.scenarios.filter(result=>result.name!=='hud-controls');
+  const wins=report.scenarios.filter(result=>names.includes(result.name));
   const controls=report.scenarios.filter(result=>result.name==='hud-controls');
+  const animationControls=report.scenarios.filter(result=>result.name==='plant-animation-controls');
   assert.equal(wins.length,24,'Only legally deployed winning runs count as puzzle completion evidence');
   assert.equal(controls.length,4,'Synthetic stage-selection/render controls are separately labeled');
+  assert.equal(animationControls.length,4,'Live body-animation controls are separately labeled');
   for(const result of report.scenarios) {
     assert.equal(result.execution,'complete-production-engine');
     assert.equal(result.resourceCapacityWarnings,0);
     assert.match(result.logSha256,shaPattern);
     assert(Number.isInteger(result.checks) && result.checks>0);
+    if(result.name==='plant-animation-controls') {
+      assert.equal(result.outcome,'animation-pass');
+      assert.equal(result.syntheticAnimationControls,true);
+      assert.equal(result.animationOracle,'current-native-rig-cardboard-body');
+      assert.deepEqual(result.phaseLabels,phaseLabels);
+      assert(result.bodySamples>=12 && result.geometryPixelComparisons>5000000 && result.opaqueInteriorComparisons>10000);
+      assert.equal(result.geometryMismatchPixels,0);
+      assert.equal(result.opaqueInteriorMismatchPixels,0);
+      assert.equal(result.raid2StaticNegatives,3,'The published static preview must fail idle, attack and healing body comparisons');
+      assert.equal(result.legalPlacements,2);
+      for(const field of animationBooleans) assert.equal(result[field],true,'Actual native body/range/pause/save/healing proof: '+field);
+      for(const field of ['boardsSolved','brainsConsumed','profileCredits','awardCollected'])
+        assert.equal(result[field],undefined,'Synthetic animation control cannot claim a completed battle: '+field);
+      continue;
+    }
     if(result.name==='hud-controls') {
       assert.equal(result.outcome,'controls-pass');
       assert.equal(result.syntheticUIControls,true);
@@ -107,12 +133,12 @@ export async function verifyRallyRaid({report, read, sha, engine, fullRunReport,
     assert.equal(result.replayRewardChecked,replay,'Replay checks first trophy then moneybag without duplicating unique completion');
     assert.deepEqual(result.checkpoint,{performed:saved,combatGraphPreserved:saved});
   }
-  assert.equal(report.speedParity.length,14);
+  assert.equal(report.speedParity.length,16);
   assert.deepEqual(report.speedParity.map(result=>`${result.name}/${result.seed}`).sort(),
-    [1729,7331].flatMap(seed=>[...names,'hud-controls'].map(name=>`${name}/${seed}`)).sort());
+    [1729,7331].flatMap(seed=>[...names,...controlNames].map(name=>`${name}/${seed}`)).sort());
   for(const parity of report.speedParity) {
     assert.equal(parity.sameNativeOutcome,true);
-    const fields=parity.name==='hud-controls'?hudFields:outcomeFields;
+    const fields=parity.name==='plant-animation-controls'?animationFields:parity.name==='hud-controls'?hudFields:outcomeFields;
     assert.deepEqual(parity.comparedFields,fields);
     const pair=report.scenarios.filter(result=>result.name===parity.name && result.seed===parity.seed);
     assert.equal(pair.length,2);
@@ -144,6 +170,11 @@ export async function verifyRallyRaid({report, read, sha, engine, fullRunReport,
   assert.match(card,/Blank\(80,65\)/);
   assert.match(card,/std::min\(22\.0f\/brainBounds\.mWidth,20\.0f\/brainBounds\.mHeight\)/);
   assert.match(card,/PvzpDrawImageScaledF\(&picture,Sexy::IMAGE_BRAIN/);
+  const liveCardboard=body(presentation,'bool DrawCustomPlant(');
+  assert.match(liveCardboard,/ReanimationTryToGet\(plant\.mBodyReanimID\)/);
+  assert.match(liveCardboard,/RestoreFilter[\s\S]*mFilterEffect=previous/);
+  assert.match(liveCardboard,/LanternShroom::DrawPlantRig[\s\S]*MenderBloom::DrawPlantRig/);
+  assert(!liveCardboard.includes('Plant::GetImage'),'Raid cardboard renders the current saved native plant rig instead of a cached packet preview');
   assert.match(harness,/Only the hardware confirmation result is scripted/);
   assert.equal((body(harness,'class IntegrationLawnApp final : public LawnApp').match(/\boverride\b/g)||[]).length,1,
     'The test application overrides only hardware confirmation input');
@@ -160,5 +191,5 @@ export async function verifyRallyRaid({report, read, sha, engine, fullRunReport,
   assert.match(checkpoint,/LawnSaveGame\([\s\S]*Graph\(b\)[\s\S]*TryLoadGame\(\)[\s\S]*Graph\(app->mBoard\)==graph/);
   assert.match(checkpoint,/ContinueDialog_Continue/);
   assert.match(harness,/GetNumTrophies\(CHALLENGE_PAGE_BONUS\)==1/);
-  console.log('PASS 24 legal native Rally Raid wins, 4 separate exact native I,Zombie render controls, 14 native speed pairs, three save phases, budget-loss Retry and final-only first/replay credit.');
+  console.log('PASS 24 legal native Rally Raid wins, 4 native I,Zombie render controls, 4 body-animation controls, 16 native speed pairs, three save phases, budget-loss Retry and final-only first/replay credit.');
 }
