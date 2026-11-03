@@ -1,0 +1,151 @@
+diff --git a/CMake/ProjectVersion.cmake b/CMake/ProjectVersion.cmake
+index ba952a1476e85c47f6d3d8cf6709a237b47faba0..3b2b21385a41774e3b57014217a364d309e077c7 100644
+--- a/CMake/ProjectVersion.cmake
++++ b/CMake/ProjectVersion.cmake
+@@ -66,6 +66,6 @@ if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
+ endif()
+ 
+ # Browser release identity; keep binary and corresponding-source manifests aligned.
+-set(PVZP_VERSION "0.2.6-web-rally.2")
++set(PVZP_VERSION "0.2.6-web-rally.3")
+ set(PVZP_VERSION_PLAIN "0.2.6")
+ configure_file("${PROJECT_SOURCE_DIR}/CMake/ProjectVersion.h.in" "${PROJECT_BINARY_DIR}/ProjectVersion.h" @ONLY)
+diff --git a/src/Lawn/System/RallyPresentation.cpp b/src/Lawn/System/RallyPresentation.cpp
+index ce50e605692fa845c8ef316db59aa2d59857afe7..8ba48e9e7a42f2594546801529c0c138e20780c4 100644
+--- a/src/Lawn/System/RallyPresentation.cpp
++++ b/src/Lawn/System/RallyPresentation.cpp
+@@ -5,6 +5,7 @@
+ #include "../../LawnApp.h"
+ #include "../../Resources.h"
+ #include "../../PvzpLib/Reanimator.h"
++#include "../../PvzpLib/ReanimAtlas.h"
+ #include "../../PvzpLib/PvzpCommon.h"
+ #include "graphics/MemoryImage.h"
+ #include "misc/Point.h"
+@@ -26,6 +27,7 @@ constexpr int kHandRenderGroup = 10;
+ struct Cache
+ {
+     std::unique_ptr<Sexy::MemoryImage> horn;
++    std::unique_ptr<Sexy::MemoryImage> grip;
+     std::unique_ptr<Sexy::MemoryImage> card;
+     std::unique_ptr<Reanimation> arms;
+ };
+@@ -94,6 +96,38 @@ Sexy::Image* Horn()
+     return cache.horn.get();
+ }
+ 
++// Reuse the original flag carrier's closed fingers, including its painted
++// outline and shading. The ordinary walk/eat hands are open palms; drawing a
++// handle behind them cannot turn either one into a gripping hand.
++Sexy::Image* Grip(Reanimation& carrier)
++{
++    Cache& cache=Images();
++    if (cache.grip) return cache.grip.get();
++    if (!carrier.TrackExists("Zombie_flaghand")) return nullptr;
++    const int index=carrier.FindTrackIndex("Zombie_flaghand");
++    Sexy::Image* source=carrier.mDefinition->mTracks.tracks[index].mTransforms.mTransforms[0].mImage;
++    Sexy::Rect rect(0,0,source ? 19 : 0,25);
++    if (auto* atlas=carrier.mDefinition->mReanimAtlas)
++    {
++        const auto* image=atlas->GetEncodedReanimAtlas(source);
++        if (!image) return nullptr;
++        rect=Sexy::Rect(image->mX,image->mY,image->mWidth,image->mHeight);
++        source=atlas->mMemoryImage.get();
++    }
++    else if (source) rect=Sexy::Rect(0,0,source->GetCelWidth(),source->GetCelHeight());
++    if (!source) return nullptr;
++    auto* pixels=dynamic_cast<Sexy::MemoryImage*>(source);
++    if (!pixels) return nullptr;
++    std::vector<uint32_t> copy(rect.mWidth*rect.mHeight);
++    const uint32_t* original=pixels->GetBits();
++    for (int y=0;y<rect.mHeight;++y)
++        std::copy_n(original+(rect.mY+y)*pixels->GetWidth()+rect.mX,
++            rect.mWidth,copy.data()+y*rect.mWidth);
++    cache.grip=std::make_unique<Sexy::MemoryImage>();
++    cache.grip->SetBits(copy.data(),rect.mWidth,rect.mHeight);
++    return cache.grip.get();
++}
++
+ Reanimation& ArmRig(Reanimation& carrier)
+ {
+     Cache& cache=Images();
+@@ -177,7 +211,7 @@ void DrawRig(Sexy::Graphics* graphics, Reanimation& carrier, bool rallying,
+             track.mBlendTime=100;
+             track.mBlendCounter=static_cast<int>((1.0f-lift)*100);
+             track.mShakeX=0;
+-            track.mShakeY=i>0 ? lift*11.0f : 0.0f;
++            track.mShakeY=i>0 ? lift*2.0f : 0.0f;
+         }
+         else
+         {
+@@ -201,12 +235,34 @@ void DrawRig(Sexy::Graphics* graphics, Reanimation& carrier, bool rallying,
+         arms.DrawRenderGroup(graphics,kHandRenderGroup);
+         return;
+     }
+-    SexyTransform2D hand;
++    Sexy::Image* grip=Grip(carrier);
++    if (!grip) {arms.DrawRenderGroup(graphics,kHandRenderGroup);return;}
++    SexyTransform2D hand, sleeve;
+     arms.GetTrackMatrix(arms.FindTrackIndex("Zombie_outerarm_hand"),hand);
+-    SexyMatrix3 local; local.LoadIdentity();
+-    local.m02=-12.0f; local.m12=-14.0f;
+-    SexyMatrix3 matrix;
+-    SexyMatrix3Multiply(matrix,hand,local);
++    arms.GetTrackMatrix(arms.FindTrackIndex("Zombie_outerarm_lower"),sleeve);
++    // GetTrackMatrix includes a half-pixel attachment bias which DrawTrack
++    // does not. Register the prop and closed hand to the visible native wrist.
++    SexyMatrix3Translation(hand,0.5f,0.5f);
++    SexyMatrix3Translation(sleeve,0.5f,0.5f);
++    // The sleeve's wrist is stable across both hand images and native blends.
++    // A hand-image switch happens at the start of a blend, so choosing a grip
++    // from that image would snap before the arm has actually changed pose.
++    // Register flag-hand wrist(13,19) to sleeve wrist(9,24), then let that
++    // native sleeve matrix carry the curled fingers throughout the motion.
++    SexyMatrix3 fist; fist.LoadIdentity();
++    fist.m00=-1.0f; fist.m11=-1.0f;
++    fist.m02=3.0f; fist.m12=16.5f;
++    SexyMatrix3 fingers;
++    SexyMatrix3Multiply(fingers,sleeve,fist);
++    // The gap between the curled fingers and palm is (9,12) in the native
++    // flag hand; the megaphone handle runs through it at (43,36).
++    const float gripX=fingers.m02-fingers.m00*0.5f-fingers.m01*0.5f;
++    const float gripY=fingers.m12-fingers.m10*0.5f-fingers.m11*0.5f;
++    // The horn follows the native hand's wrist bend while the fist follows
++    // the forearm; both share the same actual grasp, rather than image centers.
++    SexyMatrix3 matrix=hand;
++    matrix.m02=gripX-matrix.m00*13.0f-matrix.m01*12.0f;
++    matrix.m12=gripY-matrix.m10*13.0f-matrix.m11*12.0f;
+     SexyMatrix3Translation(matrix,graphics->mTransX,graphics->mTransY);
+     Sexy::Color color=carrier.mColorOverride;
+     if (graphics->GetColorizeImages()) color=ColorsMultiply(color,graphics->GetColor());
+@@ -220,9 +276,19 @@ void DrawRig(Sexy::Graphics* graphics, Reanimation& carrier, bool rallying,
+         carrier.ReanimBltMatrix(graphics,horn,matrix,graphics->mClipRect,additive,
+             Sexy::Graphics::DRAWMODE_ADDITIVE,Sexy::Rect(0,0,60,48));
+     }
+-    // The native fingers overlap the handle, so the prop is held in the hand
+-    // rather than pasted across it. Each part is drawn only once even on fades.
+-    arms.DrawRenderGroup(graphics,kHandRenderGroup);
++    {
++        matrix=fingers;
++        SexyMatrix3Translation(matrix,graphics->mTransX,graphics->mTransY);
++        carrier.ReanimBltMatrix(graphics,grip,matrix,graphics->mClipRect,color,
++            graphics->GetDrawMode(),Sexy::Rect(0,0,19,25));
++        if (carrier.mEnableExtraAdditiveDraw)
++        {
++            Sexy::Color additive=carrier.mExtraAdditiveColor;
++            additive.mAlpha=ColorComponentMultiply(additive.mAlpha,color.mAlpha);
++            carrier.ReanimBltMatrix(graphics,grip,matrix,graphics->mClipRect,additive,
++                Sexy::Graphics::DRAWMODE_ADDITIVE,Sexy::Rect(0,0,19,25));
++        }
++    }
+ }
+ 
+ void Draw(Zombie& zombie, Sexy::Graphics* graphics, const ZombieDrawPosition&)
+@@ -269,6 +335,6 @@ Sexy::Image* GetBonusImage()
+ 
+ void DisposeImage()
+ {
+-    Cache& cache=Images(); cache.card.reset(); cache.horn.reset(); cache.arms.reset();
++    Cache& cache=Images(); cache.card.reset(); cache.horn.reset(); cache.grip.reset(); cache.arms.reset();
+ }
+ }

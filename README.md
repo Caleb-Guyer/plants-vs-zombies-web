@@ -1,5 +1,12 @@
 # Plants vs. Zombies — browser playtest
 
+## Rally.3 - held megaphone repair
+
+`0.2.6-web-rally.3` gives Rally Zombie a closed grip around the megaphone using the original game's flag-holding hand. The prop follows that grip while lowered, walking and raised for a call. The original no-prop arm transitions remain available when the object is lost.
+
+All sixteen muted native suites passed (440,233 checks), along with the fifteen browser integration suites. This is a presentation repair; saved layouts, Survival startup, combat behavior, content IDs and existing plant artwork remain unchanged. See [QA scope](PARITY-QA.md) and [release receipts](DEPLOYMENT.md).
+
+
 ## Rally.2 - animation, Survival startup and fullscreen repairs
 
 `0.2.6-web-rally.2` preserves Rally Zombie's native arm blending during walk, eat and death transitions. Fresh Survival boards now initialize their wave counters before choosing waves, removing an allocator-dependent difficulty change. Fullscreen keeps the existing discreet sound, save and information controls available, including their dialogs.

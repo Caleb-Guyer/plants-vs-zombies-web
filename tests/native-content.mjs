@@ -19,14 +19,14 @@ new Function('module', 'exports', 'require', fs.readFileSync(new URL('vendor/jsz
 const JSZip = vendor.exports;
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
 const engine = JSON.parse(fs.readFileSync(new URL('game/engine-provenance.json', dist)));
-assert.equal(engine.id, '0.2.6-web-rally.2');
+assert.equal(engine.id, '0.2.6-web-rally.3');
 const currentSourceBytes = fs.readFileSync(new URL(engine.artifacts.source, new URL('game/engine-provenance.json', dist)));
 assert.equal(sha(currentSourceBytes), engine.artifacts.sourceSha256, 'Current source archive matches the engine provenance pin');
 const current = await JSZip.loadAsync(currentSourceBytes, {checkCRC32: true});
-const parentSourceBytes = fs.readFileSync(new URL('source/pvz-portable-0.2.6-web-rally.1-source.zip', dist));
-assert.equal(sha(parentSourceBytes), 'a37ba37528139bc38df887a027c7c54aadfb2065897f32a48a556b3dc15df63e', 'Parent is the exact published Rally.1 source');
+const parentSourceBytes = fs.readFileSync(new URL('source/pvz-portable-0.2.6-web-rally.2-source.zip', dist));
+assert.equal(sha(parentSourceBytes), '8d7c3d5a54bdebb57d36cd1b8a6d33f87ca68e7c0b39c905838f1a83173f8b82', 'Parent is the exact published Rally.2 source');
 const parent = await JSZip.loadAsync(parentSourceBytes, {checkCRC32: true});
-const prefix = 'rally2-candidate/';
+const prefix = 'rally3-candidate/';
 const read = async name => {
   const entry = current.file(prefix + name);
   assert(entry, 'Missing current production source/test: ' + name);
@@ -249,6 +249,11 @@ for(const result of rallyReport.scenarios) {
   assert.equal(result.armBlendComparisons,24);
   assert(result.legacyArmSnapRejections>0,'Legacy skipped-blend rendering must reproduce the native transition defect');
   assert.equal(result.constructorWavePatterns,4,'Native fresh-board counters are defined across recycled allocation patterns');
+  assert.equal(result.gripPoseComparisons,52);
+  assert.equal(result.gripNegativeControls,208);
+  assert(result.gripMinNativeSkinPixels>=8,'Original closed-finger pixels must be visible in each held-object pose');
+  assert(result.gripMinWristContactPixels>=2,'Held fist stays joined to the native sleeve');
+  assert(result.gripMinHandleOcclusionPixels>=2,'The handle remains behind the fingers');
   assert.deepEqual(result.checkpoint,{performed:true,combatGraphPreserved:true});
   continue;
  }
@@ -284,7 +289,7 @@ assert.equal(careBalance.kind, 'native healing/fatigue capacity bound; not a bat
 assert(careBalance.allBedsHealHpPerSecond > careBalance.maximumCrewFatigueHpPerSecond);
 assert(careBalance.slowestSuppliedRecoveryTicks < 3000);
 assert.equal(careBalance.authoredEnemies, 40);
-const parentPrefix = 'rally1-candidate/source/';
+const parentPrefix = 'rally2-candidate/source/';
 const parentBytes = async name => Buffer.from(await parent.file(parentPrefix + name).async('uint8array'));
 const layoutReport = reports.get('native-layout');
 assert.equal(layoutReport.hintLines, 1);
@@ -310,10 +315,10 @@ assert.equal(layoutFixture.schema, 1);
 assert.equal(layoutFixture.assetBundleId, engine.assetBundleId);
 assert.equal(layoutFixture.parentSourceSha256, '540f1ee365b558e10304995692485976e91f23bb1b28c305e6ade6cd17f1ed11',
   'The preserved layout negative-control fixture identifies its original Care.1 source');
-const parentLayoutFixtureEntry = parent.file('rally1-candidate/tests/native-layout-assets.json');
-assert(parentLayoutFixtureEntry, 'Authenticated Rally.1 parent retains the exact layout regression fixture');
+const parentLayoutFixtureEntry = parent.file('rally2-candidate/tests/native-layout-assets.json');
+assert(parentLayoutFixtureEntry, 'Authenticated Rally.2 parent retains the exact layout regression fixture');
 assert.deepEqual(layoutFixtureBytes, Buffer.from(await parentLayoutFixtureEntry.async('uint8array')),
-  'Historical Care.1 negative methods and native asset fixtures retain every authenticated Rally.1 fixture byte');
+  'Historical Care.1 negative methods and native asset fixtures retain every authenticated Rally.2 fixture byte');
 const approvedLayoutHashes = {
   'data/HouseofTerror28.txt':'08d9d6773edc9033512463b33be7c6604b675fadabd1729bb4fda4bed1966d0b',
   'data/HouseofTerror28.png':'e9913355ecccf2840761ce1a2a356067990deb44b326a7eb7d95c012126b9486',
@@ -477,7 +482,7 @@ assert.deepEqual(artRecord.cards.map(card => card.mode), [73, 74, 75, 76, 77, 78
 assert.deepEqual(artRecord.cards.map(card => card.name), ['Cone Zone', 'Night Shift', 'Cold Front', 'Garden Shuffle', 'Seed Swap', 'Intensive Lawn Care', 'Chain Reaction', 'Rally Point']);
 
 const parentArtBytes = await read('tests/rally2-parent-native-art.json');
-assert.equal(sha(parentArtBytes), '59ae4b436d2a6a5422697561ef91167cd9298a02c4bb6edf9b47254229e2c9c2', 'Independent exact published Rally.1 card metadata fixture');
+assert.equal(sha(parentArtBytes), '59ae4b436d2a6a5422697561ef91167cd9298a02c4bb6edf9b47254229e2c9c2', 'Independent exact published Rally.2 card metadata fixture');
 const parentArtRecord = JSON.parse(parentArtBytes);
 assert.deepEqual(artRecord.cards.slice(0, 8), parentArtRecord.cards, 'Every existing card retains all original metadata');
 for (const [key, value] of Object.entries(parentArtRecord))
@@ -723,8 +728,8 @@ const archivedSourceNames = Object.values(current.files).filter(entry => !entry.
   .map(entry => entry.name.slice((prefix + 'source/').length));
 assert.deepEqual(archivedSourceNames.sort(), Object.keys(sourceManifest.files).sort(),
   'Every corresponding-source archive member is represented exactly once in its manifest');
-// Maintenance changes only native arm interpolation; no stock content changes.
-const runtimeInputs = new Set(['src/Lawn/Board.cpp', 'src/Lawn/System/RallyPresentation.cpp']);
+// Repair only the held megaphone presentation; stock game logic stays exact.
+const runtimeInputs = new Set(['src/Lawn/System/RallyPresentation.cpp']);
 const releaseIdentityInputs = new Set(['CMake/ProjectVersion.cmake']);
 const addedChainInputs = [];
 const nativeNames = ['PeaShooter_backleaf.png', 'PeaShooter_backleaf_lefttip.png', 'PeaShooter_backleaf_righttip.png',
@@ -745,7 +750,7 @@ for (const entry of Object.values(parent.files)) {
     continue;
   }
   if (releaseIdentityInputs.has(name))
-    assert.equal(after.toString().replaceAll('0.2.6-web-rally.2', '0.2.6-web-rally.1'), before.toString());
+    assert.equal(after.toString().replaceAll('0.2.6-web-rally.3', '0.2.6-web-rally.2'), before.toString());
   else assert.deepEqual(after, before, 'Every unrelated source/artwork byte remains exact: ' + name);
 }
 assert.equal(parentSourceCount, 824);
@@ -760,12 +765,7 @@ for (const signature of ['void DrawCareFatigue(Graphics* g, Plant& plant, Reanim
   assert.equal(extractLegacyFunction(afterPlant, signature), extractLegacyFunction(beforePlant, signature), 'Care fatigue rendering remains exact');
 const beforeBoard = normalizeSource(await parentBytes('src/Lawn/Board.cpp'));
 const afterBoard = normalizeSource(await read('source/src/Lawn/Board.cpp'));
-const freshWaveInitialization = '\t// Fresh Survival wave selection queries completed flags before InitZombieWaves\n' +
-  '\t// resets these counters. Do not let recycled board memory choose its difficulty.\n' +
-  '\tmCurrentWave = 0;\n\tmTotalSpawnedWaves = 0;\n';
-assert.equal(afterBoard.split(freshWaveInitialization).length, 2);
-assert.equal(afterBoard.replace(freshWaveInitialization, ''), beforeBoard,
-  'Only fresh constructor wave initialization changes in the original Board implementation');
+assert.equal(afterBoard, beforeBoard, 'All Board logic, including defined Survival startup, stays exact');
 for (const signature of ['void Board::UpdateIntensiveCare()', 'bool Board::MoveIntensiveCarePlant(Plant* thePlant, int theGridX, int theGridY)'])
   assert.equal(extractLegacyFunction(afterBoard, signature), extractLegacyFunction(beforeBoard, signature), 'Existing Care mechanics stay exact');
 

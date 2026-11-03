@@ -1,5 +1,5 @@
 {
-  "id": "0.2.6-web-rally.2",
+  "id": "0.2.6-web-rally.3",
   "upstream": {
     "tag": "0.2.6",
     "commit": "396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
@@ -7,12 +7,12 @@
     "officialJsSha256": "0f2d7425190e49c762f6700b68b080086e3dcb8f2dc5e9724de42ce9fb508573"
   },
   "sourceArchive": {
-    "path": "pvz-portable-0.2.6-web-rally.2-source.zip",
-    "bytes": 21354025,
-    "sha256": "8d7c3d5a54bdebb57d36cd1b8a6d33f87ca68e7c0b39c905838f1a83173f8b82",
-    "crc32": "364dc8ea",
+    "path": "pvz-portable-0.2.6-web-rally.3-source.zip",
+    "bytes": 21368282,
+    "sha256": "2deb50f9a38d8599453f567f5458a20505d552956df0bc442e649e49ea1c5c24",
+    "crc32": "4e30296f",
     "entries": 902,
-    "uncompressedBytes": 53212953
+    "uncompressedBytes": 53268452
   },
   "artifacts": [
     {
@@ -23,37 +23,32 @@
     },
     {
       "path": "build/pvz-portable.wasm",
-      "bytes": 7684540,
-      "sha256": "8207dcd75c93e999e31b520c41b88d9e4024277b1a043a77918b53379ec6c7e1",
-      "crc32": "dffa2c7b"
+      "bytes": 7686621,
+      "sha256": "9c5d64f4478fe5466037ca06fc1b9b2144c5f21fdac30f21c3b407b1432e802a",
+      "crc32": "45144406"
     },
     {
       "path": "build/ProjectVersion.h",
       "bytes": 191,
-      "sha256": "3bd9e4d48f8eecdf00b8ae8b5fb8917ac832dbfbc74ac7ef8c00a8fdbde50c1a",
-      "crc32": "e5f33692"
+      "sha256": "734223f33dfb82c0ea6b7348fb769f1e94375cd329d39bdddb304b08a9e538df",
+      "crc32": "30f64aee"
     }
   ],
   "sourceFiles": 824,
-  "sourceBytes": 25646182,
-  "sourceDeltaVsRally1": [
+  "sourceBytes": 25649653,
+  "sourceDeltaVsRally2": [
     {
       "path": "CMake/ProjectVersion.cmake",
-      "beforeSha256": "a0cc2e6e5c78498b6056af272bb796a987b2ccebadb18034fc4f527c38bdb498",
-      "afterSha256": "0927904b131603ee8144d6a810e6911d71e0c2f2b4a5eb3d7e19a5c4e65aa3cf"
-    },
-    {
-      "path": "src/Lawn/Board.cpp",
-      "beforeSha256": "8fbd5969ff8996a45b889e3bac5846d81fdf8c66a037225b6df205853587fa65",
-      "afterSha256": "6996143c45dd1dbee6f5d9a092d7d05c3b1ea9b72b79c8fb0ce5ac44bf8fa31c"
+      "beforeSha256": "0927904b131603ee8144d6a810e6911d71e0c2f2b4a5eb3d7e19a5c4e65aa3cf",
+      "afterSha256": "37b573af943d39c92b15cf8643a5f4bd6ff332029d28a19c19953d2c2db4c3ef"
     },
     {
       "path": "src/Lawn/System/RallyPresentation.cpp",
-      "beforeSha256": "b4314403ff6ad427d24665b8d89b8950b3bf5a3be418c513142a9bb3d4186695",
-      "afterSha256": "e9ec2dc36168fc730cc0cf308e4ed3f9b3942e556bb5254ff660cd58c629daed"
+      "beforeSha256": "e9ec2dc36168fc730cc0cf308e4ed3f9b3942e556bb5254ff660cd58c629daed",
+      "afterSha256": "14dd8ea11b6c2d732f2a26cd4c2630f1434bf5413b1b1799a1064320c853de77"
     }
   ],
-  "compiledVersionHeader": "// Generated from CMake/ProjectVersion.h.in by CMake; do not edit.\r\n#pragma once\r\n\r\n#define PVZP_VERSION \"0.2.6-web-rally.2\"\r\n#define PVZP_BUILD_NUMBER 1\r\n#define PVZP_COMMIT_DATE \"unknown\"\r\n",
+  "compiledVersionHeader": "// Generated from CMake/ProjectVersion.h.in by CMake; do not edit.\r\n#pragma once\r\n\r\n#define PVZP_VERSION \"0.2.6-web-rally.3\"\r\n#define PVZP_BUILD_NUMBER 1\r\n#define PVZP_COMMIT_DATE \"unknown\"\r\n",
   "checks": {
     "fullRelease": {
       "exitCode": 0,
@@ -66,22 +61,22 @@
       "sourceUnchangedDuringBuild": true,
       "receipt": {
         "path": "logs/build-result.json",
-        "bytes": 580,
-        "sha256": "2882b977df35c0e3cc5e805b1d2cc522b0130ebfbcfef8ff7b1ea24f6a08cd91",
-        "crc32": "e36f8e46"
+        "bytes": 581,
+        "sha256": "5355d1e6a4afc042544fb59e20963c35f7f7bcc37349c13b92e998888c837a40",
+        "crc32": "337381fc"
       }
     },
     "focusedNativeTests": {
       "status": "PASS focused native production tests",
       "failures": 0,
-      "checks": 438561,
+      "checks": 440233,
       "scope": "Extracted production tests plus complete linked-engine Care, Chain Reaction and Rally Point scenarios, rally state, save/continue, speed parity and original regressions. Audio output is disabled.",
       "reports": [
         {
           "path": "tests/game-speed-results.json",
           "bytes": 1603,
-          "sha256": "0641201e788bd1bf8242d32d1a7dab7e80598358f09adfd53e3ca7533ad751c2",
-          "crc32": "4f91b9a8",
+          "sha256": "10b1eebae28275a394a917be6d97075246d304d82b8adc85bcb43ced71e3812f",
+          "crc32": "c70645d4",
           "checks": 66
         },
         {
@@ -171,23 +166,23 @@
         {
           "path": "tests/care-full-run-results.json",
           "bytes": 151765,
-          "sha256": "bd8555a2ae36ee14d23b8cfa893415c5151c08dafe312b290dbe0e031a9c84c2",
-          "crc32": "6e43dc31",
+          "sha256": "56ae6225e85801442bca3a40d904117bcbe6ba7dd2e5fb1aac2cbe2fb326cc03",
+          "crc32": "09d60050",
           "checks": 976
         },
         {
           "path": "tests/chain-reaction-results.json",
           "bytes": 162332,
-          "sha256": "bb80977667c9c0c8afa82912b2183cc66d43d6f9d9567a4c664257093516965d",
-          "crc32": "b5962e7e",
+          "sha256": "06b80df71b6ffdbf649d9cd622f11608c30ca2157f7d0deb10b18b14695979f7",
+          "crc32": "07e42c96",
           "checks": 81303
         },
         {
           "path": "tests/rally-zombie-results.json",
-          "bytes": 153944,
-          "sha256": "edbf6286b059431336282d6ccb6fe6d3d7eca331cc49dc5982d7f95016c143ff",
-          "crc32": "4f0702a4",
-          "checks": 317966
+          "bytes": 154708,
+          "sha256": "eae775e19055495835a4d68deb5843bd610b79f84e87feded9af1049977a35f1",
+          "crc32": "88a3a6c0",
+          "checks": 319638
         }
       ]
     },
@@ -198,7 +193,7 @@
         "everySourceByteMatches": true,
         "sourceFiles": 824
       },
-      "rally1": {
+      "rally2": {
         "gitApplyCheck": "PASS",
         "gitApply": "PASS",
         "everySourceByteMatches": true,
@@ -207,23 +202,23 @@
     }
   },
   "combinedPatch": {
-    "path": "web-rally.2.patch",
-    "bytes": 14312970,
-    "sha256": "246d6236ef04a453b0cba978ee3012aab68651ae227f329fc090674093d322e0",
-    "crc32": "37b65f66",
+    "path": "web-rally.3.patch",
+    "bytes": 14316507,
+    "sha256": "ccf3dadd81f926e5947aabe70ff48ade065569e95e8cc3b5cafa5e5f642445eb",
+    "crc32": "d6b78093",
     "sourcePaths": 113
   },
   "incrementalPatch": {
-    "path": "rally1-to-rally2.patch",
-    "bytes": 3288,
-    "sha256": "7bc77b0b37784b38d6ec4a247bb389a589a5146cf884ddeeaa330a1e31476474",
-    "crc32": "95c5c35b",
-    "sourcePaths": 3
+    "path": "rally2-to-rally3.patch",
+    "bytes": 7238,
+    "sha256": "4edf4bbdf961f6dff4049652128aa9e33105105cb5fe13affd949846a2632113",
+    "crc32": "3c6c5a2c",
+    "sourcePaths": 2
   },
   "parent": {
-    "id": "0.2.6-web-rally.1",
-    "sourceArchiveSha256": "a37ba37528139bc38df887a027c7c54aadfb2065897f32a48a556b3dc15df63e",
-    "releaseManifestSha256": "fd973815a1d81926b9f10157bd584c3395c8b06a6efed40705ca9cbbeb5d6355",
+    "id": "0.2.6-web-rally.2",
+    "sourceArchiveSha256": "8d7c3d5a54bdebb57d36cd1b8a6d33f87ca68e7c0b39c905838f1a83173f8b82",
+    "releaseManifestSha256": "b54cded537678d1c2d5823ebd4f739f6eaa2d99971ee1b620af4252eddaa7483",
     "scope": "Complete historical parent engine metadata is preserved in the parent property of engine-provenance.json."
   },
   "limits": [

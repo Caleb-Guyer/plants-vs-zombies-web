@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-rally.2
-Preserves the original arm animation blends during Rally Zombie eating, walking and death transitions, and initializes fresh Survival wave counters before wave selection. Existing artwork, authored balance values, content and saved layouts are retained.
+PvZ-Portable 0.2.6-web-rally.3
+Repairs the megaphone attachment to Rally Zombie's original hand animation during idle, walking and rally poses. Existing native arm blends, Survival wave initialization, art sources, authored balance, content and saved layouts are retained.
 Engine JavaScript SHA-256: 3efa16733b86653613e71e55bd160432c149fbb735c66d01a87c1685e1190e38
-Engine WASM SHA-256: 8207dcd75c93e999e31b520c41b88d9e4024277b1a043a77918b53379ec6c7e1
+Engine WASM SHA-256: 9c5d64f4478fe5466037ca06fc1b9b2144c5f21fdac30f21c3b407b1432e802a
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.

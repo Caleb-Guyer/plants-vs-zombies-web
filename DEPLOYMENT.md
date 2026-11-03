@@ -1,5 +1,20 @@
 # GitHub Pages release: Caleb-Guyer/plants-vs-zombies-web
 
+## Rally.3 - tested grip-repair inputs
+
+Current engine: `0.2.6-web-rally.3`.
+
+- Normal JavaScript SHA-256: `3efa16733b86653613e71e55bd160432c149fbb735c66d01a87c1685e1190e38`.
+- Normal WebAssembly SHA-256: `9c5d64f4478fe5466037ca06fc1b9b2144c5f21fdac30f21c3b407b1432e802a`.
+- Corresponding source: `pvz-portable-0.2.6-web-rally.3-source.zip`, 21,368,282 bytes, 902 entries, SHA-256 `2deb50f9a38d8599453f567f5458a20505d552956df0bc442e649e49ea1c5c24`.
+- Published Rally.2 parent source SHA-256: `8d7c3d5a54bdebb57d36cd1b8a6d33f87ca68e7c0b39c905838f1a83173f8b82`.
+- Full and incremental patches: `web-rally.3.patch`, `rally2-to-rally3.patch`. Both reconstruct every current production byte.
+- Native suites: 16; 440,233 checks, zero failures. The normal build receipt binds all 824 production files; full-engine drivers use those production objects.
+- Browser integration suites: 15. Muted visual inspection covers the held-object repair and the final normal browser build.
+
+The existing manual Pages workflow reruns source/browser checks, the sixteen native suites and asset verification before deploying. Final commit/deployment identity, public-byte comparisons and presentation evidence are retained locally. Earlier sections describe their named historical builds.
+
+
 ## Rally.2 - tested maintenance release inputs
 
 Current engine: `0.2.6-web-rally.2`.
