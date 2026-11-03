@@ -1,5 +1,20 @@
 # GitHub Pages release: Caleb-Guyer/plants-vs-zombies-web
 
+## Raid.1 - release inputs and publication
+
+Current engine: `0.2.6-web-raid.1`. The following pins identify the packaged, tested normal Release build.
+
+- Normal JavaScript: 209,496 bytes, SHA-256 `149cde88e398e1e3a08ae2d43c77a1eed6701299d783c78ac8a610573c268f0f`.
+- Normal WebAssembly: 7,703,175 bytes, SHA-256 `bb64f196f81294ab56f8d4b9cda0d1e7f81af3545bfaf9656573e4f861ff49d6`.
+- Published Rally.3 parent source SHA-256: `2deb50f9a38d8599453f567f5458a20505d552956df0bc442e649e49ea1c5c24`.
+- Corresponding source: `pvz-portable-0.2.6-web-raid.1-source.zip`, 23,958,264 bytes, 916 entries, SHA-256 `50e122044bb767eb9c78cf8c38c9cd48de022f8b3f966b69b3bd29a7bbafdb8c`.
+- Full and incremental patches: `web-raid.1.patch` and `rally3-to-raid1.patch`. Both reconstruct every current production byte.
+- Production inputs: 828 files. The saved actor/application headers and both native SaveGame files remain byte-identical to the authenticated parent.
+- All 17 muted native suites passed: 1,194,484 checks, zero failures. Rally Raid contributes 751,506 checks in 28 scenarios: 24 legal winning runs and four separate HUD controls. All 15 browser integration suites passed. Muted private browser inspection verified the final Raid.1 Information label and matching Engine Source link.
+
+The existing manual GitHub Pages workflow reruns source/browser checks, the native suites and asset verification before deployment. Browser identity and native raster receipts are retained locally. Earlier sections describe their named historical builds.
+
+
 ## Rally.3 - tested grip-repair inputs
 
 Current engine: `0.2.6-web-rally.3`.

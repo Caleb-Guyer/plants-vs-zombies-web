@@ -1,5 +1,18 @@
 # Current requirements
 
+## Raid.1 - Rally Raid
+
+The finite `0.2.6-web-raid.1` addition is Rally Raid, the ninth Mini-Games > Bonus card. It contains five fixed I, Zombie boards with the original bank, brains, deployment line, cardboard plant treatment and footer progress. The card combines the repaired native Rally Zombie rig with the original brain artwork. It introduces no separate generated challenge illustration, extra HUD or challenge-card tips.
+
+The five bank packets are normal zombie, Conehead, Buckethead, Screen Door and Rally Zombie. Their costs are 50, 75, 125, 100 and 100 sun. Each board resets its own budget to 450, 550, 600, 650 or 750 sun. Native armor, biting, projectiles, frost, healing and the existing non-stacking Rally movement support resolve combat. Authored mushroom defenders are awake. Thinking time is untimed; exhausting the native economy without surviving attackers can produce the original game-over.
+
+All five native brains must be eaten on each board. Boards one through four transition without awarding completion. The fifth creates the native trophy on a first clear and the normal replay reward on later clears; the unique Bonus trophy count stays one. Native Try Again and confirmed Restart restore the current board and its budget; cancelling Restart preserves the active board. A fresh New Game starts at board one. Save/Continue retains the current board, actors, packet economy, brain score and transition timer.
+
+Mode 81, reserved profile record 80 and zombie packet 77 are appended without shifting existing IDs, plant/cache/chooser ranges or saved object layouts. Challenge state 111/112/113 and the existing survival-stage, score and timer fields carry the new state. The Rally effect extension is confined to Rally Point and Rally Raid. Native UI layers keep the Raid bank and Menu/speed controls in front of top-row actors while retaining packet feedback. Existing content and custom-plant unlock requirements remain.
+
+All seventeen muted native suites passed: 1,194,484 checks, zero failures, along with all fifteen browser integration suites. The Raid matrix contributes 751,506 checks across 24 legal winning runs and four separate synthetic HUD controls; retained Care, Chain Reaction and Rally Zombie regressions remain active.
+
+
 ## Chain.1 - Chain Reaction
 
 `0.2.6-web-chain.1` adds **Chain Reaction** under **Mini-Games > Bonus**. Clear five hand-arranged boards with a limited supply of Cherry Bombs, Jalapenos and Potato Mines. Place the plants, then press the original Let's Rock button. Retry restarts the current board; a first complete clear earns one trophy. Its seventh Bonus card combines the original three plant sprites.

@@ -1,0 +1,157 @@
+// SPDX-License-Identifier: MIT
+// Authenticate complete-engine Raid runs separately from synthetic HUD controls.
+import assert from 'node:assert/strict';
+
+const shaPattern = /^[a-f0-9]{64}$/;
+const names = ['solution', 'save-before', 'save-combat', 'save-transition', 'retry', 'replay'];
+const key = result => `${result.name}/${result.speed}/${result.seed}`;
+const outcomeFields = ['outcome','boardsSolved','brainsConsumed','legalPlacements','profileIndex',
+  'profileCredits','awardCollected','failureAndRetry','scriptedModalRestart',
+  'invalidPlacementRejected','thinkingTimeObserved','replayRewardChecked'];
+const hudFields = ['outcome','syntheticUIControls','hudSamples','hudOpaquePixels',
+  'hudPixelComparisons','hudMismatchPixels','hudUnderlayNegatives','nativeControlSamples',
+  'nativeControlMismatchPixels',
+  'nativeControlOracle','hudOracle'];
+
+// Respect strings/comments so this audits actual production method bodies.
+function body(text, signature) {
+  const start=text.indexOf(signature), open=text.indexOf('{',start);
+  assert(start>=0 && open>start, 'Missing native method: '+signature);
+  let depth=1, at=open+1;
+  while(depth) {
+    assert(at<text.length, 'Unbalanced native method: '+signature);
+    if(text.startsWith('//',at)) {at=text.indexOf('\n',at);assert(at>=0);continue;}
+    if(text.startsWith('/*',at)) {at=text.indexOf('*/',at+2);assert(at>=0);at+=2;continue;}
+    if(text[at]==='"' || text[at]==="'") {
+      const quote=text[at++];
+      while(text[at]!==quote) {assert(at<text.length);at+=text[at]==='\\'?2:1;}
+      ++at;continue;
+    }
+    depth+=(text[at]==='{')-(text[at]==='}');++at;
+  }
+  return text.slice(start,at);
+}
+
+export async function verifyRallyRaid({report, read, sha, engine, fullRunReport, productionBuildBytes}) {
+  assert.equal(report.execution,'complete-production-engine');
+  assert.equal(report.optimization,'O2','Development probes cannot satisfy the Raid release matrix');
+  assert.equal(report.productionObjectCount,122);
+  assert.equal(Object.keys(report.sourceSha256).length,828);
+  assert.deepEqual(report.sourceSha256,fullRunReport.sourceSha256);
+  assert.deepEqual(report.productionObjectSha256,fullRunReport.productionObjectSha256,
+    'All complete-engine suites use the same 122 unchanged normal release objects');
+  assert.equal(report.productionBuildReceiptSha256,sha(productionBuildBytes));
+  const artifacts=['rally-raid-engine.js','rally-raid-engine.wasm'];
+  assert.deepEqual(Object.keys(report.testArtifactSha256).sort(),artifacts);
+  for(const name of artifacts) assert.equal(sha(await read('tests/'+name)),report.testArtifactSha256[name]);
+  assert(WebAssembly.validate(await read('tests/rally-raid-engine.wasm')));
+  assert.equal(sha(await read('tests/build-rally-raid.py')),report.builderSha256);
+  assert.equal(sha(await read('tests/test-rally-raid.py')),report.runnerSha256);
+  assert.equal(sha(await read('tests/rally-raid-assets.json')),report.assetFixtureSha256);
+  assert.equal(report.assetBundleId,engine.assetBundleId);
+  assert.equal(JSON.parse(await read('tests/rally-raid-assets.json')).assetBundleId,engine.assetBundleId);
+  const build=JSON.parse(await read('tests/rally-raid-build.json'));
+  for(const field of ['execution','optimization','productionObjectCount','productionBuildReceiptSha256',
+    'generatedHarnessSha256','builderSha256','testArtifactSha256','sourceSha256','productionObjectSha256'])
+    assert.deepEqual(report[field],build[field],'Raid report binds exact build metadata: '+field);
+
+  const matrix=[1729,7331].flatMap(seed=>[...names,'hud-controls'].flatMap(name=>[1,2].map(speed=>key({name,speed,seed}))));
+  assert.equal(report.scenarios.length,28);
+  assert.deepEqual(report.scenarios.map(key).sort(),matrix.sort());
+  const wins=report.scenarios.filter(result=>result.name!=='hud-controls');
+  const controls=report.scenarios.filter(result=>result.name==='hud-controls');
+  assert.equal(wins.length,24,'Only legally deployed winning runs count as puzzle completion evidence');
+  assert.equal(controls.length,4,'Synthetic stage-selection/render controls are separately labeled');
+  for(const result of report.scenarios) {
+    assert.equal(result.execution,'complete-production-engine');
+    assert.equal(result.resourceCapacityWarnings,0);
+    assert.match(result.logSha256,shaPattern);
+    assert(Number.isInteger(result.checks) && result.checks>0);
+    if(result.name==='hud-controls') {
+      assert.equal(result.outcome,'controls-pass');
+      assert.equal(result.syntheticUIControls,true);
+      assert.equal(result.hudSamples,11);
+      assert.equal(result.hudOracle,'black-white-independent-native-opaque');
+      assert(result.hudOpaquePixels>15000 && result.hudPixelComparisons>150000);
+      assert.equal(result.hudMismatchPixels,0);
+      assert.equal(result.hudUnderlayNegatives,3,'Actual Fume/Rally/bank and Rally/Menu underdraw controls must fail');
+      assert.equal(result.nativeControlSamples,3);
+      assert(result.nativeControlCoveredPixels>2000 && result.nativeControlPixelComparisons>6000);
+      assert.equal(result.nativeControlOpaquePixels,undefined,'The original translucent buttons are checked using exact scene composition');
+      assert.equal(result.nativeControlOracle,'same-state-native-composite');
+      assert.equal(result.nativeControlMismatchPixels,0);
+      for(const field of ['boardsSolved','brainsConsumed','profileCredits','awardCollected'])
+        assert.equal(result[field],undefined,'Synthetic HUD fixture must not claim a battle/reward: '+field);
+      continue;
+    }
+    const replay=result.name==='replay', saved=result.name.startsWith('save-');
+    assert.equal(result.outcome,'win');
+    assert.equal(result.syntheticUIControls,undefined);
+    assert.equal(result.boardsSolved,replay?10:5);
+    assert.equal(result.brainsConsumed,replay?50:25,'Each completed board consumes all five actual native brains');
+    assert(result.legalPlacements>0 && result.rallyCallObservations>0 && result.boostObservations>0);
+    assert(result.chilledCallerObservations>0 && result.healingObservations>0,
+      'Every legal solution exercises the actual defending Chill-shroom and Mender-bloom mechanics');
+    assert.equal(result.profileIndex,80);
+    assert.equal(result.profileCredits,replay?2:1);
+    assert.equal(result.awardCollected,true);
+    assert.equal(result.failureAndRetry,result.name==='retry');
+    assert.equal(result.scriptedModalRestart,result.name==='solution');
+    assert.equal(result.thinkingTimeObserved,result.name==='solution');
+    assert.equal(result.invalidPlacementRejected,true);
+    assert.equal(result.replayRewardChecked,replay,'Replay checks first trophy then moneybag without duplicating unique completion');
+    assert.deepEqual(result.checkpoint,{performed:saved,combatGraphPreserved:saved});
+  }
+  assert.equal(report.speedParity.length,14);
+  assert.deepEqual(report.speedParity.map(result=>`${result.name}/${result.seed}`).sort(),
+    [1729,7331].flatMap(seed=>[...names,'hud-controls'].map(name=>`${name}/${seed}`)).sort());
+  for(const parity of report.speedParity) {
+    assert.equal(parity.sameNativeOutcome,true);
+    const fields=parity.name==='hud-controls'?hudFields:outcomeFields;
+    assert.deepEqual(parity.comparedFields,fields);
+    const pair=report.scenarios.filter(result=>result.name===parity.name && result.seed===parity.seed);
+    assert.equal(pair.length,2);
+    for(const field of fields) assert.deepEqual(pair[0][field],pair[1][field],'Actual 1x/2x Raid parity: '+parity.name+'/'+field);
+  }
+  assert.equal(report.checks,828+report.scenarios.reduce((sum,result)=>sum+result.checks,0)+report.speedParity.length);
+
+  // Packet77 follows the native zombie mapping/cache/cost path. These source
+  // checks accompany actual native packet/lawn clicks in the complete driver.
+  const text=async name=>(await read('source/'+name)).toString().replace(/\r\n?/g,'\n');
+  const [plant,challenge,packet,cache,raid,presentation,harness]=await Promise.all([
+    text('src/Lawn/Plant.cpp'),text('src/Lawn/Challenge.cpp'),text('src/Lawn/SeedPacket.cpp'),
+    text('src/Lawn/System/ReanimationLawn.cpp'),text('src/Lawn/System/RallyRaid.h'),
+    text('src/Lawn/System/RallyRaidPresentation.cpp'),
+    read('tests/rally-raid-harness.cpp').then(bytes=>bytes.toString())]);
+  assert.match(body(challenge,'ZombieType Challenge::IZombieSeedTypeToZombieType('),/case SEED_ZOMBIE_RALLY:\s*return ZOMBIE_RALLY;/);
+  assert.match(body(challenge,'int Challenge::IsZombieSeedType('),/theSeedType == SEED_ZOMBIE_RALLY/);
+  assert.match(body(plant,'void Plant::DrawSeedType('),/Challenge::IsZombieSeedType[\s\S]*Challenge::IZombieSeedTypeToZombieType[\s\S]*mReanimatorCache->DrawCachedZombie/);
+  assert.match(body(cache,'std::unique_ptr<MemoryImage> ReanimatorCache::MakeCachedZombieFrame('),/RallyPresentation::PrepareRig[\s\S]*RallyPresentation::DrawRig/);
+  assert.match(body(plant,'int Plant::GetCost('),/case SeedType::SEED_ZOMBIE_RALLY:\s*return RallyRaid::kRallyCost;/);
+  assert.match(raid,/kRallyCost = 100;/);
+  assert.match(body(plant,'int Plant::GetRefreshTime('),/Challenge::IsZombieSeedType\(theSeedType\)\)\s*\{\s*return 0;/);
+  assert.match(body(packet,'void DrawSeedPacket('),/FONT_PICO129/);
+  assert.match(body(packet,'void SeedPacket::FlashIfReady('),/RallyRaid::IsMode[\s\S]*RENDER_LAYER_ABOVE_UI[\s\S]*RENDER_LAYER_UI_BOTTOM/);
+  const card=body(presentation,'Sexy::Image* GetBonusImage(');
+  assert.match(card,/RallyPresentation::PrepareRig[\s\S]*RallyPresentation::DrawRig/);
+  assert.match(card,/Blank\(80,65\)/);
+  assert.match(card,/std::min\(22\.0f\/brainBounds\.mWidth,20\.0f\/brainBounds\.mHeight\)/);
+  assert.match(card,/PvzpDrawImageScaledF\(&picture,Sexy::IMAGE_BRAIN/);
+  assert.match(harness,/Only the hardware confirmation result is scripted/);
+  assert.equal((body(harness,'class IntegrationLawnApp final : public LawnApp').match(/\boverride\b/g)||[]).length,1,
+    'The test application overrides only hardware confirmation input');
+  const dialog=body(harness,'Sexy::Dialog* DoDialog(');
+  assert.match(dialog,/LawnApp::DoDialog\(id,modal,header,lines,footer,buttons\)/);
+  assert.match(dialog,/if\(id==DIALOG_CONFIRM_RESTART && restartResponse\) dialog->mResult=restartResponse;/);
+  const winning=body(harness,'RunStats Win(');
+  assert(!/RallyRaid::ResetStage|(?:mSunMoney|mPlantHealth|mBodyHealth|mChallengeScore)\s*=(?!=)/.test(winning),
+    'Winning policy cannot author stages or overwrite economy, combat health or brain credit');
+  assert.match(winning,/Require\(award==\(initial\?COIN_AWARD_MONEY_BAG:COIN_TROPHY\)/);
+  assert.match(winning,/mChallengeRecords\[kProfile\]==initial&&!b->HasLevelAwardDropped\(\)/);
+  assert.match(winning,/mChallengeRecords\[kProfile\]==initial\+1/);
+  const checkpoint=body(harness,'void SaveContinue(');
+  assert.match(checkpoint,/LawnSaveGame\([\s\S]*Graph\(b\)[\s\S]*TryLoadGame\(\)[\s\S]*Graph\(app->mBoard\)==graph/);
+  assert.match(checkpoint,/ContinueDialog_Continue/);
+  assert.match(harness,/GetNumTrophies\(CHALLENGE_PAGE_BONUS\)==1/);
+  console.log('PASS 24 legal native Rally Raid wins, 4 separate synthetic HUD controls, 14 native speed pairs, three save phases, budget-loss Retry and final-only first/replay credit.');
+}

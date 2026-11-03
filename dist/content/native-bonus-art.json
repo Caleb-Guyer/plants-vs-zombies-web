@@ -90,6 +90,16 @@
       "gameplay": "Ten authored day-lawn waves built around Rally Zombie groups. A fixed six-plant bank and seven starting plants provide immediate counterplay; native sun, planting, recharge, mowers, armor and victory rules remain active. Calls briefly raise eligible nearby walkers to 1.45 times their base speed, do not stack and stop when their source is frozen, buttered, eating, headless or armless.",
       "artwork": "The unmodified native head, body, legs and arm images supply the character. The original reaching arm pose is blended into each walking pose to raise and lower a shaded ivory megaphone with a brick-red rim. The 80 by 65 card is rendered from this actual rig, fitted to the existing centered portrait bounds.",
       "almanac": "One additional native zombie window in the unused bottom-left space; original zombie positions and Dr. Zomboss are retained. The portrait animates using the same rig and call clock, with native formatted statistics and brown italic character biography."
+    },
+    {
+      "mode": 81,
+      "name": "Rally Raid",
+      "hero": "Original repaired Rally Zombie rig and IMAGE_BRAIN, composed at native card resolution",
+      "background": "IMAGE_BACKGROUND1",
+      "generatedArtworkUsed": false,
+      "gameplay": "Five fixed I, Zombie boards. Spend a finite sun budget to deploy normal, conehead, buckethead, screen-door and Rally Zombies on the right-hand lawn. Eat all five native brains on each board; Chill-shroom and Mender-bloom join the authored cardboard defenses. Only board five grants the completion award.",
+      "artwork": "The existing original zombie rig and repaired closed grip accompany an original brain sprite rendered at final card resolution, fitted up to 22 by 20 pixels. The combined composition fits the centered 68 by 57 hero bounds inside the native 80 by 65 card. No separately generated illustration is used.",
+      "interface": "Original I, Zombie bank, brains, deployment line, native pause/Menu/speed controls and brain meter. Native footer shows board progress. Raid draws the bank and controls above lawn actors, retaining native packet flashes above that bank."
     }
   ],
   "canvas": {
@@ -140,7 +150,7 @@
       0.07
     ]
   },
-  "checkpointCompatibility": "State-zero existing bonus checkpoints keep their previous fixed-bank twenty-wave rules. Chill.8 arcade checkpoints retain saved boards/belts/waves and gain new mechanics on later events; New Game starts the revised opening/roster. Existing completion rewards remain valid. Garden Shuffle uses new mode76 and unused profile record75 with unchanged native object layouts; moves preserve the original plant instance. Seed Swap appends mode77 and unused profile record76; native Coin, Cursor, Plant and Challenge serialized members retain packet drops and replacement gardens. Intensive Lawn Care appends mode78 and unused profile record77; native cursor, plant, conveyor and challenge fields preserve wounded crew, moves, fatigue, supply and recovery without serialized layout changes. Rally Point appends mode80 and unused profile record79; Rally Zombie appends type33. Existing Board, Challenge, Zombie and profile saved layouts are unchanged; its existing native summon counter preserves the call cadence.",
+  "checkpointCompatibility": "State-zero existing bonus checkpoints keep their previous fixed-bank twenty-wave rules. Chill.8 arcade checkpoints retain saved boards/belts/waves and gain new mechanics on later events; New Game starts the revised opening/roster. Existing completion rewards remain valid. Garden Shuffle uses new mode76 and unused profile record75 with unchanged native object layouts; moves preserve the original plant instance. Seed Swap appends mode77 and unused profile record76; native Coin, Cursor, Plant and Challenge serialized members retain packet drops and replacement gardens. Intensive Lawn Care appends mode78 and unused profile record77; native cursor, plant, conveyor and challenge fields preserve wounded crew, moves, fatigue, supply and recovery without serialized layout changes. Rally Point appends mode80 and unused profile record79; Rally Zombie appends type33. Existing Board, Challenge, Zombie and profile saved layouts are unchanged; its existing native summon counter preserves the call cadence. Rally Raid appends mode81 and uses reserved profile record80. Packet77 remains outside original plant/cache/chooser ranges. Existing serialized challenge stage, state, timer, sun, actors and brain counters preserve each of five boards without new saved fields.",
   "supportPlant": {
     "displayName": "Mender-bloom",
     "spriteOverride": "mender-bloom/provenance.json",

@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-rally.3
-Repairs the megaphone attachment to Rally Zombie's original hand animation during idle, walking and rally poses. Existing native arm blends, Survival wave initialization, art sources, authored balance, content and saved layouts are retained.
-Engine JavaScript SHA-256: 3efa16733b86653613e71e55bd160432c149fbb735c66d01a87c1685e1190e38
-Engine WASM SHA-256: 9c5d64f4478fe5466037ca06fc1b9b2144c5f21fdac30f21c3b407b1432e802a
+PvZ-Portable 0.2.6-web-raid.1
+Adds Rally Raid: five hand-authored I, Zombie puzzles with a deployable Rally Zombie and Chill-shroom/Mender-bloom defenses, finite native sun economy and final-board-only completion. Existing content, original IDs, repaired artwork and serialized layouts are retained.
+Engine JavaScript SHA-256: 149cde88e398e1e3a08ae2d43c77a1eed6701299d783c78ac8a610573c268f0f
+Engine WASM SHA-256: bb64f196f81294ab56f8d4b9cda0d1e7f81af3545bfaf9656573e4f861ff49d6
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.

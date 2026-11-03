@@ -1,5 +1,20 @@
 # Browser parity and QA record
 
+## Raid.1 - finite I, Zombie puzzle validation
+
+Engine: `0.2.6-web-raid.1`. All 17 muted native suites passed: 1,194,484 checks, zero failures. All 15 browser integration suites passed. The Raid suite contributes 751,506 checks; retained Care, Chain Reaction and Rally Zombie matrices are freshly executed against the same 828 production inputs.
+
+The Raid matrix contains 28 scenarios and 14 speed pairs: 24 legal winning runs and four separate synthetic HUD controls. Native 1x and 2x runs across seeds 1729 and 7331 use independent literal packet/lawn inputs, native sun spending, armor, attacks and brain consumption. Together the winning runs clear 140 boards and eat 700 brains with 836 legal placements, including four full native Bonus-card replay cases. Twelve exact native Save/Continue graphs cover preparation, combat and between-board transitions. Four exhausted-budget cases reach genuine defeat and recover through native Try Again; four cases exercise scripted Yes/Cancel responses to the actual Restart dialog. Final awards and Continue to Bonus preserve one unique trophy through replay. A separate 600-tick thinking observation preserves budget, brains and the absence of defeat or credit. Synthetic HUD controls do not count as puzzle wins.
+
+Each HUD control case compares 11 native bank samples and three Menu/speed samples with native raster references. Three explicit underdraw negatives reproduce tall Fume, top-row Rally and control obstruction. The bank uses independently identified opaque native pixels; Menu/speed use the same-state native composite. Exact foreground matches and rejected underdraw controls establish the bounded overlap repair. Retained font/layout checks also cover the Raid footer, card, packet and control routing.
+
+A muted private preview at `http://127.0.0.1:4231/?testing=1` served the frozen native engine while retaining its disposable QA-Boss profile. Public-origin saves were untouched. Browser inspection showed all nine Bonus cards and the native brain composition, two legal Rally purchases reducing sun 450 to 350 to 250, 2x to 1x switching and the original Menu pause. Repeated accessibility states showed Unmute sound checked (Value 1); error-level console logs were empty. Its synthetic profile achievements are not earned-win evidence. The final installed Information panel displayed `0.2.6-web-raid.1` and its matching Engine Source download link. The completed preview tab and private server were closed.
+
+The [corresponding source archive](dist/source/pvz-portable-0.2.6-web-raid.1-source.zip) contains 828 production files, 916 ZIP entries and 23,958,264 bytes, SHA-256 `50e122044bb767eb9c78cf8c38c9cd48de022f8b3f966b69b3bd29a7bbafdb8c`. The full upstream patch and Rally.3 increment reconstruct every production source byte. Existing saved-object headers and the native SaveGame implementation remain byte-identical to the authenticated parent.
+
+These are bounded native scenarios and visual checks, not exhaustive original-game parity, every-strategy difficulty guarantees or a browser frame-time benchmark. Test audio is disabled; ordinary game audio remains available. Earlier sections describe their named historical builds.
+
+
 ## Rally.3 - held-object presentation validation
 
 Current engine: `0.2.6-web-rally.3`. All **16 native suites** passed, **440,233 checks**, zero failures. Each authenticates current source/build inputs. Complete-engine coverage retains 18 Care cases, 24 five-board Chain Reaction cases and 20 Rally cases, including twelve wins, four genuine unattended losses and four separately labeled synthetic controls.

@@ -1,5 +1,14 @@
 # Plants vs. Zombies — browser playtest
 
+## Raid.1 - Rally Raid
+
+`0.2.6-web-raid.1` adds **Rally Raid** under **Mini-Games > Bonus**: five hand-arranged I, Zombie puzzles. Deploy a 100-sun Rally Zombie to support nearby attackers against the original cardboard defenders, then face Chill-shroom and Mender-bloom defenses. The native bank, brains, placement line and puzzle presentation carry the game.
+
+Each board has its own finite sun budget. Try Again and in-game Restart reset the current board; New Game begins at board one. Save/Continue preserves preparation, combat and the transition between boards. Only the fifth board grants the native final award; replays use the normal replay reward. Existing levels, unlock rules, saved layouts and accepted artwork remain.
+
+All seventeen muted native suites passed: 1,194,484 checks, zero failures, along with all fifteen browser integration suites. Rally Raid includes 24 legal winning runs and four separate HUD controls, with save/Continue, real defeat/Retry and native replay coverage. See [QA scope](PARITY-QA.md) and [release receipts](DEPLOYMENT.md). Normal game audio remains available.
+
+
 ## Rally.3 - held megaphone repair
 
 `0.2.6-web-rally.3` gives Rally Zombie a closed grip around the megaphone using the original game's flag-holding hand. The prop follows that grip while lowered, walking and raised for a call. The original no-prop arm transitions remain available when the object is lost.

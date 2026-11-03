@@ -1,15 +1,15 @@
 {
   "schema_version": 1,
-  "current_engine": "0.2.6-web-rally.3",
+  "current_engine": "0.2.6-web-raid.1",
   "upstream_tag": "0.2.6",
   "layout": "Site-source nests current corresponding source, its immediate parent when present, the upstream baseline and the current full patch. Other source archives and incremental/historical patches remain standalone downloads beside this index and in the full runtime distribution.",
   "nested_sources": [
     "pvz-portable-0.2.6-source.zip",
-    "pvz-portable-0.2.6-web-rally.2-source.zip",
-    "pvz-portable-0.2.6-web-rally.3-source.zip"
+    "pvz-portable-0.2.6-web-rally.3-source.zip",
+    "pvz-portable-0.2.6-web-raid.1-source.zip"
   ],
   "nested_patches": [
-    "web-rally.3.patch"
+    "web-raid.1.patch"
   ],
   "archives": [
     {
@@ -209,6 +209,13 @@
       "upstream": false
     },
     {
+      "name": "pvz-portable-0.2.6-web-raid.1-source.zip",
+      "bytes": 23958264,
+      "sha256": "50e122044bb767eb9c78cf8c38c9cd48de022f8b3f966b69b3bd29a7bbafdb8c",
+      "current": true,
+      "upstream": false
+    },
+    {
       "name": "pvz-portable-0.2.6-web-rally.1-source.zip",
       "bytes": 21343650,
       "sha256": "a37ba37528139bc38df887a027c7c54aadfb2065897f32a48a556b3dc15df63e",
@@ -226,7 +233,7 @@
       "name": "pvz-portable-0.2.6-web-rally.3-source.zip",
       "bytes": 21368282,
       "sha256": "2deb50f9a38d8599453f567f5458a20505d552956df0bc442e649e49ea1c5c24",
-      "current": true,
+      "current": false,
       "upstream": false
     },
     {

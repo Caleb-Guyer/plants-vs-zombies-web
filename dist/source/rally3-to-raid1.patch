@@ -1,0 +1,895 @@
+diff --git a/CMake/ProjectVersion.cmake b/CMake/ProjectVersion.cmake
+index 3b2b21385a41774e3b57014217a364d309e077c7..2ae0490fe0f3027f5a95577f7540b3ecf935c37d 100644
+--- a/CMake/ProjectVersion.cmake
++++ b/CMake/ProjectVersion.cmake
+@@ -66,6 +66,6 @@ if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
+ endif()
+ 
+ # Browser release identity; keep binary and corresponding-source manifests aligned.
+-set(PVZP_VERSION "0.2.6-web-rally.3")
++set(PVZP_VERSION "0.2.6-web-raid.1")
+ set(PVZP_VERSION_PLAIN "0.2.6")
+ configure_file("${PROJECT_SOURCE_DIR}/CMake/ProjectVersion.h.in" "${PROJECT_BINARY_DIR}/ProjectVersion.h" @ONLY)
+diff --git a/src/ConstEnums.h b/src/ConstEnums.h
+index 76fc51a8db41455e93592d314ed18e158d8d903f..e68467c90234a6f5fddeadd031e0c7a6b1e194b8 100644
+--- a/src/ConstEnums.h
++++ b/src/ConstEnums.h
+@@ -460,7 +460,8 @@ enum GameMode : int32_t
+ 	GAMEMODE_CHALLENGE_INTENSIVE_CARE = 78,
+ 	GAMEMODE_CHALLENGE_CHAIN_REACTION = 79,
+ 	GAMEMODE_CHALLENGE_RALLY_POINT = 80,
+-	NUM_GAME_MODES = 81
++	GAMEMODE_CHALLENGE_RALLY_RAID = 81,
++	NUM_GAME_MODES = 82
+ };
+ enum GameObjectType : int32_t
+ {
+@@ -1121,6 +1122,7 @@ enum SeedType : int32_t
+ 	// Appended outside the original plant/cache/chooser ranges.
+ 	SEED_LANTERNSHROOM = 75,
+ 	SEED_MENDERBLOOM = 76,
++	SEED_ZOMBIE_RALLY = 77,
+ 	NUM_SEEDS_IN_CHOOSER = 49,
+ 	SEED_NONE = -1
+ };
+diff --git a/src/Lawn/Board.cpp b/src/Lawn/Board.cpp
+index 0ab2e2f5e1739540184414d4d73a7ef6f73ef431..499841375ad0ba339343ac890072c3d36806b657 100644
+--- a/src/Lawn/Board.cpp
++++ b/src/Lawn/Board.cpp
+@@ -31,6 +31,7 @@
+ #include "System/Music.h"
+ #include "System/SaveGame.h"
+ #include "System/BonusChallenge.h"
++#include "System/RallyRaidPresentation.h"
+ #include "Widget/LawnDialog.h"
+ #include "System/PlayerInfo.h"
+ #include "System/PoolEffect.h"
+@@ -908,6 +909,7 @@ void Board::PickBackground()
+ 	case GameMode::GAMEMODE_CHALLENGE_INTENSIVE_CARE:
+ 	case GameMode::GAMEMODE_CHALLENGE_CHAIN_REACTION:
+ 	case GameMode::GAMEMODE_CHALLENGE_RALLY_POINT:
++	case GameMode::GAMEMODE_CHALLENGE_RALLY_RAID:
+ 	case GameMode::GAMEMODE_SURVIVAL_HARD_STAGE_1:
+ 	case GameMode::GAMEMODE_SURVIVAL_ENDLESS_STAGE_1:
+ 	case GameMode::GAMEMODE_CHALLENGE_WAR_AND_PEAS:
+@@ -1383,7 +1385,8 @@ void Board::InitLevel()
+     // A fresh game opts into the new mechanics. Loaded revision-1 checkpoints
+     // never pass through InitLevel and keep their original state and rules.
+     if (BonusChallenge::IsMode(aGameMode))
+-        mChallenge->mChallengeState = RallyZombie::IsMode(aGameMode) ? RallyZombie::kState :
++        mChallenge->mChallengeState = RallyRaid::IsMode(aGameMode) ? RallyRaid::kActive :
++            RallyZombie::IsMode(aGameMode) ? RallyZombie::kState :
+             ChainReaction::IsMode(aGameMode) ? ChainReaction::kPlanning :
+             IntensiveCare::IsMode(aGameMode) ? IntensiveCare::kState :
+             SeedSwap::IsMode(aGameMode) ? SeedSwap::kState :
+@@ -4069,7 +4072,7 @@ Plant* Board::ToolHitTest(int theX, int theY)
+ void Board::TutorialArrowShow(int theX, int theY)
+ {
+ 	TutorialArrowRemove();
+-	PvzpParticleSystem* aParticle = mApp->AddPvzpParticle(theX, theY, MakeRenderOrder(RenderLayer::RENDER_LAYER_TOP, 0, 0), ParticleEffect::PARTICLE_SEED_PACKET_PICK);
++	PvzpParticleSystem* aParticle = mApp->AddPvzpParticle(theX, theY, MakeRenderOrder(RallyRaid::IsMode(mApp->mGameMode) ? RenderLayer::RENDER_LAYER_ABOVE_UI : RenderLayer::RENDER_LAYER_TOP, 0, 0), ParticleEffect::PARTICLE_SEED_PACKET_PICK);
+ 	mTutorialParticleID = mApp->ParticleGetID(aParticle);
+ }
+ 
+@@ -7185,7 +7188,11 @@ void Board::DrawLevel(Graphics* g)
+ 	else
+ 	{
+ 		aLevelStr = mApp->GetCurrentChallengeDef().mChallengeName;
+-		if (ChainReaction::IsMode(mApp->mGameMode))
++		if (RallyRaid::IsMode(mApp->mGameMode))
++        {
++            aLevelStr = RallyRaidPresentation::LevelLabel(mChallenge->mSurvivalStage);
++        }
++		else if (ChainReaction::IsMode(mApp->mGameMode))
+ 		{
+ 			aLevelStr = std::format("Chain Reaction - {}/{}", std::clamp(mChallenge->mSurvivalStage + 1, 1, ChainReaction::kBoardCount), ChainReaction::kBoardCount);
+ 		}
+@@ -7216,6 +7223,7 @@ void Board::DrawLevel(Graphics* g)
+ 
+ 	int aPosX = 780;
+ 	int aPosY = 595;
++    if (RallyRaid::IsMode(mApp->mGameMode)) aPosY = 592;
+ 	if (HasProgressMeter())
+ 	{
+ 		aPosX = 593;
+@@ -7771,7 +7779,7 @@ void Board::DrawUIBottom(Graphics* g)
+ 
+ 	if (mApp->mGameScene != GameScenes::SCENE_ZOMBIES_WON)
+ 	{
+-		if (!GardenShuffle::IsMode(mApp->mGameMode) && !SeedSwap::IsMode(mApp->mGameMode) && mSeedBank->BeginDraw(g))
++		if (!RallyRaid::IsMode(mApp->mGameMode) && !GardenShuffle::IsMode(mApp->mGameMode) && !SeedSwap::IsMode(mApp->mGameMode) && mSeedBank->BeginDraw(g))
+ 		{
+ 			mSeedBank->Draw(g);
+ 			mSeedBank->EndDraw(g);
+@@ -7784,7 +7792,7 @@ void Board::DrawUIBottom(Graphics* g)
+ 	}
+ 
+ 	DrawShovel(g);
+-	if (!StageHasFog())
++	if (!StageHasFog() && !RallyRaid::IsMode(mApp->mGameMode))
+ 	{
+ 		DrawTopRightUI(g);
+ 	}
+@@ -7968,7 +7976,15 @@ bool Board::IsScaryPotterDaveTalking()
+ 
+ void Board::DrawUITop(Graphics* g)
+ {
+-	if (StageHasFog())
++    // Raid can deploy tall actors into the top row. Keep the original HUD
++    // above those lawn sprites without moving its appearance or hit targets.
++    if (RallyRaid::IsMode(mApp->mGameMode) && mApp->mGameScene != GameScenes::SCENE_ZOMBIES_WON &&
++        mSeedBank->BeginDraw(g))
++    {
++        mSeedBank->Draw(g);
++        mSeedBank->EndDraw(g);
++    }
++	if (StageHasFog() || RallyRaid::IsMode(mApp->mGameMode))
+ 	{
+ 		DrawTopRightUI(g);
+ 	}
+@@ -9770,7 +9786,7 @@ void Board::DropLootPiece(int thePosX, int thePosY, int theDropFactor)
+ 
+ bool Board::CanDropLoot()
+ {
+-	if (ChainReaction::IsMode(mApp->mGameMode)) return false;
++	if (ChainReaction::IsMode(mApp->mGameMode) || RallyRaid::IsMode(mApp->mGameMode)) return false;
+ 	return !mCutScene->ShouldRunUpsellBoard() && (!mApp->IsFirstTimeAdventureMode() || mLevel >= 11);
+ }
+ 
+diff --git a/src/Lawn/Challenge.cpp b/src/Lawn/Challenge.cpp
+index fc79fc5e5241c8448de85dad87992f908b33f57b..6341f8b4e5ff8975d6f678eba7f9b2a376294059 100644
+--- a/src/Lawn/Challenge.cpp
++++ b/src/Lawn/Challenge.cpp
+@@ -40,6 +40,7 @@
+ #include "../GameConstants.h"
+ #include "System/PlayerInfo.h"
+ #include "System/BonusChallenge.h"
++#include "System/RallyRaidPresentation.h"
+ #include "Widget/GameButton.h"
+ #include "Widget/StoreScreen.h"
+ #include "../PvzpLib/PvzpDebug.h"
+@@ -119,6 +120,11 @@ void Challenge::LoadBeghouledBoardState(BeghouledBoardState* theBoardState)
+ 
+ void Challenge::InitLevel()
+ {
++    if (RallyRaid::IsMode(mApp->mGameMode))
++    {
++        RallyRaid::Populate(*mBoard);
++        return;
++    }
+     if (RallyZombie::IsMode(mApp->mGameMode))
+         for (const auto& entry : RallyZombie::kStartingPlants)
+             mBoard->AddPlant(entry.mCol, entry.mRow, entry.mSeed, SEED_NONE);
+@@ -2080,6 +2086,11 @@ void Challenge::Update()
+ 	if (mApp->mGameScene != SCENE_PLAYING && mApp->mGameMode != GAMEMODE_TREE_OF_WISDOM)
+ 		return;
+ 
++    if (RallyRaid::IsMode(mApp->mGameMode))
++    {
++        RallyRaid::Update(*mBoard);
++        if (mChallengeState != RallyRaid::kActive) return;
++    }
+     if (ChainReaction::IsMode(mApp->mGameMode)) ChainReaction::Update(*mBoard);
+     if (IntensiveCare::IsMode(mApp->mGameMode)) mBoard->UpdateIntensiveCare();
+     if (GardenShuffle::IsMode(mApp->mGameMode))
+@@ -2355,7 +2366,7 @@ void Challenge::DrawBackdrop(Graphics* g)
+ 	{
+ 		g->DrawImage(Sexy::IMAGE_WALLNUT_BOWLINGSTRIPE, 268, 77);
+ 	}
+-	if (mApp->mGameMode == GAMEMODE_PUZZLE_I_ZOMBIE_1 || mApp->mGameMode == GAMEMODE_PUZZLE_I_ZOMBIE_2 || mApp->mGameMode == GAMEMODE_PUZZLE_I_ZOMBIE_3 ||
++	if (RallyRaid::IsMode(mApp->mGameMode) || mApp->mGameMode == GAMEMODE_PUZZLE_I_ZOMBIE_1 || mApp->mGameMode == GAMEMODE_PUZZLE_I_ZOMBIE_2 || mApp->mGameMode == GAMEMODE_PUZZLE_I_ZOMBIE_3 ||
+ 		mApp->mGameMode == GAMEMODE_PUZZLE_I_ZOMBIE_4 || mApp->mGameMode == GAMEMODE_PUZZLE_I_ZOMBIE_5)
+ 	{
+ 		g->DrawImage(Sexy::IMAGE_WALLNUT_BOWLINGSTRIPE, 352, 73);
+@@ -2402,7 +2413,8 @@ PlantingReason Challenge::CanPlantAt(int theGridX, int theGridY, SeedType theSee
+ 	}
+ 	else if (mApp->IsIZombieLevel())
+ 	{
+-		int aLimit = 6;
++		int aLimit = RallyRaid::IsMode(mApp->mGameMode) ? RallyRaid::kDeploymentColumn : 6;
++        if (RallyRaid::IsMode(mApp->mGameMode) && mChallengeState != RallyRaid::kActive) return PLANTING_NOT_HERE;
+ 		if (mApp->mGameMode == GAMEMODE_PUZZLE_I_ZOMBIE_1 || mApp->mGameMode == GAMEMODE_PUZZLE_I_ZOMBIE_2 || mApp->mGameMode == GAMEMODE_PUZZLE_I_ZOMBIE_3 ||
+ 			mApp->mGameMode == GAMEMODE_PUZZLE_I_ZOMBIE_4 || mApp->mGameMode == GAMEMODE_PUZZLE_I_ZOMBIE_5)
+ 		{
+@@ -4230,6 +4242,7 @@ ZombieType Challenge::IZombieSeedTypeToZombieType(SeedType theSeedType)
+ {
+ 	switch (theSeedType)
+ 	{
++	case SEED_ZOMBIE_RALLY:       return ZOMBIE_RALLY;
+ 	case SEED_ZOMBIE_NORMAL:		return ZOMBIE_NORMAL;
+ 	case SEED_ZOMBIE_TRAFFIC_CONE:	return ZOMBIE_TRAFFIC_CONE;
+ 	case SEED_ZOMBIE_POLEVAULTER:	return ZOMBIE_POLEVAULTER;
+@@ -4699,6 +4712,7 @@ void Challenge::IZombieUpdate()
+ int Challenge::IsZombieSeedType(SeedType theSeedType)
+ {
+ 	return
++		theSeedType == SEED_ZOMBIE_RALLY ||
+ 		theSeedType == SEED_ZOMBIQUARIUM_SNORKLE ||
+ 		theSeedType == SEED_ZOMBIQUARIUM_TROPHY ||
+ 		theSeedType == SEED_ZOMBIE_NORMAL ||
+@@ -4732,6 +4746,7 @@ void Challenge::IZombieSetPlantFilterEffect(Plant* thePlant, FilterEffect theFil
+ 
+ void Challenge::IZombieDrawPlant(Graphics* g, Plant* thePlant)
+ {
++    if (RallyRaid::IsMode(mApp->mGameMode) && RallyRaidPresentation::DrawCustomPlant(g, *thePlant)) return;
+ 	Reanimation* aReanim = mApp->ReanimationTryToGet(thePlant->mBodyReanimID);
+ 	if (aReanim)
+ 	{
+@@ -4792,6 +4807,11 @@ void Challenge::IZombieScoreBrain(GridItem* theBrain)
+ {
+ 	mBoard->mChallenge->mChallengeScore++;
+ 	mBoard->mProgressMeterWidth = PvzpAnimateCurve(0, I_ZOMBIE_WINNING_SCORE, mBoard->mChallenge->mChallengeScore, 0, PROGRESS_METER_COUNTER, CURVE_LINEAR);
++    if (RallyRaid::IsMode(mApp->mGameMode))
++    {
++        if (mChallengeScore == I_ZOMBIE_WINNING_SCORE) RallyRaid::OnBrainsCleared(*mBoard, theBrain->mGridY);
++        return;
++    }
+ 
+ 	if (mBoard->mChallenge->mChallengeScore == I_ZOMBIE_WINNING_SCORE)
+ 	{
+diff --git a/src/Lawn/Plant.cpp b/src/Lawn/Plant.cpp
+index 6b6e9154165b560460a113d48c301c3ae573c349..a6476eb58812177c6874ba9a107dcae4498c6c99 100644
+--- a/src/Lawn/Plant.cpp
++++ b/src/Lawn/Plant.cpp
+@@ -35,6 +35,7 @@
+ #include "System/PlayerInfo.h"
+ #include "System/LanternShroom.h"
+ #include "System/MenderBloom.h"
++#include "System/RallyRaid.h"
+ #include "System/IntensiveCare.h"
+ #include "System/ChainReaction.h"
+ #include "System/CareFatigue.h"
+@@ -5207,6 +5208,7 @@ int Plant::GetCost(SeedType theSeedType, SeedType theImitaterType)
+ 	case SeedType::SEED_SLOT_MACHINE_DIAMOND:       return 0;
+ 	case SeedType::SEED_ZOMBIQUARIUM_SNORKLE:       return 100;
+ 	case SeedType::SEED_ZOMBIQUARIUM_TROPHY:        return 1000;
++	case SeedType::SEED_ZOMBIE_RALLY:               return RallyRaid::kRallyCost;
+ 	case SeedType::SEED_ZOMBIE_NORMAL:              return 50;
+ 	case SeedType::SEED_ZOMBIE_TRAFFIC_CONE:        return 75;
+ 	case SeedType::SEED_ZOMBIE_POLEVAULTER:         return 75;
+@@ -5240,6 +5242,7 @@ int Plant::GetCost(SeedType theSeedType, SeedType theImitaterType)
+ 
+ std::string Plant::GetNameString(SeedType theSeedType, SeedType theImitaterType)
+ {
++    if (theSeedType == SEED_ZOMBIE_RALLY) return "Rally Zombie";
+     if (theSeedType == SEED_MENDERBLOOM) return "Mender-bloom";
+     if (theSeedType == SEED_IMITATER && theImitaterType == SEED_MENDERBLOOM) return "Imitater Mender-bloom";
+     if (theSeedType == SEED_LANTERNSHROOM) return "Chill-shroom";
+@@ -5262,6 +5265,7 @@ std::string Plant::GetNameString(SeedType theSeedType, SeedType theImitaterType)
+ 
+ std::string Plant::GetToolTip(SeedType theSeedType)
+ {
++    if (theSeedType == SEED_ZOMBIE_RALLY) return "Calls nearby walkers into a faster shuffle.";
+     if (theSeedType == SEED_MENDERBLOOM) return "Slowly heals damaged plants in the eight neighboring squares.";
+     if (theSeedType == SEED_LANTERNSHROOM) return "Cold pulses briefly slow nearby zombies.";
+ 
+diff --git a/src/Lawn/SeedPacket.cpp b/src/Lawn/SeedPacket.cpp
+index aec279ccc4d2401ac299ba216f31a53b63a2e181..6e83c9c3848cf0b69cfe3e516dc99dec944327a3 100644
+--- a/src/Lawn/SeedPacket.cpp
++++ b/src/Lawn/SeedPacket.cpp
+@@ -26,6 +26,7 @@
+ #include "Challenge.h"
+ #include "SeedPacket.h"
+ #include "SeedPacketCooldown.h"
++#include "System/RallyRaid.h"
+ #include "../LawnApp.h"
+ #include "CursorObject.h"
+ #include "../Resources.h"
+@@ -115,7 +116,8 @@ void SeedPacket::FlashIfReady()
+ 
+ 	if (!mBoard->HasConveyorBeltSeedBank())
+ 	{
+-		int aRenderPosition = Board::MakeRenderOrder(RenderLayer::RENDER_LAYER_UI_BOTTOM, 0, 2);
++		const RenderLayer aLayer = RallyRaid::IsMode(mApp->mGameMode) ? RenderLayer::RENDER_LAYER_ABOVE_UI : RenderLayer::RENDER_LAYER_UI_BOTTOM;
++		int aRenderPosition = Board::MakeRenderOrder(aLayer, 0, 2);
+ 		mApp->AddPvzpParticle(mX + mBoard->mSeedBank->mX, mY + mBoard->mSeedBank->mY, aRenderPosition, ParticleEffect::PARTICLE_SEED_PACKET_FLASH);
+ 	}
+ 
+@@ -455,6 +457,7 @@ void DrawSeedPacket(Graphics* g, float x, float y, SeedType theSeedType, SeedTyp
+ 	case SeedType::SEED_ZOMBIE_NORMAL:
+ 	case SeedType::SEED_ZOMBIE_TRAFFIC_CONE:
+ 	case SeedType::SEED_ZOMBIE_PAIL:
++	case SeedType::SEED_ZOMBIE_RALLY:
+ 		aScale = 0.35f;
+ 		aOffsetX = -3.0f;
+ 		aOffsetY = -7.0f;
+diff --git a/src/Lawn/System/BonusChallenge.h b/src/Lawn/System/BonusChallenge.h
+index 42d39b9edaf875aec06d23161f2848a35d514d98..82426bc8f453d95a8ae09aaf9ac48d7dc4f469b4 100644
+--- a/src/Lawn/System/BonusChallenge.h
++++ b/src/Lawn/System/BonusChallenge.h
+@@ -9,6 +9,7 @@
+ #include "IntensiveCare.h"
+ #include "ChainReaction.h"
+ #include "RallyZombie.h"
++#include "RallyRaid.h"
+ #include <array>
+ #include <cstddef>
+ #include <string_view>
+@@ -50,7 +51,7 @@ inline constexpr std::array<Wave, kWaveCount> kWaves = {{
+     {2, 6, 0, 2}, {2, 5, 2, 2}, {2, 6, 0, 3}, {3, 7, 2, 3}
+ }};
+ 
+-constexpr bool IsMode(GameMode mode) { return mode == kMode || NightShift::IsMode(mode) || LanternGlow::IsMode(mode) || GardenShuffle::IsMode(mode) || SeedSwap::IsMode(mode) || IntensiveCare::IsMode(mode) || ChainReaction::IsMode(mode) || RallyZombie::IsMode(mode); }
++constexpr bool IsMode(GameMode mode) { return mode == kMode || NightShift::IsMode(mode) || LanternGlow::IsMode(mode) || GardenShuffle::IsMode(mode) || SeedSwap::IsMode(mode) || IntensiveCare::IsMode(mode) || ChainReaction::IsMode(mode) || RallyZombie::IsMode(mode) || RallyRaid::IsMode(mode); }
+ constexpr bool IsFlagWave(int wave) { return wave >= 0 && wave < kWaveCount && (wave + 1) % 10 == 0; }
+ constexpr int ZombieCount(int wave)
+ {
+@@ -100,12 +101,13 @@ void FillSeedBank(Bank& bank)
+ }
+ 
+ // Shared routing keeps the original Cone Zone data and helpers unchanged.
+-constexpr int StartingSun(GameMode mode) { return RallyZombie::IsMode(mode) ? RallyZombie::kStartingSun : ChainReaction::IsMode(mode) ? 0 : IntensiveCare::IsMode(mode) ? 0 : SeedSwap::IsMode(mode) ? 0 : GardenShuffle::IsMode(mode) ? 0 : LanternGlow::IsMode(mode) ? LanternGlow::kStartingSun : NightShift::IsMode(mode) ? NightShift::kStartingSun : kStartingSun; }
+-constexpr int SeedCount(GameMode mode) { return RallyZombie::IsMode(mode) ? static_cast<int>(RallyZombie::kSeeds.size()) : ChainReaction::IsMode(mode) ? ChainReaction::kSeedCount : IntensiveCare::IsMode(mode) ? IntensiveCare::kSeedCount : SeedSwap::IsMode(mode) ? 0 : GardenShuffle::IsMode(mode) ? 0 : static_cast<int>(LanternGlow::IsMode(mode) ? LanternGlow::kSeeds.size() : NightShift::IsMode(mode) ? NightShift::kSeeds.size() : kSeeds.size()); }
++constexpr int StartingSun(GameMode mode) { return RallyRaid::IsMode(mode) ? RallyRaid::kBoards[0].mSun : RallyZombie::IsMode(mode) ? RallyZombie::kStartingSun : ChainReaction::IsMode(mode) ? 0 : IntensiveCare::IsMode(mode) ? 0 : SeedSwap::IsMode(mode) ? 0 : GardenShuffle::IsMode(mode) ? 0 : LanternGlow::IsMode(mode) ? LanternGlow::kStartingSun : NightShift::IsMode(mode) ? NightShift::kStartingSun : kStartingSun; }
++constexpr int SeedCount(GameMode mode) { return RallyRaid::IsMode(mode) ? RallyRaid::kSeedCount : RallyZombie::IsMode(mode) ? static_cast<int>(RallyZombie::kSeeds.size()) : ChainReaction::IsMode(mode) ? ChainReaction::kSeedCount : IntensiveCare::IsMode(mode) ? IntensiveCare::kSeedCount : SeedSwap::IsMode(mode) ? 0 : GardenShuffle::IsMode(mode) ? 0 : static_cast<int>(LanternGlow::IsMode(mode) ? LanternGlow::kSeeds.size() : NightShift::IsMode(mode) ? NightShift::kSeeds.size() : kSeeds.size()); }
+ 
+ template<std::size_t Waves, std::size_t Slots>
+ int PopulateWaves(GameMode mode, ZombieType (&output)[Waves][Slots])
+ {
++    if (RallyRaid::IsMode(mode)) return RallyRaid::PopulateWaves(output);
+     if (RallyZombie::IsMode(mode)) return RallyZombie::PopulateWaves(output);
+     if (ChainReaction::IsMode(mode)) return ChainReaction::PopulateWaves(output);
+     if (IntensiveCare::IsMode(mode)) return IntensiveCare::PopulateWaves(output);
+@@ -117,7 +119,8 @@ int PopulateWaves(GameMode mode, ZombieType (&output)[Waves][Slots])
+ template<std::size_t Count>
+ void PopulateAllowedZombies(GameMode mode, bool (&output)[Count])
+ {
+-    if (RallyZombie::IsMode(mode)) RallyZombie::PopulateAllowedZombies(output);
++    if (RallyRaid::IsMode(mode)) RallyRaid::PopulateAllowedZombies(output);
++    else if (RallyZombie::IsMode(mode)) RallyZombie::PopulateAllowedZombies(output);
+     else if (ChainReaction::IsMode(mode)) ChainReaction::PopulateAllowedZombies(output);
+     else if (IntensiveCare::IsMode(mode)) IntensiveCare::PopulateAllowedZombies(output);
+     else if (SeedSwap::IsMode(mode)) SeedSwap::PopulateAllowedZombies(output);
+@@ -130,7 +133,8 @@ void PopulateAllowedZombies(GameMode mode, bool (&output)[Count])
+ template<class Bank>
+ void FillSeedBank(GameMode mode, Bank& bank)
+ {
+-    if (RallyZombie::IsMode(mode)) RallyZombie::FillSeedBank(bank);
++    if (RallyRaid::IsMode(mode)) RallyRaid::FillSeedBank(bank);
++    else if (RallyZombie::IsMode(mode)) RallyZombie::FillSeedBank(bank);
+     else if (ChainReaction::IsMode(mode)) ChainReaction::FillSeedBank(bank);
+     else if (IntensiveCare::IsMode(mode)) IntensiveCare::FillSeedBank(bank);
+     else if (SeedSwap::IsMode(mode)) bank.mNumPackets = 0;
+@@ -148,6 +152,7 @@ inline constexpr ChallengeState kColdSetupState = static_cast<ChallengeState>(10
+ inline constexpr ChallengeState kColdDefendState = static_cast<ChallengeState>(102);
+ constexpr bool IsCurrentRules(GameMode mode, ChallengeState state)
+ {
++    if (RallyRaid::IsMode(mode)) return RallyRaid::IsCurrentRules(mode, state);
+     if (RallyZombie::IsMode(mode)) return RallyZombie::IsCurrentRules(mode, state);
+     if (ChainReaction::IsMode(mode)) return ChainReaction::IsCurrentRules(mode, state);
+     if (IntensiveCare::IsMode(mode)) return IntensiveCare::IsCurrentRules(mode, state);
+@@ -166,6 +171,7 @@ constexpr bool IsSetup(GameMode mode, ChallengeState state) { return LanternGlow
+ constexpr bool IsDefending(GameMode mode, ChallengeState state) { return LanternGlow::IsMode(mode) && state == kColdDefendState; }
+ constexpr int WaveCount(GameMode mode, ChallengeState state)
+ {
++    if (RallyRaid::IsMode(mode)) return RallyRaid::kBoardCount;
+     if (RallyZombie::IsMode(mode)) return RallyZombie::kWaveCount;
+     if (ChainReaction::IsMode(mode)) return ChainReaction::kBoardCount;
+     if (IntensiveCare::IsMode(mode)) return IntensiveCare::kWaveCount;
+@@ -175,6 +181,7 @@ constexpr int WaveCount(GameMode mode, ChallengeState state)
+ }
+ constexpr int StartingSun(GameMode mode, ChallengeState state)
+ {
++    if (RallyRaid::IsMode(mode)) return RallyRaid::kBoards[0].mSun;
+     if (RallyZombie::IsMode(mode)) return RallyZombie::kStartingSun;
+     return IsCurrentRules(mode, state) ? (LanternGlow::IsMode(mode) ? LanternGlow::kPuzzleStartingSun : 0) : StartingSun(mode);
+ }
+@@ -260,6 +267,7 @@ int PopulateMiniWaves(ZombieType (&output)[Waves][Slots])
+ template<std::size_t Waves, std::size_t Slots>
+ int PopulateWaves(GameMode mode, ChallengeState state, ZombieType (&output)[Waves][Slots])
+ {
++    if (RallyRaid::IsMode(mode)) return RallyRaid::PopulateWaves(output);
+     if (RallyZombie::IsMode(mode)) return RallyZombie::PopulateWaves(output);
+     if (ChainReaction::IsMode(mode)) return ChainReaction::PopulateWaves(output);
+     if (IntensiveCare::IsMode(mode)) return IntensiveCare::PopulateWaves(output);
+@@ -281,6 +289,7 @@ void PopulateAllowedZombies(GameMode mode, ChallengeState state, bool (&output)[
+ template<class Bank>
+ void FillSeedBank(GameMode mode, ChallengeState state, Bank& bank)
+ {
++    if (RallyRaid::IsMode(mode)) { RallyRaid::FillSeedBank(bank); return; }
+     if (RallyZombie::IsMode(mode)) { RallyZombie::FillSeedBank(bank); return; }
+     if (ChainReaction::IsMode(mode)) { ChainReaction::FillSeedBank(bank); return; }
+     if (IntensiveCare::IsMode(mode)) { IntensiveCare::FillSeedBank(bank); return; }
+diff --git a/src/Lawn/System/RallyRaid.cpp b/src/Lawn/System/RallyRaid.cpp
+new file mode 100644
+index 0000000000000000000000000000000000000000..bde377db3976f6480dbf48e5658a71c7d499bbf4
+--- /dev/null
++++ b/src/Lawn/System/RallyRaid.cpp
+@@ -0,0 +1,99 @@
++// SPDX-License-Identifier: LGPL-3.0-or-later
++#include "RallyRaid.h"
++#include "../Board.h"
++#include "../Challenge.h"
++#include "../Plant.h"
++#include "../Zombie.h"
++#include "../GridItem.h"
++#include "../Coin.h"
++#include "../SeedPacket.h"
++#include "../Projectile.h"
++#include "../../LawnApp.h"
++#include <algorithm>
++
++namespace RallyRaid
++{
++void Populate(Board& board)
++{
++    Challenge& challenge=*board.mChallenge;
++    const int stage=std::clamp(challenge.mSurvivalStage,0,kBoardCount-1);
++    challenge.mSurvivalStage=stage;
++    challenge.mChallengeState=kActive;
++    challenge.mChallengeStateCounter=0;
++    challenge.mChallengeScore=0;
++    board.mSunMoney=kBoards[stage].mSun;
++    board.mCurrentWave=0;
++    board.mProgressMeterWidth=0;
++    board.mZombieCountDown=100000;
++    board.mZombieCountDownStart=100000;
++    board.mNextSurvivalStageCounter=0;
++    board.mShowShovel=false;
++    board.mBonusLawnMowersRemaining=0;
++    board.ClearCursor();
++    FillSeedBank(*board.mSeedBank);
++    // These are the same native brain actors and bite counters as I, Zombie.
++    for(int row=0;row<5;++row)
++    {
++        GridItem* brain=board.mGridItems.DataArrayAlloc();
++        brain->mGridItemType=GRIDITEM_IZOMBIE_BRAIN;
++        brain->mGridX=0;brain->mGridY=row;
++        brain->mRenderOrder=Board::MakeRenderOrder(RENDER_LAYER_PLANT,row,0);
++        brain->mGridItemCounter=70;
++        brain->mPosX=board.GridToPixelX(0,row)-40;
++        brain->mPosY=board.GridToPixelY(0,row)+40;
++    }
++    for(const Defender& defender:kBoards[stage].mPlants)
++    {
++        if(defender.mSeed==SEED_NONE) continue;
++        Plant* plant=board.NewPlant(defender.mCol,defender.mRow,defender.mSeed,SEED_NONE);
++        // Authored cardboard defenders are already awake, as native daytime
++        // I, Zombie mushroom formations are; the normal unlock rule is untouched.
++        plant->SetSleeping(false);
++        challenge.IZombieSetupPlant(plant);
++    }
++}
++
++void ResetStage(Board& board,int stage)
++{
++    for(Zombie* zombie:board.mZombies) if(!zombie->mDead) zombie->DieNoLoot();
++    for(Plant* plant:board.mPlants) if(!plant->mDead) plant->Die();
++    for(Coin* coin:board.mCoins) if(!coin->mDead) coin->Die();
++    for(GridItem* item:board.mGridItems) if(!item->mDead) item->GridItemDie();
++    for(Projectile* projectile:board.mProjectiles) if(!projectile->mDead) projectile->Die();
++    board.mChallenge->mSurvivalStage=std::clamp(stage,0,kBoardCount-1);
++    board.mLevelAwardSpawned=false;
++    Populate(board);
++}
++
++void OnBrainsCleared(Board& board,int row)
++{
++    Challenge& challenge=*board.mChallenge;
++    if(challenge.mChallengeState!=kActive || board.HasLevelAwardDropped()) return;
++    board.ClearCursor();
++    board.ClearAdviceImmediately();
++    if(challenge.mSurvivalStage==kBoardCount-1)
++    {
++        challenge.mChallengeState=kFinished;
++        challenge.SpawnLevelAward(0,row);
++    }
++    else
++    {
++        challenge.mChallengeState=kTransition;
++        challenge.mChallengeStateCounter=kTransitionTicks;
++    }
++}
++
++void Update(Board& board)
++{
++    Challenge& challenge=*board.mChallenge;
++    if(!IsCurrentRules(board.mApp->mGameMode,challenge.mChallengeState) || board.mPaused ||
++        board.mApp->mGameScene!=SCENE_PLAYING || board.HasLevelAwardDropped()) return;
++    board.mShowShovel=false;
++    if(challenge.mChallengeState!=kTransition) return;
++    if(--challenge.mChallengeStateCounter>0) return;
++    challenge.PuzzleNextStageClear();
++    for(Coin* coin:board.mCoins) if(!coin->mDead) coin->Die();
++    for(Projectile* projectile:board.mProjectiles) if(!projectile->mDead) projectile->Die();
++    Populate(board);
++}
++}
+diff --git a/src/Lawn/System/RallyRaid.h b/src/Lawn/System/RallyRaid.h
+new file mode 100644
+index 0000000000000000000000000000000000000000..3edf70770f3ebf7d57d060f20ff1a43534ca7fd8
+--- /dev/null
++++ b/src/Lawn/System/RallyRaid.h
+@@ -0,0 +1,78 @@
++// SPDX-License-Identifier: LGPL-3.0-or-later
++#pragma once
++#include "../../ConstEnums.h"
++#include <array>
++#include <initializer_list>
++
++class Board;
++
++// Native I, Zombie combat and brains, with five fixed authored defenses.
++// Existing challenge state/stage/timer fields carry the complete save state.
++namespace RallyRaid
++{
++inline constexpr GameMode kMode = GAMEMODE_CHALLENGE_RALLY_RAID;
++inline constexpr ChallengeState kActive = static_cast<ChallengeState>(111);
++inline constexpr ChallengeState kTransition = static_cast<ChallengeState>(112);
++inline constexpr ChallengeState kFinished = static_cast<ChallengeState>(113);
++inline constexpr int kBoardCount = 5;
++inline constexpr int kSeedCount = 5;
++inline constexpr int kRallyCost = 100;
++inline constexpr int kDeploymentColumn = 4;
++inline constexpr int kTransitionTicks = 120;
++constexpr bool IsMode(GameMode mode) { return mode == kMode; }
++constexpr bool IsCurrentRules(GameMode mode, ChallengeState state)
++{ return IsMode(mode) && state >= kActive && state <= kFinished; }
++
++inline constexpr std::array<SeedType,kSeedCount> kSeeds = {
++    SEED_ZOMBIE_NORMAL, SEED_ZOMBIE_TRAFFIC_CONE, SEED_ZOMBIE_PAIL,
++    SEED_ZOMBIE_SCREEN_DOOR, SEED_ZOMBIE_RALLY
++};
++struct Defender { SeedType mSeed=SEED_NONE; int mCol=0; int mRow=0; };
++struct Puzzle { int mSun; std::array<Defender,12> mPlants; };
++// Empty right-hand lawn remains the original I, Zombie deployment area.
++// The first board introduces a cross-lane call; frost and healing join later.
++inline constexpr std::array<Puzzle,kBoardCount> kBoards = {{
++    {450, {{{SEED_PEASHOOTER,1,0},{SEED_PEASHOOTER,1,1},{SEED_PEASHOOTER,1,2},
++            {SEED_PEASHOOTER,1,3},{SEED_PEASHOOTER,1,4}}}},
++    {550, {{{SEED_PEASHOOTER,1,0},{SEED_PEASHOOTER,2,0},{SEED_REPEATER,1,1},
++            {SEED_PEASHOOTER,1,2},{SEED_REPEATER,1,3},{SEED_PEASHOOTER,1,4},{SEED_PEASHOOTER,2,4}}}},
++    {600, {{{SEED_PEASHOOTER,1,0},{SEED_PEASHOOTER,2,1},{SEED_LANTERNSHROOM,1,2},
++            {SEED_PEASHOOTER,3,2},{SEED_PEASHOOTER,2,3},{SEED_PEASHOOTER,1,4},
++            {SEED_SNOWPEA,1,1},{SEED_SNOWPEA,1,3}}}},
++    {650, {{{SEED_PEASHOOTER,1,0},{SEED_REPEATER,2,1},{SEED_MENDERBLOOM,1,2},
++            {SEED_PEASHOOTER,2,2},{SEED_REPEATER,2,3},{SEED_PEASHOOTER,1,4},
++            {SEED_FUMESHROOM,3,0},{SEED_FUMESHROOM,3,4}}}},
++    {750, {{{SEED_PEASHOOTER,1,0},{SEED_REPEATER,2,1},{SEED_LANTERNSHROOM,1,1},
++            {SEED_SNOWPEA,2,2},{SEED_MENDERBLOOM,1,3},{SEED_REPEATER,2,3},
++            {SEED_PEASHOOTER,1,4},{SEED_FUMESHROOM,3,0},{SEED_FUMESHROOM,3,4}}}}
++}};
++constexpr int PlantCount(int stage)
++{
++    if (stage<0 || stage>=kBoardCount) return 0;
++    int count=0;for(const Defender& plant:kBoards[stage].mPlants) count+=plant.mSeed!=SEED_NONE;
++    return count;
++}
++template<std::size_t Waves,std::size_t Slots>
++int PopulateWaves(ZombieType (&output)[Waves][Slots])
++{
++    for(auto& wave:output) for(auto& zombie:wave) zombie=ZOMBIE_INVALID;
++    return kBoardCount;
++}
++template<std::size_t Count>
++void PopulateAllowedZombies(bool (&output)[Count])
++{
++    for(auto& allowed:output) allowed=false;
++    for(ZombieType type:{ZOMBIE_NORMAL,ZOMBIE_TRAFFIC_CONE,ZOMBIE_PAIL,ZOMBIE_DOOR,ZOMBIE_RALLY}) output[type]=true;
++}
++template<class Bank> void FillSeedBank(Bank& bank)
++{
++    bank.mNumPackets=kSeedCount;
++    for(int i=0;i<kSeedCount;++i) bank.mSeedPackets[i].SetPacketType(kSeeds[i]);
++    bank.RefreshAllPackets();
++}
++void Populate(Board& board);
++void ResetStage(Board& board,int stage);
++void Update(Board& board);
++void OnBrainsCleared(Board& board,int row);
++static_assert(static_cast<int>(kMode)==81 && static_cast<int>(SEED_ZOMBIE_RALLY)==77);
++}
+diff --git a/src/Lawn/System/RallyRaidPresentation.cpp b/src/Lawn/System/RallyRaidPresentation.cpp
+new file mode 100644
+index 0000000000000000000000000000000000000000..f6deb8accac681df9f7bc50faaf5a967081d432d
+--- /dev/null
++++ b/src/Lawn/System/RallyRaidPresentation.cpp
+@@ -0,0 +1,107 @@
++// SPDX-License-Identifier: LGPL-3.0-or-later
++#include "RallyRaidPresentation.h"
++#include "RallyPresentation.h"
++#include "RallyRaid.h"
++#include "../Plant.h"
++#include "../Zombie.h"
++#include "../../Resources.h"
++#include "../../PvzpLib/Reanimator.h"
++#include "../../PvzpLib/PvzpCommon.h"
++#include "../../PvzpLib/FilterEffect.h"
++#include "graphics/MemoryImage.h"
++#include <algorithm>
++#include <format>
++#include <memory>
++#include <vector>
++
++namespace RallyRaidPresentation
++{
++namespace
++{
++std::unique_ptr<Sexy::MemoryImage> sCard;
++
++std::unique_ptr<Sexy::MemoryImage> Blank(int width, int height)
++{
++    std::vector<uint32_t> pixels(width * height, 0);
++    auto image=std::make_unique<Sexy::MemoryImage>();
++    image->SetBits(pixels.data(),width,height);
++    return image;
++}
++
++Sexy::Rect VisibleBounds(Sexy::MemoryImage& image)
++{
++    int left=image.GetWidth(),top=image.GetHeight(),right=-1,bottom=-1;
++    const uint32_t* pixels=image.GetBits();
++    for (int y=0;y<image.GetHeight();++y) for (int x=0;x<image.GetWidth();++x)
++        if ((pixels[y*image.GetWidth()+x]>>24)>8)
++        {left=std::min(left,x);top=std::min(top,y);right=std::max(right,x);bottom=std::max(bottom,y);}
++    return right<left ? Sexy::Rect() : Sexy::Rect(left,top,right-left+1,bottom-top+1);
++}
++}
++
++std::string LevelLabel(int stage)
++{
++    return std::format("Rally Raid - {}/{}",std::clamp(stage+1,1,RallyRaid::kBoardCount),RallyRaid::kBoardCount);
++}
++
++Sexy::Image* GetBonusImage()
++{
++    if (sCard) return sCard.get();
++    if (!PvzpLoadResources("DelayLoad_Background1") || !Sexy::IMAGE_BACKGROUND1 || !Sexy::IMAGE_BRAIN)
++        return nullptr;
++    auto portrait=Blank(240,230);
++    Sexy::Graphics native(portrait.get());native.SetLinearBlend(true);
++    Reanimation body;
++    body.ReanimationInitializeType(100,35,REANIM_ZOMBIE);
++    body.SetFramesForLayer("anim_idle");
++    Zombie::SetupReanimLayers(&body,ZOMBIE_RALLY);
++    RallyPresentation::PrepareRig(body);
++    body.Draw(&native);RallyPresentation::DrawRig(&native,body,true,.45f);
++    const Sexy::Rect bounds=VisibleBounds(*portrait);
++    if (bounds.mWidth<=0 || bounds.mHeight<=0) return nullptr;
++    auto* brainImage=dynamic_cast<Sexy::MemoryImage*>(Sexy::IMAGE_BRAIN);
++    const Sexy::Rect brainBounds=brainImage ? VisibleBounds(*brainImage) :
++        Sexy::Rect(0,0,Sexy::IMAGE_BRAIN->GetWidth(),Sexy::IMAGE_BRAIN->GetHeight());
++    if (brainBounds.mWidth<=0 || brainBounds.mHeight<=0) return nullptr;
++    auto card=Blank(80,65);
++    Sexy::Graphics picture(card.get());picture.SetLinearBlend(true);
++    picture.DrawImage(Sexy::IMAGE_BACKGROUND1,Sexy::Rect(0,0,80,65),Sexy::Rect(400,140,480,390));
++    // Paint the original brain at its final readable size rather than
++    // shrinking it with the tall carrier. A 4px gap keeps it off the hand/horn;
++    // their complete visible composition remains centered in the native card.
++    const float brainScale=std::min(22.0f/brainBounds.mWidth,20.0f/brainBounds.mHeight);
++    const float brainWidth=brainBounds.mWidth*brainScale;
++    const float bodyScale=std::min((68.0f-brainWidth-4.0f)/bounds.mWidth,57.0f/bounds.mHeight);
++    const float totalWidth=brainWidth+4.0f+bounds.mWidth*bodyScale;
++    const float left=40.0f-totalWidth*.5f;
++    PvzpDrawImageScaledF(&picture,portrait.get(),left+brainWidth+4.0f-bounds.mX*bodyScale,
++        32.5f-(bounds.mY+bounds.mHeight*.5f)*bodyScale,bodyScale,bodyScale);
++    PvzpDrawImageScaledF(&picture,Sexy::IMAGE_BRAIN,left-brainBounds.mX*brainScale,
++        61.0f-(brainBounds.mY+brainBounds.mHeight)*brainScale,brainScale,brainScale);
++    sCard=std::move(card);
++    return sCard.get();
++}
++
++bool DrawCustomPlant(Sexy::Graphics* graphics,Plant& plant)
++{
++    if (plant.mSeedType!=SEED_LANTERNSHROOM && plant.mSeedType!=SEED_MENDERBLOOM) return false;
++    Sexy::Image* image=Plant::GetImage(plant.mSeedType);
++    if (!image) return true;
++    Sexy::Image* silhouette=FilterEffectGetImage(image,FILTER_EFFECT_WHITE);
++    Sexy::Graphics cutout(*graphics);
++    cutout.SetDrawMode(Sexy::Graphics::DRAWMODE_NORMAL);
++    cutout.SetColorizeImages(true);
++    // Chill-shroom's existing preview has20px of transparent registration
++    // padding; Mender-bloom uses its80px plant canvas directly.
++    const float origin=plant.mSeedType==SEED_LANTERNSHROOM ? -20.0f : 0.0f;
++    const float x=plant.mShakeOffsetX+origin;
++    const float y=PlantDrawHeightOffset(plant.mBoard,&plant,plant.mSeedType,plant.mPlantCol,plant.mRow)+plant.mShakeOffsetY+origin;
++    cutout.SetColor(Sexy::Color(122,86,58));cutout.DrawImageF(silhouette,x+4,y+4);
++    cutout.SetColor(Sexy::Color(171,135,107));cutout.DrawImageF(silhouette,x+2,y+2);
++    cutout.DrawImageF(silhouette,x-2,y-2);
++    cutout.SetColor(Sexy::Color(255,201,160));cutout.DrawImageF(image,x,y);
++    return true;
++}
++
++void DisposeImage() { sCard.reset(); }
++}
+diff --git a/src/Lawn/System/RallyRaidPresentation.h b/src/Lawn/System/RallyRaidPresentation.h
+new file mode 100644
+index 0000000000000000000000000000000000000000..7ac1e0343fdd828b4ec26563913248edf72066d8
+--- /dev/null
++++ b/src/Lawn/System/RallyRaidPresentation.h
+@@ -0,0 +1,17 @@
++// SPDX-License-Identifier: LGPL-3.0-or-later
++#pragma once
++
++#include <string>
++
++class Plant;
++namespace Sexy { class Graphics; class Image; }
++
++namespace RallyRaidPresentation
++{
++Sexy::Image* GetBonusImage();
++std::string LevelLabel(int stage);
++// Native I, Zombie paints its defenses as cardboard cutouts. Custom plants
++// need their actual accepted sprite, not their hidden carrier's original art.
++bool DrawCustomPlant(Sexy::Graphics* graphics, Plant& plant);
++void DisposeImage();
++}
+diff --git a/src/Lawn/System/RallyZombie.cpp b/src/Lawn/System/RallyZombie.cpp
+index ef0f4f66055ee211fbe2a700733e99f4ac22eed7..288b0f249935e9cdc3a2387ff4f254bada61d968 100644
+--- a/src/Lawn/System/RallyZombie.cpp
++++ b/src/Lawn/System/RallyZombie.cpp
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: LGPL-3.0-or-later
+ #include "RallyZombie.h"
++#include "RallyRaid.h"
+ #include "../Board.h"
+ #include "../Zombie.h"
+ #include "../../LawnApp.h"
+@@ -26,7 +27,7 @@ bool IsRallying(const Zombie& zombie)
+ 
+ float MovementMultiplier(const Zombie& zombie)
+ {
+-    if (!zombie.mBoard || !zombie.mApp || !IsMode(zombie.mApp->mGameMode) ||
++    if (!zombie.mBoard || !zombie.mApp || !(IsMode(zombie.mApp->mGameMode) || RallyRaid::IsMode(zombie.mApp->mGameMode)) ||
+         zombie.mFromWave < 0 || !CanWalk(zombie)) return 1.0f;
+     switch (zombie.mZombieType)
+     {
+@@ -58,7 +59,7 @@ void Update(Zombie& zombie)
+ 
+ void UpdateBoard(Board& board)
+ {
+-    if (!IsMode(board.mApp->mGameMode) || board.mApp->mGameScene != SCENE_PLAYING ||
++    if (!(IsMode(board.mApp->mGameMode) || RallyRaid::IsMode(board.mApp->mGameMode)) || board.mApp->mGameScene != SCENE_PLAYING ||
+         board.mPaused || board.HasLevelAwardDropped()) return;
+     // Advance callers as a group before any actor walks. All recipients see
+     // the same call phase, independent of DataArray iteration order.
+diff --git a/src/Lawn/Widget/ChallengeScreen.cpp b/src/Lawn/Widget/ChallengeScreen.cpp
+index a26209203fc508ed95f5433b35fe26aeee28d886..ee44ab0574731c1781de70a2b7e000ddc1d3ea4a 100644
+--- a/src/Lawn/Widget/ChallengeScreen.cpp
++++ b/src/Lawn/Widget/ChallengeScreen.cpp
+@@ -28,6 +28,7 @@
+ #include "../System/PlayerInfo.h"
+ #include "../System/LanternShroom.h"
+ #include "../System/RallyPresentation.h"
++#include "../System/RallyRaidPresentation.h"
+ #include "../../PvzpLib/PvzpDebug.h"
+ #include "../../PvzpLib/PvzpFoley.h"
+ #include "../../PvzpLib/PvzpCommon.h"
+@@ -118,7 +119,8 @@ constinit const ChallengeDefinition gChallengeDefs[NUM_CHALLENGE_MODES] = {
+ 	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_SEED_SWAP, .mChallengeIconIndex = 0, .mPage = ChallengePage::CHALLENGE_PAGE_BONUS, .mRow = 1, .mCol = 4, .mChallengeName = "Seed Swap" },
+ 	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_INTENSIVE_CARE, .mChallengeIconIndex = 0, .mPage = ChallengePage::CHALLENGE_PAGE_BONUS, .mRow = 2, .mCol = 0, .mChallengeName = "Intensive Lawn Care" },
+ 	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_CHAIN_REACTION, .mChallengeIconIndex = 0, .mPage = ChallengePage::CHALLENGE_PAGE_BONUS, .mRow = 2, .mCol = 1, .mChallengeName = "Chain Reaction" },
+-	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_RALLY_POINT, .mChallengeIconIndex = 0, .mPage = ChallengePage::CHALLENGE_PAGE_BONUS, .mRow = 2, .mCol = 2, .mChallengeName = "Rally Point" }
++	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_RALLY_POINT, .mChallengeIconIndex = 0, .mPage = ChallengePage::CHALLENGE_PAGE_BONUS, .mRow = 2, .mCol = 2, .mChallengeName = "Rally Point" },
++	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_RALLY_RAID, .mChallengeIconIndex = 0, .mPage = ChallengePage::CHALLENGE_PAGE_BONUS, .mRow = 2, .mCol = 3, .mChallengeName = "Rally Raid" }
+ };
+ 
+ ChallengeScreen::ChallengeScreen(LawnApp* theApp, ChallengePage thePage)
+@@ -421,7 +423,7 @@ int ChallengeScreen::AccomplishmentsNeeded(int theChallengeIndex)
+ // Native portraits retain the original 80x65 minigame window and frame.
+ void DrawBonusIcon(Graphics* g, GameMode mode, int x, int y)
+ {
+-    if (Image* image = mode == GAMEMODE_CHALLENGE_RALLY_POINT ?
++    if (Image* image = mode == GAMEMODE_CHALLENGE_RALLY_RAID ? RallyRaidPresentation::GetBonusImage() : mode == GAMEMODE_CHALLENGE_RALLY_POINT ?
+         RallyPresentation::GetBonusImage() : LanternShroom::GetBonusImage(mode))
+     {
+         Graphics picture(*g);
+diff --git a/src/Lawn/Widget/LawnDialog.cpp b/src/Lawn/Widget/LawnDialog.cpp
+index 47d05937f159cc6a39f75ddd8c4c54b5a43d096d..541b75287a9cd6612d64c24e653664130639c56d 100644
+--- a/src/Lawn/Widget/LawnDialog.cpp
++++ b/src/Lawn/Widget/LawnDialog.cpp
+@@ -27,6 +27,7 @@
+ #include "../../Resources.h"
+ #include "ChallengeScreen.h"
+ #include "../System/ChainReaction.h"
++#include "../System/RallyRaid.h"
+ #include "../../PvzpLib/PvzpDebug.h"
+ #include "../../PvzpLib/Reanimator.h"
+ #include "../../PvzpLib/EffectSystem.h"
+@@ -505,7 +506,7 @@ void GameOverDialog::ButtonDepress(int theId)
+ 		{
+ 			mApp->ShowGameSelector();
+ 		}
+-		else if (ChainReaction::IsMode(mApp->mGameMode))
++		else if (ChainReaction::IsMode(mApp->mGameMode) || RallyRaid::IsMode(mApp->mGameMode))
+ 		{
+ 			mApp->ShowChallengeScreen(ChallengePage::CHALLENGE_PAGE_BONUS);
+ 		}
+diff --git a/src/Lawn/Widget/NewOptionsDialog.cpp b/src/Lawn/Widget/NewOptionsDialog.cpp
+index 4f26e10f999a7b62630e9232c2c7e140efa12e88..ea0de8afd5ce75d790a96ee965100f6f4c64403d 100644
+--- a/src/Lawn/Widget/NewOptionsDialog.cpp
++++ b/src/Lawn/Widget/NewOptionsDialog.cpp
+@@ -28,6 +28,7 @@
+ #include "../../LawnApp.h"
+ #include "../System/Music.h"
+ #include "../System/ChainReaction.h"
++#include "../System/RallyRaid.h"
+ #include "../../Resources.h"
+ #include "NewOptionsDialog.h"
+ #include "graphics/Font.h"
+@@ -371,7 +372,7 @@ void NewOptionsDialog::ButtonDepress(int theId)
+ 		{
+ 			std::string aDialogTitle;
+ 			std::string aDialogMessage;
+-			if (mApp->IsPuzzleMode() || ChainReaction::IsMode(mApp->mGameMode))
++			if (mApp->IsPuzzleMode() || ChainReaction::IsMode(mApp->mGameMode) || RallyRaid::IsMode(mApp->mGameMode))
+ 			{
+ 				aDialogTitle = "[RESTART_PUZZLE_HEADER]";
+ 				aDialogMessage = "[RESTART_PUZZLE_BODY]";
+@@ -398,6 +399,8 @@ void NewOptionsDialog::ButtonDepress(int theId)
+ 
+ 			if (aDialog->WaitForResult(true) == Dialog::ID_YES)
+ 			{
++				const int aRaidStage = RallyRaid::IsMode(mApp->mGameMode) && mApp->mBoard->mChallenge
++                    ? mApp->mBoard->mChallenge->mSurvivalStage : -1;
+ 				const int aChainStage = ChainReaction::IsMode(mApp->mGameMode) && mApp->mBoard->mChallenge
+ 					? mApp->mBoard->mChallenge->mSurvivalStage : -1;
+ 				mApp->mMusic->StopAllMusic();
+@@ -407,6 +410,7 @@ void NewOptionsDialog::ButtonDepress(int theId)
+ 				mApp->mSawYeti = mApp->mBoard->mKilledYeti;
+ 				mApp->PreNewGame(mApp->mGameMode, false);
+ 				if (aChainStage >= 0 && mApp->mBoard) ChainReaction::ResetStage(*mApp->mBoard, aChainStage);
++                if (aRaidStage >= 0 && mApp->mBoard) RallyRaid::ResetStage(*mApp->mBoard,aRaidStage);
+ 			}
+ 		}
+ 		break;
+diff --git a/src/LawnApp.cpp b/src/LawnApp.cpp
+index c6c11e8b9a34cd141756f1d473b58a9dd92c92ff..526815c42b4c9fa932fb49b988901318281b52b4 100644
+--- a/src/LawnApp.cpp
++++ b/src/LawnApp.cpp
+@@ -38,6 +38,7 @@
+ #include "Lawn/System/Music.h"
+ #include "Lawn/System/BonusChallenge.h"
+ #include "Lawn/System/RallyPresentation.h"
++#include "Lawn/System/RallyRaidPresentation.h"
+ #include "Lawn/System/LanternShroom.h"
+ #include "Lawn/System/MenderBloom.h"
+ #include "Lawn/System/SaveGame.h"
+@@ -215,6 +216,7 @@ LawnApp::~LawnApp()
+ 	LanternShroom::DisposeImage();
+ 	MenderBloom::DisposeImage();
+     RallyPresentation::DisposeImage();
++    RallyRaidPresentation::DisposeImage();
+ #ifdef __EMSCRIPTEN__
+ 	emscripten_set_fullscreenchange_callback(EMSCRIPTEN_EVENT_TARGET_DOCUMENT, nullptr, EM_FALSE, nullptr);
+ 	emscripten_set_blur_callback(EMSCRIPTEN_EVENT_TARGET_WINDOW, nullptr, EM_FALSE, nullptr);
+@@ -621,6 +623,13 @@ void LawnApp::KillSeedChooserScreen()
+ 
+ void LawnApp::EndLevel()
+ {
++    if (RallyRaid::IsMode(mGameMode) && mBoard && mBoard->mChallenge)
++    {
++        const int stage=mBoard->mChallenge->mSurvivalStage;
++        NewGame();
++        RallyRaid::ResetStage(*mBoard,stage);
++        return;
++    }
+     if (ChainReaction::IsMode(mGameMode) && mBoard && mBoard->mChallenge)
+     {
+         const int stage = mBoard->mChallenge->mSurvivalStage;
+@@ -1059,6 +1068,8 @@ void LawnApp::FinishNameError(int theId)
+ void LawnApp::FinishRestartConfirmDialog()
+ {
+ 	mSawYeti = mBoard->mKilledYeti;
++    const int aRaidStage = RallyRaid::IsMode(mGameMode) && mBoard->mChallenge &&
++        !GetDialog(Dialogs::DIALOG_CONTINUE) ? mBoard->mChallenge->mSurvivalStage : -1;
+     const int aChainStage = ChainReaction::IsMode(mGameMode) && mBoard->mChallenge &&
+         !GetDialog(Dialogs::DIALOG_CONTINUE) ? mBoard->mChallenge->mSurvivalStage : -1;
+ 
+@@ -1068,6 +1079,7 @@ void LawnApp::FinishRestartConfirmDialog()
+ 
+ 	PreNewGame(mGameMode, false);
+     if (aChainStage >= 0 && mBoard) ChainReaction::ResetStage(*mBoard, aChainStage);
++    if (aRaidStage >= 0 && mBoard) RallyRaid::ResetStage(*mBoard, aRaidStage);
+ }
+ 
+ void LawnApp::DoCheatDialog()
+@@ -2340,6 +2352,7 @@ bool LawnApp::IsIZombieLevel()
+ 		return false;
+ 
+ 	return
++		RallyRaid::IsMode(mGameMode) ||
+ 		mGameMode == GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_1 ||
+ 		mGameMode == GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_2 ||
+ 		mGameMode == GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_3 ||
