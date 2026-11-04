@@ -1,5 +1,5 @@
 {
-  "id": "0.2.6-web-raid.4",
+  "id": "0.2.6-web-raid.5",
   "upstream": {
     "tag": "0.2.6",
     "commit": "396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
@@ -7,12 +7,12 @@
     "officialJsSha256": "0f2d7425190e49c762f6700b68b080086e3dcb8f2dc5e9724de42ce9fb508573"
   },
   "sourceArchive": {
-    "path": "pvz-portable-0.2.6-web-raid.4-source.zip",
-    "bytes": 24005557,
-    "sha256": "8c068366dc208d692d0e5d7afd286cc4ec34312564e7f8a6deace562d59a5512",
-    "crc32": "4ee23562",
+    "path": "pvz-portable-0.2.6-web-raid.5-source.zip",
+    "bytes": 24033055,
+    "sha256": "1415b9a6f916b9780abd3425c5ea9ab32436c1ee56f1e59b89e0ce4d3db78307",
+    "crc32": "a2dd5eae",
     "entries": 920,
-    "uncompressedBytes": 62158819
+    "uncompressedBytes": 62260172
   },
   "artifacts": [
     {
@@ -23,32 +23,32 @@
     },
     {
       "path": "build/pvz-portable.wasm",
-      "bytes": 7705120,
-      "sha256": "9bfe199c70a09471548bb5a576a6657fb1cdeec2a91a58ac917f98bb3091b885",
-      "crc32": "7f2773d7"
+      "bytes": 7705123,
+      "sha256": "ad543d5bc6056486ce7bcc413b3a849913647714d25925f245b967fe5bc6f951",
+      "crc32": "d6cab1e0"
     },
     {
       "path": "build/ProjectVersion.h",
       "bytes": 190,
-      "sha256": "ee7a92d04df9855ad1854819ff17323b72bfdb0ef343ba7ef9f9467c91bb063e",
-      "crc32": "4e0e0466"
+      "sha256": "cf15df1bbe89013fdd8b88265090148536aadbec0f780aa9eb1bccd2daee205b",
+      "crc32": "9b0b781a"
     }
   ],
   "sourceFiles": 828,
-  "sourceBytes": 25667419,
-  "sourceDeltaVsRaid3": [
+  "sourceBytes": 25667457,
+  "sourceDeltaVsRaid4": [
     {
       "path": "CMake/ProjectVersion.cmake",
-      "beforeSha256": "cdb969696da9736795adbc5f9c10e51c30fdd71eecf4405f9408f8d8fe4421a7",
-      "afterSha256": "70c60fd31469e395d6e2957ea5c53c4c0afc52deb26b72b2b9aea2983f32f9ab"
+      "beforeSha256": "70c60fd31469e395d6e2957ea5c53c4c0afc52deb26b72b2b9aea2983f32f9ab",
+      "afterSha256": "3cfaca0b50d6ed8a977259f9541799d4af575076460c30cc2ce01fccdf9f2356"
     },
     {
-      "path": "src/Lawn/System/RallyRaidPresentation.cpp",
-      "beforeSha256": "a17e666d49adfa007746149222cf9e71160e1b75c0931d20c407a281201c0afa",
-      "afterSha256": "70d0dc3f84c3198285e37a0466ecb43273e2cc3153cffffe7797230e6c5ca483"
+      "path": "src/Lawn/Zombie.cpp",
+      "beforeSha256": "ba411d42019d3f089c2e96ffe50126cebe16550b480881eb2ecb58e3961ca371",
+      "afterSha256": "8eb437a83daa301cf56e4ddff1623381c933b26e8abd1dfc2823278d51201160"
     }
   ],
-  "compiledVersionHeader": "// Generated from CMake/ProjectVersion.h.in by CMake; do not edit.\r\n#pragma once\r\n\r\n#define PVZP_VERSION \"0.2.6-web-raid.4\"\r\n#define PVZP_BUILD_NUMBER 1\r\n#define PVZP_COMMIT_DATE \"unknown\"\r\n",
+  "compiledVersionHeader": "// Generated from CMake/ProjectVersion.h.in by CMake; do not edit.\r\n#pragma once\r\n\r\n#define PVZP_VERSION \"0.2.6-web-raid.5\"\r\n#define PVZP_BUILD_NUMBER 1\r\n#define PVZP_COMMIT_DATE \"unknown\"\r\n",
   "checks": {
     "fullRelease": {
       "exitCode": 0,
@@ -62,21 +62,21 @@
       "receipt": {
         "path": "logs/build-result.json",
         "bytes": 581,
-        "sha256": "f1c37cd50cf24c4da58ab9545acc24e6755f6a6a31e69896da000073007b6479",
-        "crc32": "936dfb3d"
+        "sha256": "6793b5e465dfef005c836ca0866360dc430b95089eb29f627945a2790506779e",
+        "crc32": "22bfd45a"
       }
     },
     "focusedNativeTests": {
       "status": "PASS focused native production tests",
       "failures": 0,
-      "checks": 1485247,
-      "scope": "Extracted production tests plus complete linked-engine Care, Chain Reaction, Rally Point and Rally Raid scenarios, native placement, budgets, save/continue, speed parity, live custom-plant body animation and original regressions. Audio output is disabled.",
+      "checks": 1492614,
+      "scope": "Extracted production tests plus complete linked-engine Care, Chain Reaction, Rally Point and Rally Raid scenarios; actual rally walking entry/exit, native font Almanac bounds, custom-plant idle/heal/blink, pause/save/Continue, native placement, budgets and speed parity. Original regressions remain active. Audio output is disabled.",
       "reports": [
         {
           "path": "tests/game-speed-results.json",
           "bytes": 1601,
-          "sha256": "de81b2a4a998377145108e58875db25d626042ed33b8beec214d1f41f2ba8a83",
-          "crc32": "032a6656",
+          "sha256": "cc69077f2834d964eb4cddb85de8eb19f809cdcf766b2029a332b656f63a1b32",
+          "crc32": "5e246c6c",
           "checks": 66
         },
         {
@@ -96,15 +96,15 @@
         {
           "path": "tests/bonus-challenge-results.json",
           "bytes": 2425,
-          "sha256": "96352479a14000923b10bdea0426800de89b9a2441b6ee6e6eb5afcda6a1512b",
-          "crc32": "6a3322df",
+          "sha256": "13d102a253ef103a95ec14c44fcdb7187f7ba72537b226314978ef56ef537ba6",
+          "crc32": "ba6b7c33",
           "checks": 387
         },
         {
           "path": "tests/bonus-completion-results.json",
           "bytes": 3158,
-          "sha256": "f84c0142a423f9e448041e481e106149600df29087a6e45acd6cb42f52c1bc25",
-          "crc32": "7792759b",
+          "sha256": "14da4134d8002b1fec910a780ff6feb7a25d821d200185df80c1936e39802695",
+          "crc32": "e7e37ea0",
           "checks": 1273
         },
         {
@@ -117,8 +117,8 @@
         {
           "path": "tests/lantern-shroom-results.json",
           "bytes": 7017,
-          "sha256": "d47ef98c37a5572024572eb9b3f5ef7ec00ca1322873c4f9aa92f2c0257cf1bf",
-          "crc32": "1d5cc1df",
+          "sha256": "fc087ae71477f825600a76984c5777d1f358a7ac6440ec3b026f61504a9f869c",
+          "crc32": "68bef14b",
           "checks": 1724
         },
         {
@@ -131,8 +131,8 @@
         {
           "path": "tests/seed-swap-results.json",
           "bytes": 2770,
-          "sha256": "6d38be3eb251a361c21fa4fcfc02ca40403bde43886420f510f6d20575e2be6e",
-          "crc32": "5ca6f427",
+          "sha256": "e7d8340a14ca477038a4ef5e83e619e27138843c5a7d46ed4f770da9c4b1c29d",
+          "crc32": "11d2305d",
           "checks": 587
         },
         {
@@ -145,8 +145,8 @@
         {
           "path": "tests/intensive-care-results.json",
           "bytes": 3635,
-          "sha256": "d700230c4d5a9111dce25f07de336b7281f262b518130a6d0f4c8d95cfb804d8",
-          "crc32": "e86f7c83",
+          "sha256": "1f7c2928d3e92515b2e9f97e776b7b0af87dc489c9aacb18af7578b6727fbaa0",
+          "crc32": "a4ae8ad9",
           "checks": 1135
         },
         {
@@ -166,30 +166,30 @@
         {
           "path": "tests/care-full-run-results.json",
           "bytes": 152521,
-          "sha256": "975043cf6ed8f7367c9472e5014d061d265da57582373ef9089b3283e1017f48",
-          "crc32": "6d606b3d",
+          "sha256": "4e83e03d941e4c74bc27b2f99817077ed12a7c5a99e5ae3938353ba385736145",
+          "crc32": "92d31540",
           "checks": 980
         },
         {
           "path": "tests/chain-reaction-results.json",
           "bytes": 163088,
-          "sha256": "4916f3de4bd63e0222df9671926b7e846856eb73d0413c034c9eab95b2026409",
-          "crc32": "95092d2e",
+          "sha256": "53ece8695a8df4e2c318ef77967fd6b4f791b252918006a04625b562afd94de7",
+          "crc32": "feed6e97",
           "checks": 81307
         },
         {
           "path": "tests/rally-zombie-results.json",
-          "bytes": 155464,
-          "sha256": "a28aa04cc9283383f51fd8ff170ea86cfa4bc9192f6853762d8683ef7454bc45",
-          "crc32": "5969f6ef",
-          "checks": 319642
+          "bytes": 160726,
+          "sha256": "e8fdbc36e9dc35938997572308a1da9f3f491cb6a8970993aeccf6da0de00736",
+          "crc32": "bb485e3a",
+          "checks": 327526
         },
         {
           "path": "tests/rally-raid-results.json",
-          "bytes": 177838,
-          "sha256": "608a32c6f420953202139583eb58a63223d9229877be41f5b99980494bdd33a8",
-          "crc32": "dc8ca583",
-          "checks": 1041079
+          "bytes": 177841,
+          "sha256": "3d0b68c957e05979f8702b25d8a52705e50a488fee62ad5f24aa8fffb2bc0811",
+          "crc32": "c372edf6",
+          "checks": 1040562
         }
       ]
     },
@@ -200,7 +200,7 @@
         "everySourceByteMatches": true,
         "sourceFiles": 828
       },
-      "raid3": {
+      "raid4": {
         "gitApplyCheck": "PASS",
         "gitApply": "PASS",
         "everySourceByteMatches": true,
@@ -209,27 +209,27 @@
     }
   },
   "combinedPatch": {
-    "path": "web-raid.4.patch",
-    "bytes": 14338630,
-    "sha256": "e41f58940cccf9371a071c38ca267045b72d17f10343b631b5ffc5dcc6382a76",
-    "crc32": "9aa62732",
+    "path": "web-raid.5.patch",
+    "bytes": 14338668,
+    "sha256": "78acaf913b42ca732bb58f1dc8dd0493eb08fd09feac232081b499e767790ae1",
+    "crc32": "7d31760c",
     "sourcePaths": 117
   },
   "incrementalPatch": {
-    "path": "raid3-to-raid4.patch",
-    "bytes": 3178,
-    "sha256": "7228477007ab80d461af1392d64548a8669df838a0c6fa892d47754e318caccb",
-    "crc32": "2637eff4",
+    "path": "raid4-to-raid5.patch",
+    "bytes": 1123,
+    "sha256": "204f25f4f00c85e6bbd8f54e34d32e3783fd784307d5110ed3886be432986580",
+    "crc32": "25144647",
     "sourcePaths": 2
   },
   "parent": {
-    "id": "0.2.6-web-raid.3",
-    "sourceArchiveSha256": "dc02a3d87a227e3b6b890cd03894999dea831c62a6d184fc2a0bc281425e51a3",
-    "releaseManifestSha256": "57948c6c90652b673a30c9c9eca439c493f366c8d792199fb871752b5864a7aa",
+    "id": "0.2.6-web-raid.4",
+    "sourceArchiveSha256": "8c068366dc208d692d0e5d7afd286cc4ec34312564e7f8a6deace562d59a5512",
+    "releaseManifestSha256": "fcaca3bd2324ff9afaaee7d7503c38b95a53a8f16d7e327fedefe8fe404f2d22",
     "scope": "Complete historical parent engine metadata is preserved in the parent property of engine-provenance.json."
   },
   "limits": [
-    "All nine Bonus minigames, accepted plant artwork, content metadata, native I, Zombie UI routing, authored boards, budgets, combat, original IDs, unlock rules and serialized layouts remain unchanged. Chill-shroom holds a still open-eyed cardboard idle in Rally Raid while its existing attacks remain live. Shared normal-mode idle, Mender behavior, animation clocks and image caches are unchanged. Full original parity remains unverified.",
+    "Rally Raid now refreshes actual native walking animation speed when rally boosts start and end, matching the existing Rally Point path. All nine Bonus minigames, accepted artwork, native UI, authored boards, budgets, IDs, unlock rules and serialized layouts remain unchanged. Shared custom-plant behavior and the accepted I, Zombie idle/attack correction remain exact. Full original parity remains unverified.",
     "Focused production-method tests and build checks do not replace broad game or browser validation.",
     "Earlier results remain historical parent evidence only. No separately image-generated challenge illustrations are active."
   ]

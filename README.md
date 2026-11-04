@@ -1,5 +1,12 @@
 # Plants vs. Zombies — browser playtest
 
+## Raid.5 - custom-content consistency
+
+`0.2.6-web-raid.5` keeps walking animation in step with Rally buffs in Rally Raid. Walkers now speed up and settle back to their normal stride as the movement effect changes.
+
+The update extends checks for the custom plants and Rally Zombie, including native Almanac layout, animation, pause and save/Continue. All seventeen muted native suites passed with 1,492,614 checks and zero failures; all fifteen browser integration suites passed. Muted browser inspection also confirmed clear Almanac portraits, text and controls. Accepted artwork, original-style UI, challenge rules and saved layouts are retained; normal game audio remains available. See [QA scope](PARITY-QA.md) and [release inputs](DEPLOYMENT.md).
+
+
 ## Raid.4 - still I, Zombie idle
 
 `0.2.6-web-raid.4` holds Chill-shroom still and open-eyed between attacks in Rally Raid. Its windup, release and recoil continue to animate. Normal gameplay keeps its existing idle animation, and Mender-bloom keeps its current behavior.

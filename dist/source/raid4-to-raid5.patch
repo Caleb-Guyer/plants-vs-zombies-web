@@ -1,0 +1,25 @@
+diff --git a/CMake/ProjectVersion.cmake b/CMake/ProjectVersion.cmake
+index d56888016a300a5b96b5af1c0cae0b91e7cf6013..d098057663bdf6d2539be095e48fb5000a73d37b 100644
+--- a/CMake/ProjectVersion.cmake
++++ b/CMake/ProjectVersion.cmake
+@@ -66,6 +66,6 @@ if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
+ endif()
+ 
+ # Browser release identity; keep binary and corresponding-source manifests aligned.
+-set(PVZP_VERSION "0.2.6-web-raid.4")
++set(PVZP_VERSION "0.2.6-web-raid.5")
+ set(PVZP_VERSION_PLAIN "0.2.6")
+ configure_file("${PROJECT_SOURCE_DIR}/CMake/ProjectVersion.h.in" "${PROJECT_BINARY_DIR}/ProjectVersion.h" @ONLY)
+diff --git a/src/Lawn/Zombie.cpp b/src/Lawn/Zombie.cpp
+index 5aa2fb9c0730aac8081dda8aec2ace3f1fdfadc0..b33d305deba86b2c7734d01d84759d8190538676 100644
+--- a/src/Lawn/Zombie.cpp
++++ b/src/Lawn/Zombie.cpp
+@@ -4720,7 +4720,7 @@ void Zombie::UpdatePlaying()
+ 		}
+ 	}
+ 
+-    if (RallyZombie::IsMode(mApp->mGameMode)) UpdateAnimSpeed();
++    if (RallyZombie::IsMode(mApp->mGameMode) || RallyRaid::IsMode(mApp->mGameMode)) UpdateAnimSpeed();
+ 
+ 	if (mZombiePhase == ZombiePhase::PHASE_RISING_FROM_GRAVE)
+ 	{

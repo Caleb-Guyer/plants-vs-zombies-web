@@ -1,5 +1,20 @@
 # GitHub Pages release: Caleb-Guyer/plants-vs-zombies-web
 
+## Raid.5 - consistency release inputs
+
+Current engine: `0.2.6-web-raid.5`. The release synchronizes Rally Raid walking animation with native Rally movement changes and extends the custom-content regression checks.
+
+- Published Raid.4 parent source: `pvz-portable-0.2.6-web-raid.4-source.zip`, 24,005,557 bytes, 920 entries, SHA-256 `8c068366dc208d692d0e5d7afd286cc4ec34312564e7f8a6deace562d59a5512`.
+- Normal JavaScript: 209,496 bytes, SHA-256 `177823909de86b31cb07f208cea136ab9263f17417d5d498d247e41d3d0c06a0`.
+- Normal WebAssembly: 7,705,123 bytes, SHA-256 `ad543d5bc6056486ce7bcc413b3a849913647714d25925f245b967fe5bc6f951`.
+- Production inputs: 828 files; only CMake/ProjectVersion.cmake and Zombie.cpp differ. No production files are added or removed.
+- Corresponding source: `pvz-portable-0.2.6-web-raid.5-source.zip`, 24,033,055 bytes, 920 entries, SHA-256 `1415b9a6f916b9780abd3425c5ea9ab32436c1ee56f1e59b89e0ce4d3db78307`.
+- Full and incremental patches: `web-raid.5.patch` and `raid4-to-raid5.patch`. Both reconstruct all 828 production files byte-for-byte.
+- All seventeen muted native suites passed: 1,492,614 checks, zero failures. Rally Zombie passes 327,526 in 24 cases / twelve speed pairs, including four separate consistency controls. Raid passes 1,040,562 in 32 cases / sixteen speed pairs. All eight backend JS/WASM artifacts are authenticated; all fifteen browser integration suites passed.
+
+Every accepted dist/content file is retained byte-for-byte. Muted private browser inspection verified the final Raid.5 Information identity/source link and all three custom Almanac entries with clear portraits, text and controls; error-level console logs were empty. The owned preview tab/server were closed without changing public-origin saves or viewport settings. The existing manual GitHub Pages workflow remains the publication gate. Earlier sections describe their named historical builds.
+
+
 ## Raid.4 - still Chill idle inputs
 
 Current engine: `0.2.6-web-raid.4`. The renderer gives Chill-shroom a still open-eyed I, Zombie idle while retaining live attacks. Normal idle, Mender animation, shared clocks, gameplay and save layouts remain.

@@ -1,16 +1,16 @@
 {
   "schema_version": 1,
-  "current_engine": "0.2.6-web-raid.4",
+  "current_engine": "0.2.6-web-raid.5",
   "upstream_tag": "0.2.6",
   "layout": "Site-source nests current corresponding source, its immediate parent when present, the upstream baseline, the authenticated Rally.3 native I, Zombie UI reference and the current full patch. Other source archives and incremental/historical patches remain standalone downloads beside this index and in the full runtime distribution.",
   "nested_sources": [
     "pvz-portable-0.2.6-source.zip",
-    "pvz-portable-0.2.6-web-raid.3-source.zip",
+    "pvz-portable-0.2.6-web-raid.4-source.zip",
     "pvz-portable-0.2.6-web-rally.3-source.zip",
-    "pvz-portable-0.2.6-web-raid.4-source.zip"
+    "pvz-portable-0.2.6-web-raid.5-source.zip"
   ],
   "nested_patches": [
-    "web-raid.4.patch"
+    "web-raid.5.patch"
   ],
   "archives": [
     {
@@ -234,6 +234,13 @@
       "name": "pvz-portable-0.2.6-web-raid.4-source.zip",
       "bytes": 24005557,
       "sha256": "8c068366dc208d692d0e5d7afd286cc4ec34312564e7f8a6deace562d59a5512",
+      "current": false,
+      "upstream": false
+    },
+    {
+      "name": "pvz-portable-0.2.6-web-raid.5-source.zip",
+      "bytes": 24033055,
+      "sha256": "1415b9a6f916b9780abd3425c5ea9ab32436c1ee56f1e59b89e0ce4d3db78307",
       "current": true,
       "upstream": false
     },

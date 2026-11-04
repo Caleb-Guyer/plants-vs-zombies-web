@@ -1,5 +1,14 @@
 # Current requirements
 
+## Raid.5 - custom-content regression pass
+
+Rally Raid refreshes zombie animation speed as its Rally movement effect changes, using the same refresh path already present in Rally Point. The correction extends one mode guard in Zombie::UpdatePlaying; no new animation, clock, content, UI or saved field is introduced.
+
+Across all 828 production files, only CMake/ProjectVersion.cmake and Zombie.cpp differ from the authenticated Raid.4 parent. Accepted art and content metadata, both plant rigs, the still-idle I, Zombie renderer, boards, economy, unlocks and saved layouts remain byte-identical. The browser shell changes only its release/cache identity.
+
+All seventeen muted native suites passed: 1,492,614 checks, zero failures. All fifteen browser integration suites passed. Rally Zombie contributes 327,526 checks in 24 cases and twelve 1x/2x pairs, including four separate custom-content consistency controls. Each inspects seventeen plant-body samples, three native-font Almanac entries and actual gait in Rally Point, Rally Raid and the original Adventure exclusion. The retained Raid suite passes 1,040,562 checks in 32 cases and sixteen pairs, including all 24 legal winning runs. Muted Raid.5 browser inspection verified both custom plant Almanac pages and Rally Zombie, with clear portraits, titles, descriptions, costs and navigation.
+
+
 ## Raid.4 - attack-only Chill cardboard motion
 
 Chill-shroom holds a still, open-eyed cardboard pose during Rally Raid idle: no-target readiness, cooldown and the fading frost tail. It animates during its existing windup, release and recoil. Drawing temporarily uses an exact neutral overlay and then restores the full previous overlay and filter; native animation clocks, blink objects and ability counters continue without changes.

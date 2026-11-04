@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-raid.4
-Holds Chill-shroom completely still with open eyes between attacks in Rally Raid, using a scoped neutral cardboard draw pose while preserving its live windup, release and recoil. The exact carrier overlay and filter are restored after drawing. Normal-mode idle, Mender animation, live clocks, native I, Zombie UI routing, artwork, puzzle layouts, budgets, combat, IDs and serialized layouts are unchanged.
+PvZ-Portable 0.2.6-web-raid.5
+Refreshes Rally Raid native walking speed when rally boosts begin and end. Adds complete-engine custom-content consistency controls for native animation, Almanac layout, pause and save/Continue while retaining the accepted artwork, original UI, puzzle layouts, budgets, IDs and serialized layouts.
 Engine JavaScript SHA-256: 177823909de86b31cb07f208cea136ab9263f17417d5d498d247e41d3d0c06a0
-Engine WASM SHA-256: 9bfe199c70a09471548bb5a576a6657fb1cdeec2a91a58ac917f98bb3091b885
+Engine WASM SHA-256: ad543d5bc6056486ce7bcc413b3a849913647714d25925f245b967fe5bc6f951
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.

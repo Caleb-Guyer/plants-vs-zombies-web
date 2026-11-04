@@ -32,7 +32,7 @@ function srcFiles(zip) {
     // Engine sources live at the archive root; build recipes can contain
     // separately hashed prior-source fixtures with their own nested /src/.
     const parts = entry.name.split('/');
-    const engineRoot = ['raid4-candidate/source/', 'raid3-candidate/source/', 'raid2-candidate/source/', 'raid1-candidate/source/', 'rally3-candidate/source/', 'rally2-candidate/source/', 'rally1-candidate/source/', 'chain1-candidate/source/', 'care3-candidate/source/', 'care2-candidate/source/', 'care1-candidate/source/', 'mender3-candidate/source/', 'mender2-candidate/source/', 'mender1-candidate/source/', 'seedswap1-candidate/source/', 'garden1-candidate/source/', 'chill9-candidate/source/', 'chill8-candidate/source/', 'chill7-candidate/source/', 'chill6-candidate/source/', 'chill5-candidate/source/', 'chill4-candidate/source/', 'chill3-candidate/source/', 'chill2-candidate/source/', 'chill1-candidate/source/', 'lantern2-candidate/source/', 'lantern1-candidate/source/', 'night1-candidate/source/', 'polish1-candidate/source/', 'content1-candidate/source/', 'qol2-candidate/source/', 'qol1-candidate/source/', 'software10-candidate/source/']
+    const engineRoot = ['raid5-candidate/source/', 'raid4-candidate/source/', 'raid3-candidate/source/', 'raid2-candidate/source/', 'raid1-candidate/source/', 'rally3-candidate/source/', 'rally2-candidate/source/', 'rally1-candidate/source/', 'chain1-candidate/source/', 'care3-candidate/source/', 'care2-candidate/source/', 'care1-candidate/source/', 'mender3-candidate/source/', 'mender2-candidate/source/', 'mender1-candidate/source/', 'seedswap1-candidate/source/', 'garden1-candidate/source/', 'chill9-candidate/source/', 'chill8-candidate/source/', 'chill7-candidate/source/', 'chill6-candidate/source/', 'chill5-candidate/source/', 'chill4-candidate/source/', 'chill3-candidate/source/', 'chill2-candidate/source/', 'chill1-candidate/source/', 'lantern2-candidate/source/', 'lantern1-candidate/source/', 'night1-candidate/source/', 'polish1-candidate/source/', 'content1-candidate/source/', 'qol2-candidate/source/', 'qol1-candidate/source/', 'software10-candidate/source/']
       .find(prefix => entry.name.startsWith(prefix + 'src/'));
     const relative = engineRoot
       ? entry.name.slice(engineRoot.length)
@@ -115,7 +115,7 @@ assert.deepEqual(changed.sort(), [
   "src/SexyAppFramework/platform/emscripten/Window.cpp"
 ].sort(), 'The packaged source changes exactly the reviewed existing engine paths; renderer additions are separately constrained');
 const [before, source] = decoded.get('src/Lawn/Widget/ZombatarWidget.cpp');
-console.log('PASS complete Raid.4 source layout, retained renderer additions and reviewed native QoL/bonus/plant/packet paths; all Zombatar behavior checks remain active.');
+console.log('PASS complete Raid.5 source layout, retained renderer additions and reviewed native QoL/bonus/plant/packet paths; all Zombatar behavior checks remain active.');
 
 // Find the actual complete body, respecting quoted strings and comments.
 function functionText(text, signature) {
