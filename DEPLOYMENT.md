@@ -1,5 +1,20 @@
 # GitHub Pages release: Caleb-Guyer/plants-vs-zombies-web
 
+## Raid.4 - still Chill idle inputs
+
+Current engine: `0.2.6-web-raid.4`. The renderer gives Chill-shroom a still open-eyed I, Zombie idle while retaining live attacks. Normal idle, Mender animation, shared clocks, gameplay and save layouts remain.
+
+- Normal JavaScript: 209,496 bytes, SHA-256 `177823909de86b31cb07f208cea136ab9263f17417d5d498d247e41d3d0c06a0`.
+- Normal WebAssembly: 7,705,120 bytes, SHA-256 `9bfe199c70a09471548bb5a576a6657fb1cdeec2a91a58ac917f98bb3091b885`.
+- Published Raid.3 parent source: `pvz-portable-0.2.6-web-raid.3-source.zip`, 23,994,234 bytes, 919 entries, SHA-256 `dc02a3d87a227e3b6b890cd03894999dea831c62a6d184fc2a0bc281425e51a3`.
+- Production inputs: 828 files; only CMake/ProjectVersion.cmake and RallyRaidPresentation.cpp differ. No source files are added or removed.
+- Corresponding source: `pvz-portable-0.2.6-web-raid.4-source.zip`, 24,005,557 bytes, 920 entries, SHA-256 `8c068366dc208d692d0e5d7afd286cc4ec34312564e7f8a6deace562d59a5512`.
+- Full and incremental patches: `web-raid.4.patch` and `raid3-to-raid4.patch`. Both reconstruct all 828 production files byte-for-byte.
+- All 17 muted native suites passed: 1,485,247 checks, zero failures. Raid contributes 1,041,079 checks in 32 scenarios / 16 speed pairs: 24 legal winning runs, four native-UI controls and four plant-animation controls. All eight backend JS/WASM artifacts are authenticated. All 15 browser integration suites passed. Muted private browser inspection confirmed still idle, live attack and still cooldown, plus the final Raid.4 Information label and matching Engine Source URL; error-level console logs were empty.
+
+Every dist/content file, including native-bonus-art.json, is retained byte-for-byte. Existing site-source packaging preserves the pinned Rally.3 native-UI reference and inherited plant-rendering negative fixtures. Browser shell changes are limited to version/cache identity. Earlier sections describe their named historical builds.
+
+
 ## Raid.3 - live cardboard animation inputs
 
 Current engine: `0.2.6-web-raid.3`. Current custom-plant rigs replace cached snapshots in Rally Raid's original cardboard passes. The native I, Zombie UI fix, shared plant rigs, accepted content, gameplay and saved layouts remain.

@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-raid.3
-Restores live Chill-shroom and Mender-bloom animation in Rally Raid by drawing their existing current rigs through the native cardboard passes instead of cached static previews. Idle, attack, blink and healing poses use the existing saved plant/carrier state. Native I, Zombie UI routing, artwork, shared normal-mode rigs, puzzle layouts, budgets, combat, IDs and serialized layouts are unchanged.
-Engine JavaScript SHA-256: 451f7f209d71a518f0bc9313ae070bddd1f9f4c6e04174e96b912ee90fc74db6
-Engine WASM SHA-256: 5852a90efec452dfaa8abfc54922131ad9a000a468caf956fa6c5c49c791667e
+PvZ-Portable 0.2.6-web-raid.4
+Holds Chill-shroom completely still with open eyes between attacks in Rally Raid, using a scoped neutral cardboard draw pose while preserving its live windup, release and recoil. The exact carrier overlay and filter are restored after drawing. Normal-mode idle, Mender animation, live clocks, native I, Zombie UI routing, artwork, puzzle layouts, budgets, combat, IDs and serialized layouts are unchanged.
+Engine JavaScript SHA-256: 177823909de86b31cb07f208cea136ab9263f17417d5d498d247e41d3d0c06a0
+Engine WASM SHA-256: 9bfe199c70a09471548bb5a576a6657fb1cdeec2a91a58ac917f98bb3091b885
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.

@@ -20,14 +20,14 @@ new Function('module', 'exports', 'require', fs.readFileSync(new URL('vendor/jsz
 const JSZip = vendor.exports;
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
 const engine = JSON.parse(fs.readFileSync(new URL('game/engine-provenance.json', dist)));
-assert.equal(engine.id, '0.2.6-web-raid.3');
+assert.equal(engine.id, '0.2.6-web-raid.4');
 const currentSourceBytes = fs.readFileSync(new URL(engine.artifacts.source, new URL('game/engine-provenance.json', dist)));
 assert.equal(sha(currentSourceBytes), engine.artifacts.sourceSha256, 'Current source archive matches the engine provenance pin');
 const current = await JSZip.loadAsync(currentSourceBytes, {checkCRC32: true});
-const parentSourceBytes = fs.readFileSync(new URL('source/pvz-portable-0.2.6-web-raid.2-source.zip', dist));
-assert.equal(sha(parentSourceBytes), '0bb8e6ae265488e1d1da8b472c10730f0bd17df9a56337c8acc34c4c3911a225', 'Parent is the exact published Raid.2 source');
+const parentSourceBytes = fs.readFileSync(new URL('source/pvz-portable-0.2.6-web-raid.3-source.zip', dist));
+assert.equal(sha(parentSourceBytes), 'dc02a3d87a227e3b6b890cd03894999dea831c62a6d184fc2a0bc281425e51a3', 'Parent is the exact published Raid.3 source');
 const parent = await JSZip.loadAsync(parentSourceBytes, {checkCRC32: true});
-const prefix = 'raid3-candidate/';
+const prefix = 'raid4-candidate/';
 // The restoration reference predates Raid.1's foreground override.
 const nativeUiSourceBytes=fs.readFileSync(new URL('source/pvz-portable-0.2.6-web-rally.3-source.zip',dist));
 assert.equal(sha(nativeUiSourceBytes),'2deb50f9a38d8599453f567f5458a20505d552956df0bc442e649e49ea1c5c24');
@@ -39,7 +39,7 @@ const read = async name => {
   return Buffer.from(await entry.async('uint8array'));
 };
 const retainedChecks = {'game-speed':66, 'qol-controls':90, 'decks-cooldowns':274,
-  'bonus-challenge':387, 'bonus-completion':1273, 'night-shift':231, 'lantern-shroom':880,
+  'bonus-challenge':387, 'bonus-completion':1273, 'night-shift':231, 'lantern-shroom':1724,
   'garden-shuffle':214, 'seed-swap':587, 'mender-bloom':523, 'intensive-care':1135, 'native-layout':10693};
 const suites = [...Object.keys(retainedChecks), 'care-fatigue', 'care-full-run', 'chain-reaction', 'rally-zombie', 'rally-raid'];
 assert.equal(suites.length, 17);
@@ -64,7 +64,7 @@ for (const [name, count] of Object.entries(retainedChecks))
 // Preserve all retained assertions. Raid adds one challenge-definition
 // iteration and 2,732 native footer/card/packet/layer checks; Raid.2
 // retains those cases with native-order expectations and adds14 pick controls.
-assert.equal(Object.values(retainedChecks).reduce((sum, count) => sum + count, 0), 16353);
+assert.equal(Object.values(retainedChecks).reduce((sum, count) => sum + count, 0), 17197);
 assert.equal(reports.get('care-fatigue').checks, 25042,
   'Fatigue rig coverage retains every crew pose, scoped state and restoration check');
 const fullRunReport = reports.get('care-full-run');
@@ -301,7 +301,7 @@ assert.equal(careBalance.kind, 'native healing/fatigue capacity bound; not a bat
 assert(careBalance.allBedsHealHpPerSecond > careBalance.maximumCrewFatigueHpPerSecond);
 assert(careBalance.slowestSuppliedRecoveryTicks < 3000);
 assert.equal(careBalance.authoredEnemies, 40);
-const parentPrefix = 'raid2-candidate/source/';
+const parentPrefix = 'raid3-candidate/source/';
 const parentBytes = async name => Buffer.from(await parent.file(parentPrefix + name).async('uint8array'));
 const layoutReport = reports.get('native-layout');
 assert.equal(layoutReport.hintLines, 1);
@@ -340,10 +340,10 @@ assert.equal(layoutFixture.schema, 1);
 assert.equal(layoutFixture.assetBundleId, engine.assetBundleId);
 assert.equal(layoutFixture.parentSourceSha256, '540f1ee365b558e10304995692485976e91f23bb1b28c305e6ade6cd17f1ed11',
   'The preserved layout negative-control fixture identifies its original Care.1 source');
-const parentLayoutFixtureEntry = parent.file('raid2-candidate/tests/native-layout-assets.json');
-assert(parentLayoutFixtureEntry, 'Authenticated Raid.2 parent retains the exact layout regression fixture');
+const parentLayoutFixtureEntry = parent.file('raid3-candidate/tests/native-layout-assets.json');
+assert(parentLayoutFixtureEntry, 'Authenticated Raid.3 parent retains the exact layout regression fixture');
 assert.deepEqual(layoutFixtureBytes, Buffer.from(await parentLayoutFixtureEntry.async('uint8array')),
-  'Historical Care.1 negative methods and native asset fixtures retain every authenticated Raid.2 fixture byte');
+  'Historical Care.1 negative methods and native asset fixtures retain every authenticated Raid.3 fixture byte');
 const approvedLayoutHashes = {
   'data/HouseofTerror28.txt':'08d9d6773edc9033512463b33be7c6604b675fadabd1729bb4fda4bed1966d0b',
   'data/HouseofTerror28.png':'e9913355ecccf2840761ce1a2a356067990deb44b326a7eb7d95c012126b9486',
@@ -400,8 +400,8 @@ assert.equal(sha(foregroundFixtureBytes),'bb816f27d031bffa79a91ee3f281504ebee7b6
 assert.equal(layoutReport.fixturesSha256['raid1-foreground-ui.json'],sha(foregroundFixtureBytes));
 // Raid.2 authenticated these exact methods against published Raid.1. Retain
 // that fixture through the pinned parent archive without bundling another engine.
-const inheritedForegroundEntry=parent.file('raid2-candidate/tests/raid1-foreground-ui.json');
-assert(inheritedForegroundEntry,'Authenticated Raid.2 source must retain the Raid.1 regression fixture');
+const inheritedForegroundEntry=parent.file('raid3-candidate/tests/raid1-foreground-ui.json');
+assert(inheritedForegroundEntry,'Authenticated Raid.3 source must retain the Raid.1 regression fixture');
 const inheritedForegroundBytes=Buffer.from(await inheritedForegroundEntry.async('uint8array'));
 assert.equal(sha(inheritedForegroundBytes),'bb816f27d031bffa79a91ee3f281504ebee7b666fbe4078f6762aecc83a86b95');
 assert.deepEqual(foregroundFixtureBytes,inheritedForegroundBytes,'The executed regression fixture retains every authenticated parent byte');
@@ -409,7 +409,7 @@ const foregroundFixture=JSON.parse(foregroundFixtureBytes);
 const inheritedForegroundFixture=JSON.parse(inheritedForegroundBytes);
 assert.equal(foregroundFixture.schema,1);
 assert.equal(foregroundFixture.parentSourceSha256,'50e122044bb767eb9c78cf8c38c9cd48de022f8b3f966b69b3bd29a7bbafdb8c');
-assert.deepEqual(foregroundFixture,inheritedForegroundFixture,'All original source pins, metadata and native methods match the authenticated Raid.2 fixture');
+assert.deepEqual(foregroundFixture,inheritedForegroundFixture,'All original source pins, metadata and native methods match the authenticated Raid.3 fixture');
 assert.deepEqual(Object.keys(foregroundFixture.methods).sort(),Object.keys(raidLayerFixture.methods).sort());
 for(const [signature,method] of Object.entries(foregroundFixture.methods))
   assert.equal(method,inheritedForegroundFixture.methods[signature],
@@ -419,18 +419,34 @@ assert.equal(layoutFixture.legacyHint, parentLayoutFixture.legacyHint,
   'Long-hint regression control retains its authenticated original published intro text');
 const chillReport=reports.get('lantern-shroom');
 assert.equal(chillReport.retainedChillChecks,548);
-assert.equal(chillReport.raidCardboardChecks,332);
+assert.equal(chillReport.raidCardboardChecks,1176);
+assert.equal(chillReport.raidIdleParentNegativeRejected,true);
+assert.equal(chillReport.raidIdleFrameCases,420);
+assert.equal(chillReport.normalIdleControlsRetained,true);
 assert.equal(chillReport.raidStaticParentNegativeRejected,true);
 const staticPlantFixtureBytes=await read('tests/raid2-static-plant.json');
 assert.equal(sha(staticPlantFixtureBytes),'fb2fa6f1cd55ffd2ac0f3b88bb6c98e2a457d753258ef054fdd182df2f7a5ec9');
 assert.equal(chillReport.fixturesSha256['raid2-static-plant.json'],sha(staticPlantFixtureBytes));
 const staticPlantFixture=JSON.parse(staticPlantFixtureBytes);
 assert.equal(staticPlantFixture.schema,1);
-assert.equal(staticPlantFixture.parentSourceSha256,sha(parentSourceBytes));
-assert.equal(staticPlantFixture.presentationSourceSha256,sha(await parentBytes('src/Lawn/System/RallyRaidPresentation.cpp')));
+assert.equal(staticPlantFixture.parentSourceSha256,'0bb8e6ae265488e1d1da8b472c10730f0bd17df9a56337c8acc34c4c3911a225');
 assert.equal(staticPlantFixture.signature,'bool DrawCustomPlant(');
-assert.equal(staticPlantFixture.method,extractLegacyFunction((await parentBytes('src/Lawn/System/RallyRaidPresentation.cpp')).toString(),staticPlantFixture.signature),
-  'Frozen-plant negative uses the exact published Raid.2 cached-image helper');
+const inheritedStaticEntry=parent.file('raid3-candidate/tests/raid2-static-plant.json');
+assert(inheritedStaticEntry,'Authenticated Raid.3 source retains its actual Raid.2 static-attack regression fixture');
+const inheritedStaticBytes=Buffer.from(await inheritedStaticEntry.async('uint8array'));
+assert.equal(sha(inheritedStaticBytes),'fb2fa6f1cd55ffd2ac0f3b88bb6c98e2a457d753258ef054fdd182df2f7a5ec9');
+assert.deepEqual(staticPlantFixtureBytes,inheritedStaticBytes);
+assert.deepEqual(staticPlantFixture,JSON.parse(inheritedStaticBytes),'Every inherited Raid.2 static-attack method and source pin remains authenticated');
+const breathingFixtureBytes=await read('tests/raid3-breathing-plant.json');
+assert.equal(sha(breathingFixtureBytes),'651ae378219d5fa683cb787414138239e89aa45eac6a00e1ec44d4efbe6ab344');
+assert.equal(chillReport.fixturesSha256['raid3-breathing-plant.json'],sha(breathingFixtureBytes));
+const breathingFixture=JSON.parse(breathingFixtureBytes);
+assert.equal(breathingFixture.schema,1);
+assert.equal(breathingFixture.parentSourceSha256,sha(parentSourceBytes));
+assert.equal(breathingFixture.presentationSourceSha256,sha(await parentBytes('src/Lawn/System/RallyRaidPresentation.cpp')));
+assert.equal(breathingFixture.signature,'bool DrawCustomPlant(');
+assert.equal(breathingFixture.method,extractLegacyFunction((await parentBytes('src/Lawn/System/RallyRaidPresentation.cpp')).toString(),breathingFixture.signature),
+  'Unwanted idle-breathing/blinking negative is the exact published Raid.3 helper');
 console.log('PASS native layout and live Raid cardboard use authenticated original sprite/font inputs, real parent regressions and preserved normal rig assertions.');
 // SeedPacket.h also defines the serialized SeedBank class.
 for (const name of ['src/Lawn/SeedPacket.h', 'src/Lawn/Plant.h', 'src/Lawn/System/SaveGame.cpp', 'src/Lawn/System/PlayerInfo.h', 'src/Lawn/System/PlayerInfo.cpp', 'src/LawnApp.h', 'src/Lawn/System/ReanimationLawn.h']) {
@@ -548,7 +564,7 @@ assert.match(newDefinitions.at(-1), /\.mCol = 3/);
 console.log('PASS native I,Zombie presentation restoration preserves every mode/seed ID, saved layout, plant and all nine Bonus challenge identities.');
 
 const artRecordBytes=fs.readFileSync(new URL('content/native-bonus-art.json', dist));
-assert.equal(sha(artRecordBytes),'c94ea4a5a2f77b218b9c045a0f718f8654f03db79c033c7d667247a698e5ea3b','Raid.3 preserves every published Raid.2 art metadata byte');
+assert.equal(sha(artRecordBytes),'c94ea4a5a2f77b218b9c045a0f718f8654f03db79c033c7d667247a698e5ea3b','Raid.4 preserves every accepted art metadata byte');
 const artRecord = JSON.parse(artRecordBytes);
 assert.match(artRecord.sourceKind, /native sprite compositions/);
 assert.equal(artRecord.generatedArtworkUsed, true, 'Generated artwork is scoped to the permitted plant sprite');
@@ -851,7 +867,7 @@ for (const entry of Object.values(parent.files)) {
     continue;
   }
   if (releaseIdentityInputs.has(name))
-    assert.equal(after.toString().replaceAll('0.2.6-web-raid.3', '0.2.6-web-raid.2'), before.toString());
+    assert.equal(after.toString().replaceAll('0.2.6-web-raid.4', '0.2.6-web-raid.3'), before.toString());
   else assert.deepEqual(after, before, 'Every unrelated source/artwork byte remains exact: ' + name);
 }
 assert.equal(parentSourceCount, 828);

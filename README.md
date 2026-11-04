@@ -1,5 +1,12 @@
 # Plants vs. Zombies — browser playtest
 
+## Raid.4 - still I, Zombie idle
+
+`0.2.6-web-raid.4` holds Chill-shroom still and open-eyed between attacks in Rally Raid. Its windup, release and recoil continue to animate. Normal gameplay keeps its existing idle animation, and Mender-bloom keeps its current behavior.
+
+The correction changes only the cardboard draw pose. Artwork, puzzle rules and saves are retained. All seventeen muted native suites passed: 1,485,247 checks, zero failures, including still-idle and live-attack comparisons. All fifteen browser integration suites passed. Muted browser capture confirmed still idle, live attacks and still cooldown. Normal game audio remains available. See [QA scope](PARITY-QA.md) and [release receipts](DEPLOYMENT.md).
+
+
 ## Raid.3 - live custom-plant animation
 
 `0.2.6-web-raid.3` draws Chill-shroom and Mender-bloom from their current live rigs in Rally Raid. Their idle, attack, blink and healing poses now carry through the original cardboard styling instead of using a frozen packet preview.

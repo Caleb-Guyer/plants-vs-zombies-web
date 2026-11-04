@@ -1,5 +1,14 @@
 # Current requirements
 
+## Raid.4 - attack-only Chill cardboard motion
+
+Chill-shroom holds a still, open-eyed cardboard pose during Rally Raid idle: no-target readiness, cooldown and the fading frost tail. It animates during its existing windup, release and recoil. Drawing temporarily uses an exact neutral overlay and then restores the full previous overlay and filter; native animation clocks, blink objects and ability counters continue without changes.
+
+Only CMake/ProjectVersion.cmake and RallyRaidPresentation.cpp differ from Raid.3 across all 828 production files. Normal-mode idle, the shared rigs, Mender behavior, native I, Zombie UI/head routing, accepted artwork and all content metadata remain byte-identical. Boards, budgets, combat, IDs, unlocks and saved layouts are unchanged. Browser shell changes are limited to the release/cache identity.
+
+All seventeen muted native suites passed: 1,485,247 checks, zero failures, along with all fifteen browser integration suites. Raid contributes 1,041,079 checks in 32 scenarios and 16 speed pairs: 24 legal winning runs, four native-UI controls and four plant-animation controls. The Lantern suite passes 1,724 checks, retaining its original 548; native layout passes 10,693. Muted browser capture also confirms still idle, live attack motion and a return to the identical still cooldown pose.
+
+
 ## Raid.3 - current cardboard plant rigs
 
 Rally Raid's custom defenders use the existing live Chill-shroom and Mender-bloom rigs for all four native cardboard passes. Current plant counters and the saved carrier phase supply idle, attack, blink and healing poses. The renderer retains the original colors and offsets, restores the carrier filter, and preserves the caller's graphics state. It creates no per-frame image buffers, new clocks or unbounded filter-cache entries.

@@ -12,13 +12,14 @@ const hudFields = ['outcome','syntheticUIControls','hudOracle','nativeIZMode',
   'nativeIZSamples','nativeIZFullFrameSamples','nativeIZTopBandSamples','nativeIZMismatchPixels',
   'nativeIZHeadTypes','nativeIZHeadSamples','foregroundRegressionNegatives','nativePauseSamples'];
 const controlNames=['hud-controls','plant-animation-controls'];
-const phaseLabels=['idle-a','idle-b','idle-c','windup-early','windup-late','release','recoil','cooldown',
+const phaseLabels=['idle-a','idle-b','idle-c','windup-early','windup-late','release','recoil','frost-tail-a','frost-tail-b','cooldown',
   'mender-idle-a','mender-idle-b','mender-heal-a','mender-heal-b'];
-const animationBooleans=['idleGeometryChanged','attackGeometryChanged','nativeEyesClosedObserved',
+const animationBooleans=['idleBodyStill','idleOpenEyesPreserved','idleBlinkObserved','frostTailBodyStill',
+  'cooldownBodyStill','normalIdleGeometryChanged','attackGeometryChanged','nativeEyesClosedObserved',
   'noTargetHeld','inRangePulseObserved','nativePausePreserved','attackSaveGraphPreserved',
   'attackSaveBodyPreserved','menderIdleChanged','menderHealObserved','menderHealChanged'];
-const animationFields=['outcome','syntheticAnimationControls','animationOracle','phaseLabels',
-  'geometryMismatchPixels','opaqueInteriorMismatchPixels','raid2StaticNegatives','legalPlacements',
+const animationFields=['outcome','syntheticAnimationControls','animationOracle','nativeBlinkInput','phaseLabels',
+  'geometryMismatchPixels','opaqueInteriorMismatchPixels','raid2StaticNegatives','raid3BreathingNegatives','legalPlacements',
   ...animationBooleans];
 
 // Respect strings/comments so this audits actual production method bodies.
@@ -80,12 +81,14 @@ export async function verifyRallyRaid({report, read, sha, engine, fullRunReport,
     if(result.name==='plant-animation-controls') {
       assert.equal(result.outcome,'animation-pass');
       assert.equal(result.syntheticAnimationControls,true);
-      assert.equal(result.animationOracle,'current-native-rig-cardboard-body');
+      assert.equal(result.animationOracle,'native-iz-still-idle-live-attack-body');
+      assert.equal(result.nativeBlinkInput,'DoBlink-explicit-synthetic','The closed-frame visual control uses explicit native blink input in its synthetic test');
       assert.deepEqual(result.phaseLabels,phaseLabels);
-      assert(result.bodySamples>=12 && result.geometryPixelComparisons>5000000 && result.opaqueInteriorComparisons>10000);
+      assert(result.bodySamples>=16 && result.geometryPixelComparisons>5000000 && result.opaqueInteriorComparisons>10000);
       assert.equal(result.geometryMismatchPixels,0);
       assert.equal(result.opaqueInteriorMismatchPixels,0);
-      assert.equal(result.raid2StaticNegatives,3,'The published static preview must fail idle, attack and healing body comparisons');
+      assert.equal(result.raid2StaticNegatives,3,'The published static preview must fail windup, release and recoil body comparisons');
+      assert.equal(result.raid3BreathingNegatives,1,'The published Raid.3 helper must fail the neutral idle body reference');
       assert.equal(result.legalPlacements,2);
       for(const field of animationBooleans) assert.equal(result[field],true,'Actual native body/range/pause/save/healing proof: '+field);
       for(const field of ['boardsSolved','brainsConsumed','profileCredits','awardCollected'])
@@ -172,7 +175,10 @@ export async function verifyRallyRaid({report, read, sha, engine, fullRunReport,
   assert.match(card,/PvzpDrawImageScaledF\(&picture,Sexy::IMAGE_BRAIN/);
   const liveCardboard=body(presentation,'bool DrawCustomPlant(');
   assert.match(liveCardboard,/ReanimationTryToGet\(plant\.mBodyReanimID\)/);
-  assert.match(liveCardboard,/RestoreFilter[\s\S]*mFilterEffect=previous/);
+  assert.match(liveCardboard,/RestoreDrawState[\s\S]*mFilterEffect=previousFilter/);
+  assert.match(liveCardboard,/mOverlayMatrix=previousOverlay/);
+  assert.match(liveCardboard,/GetAttackPhase[\s\S]*AttackPhase::Idle[\s\S]*mOverlayMatrix\.LoadIdentity\(\)/);
+  assert.match(liveCardboard,/if \(stillChill\)[\s\S]*LanternShroom::DrawRig\(&cutout,\*body,LanternShroom::BodyExpression::Auto\)/);
   assert.match(liveCardboard,/LanternShroom::DrawPlantRig[\s\S]*MenderBloom::DrawPlantRig/);
   assert(!liveCardboard.includes('Plant::GetImage'),'Raid cardboard renders the current saved native plant rig instead of a cached packet preview');
   assert.match(harness,/Only the hardware confirmation result is scripted/);

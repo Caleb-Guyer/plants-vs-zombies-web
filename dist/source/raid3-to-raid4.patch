@@ -1,0 +1,65 @@
+diff --git a/CMake/ProjectVersion.cmake b/CMake/ProjectVersion.cmake
+index 3dba70226345e7369f88679b3effe3a254a12a3a..d56888016a300a5b96b5af1c0cae0b91e7cf6013 100644
+--- a/CMake/ProjectVersion.cmake
++++ b/CMake/ProjectVersion.cmake
+@@ -66,6 +66,6 @@ if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
+ endif()
+ 
+ # Browser release identity; keep binary and corresponding-source manifests aligned.
+-set(PVZP_VERSION "0.2.6-web-raid.3")
++set(PVZP_VERSION "0.2.6-web-raid.4")
+ set(PVZP_VERSION_PLAIN "0.2.6")
+ configure_file("${PROJECT_SOURCE_DIR}/CMake/ProjectVersion.h.in" "${PROJECT_BINARY_DIR}/ProjectVersion.h" @ONLY)
+diff --git a/src/Lawn/System/RallyRaidPresentation.cpp b/src/Lawn/System/RallyRaidPresentation.cpp
+index 0975e98db416b7153424af356b524295fd55931c..6aba49082487e60d2b9fb352c18c743307afc1f9 100644
+--- a/src/Lawn/System/RallyRaidPresentation.cpp
++++ b/src/Lawn/System/RallyRaidPresentation.cpp
+@@ -90,12 +90,30 @@ bool DrawCustomPlant(Sexy::Graphics* graphics,Plant& plant)
+     if (plant.mSeedType!=SEED_LANTERNSHROOM && plant.mSeedType!=SEED_MENDERBLOOM) return false;
+     Reanimation* body=plant.mApp ? plant.mApp->ReanimationTryToGet(plant.mBodyReanimID) : nullptr;
+     if (!body) return true;
+-    struct RestoreFilter
++    struct RestoreDrawState
+     {
+         Reanimation& body;
+-        FilterEffect previous;
+-        ~RestoreFilter() { body.mFilterEffect=previous; }
+-    } restore{*body,body->mFilterEffect};
++        FilterEffect previousFilter;
++        Sexy::SexyTransform2D previousOverlay;
++        ~RestoreDrawState()
++        {
++            body.mFilterEffect=previousFilter;
++            body.mOverlayMatrix=previousOverlay;
++        }
++    } restore{*body,body->mFilterEffect,body->mOverlayMatrix};
++    const bool stillChill=plant.mSeedType==SEED_LANTERNSHROOM && !plant.mDead &&
++        !plant.mSquished && plant.mPlantHealth>=0 && !plant.mIsAsleep &&
++        plant.mOnBungeeState==NOT_ON_BUNGEE &&
++        LanternShroom::GetAttackPhase(plant.mStateCountdown,plant.mDoSpecialCountdown)==
++            LanternShroom::AttackPhase::Idle;
++    if (stillChill)
++    {
++        // I, Zombie cutouts hold still between attacks. Neutralize only the
++        // draw pose; the saved animation and ability clocks keep advancing.
++        body->mOverlayMatrix.LoadIdentity();
++        body->SetPosition(plant.mShakeOffsetX,
++            PlantDrawHeightOffset(plant.mBoard,&plant,plant.mSeedType,plant.mPlantCol,plant.mRow));
++    }
+     Sexy::Graphics cutout(*graphics);
+     cutout.SetDrawMode(Sexy::Graphics::DRAWMODE_NORMAL);
+     cutout.SetColorizeImages(true);
+@@ -108,7 +126,12 @@ bool DrawCustomPlant(Sexy::Graphics* graphics,Plant& plant)
+         cutout.SetColor(color);
+         body->mFilterEffect=filter;
+         if (plant.mSeedType==SEED_LANTERNSHROOM)
+-            LanternShroom::DrawPlantRig(&cutout,plant,*body);
++        {
++            if (stillChill)
++                LanternShroom::DrawRig(&cutout,*body,LanternShroom::BodyExpression::Auto);
++            else
++                LanternShroom::DrawPlantRig(&cutout,plant,*body);
++        }
+         else
+             MenderBloom::DrawPlantRig(&cutout,plant,*body);
+     };
