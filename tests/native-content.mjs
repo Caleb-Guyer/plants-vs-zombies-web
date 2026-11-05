@@ -21,14 +21,14 @@ new Function('module', 'exports', 'require', fs.readFileSync(new URL('vendor/jsz
 const JSZip = vendor.exports;
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
 const engine = JSON.parse(fs.readFileSync(new URL('game/engine-provenance.json', dist)));
-assert.equal(engine.id, '0.2.6-web-lights.1');
+assert.equal(engine.id, '0.2.6-web-lights.2');
 const currentSourceBytes = fs.readFileSync(new URL(engine.artifacts.source, new URL('game/engine-provenance.json', dist)));
 assert.equal(sha(currentSourceBytes), engine.artifacts.sourceSha256, 'Current source archive matches the engine provenance pin');
 const current = await JSZip.loadAsync(currentSourceBytes, {checkCRC32: true});
-const parentSourceBytes = fs.readFileSync(new URL('source/pvz-portable-0.2.6-web-raid.5-source.zip', dist));
-assert.equal(sha(parentSourceBytes), '1415b9a6f916b9780abd3425c5ea9ab32436c1ee56f1e59b89e0ce4d3db78307', 'Parent is the exact published Raid.5 source');
+const parentSourceBytes = fs.readFileSync(new URL('source/pvz-portable-0.2.6-web-lights.1-source.zip', dist));
+assert.equal(sha(parentSourceBytes), '5f35953986e985af0de8a572fa8bac4657ceaaee42e6db1f9cd84b7c6d3d7b8e', 'Parent is the exact published Lights.1 source');
 const parent = await JSZip.loadAsync(parentSourceBytes, {checkCRC32: true});
-const prefix = 'lights1-candidate/';
+const prefix = 'lights2-candidate/';
 // The restoration reference predates Raid.1's foreground override.
 const nativeUiSourceBytes=fs.readFileSync(new URL('source/pvz-portable-0.2.6-web-rally.3-source.zip',dist));
 assert.equal(sha(nativeUiSourceBytes),'2deb50f9a38d8599453f567f5458a20505d552956df0bc442e649e49ea1c5c24');
@@ -314,13 +314,23 @@ assert.equal(rallyReport.checks,Object.keys(rallyReport.sourceSha256).length+
  rallyReport.scenarios.reduce((sum,r)=>sum+r.checks,0)+rallyReport.speedParity.length);
 console.log('PASS twelve complete native Rally wins, four unattended gameovers, four actor controls, four custom-content consistency controls and twelve native speed outcome pairs.');
 await verifyRallyRaid({report:reports.get('rally-raid'), read, sha, engine, fullRunReport, productionBuildBytes:fullRunProductionBuildBytes});
+const priorLightsFogEntry=parent.file('lights1-candidate/tests/lights-native-art-inputs.json');
+assert(priorLightsFogEntry,'The authenticated parent must retain the original twelve artwork input pins');
+const priorLightsFogInputs=JSON.parse(await priorLightsFogEntry.async('string'));
+assert.equal(Object.keys(priorLightsFogInputs.sourceInputs).length,12);
+const expectedLightsFogInputs=structuredClone(priorLightsFogInputs);
+expectedLightsFogInputs.sourceInputs['images/fog.jpg']={bytes:31246,sha256:'78d5687316943ae354db21bf8017e8cb4605040571cf6d8ad9caf1eaf1e727d9'};
+expectedLightsFogInputs.sourceInputs['images/fog_.jpg']={bytes:40068,sha256:'303364ef61209e4ebf8f5808ab7875926d091c72fab1bf5b76499c2d4fe0550e'};
+const currentLightsFogInputs=JSON.parse(await read('tests/lights-native-art-inputs.json'));
+assert.deepEqual(currentLightsFogInputs,expectedLightsFogInputs,'All twelve prior artwork pins and metadata remain exact; only the two authenticated original graded-fog JPEGs are appended');
+assert.equal(Object.keys(currentLightsFogInputs.sourceInputs).length,14);
 await verifyLightsOut({report:reports.get('lights-out'),read,sha,engine,fullRunReport,productionBuildBytes:fullRunProductionBuildBytes});
 const careBalance = reports.get('intensive-care').balanceModel;
 assert.equal(careBalance.kind, 'native healing/fatigue capacity bound; not a battle clear');
 assert(careBalance.allBedsHealHpPerSecond > careBalance.maximumCrewFatigueHpPerSecond);
 assert(careBalance.slowestSuppliedRecoveryTicks < 3000);
 assert.equal(careBalance.authoredEnemies, 40);
-const parentPrefix = 'raid5-candidate/source/';
+const parentPrefix = 'lights1-candidate/source/';
 const parentBytes = async name => Buffer.from(await parent.file(parentPrefix + name).async('uint8array'));
 const layoutReport = reports.get('native-layout');
 assert.equal(layoutReport.hintLines, 1);
@@ -365,10 +375,10 @@ assert.equal(layoutFixture.schema, 1);
 assert.equal(layoutFixture.assetBundleId, engine.assetBundleId);
 assert.equal(layoutFixture.parentSourceSha256, '540f1ee365b558e10304995692485976e91f23bb1b28c305e6ade6cd17f1ed11',
   'The preserved layout negative-control fixture identifies its original Care.1 source');
-const parentLayoutFixtureEntry = parent.file('raid5-candidate/tests/native-layout-assets.json');
-assert(parentLayoutFixtureEntry, 'Authenticated Raid.5 parent retains the exact layout regression fixture');
+const parentLayoutFixtureEntry = parent.file('lights1-candidate/tests/native-layout-assets.json');
+assert(parentLayoutFixtureEntry, 'Authenticated Lights.1 parent retains the exact layout regression fixture');
 assert.deepEqual(layoutFixtureBytes, Buffer.from(await parentLayoutFixtureEntry.async('uint8array')),
-  'Historical Care.1 negative methods and native asset fixtures retain every authenticated Raid.5 fixture byte');
+  'Historical Care.1 negative methods and native asset fixtures retain every authenticated Lights.1 fixture byte');
 const approvedLayoutHashes = {
   'data/HouseofTerror28.txt':'08d9d6773edc9033512463b33be7c6604b675fadabd1729bb4fda4bed1966d0b',
   'data/HouseofTerror28.png':'e9913355ecccf2840761ce1a2a356067990deb44b326a7eb7d95c012126b9486',
@@ -419,18 +429,28 @@ for(const [signature,method] of Object.entries(raidLayerFixture.methods))
     'Restored UI/effects retain the actual authenticated native I,Zombie method: '+signature);
 for(const [signature,method] of Object.entries(raidLayerFixture.methods)) {
   const currentMethod=extractLegacyFunction((await read('source/'+(signature.includes('SeedPacket::')?'src/Lawn/SeedPacket.cpp':'src/Lawn/Board.cpp'))).toString(),signature);
-  const nativePath=signature==='void Board::DrawUIBottom('
-    ? currentMethod.replace('!LightsOut::IsMode(mApp->mGameMode) && ','') : currentMethod;
+  let nativePath=currentMethod;
+  if(signature==='void Board::DrawUIBottom(') {
+    assert.equal(nativePath.split('!LightsOut::IsMode(mApp->mGameMode) && ').length,2);
+    assert.equal(nativePath.split('if (!LightsOut::IsMode(mApp->mGameMode)) DrawShovel(g);').length,2);
+    nativePath=nativePath.replace('!LightsOut::IsMode(mApp->mGameMode) && ','')
+      .replace('if (!LightsOut::IsMode(mApp->mGameMode)) DrawShovel(g);','DrawShovel(g);');
+  }
+  if(signature==='void Board::DrawUITop(') {
+    const lightsGlove='\tif (LightsOut::IsMode(mApp->mGameMode)) DrawShovel(g);\n';
+    assert.equal(nativePath.split(lightsGlove).length,2);
+    nativePath=nativePath.replace(lightsGlove,'');
+  }
   assert.equal(method,nativePath,
-    'Original UI/effect paths remain exact; the sole new bottom-UI guard hides the Lights Out bank: '+signature);
+    'Native UI/effect paths stay exact after only the Lights-specific bank and glove-layer guards: '+signature);
 }
 const foregroundFixtureBytes=await read('tests/raid1-foreground-ui.json');
 assert.equal(sha(foregroundFixtureBytes),'bb816f27d031bffa79a91ee3f281504ebee7b666fbe4078f6762aecc83a86b95');
 assert.equal(layoutReport.fixturesSha256['raid1-foreground-ui.json'],sha(foregroundFixtureBytes));
 // Raid.2 authenticated these exact methods against published Raid.1. Retain
 // that fixture through the pinned parent archive without bundling another engine.
-const inheritedForegroundEntry=parent.file('raid5-candidate/tests/raid1-foreground-ui.json');
-assert(inheritedForegroundEntry,'Authenticated Raid.5 source must retain the Raid.1 regression fixture');
+const inheritedForegroundEntry=parent.file('lights1-candidate/tests/raid1-foreground-ui.json');
+assert(inheritedForegroundEntry,'Authenticated Lights.1 source must retain the Raid.1 regression fixture');
 const inheritedForegroundBytes=Buffer.from(await inheritedForegroundEntry.async('uint8array'));
 assert.equal(sha(inheritedForegroundBytes),'bb816f27d031bffa79a91ee3f281504ebee7b666fbe4078f6762aecc83a86b95');
 assert.deepEqual(foregroundFixtureBytes,inheritedForegroundBytes,'The executed regression fixture retains every authenticated parent byte');
@@ -438,7 +458,7 @@ const foregroundFixture=JSON.parse(foregroundFixtureBytes);
 const inheritedForegroundFixture=JSON.parse(inheritedForegroundBytes);
 assert.equal(foregroundFixture.schema,1);
 assert.equal(foregroundFixture.parentSourceSha256,'50e122044bb767eb9c78cf8c38c9cd48de022f8b3f966b69b3bd29a7bbafdb8c');
-assert.deepEqual(foregroundFixture,inheritedForegroundFixture,'All original source pins, metadata and native methods match the authenticated Raid.5 fixture');
+assert.deepEqual(foregroundFixture,inheritedForegroundFixture,'All original source pins, metadata and native methods match the authenticated Lights.1 fixture');
 assert.deepEqual(Object.keys(foregroundFixture.methods).sort(),Object.keys(raidLayerFixture.methods).sort());
 for(const [signature,method] of Object.entries(foregroundFixture.methods))
   assert.equal(method,inheritedForegroundFixture.methods[signature],
@@ -460,8 +480,8 @@ const staticPlantFixture=JSON.parse(staticPlantFixtureBytes);
 assert.equal(staticPlantFixture.schema,1);
 assert.equal(staticPlantFixture.parentSourceSha256,'0bb8e6ae265488e1d1da8b472c10730f0bd17df9a56337c8acc34c4c3911a225');
 assert.equal(staticPlantFixture.signature,'bool DrawCustomPlant(');
-const inheritedStaticEntry=parent.file('raid5-candidate/tests/raid2-static-plant.json');
-assert(inheritedStaticEntry,'Authenticated Raid.5 source retains its actual Raid.2 static-attack regression fixture');
+const inheritedStaticEntry=parent.file('lights1-candidate/tests/raid2-static-plant.json');
+assert(inheritedStaticEntry,'Authenticated Lights.1 source retains its actual Raid.2 static-attack regression fixture');
 const inheritedStaticBytes=Buffer.from(await inheritedStaticEntry.async('uint8array'));
 assert.equal(sha(inheritedStaticBytes),'fb2fa6f1cd55ffd2ac0f3b88bb6c98e2a457d753258ef054fdd182df2f7a5ec9');
 assert.deepEqual(staticPlantFixtureBytes,inheritedStaticBytes);
@@ -473,8 +493,8 @@ const breathingFixture=JSON.parse(breathingFixtureBytes);
 assert.equal(breathingFixture.schema,1);
 assert.equal(breathingFixture.parentSourceSha256,'dc02a3d87a227e3b6b890cd03894999dea831c62a6d184fc2a0bc281425e51a3');
 assert.equal(breathingFixture.signature,'bool DrawCustomPlant(');
-const inheritedBreathingEntry=parent.file('raid5-candidate/tests/raid3-breathing-plant.json');
-assert(inheritedBreathingEntry,'Authenticated Raid.5 retains the exact rejected Raid.3 breathing helper');
+const inheritedBreathingEntry=parent.file('lights1-candidate/tests/raid3-breathing-plant.json');
+assert(inheritedBreathingEntry,'Authenticated Lights.1 retains the exact rejected Raid.3 breathing helper');
 assert.deepEqual(breathingFixtureBytes,Buffer.from(await inheritedBreathingEntry.async('uint8array')),
   'Every inherited breathing-negative source pin and method stays byte-identical');
 console.log('PASS native layout and live Raid cardboard use authenticated original sprite/font inputs, real parent regressions and preserved normal rig assertions.');
@@ -531,13 +551,13 @@ function enumValues(text, name) {
 const oldEnums = (await parentBytes('src/ConstEnums.h')).toString();
 const newEnums = (await read('source/src/ConstEnums.h')).toString();
 const oldModes = enumValues(oldEnums, 'GameMode'), newModes = enumValues(newEnums, 'GameMode');
-assert.equal(oldModes.get('NUM_GAME_MODES'), 82);
+assert.equal(oldModes.get('NUM_GAME_MODES'), 83);
 for (const [key, value] of oldModes) if (key !== 'NUM_GAME_MODES') assert.equal(newModes.get(key), value, 'Every existing mode ID remains stable: ' + key);
 assert.equal(newModes.get('GAMEMODE_CHALLENGE_RALLY_POINT'), 80);
 assert.equal(newModes.get('GAMEMODE_CHALLENGE_RALLY_RAID'), 81);
 assert.equal(newModes.get('GAMEMODE_CHALLENGE_LIGHTS_OUT'),82);
 assert.equal(newModes.get('NUM_GAME_MODES'),83);
-assert.equal(newModes.size,oldModes.size+1,'Only Lights Out appends a mode ID');
+assert.deepEqual([...newModes],[...oldModes],'The fog/tooltip correction preserves every existing mode ID');
 assert.deepEqual([...enumValues(newEnums, 'ChallengePage')], [...enumValues(oldEnums, 'ChallengePage')],
   'Cold Front uses the existing Bonus page without changing any page IDs');
 const oldZombieIds = enumValues(oldEnums, 'ZombieType'), newZombieIds = enumValues(newEnums, 'ZombieType');
@@ -584,15 +604,15 @@ function definitions(text) {
 }
 const oldDefinitions = definitions((await parentBytes('src/Lawn/Widget/ChallengeScreen.cpp')).toString());
 const newDefinitions = definitions((await read('source/src/Lawn/Widget/ChallengeScreen.cpp')).toString());
-assert.equal(oldDefinitions.length, 81);
-assert.deepEqual(newDefinitions.slice(0, oldDefinitions.length), oldDefinitions, 'Every original and all nine existing Bonus challenge definitions remain exact');
-assert.equal(newDefinitions.length, oldDefinitions.length+1);
+assert.equal(oldDefinitions.length, 82);
+assert.deepEqual(newDefinitions, oldDefinitions, 'Every original and all ten Bonus challenge definitions remain exact');
+assert.equal(newDefinitions.length, oldDefinitions.length);
 assert.match(newDefinitions.at(-1), /GAMEMODE_CHALLENGE_LIGHTS_OUT/);
 assert.match(newDefinitions.at(-1), /Lights Out/);
 assert.match(newDefinitions.at(-1), /CHALLENGE_PAGE_BONUS/);
 assert.match(newDefinitions.at(-1), /\.mRow = 2/);
 assert.match(newDefinitions.at(-1), /\.mCol = 4/);
-console.log('PASS native I,Zombie presentation restoration preserves every mode/seed ID, saved layout, plant and all nine Bonus challenge identities.');
+console.log('PASS native I,Zombie presentation restoration preserves every mode/seed ID, saved layout, plant and all ten Bonus challenge identities.');
 
 const artRecordBytes=fs.readFileSync(new URL('content/native-bonus-art.json', dist));
 assert.equal(sha(artRecordBytes),'5e24ea62e230865ed09640e2b30e23be20860cb5bf3c0cc9e9c4d5877ba92ca0','Reviewed native Lights Out card metadata');
@@ -884,10 +904,10 @@ const archivedSourceNames = Object.values(current.files).filter(entry => !entry.
   .map(entry => entry.name.slice((prefix + 'source/').length));
 assert.deepEqual(archivedSourceNames.sort(), Object.keys(sourceManifest.files).sort(),
   'Every corresponding-source archive member is represented exactly once in its manifest');
-// Lights Out may change only these reviewed integration paths.
-const runtimeInputs = new Set(['src/ConstEnums.h','src/Lawn/Board.cpp','src/Lawn/Board.h','src/Lawn/Challenge.cpp','src/Lawn/CursorObject.cpp','src/Lawn/Plant.cpp','src/Lawn/System/BonusChallenge.h','src/Lawn/Widget/ChallengeScreen.cpp','src/LawnApp.cpp']);
+// The bounded fog/tooltip correction may change only Board.cpp and version metadata.
+const runtimeInputs = new Set(['src/Lawn/Board.cpp']);
 const releaseIdentityInputs = new Set(['CMake/ProjectVersion.cmake']);
-const addedRaidInputs = ['src/Lawn/System/LightsOut.h','src/Lawn/System/LightsOut.cpp','src/Lawn/System/LightsOutPresentation.h','src/Lawn/System/LightsOutPresentation.cpp'];
+const addedRaidInputs = [];
 const nativeNames = ['PeaShooter_backleaf.png', 'PeaShooter_backleaf_lefttip.png', 'PeaShooter_backleaf_righttip.png',
   'PeaShooter_stalk_bottom.png', 'PeaShooter_stalk_top.png', 'PeaShooter_frontleaf.png',
   'PeaShooter_frontleaf_righttip.png', 'PeaShooter_frontleaf_lefttip.png', 'SunFlower_head.png',
@@ -906,10 +926,10 @@ for (const entry of Object.values(parent.files)) {
     continue;
   }
   if (releaseIdentityInputs.has(name))
-    assert.equal(after.toString().replaceAll('0.2.6-web-lights.1', '0.2.6-web-raid.5'), before.toString());
+    assert.equal(after.toString().replaceAll('0.2.6-web-lights.2', '0.2.6-web-lights.1'), before.toString());
   else assert.deepEqual(after, before, 'Every unrelated source/artwork byte remains exact: ' + name);
 }
-assert.equal(parentSourceCount, 828);
+assert.equal(parentSourceCount, 832);
 const addedProduction = Object.keys(sourceManifest.files).filter(name => !parent.file(parentPrefix + name));
 assert.deepEqual(addedProduction.sort(), [...addedRaidInputs].sort(), 'Native presentation restoration adds no production files');
 assert.equal(Object.keys(sourceManifest.files).length, parentSourceCount + addedRaidInputs.length);
@@ -928,6 +948,17 @@ for (const signature of ['void DrawCareFatigue(Graphics* g, Plant& plant, Reanim
   assert.equal(extractLegacyFunction(afterPlant, signature), extractLegacyFunction(beforePlant, signature), 'Care fatigue rendering remains exact');
 const beforeBoard = normalizeSource(await parentBytes('src/Lawn/Board.cpp'));
 const afterBoard = normalizeSource(await read('source/src/Lawn/Board.cpp'));
+// The complete Board delta is limited to the reported presentation fixes.
+const oldTooltipGuard='if (!(IntensiveCare::IsMode(mApp->mGameMode) && theHitResult->mObjectType == OBJECT_TYPE_GLOVE))';
+const newTooltipGuard='if (!((IntensiveCare::IsMode(mApp->mGameMode) || LightsOut::IsMode(mApp->mGameMode)) && theHitResult->mObjectType == OBJECT_TYPE_GLOVE))';
+const clippedFogBlock='    Graphics aLightsFogGraphics(*g);\n    if (LightsOut::IsMode(mApp->mGameMode))\n    {\n        aLightsFogGraphics.ClipRect(0, 80, BOARD_WIDTH, 500);\n        g=&aLightsFogGraphics;\n    }\n';
+for(const original of [oldTooltipGuard,'\tDrawShovel(g);\n','void Board::DrawUITop(Graphics* g)\n{\n',clippedFogBlock])
+  assert.equal(beforeBoard.split(original).length,2,'Exact single parent presentation regression: '+original);
+const expectedBoard=beforeBoard.replace(oldTooltipGuard,newTooltipGuard)
+  .replace('\tDrawShovel(g);\n','\tif (!LightsOut::IsMode(mApp->mGameMode)) DrawShovel(g);\n')
+  .replace('void Board::DrawUITop(Graphics* g)\n{\n','void Board::DrawUITop(Graphics* g)\n{\n\tif (LightsOut::IsMode(mApp->mGameMode)) DrawShovel(g);\n')
+  .replace(clippedFogBlock,'');
+assert.equal(afterBoard,expectedBoard,'Only native fog clipping, Lights glove layer and tooltip anchor may change in Board.cpp');
 assert.equal(extractLegacyFunction(afterBoard, 'Board::Board(LawnApp* theApp)'),
   extractLegacyFunction(beforeBoard, 'Board::Board(LawnApp* theApp)'),
   'Actual Board constructor, including defined Survival wave startup counters, stays exact');

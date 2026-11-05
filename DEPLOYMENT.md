@@ -1,5 +1,21 @@
 # GitHub Pages release: Caleb-Guyer/plants-vs-zombies-web
 
+## Lights.2 - fog and glove-tooltip release inputs
+
+Current engine: `0.2.6-web-lights.2`.
+
+- Published Lights.1 parent source: `pvz-portable-0.2.6-web-lights.1-source.zip`, 26,618,089 bytes, 934 entries, SHA-256 `5f35953986e985af0de8a572fa8bac4657ceaaee42e6db1f9cd84b7c6d3d7b8e`.
+- Production scope: 832 files; only CMake/ProjectVersion.cmake and Board.cpp change. No source files are added or removed.
+- Full and incremental patches: `web-lights.2.patch` and `lights1-to-lights2.patch`.
+- All accepted content files, including the ten-card metadata, must remain byte-identical.
+- Normal JavaScript: 209,496 bytes, SHA-256 `c4a4be971b55b6c010cf9c9113caee9904e916952c7f84e483f1ffa084019dba`.
+- Normal WebAssembly: 7,715,722 bytes, SHA-256 `4afe6f8cbca197e604156a81abd4e72499247d5acce6945cd4f65aedd928616a`.
+- Corresponding source: `pvz-portable-0.2.6-web-lights.2-source.zip`, 26,630,296 bytes, 934 entries, SHA-256 `030d6dac37fbb4eca15ec4a852e2904ac6993ff598d824c7ef8a092804b6d26a`.
+- Both patches reconstruct all 832 production files byte-for-byte. All eighteen native suites and fifteen integration suites passed; the source download is checked by fresh extraction before publication.
+
+All eighteen muted native suites passed: 2,376,783 checks, zero failures, along with all fifteen browser integration suites. Muted browser inspection completed for this build. The correction is validated and prepared for GitHub Pages publication; normal game audio remains available.
+
+
 ## Lights.1 - Lights Out release inputs
 
 Current engine: `0.2.6-web-lights.1`. The new Bonus minigame uses original Plantern/fog/glove assets and appends mode 82 without changing prior content IDs or serialized object layouts. Its eight waves contain 26 native walkers, Coneheads and a final-wave Flag Zombie; existing zombie combat statistics are retained.

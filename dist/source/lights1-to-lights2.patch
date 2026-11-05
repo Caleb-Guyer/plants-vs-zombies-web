@@ -1,0 +1,55 @@
+diff --git a/CMake/ProjectVersion.cmake b/CMake/ProjectVersion.cmake
+index cbf62e377dad6540b7ecfa9b3dd0e44c52f11e56..6cfa3f9c74dd6584fb2784744ac756434d71b8cd 100644
+--- a/CMake/ProjectVersion.cmake
++++ b/CMake/ProjectVersion.cmake
+@@ -66,6 +66,6 @@ if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
+ endif()
+ 
+ # Browser release identity; keep binary and corresponding-source manifests aligned.
+-set(PVZP_VERSION "0.2.6-web-lights.1")
++set(PVZP_VERSION "0.2.6-web-lights.2")
+ set(PVZP_VERSION_PLAIN "0.2.6")
+ configure_file("${PROJECT_SOURCE_DIR}/CMake/ProjectVersion.h.in" "${PROJECT_BINARY_DIR}/ProjectVersion.h" @ONLY)
+diff --git a/src/Lawn/Board.cpp b/src/Lawn/Board.cpp
+index 0f9e5d11e83024aa51220eaa73e3a442bca5284b..4fafe9a66f04125067149b4b5f4454ec664a735c 100644
+--- a/src/Lawn/Board.cpp
++++ b/src/Lawn/Board.cpp
+@@ -3454,7 +3454,7 @@ void Board::UpdateToolTip(const HitResult* theHitResult)
+ 	if (theHitResult->mObjectType != GameObjectType::OBJECT_TYPE_SEEDPACKET)
+ 	{
+ 		Rect aButtonRect = GetShovelButtonRect();
+-		if (!(IntensiveCare::IsMode(mApp->mGameMode) && theHitResult->mObjectType == OBJECT_TYPE_GLOVE))
++		if (!((IntensiveCare::IsMode(mApp->mGameMode) || LightsOut::IsMode(mApp->mGameMode)) && theHitResult->mObjectType == OBJECT_TYPE_GLOVE))
+             GetZenButtonRect(theHitResult->mObjectType, aButtonRect);
+ 		this->mToolTip->mX = aButtonRect.mX + 35;
+ 		this->mToolTip->mY = aButtonRect.mY + 72;
+@@ -7868,7 +7868,7 @@ void Board::DrawUIBottom(Graphics* g)
+ 		}
+ 	}
+ 
+-	DrawShovel(g);
++	if (!LightsOut::IsMode(mApp->mGameMode)) DrawShovel(g);
+ 	if (!StageHasFog())
+ 	{
+ 		DrawTopRightUI(g);
+@@ -8008,12 +8008,6 @@ void Board::UpdateFog()
+ 
+ void Board::DrawFog(Graphics* g)
+ {
+-    Graphics aLightsFogGraphics(*g);
+-    if (LightsOut::IsMode(mApp->mGameMode))
+-    {
+-        aLightsFogGraphics.ClipRect(0, 80, BOARD_WIDTH, 500);
+-        g=&aLightsFogGraphics;
+-    }
+ 	bool aIs3DAccelerated = mApp->Is3DAccelerated();
+ 	Image* aImageFog = aIs3DAccelerated ? Sexy::IMAGE_FOG : Sexy::IMAGE_FOG_SOFTWARE;
+ 	// the fog animation uses 900- and 500-frame periods; mod by their lcm (4500) to avoid float precision loss on large counters
+@@ -8067,6 +8061,7 @@ bool Board::IsScaryPotterDaveTalking()
+ 
+ void Board::DrawUITop(Graphics* g)
+ {
++	if (LightsOut::IsMode(mApp->mGameMode)) DrawShovel(g);
+ 	if (StageHasFog())
+ 	{
+ 		DrawTopRightUI(g);

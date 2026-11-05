@@ -1,5 +1,16 @@
 # Current requirements
 
+## Lights.2 - reported fog and glove-tooltip correction
+
+`0.2.6-web-lights.2` fixes the two reported Lights Out presentation defects. Fog uses the original sprite's shaped transparent edges across the whole board. The native glove draws above fog, and its tooltip appears beneath the actual glove button. Original artwork, all ten Bonus cards, battle rules and save layouts are preserved.
+
+The regression checks now exercise native fog raster edges at all five Plantern rows in both original fog styles, actual native glove hover and tooltip font rendering, and CPU software glove-over-fog composition. The previous rectangular crop, wrong Zen Garden tooltip anchor and fog-covered glove are negative controls. Primary graded-fog MemoryImage exports are offscreen layout fixtures; they do not establish GPU or browser pixel equivalence. Actual browser rendering is checked separately. Existing attack gating, legal moves, saved graph, Retry, rewards and speed checks remain release gates.
+
+The final Lights Out matrix passes 883,997 checks in 20 cases and ten speed pairs: twelve legal winning runs, four static-lamp losses and four separately labeled controls. Each control checks five rows in both fog styles and rejects ten cropped-fog cases, one misplaced tooltip and one fog-covered glove. Fourteen original artwork inputs are authenticated. Eight native visual fixtures cover all five lamp rows, glove tooltip, pause and card. Synthetic visual controls do not claim earned wins.
+
+All eighteen muted native suites passed: 2,376,783 checks, zero failures, along with all fifteen browser integration suites. Muted browser inspection completed for this build. The correction is validated and prepared for GitHub Pages publication; normal game audio remains available.
+
+
 ## Lights.1 - Lights Out
 
 Lights Out is mode 82 in the existing Bonus catalog, using the unused profile record at index 81 and challenge state 114. Existing mode/seed/zombie IDs and serialized fields retain their layouts. The fixed garden contains one original Plantern, five Repeaters, five Snow Peas and five Wall-nuts on a five-row night lawn with native fog. Only the Plantern moves, along one fixed column; native glove input, a short move cooldown and the original Menu/speed controls provide the interaction.

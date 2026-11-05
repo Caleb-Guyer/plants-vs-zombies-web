@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-lights.1
-Adds Lights Out: one movable native Plantern powers nearby fixed defenses through readable original fog, with eight authored waves and native glove controls. Existing mode IDs, saved object layouts, previous minigames and accepted plant artwork are preserved.
-Engine JavaScript SHA-256: b4218af945ccc0521b19d1683884fa9bb3cfd53c5e0e0dff48c883b63723a6fc
-Engine WASM SHA-256: 4b8e06730872ee43e1935b972eb423e7909ba6bf5badc42590079b52107dc61f
+PvZ-Portable 0.2.6-web-lights.2
+Restores natural original fog edges in Lights Out and fixes the native glove tooltip anchor. The glove now draws above fog; all attack, movement, wave and save rules are unchanged. Existing mode IDs, saved object layouts, previous minigames and accepted plant artwork are preserved.
+Engine JavaScript SHA-256: c4a4be971b55b6c010cf9c9113caee9904e916952c7f84e483f1ffa084019dba
+Engine WASM SHA-256: 4afe6f8cbca197e604156a81abd4e72499247d5acce6945cd4f65aedd928616a
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.

@@ -4,6 +4,8 @@ const names=['normal','save-continue','retry-no-light','no-move','controls'];
 const controls=['lightFootprint','fogMatchesLight','litBottomBaseClear','unlitFireBlocked','pendingFireBlocked',
  'litFireObserved','inFlightRetained','idleUnfrozen','gloveMoveIdentity','invalidMovesRejected',
  'selectionCancelled','nativePause','checkpointGraphPreserved','originalModeUnaffected','nativeHUDSafe'];
+const visualControls=['fogNaturalEdges','nativeGloveTooltip','gloveAboveFog'];
+const visualEvidence={fogEdgeRows:5,fogBranchCount:2,croppedFogNegatives:10,misplacedTooltipNegatives:1,foggedGloveNegatives:1};
 
 export async function verifyLightsOut({report,read,sha,engine,fullRunReport,productionBuildBytes}) {
  assert.equal(report.execution,'complete-production-engine');
@@ -22,7 +24,7 @@ export async function verifyLightsOut({report,read,sha,engine,fullRunReport,prod
  assert.equal(sha(await read('tests/test-lights-out.py')),report.runnerSha256);
  assert.equal(sha(await read('tests/lights-out-assets.json')),report.assetFixtureSha256);
  assert.equal(report.assetBundleId,engine.assetBundleId);
- assert.equal(report.nativeArtInputs,12);
+ assert.equal(report.nativeArtInputs,14);
  assert.equal(report.fixturesSha256['lights-native-art-inputs.json'],sha(await read('tests/lights-native-art-inputs.json')));
  const build=JSON.parse(await read('tests/lights-out-build.json'));
  for(const field of ['execution','optimization','productionObjectCount','productionBuildReceiptSha256',
@@ -40,7 +42,10 @@ export async function verifyLightsOut({report,read,sha,engine,fullRunReport,prod
   if(result.name==='controls') {
    assert.equal(result.outcome,'controls-pass');
    assert.equal(result.syntheticControls,true);
-   for(const field of controls) assert.equal(result[field],true,'Actual Lights Out control: '+field);
+   for(const field of [...controls,...visualControls]) assert.equal(result[field],true,'Actual Lights Out control: '+field);
+   for(const [field,value] of Object.entries(visualEvidence)) assert.equal(result[field],value,'Actual native visual regression evidence: '+field);
+   assert(result.glovePixelSamples>100);
+   assert.equal(result.gloveMismatchPixels,0);
    assert.equal(result.profileCredits,0);
    assert.equal(result.awardCollected,false);
    continue;
@@ -80,10 +85,10 @@ export async function verifyLightsOut({report,read,sha,engine,fullRunReport,prod
   const cases=report.scenarios.filter(r=>r.name===pair.name&&r.seed===pair.seed);
   assert.equal(cases.length,2);
   const fields=['outcome','profileIndex','profileCredits','awardCollected',
-   ...(pair.name==='controls'?['syntheticControls',...controls]:['waves','nativeZombies','authoredEnemies','failureAndRetry','bonusReturned','replayCardAvailable'])];
+   ...(pair.name==='controls'?['syntheticControls',...controls,...visualControls,...Object.keys(visualEvidence)]:['waves','nativeZombies','authoredEnemies','failureAndRetry','bonusReturned','replayCardAvailable'])];
   assert.deepEqual(pair.comparedFields,fields);
   for(const field of pair.comparedFields) assert.deepEqual(cases[0][field],cases[1][field]);
  }
  assert.equal(report.checks,Object.keys(report.sourceSha256).length+report.scenarios.reduce((sum,r)=>sum+r.checks,0)+report.speedParity.length);
- console.log('PASS Lights Out: twelve legal native wins, four static-lamp losses, four isolated controls and ten speed pairs.');
+ console.log('PASS Lights Out: twelve legal native wins, four static-lamp losses, four controls with five-row natural fog, real glove tooltip/over-fog pixels, and ten speed pairs.');
 }

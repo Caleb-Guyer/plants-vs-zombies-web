@@ -1,5 +1,12 @@
 # Plants vs. Zombies — browser playtest
 
+## Lights.2 - natural fog and native glove tooltip
+
+`0.2.6-web-lights.2` fixes the two reported Lights Out presentation defects. Fog uses the original sprite's shaped transparent edges across the whole board. The native glove draws above fog, and its tooltip appears beneath the actual glove button. Original artwork, all ten Bonus cards, battle rules and save layouts are preserved.
+
+All eighteen muted native suites passed: 2,376,783 checks, zero failures, along with all fifteen browser integration suites. Muted browser inspection completed for this build. The correction is validated and prepared for GitHub Pages publication; normal game audio remains available.
+
+
 ## Lights.1 - Lights Out
 
 `0.2.6-web-lights.1` adds Lights Out to the native Bonus page. Move one original Plantern between lanes to activate a fixed garden: plants can fire only inside its glow. Eight authored waves contain 26 native zombies: walkers introduce the rule before split lanes and Coneheads demand more careful lamp placement, with a Flag Zombie in the final wave.
