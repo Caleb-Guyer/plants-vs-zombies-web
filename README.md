@@ -1,5 +1,14 @@
 # Plants vs. Zombies — browser playtest
 
+## Lights.1 - Lights Out
+
+`0.2.6-web-lights.1` adds Lights Out to the native Bonus page. Move one original Plantern between lanes to activate a fixed garden: plants can fire only inside its glow. Eight authored waves contain 26 native zombies: walkers introduce the rule before split lanes and Coneheads demand more careful lamp placement, with a Flag Zombie in the final wave.
+
+The minigame uses original Plantern, fog, plant, zombie and glove artwork. Its selected lamp remains on its current tile until a legal move commits; moving preserves the same plant, health and native animation clocks. Existing content and save layouts are retained.
+
+All eighteen muted native suites passed: 2,374,919 checks, zero failures, along with all fifteen browser integration suites. The Lights Out matrix includes twelve legal wins at 1x/2x with a slow input policy; every win kept the Plantern at full health, all five Wall-nuts and all five unused mowers. Muted browser inspection confirmed native controls, visible combat and save/reload/Continue. The update is validated and prepared for GitHub Pages publication. See [QA scope](PARITY-QA.md) and [release inputs](DEPLOYMENT.md). Normal game audio remains available.
+
+
 ## Raid.5 - custom-content consistency
 
 `0.2.6-web-raid.5` keeps walking animation in step with Rally buffs in Rally Raid. Walkers now speed up and settle back to their normal stride as the movement effect changes.

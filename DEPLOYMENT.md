@@ -1,5 +1,22 @@
 # GitHub Pages release: Caleb-Guyer/plants-vs-zombies-web
 
+## Lights.1 - Lights Out release inputs
+
+Current engine: `0.2.6-web-lights.1`. The new Bonus minigame uses original Plantern/fog/glove assets and appends mode 82 without changing prior content IDs or serialized object layouts. Its eight waves contain 26 native walkers, Coneheads and a final-wave Flag Zombie; existing zombie combat statistics are retained.
+
+- Published Raid.5 parent source: `pvz-portable-0.2.6-web-raid.5-source.zip`, 24,033,055 bytes, 920 entries, SHA-256 `1415b9a6f916b9780abd3425c5ea9ab32436c1ee56f1e59b89e0ce4d3db78307`.
+- Production inputs: 832 files, including LightsOut.h/.cpp and LightsOutPresentation.h/.cpp. Existing engine hooks are bounded to the new mode.
+- Normal JavaScript: 209,496 bytes, SHA-256 `b4218af945ccc0521b19d1683884fa9bb3cfd53c5e0e0dff48c883b63723a6fc`.
+- Normal WebAssembly: 7,715,260 bytes, SHA-256 `4b8e06730872ee43e1935b972eb423e7909ba6bf5badc42590079b52107dc61f`.
+- Corresponding source: `pvz-portable-0.2.6-web-lights.1-source.zip`, 26,618,089 bytes, 934 entries, SHA-256 `5f35953986e985af0de8a572fa8bac4657ceaaee42e6db1f9cd84b7c6d3d7b8e`.
+- Full and incremental patches: `web-lights.1.patch` and `raid5-to-lights1.patch`. Both reconstruct all 832 production files byte-for-byte; the Raid.5 increment touches fourteen paths, including the four added Lights Out files.
+- All eighteen muted native suites passed: 2,374,919 checks, zero failures. Five complete-engine drivers/ten backend files are authenticated. Lights Out contributes 882,133 checks in twenty cases/ten 1x/2x pairs, including twelve genuine wins, four static-lamp losses and four separate controls. All fifteen browser integration suites passed.
+
+The normal Release receipt confirms the production source remained unchanged during compilation. Every Lights Out winning run retained full lamp health, five Wall-nuts and five unused mowers under the unchanged slow battle policy. Five final native render fixtures were independently reviewed. Muted private browser inspection verified file-free startup, the ten-card Bonus page, top/bottom light movement, real native shots, 2x/Menu and save/full reload/Continue with no export/import. Error-level console logs were empty; the owned preview tab/server were closed without changing public-origin saves or viewport settings.
+
+The update is validated and prepared for GitHub Pages publication. The existing manual GitHub Pages workflow remains the publication gate; this record does not claim deployment has already completed. Earlier sections describe their named historical releases.
+
+
 ## Raid.5 - consistency release inputs
 
 Current engine: `0.2.6-web-raid.5`. The release synchronizes Rally Raid walking animation with native Rally movement changes and extends the custom-content regression checks.

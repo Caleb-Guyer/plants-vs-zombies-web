@@ -1,5 +1,16 @@
 # Current requirements
 
+## Lights.1 - Lights Out
+
+Lights Out is mode 82 in the existing Bonus catalog, using the unused profile record at index 81 and challenge state 114. Existing mode/seed/zombie IDs and serialized fields retain their layouts. The fixed garden contains one original Plantern, five Repeaters, five Snow Peas and five Wall-nuts on a five-row night lawn with native fog. Only the Plantern moves, along one fixed column; native glove input, a short move cooldown and the original Menu/speed controls provide the interaction.
+
+A shared Manhattan-distance rule determines the clear fog footprint and attack eligibility. The lamp activates nearby Repeater lanes and the centered Snow Pea; unlit attack clocks stop while health, native idle motion and already-fired projectiles continue. Selection keeps the source tile lit until placement, and moving retains the actor's ID, health, particles and saved clocks. Native fog stays translucent outside the glow, uses the five-row spacing, and is clipped below the header so tools and navigation remain clear. The introduction uses one transient native line; challenge cards have no added tips.
+
+The eight authored waves contain 26 zombies drawn from the native walker, Conehead and Flag Zombie types, retaining their original combat statistics. Normal play, active-combat Save/Continue and genuine failure followed by native Retry each pass at 1x/2x across two fixed seeds. All twelve winning runs retain the lamp's full 300 health, all five Wall-nuts and all five unused mowers using legal glove input every 250 simulation ticks. Four static-lamp runs lose through native combat without earning completion, so moving the light remains necessary.
+
+All eighteen muted native suites passed with 2,374,919 checks and zero failures; all fifteen browser integration suites passed. Muted browser inspection confirmed the ten-card Bonus page, top/bottom light movement, native projectiles, Menu/2x and save/reload/Continue without import/export. The existing nine Bonus definitions, accepted plant artwork and native I, Zombie behavior are retained. Release validation is complete and prepared for GitHub Pages publication; normal game audio remains available.
+
+
 ## Raid.5 - custom-content regression pass
 
 Rally Raid refreshes zombie animation speed as its Rally movement effect changes, using the same refresh path already present in Rally Point. The correction extends one mode guard in Zombie::UpdatePlaying; no new animation, clock, content, UI or saved field is introduced.

@@ -100,6 +100,16 @@
       "gameplay": "Five fixed I, Zombie boards. Spend a finite sun budget to deploy normal, conehead, buckethead, screen-door and Rally Zombies on the right-hand lawn. Eat all five native brains on each board; Chill-shroom and Mender-bloom join the authored cardboard defenses. Only board five grants the completion award.",
       "artwork": "The existing original zombie rig and repaired closed grip accompany an original brain sprite rendered at final card resolution, fitted up to 22 by 20 pixels. The combined composition fits the centered 68 by 57 hero bounds inside the native 80 by 65 card. No separately generated illustration is used.",
       "interface": "Original I, Zombie bank, brains, deployment line, native pause/Menu/speed controls and brain meter. Native footer shows board progress. Raid uses the original I, Zombie draw order and packet-feedback layers; top-row zombie heads render in front of the bank exactly as in that mode."
+    },
+    {
+      "mode": 82,
+      "name": "Lights Out",
+      "hero": "Original REANIM_PLANTERN idle rig, centered over original nighttime lawn with original fog cels",
+      "background": "IMAGE_BACKGROUND2 with IMAGE_FOG_SOFTWARE",
+      "generatedArtworkUsed": false,
+      "gameplay": "Move one living Plantern between five rail cells with the native glove. Fixed defenders attack only inside its two-tile Manhattan light footprint. A short opening introduces the light before authored waves require lane changes; original combat, mowers, pause, speed and completion rules remain active.",
+      "artwork": "The complete original Plantern body, eyes, stem and leaves are rendered from its unmodified native rig. Two original software-fog cels sit behind its silhouette. The composition uses the same centered 68 by 57 hero bounds inside the existing 80 by 65 card; no separately generated illustration is used.",
+      "interface": "Name-only tenth Bonus card in the native fifth column of row two. The original glove uses one bounded draw and hit rectangle, and the normal Menu/speed controls and footer remain clear."
     }
   ],
   "canvas": {

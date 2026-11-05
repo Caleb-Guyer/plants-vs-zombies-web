@@ -1,5 +1,5 @@
 {
-  "id": "0.2.6-web-raid.5",
+  "id": "0.2.6-web-lights.1",
   "upstream": {
     "tag": "0.2.6",
     "commit": "396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
@@ -7,21 +7,21 @@
     "officialJsSha256": "0f2d7425190e49c762f6700b68b080086e3dcb8f2dc5e9724de42ce9fb508573"
   },
   "artifacts": {
-    "jsSha256": "177823909de86b31cb07f208cea136ab9263f17417d5d498d247e41d3d0c06a0",
-    "wasmSha256": "ad543d5bc6056486ce7bcc413b3a849913647714d25925f245b967fe5bc6f951",
-    "source": "../source/pvz-portable-0.2.6-web-raid.5-source.zip",
-    "sourceSha256": "1415b9a6f916b9780abd3425c5ea9ab32436c1ee56f1e59b89e0ce4d3db78307",
-    "patch": "../source/web-raid.5.patch",
-    "patchSha256": "78acaf913b42ca732bb58f1dc8dd0493eb08fd09feac232081b499e767790ae1"
+    "jsSha256": "b4218af945ccc0521b19d1683884fa9bb3cfd53c5e0e0dff48c883b63723a6fc",
+    "wasmSha256": "4b8e06730872ee43e1935b972eb423e7909ba6bf5badc42590079b52107dc61f",
+    "source": "../source/pvz-portable-0.2.6-web-lights.1-source.zip",
+    "sourceSha256": "5f35953986e985af0de8a572fa8bac4657ceaaee42e6db1f9cd84b7c6d3d7b8e",
+    "patch": "../source/web-lights.1.patch",
+    "patchSha256": "1e1f29b2f70d8906d9a113960042ed5584d64f3a2b9ea6461c93061aeda4383f"
   },
   "buildRecord": "../source/build-provenance.json",
-  "change": "Refreshes Rally Raid native walking speed when rally boosts begin and end. Adds complete-engine custom-content consistency controls for native animation, Almanac layout, pause and save/Continue while retaining the accepted artwork, original UI, puzzle layouts, budgets, IDs and serialized layouts.",
-  "caption": "with Rally Raid.",
+  "change": "Adds Lights Out: one movable native Plantern powers nearby fixed defenses through readable original fog, with eight authored waves and native glove controls. Existing mode IDs, saved object layouts, previous minigames and accepted plant artwork are preserved.",
+  "caption": "with Lights Out.",
   "gameAssetsIncluded": true,
   "assetManifest": "../game-assets/manifest.json",
   "assetBundleId": "sha256:b468b22439430ca4a36035b886a74bd831a86b2a1a36c39d3203396f5b75d093",
   "parent": {
-    "id": "0.2.6-web-raid.4",
+    "id": "0.2.6-web-raid.5",
     "upstream": {
       "tag": "0.2.6",
       "commit": "396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
@@ -30,20 +30,20 @@
     },
     "artifacts": {
       "jsSha256": "177823909de86b31cb07f208cea136ab9263f17417d5d498d247e41d3d0c06a0",
-      "wasmSha256": "9bfe199c70a09471548bb5a576a6657fb1cdeec2a91a58ac917f98bb3091b885",
-      "source": "../source/pvz-portable-0.2.6-web-raid.4-source.zip",
-      "sourceSha256": "8c068366dc208d692d0e5d7afd286cc4ec34312564e7f8a6deace562d59a5512",
-      "patch": "../source/web-raid.4.patch",
-      "patchSha256": "e41f58940cccf9371a071c38ca267045b72d17f10343b631b5ffc5dcc6382a76"
+      "wasmSha256": "ad543d5bc6056486ce7bcc413b3a849913647714d25925f245b967fe5bc6f951",
+      "source": "../source/pvz-portable-0.2.6-web-raid.5-source.zip",
+      "sourceSha256": "1415b9a6f916b9780abd3425c5ea9ab32436c1ee56f1e59b89e0ce4d3db78307",
+      "patch": "../source/web-raid.5.patch",
+      "patchSha256": "78acaf913b42ca732bb58f1dc8dd0493eb08fd09feac232081b499e767790ae1"
     },
     "buildRecord": "../source/build-provenance.json",
-    "change": "Holds Chill-shroom completely still with open eyes between attacks in Rally Raid, using a scoped neutral cardboard draw pose while preserving its live windup, release and recoil. The exact carrier overlay and filter are restored after drawing. Normal-mode idle, Mender animation, live clocks, native I, Zombie UI routing, artwork, puzzle layouts, budgets, combat, IDs and serialized layouts are unchanged.",
+    "change": "Refreshes Rally Raid native walking speed when rally boosts begin and end. Adds complete-engine custom-content consistency controls for native animation, Almanac layout, pause and save/Continue while retaining the accepted artwork, original UI, puzzle layouts, budgets, IDs and serialized layouts.",
     "caption": "with Rally Raid.",
     "gameAssetsIncluded": true,
     "assetManifest": "../game-assets/manifest.json",
     "assetBundleId": "sha256:b468b22439430ca4a36035b886a74bd831a86b2a1a36c39d3203396f5b75d093",
     "parent": {
-      "id": "0.2.6-web-raid.3",
+      "id": "0.2.6-web-raid.4",
       "upstream": {
         "tag": "0.2.6",
         "commit": "396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
@@ -51,21 +51,21 @@
         "officialJsSha256": "0f2d7425190e49c762f6700b68b080086e3dcb8f2dc5e9724de42ce9fb508573"
       },
       "artifacts": {
-        "jsSha256": "451f7f209d71a518f0bc9313ae070bddd1f9f4c6e04174e96b912ee90fc74db6",
-        "wasmSha256": "5852a90efec452dfaa8abfc54922131ad9a000a468caf956fa6c5c49c791667e",
-        "source": "../source/pvz-portable-0.2.6-web-raid.3-source.zip",
-        "sourceSha256": "dc02a3d87a227e3b6b890cd03894999dea831c62a6d184fc2a0bc281425e51a3",
-        "patch": "../source/web-raid.3.patch",
-        "patchSha256": "206cfc5ae7848eeff9a35510f4102449bf1b3f48c05fd592e1606cbff4be96fc"
+        "jsSha256": "177823909de86b31cb07f208cea136ab9263f17417d5d498d247e41d3d0c06a0",
+        "wasmSha256": "9bfe199c70a09471548bb5a576a6657fb1cdeec2a91a58ac917f98bb3091b885",
+        "source": "../source/pvz-portable-0.2.6-web-raid.4-source.zip",
+        "sourceSha256": "8c068366dc208d692d0e5d7afd286cc4ec34312564e7f8a6deace562d59a5512",
+        "patch": "../source/web-raid.4.patch",
+        "patchSha256": "e41f58940cccf9371a071c38ca267045b72d17f10343b631b5ffc5dcc6382a76"
       },
       "buildRecord": "../source/build-provenance.json",
-      "change": "Restores live Chill-shroom and Mender-bloom animation in Rally Raid by drawing their existing current rigs through the native cardboard passes instead of cached static previews. Idle, attack, blink and healing poses use the existing saved plant/carrier state. Native I, Zombie UI routing, artwork, shared normal-mode rigs, puzzle layouts, budgets, combat, IDs and serialized layouts are unchanged.",
+      "change": "Holds Chill-shroom completely still with open eyes between attacks in Rally Raid, using a scoped neutral cardboard draw pose while preserving its live windup, release and recoil. The exact carrier overlay and filter are restored after drawing. Normal-mode idle, Mender animation, live clocks, native I, Zombie UI routing, artwork, puzzle layouts, budgets, combat, IDs and serialized layouts are unchanged.",
       "caption": "with Rally Raid.",
       "gameAssetsIncluded": true,
       "assetManifest": "../game-assets/manifest.json",
       "assetBundleId": "sha256:b468b22439430ca4a36035b886a74bd831a86b2a1a36c39d3203396f5b75d093",
       "parent": {
-        "id": "0.2.6-web-raid.2",
+        "id": "0.2.6-web-raid.3",
         "upstream": {
           "tag": "0.2.6",
           "commit": "396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
@@ -73,21 +73,21 @@
           "officialJsSha256": "0f2d7425190e49c762f6700b68b080086e3dcb8f2dc5e9724de42ce9fb508573"
         },
         "artifacts": {
-          "jsSha256": "149cde88e398e1e3a08ae2d43c77a1eed6701299d783c78ac8a610573c268f0f",
-          "wasmSha256": "4262b50e1fc6511565e76039fc6c79814bf4c6619867d2fb8c9a3e1c56f94989",
-          "source": "../source/pvz-portable-0.2.6-web-raid.2-source.zip",
-          "sourceSha256": "0bb8e6ae265488e1d1da8b472c10730f0bd17df9a56337c8acc34c4c3911a225",
-          "patch": "../source/web-raid.2.patch",
-          "patchSha256": "64400d6c04296908a2aa840856fa5e7db2dae1764c4717bfe8fdfc86987361d7"
+          "jsSha256": "451f7f209d71a518f0bc9313ae070bddd1f9f4c6e04174e96b912ee90fc74db6",
+          "wasmSha256": "5852a90efec452dfaa8abfc54922131ad9a000a468caf956fa6c5c49c791667e",
+          "source": "../source/pvz-portable-0.2.6-web-raid.3-source.zip",
+          "sourceSha256": "dc02a3d87a227e3b6b890cd03894999dea831c62a6d184fc2a0bc281425e51a3",
+          "patch": "../source/web-raid.3.patch",
+          "patchSha256": "206cfc5ae7848eeff9a35510f4102449bf1b3f48c05fd592e1606cbff4be96fc"
         },
         "buildRecord": "../source/build-provenance.json",
-        "change": "Restores the original I, Zombie UI and packet render routing in Rally Raid: the bank and non-fog Menu/speed controls use the native lower layer, and pick/ready effects use their original layers. Geometry, artwork, puzzle layouts, budgets, combat, IDs and serialized layouts are unchanged.",
+        "change": "Restores live Chill-shroom and Mender-bloom animation in Rally Raid by drawing their existing current rigs through the native cardboard passes instead of cached static previews. Idle, attack, blink and healing poses use the existing saved plant/carrier state. Native I, Zombie UI routing, artwork, shared normal-mode rigs, puzzle layouts, budgets, combat, IDs and serialized layouts are unchanged.",
         "caption": "with Rally Raid.",
         "gameAssetsIncluded": true,
         "assetManifest": "../game-assets/manifest.json",
         "assetBundleId": "sha256:b468b22439430ca4a36035b886a74bd831a86b2a1a36c39d3203396f5b75d093",
         "parent": {
-          "id": "0.2.6-web-raid.1",
+          "id": "0.2.6-web-raid.2",
           "upstream": {
             "tag": "0.2.6",
             "commit": "396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
@@ -96,20 +96,20 @@
           },
           "artifacts": {
             "jsSha256": "149cde88e398e1e3a08ae2d43c77a1eed6701299d783c78ac8a610573c268f0f",
-            "wasmSha256": "bb64f196f81294ab56f8d4b9cda0d1e7f81af3545bfaf9656573e4f861ff49d6",
-            "source": "../source/pvz-portable-0.2.6-web-raid.1-source.zip",
-            "sourceSha256": "50e122044bb767eb9c78cf8c38c9cd48de022f8b3f966b69b3bd29a7bbafdb8c",
-            "patch": "../source/web-raid.1.patch",
-            "patchSha256": "f5f6acb2e950b2d13f93c2c195c8339ed3d76bc9a7223258d9e90f16420551fd"
+            "wasmSha256": "4262b50e1fc6511565e76039fc6c79814bf4c6619867d2fb8c9a3e1c56f94989",
+            "source": "../source/pvz-portable-0.2.6-web-raid.2-source.zip",
+            "sourceSha256": "0bb8e6ae265488e1d1da8b472c10730f0bd17df9a56337c8acc34c4c3911a225",
+            "patch": "../source/web-raid.2.patch",
+            "patchSha256": "64400d6c04296908a2aa840856fa5e7db2dae1764c4717bfe8fdfc86987361d7"
           },
           "buildRecord": "../source/build-provenance.json",
-          "change": "Adds Rally Raid: five hand-authored I, Zombie puzzles with a deployable Rally Zombie and Chill-shroom/Mender-bloom defenses, finite native sun economy and final-board-only completion. Existing content, original IDs, repaired artwork and serialized layouts are retained.",
+          "change": "Restores the original I, Zombie UI and packet render routing in Rally Raid: the bank and non-fog Menu/speed controls use the native lower layer, and pick/ready effects use their original layers. Geometry, artwork, puzzle layouts, budgets, combat, IDs and serialized layouts are unchanged.",
           "caption": "with Rally Raid.",
           "gameAssetsIncluded": true,
           "assetManifest": "../game-assets/manifest.json",
           "assetBundleId": "sha256:b468b22439430ca4a36035b886a74bd831a86b2a1a36c39d3203396f5b75d093",
           "parent": {
-            "id": "0.2.6-web-rally.3",
+            "id": "0.2.6-web-raid.1",
             "upstream": {
               "tag": "0.2.6",
               "commit": "396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
@@ -117,21 +117,21 @@
               "officialJsSha256": "0f2d7425190e49c762f6700b68b080086e3dcb8f2dc5e9724de42ce9fb508573"
             },
             "artifacts": {
-              "jsSha256": "3efa16733b86653613e71e55bd160432c149fbb735c66d01a87c1685e1190e38",
-              "wasmSha256": "9c5d64f4478fe5466037ca06fc1b9b2144c5f21fdac30f21c3b407b1432e802a",
-              "source": "../source/pvz-portable-0.2.6-web-rally.3-source.zip",
-              "sourceSha256": "2deb50f9a38d8599453f567f5458a20505d552956df0bc442e649e49ea1c5c24",
-              "patch": "../source/web-rally.3.patch",
-              "patchSha256": "ccf3dadd81f926e5947aabe70ff48ade065569e95e8cc3b5cafa5e5f642445eb"
+              "jsSha256": "149cde88e398e1e3a08ae2d43c77a1eed6701299d783c78ac8a610573c268f0f",
+              "wasmSha256": "bb64f196f81294ab56f8d4b9cda0d1e7f81af3545bfaf9656573e4f861ff49d6",
+              "source": "../source/pvz-portable-0.2.6-web-raid.1-source.zip",
+              "sourceSha256": "50e122044bb767eb9c78cf8c38c9cd48de022f8b3f966b69b3bd29a7bbafdb8c",
+              "patch": "../source/web-raid.1.patch",
+              "patchSha256": "f5f6acb2e950b2d13f93c2c195c8339ed3d76bc9a7223258d9e90f16420551fd"
             },
             "buildRecord": "../source/build-provenance.json",
-            "change": "Repairs the megaphone attachment to Rally Zombie's original hand animation during idle, walking and rally poses. Existing native arm blends, Survival wave initialization, art sources, authored balance, content and saved layouts are retained.",
-            "caption": "with Rally Zombie.",
+            "change": "Adds Rally Raid: five hand-authored I, Zombie puzzles with a deployable Rally Zombie and Chill-shroom/Mender-bloom defenses, finite native sun economy and final-board-only completion. Existing content, original IDs, repaired artwork and serialized layouts are retained.",
+            "caption": "with Rally Raid.",
             "gameAssetsIncluded": true,
             "assetManifest": "../game-assets/manifest.json",
             "assetBundleId": "sha256:b468b22439430ca4a36035b886a74bd831a86b2a1a36c39d3203396f5b75d093",
             "parent": {
-              "id": "0.2.6-web-rally.2",
+              "id": "0.2.6-web-rally.3",
               "upstream": {
                 "tag": "0.2.6",
                 "commit": "396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
@@ -140,20 +140,20 @@
               },
               "artifacts": {
                 "jsSha256": "3efa16733b86653613e71e55bd160432c149fbb735c66d01a87c1685e1190e38",
-                "wasmSha256": "8207dcd75c93e999e31b520c41b88d9e4024277b1a043a77918b53379ec6c7e1",
-                "source": "../source/pvz-portable-0.2.6-web-rally.2-source.zip",
-                "sourceSha256": "8d7c3d5a54bdebb57d36cd1b8a6d33f87ca68e7c0b39c905838f1a83173f8b82",
-                "patch": "../source/web-rally.2.patch",
-                "patchSha256": "246d6236ef04a453b0cba978ee3012aab68651ae227f329fc090674093d322e0"
+                "wasmSha256": "9c5d64f4478fe5466037ca06fc1b9b2144c5f21fdac30f21c3b407b1432e802a",
+                "source": "../source/pvz-portable-0.2.6-web-rally.3-source.zip",
+                "sourceSha256": "2deb50f9a38d8599453f567f5458a20505d552956df0bc442e649e49ea1c5c24",
+                "patch": "../source/web-rally.3.patch",
+                "patchSha256": "ccf3dadd81f926e5947aabe70ff48ade065569e95e8cc3b5cafa5e5f642445eb"
               },
               "buildRecord": "../source/build-provenance.json",
-              "change": "Preserves the original arm animation blends during Rally Zombie eating, walking and death transitions, and initializes fresh Survival wave counters before wave selection. Existing artwork, authored balance values, content and saved layouts are retained.",
+              "change": "Repairs the megaphone attachment to Rally Zombie's original hand animation during idle, walking and rally poses. Existing native arm blends, Survival wave initialization, art sources, authored balance, content and saved layouts are retained.",
               "caption": "with Rally Zombie.",
               "gameAssetsIncluded": true,
               "assetManifest": "../game-assets/manifest.json",
               "assetBundleId": "sha256:b468b22439430ca4a36035b886a74bd831a86b2a1a36c39d3203396f5b75d093",
               "parent": {
-                "id": "0.2.6-web-rally.1",
+                "id": "0.2.6-web-rally.2",
                 "upstream": {
                   "tag": "0.2.6",
                   "commit": "396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
@@ -162,20 +162,20 @@
                 },
                 "artifacts": {
                   "jsSha256": "3efa16733b86653613e71e55bd160432c149fbb735c66d01a87c1685e1190e38",
-                  "wasmSha256": "a3c8539b728ce0dbee3868f5375e0622d8cac2f3ac78b0e34f1d86cd364a5e71",
-                  "source": "../source/pvz-portable-0.2.6-web-rally.1-source.zip",
-                  "sourceSha256": "a37ba37528139bc38df887a027c7c54aadfb2065897f32a48a556b3dc15df63e",
-                  "patch": "../source/web-rally.1.patch",
-                  "patchSha256": "bbccf072ee001c5c847dc0629376534ec26f7a2c86991898469b650a4df8c47f"
+                  "wasmSha256": "8207dcd75c93e999e31b520c41b88d9e4024277b1a043a77918b53379ec6c7e1",
+                  "source": "../source/pvz-portable-0.2.6-web-rally.2-source.zip",
+                  "sourceSha256": "8d7c3d5a54bdebb57d36cd1b8a6d33f87ca68e7c0b39c905838f1a83173f8b82",
+                  "patch": "../source/web-rally.2.patch",
+                  "patchSha256": "246d6236ef04a453b0cba978ee3012aab68651ae227f329fc090674093d322e0"
                 },
                 "buildRecord": "../source/build-provenance.json",
-                "change": "Adds Rally Zombie and the Rally Point bonus minigame, using the original zombie rig, a temporary non-stacking nearby movement boost and native Almanac/card presentation. Existing game modes, custom plants, recovery poses and saved layouts are retained.",
+                "change": "Preserves the original arm animation blends during Rally Zombie eating, walking and death transitions, and initializes fresh Survival wave counters before wave selection. Existing artwork, authored balance values, content and saved layouts are retained.",
                 "caption": "with Rally Zombie.",
                 "gameAssetsIncluded": true,
                 "assetManifest": "../game-assets/manifest.json",
                 "assetBundleId": "sha256:b468b22439430ca4a36035b886a74bd831a86b2a1a36c39d3203396f5b75d093",
                 "parent": {
-                  "id": "0.2.6-web-chain.1",
+                  "id": "0.2.6-web-rally.1",
                   "upstream": {
                     "tag": "0.2.6",
                     "commit": "396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
@@ -183,21 +183,21 @@
                     "officialJsSha256": "0f2d7425190e49c762f6700b68b080086e3dcb8f2dc5e9724de42ce9fb508573"
                   },
                   "artifacts": {
-                    "jsSha256": "9cb03594c99f4a562a4305ca3a3e9f3673aac5766a1b2d2cc66cb44f95be9048",
-                    "wasmSha256": "42124bdb2d4748a0e13c21b18b822eca588ac89630360f2a8f9d8b741df46ac6",
-                    "source": "../source/pvz-portable-0.2.6-web-chain.1-source.zip",
-                    "sourceSha256": "2794ff25f7427a2d3c1032bb9e2671f5b425701d7944d274f7c94e26ffb132a7",
-                    "patch": "../source/web-chain.1.patch",
-                    "patchSha256": "f6e97b825322fb3e19ee090b202d28b4854b2cafbf3a14f8b841a85475243f7d"
+                    "jsSha256": "3efa16733b86653613e71e55bd160432c149fbb735c66d01a87c1685e1190e38",
+                    "wasmSha256": "a3c8539b728ce0dbee3868f5375e0622d8cac2f3ac78b0e34f1d86cd364a5e71",
+                    "source": "../source/pvz-portable-0.2.6-web-rally.1-source.zip",
+                    "sourceSha256": "a37ba37528139bc38df887a027c7c54aadfb2065897f32a48a556b3dc15df63e",
+                    "patch": "../source/web-rally.1.patch",
+                    "patchSha256": "bbccf072ee001c5c847dc0629376534ec26f7a2c86991898469b650a4df8c47f"
                   },
                   "buildRecord": "../source/build-provenance.json",
-                  "change": "Adds Chain Reaction: five handcrafted explosive-plant puzzles using native artwork, finite seeds, planning and native explosions. Existing game modes, custom plants, recovery poses and serialized layouts are retained.",
-                  "caption": "with Chain Reaction.",
+                  "change": "Adds Rally Zombie and the Rally Point bonus minigame, using the original zombie rig, a temporary non-stacking nearby movement boost and native Almanac/card presentation. Existing game modes, custom plants, recovery poses and saved layouts are retained.",
+                  "caption": "with Rally Zombie.",
                   "gameAssetsIncluded": true,
                   "assetManifest": "../game-assets/manifest.json",
                   "assetBundleId": "sha256:b468b22439430ca4a36035b886a74bd831a86b2a1a36c39d3203396f5b75d093",
                   "parent": {
-                    "id": "0.2.6-web-care.3",
+                    "id": "0.2.6-web-chain.1",
                     "upstream": {
                       "tag": "0.2.6",
                       "commit": "396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
@@ -205,21 +205,21 @@
                       "officialJsSha256": "0f2d7425190e49c762f6700b68b080086e3dcb8f2dc5e9724de42ce9fb508573"
                     },
                     "artifacts": {
-                      "jsSha256": "a52baa0c50f4c2b01aa22f07f023fa646c4075553e402f91593e49e6bc0a8c2b",
-                      "wasmSha256": "1eed40964da459c6f5d5e741902e856c6d2ce025fb445edae82842a3b467f2b1",
-                      "source": "../source/pvz-portable-0.2.6-web-care.3-source.zip",
-                      "sourceSha256": "50d01dd1bbd793e1cda1dfbc74a70ca6724eee8741dab9260d188b3f49c882d4",
-                      "patch": "../source/web-care.3.patch",
-                      "patchSha256": "a58a0383cdad89b0ea8d558a0231f57af367df83bb98f1c6b2a7a17d6230b5a9"
+                      "jsSha256": "9cb03594c99f4a562a4305ca3a3e9f3673aac5766a1b2d2cc66cb44f95be9048",
+                      "wasmSha256": "42124bdb2d4748a0e13c21b18b822eca588ac89630360f2a8f9d8b741df46ac6",
+                      "source": "../source/pvz-portable-0.2.6-web-chain.1-source.zip",
+                      "sourceSha256": "2794ff25f7427a2d3c1032bb9e2671f5b425701d7944d274f7c94e26ffb132a7",
+                      "patch": "../source/web-chain.1.patch",
+                      "patchSha256": "f6e97b825322fb3e19ee090b202d28b4854b2cafbf3a14f8b841a85475243f7d"
                     },
                     "buildRecord": "../source/build-provenance.json",
-                    "change": "Adds complete-engine Intensive Lawn Care battles at native 1x and 2x, visible tired and exhausted poses using the original plant rigs, and finite native healing sparkles with legacy-checkpoint cleanup. Existing balance, artwork, toolbar layout and serialized formats remain unchanged.",
-                    "caption": "with full-run care validation.",
+                    "change": "Adds Chain Reaction: five handcrafted explosive-plant puzzles using native artwork, finite seeds, planning and native explosions. Existing game modes, custom plants, recovery poses and serialized layouts are retained.",
+                    "caption": "with Chain Reaction.",
                     "gameAssetsIncluded": true,
                     "assetManifest": "../game-assets/manifest.json",
                     "assetBundleId": "sha256:b468b22439430ca4a36035b886a74bd831a86b2a1a36c39d3203396f5b75d093",
                     "parent": {
-                      "id": "0.2.6-web-care.2",
+                      "id": "0.2.6-web-care.3",
                       "upstream": {
                         "tag": "0.2.6",
                         "commit": "396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
@@ -228,20 +228,20 @@
                       },
                       "artifacts": {
                         "jsSha256": "a52baa0c50f4c2b01aa22f07f023fa646c4075553e402f91593e49e6bc0a8c2b",
-                        "wasmSha256": "8926a54cd9b7a778cc6f5b61692515012372e3356f93fb0715ce118d76eda467",
-                        "source": "../source/pvz-portable-0.2.6-web-care.2-source.zip",
-                        "sourceSha256": "d8c52ecbb0f4f417b871137fb2a27017a2cb8699b1f6702fb363399a7ea7bf98",
-                        "patch": "../source/web-care.2.patch",
-                        "patchSha256": "0d3c3fdfe5b4b18358e5a7965fc0b57ecda370ad9145ae88991eac3679416c55"
+                        "wasmSha256": "1eed40964da459c6f5d5e741902e856c6d2ce025fb445edae82842a3b467f2b1",
+                        "source": "../source/pvz-portable-0.2.6-web-care.3-source.zip",
+                        "sourceSha256": "50d01dd1bbd793e1cda1dfbc74a70ca6724eee8741dab9260d188b3f49c882d4",
+                        "patch": "../source/web-care.3.patch",
+                        "patchSha256": "a58a0383cdad89b0ea8d558a0231f57af367df83bb98f1c6b2a7a17d6230b5a9"
                       },
                       "buildRecord": "../source/build-provenance.json",
-                      "change": "Repairs Intensive Lawn Care presentation: separate native glove and full conveyor frame, fit the original-font opening hint above the footer, and hide it while paused. Adds native layout regression checks. Game rules, save layouts and artwork remain unchanged.",
-                      "caption": "with repaired native minigame layout.",
+                      "change": "Adds complete-engine Intensive Lawn Care battles at native 1x and 2x, visible tired and exhausted poses using the original plant rigs, and finite native healing sparkles with legacy-checkpoint cleanup. Existing balance, artwork, toolbar layout and serialized formats remain unchanged.",
+                      "caption": "with full-run care validation.",
                       "gameAssetsIncluded": true,
                       "assetManifest": "../game-assets/manifest.json",
                       "assetBundleId": "sha256:b468b22439430ca4a36035b886a74bd831a86b2a1a36c39d3203396f5b75d093",
                       "parent": {
-                        "id": "0.2.6-web-care.1",
+                        "id": "0.2.6-web-care.2",
                         "upstream": {
                           "tag": "0.2.6",
                           "commit": "396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
@@ -249,21 +249,21 @@
                           "officialJsSha256": "0f2d7425190e49c762f6700b68b080086e3dcb8f2dc5e9724de42ce9fb508573"
                         },
                         "artifacts": {
-                          "jsSha256": "251ec8d9bc301f1245a631e8a3dc932f9bcc37d7358d804c07cdf1c6cf867d8e",
-                          "wasmSha256": "f7c31bb243b7b6823782f416a8c3f438e6a7376b48782e6a1257a1ba8a11b8d3",
-                          "source": "../source/pvz-portable-0.2.6-web-care.1-source.zip",
-                          "sourceSha256": "540f1ee365b558e10304995692485976e91f23bb1b28c305e6ade6cd17f1ed11",
-                          "patch": "../source/web-care.1.patch",
-                          "patchSha256": "9a6513daec1a10a338e8689d13b2f7e2bed1f28a8e305fad9317dd46f33283eb"
+                          "jsSha256": "a52baa0c50f4c2b01aa22f07f023fa646c4075553e402f91593e49e6bc0a8c2b",
+                          "wasmSha256": "8926a54cd9b7a778cc6f5b61692515012372e3356f93fb0715ce118d76eda467",
+                          "source": "../source/pvz-portable-0.2.6-web-care.2-source.zip",
+                          "sourceSha256": "d8c52ecbb0f4f417b871137fb2a27017a2cb8699b1f6702fb363399a7ea7bf98",
+                          "patch": "../source/web-care.2.patch",
+                          "patchSha256": "0d3c3fdfe5b4b18358e5a7965fc0b57ecda370ad9145ae88991eac3679416c55"
                         },
                         "buildRecord": "../source/build-provenance.json",
-                        "change": "Adds Intensive Lawn Care: rotate wounded conveyor plants through a protected Mender-bloom healing bed with the native gardening glove. Retains accepted plant artwork, existing minigames, normal unlocks and native save layouts.",
-                        "caption": "with Intensive Lawn Care.",
+                        "change": "Repairs Intensive Lawn Care presentation: separate native glove and full conveyor frame, fit the original-font opening hint above the footer, and hide it while paused. Adds native layout regression checks. Game rules, save layouts and artwork remain unchanged.",
+                        "caption": "with repaired native minigame layout.",
                         "gameAssetsIncluded": true,
                         "assetManifest": "../game-assets/manifest.json",
                         "assetBundleId": "sha256:b468b22439430ca4a36035b886a74bd831a86b2a1a36c39d3203396f5b75d093",
                         "parent": {
-                          "id": "0.2.6-web-mender.3",
+                          "id": "0.2.6-web-care.1",
                           "upstream": {
                             "tag": "0.2.6",
                             "commit": "396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
@@ -271,21 +271,21 @@
                             "officialJsSha256": "0f2d7425190e49c762f6700b68b080086e3dcb8f2dc5e9724de42ce9fb508573"
                           },
                           "artifacts": {
-                            "jsSha256": "f016c3f256ff234542c34fcea8a3cc927e2ad0ea6f5498b70897ce7d47750045",
-                            "wasmSha256": "7a65f7f873e63e584b511ff5c079f38fa03f56e58d978295dddc8ebc3ccd27c1",
-                            "source": "../source/pvz-portable-0.2.6-web-mender.3-source.zip",
-                            "sourceSha256": "5a6392e1d5415c3d7f5d3f2bad3114abb54a35bc13df5366be84b718c2d5bd1f",
-                            "patch": "../source/web-mender.3.patch",
-                            "patchSha256": "32c988fd44b4b66b4a2df1cbb9e2afc105a92679310ce747b4b734962da30e22"
+                            "jsSha256": "251ec8d9bc301f1245a631e8a3dc932f9bcc37d7358d804c07cdf1c6cf867d8e",
+                            "wasmSha256": "f7c31bb243b7b6823782f416a8c3f438e6a7376b48782e6a1257a1ba8a11b8d3",
+                            "source": "../source/pvz-portable-0.2.6-web-care.1-source.zip",
+                            "sourceSha256": "540f1ee365b558e10304995692485976e91f23bb1b28c305e6ade6cd17f1ed11",
+                            "patch": "../source/web-care.1.patch",
+                            "patchSha256": "9a6513daec1a10a338e8689d13b2f7e2bed1f28a8e305fad9317dd46f33283eb"
                           },
                           "buildRecord": "../source/build-provenance.json",
-                          "change": "Replaces Mender-bloom's Sunflower-like head with a distinct coral cupped blossom and its own expression. Retains the original stem and leaves, accepted idle animations, Almanac and chooser presentation, gameplay mechanics, unlocks, Chill-shroom artwork and native save layouts.",
-                          "caption": "with a distinct Mender-bloom blossom.",
+                          "change": "Adds Intensive Lawn Care: rotate wounded conveyor plants through a protected Mender-bloom healing bed with the native gardening glove. Retains accepted plant artwork, existing minigames, normal unlocks and native save layouts.",
+                          "caption": "with Intensive Lawn Care.",
                           "gameAssetsIncluded": true,
                           "assetManifest": "../game-assets/manifest.json",
                           "assetBundleId": "sha256:b468b22439430ca4a36035b886a74bd831a86b2a1a36c39d3203396f5b75d093",
                           "parent": {
-                            "id": "0.2.6-web-mender.2",
+                            "id": "0.2.6-web-mender.3",
                             "upstream": {
                               "tag": "0.2.6",
                               "commit": "396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
@@ -294,20 +294,20 @@
                             },
                             "artifacts": {
                               "jsSha256": "f016c3f256ff234542c34fcea8a3cc927e2ad0ea6f5498b70897ce7d47750045",
-                              "wasmSha256": "f81303e6bc051a46bd6d08f9e42e089960b0bec37a1f87b9bba20335240e4b5d",
-                              "source": "../source/pvz-portable-0.2.6-web-mender.2-source.zip",
-                              "sourceSha256": "2d40f382100860e1f64e3475ee2e0b299875df5458e488099b226c19a3d6ee24",
-                              "patch": "../source/web-mender.2.patch",
-                              "patchSha256": "bff610aaead4b73b269b8dc918488d1e6f33f414d0eb651df20b0854a2b89eee"
+                              "wasmSha256": "7a65f7f873e63e584b511ff5c079f38fa03f56e58d978295dddc8ebc3ccd27c1",
+                              "source": "../source/pvz-portable-0.2.6-web-mender.3-source.zip",
+                              "sourceSha256": "5a6392e1d5415c3d7f5d3f2bad3114abb54a35bc13df5366be84b718c2d5bd1f",
+                              "patch": "../source/web-mender.3.patch",
+                              "patchSha256": "32c988fd44b4b66b4a2df1cbb9e2afc105a92679310ce747b4b734962da30e22"
                             },
                             "buildRecord": "../source/build-provenance.json",
-                            "change": "Gives Chill-shroom and Mender-bloom expressive idle animations and original-style Almanac formatting, compact catalog portraits and character-specific descriptions. Rebuilds Mender-bloom from original sprite parts and moves custom seed packets inside the chooser panel. Preserves abilities, unlocks, Chill-shroom pixels, all five bonus minigames and native save layouts.",
-                            "caption": "with livelier custom plants and native-style Almanac entries.",
+                            "change": "Replaces Mender-bloom's Sunflower-like head with a distinct coral cupped blossom and its own expression. Retains the original stem and leaves, accepted idle animations, Almanac and chooser presentation, gameplay mechanics, unlocks, Chill-shroom artwork and native save layouts.",
+                            "caption": "with a distinct Mender-bloom blossom.",
                             "gameAssetsIncluded": true,
                             "assetManifest": "../game-assets/manifest.json",
                             "assetBundleId": "sha256:b468b22439430ca4a36035b886a74bd831a86b2a1a36c39d3203396f5b75d093",
                             "parent": {
-                              "id": "0.2.6-web-mender.1",
+                              "id": "0.2.6-web-mender.2",
                               "upstream": {
                                 "tag": "0.2.6",
                                 "commit": "396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
@@ -315,21 +315,21 @@
                                 "officialJsSha256": "0f2d7425190e49c762f6700b68b080086e3dcb8f2dc5e9724de42ce9fb508573"
                               },
                               "artifacts": {
-                                "jsSha256": "823f52b735230fba6a15bd0c6581486d27df069671338972d5337bb12d8a6c79",
-                                "wasmSha256": "7456cecda0dce7e0cd18d50828bf5b64b87866fd38c9f6651558537a7ca38843",
-                                "source": "../source/pvz-portable-0.2.6-web-mender.1-source.zip",
-                                "sourceSha256": "d91f663297f7787be7063f478027cd4935ff4285c9dbed600c1c71703d1e08a3",
-                                "patch": "../source/web-mender.1.patch",
-                                "patchSha256": "25d06e8a09d21594d877aba333b48585a7fdb9456b880611821522414e7803de"
+                                "jsSha256": "f016c3f256ff234542c34fcea8a3cc927e2ad0ea6f5498b70897ce7d47750045",
+                                "wasmSha256": "f81303e6bc051a46bd6d08f9e42e089960b0bec37a1f87b9bba20335240e4b5d",
+                                "source": "../source/pvz-portable-0.2.6-web-mender.2-source.zip",
+                                "sourceSha256": "2d40f382100860e1f64e3475ee2e0b299875df5458e488099b226c19a3d6ee24",
+                                "patch": "../source/web-mender.2.patch",
+                                "patchSha256": "bff610aaead4b73b269b8dc918488d1e6f33f414d0eb651df20b0854a2b89eee"
                               },
                               "buildRecord": "../source/build-provenance.json",
-                              "change": "Adds Mender-bloom, a support plant earned by beating Seed Swap that slowly heals adjacent plants, plus native Almanac entries for Mender-bloom and Chill-shroom. Retains all five bonus minigames, original content and native save layouts.",
-                              "caption": "with Mender-bloom and native Almanac entries.",
+                              "change": "Gives Chill-shroom and Mender-bloom expressive idle animations and original-style Almanac formatting, compact catalog portraits and character-specific descriptions. Rebuilds Mender-bloom from original sprite parts and moves custom seed packets inside the chooser panel. Preserves abilities, unlocks, Chill-shroom pixels, all five bonus minigames and native save layouts.",
+                              "caption": "with livelier custom plants and native-style Almanac entries.",
                               "gameAssetsIncluded": true,
                               "assetManifest": "../game-assets/manifest.json",
                               "assetBundleId": "sha256:b468b22439430ca4a36035b886a74bd831a86b2a1a36c39d3203396f5b75d093",
                               "parent": {
-                                "id": "0.2.6-web-seedswap.1",
+                                "id": "0.2.6-web-mender.1",
                                 "upstream": {
                                   "tag": "0.2.6",
                                   "commit": "396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
@@ -337,21 +337,21 @@
                                   "officialJsSha256": "0f2d7425190e49c762f6700b68b080086e3dcb8f2dc5e9724de42ce9fb508573"
                                 },
                                 "artifacts": {
-                                  "jsSha256": "ed1e74589db7ab1b8339c34e3417a182ed5188b91418d88237bd4ac1a09cd6cf",
-                                  "wasmSha256": "bb23c783f3f3360ef8259a376c2d0d96efdf01eeb2554c98154b294961b89431",
-                                  "source": "../source/pvz-portable-0.2.6-web-seedswap.1-source.zip",
-                                  "sourceSha256": "0db62a66059ebc4891181044609fa949d2c623b0a05181930c2734a0f7aeeb18",
-                                  "patch": "../source/web-seedswap.1.patch",
-                                  "patchSha256": "56db7bf4ce96f80d19244a214f77024052f4c996284d82ea88c3d1733328eb93"
+                                  "jsSha256": "823f52b735230fba6a15bd0c6581486d27df069671338972d5337bb12d8a6c79",
+                                  "wasmSha256": "7456cecda0dce7e0cd18d50828bf5b64b87866fd38c9f6651558537a7ca38843",
+                                  "source": "../source/pvz-portable-0.2.6-web-mender.1-source.zip",
+                                  "sourceSha256": "d91f663297f7787be7063f478027cd4935ff4285c9dbed600c1c71703d1e08a3",
+                                  "patch": "../source/web-mender.1.patch",
+                                  "patchSha256": "25d06e8a09d21594d877aba333b48585a7fdb9456b880611821522414e7803de"
                                 },
                                 "buildRecord": "../source/build-provenance.json",
-                                "change": "Adds Seed Swap with a fixed defense, native seed-packet drops and replacement-only planting. Retains the existing four bonus modes, earned Chill-shroom unlock, original content and native save layouts.",
-                                "caption": "with Seed Swap and native bonus minigames.",
+                                "change": "Adds Mender-bloom, a support plant earned by beating Seed Swap that slowly heals adjacent plants, plus native Almanac entries for Mender-bloom and Chill-shroom. Retains all five bonus minigames, original content and native save layouts.",
+                                "caption": "with Mender-bloom and native Almanac entries.",
                                 "gameAssetsIncluded": true,
                                 "assetManifest": "../game-assets/manifest.json",
                                 "assetBundleId": "sha256:b468b22439430ca4a36035b886a74bd831a86b2a1a36c39d3203396f5b75d093",
                                 "parent": {
-                                  "id": "0.2.6-web-garden.1",
+                                  "id": "0.2.6-web-seedswap.1",
                                   "upstream": {
                                     "tag": "0.2.6",
                                     "commit": "396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
@@ -359,21 +359,21 @@
                                     "officialJsSha256": "0f2d7425190e49c762f6700b68b080086e3dcb8f2dc5e9724de42ce9fb508573"
                                   },
                                   "artifacts": {
-                                    "jsSha256": "40689d2194845d13d14e2e46dbd753a483556daeacf5c053cc133630684c83ab",
-                                    "wasmSha256": "99722b52f48e912fda7010d20f164dd819d46f251f3e1b54b6d50cfc63e6756d",
-                                    "source": "../source/pvz-portable-0.2.6-web-garden.1-source.zip",
-                                    "sourceSha256": "34807be9b16aafc8e1e8bc9fd4da840df0ce9ae5667157cf51e61f4571d95122",
-                                    "patch": "../source/web-garden.1.patch",
-                                    "patchSha256": "b0bad79599a287b9d95e286bcf8a8189ff3f041e3608275b6617a35dccbea0fc"
+                                    "jsSha256": "ed1e74589db7ab1b8339c34e3417a182ed5188b91418d88237bd4ac1a09cd6cf",
+                                    "wasmSha256": "bb23c783f3f3360ef8259a376c2d0d96efdf01eeb2554c98154b294961b89431",
+                                    "source": "../source/pvz-portable-0.2.6-web-seedswap.1-source.zip",
+                                    "sourceSha256": "0db62a66059ebc4891181044609fa949d2c623b0a05181930c2734a0f7aeeb18",
+                                    "patch": "../source/web-seedswap.1.patch",
+                                    "patchSha256": "56db7bf4ce96f80d19244a214f77024052f4c996284d82ea88c3d1733328eb93"
                                   },
                                   "buildRecord": "../source/build-provenance.json",
-                                  "change": "Adds Garden Shuffle with a fixed garden and movable living plants, plus a fairer Night Shift grave warning. Retains the existing bonus modes, earned Chill-shroom unlock, original content and native save layouts.",
-                                  "caption": "with Garden Shuffle and native bonus minigames.",
+                                  "change": "Adds Seed Swap with a fixed defense, native seed-packet drops and replacement-only planting. Retains the existing four bonus modes, earned Chill-shroom unlock, original content and native save layouts.",
+                                  "caption": "with Seed Swap and native bonus minigames.",
                                   "gameAssetsIncluded": true,
                                   "assetManifest": "../game-assets/manifest.json",
                                   "assetBundleId": "sha256:b468b22439430ca4a36035b886a74bd831a86b2a1a36c39d3203396f5b75d093",
                                   "parent": {
-                                    "id": "0.2.6-web-chill.9",
+                                    "id": "0.2.6-web-garden.1",
                                     "upstream": {
                                       "tag": "0.2.6",
                                       "commit": "396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
@@ -381,21 +381,21 @@
                                       "officialJsSha256": "0f2d7425190e49c762f6700b68b080086e3dcb8f2dc5e9724de42ce9fb508573"
                                     },
                                     "artifacts": {
-                                      "jsSha256": "e8d900ccb153376dc0a885b7371b53cb227a324b034c32140336aeefc3d7f33c",
-                                      "wasmSha256": "6e69af3cc26a776d4030c64d7cd2126fe82d8eafa5034054e6451e3ac070b488",
-                                      "source": "../source/pvz-portable-0.2.6-web-chill.9-source.zip",
-                                      "sourceSha256": "7fa3d16079cca928812a965ec7bdcd15c7f157570d14607895c31067d06e49f0",
-                                      "patch": "../source/web-chill.9.patch",
-                                      "patchSha256": "b88baaffec4f0cb52f63903b823ec6c1d6a5fbde9e35fac04da5c825b4e2e879"
+                                      "jsSha256": "40689d2194845d13d14e2e46dbd753a483556daeacf5c053cc133630684c83ab",
+                                      "wasmSha256": "99722b52f48e912fda7010d20f164dd819d46f251f3e1b54b6d50cfc63e6756d",
+                                      "source": "../source/pvz-portable-0.2.6-web-garden.1-source.zip",
+                                      "sourceSha256": "34807be9b16aafc8e1e8bc9fd4da840df0ce9ae5667157cf51e61f4571d95122",
+                                      "patch": "../source/web-garden.1.patch",
+                                      "patchSha256": "b0bad79599a287b9d95e286bcf8a8189ff3f041e3608275b6617a35dccbea0fc"
                                     },
                                     "buildRecord": "../source/build-provenance.json",
-                                    "change": "Adds cone-armored zombie variants and giant bowling Wall-nuts to Cone Zone, plus a graveyard-control mechanic in Night Shift. Retains Cold Front, the earned Chill-shroom unlock, original content, artwork and native save layouts.",
-                                    "caption": "with expanded Cone Zone bowling and Night Shift graveyard control.",
+                                    "change": "Adds Garden Shuffle with a fixed garden and movable living plants, plus a fairer Night Shift grave warning. Retains the existing bonus modes, earned Chill-shroom unlock, original content and native save layouts.",
+                                    "caption": "with Garden Shuffle and native bonus minigames.",
                                     "gameAssetsIncluded": true,
                                     "assetManifest": "../game-assets/manifest.json",
                                     "assetBundleId": "sha256:b468b22439430ca4a36035b886a74bd831a86b2a1a36c39d3203396f5b75d093",
                                     "parent": {
-                                      "id": "0.2.6-web-chill.8",
+                                      "id": "0.2.6-web-chill.9",
                                       "upstream": {
                                         "tag": "0.2.6",
                                         "commit": "396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
@@ -403,21 +403,21 @@
                                         "officialJsSha256": "0f2d7425190e49c762f6700b68b080086e3dcb8f2dc5e9724de42ce9fb508573"
                                       },
                                       "artifacts": {
-                                        "jsSha256": "76ccff746dbfc8c86996335479d865be793f56f1dc96c83c8f8ff68c27326e17",
-                                        "wasmSha256": "1e7038d9bfa460a0282731345ff6e865214f022a4f1aeb90f7494e889b694992",
-                                        "source": "../source/pvz-portable-0.2.6-web-chill.8-source.zip",
-                                        "sourceSha256": "04bd204805f83ce8322952fbba81a9e5a2d73bdf1eeafaf95b4a5c7ccf33d367",
-                                        "patch": "../source/web-chill.8.patch",
-                                        "patchSha256": "270d6f9351ed75fe5a64682be226a7cf864b17077c9b8702588b4b03f154c732"
+                                        "jsSha256": "e8d900ccb153376dc0a885b7371b53cb227a324b034c32140336aeefc3d7f33c",
+                                        "wasmSha256": "6e69af3cc26a776d4030c64d7cd2126fe82d8eafa5034054e6451e3ac070b488",
+                                        "source": "../source/pvz-portable-0.2.6-web-chill.9-source.zip",
+                                        "sourceSha256": "7fa3d16079cca928812a965ec7bdcd15c7f157570d14607895c31067d06e49f0",
+                                        "patch": "../source/web-chill.9.patch",
+                                        "patchSha256": "b88baaffec4f0cb52f63903b823ec6c1d6a5fbde9e35fac04da5c825b4e2e879"
                                       },
                                       "buildRecord": "../source/build-provenance.json",
-                                      "change": "Adds distinct bowling, conveyor and setup-defense bonus minigames, and unlocks Chill-shroom in normal native seed selection after Cold Front. Retains original content, accepted artwork, stable IDs and saved layouts; existing bonus checkpoints keep their original rules.",
-                                      "caption": "with three bonus minigames and the unlockable Chill-shroom.",
+                                      "change": "Adds cone-armored zombie variants and giant bowling Wall-nuts to Cone Zone, plus a graveyard-control mechanic in Night Shift. Retains Cold Front, the earned Chill-shroom unlock, original content, artwork and native save layouts.",
+                                      "caption": "with expanded Cone Zone bowling and Night Shift graveyard control.",
                                       "gameAssetsIncluded": true,
                                       "assetManifest": "../game-assets/manifest.json",
                                       "assetBundleId": "sha256:b468b22439430ca4a36035b886a74bd831a86b2a1a36c39d3203396f5b75d093",
                                       "parent": {
-                                        "id": "0.2.6-web-chill.7",
+                                        "id": "0.2.6-web-chill.8",
                                         "upstream": {
                                           "tag": "0.2.6",
                                           "commit": "396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
@@ -425,21 +425,21 @@
                                           "officialJsSha256": "0f2d7425190e49c762f6700b68b080086e3dcb8f2dc5e9724de42ce9fb508573"
                                         },
                                         "artifacts": {
-                                          "jsSha256": "65b1d3545c1b70b274cec39f3bb7a56ee279bd3dbb7636873aa7d9c6c7db017e",
-                                          "wasmSha256": "6603c200aaa2e4541bfa42c0123443f704e02e6c5a96230c4657b260ee39fa3d",
-                                          "source": "../source/pvz-portable-0.2.6-web-chill.7-source.zip",
-                                          "sourceSha256": "450613f4d14df23380549081b154d40c11587151d37e749a74f5118a11534605",
-                                          "patch": "../source/web-chill.7.patch",
-                                          "patchSha256": "8ad4dddbe09969a8114ddbc40b4f8d2128c3647fd9e1617b7153f04e885c7ae2"
+                                          "jsSha256": "76ccff746dbfc8c86996335479d865be793f56f1dc96c83c8f8ff68c27326e17",
+                                          "wasmSha256": "1e7038d9bfa460a0282731345ff6e865214f022a4f1aeb90f7494e889b694992",
+                                          "source": "../source/pvz-portable-0.2.6-web-chill.8-source.zip",
+                                          "sourceSha256": "04bd204805f83ce8322952fbba81a9e5a2d73bdf1eeafaf95b4a5c7ccf33d367",
+                                          "patch": "../source/web-chill.8.patch",
+                                          "patchSha256": "270d6f9351ed75fe5a64682be226a7cf864b17077c9b8702588b4b03f154c732"
                                         },
                                         "buildRecord": "../source/build-provenance.json",
-                                        "change": "Adds a restrained idle animation, target-gated attacks and a slower native-style frost effect while retaining the approved artwork, registered rig, radial slow and saved layouts.",
-                                        "caption": "with idle motion, target-aware Chill-shroom attacks and a lingering native-style frost effect.",
+                                        "change": "Adds distinct bowling, conveyor and setup-defense bonus minigames, and unlocks Chill-shroom in normal native seed selection after Cold Front. Retains original content, accepted artwork, stable IDs and saved layouts; existing bonus checkpoints keep their original rules.",
+                                        "caption": "with three bonus minigames and the unlockable Chill-shroom.",
                                         "gameAssetsIncluded": true,
                                         "assetManifest": "../game-assets/manifest.json",
                                         "assetBundleId": "sha256:b468b22439430ca4a36035b886a74bd831a86b2a1a36c39d3203396f5b75d093",
                                         "parent": {
-                                          "id": "0.2.6-web-chill.6",
+                                          "id": "0.2.6-web-chill.7",
                                           "upstream": {
                                             "tag": "0.2.6",
                                             "commit": "396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
@@ -447,21 +447,21 @@
                                             "officialJsSha256": "0f2d7425190e49c762f6700b68b080086e3dcb8f2dc5e9724de42ce9fb508573"
                                           },
                                           "artifacts": {
-                                            "jsSha256": "4dae3958eff86b0d1a147f8ca99af745f957f7a2335c6c9a41cc848d81fc6a2d",
-                                            "wasmSha256": "95cf82928f97a36e28bc19cabd971baad362529faf33ed1a1fe482a04c65aa25",
-                                            "source": "../source/pvz-portable-0.2.6-web-chill.6-source.zip",
-                                            "sourceSha256": "518d779b9948ac8a2d124db8f7929f13acf1121f38953d4ebee367518da17104",
-                                            "patch": "../source/web-chill.6.patch",
-                                            "patchSha256": "3de766341b4e2b7e8c8604898e78e0c0890096fd960ad0631026e025d753b98a"
+                                            "jsSha256": "65b1d3545c1b70b274cec39f3bb7a56ee279bd3dbb7636873aa7d9c6c7db017e",
+                                            "wasmSha256": "6603c200aaa2e4541bfa42c0123443f704e02e6c5a96230c4657b260ee39fa3d",
+                                            "source": "../source/pvz-portable-0.2.6-web-chill.7-source.zip",
+                                            "sourceSha256": "450613f4d14df23380549081b154d40c11587151d37e749a74f5118a11534605",
+                                            "patch": "../source/web-chill.7.patch",
+                                            "patchSha256": "8ad4dddbe09969a8114ddbc40b4f8d2128c3647fd9e1617b7153f04e885c7ae2"
                                           },
                                           "buildRecord": "../source/build-provenance.json",
-                                          "change": "Refines Chill-shroom paint and expression while retaining the approved whole-character shape, registered layers and shared plant/packet/card rig. Native timing, radial slow and saved layouts are retained.",
-                                          "caption": "with refined Chill-shroom paint, the approved silhouette and native Bonus portraits.",
+                                          "change": "Adds a restrained idle animation, target-gated attacks and a slower native-style frost effect while retaining the approved artwork, registered rig, radial slow and saved layouts.",
+                                          "caption": "with idle motion, target-aware Chill-shroom attacks and a lingering native-style frost effect.",
                                           "gameAssetsIncluded": true,
                                           "assetManifest": "../game-assets/manifest.json",
                                           "assetBundleId": "sha256:b468b22439430ca4a36035b886a74bd831a86b2a1a36c39d3203396f5b75d093",
                                           "parent": {
-                                            "id": "0.2.6-web-chill.5",
+                                            "id": "0.2.6-web-chill.6",
                                             "upstream": {
                                               "tag": "0.2.6",
                                               "commit": "396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
@@ -470,20 +470,20 @@
                                             },
                                             "artifacts": {
                                               "jsSha256": "4dae3958eff86b0d1a147f8ca99af745f957f7a2335c6c9a41cc848d81fc6a2d",
-                                              "wasmSha256": "8d37d684cec98a6c34f68cc8c39517006e2ef9408956ec1ef5bdee8a347d6157",
-                                              "source": "../source/pvz-portable-0.2.6-web-chill.5-source.zip",
-                                              "sourceSha256": "8e97e5f49981a5e7a9a230e6651c586d6b9e3434ab22092dc30c7aa897d1c0ab",
-                                              "patch": "../source/web-chill.5.patch",
-                                              "patchSha256": "a679477d9b18313e2c203e5c0c393c46c2cae2b5ca85be9969c2ca57271cfc3e"
+                                              "wasmSha256": "95cf82928f97a36e28bc19cabd971baad362529faf33ed1a1fe482a04c65aa25",
+                                              "source": "../source/pvz-portable-0.2.6-web-chill.6-source.zip",
+                                              "sourceSha256": "518d779b9948ac8a2d124db8f7929f13acf1121f38953d4ebee367518da17104",
+                                              "patch": "../source/web-chill.6.patch",
+                                              "patchSha256": "3de766341b4e2b7e8c8604898e78e0c0890096fd960ad0631026e025d753b98a"
                                             },
                                             "buildRecord": "../source/build-provenance.json",
-                                            "change": "Preserves the approved whole-character shape with registered cap/body layers and a shared plant/packet/card rig independent of Ice artwork pivots. Native blink/sleep timing, radial slow and saved layouts are retained.",
-                                            "caption": "with the approved Chill-shroom silhouette and native Bonus portraits.",
+                                            "change": "Refines Chill-shroom paint and expression while retaining the approved whole-character shape, registered layers and shared plant/packet/card rig. Native timing, radial slow and saved layouts are retained.",
+                                            "caption": "with refined Chill-shroom paint, the approved silhouette and native Bonus portraits.",
                                             "gameAssetsIncluded": true,
                                             "assetManifest": "../game-assets/manifest.json",
                                             "assetBundleId": "sha256:b468b22439430ca4a36035b886a74bd831a86b2a1a36c39d3203396f5b75d093",
                                             "parent": {
-                                              "id": "0.2.6-web-chill.4",
+                                              "id": "0.2.6-web-chill.5",
                                               "upstream": {
                                                 "tag": "0.2.6",
                                                 "commit": "396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
@@ -491,21 +491,21 @@
                                                 "officialJsSha256": "0f2d7425190e49c762f6700b68b080086e3dcb8f2dc5e9724de42ce9fb508573"
                                               },
                                               "artifacts": {
-                                                "jsSha256": "0602f3868ca9c937bdedf84fcd83e8c140d8ea0dbb947b78cd4924064d5b91e9",
-                                                "wasmSha256": "085aa044c83bca3ba3729514361859c6482272846060e0505f0a265ba76e0486",
-                                                "source": "../source/pvz-portable-0.2.6-web-chill.4-source.zip",
-                                                "sourceSha256": "d8551acdc9f49704634b668d5abb2b461c3f1db683e19a228d0a9dd78785edae",
-                                                "patch": "../source/web-chill.4.patch",
-                                                "patchSha256": "9a6f3f8ddbb595dd297c0e7609e244f4b10632fadf5df34d60cffd005adf3ac6"
+                                                "jsSha256": "4dae3958eff86b0d1a147f8ca99af745f957f7a2335c6c9a41cc848d81fc6a2d",
+                                                "wasmSha256": "8d37d684cec98a6c34f68cc8c39517006e2ef9408956ec1ef5bdee8a347d6157",
+                                                "source": "../source/pvz-portable-0.2.6-web-chill.5-source.zip",
+                                                "sourceSha256": "8e97e5f49981a5e7a9a230e6651c586d6b9e3434ab22092dc30c7aa897d1c0ab",
+                                                "patch": "../source/web-chill.5.patch",
+                                                "patchSha256": "a679477d9b18313e2c203e5c0c393c46c2cae2b5ca85be9969c2ca57271cfc3e"
                                               },
                                               "buildRecord": "../source/build-provenance.json",
-                                              "change": "Refines Chill-shroom with a rounder painted cap, squat shaded body, seam-free full-body eye states and independent cap follow-through. Centered native challenge portraits, radial slow and saved layouts are retained.",
-                                              "caption": "with a shaded Chill-shroom sprite and native Bonus portraits.",
+                                              "change": "Preserves the approved whole-character shape with registered cap/body layers and a shared plant/packet/card rig independent of Ice artwork pivots. Native blink/sleep timing, radial slow and saved layouts are retained.",
+                                              "caption": "with the approved Chill-shroom silhouette and native Bonus portraits.",
                                               "gameAssetsIncluded": true,
                                               "assetManifest": "../game-assets/manifest.json",
                                               "assetBundleId": "sha256:b468b22439430ca4a36035b886a74bd831a86b2a1a36c39d3203396f5b75d093",
                                               "parent": {
-                                                "id": "0.2.6-web-chill.3",
+                                                "id": "0.2.6-web-chill.4",
                                                 "upstream": {
                                                   "tag": "0.2.6",
                                                   "commit": "396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
@@ -513,21 +513,21 @@
                                                   "officialJsSha256": "0f2d7425190e49c762f6700b68b080086e3dcb8f2dc5e9724de42ce9fb508573"
                                                 },
                                                 "artifacts": {
-                                                  "jsSha256": "5eefa126cc02b7be3df2dc1d3ebd3cefad6869a488c887b9e9af645015884e26",
-                                                  "wasmSha256": "904f79299c10d2534de5d6167159112e15219c7a3a65a50be2791774f5ffb7af",
-                                                  "source": "../source/pvz-portable-0.2.6-web-chill.3-source.zip",
-                                                  "sourceSha256": "3248007cf32dc65c44b5a8474f3ed8465cb5fe849697cf77695e6c830af53aca",
-                                                  "patch": "../source/web-chill.3.patch",
-                                                  "patchSha256": "152d92d80e81a9c3fda22edc9d6c8b7af4d94b844ea9ff78727d803f59b790fd"
+                                                  "jsSha256": "0602f3868ca9c937bdedf84fcd83e8c140d8ea0dbb947b78cd4924064d5b91e9",
+                                                  "wasmSha256": "085aa044c83bca3ba3729514361859c6482272846060e0505f0a265ba76e0486",
+                                                  "source": "../source/pvz-portable-0.2.6-web-chill.4-source.zip",
+                                                  "sourceSha256": "d8551acdc9f49704634b668d5abb2b461c3f1db683e19a228d0a9dd78785edae",
+                                                  "patch": "../source/web-chill.4.patch",
+                                                  "patchSha256": "9a6f3f8ddbb595dd297c0e7609e244f4b10632fadf5df34d60cffd005adf3ac6"
                                                 },
                                                 "buildRecord": "../source/build-provenance.json",
-                                                "change": "Gives Chill-shroom a distinct editable vector sprite with matching sleep and blink frames. Centered native-sprite Bonus portraits, radial attacks and save compatibility are retained.",
-                                                "caption": "with a custom vector Chill-shroom sprite and centered native Bonus portraits.",
+                                                "change": "Refines Chill-shroom with a rounder painted cap, squat shaded body, seam-free full-body eye states and independent cap follow-through. Centered native challenge portraits, radial slow and saved layouts are retained.",
+                                                "caption": "with a shaded Chill-shroom sprite and native Bonus portraits.",
                                                 "gameAssetsIncluded": true,
                                                 "assetManifest": "../game-assets/manifest.json",
                                                 "assetBundleId": "sha256:b468b22439430ca4a36035b886a74bd831a86b2a1a36c39d3203396f5b75d093",
                                                 "parent": {
-                                                  "id": "0.2.6-web-chill.2",
+                                                  "id": "0.2.6-web-chill.3",
                                                   "upstream": {
                                                     "tag": "0.2.6",
                                                     "commit": "396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
@@ -535,21 +535,21 @@
                                                     "officialJsSha256": "0f2d7425190e49c762f6700b68b080086e3dcb8f2dc5e9724de42ce9fb508573"
                                                   },
                                                   "artifacts": {
-                                                    "jsSha256": "87800fada3cffd882c206d08af3dad7c63c0b42a4334413edaa92b2c51062b92",
-                                                    "wasmSha256": "c92b05020b8421c00152e58ff8335650156f0af4f78bfe548539c3839775e715",
-                                                    "source": "../source/pvz-portable-0.2.6-web-chill.2-source.zip",
-                                                    "sourceSha256": "e9bf4039b9652cfe9817abdde2119859e033ae7af08cdf7f12c3ffb028b9f5ca",
-                                                    "patch": "../source/web-chill.2.patch",
-                                                    "patchSha256": "1232b2ed24e5bfe2f994e2a2a2d92546893378f9b6e256293c72924728bd9c8e"
+                                                    "jsSha256": "5eefa126cc02b7be3df2dc1d3ebd3cefad6869a488c887b9e9af645015884e26",
+                                                    "wasmSha256": "904f79299c10d2534de5d6167159112e15219c7a3a65a50be2791774f5ffb7af",
+                                                    "source": "../source/pvz-portable-0.2.6-web-chill.3-source.zip",
+                                                    "sourceSha256": "3248007cf32dc65c44b5a8474f3ed8465cb5fe849697cf77695e6c830af53aca",
+                                                    "patch": "../source/web-chill.3.patch",
+                                                    "patchSha256": "152d92d80e81a9c3fda22edc9d6c8b7af4d94b844ea9ff78727d803f59b790fd"
                                                   },
                                                   "buildRecord": "../source/build-provenance.json",
-                                                  "change": "Removes generated cap and card artwork. Uses original Ice-shroom visuals and centered original-sprite Bonus portraits while retaining Chill-shroom attacks and save compatibility.",
-                                                  "caption": "with original game artwork and centered Bonus portraits.",
+                                                  "change": "Gives Chill-shroom a distinct editable vector sprite with matching sleep and blink frames. Centered native-sprite Bonus portraits, radial attacks and save compatibility are retained.",
+                                                  "caption": "with a custom vector Chill-shroom sprite and centered native Bonus portraits.",
                                                   "gameAssetsIncluded": true,
                                                   "assetManifest": "../game-assets/manifest.json",
                                                   "assetBundleId": "sha256:b468b22439430ca4a36035b886a74bd831a86b2a1a36c39d3203396f5b75d093",
                                                   "parent": {
-                                                    "id": "0.2.6-web-chill.1",
+                                                    "id": "0.2.6-web-chill.2",
                                                     "upstream": {
                                                       "tag": "0.2.6",
                                                       "commit": "396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
@@ -557,21 +557,21 @@
                                                       "officialJsSha256": "0f2d7425190e49c762f6700b68b080086e3dcb8f2dc5e9724de42ce9fb508573"
                                                     },
                                                     "artifacts": {
-                                                      "jsSha256": "e89a921124733a9950c19ad25c955e2a1688e4dc585107274d994fcdfb803db0",
-                                                      "wasmSha256": "23a46b077d6cc1ae14e2d1cbf88463f86ee50e021aa63415702aa6cebafe4af5",
-                                                      "source": "../source/pvz-portable-0.2.6-web-chill.1-source.zip",
-                                                      "sourceSha256": "e451a8f08f442070e2855e5a64832e3a8ad263a881d37308394b198642271118",
-                                                      "patch": "../source/web-chill.1.patch",
-                                                      "patchSha256": "e8f8be7e93ff8e16a796b55e1526a0e6cb33c08ac183c868463be65fb7412f9f"
+                                                      "jsSha256": "87800fada3cffd882c206d08af3dad7c63c0b42a4334413edaa92b2c51062b92",
+                                                      "wasmSha256": "c92b05020b8421c00152e58ff8335650156f0af4f78bfe548539c3839775e715",
+                                                      "source": "../source/pvz-portable-0.2.6-web-chill.2-source.zip",
+                                                      "sourceSha256": "e9bf4039b9652cfe9817abdde2119859e033ae7af08cdf7f12c3ffb028b9f5ca",
+                                                      "patch": "../source/web-chill.2.patch",
+                                                      "patchSha256": "1232b2ed24e5bfe2f994e2a2a2d92546893378f9b6e256293c72924728bd9c8e"
                                                     },
                                                     "buildRecord": "../source/build-provenance.json",
-                                                    "change": "Replaces the yellow Lantern theme with Chill-shroom: a muzzle-free frost mushroom with native body animation, wind-up and radial frost release. Adds painted Bonus illustrations and retains concise native cards.",
-                                                    "caption": "with Chill-shroom, radial frost attacks and painted Bonus art.",
+                                                    "change": "Removes generated cap and card artwork. Uses original Ice-shroom visuals and centered original-sprite Bonus portraits while retaining Chill-shroom attacks and save compatibility.",
+                                                    "caption": "with original game artwork and centered Bonus portraits.",
                                                     "gameAssetsIncluded": true,
                                                     "assetManifest": "../game-assets/manifest.json",
                                                     "assetBundleId": "sha256:b468b22439430ca4a36035b886a74bd831a86b2a1a36c39d3203396f5b75d093",
                                                     "parent": {
-                                                      "id": "0.2.6-web-lantern.2",
+                                                      "id": "0.2.6-web-chill.1",
                                                       "upstream": {
                                                         "tag": "0.2.6",
                                                         "commit": "396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
@@ -579,21 +579,21 @@
                                                         "officialJsSha256": "0f2d7425190e49c762f6700b68b080086e3dcb8f2dc5e9724de42ce9fb508573"
                                                       },
                                                       "artifacts": {
-                                                        "jsSha256": "ba021f822a3187a385cadf68157f20af00745646d50ab4608e7234341d699403",
-                                                        "wasmSha256": "2b75f8768df5777a3115e5557b66b3d2655b02bdbc7e4c62cff66a12473bae01",
-                                                        "source": "../source/pvz-portable-0.2.6-web-lantern.2-source.zip",
-                                                        "sourceSha256": "64da4037777bcbc12ceb0715612e2855c31da4979c66ab85455ae466f9ac64ee",
-                                                        "patch": "../source/web-lantern.2.patch",
-                                                        "patchSha256": "1be4b1c670cbc8d4507fdb183ad23aaa1de99ceafce8b98563aa226f8ee0c694"
+                                                        "jsSha256": "e89a921124733a9950c19ad25c955e2a1688e4dc585107274d994fcdfb803db0",
+                                                        "wasmSha256": "23a46b077d6cc1ae14e2d1cbf88463f86ee50e021aa63415702aa6cebafe4af5",
+                                                        "source": "../source/pvz-portable-0.2.6-web-chill.1-source.zip",
+                                                        "sourceSha256": "e451a8f08f442070e2855e5a64832e3a8ad263a881d37308394b198642271118",
+                                                        "patch": "../source/web-chill.1.patch",
+                                                        "patchSha256": "e8f8be7e93ff8e16a796b55e1526a0e6cb33c08ac183c868463be65fb7412f9f"
                                                       },
                                                       "buildRecord": "../source/build-provenance.json",
-                                                      "change": "Rebuilds Lantern-shroom with the original mushroom body, blinking and animation plus a cap-only edit. Adds unique native-art Bonus pictures and removes added challenge tips.",
-                                                      "caption": "with native mushroom animation and distinct Bonus art.",
+                                                      "change": "Replaces the yellow Lantern theme with Chill-shroom: a muzzle-free frost mushroom with native body animation, wind-up and radial frost release. Adds painted Bonus illustrations and retains concise native cards.",
+                                                      "caption": "with Chill-shroom, radial frost attacks and painted Bonus art.",
                                                       "gameAssetsIncluded": true,
                                                       "assetManifest": "../game-assets/manifest.json",
                                                       "assetBundleId": "sha256:b468b22439430ca4a36035b886a74bd831a86b2a1a36c39d3203396f5b75d093",
                                                       "parent": {
-                                                        "id": "0.2.6-web-lantern.1",
+                                                        "id": "0.2.6-web-lantern.2",
                                                         "upstream": {
                                                           "tag": "0.2.6",
                                                           "commit": "396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
@@ -601,21 +601,21 @@
                                                           "officialJsSha256": "0f2d7425190e49c762f6700b68b080086e3dcb8f2dc5e9724de42ce9fb508573"
                                                         },
                                                         "artifacts": {
-                                                          "jsSha256": "94cc37133b75e998e6fc621cfd505f05916ed498b9609d8972b4a121f4e3e272",
-                                                          "wasmSha256": "f4c268f7bf5535049010ed560fac3382b80471056fdc048b611489e0832c98e4",
-                                                          "source": "../source/pvz-portable-0.2.6-web-lantern.1-source.zip",
-                                                          "sourceSha256": "c0f1ce050347d68672afa2139fe3da05ea2934fae9ea377a9fc45a2454c55244",
-                                                          "patch": "../source/web-lantern.1.patch",
-                                                          "patchSha256": "784f78d34219abc847f0acfbe5a8d6940ecf76d8927eac4d94e929e371f062ff"
+                                                          "jsSha256": "ba021f822a3187a385cadf68157f20af00745646d50ab4608e7234341d699403",
+                                                          "wasmSha256": "2b75f8768df5777a3115e5557b66b3d2655b02bdbc7e4c62cff66a12473bae01",
+                                                          "source": "../source/pvz-portable-0.2.6-web-lantern.2-source.zip",
+                                                          "sourceSha256": "64da4037777bcbc12ceb0715612e2855c31da4979c66ab85455ae466f9ac64ee",
+                                                          "patch": "../source/web-lantern.2.patch",
+                                                          "patchSha256": "1be4b1c670cbc8d4507fdb183ad23aaa1de99ceafce8b98563aa226f8ee0c694"
                                                         },
                                                         "buildRecord": "../source/build-provenance.json",
-                                                        "change": "Adds Lantern-shroom, a mushroom that briefly slows nearby zombies with a glowing pulse, introduced in the independent nighttime Lantern Glow Bonus challenge.",
-                                                        "caption": "with Lantern-shroom and Lantern Glow.",
+                                                        "change": "Rebuilds Lantern-shroom with the original mushroom body, blinking and animation plus a cap-only edit. Adds unique native-art Bonus pictures and removes added challenge tips.",
+                                                        "caption": "with native mushroom animation and distinct Bonus art.",
                                                         "gameAssetsIncluded": true,
                                                         "assetManifest": "../game-assets/manifest.json",
                                                         "assetBundleId": "sha256:b468b22439430ca4a36035b886a74bd831a86b2a1a36c39d3203396f5b75d093",
                                                         "parent": {
-                                                          "id": "0.2.6-web-night.1",
+                                                          "id": "0.2.6-web-lantern.1",
                                                           "upstream": {
                                                             "tag": "0.2.6",
                                                             "commit": "396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
@@ -623,21 +623,21 @@
                                                             "officialJsSha256": "0f2d7425190e49c762f6700b68b080086e3dcb8f2dc5e9724de42ce9fb508573"
                                                           },
                                                           "artifacts": {
-                                                            "jsSha256": "f6d1a7749955e3d889257c6074b9d2095df9a81c1bc67d323db7957f45d00755",
-                                                            "wasmSha256": "a63038207945b1e4ae82abc646693fb89c0b3292e37e758806ae744d1fb2ff9f",
-                                                            "source": "../source/pvz-portable-0.2.6-web-night.1-source.zip",
-                                                            "sourceSha256": "7b77f6f892a5f29b43bbb825307abb9c453f74e5990023d1adf11545a632cb65",
-                                                            "patch": "../source/web-night.1.patch",
-                                                            "patchSha256": "e6f1dcb8827895243312ccb972908451af4df6c14ede9246b0165a4dce11e656"
+                                                            "jsSha256": "94cc37133b75e998e6fc621cfd505f05916ed498b9609d8972b4a121f4e3e272",
+                                                            "wasmSha256": "f4c268f7bf5535049010ed560fac3382b80471056fdc048b611489e0832c98e4",
+                                                            "source": "../source/pvz-portable-0.2.6-web-lantern.1-source.zip",
+                                                            "sourceSha256": "c0f1ce050347d68672afa2139fe3da05ea2934fae9ea377a9fc45a2454c55244",
+                                                            "patch": "../source/web-lantern.1.patch",
+                                                            "patchSha256": "784f78d34219abc847f0acfbe5a8d6940ecf76d8927eac4d94e929e371f062ff"
                                                           },
                                                           "buildRecord": "../source/build-provenance.json",
-                                                          "change": "Adds Night Shift, a twenty-wave nighttime Bonus challenge with six fixed mushroom-focused seeds and an independent checkpoint and completion record. Retains background saves and original-style controls.",
-                                                          "caption": "with Night Shift and original-style controls.",
+                                                          "change": "Adds Lantern-shroom, a mushroom that briefly slows nearby zombies with a glowing pulse, introduced in the independent nighttime Lantern Glow Bonus challenge.",
+                                                          "caption": "with Lantern-shroom and Lantern Glow.",
                                                           "gameAssetsIncluded": true,
                                                           "assetManifest": "../game-assets/manifest.json",
                                                           "assetBundleId": "sha256:b468b22439430ca4a36035b886a74bd831a86b2a1a36c39d3203396f5b75d093",
                                                           "parent": {
-                                                            "id": "0.2.6-web-polish.1",
+                                                            "id": "0.2.6-web-night.1",
                                                             "upstream": {
                                                               "tag": "0.2.6",
                                                               "commit": "396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
@@ -645,21 +645,21 @@
                                                               "officialJsSha256": "0f2d7425190e49c762f6700b68b080086e3dcb8f2dc5e9724de42ce9fb508573"
                                                             },
                                                             "artifacts": {
-                                                              "jsSha256": "e7f8d0ba327ce5acb94d7301da92e398d078e6b2a0ff13db06346a0925f4d7d6",
-                                                              "wasmSha256": "852d8a02dbf6fc0d1302b0a4fe4964dd80abbb7609d20bab4610b0c7a265f000",
-                                                              "source": "../source/pvz-portable-0.2.6-web-polish.1-source.zip",
-                                                              "sourceSha256": "aba3e5a40370a81826c6dc61e5f04ad1742dda405bffc3da86e24edcd981391d",
-                                                              "patch": "../source/web-polish.1.patch",
-                                                              "patchSha256": "47a4f0c7fdc5232b769f22179c61db8a163776b1c21af0f7a3821d718a3628f1"
+                                                              "jsSha256": "f6d1a7749955e3d889257c6074b9d2095df9a81c1bc67d323db7957f45d00755",
+                                                              "wasmSha256": "a63038207945b1e4ae82abc646693fb89c0b3292e37e758806ae744d1fb2ff9f",
+                                                              "source": "../source/pvz-portable-0.2.6-web-night.1-source.zip",
+                                                              "sourceSha256": "7b77f6f892a5f29b43bbb825307abb9c453f74e5990023d1adf11545a632cb65",
+                                                              "patch": "../source/web-night.1.patch",
+                                                              "patchSha256": "e6f1dcb8827895243312ccb972908451af4df6c14ede9246b0165a4dce11e656"
                                                             },
                                                             "buildRecord": "../source/build-provenance.json",
-                                                            "change": "Simplifies bonus challenge, options and plant-deck presentation using the original game artwork and concise native controls. Browser saves use a background worker in the corresponding website source.",
-                                                            "caption": "with original-style controls and background save processing.",
+                                                            "change": "Adds Night Shift, a twenty-wave nighttime Bonus challenge with six fixed mushroom-focused seeds and an independent checkpoint and completion record. Retains background saves and original-style controls.",
+                                                            "caption": "with Night Shift and original-style controls.",
                                                             "gameAssetsIncluded": true,
                                                             "assetManifest": "../game-assets/manifest.json",
                                                             "assetBundleId": "sha256:b468b22439430ca4a36035b886a74bd831a86b2a1a36c39d3203396f5b75d093",
                                                             "parent": {
-                                                              "id": "0.2.6-web-content.1",
+                                                              "id": "0.2.6-web-polish.1",
                                                               "upstream": {
                                                                 "tag": "0.2.6",
                                                                 "commit": "396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
@@ -667,21 +667,21 @@
                                                                 "officialJsSha256": "0f2d7425190e49c762f6700b68b080086e3dcb8f2dc5e9724de42ce9fb508573"
                                                               },
                                                               "artifacts": {
-                                                                "jsSha256": "39a4760b0f7a6b360d4bff47522e7b2c46973de5347f8e901fa6fafbaa5d66ff",
-                                                                "wasmSha256": "9474c0b3d41ad713e195f43cf4b60ae25a345697c155f222c65aee02507febc5",
-                                                                "source": "../source/pvz-portable-0.2.6-web-content.1-source.zip",
-                                                                "sourceSha256": "4a8c06629b3d6d87b7ea9b3f10a6b845c764eb9d9875beeb1b82fba82f346922",
-                                                                "patch": "../source/web-content.1.patch",
-                                                                "patchSha256": "947c7931458ceac2e307584f146262a901e78f1f69527f90280aff6757a564b9"
+                                                                "jsSha256": "e7f8d0ba327ce5acb94d7301da92e398d078e6b2a0ff13db06346a0925f4d7d6",
+                                                                "wasmSha256": "852d8a02dbf6fc0d1302b0a4fe4964dd80abbb7609d20bab4610b0c7a265f000",
+                                                                "source": "../source/pvz-portable-0.2.6-web-polish.1-source.zip",
+                                                                "sourceSha256": "aba3e5a40370a81826c6dc61e5f04ad1742dda405bffc3da86e24edcd981391d",
+                                                                "patch": "../source/web-polish.1.patch",
+                                                                "patchSha256": "47a4f0c7fdc5232b769f22179c61db8a163776b1c21af0f7a3821d718a3628f1"
                                                               },
                                                               "buildRecord": "../source/build-provenance.json",
-                                                              "change": "Adds Cone Zone, an optional twenty-wave daylight bonus challenge with a fixed six-plant bank and an independent completion record.",
-                                                              "caption": "with Cone Zone, an optional bonus challenge.",
+                                                              "change": "Simplifies bonus challenge, options and plant-deck presentation using the original game artwork and concise native controls. Browser saves use a background worker in the corresponding website source.",
+                                                              "caption": "with original-style controls and background save processing.",
                                                               "gameAssetsIncluded": true,
                                                               "assetManifest": "../game-assets/manifest.json",
                                                               "assetBundleId": "sha256:b468b22439430ca4a36035b886a74bd831a86b2a1a36c39d3203396f5b75d093",
                                                               "parent": {
-                                                                "id": "0.2.6-web-qol.2",
+                                                                "id": "0.2.6-web-content.1",
                                                                 "upstream": {
                                                                   "tag": "0.2.6",
                                                                   "commit": "396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
@@ -689,21 +689,21 @@
                                                                   "officialJsSha256": "0f2d7425190e49c762f6700b68b080086e3dcb8f2dc5e9724de42ce9fb508573"
                                                                 },
                                                                 "artifacts": {
-                                                                  "jsSha256": "e2aaa79b42ab33d59a7230f51bc0d995b5aff53615e42b6a02beccc800557328",
-                                                                  "wasmSha256": "441d8f3b66ad2ed5163eb333a3801e189d52afd14fd9e7e2697e415458d3b248",
-                                                                  "source": "../source/pvz-portable-0.2.6-web-qol.2-source.zip",
-                                                                  "sourceSha256": "9d77a0a5e2a367630bded271996e7ccffd081bc4cf7f77e16892591812a6f841",
-                                                                  "patch": "../source/web-qol.2.patch",
-                                                                  "patchSha256": "081cad7a19c05f0ec33d8f552084a3a0315004ca30d2b13821d0fe3b8808bc6a"
+                                                                  "jsSha256": "39a4760b0f7a6b360d4bff47522e7b2c46973de5347f8e901fa6fafbaa5d66ff",
+                                                                  "wasmSha256": "9474c0b3d41ad713e195f43cf4b60ae25a345697c155f222c65aee02507febc5",
+                                                                  "source": "../source/pvz-portable-0.2.6-web-content.1-source.zip",
+                                                                  "sourceSha256": "4a8c06629b3d6d87b7ea9b3f10a6b845c764eb9d9875beeb1b82fba82f346922",
+                                                                  "patch": "../source/web-content.1.patch",
+                                                                  "patchSha256": "947c7931458ceac2e307584f146262a901e78f1f69527f90280aff6757a564b9"
                                                                 },
                                                                 "buildRecord": "../source/build-provenance.json",
-                                                                "change": "Adds automatic save recovery, native per-profile QoL options, focus-loss pause, remappable controls, plant decks, remembered speed and optional cooldown numbers.",
-                                                                "caption": "with save recovery and original-style quality-of-life controls.",
+                                                                "change": "Adds Cone Zone, an optional twenty-wave daylight bonus challenge with a fixed six-plant bank and an independent completion record.",
+                                                                "caption": "with Cone Zone, an optional bonus challenge.",
                                                                 "gameAssetsIncluded": true,
                                                                 "assetManifest": "../game-assets/manifest.json",
                                                                 "assetBundleId": "sha256:b468b22439430ca4a36035b886a74bd831a86b2a1a36c39d3203396f5b75d093",
                                                                 "parent": {
-                                                                  "id": "0.2.6-web-qol.1",
+                                                                  "id": "0.2.6-web-qol.2",
                                                                   "upstream": {
                                                                     "tag": "0.2.6",
                                                                     "commit": "396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
@@ -711,21 +711,21 @@
                                                                     "officialJsSha256": "0f2d7425190e49c762f6700b68b080086e3dcb8f2dc5e9724de42ce9fb508573"
                                                                   },
                                                                   "artifacts": {
-                                                                    "jsSha256": "b60338d9d8ceb53c3e30407a667bd2761243c9abc83f82d567173ac4fb14c160",
-                                                                    "wasmSha256": "5319147e3ac37d05b7179c4206c79e76bd98f19521e94b1ea710b07b31768566",
-                                                                    "source": "../source/pvz-portable-0.2.6-web-qol.1-source.zip",
-                                                                    "sourceSha256": "cfb04160423d2bf5d66cf414daa476e0b292951a9c4cc31d5fd6e9eb884cadeb",
-                                                                    "patch": "../source/web-qol.1.patch",
-                                                                    "patchSha256": "b7522bb75c85d1453ddb2f8ef06a97fa4e1251b181ff013bbbd9e78988359a8b"
+                                                                    "jsSha256": "e2aaa79b42ab33d59a7230f51bc0d995b5aff53615e42b6a02beccc800557328",
+                                                                    "wasmSha256": "441d8f3b66ad2ed5163eb333a3801e189d52afd14fd9e7e2697e415458d3b248",
+                                                                    "source": "../source/pvz-portable-0.2.6-web-qol.2-source.zip",
+                                                                    "sourceSha256": "9d77a0a5e2a367630bded271996e7ccffd081bc4cf7f77e16892591812a6f841",
+                                                                    "patch": "../source/web-qol.2.patch",
+                                                                    "patchSha256": "081cad7a19c05f0ec33d8f552084a3a0315004ca30d2b13821d0fe3b8808bc6a"
                                                                   },
                                                                   "buildRecord": "../source/build-provenance.json",
-                                                                  "change": "Adds a native 1x/2x gameplay speed toggle beside Menu using the original button style.",
-                                                                  "caption": "with browser saves, selectable CPU rendering and a native 1x/2x speed toggle.",
+                                                                  "change": "Adds automatic save recovery, native per-profile QoL options, focus-loss pause, remappable controls, plant decks, remembered speed and optional cooldown numbers.",
+                                                                  "caption": "with save recovery and original-style quality-of-life controls.",
                                                                   "gameAssetsIncluded": true,
                                                                   "assetManifest": "../game-assets/manifest.json",
                                                                   "assetBundleId": "sha256:b468b22439430ca4a36035b886a74bd831a86b2a1a36c39d3203396f5b75d093",
                                                                   "parent": {
-                                                                    "id": "0.2.6-web-software.10",
+                                                                    "id": "0.2.6-web-qol.1",
                                                                     "upstream": {
                                                                       "tag": "0.2.6",
                                                                       "commit": "396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
@@ -733,400 +733,429 @@
                                                                       "officialJsSha256": "0f2d7425190e49c762f6700b68b080086e3dcb8f2dc5e9724de42ce9fb508573"
                                                                     },
                                                                     "artifacts": {
-                                                                      "jsSha256": "905679974d24b7657297c42cfb39b3201f4168cf2e607efb7a8a45cf0a1d9669",
-                                                                      "wasmSha256": "b8b041dfe57d3e66d7ea6889ba9fabb8db6bd71b6eda8e6944188ee982ec24c1",
-                                                                      "source": "../source/pvz-portable-0.2.6-web-software.10-source.zip",
-                                                                      "sourceSha256": "62bf399ffeedde34ec9946b4aece8fce4cb4ffb119739d3b55d2025bc4cda261",
-                                                                      "patch": "../source/web-software.10.patch",
-                                                                      "patchSha256": "23c50a326efdecfd25e6d7bc9f55b2398cb19b88ae7539d15dd4099253d2d208"
+                                                                      "jsSha256": "b60338d9d8ceb53c3e30407a667bd2761243c9abc83f82d567173ac4fb14c160",
+                                                                      "wasmSha256": "5319147e3ac37d05b7179c4206c79e76bd98f19521e94b1ea710b07b31768566",
+                                                                      "source": "../source/pvz-portable-0.2.6-web-qol.1-source.zip",
+                                                                      "sourceSha256": "cfb04160423d2bf5d66cf414daa476e0b292951a9c4cc31d5fd6e9eb884cadeb",
+                                                                      "patch": "../source/web-qol.1.patch",
+                                                                      "patchSha256": "b7522bb75c85d1453ddb2f8ef06a97fa4e1251b181ff013bbbd9e78988359a8b"
                                                                     },
                                                                     "buildRecord": "../source/build-provenance.json",
-                                                                    "change": "Retains Software.9. Adds only dedicated-screen RGB888 nearest ADDITIVE TA1/MOD1/GLOB1 with equal valid original input colors and TA0/MOD0/GLOB1 with effective sample alpha255. Authentic combined double-global modulation remains. The90 unchanged expanded callback bodies include both normal dispatchers. Sampling/geometry/context and game/audio source remain unchanged.",
-                                                                    "caption": "with browser export and selectable CPU rendering. Fresh tutorial and save-transfer checks passed.",
+                                                                    "change": "Adds a native 1x/2x gameplay speed toggle beside Menu using the original button style.",
+                                                                    "caption": "with browser saves, selectable CPU rendering and a native 1x/2x speed toggle.",
                                                                     "gameAssetsIncluded": true,
                                                                     "assetManifest": "../game-assets/manifest.json",
                                                                     "assetBundleId": "sha256:b468b22439430ca4a36035b886a74bd831a86b2a1a36c39d3203396f5b75d093",
                                                                     "parent": {
-                                                                      "id": "0.2.6-web-software.9",
+                                                                      "id": "0.2.6-web-software.10",
+                                                                      "upstream": {
+                                                                        "tag": "0.2.6",
+                                                                        "commit": "396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
+                                                                        "officialWasmSha256": "0ff3d5c386e4bfd1b7bcd73d3a6eda3a975192987788f2ac0437efcd12d2b2a7",
+                                                                        "officialJsSha256": "0f2d7425190e49c762f6700b68b080086e3dcb8f2dc5e9724de42ce9fb508573"
+                                                                      },
                                                                       "artifacts": {
                                                                         "jsSha256": "905679974d24b7657297c42cfb39b3201f4168cf2e607efb7a8a45cf0a1d9669",
-                                                                        "wasmSha256": "d1cdb28cbe5dd936154d7cbc22ce4936bbccd9010e3c1d63829fcf0d440a4cb7",
-                                                                        "source": "../source/pvz-portable-0.2.6-web-software.9-source.zip",
-                                                                        "sourceSha256": "b4ca8b710fe2c61ead0ab5ee1f1a4dffbae92e7c9c705b8ac2e3c4e0f4f83fc4",
-                                                                        "patch": "../source/web-software.9.patch",
-                                                                        "patchSha256": "6acebb41a80dfde3c82c5596c0dadfcc3fcc06ff29c63e2ef1e4db0202255dc3"
+                                                                        "wasmSha256": "b8b041dfe57d3e66d7ea6889ba9fabb8db6bd71b6eda8e6944188ee982ec24c1",
+                                                                        "source": "../source/pvz-portable-0.2.6-web-software.10-source.zip",
+                                                                        "sourceSha256": "62bf399ffeedde34ec9946b4aece8fce4cb4ffb119739d3b55d2025bc4cda261",
+                                                                        "patch": "../source/web-software.10.patch",
+                                                                        "patchSha256": "23c50a326efdecfd25e6d7bc9f55b2398cb19b88ae7539d15dd4099253d2d208"
                                                                       },
-                                                                      "unchangedSourceFiles": 754,
-                                                                      "changedSourcePaths": [
-                                                                        "CMake/ProjectVersion.cmake",
-                                                                        "src/PvzpLib/PvzpDrawTriangle.inc",
-                                                                        "src/PvzpLib/PvzpNativeScreenPixel888.inc"
-                                                                      ],
-                                                                      "releaseRuntimeSnapshot": {
-                                                                        "build": "0.2.6-web-software.9",
-                                                                        "status": "PASS bounded own private ordinary-UI startup/pause/CPU preference checks",
-                                                                        "context": "Private isolated preview; generated QA-Boss profile; six generated profiles installed through ordinary management controls; testing=1 quiet guard. No public gameplay or original-runtime comparison credit.",
-                                                                        "identityAndStartup": {
-                                                                          "automaticFileFreeReadyOriginalTitle": true,
-                                                                          "informationVersion9AndMatchingEngineSource": true,
-                                                                          "sixGeneratedProfilesThroughOrdinaryMoreControls": true
+                                                                      "buildRecord": "../source/build-provenance.json",
+                                                                      "change": "Retains Software.9. Adds only dedicated-screen RGB888 nearest ADDITIVE TA1/MOD1/GLOB1 with equal valid original input colors and TA0/MOD0/GLOB1 with effective sample alpha255. Authentic combined double-global modulation remains. The90 unchanged expanded callback bodies include both normal dispatchers. Sampling/geometry/context and game/audio source remain unchanged.",
+                                                                      "caption": "with browser export and selectable CPU rendering. Fresh tutorial and save-transfer checks passed.",
+                                                                      "gameAssetsIncluded": true,
+                                                                      "assetManifest": "../game-assets/manifest.json",
+                                                                      "assetBundleId": "sha256:b468b22439430ca4a36035b886a74bd831a86b2a1a36c39d3203396f5b75d093",
+                                                                      "parent": {
+                                                                        "id": "0.2.6-web-software.9",
+                                                                        "artifacts": {
+                                                                          "jsSha256": "905679974d24b7657297c42cfb39b3201f4168cf2e607efb7a8a45cf0a1d9669",
+                                                                          "wasmSha256": "d1cdb28cbe5dd936154d7cbc22ce4936bbccd9010e3c1d63829fcf0d440a4cb7",
+                                                                          "source": "../source/pvz-portable-0.2.6-web-software.9-source.zip",
+                                                                          "sourceSha256": "b4ca8b710fe2c61ead0ab5ee1f1a4dffbae92e7c9c705b8ac2e3c4e0f4f83fc4",
+                                                                          "patch": "../source/web-software.9.patch",
+                                                                          "patchSha256": "6acebb41a80dfde3c82c5596c0dadfcc3fcc06ff29c63e2ef1e4db0202255dc3"
+                                                                        },
+                                                                        "unchangedSourceFiles": 754,
+                                                                        "changedSourcePaths": [
+                                                                          "CMake/ProjectVersion.cmake",
+                                                                          "src/PvzpLib/PvzpDrawTriangle.inc",
+                                                                          "src/PvzpLib/PvzpNativeScreenPixel888.inc"
+                                                                        ],
+                                                                        "releaseRuntimeSnapshot": {
+                                                                          "build": "0.2.6-web-software.9",
+                                                                          "status": "PASS bounded own private ordinary-UI startup/pause/CPU preference checks",
+                                                                          "context": "Private isolated preview; generated QA-Boss profile; six generated profiles installed through ordinary management controls; testing=1 quiet guard. No public gameplay or original-runtime comparison credit.",
+                                                                          "identityAndStartup": {
+                                                                            "automaticFileFreeReadyOriginalTitle": true,
+                                                                            "informationVersion9AndMatchingEngineSource": true,
+                                                                            "sixGeneratedProfilesThroughOrdinaryMoreControls": true
+                                                                          },
+                                                                          "renderer": {
+                                                                            "cpuSelectedThroughOriginalOptions": true,
+                                                                            "native3DCheckboxUncheckedOnReopen": true,
+                                                                            "native3DCheckboxUncheckedAfterQuitReadyTitleStart": true
+                                                                          },
+                                                                          "ordinarySample": {
+                                                                            "mode": "GAMEMODE_SCARY_POTTER_1",
+                                                                            "initialVases": 25,
+                                                                            "openedVases": 0,
+                                                                            "plantedPlants": 0,
+                                                                            "nativeSpacePauseNewspaperVisibleAtTwoFrames": true,
+                                                                            "resumeRetained25UnopenedVases": true,
+                                                                            "zombieCombatObserved": false,
+                                                                            "finiteWinObserved": false,
+                                                                            "newAdditiveCallbackInvocationObserved": false,
+                                                                            "scope": "Ordinary pause/resume scene only; normal source eligibility is not an observed additive specialization or exact framebuffer/timing comparison."
+                                                                          },
+                                                                          "persistence": {
+                                                                            "sequence": "Native Leave/MainMenu -> Quit/confirmation -> fresh READY original title -> Start -> original Options CPU unchecked",
+                                                                            "cpuPreferenceVisibleFreshPass": true,
+                                                                            "boardContinueRestorationTested": false,
+                                                                            "saveExportBytesCompared": false
+                                                                          },
+                                                                          "logs": {
+                                                                            "errorLevelLimit30": [],
+                                                                            "missingTrackFilterLimit30": [],
+                                                                            "scope": "Only the bounded root-retrieved queries are empty; no all-warning/whole-session absence claim."
+                                                                          },
+                                                                          "cleanup": {
+                                                                            "finalNativeQuitReachedReadyTitle": true,
+                                                                            "privateTab7Closed": true,
+                                                                            "ownedServer90131Stopped": true,
+                                                                            "authority": "Root ordinary UI and owned-process report"
+                                                                          },
+                                                                          "privateReceipt": {
+                                                                            "name": "software9-actual-ui.json",
+                                                                            "sha256": "bb8fc7bcb43df9b41f3934c7554058c09bc0f0831a2c544052a90552bdeee5da"
+                                                                          },
+                                                                          "limits": [
+                                                                            "No9combat/finitewin/boardContinue/exportbytes/denseperformance/nativeframe/originalruntime comparison.",
+                                                                            "No ordinary new additive-nearest scene or direct callback invocation was proved. Two visible Pause frames do not establish pixel/timing parity.",
+                                                                            "Own8Vasebreaker/twoSnow/freshcheckpoint and own7wins remain historical; no transfer to9gameplay or public-host results."
+                                                                          ]
+                                                                        },
+                                                                        "snapshotScope": "Public17 Software9 release-time record retained historically. Later private9 gameplay/save receipts are separate; no retrospective change to that release snapshot."
+                                                                      },
+                                                                      "runtimeQa": {
+                                                                        "build": "0.2.6-web-software.10",
+                                                                        "status": "PASS bounded own private fresh tutorial, renderer preference and cross-origin save transfer/Continue",
+                                                                        "context": "Private isolated Software10 origins; fresh Web10QA profile with no generated fixture. testing=1 and checked mute observed. No public-host gameplay or authentic original-runtime comparison credit.",
+                                                                        "startup": {
+                                                                          "automaticFileFreeFreshTitle": true,
+                                                                          "freshProfileNameAccepted": true,
+                                                                          "fiveCompactControlsVisible": true,
+                                                                          "initialNative3DChecked": true
                                                                         },
                                                                         "renderer": {
-                                                                          "cpuSelectedThroughOriginalOptions": true,
-                                                                          "native3DCheckboxUncheckedOnReopen": true,
-                                                                          "native3DCheckboxUncheckedAfterQuitReadyTitleStart": true
+                                                                          "cpuSelectedBeforeAdventure": true,
+                                                                          "uncheckedNativeOptionsReopenedDuring1_1": true,
+                                                                          "level1_1CpuFightWithNoLater3DRequest": true,
+                                                                          "level1_2CpuHardwareCpuCycleMenuClosedAndReopenedEach": true,
+                                                                          "importedRegistryIs3D": 0,
+                                                                          "targetMenuAfterContinueUnchecked": true,
+                                                                          "scope": "Visible native options/saved preference/board retention; no hardware fight/backend-object/FPS/native-pixel claim."
                                                                         },
-                                                                        "ordinarySample": {
-                                                                          "mode": "GAMEMODE_SCARY_POTTER_1",
-                                                                          "initialVases": 25,
-                                                                          "openedVases": 0,
-                                                                          "plantedPlants": 0,
-                                                                          "nativeSpacePauseNewspaperVisibleAtTwoFrames": true,
-                                                                          "resumeRetained25UnopenedVases": true,
-                                                                          "zombieCombatObserved": false,
-                                                                          "finiteWinObserved": false,
-                                                                          "newAdditiveCallbackInvocationObserved": false,
-                                                                          "scope": "Ordinary pause/resume scene only; normal source eligibility is not an observed additive specialization or exact framebuffer/timing comparison."
+                                                                        "gameplay": {
+                                                                          "adventure1_1": {
+                                                                            "freshOneAttemptFiniteWin": true,
+                                                                            "restartOrGameOverUsed": false,
+                                                                            "sunCollectionAndPeashooterProjectilesObserved": true,
+                                                                            "twoPeashootersRetained": true,
+                                                                            "sunflowerRewardCollectedAndAwardReached": true,
+                                                                            "exactZombieCountIndependent": false
+                                                                          },
+                                                                          "adventure1_2": {
+                                                                            "enteredViaNextLevel": true,
+                                                                            "oneVisibleSunflowerC0Middle": true,
+                                                                            "visibleSunAfterContinue": 0,
+                                                                            "finiteWinObserved": false
+                                                                          }
                                                                         },
                                                                         "persistence": {
-                                                                          "sequence": "Native Leave/MainMenu -> Quit/confirmation -> fresh READY original title -> Start -> original Options CPU unchecked",
-                                                                          "cpuPreferenceVisibleFreshPass": true,
-                                                                          "boardContinueRestorationTested": false,
-                                                                          "saveExportBytesCompared": false
+                                                                          "sourceSequence": "Native Leave/MainMenu -> Quit/confirmation -> fresh READY title -> export A",
+                                                                          "targetSequence": "Fresh separate-origin save-only import A -> export B0 before Start -> original profile/menu -> actual Continue click -> restored board/native menu",
+                                                                          "profileLevel": 2,
+                                                                          "finishedAdventure": 0,
+                                                                          "generatedFixtureUsed": false,
+                                                                          "preStartPayloads": 4,
+                                                                          "preStartExpandedBytes": 44120,
+                                                                          "allPreStartPayloadBytesEqual": true,
+                                                                          "sourceExportSha256": "9fbb5fc2bf827131e38592cf1127f7fda537507afb4f9fc7348bd247a9f54285",
+                                                                          "targetB0ExportSha256": "b447ae582ea58fca0c91267c8748c66d26f320f299abd55ed728bf77ffa348a3",
+                                                                          "checkpointBytes": 42863,
+                                                                          "checkpointSha256": "c9a015283716842956abdfb9254d6670134c498f8b9741bcd5ee3ccc7063936e",
+                                                                          "checkpointInternalCrc32": "ec6bbc32",
+                                                                          "importSuccessStatusVisible": true,
+                                                                          "actualContinueRestoredOneVisibleSunflowerC0MiddleAnd0Sun": true,
+                                                                          "postContinueNative3DUnchecked": true,
+                                                                          "fullActorEnumeration": false,
+                                                                          "scope": "Exact browser-export/import payload transfer before target Start plus bounded visible Continue. No native-original save compatibility or whole actor enumeration."
                                                                         },
-                                                                        "logs": {
-                                                                          "errorLevelLimit30": [],
-                                                                          "missingTrackFilterLimit30": [],
-                                                                          "scope": "Only the bounded root-retrieved queries are empty; no all-warning/whole-session absence claim."
-                                                                        },
-                                                                        "cleanup": {
-                                                                          "finalNativeQuitReachedReadyTitle": true,
-                                                                          "privateTab7Closed": true,
-                                                                          "ownedServer90131Stopped": true,
-                                                                          "authority": "Root ordinary UI and owned-process report"
+                                                                        "quietTesting": {
+                                                                          "testing1AndMuteCheckedObserved": true,
+                                                                          "realAudioGainOrDeviceInspected": false,
+                                                                          "scope": "Static/doubles gain0 checks are separate from visible controls; normal-player audio implementation is retained."
                                                                         },
                                                                         "privateReceipt": {
-                                                                          "name": "software9-actual-ui.json",
-                                                                          "sha256": "bb8fc7bcb43df9b41f3934c7554058c09bc0f0831a2c544052a90552bdeee5da"
+                                                                          "name": "software10-actual-ui.json",
+                                                                          "bytes": 10479,
+                                                                          "sha256": "3b0e43483028a379ef713beeb95494572c7b218d205561509ea8f5862ecc681e"
                                                                         },
                                                                         "limits": [
-                                                                          "No9combat/finitewin/boardContinue/exportbytes/denseperformance/nativeframe/originalruntime comparison.",
-                                                                          "No ordinary new additive-nearest scene or direct callback invocation was proved. Two visible Pause frames do not establish pixel/timing parity.",
-                                                                          "Own8Vasebreaker/twoSnow/freshcheckpoint and own7wins remain historical; no transfer to9gameplay or public-host results."
+                                                                          "No public Software10 gameplay/finite-win credit; these observations belong to private10 only.",
+                                                                          "No ordinary new additive callback invocation, original runtime/framebuffer/geometry/UV parity, full roster/all50/allmodes or dense performance claim.",
+                                                                          "The1-2 continuation is a checkpoint sample, not a second level win. Misnamed/transitional images do not add combat, award or Continue proof.",
+                                                                          "No hardware fight or exact actor-count/timing/audio-listening claim. Earlier9/8/7 results remain historical and separately scoped."
                                                                         ]
                                                                       },
-                                                                      "snapshotScope": "Public17 Software9 release-time record retained historically. Later private9 gameplay/save receipts are separate; no retrospective change to that release snapshot."
-                                                                    },
-                                                                    "runtimeQa": {
-                                                                      "build": "0.2.6-web-software.10",
-                                                                      "status": "PASS bounded own private fresh tutorial, renderer preference and cross-origin save transfer/Continue",
-                                                                      "context": "Private isolated Software10 origins; fresh Web10QA profile with no generated fixture. testing=1 and checked mute observed. No public-host gameplay or authentic original-runtime comparison credit.",
-                                                                      "startup": {
-                                                                        "automaticFileFreeFreshTitle": true,
-                                                                        "freshProfileNameAccepted": true,
-                                                                        "fiveCompactControlsVisible": true,
-                                                                        "initialNative3DChecked": true
-                                                                      },
-                                                                      "renderer": {
-                                                                        "cpuSelectedBeforeAdventure": true,
-                                                                        "uncheckedNativeOptionsReopenedDuring1_1": true,
-                                                                        "level1_1CpuFightWithNoLater3DRequest": true,
-                                                                        "level1_2CpuHardwareCpuCycleMenuClosedAndReopenedEach": true,
-                                                                        "importedRegistryIs3D": 0,
-                                                                        "targetMenuAfterContinueUnchecked": true,
-                                                                        "scope": "Visible native options/saved preference/board retention; no hardware fight/backend-object/FPS/native-pixel claim."
-                                                                      },
-                                                                      "gameplay": {
-                                                                        "adventure1_1": {
-                                                                          "freshOneAttemptFiniteWin": true,
-                                                                          "restartOrGameOverUsed": false,
-                                                                          "sunCollectionAndPeashooterProjectilesObserved": true,
-                                                                          "twoPeashootersRetained": true,
-                                                                          "sunflowerRewardCollectedAndAwardReached": true,
-                                                                          "exactZombieCountIndependent": false
-                                                                        },
-                                                                        "adventure1_2": {
-                                                                          "enteredViaNextLevel": true,
-                                                                          "oneVisibleSunflowerC0Middle": true,
-                                                                          "visibleSunAfterContinue": 0,
-                                                                          "finiteWinObserved": false
-                                                                        }
-                                                                      },
-                                                                      "persistence": {
-                                                                        "sourceSequence": "Native Leave/MainMenu -> Quit/confirmation -> fresh READY title -> export A",
-                                                                        "targetSequence": "Fresh separate-origin save-only import A -> export B0 before Start -> original profile/menu -> actual Continue click -> restored board/native menu",
-                                                                        "profileLevel": 2,
-                                                                        "finishedAdventure": 0,
-                                                                        "generatedFixtureUsed": false,
-                                                                        "preStartPayloads": 4,
-                                                                        "preStartExpandedBytes": 44120,
-                                                                        "allPreStartPayloadBytesEqual": true,
-                                                                        "sourceExportSha256": "9fbb5fc2bf827131e38592cf1127f7fda537507afb4f9fc7348bd247a9f54285",
-                                                                        "targetB0ExportSha256": "b447ae582ea58fca0c91267c8748c66d26f320f299abd55ed728bf77ffa348a3",
-                                                                        "checkpointBytes": 42863,
-                                                                        "checkpointSha256": "c9a015283716842956abdfb9254d6670134c498f8b9741bcd5ee3ccc7063936e",
-                                                                        "checkpointInternalCrc32": "ec6bbc32",
-                                                                        "importSuccessStatusVisible": true,
-                                                                        "actualContinueRestoredOneVisibleSunflowerC0MiddleAnd0Sun": true,
-                                                                        "postContinueNative3DUnchecked": true,
-                                                                        "fullActorEnumeration": false,
-                                                                        "scope": "Exact browser-export/import payload transfer before target Start plus bounded visible Continue. No native-original save compatibility or whole actor enumeration."
-                                                                      },
-                                                                      "quietTesting": {
-                                                                        "testing1AndMuteCheckedObserved": true,
-                                                                        "realAudioGainOrDeviceInspected": false,
-                                                                        "scope": "Static/doubles gain0 checks are separate from visible controls; normal-player audio implementation is retained."
-                                                                      },
-                                                                      "privateReceipt": {
-                                                                        "name": "software10-actual-ui.json",
-                                                                        "bytes": 10479,
-                                                                        "sha256": "3b0e43483028a379ef713beeb95494572c7b218d205561509ea8f5862ecc681e"
-                                                                      },
                                                                       "limits": [
-                                                                        "No public Software10 gameplay/finite-win credit; these observations belong to private10 only.",
-                                                                        "No ordinary new additive callback invocation, original runtime/framebuffer/geometry/UV parity, full roster/all50/allmodes or dense performance claim.",
-                                                                        "The1-2 continuation is a checkpoint sample, not a second level win. Misnamed/transitional images do not add combat, award or Continue proof.",
-                                                                        "No hardware fight or exact actor-count/timing/audio-listening claim. Earlier9/8/7 results remain historical and separately scoped."
-                                                                      ]
+                                                                        "Only RGB888 nearest ADDITIVE TA1/MOD1/GLOB1 constant valid original input colors and TA0/MOD0/GLOB1 are newly admitted. Original combined prepass and repeated pixel global modulation are authentic and unchanged.",
+                                                                        "Exactly90 expanded callback bodies, including normal dispatchers and the old9 additive family, are byte-exact. The actual paired cases preserve complete offscreen/invalid/gradient destination storage and original vertex state.",
+                                                                        "Actual callbacks and extracted screen RAII/query/virtual boundaries use app/image/flat4x4 triangle doubles. Conditional arithmetic/state tests are not original native geometry/scan/interpolation/x87/cache/device/framebuffer proof.",
+                                                                        "No ordinary gameplay scene invoking either new nearest/additive family was established. Full Release compilation/link and separately recorded bounded private10 tutorial/preference/save-transfer checks passed; native-frame/full-game/ordinary-new-additive proof remains incomplete.",
+                                                                        "Earlier Software.9 tests/gameplay/UI/wins remain historical preserved-source evidence, not newly run10 tests. Only the focused paired additive suite is bundled here.",
+                                                                        "No browser/game/original/audio runtime initializes in these producers. Full1:1, all Adventure/modes/rosters, native frames and dense runtime performance remain incomplete.",
+                                                                        "Full original runtime/framebuffer/gameplay equivalence and broad all50/allmodes/allrosters verification remain incomplete."
+                                                                      ],
+                                                                      "producerReceiptScope": "Frozen10 verification/sourceZIP is as-built source/build/focused C++ evidence. Its pending-runtime wording is a creation-time snapshot; later own10 runtime observations must be separate and scoped."
                                                                     },
+                                                                    "parentScope": "Historical Software.10 release metadata only; not new QoL.1 runtime results.",
                                                                     "limits": [
-                                                                      "Only RGB888 nearest ADDITIVE TA1/MOD1/GLOB1 constant valid original input colors and TA0/MOD0/GLOB1 are newly admitted. Original combined prepass and repeated pixel global modulation are authentic and unchanged.",
-                                                                      "Exactly90 expanded callback bodies, including normal dispatchers and the old9 additive family, are byte-exact. The actual paired cases preserve complete offscreen/invalid/gradient destination storage and original vertex state.",
-                                                                      "Actual callbacks and extracted screen RAII/query/virtual boundaries use app/image/flat4x4 triangle doubles. Conditional arithmetic/state tests are not original native geometry/scan/interpolation/x87/cache/device/framebuffer proof.",
-                                                                      "No ordinary gameplay scene invoking either new nearest/additive family was established. Full Release compilation/link and separately recorded bounded private10 tutorial/preference/save-transfer checks passed; native-frame/full-game/ordinary-new-additive proof remains incomplete.",
-                                                                      "Earlier Software.9 tests/gameplay/UI/wins remain historical preserved-source evidence, not newly run10 tests. Only the focused paired additive suite is bundled here.",
-                                                                      "No browser/game/original/audio runtime initializes in these producers. Full1:1, all Adventure/modes/rosters, native frames and dense runtime performance remain incomplete.",
-                                                                      "Full original runtime/framebuffer/gameplay equivalence and broad all50/allmodes/allrosters verification remain incomplete."
-                                                                    ],
-                                                                    "producerReceiptScope": "Frozen10 verification/sourceZIP is as-built source/build/focused C++ evidence. Its pending-runtime wording is a creation-time snapshot; later own10 runtime observations must be separate and scoped."
+                                                                      "This is the user-requested QoL speed feature, not a claim of exact original-game parity.",
+                                                                      "Focused production-method tests and build checks do not replace broad game or browser validation.",
+                                                                      "Earlier Software.10 results remain historical parent evidence only."
+                                                                    ]
                                                                   },
-                                                                  "parentScope": "Historical Software.10 release metadata only; not new QoL.1 runtime results.",
+                                                                  "parentScope": "Historical QoL.1 release metadata only; not new QoL.2 runtime results.",
                                                                   "limits": [
-                                                                    "This is the user-requested QoL speed feature, not a claim of exact original-game parity.",
+                                                                    "These are the six user-requested QoL features, not a claim of exact original-game parity.",
                                                                     "Focused production-method tests and build checks do not replace broad game or browser validation.",
-                                                                    "Earlier Software.10 results remain historical parent evidence only."
+                                                                    "Earlier QoL.1 results remain historical parent evidence only."
                                                                   ]
                                                                 },
-                                                                "parentScope": "Historical QoL.1 release metadata only; not new QoL.2 runtime results.",
+                                                                "parentScope": "Historical QoL.2 release metadata only; not new Content.1 runtime results.",
                                                                 "limits": [
-                                                                  "These are the six user-requested QoL features, not a claim of exact original-game parity.",
+                                                                  "Adds one optional bonus challenge; existing original-game parity limits remain unchanged.",
                                                                   "Focused production-method tests and build checks do not replace broad game or browser validation.",
-                                                                  "Earlier QoL.1 results remain historical parent evidence only."
+                                                                  "Earlier QoL.2 results remain historical parent evidence only."
                                                                 ]
                                                               },
-                                                              "parentScope": "Historical QoL.2 release metadata only; not new Content.1 runtime results.",
+                                                              "parentScope": "Historical Content.1 release metadata only; not new Polish.1 runtime results.",
                                                               "limits": [
-                                                                "Adds one optional bonus challenge; existing original-game parity limits remain unchanged.",
+                                                                "Simplifies native bonus/options/deck presentation; existing gameplay and parity limits remain unchanged.",
                                                                 "Focused production-method tests and build checks do not replace broad game or browser validation.",
-                                                                "Earlier QoL.2 results remain historical parent evidence only."
+                                                                "Earlier Content.1 results remain historical parent evidence only."
                                                               ]
                                                             },
-                                                            "parentScope": "Historical Content.1 release metadata only; not new Polish.1 runtime results.",
+                                                            "parentScope": "Historical Polish.1 release metadata only; not new Night.1 runtime results.",
                                                             "limits": [
-                                                              "Simplifies native bonus/options/deck presentation; existing gameplay and parity limits remain unchanged.",
+                                                              "Adds the optional Night Shift challenge using existing native plants, zombies and artwork; full original parity remains unverified.",
                                                               "Focused production-method tests and build checks do not replace broad game or browser validation.",
-                                                              "Earlier Content.1 results remain historical parent evidence only."
+                                                              "Earlier Polish.1 results remain historical parent evidence only."
                                                             ]
                                                           },
-                                                          "parentScope": "Historical Polish.1 release metadata only; not new Night.1 runtime results.",
+                                                          "parentScope": "Historical Night.1 release metadata only; not new Lantern.1 runtime results.",
                                                           "limits": [
-                                                            "Adds the optional Night Shift challenge using existing native plants, zombies and artwork; full original parity remains unverified.",
+                                                            "Adds Lantern-shroom and its optional Lantern Glow challenge; full original parity remains unverified.",
                                                             "Focused production-method tests and build checks do not replace broad game or browser validation.",
-                                                            "Earlier Polish.1 results remain historical parent evidence only."
+                                                            "Earlier Night.1 results remain historical parent evidence only."
                                                           ]
                                                         },
-                                                        "parentScope": "Historical Night.1 release metadata only; not new Lantern.1 runtime results.",
+                                                        "parentScope": "Historical Lantern.1 release metadata only; not new Lantern.2 runtime results.",
                                                         "limits": [
-                                                          "Adds Lantern-shroom and its optional Lantern Glow challenge; full original parity remains unverified.",
+                                                          "Revises Lantern-shroom art/animation and Bonus card presentation; full original parity remains unverified.",
                                                           "Focused production-method tests and build checks do not replace broad game or browser validation.",
-                                                          "Earlier Night.1 results remain historical parent evidence only."
+                                                          "Earlier Lantern.1 results remain historical parent evidence only."
                                                         ]
                                                       },
-                                                      "parentScope": "Historical Lantern.1 release metadata only; not new Lantern.2 runtime results.",
+                                                      "parentScope": "Historical Lantern.2 release metadata only; not new Chill.1 runtime results.",
                                                       "limits": [
-                                                        "Revises Lantern-shroom art/animation and Bonus card presentation; full original parity remains unverified.",
+                                                        "Redesigns Chill-shroom with a muzzle-free frost identity, phased radial attack and painted Bonus illustrations; full original parity remains unverified.",
                                                         "Focused production-method tests and build checks do not replace broad game or browser validation.",
-                                                        "Earlier Lantern.1 results remain historical parent evidence only."
+                                                        "Earlier Lantern.2 results remain historical parent evidence only."
                                                       ]
                                                     },
-                                                    "parentScope": "Historical Lantern.2 release metadata only; not new Chill.1 runtime results.",
+                                                    "parentScope": "Historical Chill.1 release metadata only; not new Chill.2 runtime results.",
                                                     "limits": [
-                                                      "Redesigns Chill-shroom with a muzzle-free frost identity, phased radial attack and painted Bonus illustrations; full original parity remains unverified.",
+                                                      "Uses original hand-drawn game artwork and centered native Bonus portraits; full original parity remains unverified.",
                                                       "Focused production-method tests and build checks do not replace broad game or browser validation.",
-                                                      "Earlier Lantern.2 results remain historical parent evidence only."
+                                                      "Earlier Chill.1 results remain historical parent evidence only; its generated artwork is superseded."
                                                     ]
                                                   },
-                                                  "parentScope": "Historical Chill.1 release metadata only; not new Chill.2 runtime results.",
+                                                  "parentScope": "Historical Chill.2 release metadata only; not new Chill.3 runtime results.",
                                                   "limits": [
-                                                    "Uses original hand-drawn game artwork and centered native Bonus portraits; full original parity remains unverified.",
+                                                    "Uses a distinct code-drawn vector Chill-shroom sprite and centered native Bonus portraits; full original parity remains unverified.",
                                                     "Focused production-method tests and build checks do not replace broad game or browser validation.",
-                                                    "Earlier Chill.1 results remain historical parent evidence only; its generated artwork is superseded."
+                                                    "Earlier results remain historical parent evidence only. No separately image-generated challenge illustrations are active."
                                                   ]
                                                 },
-                                                "parentScope": "Historical Chill.2 release metadata only; not new Chill.3 runtime results.",
+                                                "parentScope": "Historical Chill.3 release metadata only; not new Chill.4 runtime results.",
                                                 "limits": [
-                                                  "Uses a distinct code-drawn vector Chill-shroom sprite and centered native Bonus portraits; full original parity remains unverified.",
+                                                  "Uses a fuller shaded AI-assisted plant sprite and cap follow-through; native centered Bonus compositions remain. Full original parity remains unverified.",
                                                   "Focused production-method tests and build checks do not replace broad game or browser validation.",
                                                   "Earlier results remain historical parent evidence only. No separately image-generated challenge illustrations are active."
                                                 ]
                                               },
-                                              "parentScope": "Historical Chill.3 release metadata only; not new Chill.4 runtime results.",
+                                              "parentScope": "Historical Chill.4 release metadata only; not new Chill.5 runtime results.",
                                               "limits": [
-                                                "Uses a fuller shaded AI-assisted plant sprite and cap follow-through; native centered Bonus compositions remain. Full original parity remains unverified.",
+                                                "Uses the user-approved whole-character silhouette on one registered canvas; native timing and centered Bonus compositions remain. Full original parity remains unverified.",
                                                 "Focused production-method tests and build checks do not replace broad game or browser validation.",
                                                 "Earlier results remain historical parent evidence only. No separately image-generated challenge illustrations are active."
                                               ]
                                             },
-                                            "parentScope": "Historical Chill.4 release metadata only; not new Chill.5 runtime results.",
+                                            "parentScope": "Historical Chill.5 release metadata only; not new Chill.6 runtime results.",
                                             "limits": [
                                               "Uses the user-approved whole-character silhouette on one registered canvas; native timing and centered Bonus compositions remain. Full original parity remains unverified.",
                                               "Focused production-method tests and build checks do not replace broad game or browser validation.",
                                               "Earlier results remain historical parent evidence only. No separately image-generated challenge illustrations are active."
                                             ]
                                           },
-                                          "parentScope": "Historical Chill.5 release metadata only; not new Chill.6 runtime results.",
+                                          "parentScope": "Historical Chill.6 release metadata only; not new Chill.7 runtime results.",
                                           "limits": [
-                                            "Uses the user-approved whole-character silhouette on one registered canvas; native timing and centered Bonus compositions remain. Full original parity remains unverified.",
+                                            "Uses the user-approved whole-character artwork on one registered canvas; attack activation and visual timing are updated for this request. Centered Bonus compositions remain. Full original parity remains unverified.",
                                             "Focused production-method tests and build checks do not replace broad game or browser validation.",
                                             "Earlier results remain historical parent evidence only. No separately image-generated challenge illustrations are active."
                                           ]
                                         },
-                                        "parentScope": "Historical Chill.6 release metadata only; not new Chill.7 runtime results.",
+                                        "parentScope": "Historical Chill.7 release metadata only; not new Chill.8 runtime results.",
                                         "limits": [
-                                          "Uses the user-approved whole-character artwork on one registered canvas; attack activation and visual timing are updated for this request. Centered Bonus compositions remain. Full original parity remains unverified.",
+                                          "Three native bonus minigames replace fresh fixed-bank challenges; old checkpoints retain their historical rules. The accepted artwork and original IDs/save layouts remain. Full original parity remains unverified.",
                                           "Focused production-method tests and build checks do not replace broad game or browser validation.",
                                           "Earlier results remain historical parent evidence only. No separately image-generated challenge illustrations are active."
                                         ]
                                       },
-                                      "parentScope": "Historical Chill.7 release metadata only; not new Chill.8 runtime results.",
+                                      "parentScope": "Historical Chill.8 release metadata only; not new Chill.9 runtime results.",
                                       "limits": [
                                         "Three native bonus minigames replace fresh fixed-bank challenges; old checkpoints retain their historical rules. The accepted artwork and original IDs/save layouts remain. Full original parity remains unverified.",
                                         "Focused production-method tests and build checks do not replace broad game or browser validation.",
                                         "Earlier results remain historical parent evidence only. No separately image-generated challenge illustrations are active."
                                       ]
                                     },
-                                    "parentScope": "Historical Chill.8 release metadata only; not new Chill.9 runtime results.",
+                                    "parentScope": "Historical Chill.9 release metadata only; not new Garden.1 runtime results.",
                                     "limits": [
-                                      "Three native bonus minigames replace fresh fixed-bank challenges; old checkpoints retain their historical rules. The accepted artwork and original IDs/save layouts remain. Full original parity remains unverified.",
+                                      "Four native bonus minigames include Garden Shuffle; earlier checkpoints retain their historical rules. Accepted artwork, original IDs and serialized layouts remain. Full original parity remains unverified.",
                                       "Focused production-method tests and build checks do not replace broad game or browser validation.",
                                       "Earlier results remain historical parent evidence only. No separately image-generated challenge illustrations are active."
                                     ]
                                   },
-                                  "parentScope": "Historical Chill.9 release metadata only; not new Garden.1 runtime results.",
+                                  "parentScope": "Historical Garden.1 release metadata only; not new SeedSwap.1 runtime results.",
                                   "limits": [
-                                    "Four native bonus minigames include Garden Shuffle; earlier checkpoints retain their historical rules. Accepted artwork, original IDs and serialized layouts remain. Full original parity remains unverified.",
+                                    "Five native bonus minigames include Seed Swap; earlier checkpoints retain their historical rules. Accepted artwork, original IDs and serialized layouts remain. Full original parity remains unverified.",
                                     "Focused production-method tests and build checks do not replace broad game or browser validation.",
                                     "Earlier results remain historical parent evidence only. No separately image-generated challenge illustrations are active."
                                   ]
                                 },
-                                "parentScope": "Historical Garden.1 release metadata only; not new SeedSwap.1 runtime results.",
+                                "parentScope": "Historical SeedSwap.1 release metadata only; not new Mender.1 runtime results.",
                                 "limits": [
-                                  "Five native bonus minigames include Seed Swap; earlier checkpoints retain their historical rules. Accepted artwork, original IDs and serialized layouts remain. Full original parity remains unverified.",
+                                  "Mender-bloom unlocks after Seed Swap; Mender-bloom and Chill-shroom have native Almanac entries. All five existing bonus minigames, original IDs and serialized layouts remain. Full original parity remains unverified.",
                                   "Focused production-method tests and build checks do not replace broad game or browser validation.",
                                   "Earlier results remain historical parent evidence only. No separately image-generated challenge illustrations are active."
                                 ]
                               },
-                              "parentScope": "Historical SeedSwap.1 release metadata only; not new Mender.1 runtime results.",
+                              "parentScope": "Historical Mender.1 release metadata only; not new Mender.2 runtime results.",
                               "limits": [
                                 "Mender-bloom unlocks after Seed Swap; Mender-bloom and Chill-shroom have native Almanac entries. All five existing bonus minigames, original IDs and serialized layouts remain. Full original parity remains unverified.",
                                 "Focused production-method tests and build checks do not replace broad game or browser validation.",
                                 "Earlier results remain historical parent evidence only. No separately image-generated challenge illustrations are active."
                               ]
                             },
-                            "parentScope": "Historical Mender.1 release metadata only; not new Mender.2 runtime results.",
+                            "parentScope": "Historical Mender.2 release metadata only; not new Mender.3 runtime results.",
                             "limits": [
                               "Mender-bloom unlocks after Seed Swap; Mender-bloom and Chill-shroom have native Almanac entries. All five existing bonus minigames, original IDs and serialized layouts remain. Full original parity remains unverified.",
                               "Focused production-method tests and build checks do not replace broad game or browser validation.",
                               "Earlier results remain historical parent evidence only. No separately image-generated challenge illustrations are active."
                             ]
                           },
-                          "parentScope": "Historical Mender.2 release metadata only; not new Mender.3 runtime results.",
+                          "parentScope": "Historical Mender.3 release metadata only; not new Care.1 runtime results.",
                           "limits": [
-                            "Mender-bloom unlocks after Seed Swap; Mender-bloom and Chill-shroom have native Almanac entries. All five existing bonus minigames, original IDs and serialized layouts remain. Full original parity remains unverified.",
+                            "Mender-bloom unlocks after Seed Swap; Mender-bloom and Chill-shroom have native Almanac entries. All five existing bonus minigames, original IDs and serialized layouts remain; Intensive Lawn Care is appended as mode 78. Full original parity remains unverified.",
                             "Focused production-method tests and build checks do not replace broad game or browser validation.",
                             "Earlier results remain historical parent evidence only. No separately image-generated challenge illustrations are active."
                           ]
                         },
-                        "parentScope": "Historical Mender.3 release metadata only; not new Care.1 runtime results.",
+                        "parentScope": "Historical Care.1 release metadata only; not new Care.2 runtime results.",
                         "limits": [
                           "Mender-bloom unlocks after Seed Swap; Mender-bloom and Chill-shroom have native Almanac entries. All five existing bonus minigames, original IDs and serialized layouts remain; Intensive Lawn Care is appended as mode 78. Full original parity remains unverified.",
                           "Focused production-method tests and build checks do not replace broad game or browser validation.",
                           "Earlier results remain historical parent evidence only. No separately image-generated challenge illustrations are active."
                         ]
                       },
-                      "parentScope": "Historical Care.1 release metadata only; not new Care.2 runtime results.",
+                      "parentScope": "Historical Care.2 release metadata only; not new Care.3 runtime results.",
                       "limits": [
                         "Mender-bloom unlocks after Seed Swap; Mender-bloom and Chill-shroom have native Almanac entries. All five existing bonus minigames, original IDs and serialized layouts remain; Intensive Lawn Care is appended as mode 78. Full original parity remains unverified.",
                         "Focused production-method tests and build checks do not replace broad game or browser validation.",
                         "Earlier results remain historical parent evidence only. No separately image-generated challenge illustrations are active."
                       ]
                     },
-                    "parentScope": "Historical Care.2 release metadata only; not new Care.3 runtime results.",
+                    "parentScope": "Historical Care.3 release metadata only; not new Chain.1 runtime results.",
                     "limits": [
-                      "Mender-bloom unlocks after Seed Swap; Mender-bloom and Chill-shroom have native Almanac entries. All five existing bonus minigames, original IDs and serialized layouts remain; Intensive Lawn Care is appended as mode 78. Full original parity remains unverified.",
+                      "Mender-bloom unlocks after Seed Swap; Mender-bloom and Chill-shroom have native Almanac entries. All six existing bonus minigames, original IDs and serialized layouts remain; Chain Reaction is appended as mode 79. Full original parity remains unverified.",
                       "Focused production-method tests and build checks do not replace broad game or browser validation.",
                       "Earlier results remain historical parent evidence only. No separately image-generated challenge illustrations are active."
                     ]
                   },
-                  "parentScope": "Historical Care.3 release metadata only; not new Chain.1 runtime results.",
+                  "parentScope": "Historical Chain.1 release metadata only; not new Rally.1 runtime results.",
                   "limits": [
-                    "Mender-bloom unlocks after Seed Swap; Mender-bloom and Chill-shroom have native Almanac entries. All six existing bonus minigames, original IDs and serialized layouts remain; Chain Reaction is appended as mode 79. Full original parity remains unverified.",
+                    "Mender-bloom unlocks after Seed Swap; Mender-bloom and Chill-shroom have native Almanac entries. All seven existing bonus minigames, original IDs and serialized layouts remain; Rally Point is appended as mode 80 and Rally Zombie as type 33. Full original parity remains unverified.",
                     "Focused production-method tests and build checks do not replace broad game or browser validation.",
                     "Earlier results remain historical parent evidence only. No separately image-generated challenge illustrations are active."
                   ]
                 },
-                "parentScope": "Historical Chain.1 release metadata only; not new Rally.1 runtime results.",
+                "parentScope": "Historical Rally.1 release metadata only; not new Rally.2 runtime results.",
                 "limits": [
                   "Mender-bloom unlocks after Seed Swap; Mender-bloom and Chill-shroom have native Almanac entries. All seven existing bonus minigames, original IDs and serialized layouts remain; Rally Point is appended as mode 80 and Rally Zombie as type 33. Full original parity remains unverified.",
                   "Focused production-method tests and build checks do not replace broad game or browser validation.",
                   "Earlier results remain historical parent evidence only. No separately image-generated challenge illustrations are active."
                 ]
               },
-              "parentScope": "Historical Rally.1 release metadata only; not new Rally.2 runtime results.",
+              "parentScope": "Historical Rally.2 release metadata only; not new Rally.3 runtime results.",
               "limits": [
                 "Mender-bloom unlocks after Seed Swap; Mender-bloom and Chill-shroom have native Almanac entries. All seven existing bonus minigames, original IDs and serialized layouts remain; Rally Point is appended as mode 80 and Rally Zombie as type 33. Full original parity remains unverified.",
                 "Focused production-method tests and build checks do not replace broad game or browser validation.",
                 "Earlier results remain historical parent evidence only. No separately image-generated challenge illustrations are active."
               ]
             },
-            "parentScope": "Historical Rally.2 release metadata only; not new Rally.3 runtime results.",
+            "parentScope": "Historical Rally.3 release metadata only; not new Rally Raid runtime results.",
             "limits": [
-              "Mender-bloom unlocks after Seed Swap; Mender-bloom and Chill-shroom have native Almanac entries. All seven existing bonus minigames, original IDs and serialized layouts remain; Rally Point is appended as mode 80 and Rally Zombie as type 33. Full original parity remains unverified.",
+              "Mender-bloom unlocks after Seed Swap; Mender-bloom and Chill-shroom have native Almanac entries. All eight existing bonus minigames, original IDs and serialized layouts remain. Rally Raid appends mode 81 and zombie packet 77 outside the original plant/cache/chooser ranges. Full original parity remains unverified.",
               "Focused production-method tests and build checks do not replace broad game or browser validation.",
               "Earlier results remain historical parent evidence only. No separately image-generated challenge illustrations are active."
             ]
           },
-          "parentScope": "Historical Rally.3 release metadata only; not new Rally Raid runtime results.",
+          "parentScope": "Historical Raid.1 release metadata only; current native and browser results are recorded separately.",
           "limits": [
-            "Mender-bloom unlocks after Seed Swap; Mender-bloom and Chill-shroom have native Almanac entries. All eight existing bonus minigames, original IDs and serialized layouts remain. Rally Raid appends mode 81 and zombie packet 77 outside the original plant/cache/chooser ranges. Full original parity remains unverified.",
+            "All nine Bonus minigames, accepted plant artwork, authored boards, budgets, original IDs, unlock rules and serialized layouts remain unchanged. Rally Raid restores the original I, Zombie bank/control and packet-effect routing without moving or resizing actors or controls. Full original parity remains unverified.",
             "Focused production-method tests and build checks do not replace broad game or browser validation.",
             "Earlier results remain historical parent evidence only. No separately image-generated challenge illustrations are active."
           ]
         },
-        "parentScope": "Historical Raid.1 release metadata only; current native and browser results are recorded separately.",
+        "parentScope": "Historical Raid.2 release metadata only; current native and browser results are recorded separately.",
         "limits": [
-          "All nine Bonus minigames, accepted plant artwork, authored boards, budgets, original IDs, unlock rules and serialized layouts remain unchanged. Rally Raid restores the original I, Zombie bank/control and packet-effect routing without moving or resizing actors or controls. Full original parity remains unverified.",
+          "All nine Bonus minigames, accepted plant artwork, native I, Zombie UI routing, authored boards, budgets, combat, original IDs, unlock rules and serialized layouts remain unchanged. Rally Raid custom defenders use their existing current live rigs through the original cardboard passes, without new animation clocks or per-frame image buffers. Full original parity remains unverified.",
           "Focused production-method tests and build checks do not replace broad game or browser validation.",
           "Earlier results remain historical parent evidence only. No separately image-generated challenge illustrations are active."
         ]
       },
-      "parentScope": "Historical Raid.2 release metadata only; current native and browser results are recorded separately.",
+      "parentScope": "Historical Raid.3 release metadata only; current native and browser results are recorded separately.",
       "limits": [
-        "All nine Bonus minigames, accepted plant artwork, native I, Zombie UI routing, authored boards, budgets, combat, original IDs, unlock rules and serialized layouts remain unchanged. Rally Raid custom defenders use their existing current live rigs through the original cardboard passes, without new animation clocks or per-frame image buffers. Full original parity remains unverified.",
+        "All nine Bonus minigames, accepted plant artwork, content metadata, native I, Zombie UI routing, authored boards, budgets, combat, original IDs, unlock rules and serialized layouts remain unchanged. Chill-shroom holds a still open-eyed cardboard idle in Rally Raid while its existing attacks remain live. Shared normal-mode idle, Mender behavior, animation clocks and image caches are unchanged. Full original parity remains unverified.",
         "Focused production-method tests and build checks do not replace broad game or browser validation.",
         "Earlier results remain historical parent evidence only. No separately image-generated challenge illustrations are active."
       ]
     },
-    "parentScope": "Historical Raid.3 release metadata only; current native and browser results are recorded separately.",
+    "parentScope": "Historical Raid.4 release metadata only; current native and browser results are recorded separately.",
     "limits": [
-      "All nine Bonus minigames, accepted plant artwork, content metadata, native I, Zombie UI routing, authored boards, budgets, combat, original IDs, unlock rules and serialized layouts remain unchanged. Chill-shroom holds a still open-eyed cardboard idle in Rally Raid while its existing attacks remain live. Shared normal-mode idle, Mender behavior, animation clocks and image caches are unchanged. Full original parity remains unverified.",
+      "Rally Raid now refreshes actual native walking animation speed when rally boosts start and end, matching the existing Rally Point path. All nine Bonus minigames, accepted artwork, native UI, authored boards, budgets, IDs, unlock rules and serialized layouts remain unchanged. Shared custom-plant behavior and the accepted I, Zombie idle/attack correction remain exact. Full original parity remains unverified.",
       "Focused production-method tests and build checks do not replace broad game or browser validation.",
       "Earlier results remain historical parent evidence only. No separately image-generated challenge illustrations are active."
     ]
   },
-  "parentScope": "Historical Raid.4 release metadata only; current native and browser results are recorded separately.",
+  "parentScope": "Historical Raid.5 release metadata only; current native and browser results are recorded separately.",
   "limits": [
-    "Rally Raid now refreshes actual native walking animation speed when rally boosts start and end, matching the existing Rally Point path. All nine Bonus minigames, accepted artwork, native UI, authored boards, budgets, IDs, unlock rules and serialized layouts remain unchanged. Shared custom-plant behavior and the accepted I, Zombie idle/attack correction remain exact. Full original parity remains unverified.",
+    "Lights Out is the tenth Bonus minigame. It uses original Plantern/fog artwork and native glove controls with a fixed garden. Earlier minigames, accepted plant artwork, original mode IDs, unlock rules and serialized object layouts are preserved. Full original parity remains unverified.",
     "Focused production-method tests and build checks do not replace broad game or browser validation.",
     "Earlier results remain historical parent evidence only. No separately image-generated challenge illustrations are active."
   ]

@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-raid.5
-Refreshes Rally Raid native walking speed when rally boosts begin and end. Adds complete-engine custom-content consistency controls for native animation, Almanac layout, pause and save/Continue while retaining the accepted artwork, original UI, puzzle layouts, budgets, IDs and serialized layouts.
-Engine JavaScript SHA-256: 177823909de86b31cb07f208cea136ab9263f17417d5d498d247e41d3d0c06a0
-Engine WASM SHA-256: ad543d5bc6056486ce7bcc413b3a849913647714d25925f245b967fe5bc6f951
+PvZ-Portable 0.2.6-web-lights.1
+Adds Lights Out: one movable native Plantern powers nearby fixed defenses through readable original fog, with eight authored waves and native glove controls. Existing mode IDs, saved object layouts, previous minigames and accepted plant artwork are preserved.
+Engine JavaScript SHA-256: b4218af945ccc0521b19d1683884fa9bb3cfd53c5e0e0dff48c883b63723a6fc
+Engine WASM SHA-256: 4b8e06730872ee43e1935b972eb423e7909ba6bf5badc42590079b52107dc61f
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.

@@ -44,11 +44,11 @@ function body(text, signature) {
 export async function verifyRallyRaid({report, read, sha, engine, fullRunReport, productionBuildBytes}) {
   assert.equal(report.execution,'complete-production-engine');
   assert.equal(report.optimization,'O2','Development probes cannot satisfy the Raid release matrix');
-  assert.equal(report.productionObjectCount,122);
-  assert.equal(Object.keys(report.sourceSha256).length,828);
+  assert.equal(report.productionObjectCount,124);
+  assert.equal(Object.keys(report.sourceSha256).length,832);
   assert.deepEqual(report.sourceSha256,fullRunReport.sourceSha256);
   assert.deepEqual(report.productionObjectSha256,fullRunReport.productionObjectSha256,
-    'All complete-engine suites use the same 122 unchanged normal release objects');
+    'All complete-engine suites use the same 124 normal release objects');
   assert.equal(report.productionBuildReceiptSha256,sha(productionBuildBytes));
   const artifacts=['rally-raid-engine.js','rally-raid-engine.wasm'];
   assert.deepEqual(Object.keys(report.testArtifactSha256).sort(),artifacts);
@@ -147,7 +147,7 @@ export async function verifyRallyRaid({report, read, sha, engine, fullRunReport,
     assert.equal(pair.length,2);
     for(const field of fields) assert.deepEqual(pair[0][field],pair[1][field],'Actual 1x/2x Raid parity: '+parity.name+'/'+field);
   }
-  assert.equal(report.checks,828+report.scenarios.reduce((sum,result)=>sum+result.checks,0)+report.speedParity.length);
+  assert.equal(report.checks,832+report.scenarios.reduce((sum,result)=>sum+result.checks,0)+report.speedParity.length);
 
   // Packet77 follows the native zombie mapping/cache/cost path. These source
   // checks accompany actual native packet/lawn clicks in the complete driver.
