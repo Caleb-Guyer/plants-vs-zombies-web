@@ -1,5 +1,14 @@
 # Browser parity and QA record
 
+## Bungee.1 - heists, budgets and native controls
+
+The new complete-engine matrix covers two seeds at1x/2x, actual packet/lawn input, native protection clearing, Bungee departures, budgets, target-loss failure, checkpoints, Retry, awards and fresh replay. Synthetic lifecycle and UI controls are separate from earned battles and grant no completion credit. Checkpoint comparisons cover observed actor fields and animation clocks rather than claiming every serialized holder byte was compared. Original sprite inputs authenticate the thumbnail, native bank, plant/zombie rigs and fonts. Offscreen MemoryImage exports establish native layout only; browser rendering is checked separately. Previous Garlic Run, Lights Out, I, Zombie presentation and all other retained regression checks remain release gates.
+
+The final Bungee Business matrix passes 704,876 assertions in24cases and twelve speed pairs. It distinguishes primary five-board wins, additional full five-board replays, genuine bad-plan losses and isolated controls. These bounded checks do not certify exhaustive original-game parity or browser frame timing.
+
+All twenty muted native suites passed: 4,125,933 checks and zero failures. All fifteen browser integration suites passed, and muted browser inspection completed for this engine. These exact artifacts are prepared for GitHub Pages publication.
+
+
 ## Garlic.1 - routing, saves and presentation checks
 
 The new complete-engine suite runs 24 cases and twelve speed pairs across two RNG seeds at1x/2x. Sixteen primary five-board wins and four additional full five-board replays are separate from four genuine unattended losses and four isolated native controls. Winning runs use actual glove/lawn/Start inputs, native enemy diversions, Spikeweed damage, mine arming/explosions and final awards. Planning and active-combat checkpoints preserve the observed actor fields and animation clocks, including identity, health, location, mine fuses and Garlic gross-out state. Retry starts the current puzzle; a fresh Bonus-card replay starts board one. Controls verify legal/invalid moves, cancellation, actor identity, cooldown, Pause, original-mode isolation, actual glove hover/font bounds and original software glove pixels. Fifty-one original artwork inputs are authenticated. Offscreen MemoryImage exports establish native layout only; browser rendering is checked separately.

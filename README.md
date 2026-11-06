@@ -1,5 +1,12 @@
 # Plants vs. Zombies — browser playtest
 
+## Bungee.1 - Bungee Business
+
+`0.2.6-web-bungee.1` adds Bungee Business to the Bonus page: five finite heist puzzles using the original I, Zombie controls. Spend each board's fixed sun budget to clear Umbrella-leaf protection, then send native Bungee Zombies to carry away the Sunflowers. Later layouts include protected lanes, a Pole Vaulting Zombie route over a Wall-nut, and three targets. Only actual completed Bungee departures count as thefts; eating or destroying a target fails the board. Only the fifth clear grants the normal native completion award.
+
+All twenty muted native suites passed: 4,125,933 checks and zero failures. All fifteen browser integration suites passed, and muted browser inspection completed for this engine. These exact artifacts are prepared for GitHub Pages publication.
+
+
 ## Garlic.1 - Garlic Run
 
 `0.2.6-web-garlic.1` adds Garlic Run to the Bonus page: five short day-lawn routing puzzles. Move Garlic with the native glove, then press the native Let's Rock button. Steer approaching zombies through Spikeweed corridors and normally armed Potato Mines. Later boards need two routes or a Garlic relay. Original Garlic health, random diversion, Spikeweed damage and mine fuse rules remain intact. Setup holds zombies and mine fuses; active play uses native combat. Only the fifth clear grants the normal native completion award.

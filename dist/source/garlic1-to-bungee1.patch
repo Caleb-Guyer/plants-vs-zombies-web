@@ -1,0 +1,775 @@
+diff --git a/CMake/ProjectVersion.cmake b/CMake/ProjectVersion.cmake
+index 8f1e37ff8e09ebc94695cfae4b1cd7e765fd172a..8aae986e95d10e7d69401e515e2018ec5dc32e69 100644
+--- a/CMake/ProjectVersion.cmake
++++ b/CMake/ProjectVersion.cmake
+@@ -66,6 +66,6 @@ if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
+ endif()
+ 
+ # Browser release identity; keep binary and corresponding-source manifests aligned.
+-set(PVZP_VERSION "0.2.6-web-garlic.1")
++set(PVZP_VERSION "0.2.6-web-bungee.1")
+ set(PVZP_VERSION_PLAIN "0.2.6")
+ configure_file("${PROJECT_SOURCE_DIR}/CMake/ProjectVersion.h.in" "${PROJECT_BINARY_DIR}/ProjectVersion.h" @ONLY)
+diff --git a/src/ConstEnums.h b/src/ConstEnums.h
+index c3705dd7009bff3e3830ee3fb9ca0b41d935881a..76ce64bc0a8dfda813e7be2ce27b355447a8d9db 100644
+--- a/src/ConstEnums.h
++++ b/src/ConstEnums.h
+@@ -463,7 +463,8 @@ enum GameMode : int32_t
+ 	GAMEMODE_CHALLENGE_RALLY_RAID = 81,
+ 	GAMEMODE_CHALLENGE_LIGHTS_OUT = 82,
+ 	GAMEMODE_CHALLENGE_GARLIC_RUN = 83,
+-	NUM_GAME_MODES = 84
++	GAMEMODE_CHALLENGE_BUNGEE_BUSINESS = 84,
++	NUM_GAME_MODES = 85
+ };
+ enum GameObjectType : int32_t
+ {
+diff --git a/src/Lawn/Board.cpp b/src/Lawn/Board.cpp
+index de9cab3ea89dbf9965e53191ff1a98ed2d954410..db0a4e8e24383eff12b0a60dc3558aaa8f4f7c1f 100644
+--- a/src/Lawn/Board.cpp
++++ b/src/Lawn/Board.cpp
+@@ -1390,7 +1390,7 @@ void Board::InitLevel()
+     // A fresh game opts into the new mechanics. Loaded revision-1 checkpoints
+     // never pass through InitLevel and keep their original state and rules.
+     if (BonusChallenge::IsMode(aGameMode))
+-        mChallenge->mChallengeState = GarlicRun::IsMode(aGameMode) ? GarlicRun::kPlanning : LightsOut::IsMode(aGameMode) ? LightsOut::kState : RallyRaid::IsMode(aGameMode) ? RallyRaid::kActive :
++        mChallenge->mChallengeState = BungeeBusiness::IsMode(aGameMode) ? BungeeBusiness::kActive : GarlicRun::IsMode(aGameMode) ? GarlicRun::kPlanning : LightsOut::IsMode(aGameMode) ? LightsOut::kState : RallyRaid::IsMode(aGameMode) ? RallyRaid::kActive :
+             RallyZombie::IsMode(aGameMode) ? RallyZombie::kState :
+             ChainReaction::IsMode(aGameMode) ? ChainReaction::kPlanning :
+             IntensiveCare::IsMode(aGameMode) ? IntensiveCare::kState :
+@@ -1611,7 +1611,7 @@ Reanimation* Board::CreateRakeReanim(float theRakeX, float theRakeY, int theRend
+ 
+ void Board::PlaceRake()
+ {
+-    if (ChainReaction::IsMode(mApp->mGameMode) || GarlicRun::IsMode(mApp->mGameMode)) return;
++    if (BungeeBusiness::IsMode(mApp->mGameMode) || ChainReaction::IsMode(mApp->mGameMode) || GarlicRun::IsMode(mApp->mGameMode)) return;
+     if (LightsOut::IsMode(mApp->mGameMode) || GardenShuffle::IsMode(mApp->mGameMode) || SeedSwap::IsMode(mApp->mGameMode) || IntensiveCare::IsMode(mApp->mGameMode)) return;
+ 	if (!mApp->mPlayerInfo->mPurchases[StoreItem::STORE_ITEM_RAKE])
+ 		return;
+@@ -7175,7 +7175,7 @@ void Board::DrawGameObjects(Graphics* g)
+ 
+ bool Board::HasProgressMeter()
+ {
+-    if (ChainReaction::IsMode(mApp->mGameMode) || GarlicRun::IsMode(mApp->mGameMode)) return false;
++    if (BungeeBusiness::IsMode(mApp->mGameMode) || ChainReaction::IsMode(mApp->mGameMode) || GarlicRun::IsMode(mApp->mGameMode)) return false;
+ 	if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED ||
+ 		mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED_TWIST ||
+ 		mApp->IsFinalBossLevel() ||
+@@ -7328,7 +7328,11 @@ void Board::DrawLevel(Graphics* g)
+ 	else
+ 	{
+ 		aLevelStr = mApp->GetCurrentChallengeDef().mChallengeName;
+-		if (GarlicRun::IsMode(mApp->mGameMode))
++		if (BungeeBusiness::IsMode(mApp->mGameMode))
++        {
++            aLevelStr = BungeeBusiness::LevelLabel(mChallenge->mSurvivalStage);
++        }
++		else if (GarlicRun::IsMode(mApp->mGameMode))
+         {
+             aLevelStr = GarlicRun::LevelLabel(mChallenge->mSurvivalStage);
+         }
+@@ -7367,7 +7371,7 @@ void Board::DrawLevel(Graphics* g)
+ 
+ 	int aPosX = 780;
+ 	int aPosY = 595;
+-    if (RallyRaid::IsMode(mApp->mGameMode)) aPosY = 592;
++    if (BungeeBusiness::IsMode(mApp->mGameMode) || RallyRaid::IsMode(mApp->mGameMode)) aPosY = 592;
+ 	if (HasProgressMeter())
+ 	{
+ 		aPosX = 593;
+@@ -9935,7 +9939,7 @@ void Board::DropLootPiece(int thePosX, int thePosY, int theDropFactor)
+ 
+ bool Board::CanDropLoot()
+ {
+-	if (ChainReaction::IsMode(mApp->mGameMode) || RallyRaid::IsMode(mApp->mGameMode) || GarlicRun::IsMode(mApp->mGameMode)) return false;
++	if (BungeeBusiness::IsMode(mApp->mGameMode) || ChainReaction::IsMode(mApp->mGameMode) || RallyRaid::IsMode(mApp->mGameMode) || GarlicRun::IsMode(mApp->mGameMode)) return false;
+ 	return !mCutScene->ShouldRunUpsellBoard() && (!mApp->IsFirstTimeAdventureMode() || mLevel >= 11);
+ }
+ 
+diff --git a/src/Lawn/Challenge.cpp b/src/Lawn/Challenge.cpp
+index da3dc817224dab49513e28066858119466b15d55..fc478bba48e5cc1bfc476273b542c775363c73fb 100644
+--- a/src/Lawn/Challenge.cpp
++++ b/src/Lawn/Challenge.cpp
+@@ -120,6 +120,11 @@ void Challenge::LoadBeghouledBoardState(BeghouledBoardState* theBoardState)
+ 
+ void Challenge::InitLevel()
+ {
++    if (BungeeBusiness::IsMode(mApp->mGameMode))
++    {
++        BungeeBusiness::Populate(*mBoard);
++        return;
++    }
+     if (GarlicRun::IsMode(mApp->mGameMode))
+     {
+         GarlicRun::Populate(*mBoard);
+@@ -2104,6 +2109,11 @@ void Challenge::Update()
+ 	if (mApp->mGameScene != SCENE_PLAYING && mApp->mGameMode != GAMEMODE_TREE_OF_WISDOM)
+ 		return;
+ 
++    if (BungeeBusiness::IsMode(mApp->mGameMode))
++    {
++        BungeeBusiness::Update(*mBoard);
++        return;
++    }
+     if (RallyRaid::IsMode(mApp->mGameMode))
+     {
+         RallyRaid::Update(*mBoard);
+@@ -2395,7 +2405,7 @@ void Challenge::DrawBackdrop(Graphics* g)
+ 	{
+ 		g->DrawImage(Sexy::IMAGE_WALLNUT_BOWLINGSTRIPE, 352, 73);
+ 	}
+-	if (mApp->mGameMode == GAMEMODE_PUZZLE_I_ZOMBIE_6 || mApp->mGameMode == GAMEMODE_PUZZLE_I_ZOMBIE_7 || mApp->mGameMode == GAMEMODE_PUZZLE_I_ZOMBIE_8 ||
++	if (BungeeBusiness::IsMode(mApp->mGameMode) || mApp->mGameMode == GAMEMODE_PUZZLE_I_ZOMBIE_6 || mApp->mGameMode == GAMEMODE_PUZZLE_I_ZOMBIE_7 || mApp->mGameMode == GAMEMODE_PUZZLE_I_ZOMBIE_8 ||
+ 		mApp->mGameMode == GAMEMODE_PUZZLE_I_ZOMBIE_ENDLESS)
+ 	{
+ 		g->DrawImage(Sexy::IMAGE_WALLNUT_BOWLINGSTRIPE, 432, 73);
+@@ -2431,6 +2441,8 @@ void Challenge::PlantAdded(Plant* thePlant)
+ 
+ PlantingReason Challenge::CanPlantAt(int theGridX, int theGridY, SeedType theSeedType)
+ {
++    if (BungeeBusiness::IsMode(mApp->mGameMode))
++        return BungeeBusiness::CanDeploy(*mBoard, theGridX, theGridY, theSeedType) ? PLANTING_OK : PLANTING_NOT_HERE;
+ 	if (mApp->IsWallnutBowlingLevel())
+ 	{
+ 		return theGridX > 2 ? PLANTING_NOT_PASSED_LINE : PLANTING_OK;
+@@ -4314,6 +4326,11 @@ void Challenge::IZombieMouseDownWithZombie(int theX, int theY, int theClickCount
+ 		int aGridY = mBoard->PlantingPixelToGridY(theX, theY, aSeedType);
+ 		if (aGridX != -1 && aGridY != -1 && theClickCount)
+ 		{
++			if (BungeeBusiness::IsMode(mApp->mGameMode) && !BungeeBusiness::CanDeploy(*mBoard, aGridX, aGridY, aSeedType))
++			{
++				mApp->PlaySample(SOUND_BUZZER);
++				return;
++			}
+ 			if (CanPlantAt(aGridX, aGridY, aSeedType) == PLANTING_OK)
+ 			{
+ 				if (mApp->mEasyPlantingCheat || mBoard->TakeSunMoney(mBoard->GetCurrentPlantCost(aSeedType, SEED_NONE)))
+@@ -4667,6 +4684,11 @@ void Challenge::IZombieInitLevel()
+ 
+ void Challenge::IZombieStart()
+ {
++    if (BungeeBusiness::IsMode(mApp->mGameMode))
++    {
++        mBoard->DisplayAdvice("Steal every Sunflower.", MESSAGE_STYLE_HINT_FAST, ADVICE_NONE);
++        return;
++    }
+ 	mBoard->DisplayAdvice("[ADVICE_I_ZOMBIE_EAT_ALL_BRAINS]", MESSAGE_STYLE_HINT_FAST, ADVICE_I_ZOMBIE_EAT_ALL_BRAINS);
+ }
+ 
+@@ -4874,6 +4896,7 @@ int Challenge::IZombieEatBrain(Zombie* theZombie)
+ 
+ void Challenge::IZombiePlantDropRemainingSun(Plant* thePlant)
+ {
++    if (BungeeBusiness::IsMode(mApp->mGameMode)) return;
+ 	if (thePlant->mSeedType == SEED_SUNFLOWER)
+ 	{
+ 		int aSunCount = thePlant->mPlantHealth / 40 + 1;
+diff --git a/src/Lawn/System/BonusChallenge.h b/src/Lawn/System/BonusChallenge.h
+index 2ca216f5c66891ba7f92160c72d802e56756c219..9e5875aeb6deb0dcd0cc6c7d12972e096de318bd 100644
+--- a/src/Lawn/System/BonusChallenge.h
++++ b/src/Lawn/System/BonusChallenge.h
+@@ -12,6 +12,7 @@
+ #include "RallyRaid.h"
+ #include "LightsOut.h"
+ #include "GarlicRun.h"
++#include "BungeeBusiness.h"
+ #include <array>
+ #include <cstddef>
+ #include <string_view>
+@@ -53,7 +54,7 @@ inline constexpr std::array<Wave, kWaveCount> kWaves = {{
+     {2, 6, 0, 2}, {2, 5, 2, 2}, {2, 6, 0, 3}, {3, 7, 2, 3}
+ }};
+ 
+-constexpr bool IsMode(GameMode mode) { return GarlicRun::IsMode(mode) || LightsOut::IsMode(mode) || mode == kMode || NightShift::IsMode(mode) || LanternGlow::IsMode(mode) || GardenShuffle::IsMode(mode) || SeedSwap::IsMode(mode) || IntensiveCare::IsMode(mode) || ChainReaction::IsMode(mode) || RallyZombie::IsMode(mode) || RallyRaid::IsMode(mode); }
++constexpr bool IsMode(GameMode mode) { return BungeeBusiness::IsMode(mode) || GarlicRun::IsMode(mode) || LightsOut::IsMode(mode) || mode == kMode || NightShift::IsMode(mode) || LanternGlow::IsMode(mode) || GardenShuffle::IsMode(mode) || SeedSwap::IsMode(mode) || IntensiveCare::IsMode(mode) || ChainReaction::IsMode(mode) || RallyZombie::IsMode(mode) || RallyRaid::IsMode(mode); }
+ constexpr bool IsFlagWave(int wave) { return wave >= 0 && wave < kWaveCount && (wave + 1) % 10 == 0; }
+ constexpr int ZombieCount(int wave)
+ {
+@@ -103,12 +104,13 @@ void FillSeedBank(Bank& bank)
+ }
+ 
+ // Shared routing keeps the original Cone Zone data and helpers unchanged.
+-constexpr int StartingSun(GameMode mode) { return GarlicRun::IsMode(mode) ? 0 : LightsOut::IsMode(mode) ? 0 : RallyRaid::IsMode(mode) ? RallyRaid::kBoards[0].mSun : RallyZombie::IsMode(mode) ? RallyZombie::kStartingSun : ChainReaction::IsMode(mode) ? 0 : IntensiveCare::IsMode(mode) ? 0 : SeedSwap::IsMode(mode) ? 0 : GardenShuffle::IsMode(mode) ? 0 : LanternGlow::IsMode(mode) ? LanternGlow::kStartingSun : NightShift::IsMode(mode) ? NightShift::kStartingSun : kStartingSun; }
+-constexpr int SeedCount(GameMode mode) { return GarlicRun::IsMode(mode) ? 0 : LightsOut::IsMode(mode) ? 0 : RallyRaid::IsMode(mode) ? RallyRaid::kSeedCount : RallyZombie::IsMode(mode) ? static_cast<int>(RallyZombie::kSeeds.size()) : ChainReaction::IsMode(mode) ? ChainReaction::kSeedCount : IntensiveCare::IsMode(mode) ? IntensiveCare::kSeedCount : SeedSwap::IsMode(mode) ? 0 : GardenShuffle::IsMode(mode) ? 0 : static_cast<int>(LanternGlow::IsMode(mode) ? LanternGlow::kSeeds.size() : NightShift::IsMode(mode) ? NightShift::kSeeds.size() : kSeeds.size()); }
++constexpr int StartingSun(GameMode mode) { return BungeeBusiness::IsMode(mode) ? BungeeBusiness::kBoards[0].mSun : GarlicRun::IsMode(mode) ? 0 : LightsOut::IsMode(mode) ? 0 : RallyRaid::IsMode(mode) ? RallyRaid::kBoards[0].mSun : RallyZombie::IsMode(mode) ? RallyZombie::kStartingSun : ChainReaction::IsMode(mode) ? 0 : IntensiveCare::IsMode(mode) ? 0 : SeedSwap::IsMode(mode) ? 0 : GardenShuffle::IsMode(mode) ? 0 : LanternGlow::IsMode(mode) ? LanternGlow::kStartingSun : NightShift::IsMode(mode) ? NightShift::kStartingSun : kStartingSun; }
++constexpr int SeedCount(GameMode mode) { return BungeeBusiness::IsMode(mode) ? BungeeBusiness::kSeedCount : GarlicRun::IsMode(mode) ? 0 : LightsOut::IsMode(mode) ? 0 : RallyRaid::IsMode(mode) ? RallyRaid::kSeedCount : RallyZombie::IsMode(mode) ? static_cast<int>(RallyZombie::kSeeds.size()) : ChainReaction::IsMode(mode) ? ChainReaction::kSeedCount : IntensiveCare::IsMode(mode) ? IntensiveCare::kSeedCount : SeedSwap::IsMode(mode) ? 0 : GardenShuffle::IsMode(mode) ? 0 : static_cast<int>(LanternGlow::IsMode(mode) ? LanternGlow::kSeeds.size() : NightShift::IsMode(mode) ? NightShift::kSeeds.size() : kSeeds.size()); }
+ 
+ template<std::size_t Waves, std::size_t Slots>
+ int PopulateWaves(GameMode mode, ZombieType (&output)[Waves][Slots])
+ {
++    if (BungeeBusiness::IsMode(mode)) return BungeeBusiness::PopulateWaves(output);
+     if (GarlicRun::IsMode(mode)) return GarlicRun::PopulateWaves(output);
+     if (LightsOut::IsMode(mode)) return LightsOut::PopulateWaves(output);
+     if (RallyRaid::IsMode(mode)) return RallyRaid::PopulateWaves(output);
+@@ -123,7 +125,8 @@ int PopulateWaves(GameMode mode, ZombieType (&output)[Waves][Slots])
+ template<std::size_t Count>
+ void PopulateAllowedZombies(GameMode mode, bool (&output)[Count])
+ {
+-    if (GarlicRun::IsMode(mode)) GarlicRun::PopulateAllowedZombies(output);
++    if (BungeeBusiness::IsMode(mode)) BungeeBusiness::PopulateAllowedZombies(output);
++    else if (GarlicRun::IsMode(mode)) GarlicRun::PopulateAllowedZombies(output);
+     else if (LightsOut::IsMode(mode)) LightsOut::PopulateAllowedZombies(output);
+     else if (RallyRaid::IsMode(mode)) RallyRaid::PopulateAllowedZombies(output);
+     else if (RallyZombie::IsMode(mode)) RallyZombie::PopulateAllowedZombies(output);
+@@ -139,7 +142,8 @@ void PopulateAllowedZombies(GameMode mode, bool (&output)[Count])
+ template<class Bank>
+ void FillSeedBank(GameMode mode, Bank& bank)
+ {
+-    if (GarlicRun::IsMode(mode)) bank.mNumPackets = 0;
++    if (BungeeBusiness::IsMode(mode)) BungeeBusiness::FillSeedBank(bank);
++    else if (GarlicRun::IsMode(mode)) bank.mNumPackets = 0;
+     else if (LightsOut::IsMode(mode)) bank.mNumPackets = 0;
+     else if (RallyRaid::IsMode(mode)) RallyRaid::FillSeedBank(bank);
+     else if (RallyZombie::IsMode(mode)) RallyZombie::FillSeedBank(bank);
+@@ -160,6 +164,7 @@ inline constexpr ChallengeState kColdSetupState = static_cast<ChallengeState>(10
+ inline constexpr ChallengeState kColdDefendState = static_cast<ChallengeState>(102);
+ constexpr bool IsCurrentRules(GameMode mode, ChallengeState state)
+ {
++    if (BungeeBusiness::IsMode(mode)) return BungeeBusiness::IsCurrentRules(mode, state);
+     if (GarlicRun::IsMode(mode)) return GarlicRun::IsCurrentRules(mode, state);
+     if (LightsOut::IsMode(mode)) return LightsOut::IsCurrentRules(mode, state);
+     if (RallyRaid::IsMode(mode)) return RallyRaid::IsCurrentRules(mode, state);
+@@ -181,6 +186,7 @@ constexpr bool IsSetup(GameMode mode, ChallengeState state) { return LanternGlow
+ constexpr bool IsDefending(GameMode mode, ChallengeState state) { return LanternGlow::IsMode(mode) && state == kColdDefendState; }
+ constexpr int WaveCount(GameMode mode, ChallengeState state)
+ {
++    if (BungeeBusiness::IsMode(mode)) return BungeeBusiness::kBoardCount;
+     if (GarlicRun::IsMode(mode)) return GarlicRun::kBoardCount;
+     if (LightsOut::IsMode(mode)) return LightsOut::kWaveCount;
+     if (RallyRaid::IsMode(mode)) return RallyRaid::kBoardCount;
+@@ -193,6 +199,7 @@ constexpr int WaveCount(GameMode mode, ChallengeState state)
+ }
+ constexpr int StartingSun(GameMode mode, ChallengeState state)
+ {
++    if (BungeeBusiness::IsMode(mode)) return BungeeBusiness::kBoards[0].mSun;
+     if (RallyRaid::IsMode(mode)) return RallyRaid::kBoards[0].mSun;
+     if (RallyZombie::IsMode(mode)) return RallyZombie::kStartingSun;
+     return IsCurrentRules(mode, state) ? (LanternGlow::IsMode(mode) ? LanternGlow::kPuzzleStartingSun : 0) : StartingSun(mode);
+@@ -279,6 +286,7 @@ int PopulateMiniWaves(ZombieType (&output)[Waves][Slots])
+ template<std::size_t Waves, std::size_t Slots>
+ int PopulateWaves(GameMode mode, ChallengeState state, ZombieType (&output)[Waves][Slots])
+ {
++    if (BungeeBusiness::IsMode(mode)) return BungeeBusiness::PopulateWaves(output);
+     if (GarlicRun::IsMode(mode)) return GarlicRun::PopulateWaves(output);
+     if (LightsOut::IsMode(mode)) return LightsOut::PopulateWaves(output);
+     if (RallyRaid::IsMode(mode)) return RallyRaid::PopulateWaves(output);
+@@ -303,6 +311,7 @@ void PopulateAllowedZombies(GameMode mode, ChallengeState state, bool (&output)[
+ template<class Bank>
+ void FillSeedBank(GameMode mode, ChallengeState state, Bank& bank)
+ {
++    if (BungeeBusiness::IsMode(mode)) { BungeeBusiness::FillSeedBank(bank); return; }
+     if (GarlicRun::IsMode(mode)) { bank.mNumPackets = 0; return; }
+     if (LightsOut::IsMode(mode)) { bank.mNumPackets = 0; return; }
+     if (RallyRaid::IsMode(mode)) { RallyRaid::FillSeedBank(bank); return; }
+diff --git a/src/Lawn/System/BungeeBusiness.cpp b/src/Lawn/System/BungeeBusiness.cpp
+new file mode 100644
+index 0000000000000000000000000000000000000000..477da010f818bbcbcce4f29e883813dd64357b73
+--- /dev/null
++++ b/src/Lawn/System/BungeeBusiness.cpp
+@@ -0,0 +1,164 @@
++// SPDX-License-Identifier: LGPL-3.0-or-later
++#include "BungeeBusiness.h"
++#include "../Board.h"
++#include "../Challenge.h"
++#include "../Plant.h"
++#include "../Zombie.h"
++#include "../Coin.h"
++#include "../GridItem.h"
++#include "../Projectile.h"
++#include "../SeedPacket.h"
++#include "../../LawnApp.h"
++#include <algorithm>
++#include <format>
++
++namespace BungeeBusiness
++{
++namespace
++{
++int TargetBit(const Board& board, int col, int row)
++{
++    const int stage = std::clamp(board.mChallenge->mSurvivalStage, 0, kBoardCount - 1);
++    int index = 0;
++    for (const Defender& defender : kBoards[stage].mPlants)
++    {
++        if (defender.mSeed != SEED_SUNFLOWER) continue;
++        if (defender.mCol == col && defender.mRow == row) return 1 << index;
++        ++index;
++    }
++    return 0;
++}
++void Fail(Board& board)
++{
++    board.mChallenge->mChallengeState = kFailed;
++    board.ClearCursor();
++    board.ClearAdviceImmediately();
++    board.ZombiesWon(nullptr);
++}
++}
++
++std::string LevelLabel(int stage)
++{
++    return std::format("Bungee Business - {}/{}", std::clamp(stage + 1, 1, kBoardCount), kBoardCount);
++}
++
++void Populate(Board& board)
++{
++    Challenge& challenge = *board.mChallenge;
++    const int stage = std::clamp(challenge.mSurvivalStage, 0, kBoardCount - 1);
++    challenge.mSurvivalStage = stage;
++    challenge.mChallengeState = kActive;
++    challenge.mChallengeStateCounter = 0;
++    challenge.mChallengeScore = 0;
++    // This existing saved field is the unique authored-target completion mask.
++    challenge.mScaryPotterPots = 0;
++    board.mSunMoney = kBoards[stage].mSun;
++    board.mCurrentWave = 0;
++    board.mProgressMeterWidth = 0;
++    board.mZombieCountDown = board.mZombieCountDownStart = 100000;
++    board.mNextSurvivalStageCounter = 0;
++    board.mShowShovel = false;
++    board.mBonusLawnMowersRemaining = 0;
++    board.ClearCursor();
++    FillSeedBank(*board.mSeedBank);
++    for (const Defender& defender : kBoards[stage].mPlants)
++    {
++        if (defender.mSeed == SEED_NONE) continue;
++        Plant* plant = board.NewPlant(defender.mCol, defender.mRow, defender.mSeed, SEED_NONE);
++        board.mChallenge->IZombieSetupPlant(plant);
++    }
++}
++
++void ResetStage(Board& board, int stage)
++{
++    for (Zombie* zombie : board.mZombies) if (!zombie->mDead) zombie->DieNoLoot();
++    for (Plant* plant : board.mPlants) if (!plant->mDead) plant->Die();
++    for (Coin* coin : board.mCoins) if (!coin->mDead) coin->Die();
++    for (GridItem* item : board.mGridItems) if (!item->mDead) item->GridItemDie();
++    for (Projectile* projectile : board.mProjectiles) if (!projectile->mDead) projectile->Die();
++    board.mChallenge->mSurvivalStage = std::clamp(stage, 0, kBoardCount - 1);
++    board.mLevelAwardSpawned = false;
++    Populate(board);
++}
++
++bool CanDeploy(Board& board, int col, int row, SeedType seed)
++{
++    if (!board.mChallenge || board.mChallenge->mChallengeState != kActive ||
++        board.mLevelComplete || board.HasLevelAwardDropped() ||
++        col < 0 || col >= 9 || row < 0 || row >= 5 ||
++        std::find(kSeeds.begin(), kSeeds.end(), seed) == kSeeds.end()) return false;
++    if (seed != SEED_ZOMBIE_BUNGEE) return col >= kDeploymentColumn;
++    if (col >= kDeploymentColumn || board.BungeeIsTargetingCell(col, row)) return false;
++    Plant* plant = board.GetTopPlantAt(col, row, TOPPLANT_BUNGEE_ORDER);
++    return plant && !plant->mDead && !plant->NotOnGround();
++}
++
++void OnBungeeExit(Zombie& zombie)
++{
++    Board* board = zombie.mBoard;
++    if (!board || !board->mChallenge || !IsMode(board->mApp->mGameMode) ||
++        board->mChallenge->mChallengeState != kActive || zombie.mDead || zombie.IsDeadOrDying() ||
++        zombie.mZombieType != ZOMBIE_BUNGEE || zombie.mZombiePhase != PHASE_BUNGEE_RISING ||
++        zombie.mAltitude < 600.0f || zombie.mRelatedZombieID != ZOMBIEID_NULL) return;
++    Plant* plant = board->mPlants.DataArrayTryToGet(zombie.mTargetPlantID);
++    if (!plant || plant->mDead || plant->mSquished || plant->mPlantHealth <= 0 || plant->mSeedType != SEED_SUNFLOWER ||
++        plant->mPlantCol != zombie.mTargetCol || plant->mRow != zombie.mRow ||
++        plant->mOnBungeeState != RISING_WITH_BUNGEE) return;
++    const int bit = TargetBit(*board, plant->mPlantCol, plant->mRow);
++    if (bit == 0 || (board->mChallenge->mScaryPotterPots & bit) != 0) return;
++    board->mChallenge->mScaryPotterPots |= bit;
++    ++board->mChallenge->mChallengeScore;
++}
++
++void Update(Board& board)
++{
++    Challenge& challenge = *board.mChallenge;
++    if (!IsCurrentRules(board.mApp->mGameMode, challenge.mChallengeState) || board.mPaused ||
++        board.mApp->mGameScene != SCENE_PLAYING || board.HasLevelAwardDropped()) return;
++    board.mShowShovel = false;
++    if (challenge.mChallengeState == kTransition)
++    {
++        if (--challenge.mChallengeStateCounter > 0) return;
++        challenge.PuzzleNextStageClear();
++        for (Coin* coin : board.mCoins) if (!coin->mDead) coin->Die();
++        for (Projectile* projectile : board.mProjectiles) if (!projectile->mDead) projectile->Die();
++        Populate(board);
++        return;
++    }
++    if (challenge.mChallengeState != kActive) return;
++    const int stage = std::clamp(challenge.mSurvivalStage, 0, kBoardCount - 1);
++    int remaining = 0;
++    for (const Defender& target : kBoards[stage].mPlants)
++    {
++        if (target.mSeed != SEED_SUNFLOWER) continue;
++        const int bit = TargetBit(board, target.mCol, target.mRow);
++        if ((challenge.mScaryPotterPots & bit) != 0) continue;
++        bool present = false;
++        // A rising plant is still a live target until its carrier leaves.
++        for (Plant* plant : board.mPlants)
++            if (!plant->mDead && !plant->mSquished && plant->mPlantHealth > 0 && plant->mSeedType == SEED_SUNFLOWER &&
++                plant->mPlantCol == target.mCol && plant->mRow == target.mRow) present = true;
++        if (!present) { Fail(board); return; }
++        ++remaining;
++    }
++    if (remaining == 0 && challenge.mChallengeScore == TargetCount(stage))
++    {
++        board.ClearCursor();
++        board.ClearAdviceImmediately();
++        if (stage == kBoardCount - 1)
++        {
++            challenge.mChallengeState = kFinished;
++            challenge.SpawnLevelAward(2, 2);
++        }
++        else
++        {
++            challenge.mChallengeState = kTransition;
++            challenge.mChallengeStateCounter = kTransitionTicks;
++        }
++        return;
++    }
++    if (board.mSunMoney + board.CountSunBeingCollected() >= kBungeeCost) return;
++    for (Zombie* zombie : board.mZombies) if (!zombie->mDead) return;
++    Fail(board);
++}
++}
+diff --git a/src/Lawn/System/BungeeBusiness.h b/src/Lawn/System/BungeeBusiness.h
+new file mode 100644
+index 0000000000000000000000000000000000000000..ea40c4e72e84cba081bd376a06457a0b310576f0
+--- /dev/null
++++ b/src/Lawn/System/BungeeBusiness.h
+@@ -0,0 +1,92 @@
++// SPDX-License-Identifier: LGPL-3.0-or-later
++#pragma once
++
++#include "../../ConstEnums.h"
++#include <array>
++#include <cstddef>
++#include <initializer_list>
++#include <string>
++
++class Board;
++class Zombie;
++
++// Native I, Zombie input and combat with a finite heist objective. All progress
++// occupies existing serialized Challenge fields; original mode layouts stay exact.
++namespace BungeeBusiness
++{
++inline constexpr GameMode kMode = GAMEMODE_CHALLENGE_BUNGEE_BUSINESS;
++inline constexpr ChallengeState kActive = static_cast<ChallengeState>(119);
++inline constexpr ChallengeState kTransition = static_cast<ChallengeState>(120);
++inline constexpr ChallengeState kFinished = static_cast<ChallengeState>(121);
++inline constexpr ChallengeState kFailed = static_cast<ChallengeState>(122);
++inline constexpr int kBoardCount = 5;
++inline constexpr int kSeedCount = 5;
++inline constexpr int kDeploymentColumn = 5;
++inline constexpr int kBungeeCost = 125;
++inline constexpr int kTransitionTicks = 120;
++constexpr bool IsMode(GameMode mode) { return mode == kMode; }
++constexpr bool IsCurrentRules(GameMode mode, ChallengeState state)
++{ return IsMode(mode) && state >= kActive && state <= kFailed; }
++inline constexpr std::array<SeedType, kSeedCount> kSeeds = {
++    SEED_ZOMBIE_NORMAL, SEED_ZOMBIE_TRAFFIC_CONE, SEED_ZOMBIE_POLEVAULTER,
++    SEED_ZOMBIE_PAIL, SEED_ZOMBIE_BUNGEE
++};
++struct Defender { SeedType mSeed = SEED_NONE; int mCol = 0; int mRow = 0; };
++struct Puzzle { int mSun; std::array<Defender, 9> mPlants; };
++// Ground crews work in lanes separate from the Sunflowers. Clear the native
++// Umbrella-leaf coverage, then spend the remaining budget on targeted Bungees.
++inline constexpr std::array<Puzzle, kBoardCount> kBoards = {{
++    {225, {{{SEED_SUNFLOWER,0,1}, {SEED_UMBRELLA,1,2}}}},
++    {375, {{{SEED_SUNFLOWER,0,1}, {SEED_SUNFLOWER,0,3},
++            {SEED_UMBRELLA,1,2}, {SEED_PEASHOOTER,0,2}}}},
++    {450, {{{SEED_SUNFLOWER,0,1}, {SEED_SUNFLOWER,0,3},
++            {SEED_UMBRELLA,1,0}, {SEED_UMBRELLA,1,4},
++            {SEED_PEASHOOTER,0,0}, {SEED_PEASHOOTER,0,4}}}},
++    {375, {{{SEED_SUNFLOWER,0,1}, {SEED_SUNFLOWER,0,3},
++            {SEED_UMBRELLA,1,2}, {SEED_WALLNUT,3,2}, {SEED_PEASHOOTER,0,2}}}},
++    {625, {{{SEED_SUNFLOWER,0,1}, {SEED_SUNFLOWER,3,1}, {SEED_SUNFLOWER,0,3},
++            {SEED_UMBRELLA,1,0}, {SEED_UMBRELLA,3,2}, {SEED_UMBRELLA,1,4},
++            {SEED_PEASHOOTER,0,0}, {SEED_PEASHOOTER,0,2}, {SEED_PEASHOOTER,0,4}}}}
++}};
++constexpr int PlantCount(int stage)
++{
++    if (stage < 0 || stage >= kBoardCount) return 0;
++    int count = 0;
++    for (const Defender& plant : kBoards[stage].mPlants) count += plant.mSeed != SEED_NONE;
++    return count;
++}
++constexpr int TargetCount(int stage)
++{
++    if (stage < 0 || stage >= kBoardCount) return 0;
++    int count = 0;
++    for (const Defender& plant : kBoards[stage].mPlants) count += plant.mSeed == SEED_SUNFLOWER;
++    return count;
++}
++template<std::size_t Waves, std::size_t Slots>
++int PopulateWaves(ZombieType (&output)[Waves][Slots])
++{
++    static_assert(Waves >= kBoardCount);
++    for (auto& wave : output) for (auto& zombie : wave) zombie = ZOMBIE_INVALID;
++    return kBoardCount;
++}
++template<std::size_t Count>
++void PopulateAllowedZombies(bool (&output)[Count])
++{
++    for (auto& allowed : output) allowed = false;
++    for (ZombieType type : {ZOMBIE_NORMAL, ZOMBIE_TRAFFIC_CONE, ZOMBIE_POLEVAULTER, ZOMBIE_PAIL, ZOMBIE_BUNGEE}) output[type] = true;
++}
++template<class Bank> void FillSeedBank(Bank& bank)
++{
++    bank.mNumPackets = kSeedCount;
++    for (int i = 0; i < kSeedCount; ++i) bank.mSeedPackets[i].SetPacketType(kSeeds[i]);
++    bank.RefreshAllPackets();
++}
++void Populate(Board& board);
++void ResetStage(Board& board, int stage);
++void Update(Board& board);
++bool CanDeploy(Board& board, int col, int row, SeedType seed);
++void OnBungeeExit(Zombie& zombie);
++std::string LevelLabel(int stage);
++static_assert(static_cast<int>(kMode) == 84);
++static_assert(TargetCount(0) + TargetCount(1) + TargetCount(2) + TargetCount(3) + TargetCount(4) == 10);
++}
+diff --git a/src/Lawn/System/BungeeBusinessPresentation.cpp b/src/Lawn/System/BungeeBusinessPresentation.cpp
+new file mode 100644
+index 0000000000000000000000000000000000000000..66867b783f5e7d252b11c5962d74ad9b8a8de1ad
+--- /dev/null
++++ b/src/Lawn/System/BungeeBusinessPresentation.cpp
+@@ -0,0 +1,97 @@
++// SPDX-License-Identifier: LGPL-3.0-or-later
++#include "BungeeBusinessPresentation.h"
++#include "../../LawnApp.h"
++#include "../../Resources.h"
++#include "../../PvzpLib/PvzpCommon.h"
++#include "../../PvzpLib/Reanimator.h"
++#include "graphics/Graphics.h"
++#include "graphics/MemoryImage.h"
++#include <algorithm>
++#include <memory>
++#include <vector>
++
++namespace BungeeBusinessPresentation
++{
++namespace
++{
++std::unique_ptr<Sexy::MemoryImage> sCard;
++
++std::unique_ptr<Sexy::MemoryImage> Blank(int width, int height)
++{
++    std::vector<uint32_t> pixels(width * height, 0);
++    auto image = std::make_unique<Sexy::MemoryImage>();
++    image->SetBits(pixels.data(), width, height);
++    return image;
++}
++
++Sexy::Rect VisibleBounds(Sexy::MemoryImage& image)
++{
++    int left = image.GetWidth(), top = image.GetHeight(), right = -1, bottom = -1;
++    const uint32_t* pixels = image.GetBits();
++    for (int y = 0; y < image.GetHeight(); ++y)
++        for (int x = 0; x < image.GetWidth(); ++x)
++            if ((pixels[y * image.GetWidth() + x] >> 24) > 8)
++            {
++                left = std::min(left, x); top = std::min(top, y);
++                right = std::max(right, x); bottom = std::max(bottom, y);
++            }
++    return right < left ? Sexy::Rect() : Sexy::Rect(left, top, right - left + 1, bottom - top + 1);
++}
++}
++
++Sexy::Image* GetBonusImage()
++{
++    if (sCard) return sCard.get();
++    if (!PvzpLoadResources("DelayLoad_Background1") || !Sexy::IMAGE_BACKGROUND1) return nullptr;
++
++    auto portrait = Blank(220, 220);
++    Sexy::Graphics native(portrait.get());
++    native.SetLinearBlend(true);
++
++    // Preserve the original carrying geometry, pose and occlusion. Native
++    // UpdateReanim places a Bungee body at (-3,-8) relative to its cell origin;
++    // DrawBungeeReanim draws the carried plant at (0,30), then its forearms.
++    constexpr float originX = 70.0f, originY = 25.0f;
++    constexpr int arms = 2;
++    Reanimation body;
++    body.ReanimationInitializeType(originX - 3.0f, originY - 8.0f, REANIM_BUNGEE);
++    body.SetFramesForLayer("anim_raise");
++    body.mLoopType = REANIM_PLAY_ONCE_AND_HOLD;
++    body.mAnimTime = 1.0f;
++    body.SetTruncateDisappearingFrames(nullptr, false);
++    for (const char* prefix : {"Zombie_bungi_rightarm_lower2", "Zombie_bungi_rightarm_hand2",
++            "Zombie_bungi_leftarm_lower2", "Zombie_bungi_leftarm_hand2"})
++        body.AssignRenderGroupToPrefix(prefix, arms);
++    body.Draw(&native);
++
++    Reanimation flower;
++    flower.ReanimationInitializeType(originX, originY + 30.0f, REANIM_SUNFLOWER);
++    flower.SetFramesForLayer("anim_idle");
++    flower.Draw(&native);
++    body.DrawRenderGroup(&native, arms);
++
++    // The protection leaf is a small supporting figure. The held plant stays
++    // registered to the Bungee and is never independently fitted into its grip.
++    Reanimation umbrella;
++    umbrella.ReanimationInitializeType(145.0f, 115.0f, REANIM_UMBRELLALEAF);
++    umbrella.SetFramesForLayer("anim_idle");
++    umbrella.OverrideScale(0.5f, 0.5f);
++    umbrella.Draw(&native);
++
++    const Sexy::Rect bounds = VisibleBounds(*portrait);
++    if (bounds.mWidth <= 0 || bounds.mHeight <= 0) return nullptr;
++    auto card = Blank(80, 65);
++    Sexy::Graphics picture(card.get());
++    picture.SetLinearBlend(true);
++    picture.ClipRect(0, 0, 80, 65);
++    picture.DrawImage(Sexy::IMAGE_BACKGROUND1, Sexy::Rect(0, 0, 80, 65), Sexy::Rect(400, 140, 480, 390));
++    const float scale = std::min(68.0f / bounds.mWidth, 57.0f / bounds.mHeight);
++    PvzpDrawImageScaledF(&picture, portrait.get(),
++        40.0f - (bounds.mX + bounds.mWidth * 0.5f) * scale,
++        32.5f - (bounds.mY + bounds.mHeight * 0.5f) * scale, scale, scale);
++    sCard = std::move(card);
++    return sCard.get();
++}
++
++void DisposeImage() { sCard.reset(); }
++}
+diff --git a/src/Lawn/System/BungeeBusinessPresentation.h b/src/Lawn/System/BungeeBusinessPresentation.h
+new file mode 100644
+index 0000000000000000000000000000000000000000..c457725cc9df4ba4e03ab4fa8ee474675d44010e
+--- /dev/null
++++ b/src/Lawn/System/BungeeBusinessPresentation.h
+@@ -0,0 +1,11 @@
++// SPDX-License-Identifier: LGPL-3.0-or-later
++#pragma once
++
++namespace Sexy { class Image; }
++
++// Original Bungee, Sunflower and Umbrella-leaf rigs in the native Bonus window.
++namespace BungeeBusinessPresentation
++{
++Sexy::Image* GetBonusImage();
++void DisposeImage();
++}
+diff --git a/src/Lawn/Widget/ChallengeScreen.cpp b/src/Lawn/Widget/ChallengeScreen.cpp
+index 4be7adedaa4cf01d035c7b4761be74090b7f9fe0..bd387b207b1089dd5d05bdff42209aedd677facf 100644
+--- a/src/Lawn/Widget/ChallengeScreen.cpp
++++ b/src/Lawn/Widget/ChallengeScreen.cpp
+@@ -30,7 +30,8 @@
+ #include "../System/RallyPresentation.h"
+ #include "../System/RallyRaidPresentation.h"
+ #include "../System/LightsOutPresentation.h"
+-#include "../System/GarlicRunPresentation.h"
++#include "../System/GarlicRunPresentation.h"
++#include "../System/BungeeBusinessPresentation.h"
+ #include "../../PvzpLib/PvzpDebug.h"
+ #include "../../PvzpLib/PvzpFoley.h"
+ #include "../../PvzpLib/PvzpCommon.h"
+@@ -124,7 +125,8 @@ constinit const ChallengeDefinition gChallengeDefs[NUM_CHALLENGE_MODES] = {
+ 	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_RALLY_POINT, .mChallengeIconIndex = 0, .mPage = ChallengePage::CHALLENGE_PAGE_BONUS, .mRow = 2, .mCol = 2, .mChallengeName = "Rally Point" },
+ 	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_RALLY_RAID, .mChallengeIconIndex = 0, .mPage = ChallengePage::CHALLENGE_PAGE_BONUS, .mRow = 2, .mCol = 3, .mChallengeName = "Rally Raid" },
+ 	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_LIGHTS_OUT, .mChallengeIconIndex = 0, .mPage = ChallengePage::CHALLENGE_PAGE_BONUS, .mRow = 2, .mCol = 4, .mChallengeName = "Lights Out" },
+-	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_GARLIC_RUN, .mChallengeIconIndex = 0, .mPage = ChallengePage::CHALLENGE_PAGE_BONUS, .mRow = 3, .mCol = 0, .mChallengeName = "Garlic Run" }
++	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_GARLIC_RUN, .mChallengeIconIndex = 0, .mPage = ChallengePage::CHALLENGE_PAGE_BONUS, .mRow = 3, .mCol = 0, .mChallengeName = "Garlic Run" },
++	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_BUNGEE_BUSINESS, .mChallengeIconIndex = 0, .mPage = ChallengePage::CHALLENGE_PAGE_BONUS, .mRow = 3, .mCol = 1, .mChallengeName = "Bungee Business" }
+ };
+ 
+ ChallengeScreen::ChallengeScreen(LawnApp* theApp, ChallengePage thePage)
+@@ -427,7 +429,8 @@ int ChallengeScreen::AccomplishmentsNeeded(int theChallengeIndex)
+ // Native portraits retain the original 80x65 minigame window and frame.
+ void DrawBonusIcon(Graphics* g, GameMode mode, int x, int y)
+ {
+-    if (Image* image = mode == GAMEMODE_CHALLENGE_GARLIC_RUN ? GarlicRunPresentation::GetBonusImage() :
++    if (Image* image = mode == GAMEMODE_CHALLENGE_BUNGEE_BUSINESS ? BungeeBusinessPresentation::GetBonusImage() :
++        mode == GAMEMODE_CHALLENGE_GARLIC_RUN ? GarlicRunPresentation::GetBonusImage() :
+         mode == GAMEMODE_CHALLENGE_LIGHTS_OUT ? LightsOutPresentation::GetBonusImage() :
+         mode == GAMEMODE_CHALLENGE_RALLY_RAID ? RallyRaidPresentation::GetBonusImage() : mode == GAMEMODE_CHALLENGE_RALLY_POINT ?
+         RallyPresentation::GetBonusImage() : LanternShroom::GetBonusImage(mode))
+diff --git a/src/Lawn/Zombie.cpp b/src/Lawn/Zombie.cpp
+index 26479de002f80c4d35cdab2c993c0c9530ae7e6e..3dd834cdfee8097f81aa06530310bba53589f56e 100644
+--- a/src/Lawn/Zombie.cpp
++++ b/src/Lawn/Zombie.cpp
+@@ -1452,6 +1452,7 @@ void Zombie::UpdateZombieBungee()
+ 		mAltitude += 8.0f;
+ 		if (mAltitude >= 600.0f)
+ 		{
++            if (BungeeBusiness::IsMode(mApp->mGameMode)) BungeeBusiness::OnBungeeExit(*this);
+ 			DieNoLoot();
+ 		}
+ 	}
+@@ -7204,7 +7205,7 @@ void Zombie::EatPlant(Plant* thePlant)
+ 	if (mChilledCounter > 0 && mZombieAge % 2 == 1)
+ 		return;
+ 
+-	if (mApp->IsIZombieLevel() && thePlant->mSeedType == SeedType::SEED_SUNFLOWER)
++	if (mApp->IsIZombieLevel() && !BungeeBusiness::IsMode(mApp->mGameMode) && thePlant->mSeedType == SeedType::SEED_SUNFLOWER)
+ 	{
+ 		int aStageBeforeChew = thePlant->mPlantHealth / 40;
+ 		int aStageAfterChew = (thePlant->mPlantHealth - DAMAGE_PER_EAT) / 40;
+@@ -7254,7 +7255,7 @@ void Zombie::EatZombie(Zombie* theZombie)
+ 
+ bool Zombie::TrySpawnLevelAward()
+ {
+-    if (ChainReaction::IsMode(mApp->mGameMode) || GarlicRun::IsMode(mApp->mGameMode)) return false;
++    if (BungeeBusiness::IsMode(mApp->mGameMode) || ChainReaction::IsMode(mApp->mGameMode) || GarlicRun::IsMode(mApp->mGameMode)) return false;
+ 	if (!IsOnBoard() || mBoard->HasLevelAwardDropped() || mBoard->mLevelComplete || mDroppedLoot)
+ 	{
+ 		return false;
+diff --git a/src/LawnApp.cpp b/src/LawnApp.cpp
+index abc7eb0155ff4a809fd8d0f51c800a7485d6a57e..0babc8da182664902db76413ee1ecb5e4ac02f51 100644
+--- a/src/LawnApp.cpp
++++ b/src/LawnApp.cpp
+@@ -41,6 +41,7 @@
+ #include "Lawn/System/RallyRaidPresentation.h"
+ #include "Lawn/System/LightsOutPresentation.h"
+ #include "Lawn/System/GarlicRunPresentation.h"
++#include "Lawn/System/BungeeBusinessPresentation.h"
+ #include "Lawn/System/LanternShroom.h"
+ #include "Lawn/System/MenderBloom.h"
+ #include "Lawn/System/SaveGame.h"
+@@ -221,6 +222,7 @@ LawnApp::~LawnApp()
+     RallyRaidPresentation::DisposeImage();
+     LightsOutPresentation::DisposeImage();
+     GarlicRunPresentation::DisposeImage();
++    BungeeBusinessPresentation::DisposeImage();
+ #ifdef __EMSCRIPTEN__
+ 	emscripten_set_fullscreenchange_callback(EMSCRIPTEN_EVENT_TARGET_DOCUMENT, nullptr, EM_FALSE, nullptr);
+ 	emscripten_set_blur_callback(EMSCRIPTEN_EVENT_TARGET_WINDOW, nullptr, EM_FALSE, nullptr);
+@@ -627,6 +629,13 @@ void LawnApp::KillSeedChooserScreen()
+ 
+ void LawnApp::EndLevel()
+ {
++    if (BungeeBusiness::IsMode(mGameMode) && mBoard && mBoard->mChallenge)
++    {
++        const int stage = mBoard->mChallenge->mSurvivalStage;
++        NewGame();
++        BungeeBusiness::ResetStage(*mBoard, stage);
++        return;
++    }
+     if (GarlicRun::IsMode(mGameMode) && mBoard && mBoard->mChallenge)
+     {
+         const int stage = mBoard->mChallenge->mSurvivalStage;
+@@ -1079,6 +1088,8 @@ void LawnApp::FinishNameError(int theId)
+ void LawnApp::FinishRestartConfirmDialog()
+ {
+ 	mSawYeti = mBoard->mKilledYeti;
++    const int aBungeeStage = BungeeBusiness::IsMode(mGameMode) && mBoard->mChallenge &&
++        !GetDialog(Dialogs::DIALOG_CONTINUE) ? mBoard->mChallenge->mSurvivalStage : -1;
+     const int aRaidStage = RallyRaid::IsMode(mGameMode) && mBoard->mChallenge &&
+         !GetDialog(Dialogs::DIALOG_CONTINUE) ? mBoard->mChallenge->mSurvivalStage : -1;
+     const int aGarlicStage = GarlicRun::IsMode(mGameMode) && mBoard->mChallenge &&
+@@ -1091,6 +1102,7 @@ void LawnApp::FinishRestartConfirmDialog()
+ 	KillBoard();
+ 
+ 	PreNewGame(mGameMode, false);
++    if (aBungeeStage >= 0 && mBoard) BungeeBusiness::ResetStage(*mBoard, aBungeeStage);
+     if (aGarlicStage >= 0 && mBoard) GarlicRun::ResetStage(*mBoard, aGarlicStage);
+     if (aChainStage >= 0 && mBoard) ChainReaction::ResetStage(*mBoard, aChainStage);
+     if (aRaidStage >= 0 && mBoard) RallyRaid::ResetStage(*mBoard, aRaidStage);
+@@ -2366,7 +2378,7 @@ bool LawnApp::IsIZombieLevel()
+ 		return false;
+ 
+ 	return
+-		RallyRaid::IsMode(mGameMode) ||
++		BungeeBusiness::IsMode(mGameMode) || RallyRaid::IsMode(mGameMode) ||
+ 		mGameMode == GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_1 ||
+ 		mGameMode == GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_2 ||
+ 		mGameMode == GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_3 ||

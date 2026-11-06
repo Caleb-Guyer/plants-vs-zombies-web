@@ -1,5 +1,22 @@
 # GitHub Pages release: Caleb-Guyer/plants-vs-zombies-web
 
+## Bungee.1 - reviewed release inputs
+
+Current engine: `0.2.6-web-bungee.1`.
+
+- Exact published parent: Garlic.1 source SHA-256 `389c3ab2ca51747139b34f2162d9dd8b81a973919222974cce4e8431e495749c`, 29,234,821 bytes, 948 entries, 836 production files.
+- Current production: 840 files, including four new Bungee Business implementation/presentation files.
+- Reconstructing patches: `web-bungee.1.patch` and `garlic1-to-bungee1.patch`.
+- Seven silent complete-engine drivers link the same 128 normal Release objects except main. All twenty native suites remain release gates.
+- `build/pvz-portable.js`: 209,496 bytes, SHA-256 `b623dc15e681583b5c22fd16edb8c97375cfbdcac3412de35e9d2b9de12ba491`.
+- `build/pvz-portable.wasm`: 7,739,560 bytes, SHA-256 `6b49b7731f1225626d793134d1f754f3016e1c8e5547eef9c088bdd5132f78f6`.
+- `build/ProjectVersion.h`: 192 bytes, SHA-256 `7a2833d19f37597ff8b92a9f1f6111d779d1da9176fe968ba1bf9fd900422c98`.
+- Corresponding source: `pvz-portable-0.2.6-web-bungee.1-source.zip`, 31,850,177 bytes, 962 entries, SHA-256 `452205b2a2e383a74183423ddcd730db978abe0ed086f8463c168c75142f9062`.
+- Both patches reconstruct all840 production files exactly. Fresh source-download extraction is checked offline before publication.
+
+All twenty muted native suites passed: 4,125,933 checks and zero failures. All fifteen browser integration suites passed, and muted browser inspection completed for this engine. These exact artifacts are prepared for GitHub Pages publication.
+
+
 ## Garlic.1 - reviewed release inputs
 
 Current engine: `0.2.6-web-garlic.1`.

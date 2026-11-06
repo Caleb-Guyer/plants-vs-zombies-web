@@ -120,6 +120,16 @@
       "gameplay": "Five short native routing puzzles. Reposition living Garlic with the original glove to steer native zombies through fixed Spikeweed and Potato Mine traps; original plant artwork, attacks, health and garlic diversion remain active.",
       "artwork": "The complete original Garlic is the centered hero above a small route made from original Spikeweed and armed Potato Mine rigs. The composition fits the same centered 68 by 57 hero bounds inside the native 80 by 65 card; no separately generated illustration is used.",
       "interface": "Name-only eleventh Bonus card in the first column of row three. Native glove, preparation Start button, Menu/speed controls and board footer use the existing game style."
+    },
+    {
+      "mode": 84,
+      "name": "Bungee Business",
+      "hero": "Original REANIM_BUNGEE raising rig carrying the original REANIM_SUNFLOWER, with original REANIM_UMBRELLALEAF support",
+      "background": "IMAGE_BACKGROUND1",
+      "generatedArtworkUsed": false,
+      "gameplay": "Five native heist puzzles. Spend a limited zombie budget to clear Umbrella-leaf coverage, then steal the Sunflowers with actual Bungee Zombies and original native abduction mechanics.",
+      "artwork": "The original Bungee raising pose and carried Sunflower use the native body/plant offset and forearm occlusion order. An original Umbrella-leaf supports the composition; its complete visible bounds are centered and fitted to the same 68 by 57 hero area inside the native 80 by 65 card. No separately generated illustration is used.",
+      "interface": "Name-only twelfth Bonus card in the second column of row three. The original I, Zombie bank, sun budget, Menu/speed controls and native footer retain the existing game style."
     }
   ],
   "canvas": {

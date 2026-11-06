@@ -1,5 +1,5 @@
 {
-  "id": "0.2.6-web-garlic.1",
+  "id": "0.2.6-web-bungee.1",
   "upstream": {
     "tag": "0.2.6",
     "commit": "396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
@@ -7,113 +7,98 @@
     "officialJsSha256": "0f2d7425190e49c762f6700b68b080086e3dcb8f2dc5e9724de42ce9fb508573"
   },
   "sourceArchive": {
-    "path": "pvz-portable-0.2.6-web-garlic.1-source.zip",
-    "bytes": 29234821,
-    "sha256": "389c3ab2ca51747139b34f2162d9dd8b81a973919222974cce4e8431e495749c",
-    "crc32": "65fd0df0",
-    "entries": 948,
-    "uncompressedBytes": 79766789
+    "path": "pvz-portable-0.2.6-web-bungee.1-source.zip",
+    "bytes": 31850177,
+    "sha256": "452205b2a2e383a74183423ddcd730db978abe0ed086f8463c168c75142f9062",
+    "crc32": "8328515f",
+    "entries": 962,
+    "uncompressedBytes": 88607909
   },
   "artifacts": [
     {
       "path": "build/pvz-portable.js",
       "bytes": 209496,
-      "sha256": "a1c3abb22fcfcb2f0af3b949e7024ced05d546b2e21e3d58c1005cc8386843f1",
-      "crc32": "e7111b63"
+      "sha256": "b623dc15e681583b5c22fd16edb8c97375cfbdcac3412de35e9d2b9de12ba491",
+      "crc32": "5118ad33"
     },
     {
       "path": "build/pvz-portable.wasm",
-      "bytes": 7729353,
-      "sha256": "4360c05474466200f96cff484ec1b026f8dbc9440479d691dc659ddf45b04dc1",
-      "crc32": "18acd42b"
+      "bytes": 7739560,
+      "sha256": "6b49b7731f1225626d793134d1f754f3016e1c8e5547eef9c088bdd5132f78f6",
+      "crc32": "404db19a"
     },
     {
       "path": "build/ProjectVersion.h",
       "bytes": 192,
-      "sha256": "52a9e0ecaa6e1908a57537312235a8fa5679767d2afa2d1c7b987eb2b16f955d",
-      "crc32": "aa67e20d"
+      "sha256": "7a2833d19f37597ff8b92a9f1f6111d779d1da9176fe968ba1bf9fd900422c98",
+      "crc32": "2517638d"
     }
   ],
-  "sourceFiles": 836,
-  "sourceBytes": 25709874,
-  "sourceDeltaVsLights2": [
+  "sourceFiles": 840,
+  "sourceBytes": 25727690,
+  "sourceDeltaVsGarlic1": [
     {
       "path": "CMake/ProjectVersion.cmake",
-      "beforeSha256": "0b52fe00d9d02981c13de04b2fae3a30026f83de8dd7617e2e0892c24155d827",
-      "afterSha256": "9069faebef9bcf2209600cc36d7be9dd4337ad20cad419540412572b575f9a8f"
+      "beforeSha256": "9069faebef9bcf2209600cc36d7be9dd4337ad20cad419540412572b575f9a8f",
+      "afterSha256": "2196d5cea880ceae84f26c16c70f9c7ff31910fd3c021f8acb0674cebfc719cd"
     },
     {
       "path": "src/ConstEnums.h",
-      "beforeSha256": "91476daf7e187377a2b1c57e45fe18c31a15887477c5a7c72194b4a7701810c9",
-      "afterSha256": "177ce8395cb47575ec94d97735f34f027292a71edaec78beb0e9dd112658a4b6"
+      "beforeSha256": "177ce8395cb47575ec94d97735f34f027292a71edaec78beb0e9dd112658a4b6",
+      "afterSha256": "c80606a8dbc604be37aeeed6d220886b14d9d0e36f14ba742d3f0264a1b65d03"
     },
     {
       "path": "src/Lawn/Board.cpp",
-      "beforeSha256": "6f2c71e87bff6472d1f9e7ae6963999931f5635375b47055e8510aa23ceb074b",
-      "afterSha256": "6b319ea27810050e42d6b379cb2d677db287ce7a515388fcc3d022a3ab2b0e25"
-    },
-    {
-      "path": "src/Lawn/Board.h",
-      "beforeSha256": "0656867eac1e4b6a22d1bc79d0cc0c6498d89f77145d7c5c08e21680659886c7",
-      "afterSha256": "cfde9658f8b1f067a66ceb1fb0712bdfad9aaa745eae0e1079d95678ea847e26"
+      "beforeSha256": "6b319ea27810050e42d6b379cb2d677db287ce7a515388fcc3d022a3ab2b0e25",
+      "afterSha256": "15a0c9cee17ccb4991752308de2ae438e1a9cc0814c26a58b4a47ec963f16bcf"
     },
     {
       "path": "src/Lawn/Challenge.cpp",
-      "beforeSha256": "8154d4c581d9d3861e01cb90471d33a9e9b4951e07813b05f144b57c6abc92b0",
-      "afterSha256": "e4fd9c21b2e6d3a86ab75560be2187eff91fd7701cfca77e26aed5e1e35714d1"
-    },
-    {
-      "path": "src/Lawn/CursorObject.cpp",
-      "beforeSha256": "65cc24f4cd03659e9a3897d80599cc5f350d37ed1cf39d0ce3ada138d1dabff2",
-      "afterSha256": "8d1ffb416b958525607fae3c3cdeda39e0bc74da483796599ea5e5dfe71e4800"
-    },
-    {
-      "path": "src/Lawn/Plant.cpp",
-      "beforeSha256": "ab8f1307fcefd24c377e2d1a011ef2335ccf47bc09bd13983914d14394290058",
-      "afterSha256": "30d2bb76adf82390196992354bfbe3b71b44834b4cfafd154c7770dacc402c57"
+      "beforeSha256": "e4fd9c21b2e6d3a86ab75560be2187eff91fd7701cfca77e26aed5e1e35714d1",
+      "afterSha256": "f7bde407c36d5da51b8e2e7c5888b1dcab2a028866e34d909c4a7a0b1321089c"
     },
     {
       "path": "src/Lawn/System/BonusChallenge.h",
-      "beforeSha256": "ebb1ff2389d6321330f27da97a4940740748c6f9d00dccfca89964a8385a8f96",
-      "afterSha256": "f081baaeef477230111b45a284502ba0ef2ccdae4235f5bca7cd664e061dc274"
+      "beforeSha256": "f081baaeef477230111b45a284502ba0ef2ccdae4235f5bca7cd664e061dc274",
+      "afterSha256": "02e6ab327a8160529815965fbd3e39fad1ac81e8a81abf0b402a453569cb89ef"
     },
     {
-      "path": "src/Lawn/System/GarlicRun.cpp",
+      "path": "src/Lawn/System/BungeeBusiness.cpp",
       "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "afterSha256": "b51f40daf3474dee4d7381dbb27fdce1e1ac581e7e1c523c7be12c4da8a90690"
+      "afterSha256": "bb4e00dca700167584e1026bf31de206bdd0af740641993682e76c065f30fa32"
     },
     {
-      "path": "src/Lawn/System/GarlicRun.h",
+      "path": "src/Lawn/System/BungeeBusiness.h",
       "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "afterSha256": "6b0dac8f28087b06b0636c3890d95a989cd45aa493f77e1abb0210bb6d65992c"
+      "afterSha256": "fc3a69a7691b0e72c06e38cbfdcdc16e749f819d47dadac4cf9f5e26ecd038af"
     },
     {
-      "path": "src/Lawn/System/GarlicRunPresentation.cpp",
+      "path": "src/Lawn/System/BungeeBusinessPresentation.cpp",
       "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "afterSha256": "566906396b3dc247f0ba1e2bfd47b710e93008e9f04c9ebdd6647cd55de1f887"
+      "afterSha256": "34af024e0d9a3a7ea8282ba0357fa491a2b78a518838ffcbc0e33ea636484194"
     },
     {
-      "path": "src/Lawn/System/GarlicRunPresentation.h",
+      "path": "src/Lawn/System/BungeeBusinessPresentation.h",
       "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "afterSha256": "046feddfdea939e2a94ba69195d7ff18e9e0e096bf39e6ef57892fed4e6caea8"
+      "afterSha256": "ee49d1f8c83917e5675ba14bc6ab07970ef4a12de9c06a7a1ba2f65f4a772671"
     },
     {
       "path": "src/Lawn/Widget/ChallengeScreen.cpp",
-      "beforeSha256": "f0dcb29b3d52ca2d605dd37f6f23cafa25029cf99d6b9254f70b0c9f603e8a60",
-      "afterSha256": "5aecf3d1d5cc09ee639518b24bbaae6f299b74e6ff42ee0296b7c35ef73ecce4"
+      "beforeSha256": "5aecf3d1d5cc09ee639518b24bbaae6f299b74e6ff42ee0296b7c35ef73ecce4",
+      "afterSha256": "8b6be9c7d475939a512e45c728e70eba03ff058feb7aa5fdf7917a8689fdc615"
     },
     {
       "path": "src/Lawn/Zombie.cpp",
-      "beforeSha256": "8eb437a83daa301cf56e4ddff1623381c933b26e8abd1dfc2823278d51201160",
-      "afterSha256": "f5f2b7955d990f478b78fd907c2147783ef0a5be2d8e34cf645e1eadde2f3a2d"
+      "beforeSha256": "f5f2b7955d990f478b78fd907c2147783ef0a5be2d8e34cf645e1eadde2f3a2d",
+      "afterSha256": "dd593bf092ea7f824b4aa131550f65a106eee376114457fd06c75716f994d918"
     },
     {
       "path": "src/LawnApp.cpp",
-      "beforeSha256": "05c111dcb03705f16a07f9ec4122798258a2d9a3da873ee211e1257850b36908",
-      "afterSha256": "63a919e41847cff7a2036db43480e84814a0c51c3ab44ff09754c16112e37479"
+      "beforeSha256": "63a919e41847cff7a2036db43480e84814a0c51c3ab44ff09754c16112e37479",
+      "afterSha256": "10c8fe8406cd67322591dca0ec332a5de7cbaf75c56d12f473edad83d5f60fba"
     }
   ],
-  "compiledVersionHeader": "// Generated from CMake/ProjectVersion.h.in by CMake; do not edit.\r\n#pragma once\r\n\r\n#define PVZP_VERSION \"0.2.6-web-garlic.1\"\r\n#define PVZP_BUILD_NUMBER 1\r\n#define PVZP_COMMIT_DATE \"unknown\"\r\n",
+  "compiledVersionHeader": "// Generated from CMake/ProjectVersion.h.in by CMake; do not edit.\r\n#pragma once\r\n\r\n#define PVZP_VERSION \"0.2.6-web-bungee.1\"\r\n#define PVZP_BUILD_NUMBER 1\r\n#define PVZP_COMMIT_DATE \"unknown\"\r\n",
   "checks": {
     "fullRelease": {
       "exitCode": 0,
@@ -127,148 +112,155 @@
       "receipt": {
         "path": "logs/build-result.json",
         "bytes": 580,
-        "sha256": "67659ccc3b22530d6158eb85aff6550cf0203bb7c88e270354b11fa5e8b8bead",
-        "crc32": "0cd081c0"
+        "sha256": "fdc1558ee768cabf02b94e4c028542b3f39ff55af4b756900e3f40e3ee5de0b0",
+        "crc32": "5fefbfd2"
       }
     },
     "focusedNativeTests": {
       "status": "PASS focused native production tests",
       "failures": 0,
-      "checks": 3420013,
-      "scope": "Extracted production tests plus complete linked-engine Care, Chain Reaction, Rally Point, Rally Raid, Lights Out and Garlic Run scenarios; twenty actual five-board Garlic Run completions, four no-route losses and four isolated control cases; actual light-gated attacks, natural native fog edges at five lamp positions, glove tooltip hover/raster bounds, glove-over-fog composition, legal Plantern moves, active-combat save/Continue, native awards, failure/retry, slow-play balance, UI bounds and speed parity. Original regressions remain active. Audio output is disabled.",
+      "checks": 4125933,
+      "scope": "Extracted production tests plus complete linked-engine Care, Chain Reaction, Rally Point, Rally Raid, Lights Out, Garlic Run and Bungee Business scenarios; actual native protection clearing, finite budgets, unique Bungee thefts, target-loss failure and native heist saves/replays; twenty actual five-board Garlic Run completions, four no-route losses and four isolated control cases; actual light-gated attacks, natural native fog edges at five lamp positions, glove tooltip hover/raster bounds, glove-over-fog composition, legal Plantern moves, active-combat save/Continue, native awards, failure/retry, slow-play balance, UI bounds and speed parity. Original regressions remain active. Audio output is disabled.",
       "reports": [
         {
           "path": "tests/game-speed-results.json",
           "bytes": 1605,
-          "sha256": "f254c6b34caa6c1173a8ba22a840edfe663946c8cf01bb2d2d598c59694c4f5e",
-          "crc32": "1462d408",
+          "sha256": "9c3568c81b75911abeff4e481fa79d891208a5283d4e4ec6f639e741db41024c",
+          "crc32": "aa15c89d",
           "checks": 66
         },
         {
           "path": "tests/qol-controls-results.json",
           "bytes": 1687,
-          "sha256": "3769d84395245b3ab9629b0db4ec4fa73f7916206dc3c16724ab8fea963248a1",
-          "crc32": "50fa750b",
+          "sha256": "848afdd28d235e7d84db12ef66f6037b0134a7732c3405f21317169268240a4f",
+          "crc32": "4beb5b80",
           "checks": 90
         },
         {
           "path": "tests/decks-cooldowns-results.json",
           "bytes": 1783,
-          "sha256": "6e5626479fe9ffebee8a089adaf1dcbd88ed33fda46ded69dfb7ec230357630c",
-          "crc32": "6e9ae028",
+          "sha256": "337f85fc677b642dcb3ea1712f3c2af147390efdb54b53c719f1a9b634ba716a",
+          "crc32": "5ff8b8bf",
           "checks": 274
         },
         {
           "path": "tests/bonus-challenge-results.json",
-          "bytes": 2645,
-          "sha256": "ef64f5eba8fc4f49463ad39ffcdd9603ee1be4cf26e8fd4b4fe1cf6c85a1d855",
-          "crc32": "3b8f9d15",
+          "bytes": 2760,
+          "sha256": "56397e4ecc8e8ba6ec1a01bb6f647aa39482532d9f7a3f22489f093666eb4c32",
+          "crc32": "2516a491",
           "checks": 387
         },
         {
           "path": "tests/bonus-completion-results.json",
-          "bytes": 3378,
-          "sha256": "3cda8e21da5a60f9f869086e615296275fb322c166642c0fa25caabeb89137df",
-          "crc32": "b6bda994",
-          "checks": 1275
+          "bytes": 3493,
+          "sha256": "c486713c74e400d537f6d13fdacd2e0f4c79f180f2b3d27814a8d02ef08d6928",
+          "crc32": "f61a6329",
+          "checks": 1276
         },
         {
           "path": "tests/night-shift-results.json",
-          "bytes": 2212,
-          "sha256": "0a6705920ac0b3c64e2839229376dc0fbf57e5ccaedf612e03e2add448e13acc",
-          "crc32": "4140ab05",
+          "bytes": 2327,
+          "sha256": "97ae5bfcd2d4fd0de182081bd500177d7f9846bf6256790780849d81162ca22e",
+          "crc32": "b256710c",
           "checks": 231
         },
         {
           "path": "tests/lantern-shroom-results.json",
-          "bytes": 7237,
-          "sha256": "d8cbfe9525a77de96964bd84827165ec8204ba16c698bb57f2c9f9a3e55bb123",
-          "crc32": "98ac9c7f",
+          "bytes": 7352,
+          "sha256": "225d237dead9db0b3b1fa579af6c9b05449f787c86cfbf4190ca61f25a673513",
+          "crc32": "f10b166a",
           "checks": 1724
         },
         {
           "path": "tests/garden-shuffle-results.json",
-          "bytes": 2919,
-          "sha256": "c1e73a25f6e06fd242a735c8977137eae9720ae480885b490c5614dfccae8ff9",
-          "crc32": "75b9cde7",
+          "bytes": 3034,
+          "sha256": "35bfb42ade83ad9476fbab811a2d70efb22d4f0491efa11e4d66b4cdff81ca04",
+          "crc32": "8741a73f",
           "checks": 214
         },
         {
           "path": "tests/seed-swap-results.json",
-          "bytes": 2990,
-          "sha256": "0da5c06ac0c05c27bc13ae35075f225c78db42ab76c3ae75cfc5214bf3150bec",
-          "crc32": "3c3ea4ae",
+          "bytes": 3105,
+          "sha256": "eb66d2561db58bad1bd1d23da50b4b48a90fac6299a74bfcb311a0ebed72ec2f",
+          "crc32": "aa483d91",
           "checks": 587
         },
         {
           "path": "tests/mender-bloom-results.json",
-          "bytes": 2396,
-          "sha256": "44007be7de0e1d5be4523d901b59e05938feaebb39900b73dc3fe4a21907dcd2",
-          "crc32": "e1317a48",
+          "bytes": 2511,
+          "sha256": "036d68666ea8f3a4f41212a5a87dbc48e40afca1f0128c0ae455023aae1e60ca",
+          "crc32": "026186e6",
           "checks": 523
         },
         {
           "path": "tests/intensive-care-results.json",
-          "bytes": 4079,
-          "sha256": "fb6606dd7f54aa9c869abc56fd2031d4e0aa2d7a5c26efc91b68954b9724e608",
-          "crc32": "0304df26",
+          "bytes": 4194,
+          "sha256": "d9c78c0ae6f11379f32bc68378d143e98b486e79c6b47279907d2db5905a5030",
+          "crc32": "fc51b3f3",
           "checks": 1135
         },
         {
           "path": "tests/native-layout-results.json",
-          "bytes": 10205,
-          "sha256": "21187e1d9834d7d7f6344d6a9bf611d200aff61f0e594d9f9031d58a72488d62",
-          "crc32": "65d8962c",
-          "checks": 11281
+          "bytes": 11561,
+          "sha256": "9e877ae63c67b50f9dd5291ff678adc379394e7616e020bff5b25290e0d75f98",
+          "crc32": "eb9aed65",
+          "checks": 12300
         },
         {
           "path": "tests/care-fatigue-results.json",
           "bytes": 1225,
-          "sha256": "2ec8254011eff5ecc7cd1b1a75d0a4e0544e7ad8ea810182a2d015e4663b3f10",
-          "crc32": "ec27c628",
+          "sha256": "bd1cb90f52ba9682e8e9c88cb1f1803d3dbe6ae5ae2205d66b02afe8697ef27c",
+          "crc32": "984ec505",
           "checks": 25042
         },
         {
           "path": "tests/care-full-run-results.json",
-          "bytes": 154033,
-          "sha256": "f85577c9da41de12a26ffb1dbba6c39fdd63699311e05eb3db78787c68ae0074",
-          "crc32": "cde751eb",
-          "checks": 988
+          "bytes": 154819,
+          "sha256": "c401331df159a45daae1b07f4cdbc444c3c3fd8ab08e71e358c8bb7f95ee3d65",
+          "crc32": "93e2097a",
+          "checks": 992
         },
         {
           "path": "tests/chain-reaction-results.json",
-          "bytes": 164600,
-          "sha256": "2e73c4f2ea0a6eb5aea10a6ef576a17ae7aaf32f55a53e42a017da62fbe7a865",
-          "crc32": "f73477a2",
-          "checks": 81315
+          "bytes": 165386,
+          "sha256": "4aa8b3497b321ba493fa25ff945bd3ed6f379cc37e7a659b16106f944e5f87f2",
+          "crc32": "cfe585c4",
+          "checks": 81319
         },
         {
           "path": "tests/rally-zombie-results.json",
-          "bytes": 162238,
-          "sha256": "86686560dbdd65c11458a57841578ae0b566c28ae4c1c67d77265ae5900e2f98",
-          "crc32": "44382737",
-          "checks": 327534
+          "bytes": 163024,
+          "sha256": "66717994415926e32af56e4904394d0a5e932c422bf737ef2846c7e2a54d9d62",
+          "crc32": "d8cff3b7",
+          "checks": 327538
         },
         {
           "path": "tests/rally-raid-results.json",
-          "bytes": 179353,
-          "sha256": "9a9a09bd2f73cd6b132ef08f8db3ce21dfc434a3d20846224262d7167bd9b609",
-          "crc32": "8d468d60",
-          "checks": 1040570
+          "bytes": 180139,
+          "sha256": "c212a119c3652e7dc1c14efe46e152768053a5fb69d5e05d7fa5a57ed1fc8079",
+          "crc32": "0574ae6a",
+          "checks": 1040574
         },
         {
           "path": "tests/lights-out-results.json",
-          "bytes": 165667,
-          "sha256": "cd1d75b585cbe063af82209504c0a0de6e0fd151cdb6024ea6349d3fb44d852f",
-          "crc32": "040d7bf5",
-          "checks": 884001
+          "bytes": 166453,
+          "sha256": "0a3741e2e38c29bd5eec4e633566d6a73de8fe227ab06c96026783d8328ad574",
+          "crc32": "3c27baf5",
+          "checks": 884005
         },
         {
           "path": "tests/garlic-run-results.json",
-          "bytes": 173231,
-          "sha256": "da54a824274a1af242d80dce552bd949d6a40fc19b4406637c100c8da5475580",
-          "crc32": "9db3b372",
-          "checks": 1042776
+          "bytes": 174017,
+          "sha256": "b2e6fbb8fe3db0dc2f1f64367d01f8fa169247581092f5e931c8f4dff9dd6423",
+          "crc32": "e9db7055",
+          "checks": 1042780
+        },
+        {
+          "path": "tests/bungee-business-results.json",
+          "bytes": 181138,
+          "sha256": "399846d08e2554c0c9f525c9eef68ec25c304dc5c316d19a88e1b8417b8ec0d1",
+          "crc32": "2258c907",
+          "checks": 704876
         }
       ]
     },
@@ -277,38 +269,38 @@
         "gitApplyCheck": "PASS",
         "gitApply": "PASS",
         "everySourceByteMatches": true,
-        "sourceFiles": 836
+        "sourceFiles": 840
       },
-      "lights2": {
+      "garlic1": {
         "gitApplyCheck": "PASS",
         "gitApply": "PASS",
         "everySourceByteMatches": true,
-        "sourceFiles": 836
+        "sourceFiles": 840
       }
     }
   },
   "combinedPatch": {
-    "path": "web-garlic.1.patch",
-    "bytes": 14600929,
-    "sha256": "965ca0acfd7f1b29f98790545113c8af48547290de211ed8c5a24ce1debc9965",
-    "crc32": "1ffef5ad",
-    "sourcePaths": 125
+    "path": "web-bungee.1.patch",
+    "bytes": 14622312,
+    "sha256": "ecf8e617ced3caed26f399d881b15221b8c5dad16007da1ccebf09b89a90b512",
+    "crc32": "c8599be2",
+    "sourcePaths": 129
   },
   "incrementalPatch": {
-    "path": "lights2-to-garlic1.patch",
-    "bytes": 687726,
-    "sha256": "5ff427bc0d4f39edad2a06b715435813702aa417d277ef6b8468011180554319",
-    "crc32": "9cdc2826",
-    "sourcePaths": 15
+    "path": "garlic1-to-bungee1.patch",
+    "bytes": 39137,
+    "sha256": "eb3ceca71e537163fbf0bd41db0a4ac231a6da58da577e4afa8f79b8ac1356c8",
+    "crc32": "0ef0f677",
+    "sourcePaths": 12
   },
   "parent": {
-    "id": "0.2.6-web-lights.2",
-    "sourceArchiveSha256": "030d6dac37fbb4eca15ec4a852e2904ac6993ff598d824c7ef8a092804b6d26a",
-    "releaseManifestSha256": "58ce5aaef387bf6d56791a37954c88ccc561e77586bb1a5deba21f55277cb35d",
+    "id": "0.2.6-web-garlic.1",
+    "sourceArchiveSha256": "389c3ab2ca51747139b34f2162d9dd8b81a973919222974cce4e8431e495749c",
+    "releaseManifestSha256": "0668f5a26aaac59f68b69d11a1dfbdb031229d210d3b5a5f64dab7004ef3fdfd",
     "scope": "Complete historical parent engine metadata is preserved in the parent property of engine-provenance.json."
   },
   "limits": [
-    "Garlic Run adds five day-lawn routing puzzles using original Garlic, Spikeweed and Potato Mine mechanics, movable Garlic, a native preparation button and native save/retry/reward paths. Earlier minigames, accepted artwork, original mode IDs, unlock rules and serialized object layouts are preserved. Full original parity remains unverified.",
+    "Bungee Business adds five finite-budget heist puzzles using original I, Zombie controls, native protection clearing and Bungee abductions, ten Sunflower targets, and native save/retry/reward paths. Earlier minigames, accepted artwork, original mode IDs, unlock rules and serialized object layouts are preserved. Full original parity remains unverified.",
     "Focused production-method tests and build checks do not replace broad game or browser validation.",
     "Earlier results remain historical parent evidence only. No separately image-generated challenge illustrations are active."
   ]
