@@ -1,16 +1,16 @@
 {
   "schema_version": 1,
-  "current_engine": "0.2.6-web-lights.2",
+  "current_engine": "0.2.6-web-garlic.1",
   "upstream_tag": "0.2.6",
   "layout": "Site-source nests current corresponding source, its immediate parent when present, the upstream baseline, the authenticated Rally.3 native I, Zombie UI reference and the current full patch. Other source archives and incremental/historical patches remain standalone downloads beside this index and in the full runtime distribution.",
   "nested_sources": [
     "pvz-portable-0.2.6-source.zip",
-    "pvz-portable-0.2.6-web-lights.1-source.zip",
+    "pvz-portable-0.2.6-web-lights.2-source.zip",
     "pvz-portable-0.2.6-web-rally.3-source.zip",
-    "pvz-portable-0.2.6-web-lights.2-source.zip"
+    "pvz-portable-0.2.6-web-garlic.1-source.zip"
   ],
   "nested_patches": [
-    "web-lights.2.patch"
+    "web-garlic.1.patch"
   ],
   "archives": [
     {
@@ -126,6 +126,13 @@
       "upstream": false
     },
     {
+      "name": "pvz-portable-0.2.6-web-garlic.1-source.zip",
+      "bytes": 29234821,
+      "sha256": "389c3ab2ca51747139b34f2162d9dd8b81a973919222974cce4e8431e495749c",
+      "current": true,
+      "upstream": false
+    },
+    {
       "name": "pvz-portable-0.2.6-web-lantern.1-source.zip",
       "bytes": 6034293,
       "sha256": "c0f1ce050347d68672afa2139fe3da05ea2934fae9ea377a9fc45a2454c55244",
@@ -150,7 +157,7 @@
       "name": "pvz-portable-0.2.6-web-lights.2-source.zip",
       "bytes": 26630296,
       "sha256": "030d6dac37fbb4eca15ec4a852e2904ac6993ff598d824c7ef8a092804b6d26a",
-      "current": true,
+      "current": false,
       "upstream": false
     },
     {

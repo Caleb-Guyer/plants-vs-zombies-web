@@ -1,5 +1,14 @@
 # Browser parity and QA record
 
+## Garlic.1 - routing, saves and presentation checks
+
+The new complete-engine suite runs 24 cases and twelve speed pairs across two RNG seeds at1x/2x. Sixteen primary five-board wins and four additional full five-board replays are separate from four genuine unattended losses and four isolated native controls. Winning runs use actual glove/lawn/Start inputs, native enemy diversions, Spikeweed damage, mine arming/explosions and final awards. Planning and active-combat checkpoints preserve the observed actor fields and animation clocks, including identity, health, location, mine fuses and Garlic gross-out state. Retry starts the current puzzle; a fresh Bonus-card replay starts board one. Controls verify legal/invalid moves, cancellation, actor identity, cooldown, Pause, original-mode isolation, actual glove hover/font bounds and original software glove pixels. Fifty-one original artwork inputs are authenticated. Offscreen MemoryImage exports establish native layout only; browser rendering is checked separately.
+
+The final Garlic Run native suite passes 1,042,776 assertions. Previous Care, Chain Reaction, Rally, Raid, Lights Out and focused regression coverage remains active, including the earlier fog/tooltip and I,Zombie presentation fixes. These bounded checks do not certify exhaustive original-game parity or browser frame timing.
+
+All nineteen muted native suites passed: 3,420,013 checks and zero failures. All fifteen browser integration suites passed, and muted browser inspection completed for this engine. These artifacts are prepared for GitHub Pages publication.
+
+
 ## Lights.2 - fog-edge and glove-hover regressions
 
 `0.2.6-web-lights.2` fixes the two reported Lights Out presentation defects. Fog uses the original sprite's shaped transparent edges across the whole board. The native glove draws above fog, and its tooltip appears beneath the actual glove button. Original artwork, all ten Bonus cards, battle rules and save layouts are preserved.

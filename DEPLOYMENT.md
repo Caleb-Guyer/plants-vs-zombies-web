@@ -1,5 +1,22 @@
 # GitHub Pages release: Caleb-Guyer/plants-vs-zombies-web
 
+## Garlic.1 - reviewed release inputs
+
+Current engine: `0.2.6-web-garlic.1`.
+
+- Exact published parent: Lights.2 source SHA-256 `030d6dac37fbb4eca15ec4a852e2904ac6993ff598d824c7ef8a092804b6d26a`, 26,630,296 bytes, 934 entries, 832 production files.
+- Current production: 836 files. Fifteen reviewed paths differ: eleven existing integration/version files and four new Garlic Run implementation/presentation files.
+- Reconstructing patches: `web-garlic.1.patch` and `lights2-to-garlic1.patch`.
+- Six silent complete-engine test drivers link the same 126 normal Release objects except main. All nineteen native suites remain release gates.
+- `build/pvz-portable.js`: 209,496 bytes, SHA-256 `a1c3abb22fcfcb2f0af3b949e7024ced05d546b2e21e3d58c1005cc8386843f1`.
+- `build/pvz-portable.wasm`: 7,729,353 bytes, SHA-256 `4360c05474466200f96cff484ec1b026f8dbc9440479d691dc659ddf45b04dc1`.
+- `build/ProjectVersion.h`: 192 bytes, SHA-256 `52a9e0ecaa6e1908a57537312235a8fa5679767d2afa2d1c7b987eb2b16f955d`.
+- Corresponding source: `pvz-portable-0.2.6-web-garlic.1-source.zip`, 29,234,821 bytes, 948 entries, SHA-256 `389c3ab2ca51747139b34f2162d9dd8b81a973919222974cce4e8431e495749c`.
+- Both patches reconstruct all836 production files exactly. Fresh source-download extraction is checked offline before publication.
+
+All nineteen muted native suites passed: 3,420,013 checks and zero failures. All fifteen browser integration suites passed, and muted browser inspection completed for this engine. These artifacts are prepared for GitHub Pages publication.
+
+
 ## Lights.2 - fog and glove-tooltip release inputs
 
 Current engine: `0.2.6-web-lights.2`.

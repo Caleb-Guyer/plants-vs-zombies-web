@@ -1,5 +1,14 @@
 # Current requirements
 
+## Garlic.1 - native routing puzzles
+
+`0.2.6-web-garlic.1` adds Garlic Run to the Bonus page: five short day-lawn routing puzzles. Move Garlic with the native glove, then press the native Let's Rock button. Steer approaching zombies through Spikeweed corridors and normally armed Potato Mines. Later boards need two routes or a Garlic relay. Original Garlic health, random diversion, Spikeweed damage and mine fuse rules remain intact. Setup holds zombies and mine fuses; active play uses native combat. Only the fifth clear grants the normal native completion award.
+
+The eleventh Bonus card uses original Garlic, Spikeweed, Potato Mine and lawn artwork. The original glove, Start, Menu, speed, pause and footer controls provide the interface; no persistent instruction overlay is added. The Start button sits in the header clear of the glove and every lawn row. Existing mode IDs, all saved actor layouts, original plant/zombie definitions, previous ten card records and accepted bitmap artwork remain unchanged. Normal game audio remains available; testing stays muted.
+
+All nineteen muted native suites passed: 3,420,013 checks and zero failures. All fifteen browser integration suites passed, and muted browser inspection completed for this engine. These artifacts are prepared for GitHub Pages publication.
+
+
 ## Lights.2 - reported fog and glove-tooltip correction
 
 `0.2.6-web-lights.2` fixes the two reported Lights Out presentation defects. Fog uses the original sprite's shaped transparent edges across the whole board. The native glove draws above fog, and its tooltip appears beneath the actual glove button. Original artwork, all ten Bonus cards, battle rules and save layouts are preserved.

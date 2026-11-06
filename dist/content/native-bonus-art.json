@@ -110,6 +110,16 @@
       "gameplay": "Move one living Plantern between five rail cells with the native glove. Fixed defenders attack only inside its two-tile Manhattan light footprint. A short opening introduces the light before authored waves require lane changes; original combat, mowers, pause, speed and completion rules remain active.",
       "artwork": "The complete original Plantern body, eyes, stem and leaves are rendered from its unmodified native rig. Two original software-fog cels sit behind its silhouette. The composition uses the same centered 68 by 57 hero bounds inside the existing 80 by 65 card; no separately generated illustration is used.",
       "interface": "Name-only tenth Bonus card in the native fifth column of row two. The original glove uses one bounded draw and hit rectangle, and the normal Menu/speed controls and footer remain clear."
+    },
+    {
+      "mode": 83,
+      "name": "Garlic Run",
+      "hero": "Original REANIM_GARLIC idle rig with original REANIM_SPIKEWEED and armed REANIM_POTATOMINE",
+      "background": "IMAGE_BACKGROUND1",
+      "generatedArtworkUsed": false,
+      "gameplay": "Five short native routing puzzles. Reposition living Garlic with the original glove to steer native zombies through fixed Spikeweed and Potato Mine traps; original plant artwork, attacks, health and garlic diversion remain active.",
+      "artwork": "The complete original Garlic is the centered hero above a small route made from original Spikeweed and armed Potato Mine rigs. The composition fits the same centered 68 by 57 hero bounds inside the native 80 by 65 card; no separately generated illustration is used.",
+      "interface": "Name-only eleventh Bonus card in the first column of row three. Native glove, preparation Start button, Menu/speed controls and board footer use the existing game style."
     }
   ],
   "canvas": {
