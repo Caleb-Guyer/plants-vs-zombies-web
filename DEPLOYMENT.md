@@ -1,5 +1,25 @@
 # GitHub Pages release: Caleb-Guyer/plants-vs-zombies-web
 
+## Cob.1 - reviewed release inputs
+
+Current engine: `0.2.6-web-cob.1`.
+
+- Exact published parent: Bungee.1 source SHA-256 `452205b2a2e383a74183423ddcd730db978abe0ed086f8463c168c75142f9062`, 31,850,177 bytes, 962 entries, 840 production files.
+- Current production: 844 files, including four new Cob Cannon Command implementation/presentation files.
+- Reconstructing patches: `web-cob.1.patch` and `bungee1-to-cob1.patch`.
+- Eight silent complete-engine drivers link the same 130 normal Release objects except main, producing sixteen backend files. All twenty-one native suites remain release gates.
+- All fifteen browser integration suites, muted actual-browser inspection and a fresh offline source-download check remain publication gates.
+- `build/pvz-portable.js`: 209,496 bytes, SHA-256 `c71e9fabbfefb0c84e06ee0b8227cda5f5993d66f7adbc89f66ede503856f6cc`.
+- `build/pvz-portable.wasm`: 7,746,359 bytes, SHA-256 `dbe563e56fbf1929e9556fe39e6285aaf18153847e2c741b5e72958b8e40acf7`.
+- `build/ProjectVersion.h`: 189 bytes, SHA-256 `8c594feafa4b00936426672bac2621c0eaebaf4eaa3462fb0ca692357dd4eadf`.
+- Corresponding source: `pvz-portable-0.2.6-web-cob.1-source.zip`, 34,458,383 bytes, 977 entries, SHA-256 `f1882ce4c5a412d539d15d4ccfcd5412cc96d6ffc7b8ae5b4b374bf04418dee0`.
+- Combined patch: `web-cob.1.patch`, 14,634,807 bytes, SHA-256 `5ff2a2f82480f25a6d93ededce80561461f5d56ddd153a7dda465596e55085c2`.
+- Incremental patch: `bungee1-to-cob1.patch`, 30,345 bytes, SHA-256 `a0f971298d6e1de0ca8a6840af6fe03baa67458b4fdcdfd0af82b65d719a0f54`.
+- Both patches reconstruct all 844 production files exactly. Fresh source-download extraction is checked with `npm --offline run check` before publication.
+
+All twenty-one muted native suites passed: 4,995,572 checks and zero failures. All fifteen browser integration suites passed, and muted browser inspection completed for this engine. These exact artifacts are prepared for GitHub Pages publication.
+
+
 ## Bungee.1 - reviewed release inputs
 
 Current engine: `0.2.6-web-bungee.1`.

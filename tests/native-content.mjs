@@ -15,6 +15,7 @@ import {verifyRallyRaid} from './rally-raid-verification.mjs';
 import {verifyLightsOut} from './lights-out-verification.mjs';
 import {verifyGarlicRun} from './garlic-run-verification.mjs';
 import {verifyBungeeBusiness} from './bungee-business-verification.mjs';
+import {verifyCobCannonCommand} from './cob-cannon-command-verification.mjs';
 
 const require = createRequire(import.meta.url);
 const dist = new URL('../dist/', import.meta.url);
@@ -23,12 +24,12 @@ new Function('module', 'exports', 'require', fs.readFileSync(new URL('vendor/jsz
 const JSZip = vendor.exports;
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
 const engine = JSON.parse(fs.readFileSync(new URL('game/engine-provenance.json', dist)));
-assert.equal(engine.id, '0.2.6-web-bungee.1');
+assert.equal(engine.id, '0.2.6-web-cob.1');
 const currentSourceBytes = fs.readFileSync(new URL(engine.artifacts.source, new URL('game/engine-provenance.json', dist)));
 assert.equal(sha(currentSourceBytes), engine.artifacts.sourceSha256, 'Current source archive matches the engine provenance pin');
 const current = await JSZip.loadAsync(currentSourceBytes, {checkCRC32: true});
-const parentSourceBytes = fs.readFileSync(new URL('source/pvz-portable-0.2.6-web-garlic.1-source.zip', dist));
-assert.equal(sha(parentSourceBytes), '389c3ab2ca51747139b34f2162d9dd8b81a973919222974cce4e8431e495749c', 'Parent is the exact published Garlic.1 source');
+const parentSourceBytes = fs.readFileSync(new URL('source/pvz-portable-0.2.6-web-bungee.1-source.zip', dist));
+assert.equal(sha(parentSourceBytes), '452205b2a2e383a74183423ddcd730db978abe0ed086f8463c168c75142f9062', 'Parent is the exact published Bungee.1 source');
 const parent = await JSZip.loadAsync(parentSourceBytes, {checkCRC32: true});
 // Preserve the two exact historical inputs required by the retained fog fix
 // without making a portable source checkout carry another complete engine ZIP.
@@ -50,22 +51,40 @@ for(const [name,pin] of Object.entries(lights1InputPins)) {
   assert.equal(sha(bytes),pin.sha256,'Retained historical input matches its authenticated archive bytes: '+name);
   lights1Inputs.set(name,bytes);
 }
-const prefix = 'bungee1-candidate/';
+const prefix = 'cob1-candidate/';
 // The restoration reference predates Raid.1's foreground override.
-const nativeUiSourceBytes=fs.readFileSync(new URL('source/pvz-portable-0.2.6-web-rally.3-source.zip',dist));
-assert.equal(sha(nativeUiSourceBytes),'2deb50f9a38d8599453f567f5458a20505d552956df0bc442e649e49ea1c5c24');
-const nativeUiSource=await JSZip.loadAsync(nativeUiSourceBytes,{checkCRC32:true});
-const nativeUiBytes=async name=>Buffer.from(await nativeUiSource.file('rally3-candidate/source/'+name).async('uint8array'));
+// Compact exact inputs retain archive and whole-file authentication without
+// forcing source downloads to duplicate another complete historical engine ZIP.
+const nativeUiArchiveSha256='2deb50f9a38d8599453f567f5458a20505d552956df0bc442e649e49ea1c5c24';
+const nativeUiReferenceBytes=fs.readFileSync(new URL('./fixtures/native-ui-reference.json',import.meta.url));
+assert.equal(sha(nativeUiReferenceBytes),'d9861034849eca9d637197aa78a1bae4c90b5656db91ca102d8c903100031edd');
+const nativeUiReference=JSON.parse(nativeUiReferenceBytes);
+assert.equal(nativeUiReference.schema,1);
+assert.equal(nativeUiReference.archiveSha256,nativeUiArchiveSha256);
+const nativeUiInputPins={
+  'rally3-candidate/source/src/Lawn/Board.cpp':{"bytes":304583,"sha256":"6996143c45dd1dbee6f5d9a092d7d05c3b1ea9b72b79c8fb0ce5ac44bf8fa31c"},
+  'rally3-candidate/source/src/Lawn/SeedPacket.cpp':{"bytes":33764,"sha256":"829e0a0818c096bd56ba4c3de7ab21df52e744bce8aeb32f698057950b42a863"},
+};
+assert.deepEqual(Object.keys(nativeUiReference.files).sort(),Object.keys(nativeUiInputPins).sort());
+const nativeUiInputs=new Map();
+for(const [name,pin] of Object.entries(nativeUiInputPins)) {
+  const entry=nativeUiReference.files[name],bytes=Buffer.from(entry.base64,'base64');
+  assert.deepEqual({bytes:entry.bytes,sha256:entry.sha256},pin);
+  assert.equal(bytes.length,pin.bytes);
+  assert.equal(sha(bytes),pin.sha256,'Complete authenticated original I,Zombie source input: '+name);
+  nativeUiInputs.set(name,bytes);
+}
+const nativeUiBytes=async name=>{const input=nativeUiInputs.get('rally3-candidate/source/'+name);assert(input,'Missing authenticated native UI input: '+name);return input;};
 const read = async name => {
   const entry = current.file(prefix + name);
   assert(entry, 'Missing current production source/test: ' + name);
   return Buffer.from(await entry.async('uint8array'));
 };
 const retainedChecks = {'game-speed':66, 'qol-controls':90, 'decks-cooldowns':274,
-  'bonus-challenge':387, 'bonus-completion':1276, 'night-shift':231, 'lantern-shroom':1724,
-  'garden-shuffle':214, 'seed-swap':587, 'mender-bloom':523, 'intensive-care':1135, 'native-layout':12300};
-const suites = [...Object.keys(retainedChecks), 'care-fatigue', 'care-full-run', 'chain-reaction', 'rally-zombie', 'rally-raid', 'lights-out', 'garlic-run', 'bungee-business'];
-assert.equal(suites.length, 20);
+  'bonus-challenge':387, 'bonus-completion':1277, 'night-shift':231, 'lantern-shroom':1724,
+  'garden-shuffle':214, 'seed-swap':587, 'mender-bloom':523, 'intensive-care':1135, 'native-layout':13470};
+const suites = [...Object.keys(retainedChecks), 'care-fatigue', 'care-full-run', 'chain-reaction', 'rally-zombie', 'rally-raid', 'lights-out', 'garlic-run', 'bungee-business', 'cob-cannon-command'];
+assert.equal(suites.length, 21);
 const reports = new Map();
 let checks = 0;
 for (const name of suites) {
@@ -87,17 +106,17 @@ for (const [name, count] of Object.entries(retainedChecks))
 // Preserve all retained assertions. Raid adds one challenge-definition
 // iteration and 2,732 native footer/card/packet/layer checks; Raid.2
 // retains those cases with native-order expectations and adds14 pick controls.
-assert.equal(Object.values(retainedChecks).reduce((sum, count) => sum + count, 0), 18807);
+assert.equal(Object.values(retainedChecks).reduce((sum, count) => sum + count, 0), 19978);
 assert.equal(reports.get('care-fatigue').checks, 25042,
   'Fatigue rig coverage retains every crew pose, scoped state and restoration check');
 const fullRunReport = reports.get('care-full-run');
 assert.equal(fullRunReport.checks, Object.keys(fullRunReport.sourceSha256).length + 152, 'Complete-engine provenance and required native scenario checks are retained');
 assert.equal(fullRunReport.execution, 'complete-production-engine',
   'Care scenarios execute the complete linked engine, not an extracted combat model');
-assert.equal(fullRunReport.productionObjectCount, 128, 'Complete engine drivers link all 128 normal production objects except main');
-assert.equal(Object.keys(fullRunReport.productionObjectSha256).length, 128);
+assert.equal(fullRunReport.productionObjectCount, 130, 'Complete engine drivers link all 130 normal production objects except main');
+assert.equal(Object.keys(fullRunReport.productionObjectSha256).length, 130);
 for (const digest of Object.values(fullRunReport.productionObjectSha256)) assert.match(digest, /^[a-f0-9]{64}$/);
-assert.equal(Object.keys(fullRunReport.sourceSha256).length, 840,
+assert.equal(Object.keys(fullRunReport.sourceSha256).length, 844,
   'Complete engine scenarios pin every production source input, not an extracted combat model');
 const fullRunArtifactNames = ['care-full-run-engine.js', 'care-full-run-engine.wasm'];
 assert.deepEqual(Object.keys(fullRunReport.testArtifactSha256).sort(), [...fullRunArtifactNames].sort());
@@ -117,7 +136,7 @@ const fullRunProductionBuild = JSON.parse(fullRunProductionBuildBytes);
 assert.equal(fullRunProductionBuild.exitCode, 0);
 assert.equal(fullRunProductionBuild.sourceUnchangedDuringBuild, true);
 assert.equal(fullRunProductionBuild.status, 'PASS');
-assert.equal(fullRunProductionBuild.sourceFiles, 840);
+assert.equal(fullRunProductionBuild.sourceFiles, 844);
 const fullRunBuild = JSON.parse(await read('tests/care-full-run-build.json'));
 for (const name of ['execution', 'productionObjectCount', 'productionBuildReceiptSha256',
   'generatedHarnessSha256', 'builderSha256', 'testArtifactSha256', 'sourceSha256', 'productionObjectSha256'])
@@ -347,15 +366,16 @@ const currentLightsFogInputs=JSON.parse(await read('tests/lights-native-art-inpu
 assert.deepEqual(currentLightsFogInputs,expectedLightsFogInputs,'All twelve prior artwork pins and metadata remain exact; only the two authenticated original graded-fog JPEGs are appended');
 assert.equal(Object.keys(currentLightsFogInputs.sourceInputs).length,14);
 await verifyLightsOut({report:reports.get('lights-out'),read,sha,engine,fullRunReport,productionBuildBytes:fullRunProductionBuildBytes});
-assert.deepEqual(await read('tests/lights-native-art-inputs.json'), Buffer.from(await parent.file('garlic1-candidate/tests/lights-native-art-inputs.json').async('uint8array')), 'All fourteen original fog artwork inputs remain byte-identical to Lights.2');
+assert.deepEqual(await read('tests/lights-native-art-inputs.json'), Buffer.from(await parent.file('bungee1-candidate/tests/lights-native-art-inputs.json').async('uint8array')), 'All fourteen original fog artwork inputs remain byte-identical to Lights.2');
 await verifyGarlicRun({report:reports.get('garlic-run'),read,sha,engine,fullRunReport,productionBuildBytes:fullRunProductionBuildBytes});
 await verifyBungeeBusiness({report:reports.get('bungee-business'),read,sha,engine,fullRunReport,productionBuildBytes:fullRunProductionBuildBytes});
+await verifyCobCannonCommand({report:reports.get('cob-cannon-command'),read,sha,engine,fullRunReport,productionBuildBytes:fullRunProductionBuildBytes});
 const careBalance = reports.get('intensive-care').balanceModel;
 assert.equal(careBalance.kind, 'native healing/fatigue capacity bound; not a battle clear');
 assert(careBalance.allBedsHealHpPerSecond > careBalance.maximumCrewFatigueHpPerSecond);
 assert(careBalance.slowestSuppliedRecoveryTicks < 3000);
 assert.equal(careBalance.authoredEnemies, 40);
-const parentPrefix = 'garlic1-candidate/source/';
+const parentPrefix = 'bungee1-candidate/source/';
 const parentBytes = async name => Buffer.from(await parent.file(parentPrefix + name).async('uint8array'));
 const layoutReport = reports.get('native-layout');
 assert.equal(layoutReport.hintLines, 1);
@@ -405,6 +425,27 @@ assert.equal(layoutReport.bungeeBonusCards,1);
 assert.equal(layoutReport.bungeeViewports,6);
 assert.equal(layoutReport.bungeeFooterCases,20);
 assert.equal(layoutReport.bungeeIntroLines,1);
+assert.equal(layoutReport.cobRetainedChecks,12300);
+assert.equal(layoutReport.cobLayoutChecks,1170);
+assert.equal(layoutReport.cobBonusCards,1);
+assert.equal(layoutReport.cobViewports,6);
+assert.equal(layoutReport.cobFooterCases,36);
+assert.equal(layoutReport.cobIntroLines,1);
+assert.equal(layoutReport.cobObservedNativeGeometry,true);
+assert.equal(layoutReport.cobFooterBaselineMutationRejected,true);
+const cobUiAssetBytes=await read('tests/cob-ui-assets.json');
+assert.equal(sha(cobUiAssetBytes),'2e9622894f707e75fe4d3c8569e488ae62f41553ae9d3ceed76b0649acc7f1e8');
+assert.equal(layoutReport.fixturesSha256['cob-ui-assets.json'],sha(cobUiAssetBytes));
+const cobUiAssets=JSON.parse(cobUiAssetBytes);
+const cobNativeArtInputs=JSON.parse(await read('tests/cob-native-art-inputs.json'));
+assert.equal(Object.keys(cobNativeArtInputs.sourceInputs).length,53);
+assert.deepEqual(Object.keys(cobUiAssets).sort(),['images/FlagMeter.png','images/FlagMeterParts.png','images/FlagMeterLevelProgress.png'].sort());
+for(const [name,entry] of Object.entries(cobUiAssets)) {
+  const bytes=Buffer.from(entry.base64,'base64');
+  assert.equal(sha(bytes),entry.sha256);
+  assert.equal(entry.sha256,cobNativeArtInputs.sourceInputs[name].sha256);
+  assert.equal(bytes.length,cobNativeArtInputs.sourceInputs[name].bytes);
+}
 assert.equal(layoutReport.bungeeObservedNativeGeometry,true);
 assert.equal(layoutReport.bungeeFooterBaselineMutationRejected,true);
 const layoutFixtureBytes = await read('tests/native-layout-assets.json');
@@ -415,7 +456,7 @@ assert.equal(layoutFixture.schema, 1);
 assert.equal(layoutFixture.assetBundleId, engine.assetBundleId);
 assert.equal(layoutFixture.parentSourceSha256, '540f1ee365b558e10304995692485976e91f23bb1b28c305e6ade6cd17f1ed11',
   'The preserved layout negative-control fixture identifies its original Care.1 source');
-const parentLayoutFixtureEntry = parent.file('garlic1-candidate/tests/native-layout-assets.json');
+const parentLayoutFixtureEntry = parent.file('bungee1-candidate/tests/native-layout-assets.json');
 assert(parentLayoutFixtureEntry, 'Authenticated Lights.1 parent retains the exact layout regression fixture');
 assert.deepEqual(layoutFixtureBytes, Buffer.from(await parentLayoutFixtureEntry.async('uint8array')),
   'Historical Care.1 negative methods and native asset fixtures retain every authenticated Lights.1 fixture byte');
@@ -458,7 +499,7 @@ assert.equal(sha(raidLayerFixtureBytes),'fdd6bf6e6d6cc40aac5e77817150cedd87ba369
 assert.equal(layoutReport.fixturesSha256['raid-bank-parent.json'],sha(raidLayerFixtureBytes));
 const raidLayerFixture=JSON.parse(raidLayerFixtureBytes);
 assert.equal(raidLayerFixture.schema,1);
-assert.equal(raidLayerFixture.parentSourceSha256,sha(nativeUiSourceBytes));
+assert.equal(raidLayerFixture.parentSourceSha256,nativeUiArchiveSha256);
 assert.equal(raidLayerFixture.boardSourceSha256,sha(await nativeUiBytes('src/Lawn/Board.cpp')));
 assert.equal(raidLayerFixture.seedPacketSourceSha256,sha(await nativeUiBytes('src/Lawn/SeedPacket.cpp')));
 assert.deepEqual(Object.keys(raidLayerFixture.methods).sort(),
@@ -471,6 +512,9 @@ for(const [signature,method] of Object.entries(raidLayerFixture.methods)) {
   const currentMethod=extractLegacyFunction((await read('source/'+(signature.includes('SeedPacket::')?'src/Lawn/SeedPacket.cpp':'src/Lawn/Board.cpp'))).toString(),signature);
   let nativePath=currentMethod;
   if(signature==='void Board::DrawUIBottom(') {
+    const cobBankGuard='!CobCannonCommand::IsMode(mApp->mGameMode) && ';
+    assert.equal(nativePath.split(cobBankGuard).length,2);
+    nativePath=nativePath.replace(cobBankGuard,'');
     const bankGuard='!GarlicRun::IsMode(mApp->mGameMode) && !LightsOut::IsMode(mApp->mGameMode) && ';
     const bottomGlove='if (!LightsOut::IsMode(mApp->mGameMode) && !GarlicRun::IsMode(mApp->mGameMode)) DrawShovel(g);';
     assert.equal(nativePath.split(bankGuard).length,2);
@@ -493,7 +537,7 @@ assert.equal(sha(foregroundFixtureBytes),'bb816f27d031bffa79a91ee3f281504ebee7b6
 assert.equal(layoutReport.fixturesSha256['raid1-foreground-ui.json'],sha(foregroundFixtureBytes));
 // Raid.2 authenticated these exact methods against published Raid.1. Retain
 // that fixture through the pinned parent archive without bundling another engine.
-const inheritedForegroundEntry=parent.file('garlic1-candidate/tests/raid1-foreground-ui.json');
+const inheritedForegroundEntry=parent.file('bungee1-candidate/tests/raid1-foreground-ui.json');
 assert(inheritedForegroundEntry,'Authenticated Lights.1 source must retain the Raid.1 regression fixture');
 const inheritedForegroundBytes=Buffer.from(await inheritedForegroundEntry.async('uint8array'));
 assert.equal(sha(inheritedForegroundBytes),'bb816f27d031bffa79a91ee3f281504ebee7b666fbe4078f6762aecc83a86b95');
@@ -524,7 +568,7 @@ const staticPlantFixture=JSON.parse(staticPlantFixtureBytes);
 assert.equal(staticPlantFixture.schema,1);
 assert.equal(staticPlantFixture.parentSourceSha256,'0bb8e6ae265488e1d1da8b472c10730f0bd17df9a56337c8acc34c4c3911a225');
 assert.equal(staticPlantFixture.signature,'bool DrawCustomPlant(');
-const inheritedStaticEntry=parent.file('garlic1-candidate/tests/raid2-static-plant.json');
+const inheritedStaticEntry=parent.file('bungee1-candidate/tests/raid2-static-plant.json');
 assert(inheritedStaticEntry,'Authenticated Lights.1 source retains its actual Raid.2 static-attack regression fixture');
 const inheritedStaticBytes=Buffer.from(await inheritedStaticEntry.async('uint8array'));
 assert.equal(sha(inheritedStaticBytes),'fb2fa6f1cd55ffd2ac0f3b88bb6c98e2a457d753258ef054fdd182df2f7a5ec9');
@@ -537,7 +581,7 @@ const breathingFixture=JSON.parse(breathingFixtureBytes);
 assert.equal(breathingFixture.schema,1);
 assert.equal(breathingFixture.parentSourceSha256,'dc02a3d87a227e3b6b890cd03894999dea831c62a6d184fc2a0bc281425e51a3');
 assert.equal(breathingFixture.signature,'bool DrawCustomPlant(');
-const inheritedBreathingEntry=parent.file('garlic1-candidate/tests/raid3-breathing-plant.json');
+const inheritedBreathingEntry=parent.file('bungee1-candidate/tests/raid3-breathing-plant.json');
 assert(inheritedBreathingEntry,'Authenticated Lights.1 retains the exact rejected Raid.3 breathing helper');
 assert.deepEqual(breathingFixtureBytes,Buffer.from(await inheritedBreathingEntry.async('uint8array')),
   'Every inherited breathing-negative source pin and method stays byte-identical');
@@ -595,15 +639,16 @@ function enumValues(text, name) {
 const oldEnums = (await parentBytes('src/ConstEnums.h')).toString();
 const newEnums = (await read('source/src/ConstEnums.h')).toString();
 const oldModes = enumValues(oldEnums, 'GameMode'), newModes = enumValues(newEnums, 'GameMode');
-assert.equal(oldModes.get('NUM_GAME_MODES'), 84);
+assert.equal(oldModes.get('NUM_GAME_MODES'), 85);
 for (const [key, value] of oldModes) if (key !== 'NUM_GAME_MODES') assert.equal(newModes.get(key), value, 'Every existing mode ID remains stable: ' + key);
 assert.equal(newModes.get('GAMEMODE_CHALLENGE_RALLY_POINT'), 80);
 assert.equal(newModes.get('GAMEMODE_CHALLENGE_RALLY_RAID'), 81);
 assert.equal(newModes.get('GAMEMODE_CHALLENGE_LIGHTS_OUT'),82);
 assert.equal(newModes.get('GAMEMODE_CHALLENGE_GARLIC_RUN'),83);
 assert.equal(newModes.get('GAMEMODE_CHALLENGE_BUNGEE_BUSINESS'),84);
-assert.equal(newModes.get('NUM_GAME_MODES'),85);
-assert.deepEqual([...newModes].filter(([name])=>name!=='GAMEMODE_CHALLENGE_BUNGEE_BUSINESS'&&name!=='NUM_GAME_MODES'),[...oldModes].filter(([name])=>name!=='NUM_GAME_MODES'),'Every prior mode ID remains exact');
+assert.equal(newModes.get('GAMEMODE_CHALLENGE_COB_CANNON_COMMAND'),85);
+assert.equal(newModes.get('NUM_GAME_MODES'),86);
+assert.deepEqual([...newModes].filter(([name])=>name!=='GAMEMODE_CHALLENGE_COB_CANNON_COMMAND'&&name!=='NUM_GAME_MODES'),[...oldModes].filter(([name])=>name!=='NUM_GAME_MODES'),'Every prior mode ID remains exact');
 assert.deepEqual([...enumValues(newEnums, 'ChallengePage')], [...enumValues(oldEnums, 'ChallengePage')],
   'Cold Front uses the existing Bonus page without changing any page IDs');
 const oldZombieIds = enumValues(oldEnums, 'ZombieType'), newZombieIds = enumValues(newEnums, 'ZombieType');
@@ -650,8 +695,8 @@ function definitions(text) {
 }
 const oldDefinitions = definitions((await parentBytes('src/Lawn/Widget/ChallengeScreen.cpp')).toString());
 const newDefinitions = definitions((await read('source/src/Lawn/Widget/ChallengeScreen.cpp')).toString());
-assert.equal(oldDefinitions.length, 83);
-assert.deepEqual(newDefinitions.slice(0,oldDefinitions.length), oldDefinitions, 'Every original and all eleven prior Bonus challenge definitions remain exact');
+assert.equal(oldDefinitions.length, 84);
+assert.deepEqual(newDefinitions.slice(0,oldDefinitions.length), oldDefinitions, 'Every original and all twelve prior Bonus challenge definitions remain exact');
 assert.equal(newDefinitions.length, oldDefinitions.length+1);
 assert.match(newDefinitions[81], /GAMEMODE_CHALLENGE_LIGHTS_OUT/);
 assert.match(newDefinitions[81], /Lights Out/);
@@ -659,17 +704,20 @@ assert.match(newDefinitions[81], /CHALLENGE_PAGE_BONUS/);
 assert.match(newDefinitions[81], /\.mRow = 2/);
 assert.match(newDefinitions[81], /\.mCol = 4/);
 assert.match(newDefinitions[82], /GAMEMODE_CHALLENGE_GARLIC_RUN/);
-assert.match(newDefinitions.at(-1), /GAMEMODE_CHALLENGE_BUNGEE_BUSINESS/);
+assert.match(newDefinitions[83], /GAMEMODE_CHALLENGE_BUNGEE_BUSINESS/);
+assert.match(newDefinitions.at(-1), /GAMEMODE_CHALLENGE_COB_CANNON_COMMAND/);
 assert.match(newDefinitions[82], /Garlic Run/);
-assert.match(newDefinitions.at(-1), /Bungee Business/);
+assert.match(newDefinitions[83], /Bungee Business/);
+assert.match(newDefinitions.at(-1), /Cob Cannon Command/);
 assert.match(newDefinitions.at(-1), /CHALLENGE_PAGE_BONUS/);
 assert.match(newDefinitions.at(-1), /\.mRow = 3/);
 assert.match(newDefinitions[82], /\.mCol = 0/);
-assert.match(newDefinitions.at(-1), /\.mCol = 1/);
-console.log('PASS native I,Zombie presentation restoration preserves every prior mode/seed ID, saved layout, plant and all eleven prior Bonus challenge identities.');
+assert.match(newDefinitions[83], /\.mCol = 1/);
+assert.match(newDefinitions.at(-1), /\.mCol = 2/);
+console.log('PASS native I,Zombie presentation restoration preserves every prior mode/seed ID, saved layout, plant and all twelve prior Bonus challenge identities.');
 
 const artRecordBytes=fs.readFileSync(new URL('content/native-bonus-art.json', dist));
-assert.equal(sha(artRecordBytes),'1b01deaea4c08f6561168c195935ac93df0b715da490791170a281af58120309','Reviewed twelve-card native Bonus metadata');
+assert.equal(sha(artRecordBytes),'4206d7a5c8cf3d237d34922e30717fa06af5696679214d8ec836fae91c72b6a3','Reviewed thirteen-card native Bonus metadata');
 const artRecord = JSON.parse(artRecordBytes);
 assert.match(artRecord.sourceKind, /native sprite compositions/);
 assert.equal(artRecord.generatedArtworkUsed, true, 'Generated artwork is scoped to the permitted plant sprite');
@@ -678,8 +726,8 @@ assert.equal(artRecord.assetBundleId, engine.assetBundleId);
 assert.equal(artRecord.plant.nativeReanimation, 'REANIM_ICESHROOM');
 assert.equal(artRecord.plant.spriteOverride, 'chill-shroom/provenance.json');
 assert.deepEqual(artRecord.canvas, {width: 80, height: 65, heroCenterX: 40, heroCenterY: 32.5, maxHeroWidth: 68, maxHeroHeight: 57});
-assert.deepEqual(artRecord.cards.map(card => card.mode), [73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84]);
-assert.deepEqual(artRecord.cards.map(card => card.name), ['Cone Zone', 'Night Shift', 'Cold Front', 'Garden Shuffle', 'Seed Swap', 'Intensive Lawn Care', 'Chain Reaction', 'Rally Point', 'Rally Raid', 'Lights Out', 'Garlic Run', 'Bungee Business']);
+assert.deepEqual(artRecord.cards.map(card => card.mode), [73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85]);
+assert.deepEqual(artRecord.cards.map(card => card.name), ['Cone Zone', 'Night Shift', 'Cold Front', 'Garden Shuffle', 'Seed Swap', 'Intensive Lawn Care', 'Chain Reaction', 'Rally Point', 'Rally Raid', 'Lights Out', 'Garlic Run', 'Bungee Business', 'Cob Cannon Command']);
 
 const parentArtBytes = await read('tests/raid-parent-native-art.json');
 assert.equal(sha(parentArtBytes), '59ae4b436d2a6a5422697561ef91167cd9298a02c4bb6edf9b47254229e2c9c2', 'Independent exact published Rally.3 card metadata fixture');
@@ -728,6 +776,17 @@ assert.equal(artRecord.cards[11].name,'Bungee Business');
 assert.equal(artRecord.cards[11].generatedArtworkUsed,false);
 assert.match(artRecord.cards[11].hero,/Original REANIM_BUNGEE[\s\S]*REANIM_SUNFLOWER[\s\S]*REANIM_UMBRELLALEAF/);
 assert.equal(sha(await read('tests/bungee-native-art-inputs.json')),'de72c77af01f18c6a34fa73ae96bda1917c3ef7d338ac552e09f0a49292c5793');
+const cobParentArtBytes=await read('tests/cob-parent-native-art.json');
+assert.equal(sha(cobParentArtBytes),'1b01deaea4c08f6561168c195935ac93df0b715da490791170a281af58120309');
+assert.deepEqual({...artRecord,cards:artRecord.cards.slice(0,12)},JSON.parse(cobParentArtBytes),'Cob Cannon Command appends only its own card while all twelve old artwork and non-card values remain exact');
+const cobCard=artRecord.cards[12];
+assert.equal(cobCard.mode,85);
+assert.equal(cobCard.name,'Cob Cannon Command');
+assert.equal(cobCard.background,'IMAGE_BACKGROUND1');
+assert.equal(cobCard.generatedArtworkUsed,false);
+assert.match(cobCard.hero,/Original REANIM_COBCANNON loaded idle rig/);
+assert.match(cobCard.artwork,/complete original loaded Cob Cannon assembly[\s\S]*68 by57|complete original loaded Cob Cannon assembly[\s\S]*68 by 57/);
+assert.equal(sha(await read('tests/cob-native-art-inputs.json')),'212692d9fa221a0f8865aa900028bcafe4f0322128a7af12d7716271d0241229');
 assert.notEqual(raidCard.interface,raid1Art.cards[8].interface);
 assert.match(artRecord.checkpointCompatibility,/Rally Raid appends mode81[\s\S]*profile record80[\s\S]*Packet77 remains outside original plant\/cache\/chooser ranges/);
 assert.equal(artRecord.animation.newGeneratedArtwork, false, 'Motion uses existing sprite/effect assets');
@@ -959,7 +1018,7 @@ const completeProductionSources = Object.fromEntries(Object.entries(sourceManife
   .map(([name, pin]) => ['source/' + name, pin.sha256]));
 assert.deepEqual(fullRunReport.sourceSha256, completeProductionSources,
   'Every full-engine source input matches the complete published production manifest');
-assert.equal(Object.keys(completeProductionSources).length,840);
+assert.equal(Object.keys(completeProductionSources).length,844);
 for(const [name,result] of reports)
   for(const [input,pin] of Object.entries(result.sourceSha256))
     assert.equal(completeProductionSources[input],pin,'Every native suite uses this same complete release source: '+name+'/'+input);
@@ -973,10 +1032,10 @@ const archivedSourceNames = Object.values(current.files).filter(entry => !entry.
   .map(entry => entry.name.slice((prefix + 'source/').length));
 assert.deepEqual(archivedSourceNames.sort(), Object.keys(sourceManifest.files).sort(),
   'Every corresponding-source archive member is represented exactly once in its manifest');
-// Existing production changes are limited to the appended Bungee heist mode and native integration hooks.
+// Existing production changes are limited to the appended Cob Cannon artillery mode and native integration hooks.
 const runtimeInputs = new Set(['src/ConstEnums.h','src/Lawn/Board.cpp','src/Lawn/Challenge.cpp','src/Lawn/System/BonusChallenge.h','src/Lawn/Widget/ChallengeScreen.cpp','src/Lawn/Zombie.cpp','src/LawnApp.cpp']);
 const releaseIdentityInputs = new Set(['CMake/ProjectVersion.cmake']);
-const addedRaidInputs = ['src/Lawn/System/BungeeBusiness.cpp','src/Lawn/System/BungeeBusiness.h','src/Lawn/System/BungeeBusinessPresentation.cpp','src/Lawn/System/BungeeBusinessPresentation.h'];
+const addedRaidInputs = ['src/Lawn/System/CobCannonCommand.cpp','src/Lawn/System/CobCannonCommand.h','src/Lawn/System/CobCannonCommandPresentation.cpp','src/Lawn/System/CobCannonCommandPresentation.h'];
 const nativeNames = ['PeaShooter_backleaf.png', 'PeaShooter_backleaf_lefttip.png', 'PeaShooter_backleaf_righttip.png',
   'PeaShooter_stalk_bottom.png', 'PeaShooter_stalk_top.png', 'PeaShooter_frontleaf.png',
   'PeaShooter_frontleaf_righttip.png', 'PeaShooter_frontleaf_lefttip.png', 'SunFlower_head.png',
@@ -995,17 +1054,44 @@ for (const entry of Object.values(parent.files)) {
     continue;
   }
   if (releaseIdentityInputs.has(name))
-    assert.equal(after.toString().replaceAll('0.2.6-web-bungee.1', '0.2.6-web-garlic.1'), before.toString());
+    assert.equal(after.toString().replaceAll('0.2.6-web-cob.1', '0.2.6-web-bungee.1'), before.toString());
   else assert.deepEqual(after, before, 'Every unrelated source/artwork byte remains exact: ' + name);
 }
-assert.equal(parentSourceCount, 836);
+assert.equal(parentSourceCount, 840);
 const addedProduction = Object.keys(sourceManifest.files).filter(name => !parent.file(parentPrefix + name));
-assert.deepEqual(addedProduction.sort(), [...addedRaidInputs].sort(), 'Bungee Business adds exactly four reviewed implementation/presentation files');
+assert.deepEqual(addedProduction.sort(), [...addedRaidInputs].sort(), 'Cob Cannon Command adds exactly four reviewed implementation/presentation files');
 assert.equal(Object.keys(sourceManifest.files).length, parentSourceCount + addedRaidInputs.length);
 const normalizeSource = bytes => bytes.toString().replace(/\r\n?/g, '\n');
 // Reconstruct the exact historical Lights.2 Zombie from authenticated Garlic.1.
 // Its independently obtained normalized SHA pins every old source byte.
-const afterWalkingZombie=normalizeSource(await parentBytes('src/Lawn/Zombie.cpp'));
+const publishedBungeeZombie=normalizeSource(await parentBytes('src/Lawn/Zombie.cpp'));
+const publishedBungeeBoard=normalizeSource(await parentBytes('src/Lawn/Board.cpp'));
+// Only exact Bungee-only hooks may differ from the complete published Garlic.1
+// Board/Zombie. This includes preserving every prior native Bungee mechanic.
+let parentZombieFromBungee=publishedBungeeZombie;
+for(const addition of [
+  '            if (BungeeBusiness::IsMode(mApp->mGameMode)) BungeeBusiness::OnBungeeExit(*this);\n',
+  ' && !BungeeBusiness::IsMode(mApp->mGameMode)',
+  'BungeeBusiness::IsMode(mApp->mGameMode) || ',
+]) {
+  assert.equal(parentZombieFromBungee.split(addition).length,2,'Exact Bungee-only Zombie hook: '+addition);
+  parentZombieFromBungee=parentZombieFromBungee.replace(addition,'');
+}
+assert.equal(sha(Buffer.from(parentZombieFromBungee)),'f5f2b7955d990f478b78fd907c2147783ef0a5be2d8e34cf645e1eadde2f3a2d','All reconstructed Garlic Zombie bytes match the independently authenticated published Garlic.1 source');
+const afterWalkingZombie=parentZombieFromBungee;
+let parentBoardFromBungee=publishedBungeeBoard;
+const removeBungeeBoard=(addition,count=1,replacement='')=>{
+  assert.equal(parentBoardFromBungee.split(addition).length,count+1,'Exact Bungee-only Board hook: '+addition);
+  parentBoardFromBungee=parentBoardFromBungee.replaceAll(addition,replacement);
+};
+removeBungeeBoard('BungeeBusiness::IsMode(aGameMode) ? BungeeBusiness::kActive : ');
+removeBungeeBoard('\t\tif (BungeeBusiness::IsMode(mApp->mGameMode))\n        {\n            aLevelStr = BungeeBusiness::LevelLabel(mChallenge->mSurvivalStage);\n        }\n\t\telse if (GarlicRun::IsMode(mApp->mGameMode))',1,'\t\tif (GarlicRun::IsMode(mApp->mGameMode))');
+// Four prefixes include the mode-only correction for the native footer descender.
+removeBungeeBoard('BungeeBusiness::IsMode(mApp->mGameMode) || ',4);
+assert.equal(sha(Buffer.from(parentBoardFromBungee)),'fd58ac067e264888eb1608c7333345300ed7a0afa52c1568d3ba7c053138c27b','All reconstructed Garlic Board bytes match the independently authenticated published Garlic.1 source');
+const afterBoard=parentBoardFromBungee;
+
+
 const currentWalkingZombie=normalizeSource(await read('source/src/Lawn/Zombie.cpp'));
 let priorZombiePath=afterWalkingZombie;
 for(const addition of [' || GarlicRun::HoldsZombie(*this)',' || GarlicRun::IsMode(mApp->mGameMode)']) {
@@ -1022,8 +1108,26 @@ const afterPlant = normalizeSource(await read('source/src/Lawn/Plant.cpp'));
 for (const signature of ['void DrawCareFatigue(Graphics* g, Plant& plant, Reanimation& body, float baseY)',
   "namespace\n{\n// Reanimation's matrix draw path does not use Graphics::SetScale."])
   assert.equal(extractLegacyFunction(afterPlant, signature), extractLegacyFunction(beforePlant, signature), 'Care fatigue rendering remains exact');
-const afterBoard = normalizeSource(await parentBytes('src/Lawn/Board.cpp'));
 const currentBoard = normalizeSource(await read('source/src/Lawn/Board.cpp'));
+
+// Remove only the explicitly reviewed Cob additions. Both full files must
+// reconstruct the exact directly authenticated published Bungee.1 parent.
+let parentZombieFromCob=currentWalkingZombie;
+const cobZombieGuard='CobCannonCommand::IsMode(mApp->mGameMode) || ';
+assert.equal(parentZombieFromCob.split(cobZombieGuard).length,2);
+parentZombieFromCob=parentZombieFromCob.replace(cobZombieGuard,'');
+assert.equal(parentZombieFromCob,publishedBungeeZombie,'All existing zombie motion, attacks, health and award behavior stays byte exact outside the Cob-only award guard');
+let parentBoardFromCob=currentBoard;
+for(const [addition,count] of [
+  ['CobCannonCommand::IsMode(aGameMode) ? CobCannonCommand::kActive : ',1],
+  ['CobCannonCommand::IsMode(mApp->mGameMode) || ',4],
+  ['!CobCannonCommand::IsMode(mApp->mGameMode) && ',1],
+]) {
+  assert.equal(parentBoardFromCob.split(addition).length,count+1,'Exact Cob-only Board integration: '+addition);
+  parentBoardFromCob=parentBoardFromCob.replaceAll(addition,'');
+}
+assert.equal(parentBoardFromCob,publishedBungeeBoard,'All prior Board gameplay, fog, tooltips and UI remain byte exact after the reviewed Cob guards');
+
 // Retain the full previous fog/tooltip fix proof against its exact historical parent.
 const lights1Board=normalizeSource(lights1Inputs.get('lights1-candidate/source/src/Lawn/Board.cpp'));
 const oldTooltipGuard='if (!(IntensiveCare::IsMode(mApp->mGameMode) && theHitResult->mObjectType == OBJECT_TYPE_GLOVE))';
@@ -1067,29 +1171,6 @@ for (const field of ['mCurrentWave', 'mTotalSpawnedWaves'])
   assert.match(extractLegacyFunction(afterBoard, 'Board::Board(LawnApp* theApp)'), new RegExp(field+' = 0;'));
 for (const signature of ['void Board::UpdateIntensiveCare()', 'bool Board::MoveIntensiveCarePlant(Plant* thePlant, int theGridX, int theGridY)'])
   assert.equal(extractLegacyFunction(afterBoard, signature), extractLegacyFunction(beforeBoard, signature), 'Existing Care mechanics stay exact');
-
-// Only exact Bungee-only hooks may differ from the complete published Garlic.1
-// Board/Zombie. This includes preserving every prior native Bungee mechanic.
-let parentZombieFromBungee=currentWalkingZombie;
-for(const addition of [
-  '            if (BungeeBusiness::IsMode(mApp->mGameMode)) BungeeBusiness::OnBungeeExit(*this);\n',
-  ' && !BungeeBusiness::IsMode(mApp->mGameMode)',
-  'BungeeBusiness::IsMode(mApp->mGameMode) || ',
-]) {
-  assert.equal(parentZombieFromBungee.split(addition).length,2,'Exact Bungee-only Zombie hook: '+addition);
-  parentZombieFromBungee=parentZombieFromBungee.replace(addition,'');
-}
-assert.equal(parentZombieFromBungee,afterWalkingZombie,'All old Zombie walking, attacks, health, native Bungee grab/lift and unrelated source bytes remain exact');
-let parentBoardFromBungee=currentBoard;
-const removeBungeeBoard=(addition,count=1,replacement='')=>{
-  assert.equal(parentBoardFromBungee.split(addition).length,count+1,'Exact Bungee-only Board hook: '+addition);
-  parentBoardFromBungee=parentBoardFromBungee.replaceAll(addition,replacement);
-};
-removeBungeeBoard('BungeeBusiness::IsMode(aGameMode) ? BungeeBusiness::kActive : ');
-removeBungeeBoard('\t\tif (BungeeBusiness::IsMode(mApp->mGameMode))\n        {\n            aLevelStr = BungeeBusiness::LevelLabel(mChallenge->mSurvivalStage);\n        }\n\t\telse if (GarlicRun::IsMode(mApp->mGameMode))',1,'\t\tif (GarlicRun::IsMode(mApp->mGameMode))');
-// Four prefixes include the mode-only correction for the native footer descender.
-removeBungeeBoard('BungeeBusiness::IsMode(mApp->mGameMode) || ',4);
-assert.equal(parentBoardFromBungee,afterBoard,'Every previous Board byte and native old-mode path remains exact after the explicit Bungee hooks');
 
 const beforeLantern = normalizeSource(await parentBytes('src/Lawn/System/LanternShroom.cpp'));
 const afterLantern = normalizeSource(await read('source/src/Lawn/System/LanternShroom.cpp'));
@@ -1442,7 +1523,7 @@ if (process.argv.includes('--run-native')) {
     }
     for (const name of suites) {
       const args = [path.join(temporary, 'tests/test-' + name + '.py'), '--native'];
-      if (['care-full-run','chain-reaction','rally-zombie','rally-raid','lights-out','garlic-run','bungee-business'].includes(name)) args.push('--asset-root', fileURLToPath(new URL('game-assets/', dist)));
+      if (['care-full-run','chain-reaction','rally-zombie','rally-raid','lights-out','garlic-run','bungee-business','cob-cannon-command'].includes(name)) args.push('--asset-root', fileURLToPath(new URL('game-assets/', dist)));
       const run = spawnSync('python', args, {encoding: 'utf8'});
       assert.equal(run.status, 0, (run.error?.message || '') + run.stdout + run.stderr);
       const actual = JSON.parse(fs.readFileSync(path.join(temporary, 'tests/' + name + '-results.json')));
@@ -1451,8 +1532,8 @@ if (process.argv.includes('--run-native')) {
       assert.equal(actual.exitCode, 0);
       assert.match(actual.status, /^PASS/);
       assert.deepEqual(actual.sourceSha256, reports.get(name).sourceSha256);
-      if(['care-full-run','chain-reaction','rally-zombie','rally-raid','lights-out','garlic-run','bungee-business'].includes(name)) {
-        assert.equal(actual.productionObjectCount,128);
+      if(['care-full-run','chain-reaction','rally-zombie','rally-raid','lights-out','garlic-run','bungee-business','cob-cannon-command'].includes(name)) {
+        assert.equal(actual.productionObjectCount,130);
         assert.deepEqual(actual.productionObjectSha256,fullRunReport.productionObjectSha256);
         assert.equal(actual.productionBuildReceiptSha256,sha(fullRunProductionBuildBytes));
       }
@@ -1468,8 +1549,11 @@ if (process.argv.includes('--run-native')) {
       if(name==='bungee-business') await verifyBungeeBusiness({report:actual,
         read:async input=>fs.readFileSync(path.join(temporary,input)),sha,engine,fullRunReport,
         productionBuildBytes:fullRunProductionBuildBytes});
+      if(name==='cob-cannon-command') await verifyCobCannonCommand({report:actual,
+        read:async input=>fs.readFileSync(path.join(temporary,input)),sha,engine,fullRunReport,
+        productionBuildBytes:fullRunProductionBuildBytes});
     }
-    console.log(`PASS all ${checks} assertions across 20 native suites, including complete headless Care, Chain, Rally, Raid, Lights Out, Garlic Run and Bungee Business scenarios on CI.`);
+    console.log(`PASS all ${checks} assertions across 21 native suites, including complete headless Care, Chain, Rally, Raid, Lights Out, Garlic Run, Bungee Business and Cob Cannon Command scenarios on CI.`);
   } finally {
     const resolved = fs.realpathSync(temporary);
     assert.equal(path.dirname(resolved), temporaryRoot);

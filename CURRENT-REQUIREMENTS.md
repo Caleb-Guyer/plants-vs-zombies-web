@@ -1,5 +1,14 @@
 # Current requirements
 
+## Cob.1 - native artillery battle
+
+`0.2.6-web-cob.1` adds Cob Cannon Command as the thirteenth Bonus minigame. One continuous day-lawn battle starts with six preplaced Cob Cannons, five Wall-nuts and five original lawn mowers. Aim the loaded cannons at eight moving formations containing 36 authored zombies. The two late Gargantuars can throw real native Imps; only clearing the entire battle earns the normal native completion award.
+
+The original two-click targeting, cancellation, reticle, firing animation, shell flight, explosions and damage rules remain intact. Cannons retain their native initial 500-tick arming delay and 3000-tick reload followed by the original charge animation. The six Cannons, five Wall-nuts and all enemies retain their original health and combat stats. There is no planting, seed bank, sun collection, incidental loot or shovel in this mode. The original progress meter, Menu, speed and pause controls and one short footer title provide the interface; the brief targeting hint expires naturally. The new card uses the complete original Cob Cannon rig. Previous twelve card records, existing content and serialized actor layouts are preserved. Save/Continue retains the current battle; Retry and a fresh Bonus-card replay start a new arena before the first formation. Normal game audio remains available; testing stays muted.
+
+All twenty-one muted native suites passed: 4,995,572 checks and zero failures. All fifteen browser integration suites passed, and muted browser inspection completed for this engine. These exact artifacts are prepared for GitHub Pages publication.
+
+
 ## Bungee.1 - native heist puzzles
 
 `0.2.6-web-bungee.1` adds Bungee Business to the Bonus page: five finite heist puzzles using the original I, Zombie controls. Spend each board's fixed sun budget to clear Umbrella-leaf protection, then send native Bungee Zombies to carry away the Sunflowers. Later layouts include protected lanes, a Pole Vaulting Zombie route over a Wall-nut, and three targets. Only actual completed Bungee departures count as thefts; eating or destroying a target fails the board. Only the fifth clear grants the normal native completion award.

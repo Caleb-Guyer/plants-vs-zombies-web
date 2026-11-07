@@ -1,16 +1,15 @@
 {
   "schema_version": 1,
-  "current_engine": "0.2.6-web-bungee.1",
+  "current_engine": "0.2.6-web-cob.1",
   "upstream_tag": "0.2.6",
   "layout": "Site-source nests current corresponding source, its immediate parent when present, the upstream baseline, the authenticated Rally.3 native I, Zombie UI reference and the current full patch. Other source archives and incremental/historical patches remain standalone downloads beside this index and in the full runtime distribution.",
   "nested_sources": [
     "pvz-portable-0.2.6-source.zip",
-    "pvz-portable-0.2.6-web-garlic.1-source.zip",
-    "pvz-portable-0.2.6-web-rally.3-source.zip",
-    "pvz-portable-0.2.6-web-bungee.1-source.zip"
+    "pvz-portable-0.2.6-web-bungee.1-source.zip",
+    "pvz-portable-0.2.6-web-cob.1-source.zip"
   ],
   "nested_patches": [
-    "web-bungee.1.patch"
+    "web-cob.1.patch"
   ],
   "archives": [
     {
@@ -24,7 +23,7 @@
       "name": "pvz-portable-0.2.6-web-bungee.1-source.zip",
       "bytes": 31850177,
       "sha256": "452205b2a2e383a74183423ddcd730db978abe0ed086f8463c168c75142f9062",
-      "current": true,
+      "current": false,
       "upstream": false
     },
     {
@@ -116,6 +115,13 @@
       "bytes": 9308592,
       "sha256": "7fa3d16079cca928812a965ec7bdcd15c7f157570d14607895c31067d06e49f0",
       "current": false,
+      "upstream": false
+    },
+    {
+      "name": "pvz-portable-0.2.6-web-cob.1-source.zip",
+      "bytes": 34458383,
+      "sha256": "f1882ce4c5a412d539d15d4ccfcd5412cc96d6ffc7b8ae5b4b374bf04418dee0",
+      "current": true,
       "upstream": false
     },
     {

@@ -91,16 +91,17 @@ def parent_source_input(engine):
 
 
 def nested_source_inputs(engine, paths, baseline):
-    """Include current, parent, upstream and the authenticated native-UI reference."""
+    """Include current, parent and upstream; exact UI references ship as fixtures."""
     parent = parent_source_input(engine)
-    # The native restoration checks read this exact release as an independent
-    # stock I, Zombie reference. Keep fresh source downloads self-contained.
-    native_ui = DIST / "source/pvz-portable-0.2.6-web-rally.3-source.zip"
+    # Retain the independently authenticated complete Board/SeedPacket files,
+    # without nesting an entire historical engine archive for two references.
+    # The standalone historical archive and download inventory stay available.
+    native_ui = ROOT / "tests/fixtures/native-ui-reference.json"
     if (not native_ui.is_file() or native_ui.is_symlink()
             or hashlib.sha256(native_ui.read_bytes()).hexdigest()
-            != "2deb50f9a38d8599453f567f5458a20505d552956df0bc442e649e49ea1c5c24"):
-        raise ValueError("Authenticated native I, Zombie UI reference is missing or changed")
-    return list(dict.fromkeys([baseline, *([parent] if parent else []), native_ui.resolve(), paths["source"]]))
+            != "d9861034849eca9d637197aa78a1bae4c90b5656db91ca102d8c903100031edd"):
+        raise ValueError("Authenticated native I, Zombie UI fixture is missing or changed")
+    return list(dict.fromkeys([baseline, *([parent] if parent else []), paths["source"]]))
 
 
 def validate_engine_inputs():

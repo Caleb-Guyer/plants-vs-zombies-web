@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-bungee.1
-Adds Bungee Business: five finite-budget native heists. Clear Umbrella-leaf protection and use original Bungees to steal ten Sunflower targets with native controls, saves, Retry and awards. Existing mode IDs, saved object layouts, previous minigames and accepted artwork are preserved.
-Engine JavaScript SHA-256: b623dc15e681583b5c22fd16edb8c97375cfbdcac3412de35e9d2b9de12ba491
-Engine WASM SHA-256: 6b49b7731f1225626d793134d1f754f3016e1c8e5547eef9c088bdd5132f78f6
+PvZ-Portable 0.2.6-web-cob.1
+Adds Cob Cannon Command: a continuous artillery minigame with six preplaced cannons and eight moving zombie formations. Original targeting, shell flight, explosions and reloads remain intact, with native saves, Retry and awards. Existing mode IDs, saved object layouts, previous minigames and accepted artwork are preserved.
+Engine JavaScript SHA-256: c71e9fabbfefb0c84e06ee0b8227cda5f5993d66f7adbc89f66ede503856f6cc
+Engine WASM SHA-256: dbe563e56fbf1929e9556fe39e6285aaf18153847e2c741b5e72958b8e40acf7
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.

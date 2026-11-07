@@ -130,6 +130,16 @@
       "gameplay": "Five native heist puzzles. Spend a limited zombie budget to clear Umbrella-leaf coverage, then steal the Sunflowers with actual Bungee Zombies and original native abduction mechanics.",
       "artwork": "The original Bungee raising pose and carried Sunflower use the native body/plant offset and forearm occlusion order. An original Umbrella-leaf supports the composition; its complete visible bounds are centered and fitted to the same 68 by 57 hero area inside the native 80 by 65 card. No separately generated illustration is used.",
       "interface": "Name-only twelfth Bonus card in the second column of row three. The original I, Zombie bank, sun budget, Menu/speed controls and native footer retain the existing game style."
+    },
+    {
+      "mode": 85,
+      "name": "Cob Cannon Command",
+      "hero": "Original REANIM_COBCANNON loaded idle rig; the complete two-square cannon is uniformly fitted and centered",
+      "background": "IMAGE_BACKGROUND1",
+      "generatedArtworkUsed": false,
+      "gameplay": "A continuous artillery battle against moving native zombie formations. Preplaced Cob Cannons keep their original initial arming, two-click aiming, projectile flight, blast and reload mechanics.",
+      "artwork": "The complete original loaded Cob Cannon assembly is rendered at native resolution, then fitted once within68 by57 pixels at the center of the80 by65 native Bonus picture. No redrawn parts, generated image or reused Survival picture.",
+      "interface": "Original Cob Cannon target reticle, Menu, speed and pause controls, native wave progress and footer. No plant chooser, persistent challenge tips or additional HUD."
     }
   ],
   "canvas": {

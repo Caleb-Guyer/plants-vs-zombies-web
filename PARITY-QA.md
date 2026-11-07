@@ -1,5 +1,18 @@
 # Browser parity and QA record
 
+## Cob.1 - aiming, reloads, saves and native combat
+
+The complete-engine Cob Cannon Command matrix has 24 cases and twelve 1x/2x speed pairs across two RNG seeds. Sixteen primary earned wins and four additional independently observed full replays account for twenty completed eight-formation battles. Four genuine no-fire defeats and four isolated native-control cases are separate from earned wins. The winning policy uses actual cannon selection, lawn aiming, award, Continue, Retry and Bonus-card inputs at 250 simulation ticks between decisions, with a slower 500-tick policy for reload-checkpoint runs. No earned-run health, position, reload, projectile, score or scripted-win changes substitute for play. Native observations cover full reload and reuse, shell ascent/descent and impact, burn deaths, two 1800-damage Gargantuar hits and two real Imp throws per completed battle.
+
+Flight and reload checkpoints compare selected actor, target, health, formation, projectile and animation-clock fields, rather than claiming every serialized particle or attachment byte was compared. Release gates require at least four surviving Cannons with 1000 combined health and two unused mowers at the first native award; the frozen mower count must agree with the actual native LastLevelStats after collection. Native input controls cover aiming cancellation, the original misclick guard, top-margin rejection, reloading rejection and Pause without synthetic actor edits. Actual original-font footer ink and an overflow negative check guard the lower edge.
+
+Fifty-three original artwork inputs authenticate the Cannon rig, reticle, projectile effects, lawn, meter, fonts and related native assets. Six offscreen MemoryImage exports cover the opening, aim, flight, reload, pause and Bonus card. These are visual fixtures, with battleProof and gpuEquivalence both false; muted actual-browser inspection is separate. All retained Bungee Business, Garlic Run, Lights Out, I, Zombie presentation and other regression checks remain release gates. These bounded checks do not certify exhaustive original-game parity or universal browser frame timing.
+
+The final Cob Cannon Command matrix passes 868,440 assertions in 24 cases and twelve speed pairs, with sixteen primary native wins, four independent full replays, four genuine no-fire losses and four isolated native-control cases.
+
+All twenty-one muted native suites passed: 4,995,572 checks and zero failures. All fifteen browser integration suites passed, and muted browser inspection completed for this engine. These exact artifacts are prepared for GitHub Pages publication.
+
+
 ## Bungee.1 - heists, budgets and native controls
 
 The new complete-engine matrix covers two seeds at1x/2x, actual packet/lawn input, native protection clearing, Bungee departures, budgets, target-loss failure, checkpoints, Retry, awards and fresh replay. Synthetic lifecycle and UI controls are separate from earned battles and grant no completion credit. Checkpoint comparisons cover observed actor fields and animation clocks rather than claiming every serialized holder byte was compared. Original sprite inputs authenticate the thumbnail, native bank, plant/zombie rigs and fonts. Offscreen MemoryImage exports establish native layout only; browser rendering is checked separately. Previous Garlic Run, Lights Out, I, Zombie presentation and all other retained regression checks remain release gates.
