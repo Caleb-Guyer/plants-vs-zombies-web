@@ -1,5 +1,14 @@
 # Current requirements
 
+## Pool.1 - native pool conveyor battle
+
+`0.2.6-web-pool.1` adds Pool Panic as the fourteenth Bonus minigame. One continuous battle uses the original six-row daytime pool lawn. A finite conveyor supplies Squash, Tangle Kelp, Cherry Bomb and Jalapeno against eight formations containing 48 authored zombies: 28 on land and 20 in the water, including late Dolphin Riders. Eight preplaced Lily Pads support ground plants in the back four columns of the pool; open water remains available for Kelp. Six original mowers retain the normal Pool Cleaner purchase behavior; a fresh profile has ordinary mowers in both water rows. Only clearing the entire battle earns the normal native completion award.
+
+The conveyor has 56 packets: 14 Squashes, 21 Tangle Kelps, 14 Cherry Bombs and seven Jalapenos. Four packets begin on the left; subsequent deliveries follow a fixed sequence. A full ten-slot bank keeps moving while its next delivery and saved ordinal wait for space, so supplies cannot disappear through overflow. The original packet selection, cancellation, legal placement, single-use attacks, Kelp grab and drowning, Squash jump and smash, Cherry explosion and Jalapeno row fire remain intact. Native health, damage, fuses and animation clocks are unchanged. There are no permanent attackers, extra Lily Pad packets, sun collection, incidental loot, shovel or instruction overlays. The original conveyor, progress meter, Menu, speed, pause and short footer provide the interface. The new card uses original Squash, Kelp, Lily Pad and pool artwork. Previous thirteen card records and saved actor layouts are preserved. Save/Continue keeps the current battle, moving packets and active effects; Retry and a fresh Bonus-card replay start a new arena. Normal game audio remains available; testing stays muted.
+
+All twenty-two muted native suites passed: 11,597,574 checks and zero failures. All fifteen browser integration suites passed, and muted browser inspection completed for this engine. These exact artifacts are prepared for GitHub Pages publication.
+
+
 ## Cob.1 - native artillery battle
 
 `0.2.6-web-cob.1` adds Cob Cannon Command as the thirteenth Bonus minigame. One continuous day-lawn battle starts with six preplaced Cob Cannons, five Wall-nuts and five original lawn mowers. Aim the loaded cannons at eight moving formations containing 36 authored zombies. The two late Gargantuars can throw real native Imps; only clearing the entire battle earns the normal native completion award.

@@ -140,6 +140,16 @@
       "gameplay": "A continuous artillery battle against moving native zombie formations. Preplaced Cob Cannons keep their original initial arming, two-click aiming, projectile flight, blast and reload mechanics.",
       "artwork": "The complete original loaded Cob Cannon assembly is rendered at native resolution, then fitted once within68 by57 pixels at the center of the80 by65 native Bonus picture. No redrawn parts, generated image or reused Survival picture.",
       "interface": "Original Cob Cannon target reticle, Menu, speed and pause controls, native wave progress and footer. No plant chooser, persistent challenge tips or additional HUD."
+    },
+    {
+      "mode": 86,
+      "name": "Pool Panic",
+      "hero": "Original REANIM_SQUASH, REANIM_TANGLEKELP aquarium pose and REANIM_LILYPAD rigs, rendered together with complete native parts",
+      "background": "IMAGE_BACKGROUND3 with original IMAGE_POOL water layer",
+      "generatedArtworkUsed": false,
+      "gameplay": "A native pool conveyor minigame using single-use Squash, Tangle Kelp, Cherry Bomb and Jalapeno against mixed land and water zombies. Rear Lily Pads support water-lane planting.",
+      "artwork": "The original Squash rests on an original Lily Pad beside Tangle Kelp in its native packet and Almanac aquarium pose. Their complete native assembly is uniformly fitted inside68 by57 pixels, centered in the80 by65 Bonus picture over the original pool backdrop and IMAGE_POOL water composited at the native software-pool position before cropping. No redrawn parts, generated image or Survival thumbnail.",
+      "interface": "Original conveyor belt, seed packets, Menu, speed and pause controls, native progress meter and footer. No glove, extra HUD or persistent challenge tips."
     }
   ],
   "canvas": {

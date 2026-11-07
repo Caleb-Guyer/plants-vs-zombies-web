@@ -1,5 +1,25 @@
 # GitHub Pages release: Caleb-Guyer/plants-vs-zombies-web
 
+## Pool.1 - reviewed release inputs
+
+Current engine: `0.2.6-web-pool.1`.
+
+- Exact published parent: Cob.1 source SHA-256 `f1882ce4c5a412d539d15d4ccfcd5412cc96d6ffc7b8ae5b4b374bf04418dee0`, 34,458,383 bytes, 977 entries, 844 production files.
+- Current production: 848 files, including four new Pool Panic implementation/presentation files.
+- Reconstructing patches: `web-pool.1.patch` and `cob1-to-pool1.patch`.
+- Nine silent complete-engine drivers link the same 132 normal Release objects except main, producing eighteen backend files. All twenty-two native suites remain release gates.
+- All fifteen browser integration suites, muted actual-browser inspection and a fresh offline source-download check remain publication gates.
+- `build/pvz-portable.js`: 209,496 bytes, SHA-256 `13268167cdfbfa7c736796a106c2b57294b077b7f90f277fcdc3baa0650cc92b`.
+- `build/pvz-portable.wasm`: 7,755,708 bytes, SHA-256 `943d3443abb91738d18db7130ba382beea1f00bd6cdf98d40f06394c39635b3b`.
+- `build/ProjectVersion.h`: 190 bytes, SHA-256 `c3a97840b38e77cb30a6209b0e0666f2c5658527c38a9c0e4a2622556e437c36`.
+- Corresponding source: `pvz-portable-0.2.6-web-pool.1-source.zip`, 37,098,165 bytes, 991 entries, SHA-256 `9d1cb0b7fdc6e10cb4ea79b869b922d98417b14c829862899c6361f80c7dc988`.
+- Combined patch: `web-pool.1.patch`, 14,650,089 bytes, SHA-256 `150c9b7e718b72d1b168d20f486a4e454ad2f544c279cb8d6a8cda2642812a85`.
+- Incremental patch: `cob1-to-pool1.patch`, 34,848 bytes, SHA-256 `4548001b2fe27954db06773e0faf41d13fa8a60ca27765cf5730dff0de106949`.
+- Both patches reconstruct all 848 production files exactly. Fresh source-download extraction is checked with `npm --offline run check` before publication.
+
+All twenty-two muted native suites passed: 11,597,574 checks and zero failures. All fifteen browser integration suites passed, and muted browser inspection completed for this engine. These exact artifacts are prepared for GitHub Pages publication.
+
+
 ## Cob.1 - reviewed release inputs
 
 Current engine: `0.2.6-web-cob.1`.

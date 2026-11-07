@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-cob.1
-Adds Cob Cannon Command: a continuous artillery minigame with six preplaced cannons and eight moving zombie formations. Original targeting, shell flight, explosions and reloads remain intact, with native saves, Retry and awards. Existing mode IDs, saved object layouts, previous minigames and accepted artwork are preserved.
-Engine JavaScript SHA-256: c71e9fabbfefb0c84e06ee0b8227cda5f5993d66f7adbc89f66ede503856f6cc
-Engine WASM SHA-256: dbe563e56fbf1929e9556fe39e6285aaf18153847e2c741b5e72958b8e40acf7
+PvZ-Portable 0.2.6-web-pool.1
+Adds Pool Panic: a continuous pool conveyor minigame using original single-use Squash, Tangle Kelp, Cherry Bomb and Jalapeno against mixed land and water waves. Native effects, placement and conveyor controls remain intact, with saves, Retry and awards. Existing mode IDs, saved object layouts, previous minigames and accepted artwork are preserved.
+Engine JavaScript SHA-256: 13268167cdfbfa7c736796a106c2b57294b077b7f90f277fcdc3baa0650cc92b
+Engine WASM SHA-256: 943d3443abb91738d18db7130ba382beea1f00bd6cdf98d40f06394c39635b3b
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.
