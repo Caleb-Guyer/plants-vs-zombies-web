@@ -1,5 +1,14 @@
 # Current requirements
 
+## Endless.1 - native flags and persistent best
+
+`0.2.6-web-endless.1` adds Pool Panic Endless as the fifteenth Bonus card. The original pool conveyor continues through flags instead of ending after one battle. The first three flags contain 36, 46 and 56 authored zombies; later flags cap at 66 while native armor, aquatic enemies and special abilities vary the formations. The game uses the original Survival flag counter and best-record presentation. Clearing a flag saves progress and updates the personal best; a loss ends the run without a finite victory award or trophy.
+
+Each flag has ten formations and an allowance of 48 packets drawn from the same four original plants: Squash, Tangle Kelp, Cherry Bomb and Jalapeno. Accepted packets carry on the native conveyor between flags; only unissued quota expires when a flag is cleared. The ten-slot bank keeps moving at capacity while delivery waits for room. Eight saved spatial variants rotate the land lanes and swap the water lanes. Wave spacing tightens within a fixed lower bound, and native enemy types provide escalation without changing their health or damage. A twelve-second intermission follows a genuine clear. Only missing, empty cells among the eight original rear Lily Pad positions receive replacement pads; existing pad health and active plants remain untouched. Mowers are never refilled or upgraded, and original Pool Cleaner purchase behavior is preserved. The native flag counter, conveyor, progress meter, Menu, speed, pause and own-card personal best provide the interface. Native high-water persistence and a production-written checkpoint run at each cleared flag, followed by the existing browser save queue. Retry starts at zero flags while keeping the earned best. Finite Pool Panic, all fourteen earlier cards, accepted artwork and serialized actor layouts remain unchanged. Normal game audio remains available; testing stays muted.
+
+All twenty-three muted native suites passed: 39,350,711 checks and zero failures. All fifteen browser integration suites passed, and muted browser inspection completed for this engine. These exact artifacts are prepared for GitHub Pages publication.
+
+
 ## Pool.1 - native pool conveyor battle
 
 `0.2.6-web-pool.1` adds Pool Panic as the fourteenth Bonus minigame. One continuous battle uses the original six-row daytime pool lawn. A finite conveyor supplies Squash, Tangle Kelp, Cherry Bomb and Jalapeno against eight formations containing 48 authored zombies: 28 on land and 20 in the water, including late Dolphin Riders. Eight preplaced Lily Pads support ground plants in the back four columns of the pool; open water remains available for Kelp. Six original mowers retain the normal Pool Cleaner purchase behavior; a fresh profile has ordinary mowers in both water rows. Only clearing the entire battle earns the normal native completion award.

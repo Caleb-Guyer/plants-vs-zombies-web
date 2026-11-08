@@ -1,5 +1,5 @@
 {
-  "id": "0.2.6-web-pool.1",
+  "id": "0.2.6-web-endless.1",
   "upstream": {
     "tag": "0.2.6",
     "commit": "396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
@@ -7,98 +7,103 @@
     "officialJsSha256": "0f2d7425190e49c762f6700b68b080086e3dcb8f2dc5e9724de42ce9fb508573"
   },
   "sourceArchive": {
-    "path": "pvz-portable-0.2.6-web-pool.1-source.zip",
-    "bytes": 37098165,
-    "sha256": "9d1cb0b7fdc6e10cb4ea79b869b922d98417b14c829862899c6361f80c7dc988",
-    "crc32": "8312661a",
-    "entries": 991,
-    "uncompressedBytes": 106336157
+    "path": "pvz-portable-0.2.6-web-endless.1-source.zip",
+    "bytes": 39931636,
+    "sha256": "eee4ae6dfeaaa49bbf203c37cf45ad73dad56b85d3d0079e549ed11bc3d45f25",
+    "crc32": "ff3e20e1",
+    "entries": 1009,
+    "uncompressedBytes": 115924874
   },
   "artifacts": [
     {
       "path": "build/pvz-portable.js",
-      "bytes": 209496,
-      "sha256": "13268167cdfbfa7c736796a106c2b57294b077b7f90f277fcdc3baa0650cc92b",
-      "crc32": "19a0e3f2"
+      "bytes": 209600,
+      "sha256": "cac16540c4538cbda98c25b9911d38c194db48abf7b73803780dd4c6f79be601",
+      "crc32": "816eae42"
     },
     {
       "path": "build/pvz-portable.wasm",
-      "bytes": 7755708,
-      "sha256": "943d3443abb91738d18db7130ba382beea1f00bd6cdf98d40f06394c39635b3b",
-      "crc32": "6bb60c56"
+      "bytes": 7772035,
+      "sha256": "9608d3fb4419fe9da5409e6c7c87f47af751fab66b907a783475325c984869ad",
+      "crc32": "e50226de"
     },
     {
       "path": "build/ProjectVersion.h",
-      "bytes": 190,
-      "sha256": "c3a97840b38e77cb30a6209b0e0666f2c5658527c38a9c0e4a2622556e437c36",
-      "crc32": "d72c77f3"
+      "bytes": 193,
+      "sha256": "3c3d6c3953d7bbc215b2c8bc7da66192099f3cc44febd2f6799c85c869ecac47",
+      "crc32": "8d70348f"
     }
   ],
-  "sourceFiles": 848,
-  "sourceBytes": 25752693,
-  "sourceDeltaVsCob1": [
+  "sourceFiles": 852,
+  "sourceBytes": 25774570,
+  "sourceDeltaVsPool1": [
     {
       "path": "CMake/ProjectVersion.cmake",
-      "beforeSha256": "f98c5c5f70b10ccd5f68f30a2905b4fbdd357554b8e0ee876ca5e09c2c6cbaad",
-      "afterSha256": "0013b39b45a6e53c454f9d5e6da5e322b37a78eb7cec4febee58734b3faa58e5"
+      "beforeSha256": "0013b39b45a6e53c454f9d5e6da5e322b37a78eb7cec4febee58734b3faa58e5",
+      "afterSha256": "16ca7072d28d8605666b2a6dbbbacb005dc0e744811ae5ffc9f2533c637fa914"
     },
     {
       "path": "src/ConstEnums.h",
-      "beforeSha256": "569723c8cd0b87036a3558d0fc38f090ff323744e6496f6665c011a2cbd5c9b0",
-      "afterSha256": "2dc4019475c9211c63cff877bb61b28dcd68e4a0c5a865ea76dc790dc959976d"
+      "beforeSha256": "2dc4019475c9211c63cff877bb61b28dcd68e4a0c5a865ea76dc790dc959976d",
+      "afterSha256": "7873d3aa67254ac09a632203bb3149433f8a8ff11e311ac3c796c9b0a380a709"
     },
     {
       "path": "src/Lawn/Board.cpp",
-      "beforeSha256": "e7de99ab7e19ca13f3f774985577641351c9e3c613b56e5d4aa7c02a4203fb47",
-      "afterSha256": "046e77d7bce4b579a8d2bf37f882239cb9d01384fa3db8f88f16d1e2b354fc76"
+      "beforeSha256": "046e77d7bce4b579a8d2bf37f882239cb9d01384fa3db8f88f16d1e2b354fc76",
+      "afterSha256": "b25da34f3b57c3fe96c44cc436cc93d3049c5c5f65b5008f2af70476ce98d89e"
     },
     {
       "path": "src/Lawn/Challenge.cpp",
-      "beforeSha256": "f034361bfe51a325543fb89341224c5f337b057a14c682f10d02df296686aeb5",
-      "afterSha256": "02810ead9194b71e9cd3dad049ab9b1e1bd2c0f03e7e2b2b1a7ae8602e1fd853"
+      "beforeSha256": "02810ead9194b71e9cd3dad049ab9b1e1bd2c0f03e7e2b2b1a7ae8602e1fd853",
+      "afterSha256": "22f9c812eed29d7c5654f0692d7713c4ec9ce1a6ca127c41969cb91c490d9fed"
     },
     {
       "path": "src/Lawn/System/BonusChallenge.h",
-      "beforeSha256": "955661fd855259f2b46d58a105bc35863a0341e80f757d48180343c5fb0c1367",
-      "afterSha256": "8aecf13b86109eb9162b539169853dc807b12ecf84efd65b0fd33d79549dff09"
+      "beforeSha256": "8aecf13b86109eb9162b539169853dc807b12ecf84efd65b0fd33d79549dff09",
+      "afterSha256": "b54eb9d587d1f8ee6fa1bf5d7b5f6c3b359490957b88223ed490c8ddfcfc8f82"
     },
     {
-      "path": "src/Lawn/System/PoolPanic.cpp",
+      "path": "src/Lawn/System/PoolPanicEndless.cpp",
       "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "afterSha256": "d80e1fc9545226f91ea0ba34bd7edf1421cfd2f7007951b4e601d072f30e5cec"
+      "afterSha256": "8913db4ca5a2483510bd35d4afa6330004461bff5ed5bab3c670bef2cbf22a60"
     },
     {
-      "path": "src/Lawn/System/PoolPanic.h",
+      "path": "src/Lawn/System/PoolPanicEndless.h",
       "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "afterSha256": "8bd88d702f1846360d3b4a4e2e9b6c24ffc82f51bb6f35744a8fda4be38eed43"
+      "afterSha256": "91adafb1d66d08c8492444b7baee82c18a520e116beaebbf794585494b63319e"
     },
     {
-      "path": "src/Lawn/System/PoolPanicPresentation.cpp",
+      "path": "src/Lawn/System/PoolPanicEndlessPresentation.cpp",
       "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "afterSha256": "716c4c9b7efa29b188793307f025c6c20b950a50949d094764403c34049378e6"
+      "afterSha256": "910630cbedbb870ff1568f78fc39deaf215ee72137aff83d203ec6d6d9ac43b4"
     },
     {
-      "path": "src/Lawn/System/PoolPanicPresentation.h",
+      "path": "src/Lawn/System/PoolPanicEndlessPresentation.h",
       "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "afterSha256": "a943b54a203e6cfe7b3e0f55b5c1136d3f24008de1adbca39730128dc25eaf77"
+      "afterSha256": "9390e53f20aee9a358527d17aa283dbf0d9f30a3b3696241a8644c2d7d82a0d1"
     },
     {
       "path": "src/Lawn/Widget/ChallengeScreen.cpp",
-      "beforeSha256": "bb01af74b576067dd021ba2f2c766f6a0a8fe2795b1c5cbc212fb9a4dabd0685",
-      "afterSha256": "aae6cc2d3ea1235d25e24e00173e9d5014862bd4cc23ac54dc7e4a69cf4ed1cd"
+      "beforeSha256": "aae6cc2d3ea1235d25e24e00173e9d5014862bd4cc23ac54dc7e4a69cf4ed1cd",
+      "afterSha256": "a166386e7e26d9ae1ce6ced765c6723e1646d696f68afc9e9ac4cff4711593cb"
+    },
+    {
+      "path": "src/Lawn/Widget/LawnDialog.cpp",
+      "beforeSha256": "ed5d2b58a4f142403056eb2dc8100f7d601d758f410c4cea698e0e58ceefe923",
+      "afterSha256": "2574fac45a5b7f2b8bef9c6087fc3c296ffbdacdff4a95c5d9206d7f72986a2e"
     },
     {
       "path": "src/Lawn/Zombie.cpp",
-      "beforeSha256": "3fce536701fcc7f88a32f306c886405ece7ad2ffe4cecc1adbad9ecd11c7be92",
-      "afterSha256": "2b70cb9a33f247f6aeceb2d25393508c925af0d9812f1e0bb44cea237dd590e6"
+      "beforeSha256": "2b70cb9a33f247f6aeceb2d25393508c925af0d9812f1e0bb44cea237dd590e6",
+      "afterSha256": "fe6225cb6f5905e9cae7a6f5c71890b4f56adc65e048d44eb804e06a6937aebd"
     },
     {
       "path": "src/LawnApp.cpp",
-      "beforeSha256": "966c7e1e64c8501bf5e5a586bd72d69b2bade64f07fa4646846a1e6c31cf965f",
-      "afterSha256": "65d628ec10b6a4a0efc1a2e5e4f7abb1723e13c6607515357542ae83541404ed"
+      "beforeSha256": "65d628ec10b6a4a0efc1a2e5e4f7abb1723e13c6607515357542ae83541404ed",
+      "afterSha256": "d212719b9adc07662a95ff40527b05dafe8990132ab6cd6df6764594929ec192"
     }
   ],
-  "compiledVersionHeader": "// Generated from CMake/ProjectVersion.h.in by CMake; do not edit.\r\n#pragma once\r\n\r\n#define PVZP_VERSION \"0.2.6-web-pool.1\"\r\n#define PVZP_BUILD_NUMBER 1\r\n#define PVZP_COMMIT_DATE \"unknown\"\r\n",
+  "compiledVersionHeader": "// Generated from CMake/ProjectVersion.h.in by CMake; do not edit.\r\n#pragma once\r\n\r\n#define PVZP_VERSION \"0.2.6-web-endless.1\"\r\n#define PVZP_BUILD_NUMBER 1\r\n#define PVZP_COMMIT_DATE \"unknown\"\r\n",
   "checks": {
     "fullRelease": {
       "exitCode": 0,
@@ -112,169 +117,176 @@
       "receipt": {
         "path": "logs/build-result.json",
         "bytes": 580,
-        "sha256": "fc87709d4c4972e80f74de747b6e71784757816308d3cdec9981bb444e747739",
-        "crc32": "303ff420"
+        "sha256": "dfe3be0dd62219beb631e2340c51e1399702d3dae39cb7381e23949ec740779f",
+        "crc32": "5986da67"
       }
     },
     "focusedNativeTests": {
       "status": "PASS focused native production tests",
       "failures": 0,
-      "checks": 11597574,
-      "scope": "Extracted production tests plus complete linked-engine Care, Chain Reaction, Rally Point, Rally Raid, Lights Out, Garlic Run, Bungee Business, Cob Cannon Command and Pool Panic scenarios; original finite conveyor packets, six-row land/water placement and native single-use activations; actual native aiming, shell flight, explosions, full reload cycles and eight moving formations; actual native protection clearing, finite budgets, unique Bungee thefts, target-loss failure and native heist saves/replays; twenty actual five-board Garlic Run completions, four no-route losses and four isolated control cases; actual light-gated attacks, natural native fog edges at five lamp positions, glove tooltip hover/raster bounds, glove-over-fog composition, legal Plantern moves, active-combat save/Continue, native awards, failure/retry, slow-play balance, UI bounds and speed parity. Original regressions remain active. Audio output is disabled.",
+      "checks": 39350711,
+      "scope": "Extracted production tests plus complete linked-engine Care, Chain Reaction, Rally Point, Rally Raid, Lights Out, Garlic Run, Bungee Business, Cob Cannon Command, Pool Panic and Pool Panic Endless scenarios; real multi-flag prefixes, automatic native checkpoints, persistent best records and genuine endless defeats; original finite conveyor packets, six-row land/water placement and native single-use activations; actual native aiming, shell flight, explosions, full reload cycles and eight moving formations; actual native protection clearing, finite budgets, unique Bungee thefts, target-loss failure and native heist saves/replays; twenty actual five-board Garlic Run completions, four no-route losses and four isolated control cases; actual light-gated attacks, natural native fog edges at five lamp positions, glove tooltip hover/raster bounds, glove-over-fog composition, legal Plantern moves, active-combat save/Continue, native awards, failure/retry, slow-play balance, UI bounds and speed parity. Original regressions remain active. Audio output is disabled.",
       "reports": [
         {
           "path": "tests/game-speed-results.json",
-          "bytes": 2573,
-          "sha256": "cd386d0a3773f049c7c29b1fc4ee4945fafaa881f77f306f27a49a416ca8087d",
-          "crc32": "da95b231",
+          "bytes": 3079,
+          "sha256": "fbbf0fe10bfe83a1ebe83c572bf2cd02826fbd6cc023e8ee9c48accbc3a34dce",
+          "crc32": "cfd88b62",
           "checks": 66
         },
         {
           "path": "tests/qol-controls-results.json",
-          "bytes": 2659,
-          "sha256": "dee8440f060f5e0de6e13a59a940fc8e78268f814c83cc0eec965da9d322feb8",
-          "crc32": "5caa706b",
+          "bytes": 3159,
+          "sha256": "a9466a0a89a49e56221b5caf1d13fa4f356bf26f7b2ee0e8641e6b7418638d40",
+          "crc32": "d4b9d6c6",
           "checks": 90
         },
         {
           "path": "tests/decks-cooldowns-results.json",
-          "bytes": 2755,
-          "sha256": "faa29190d81e4263cd274b37a0654b225d1624e0d4aba25fbf77f2d998f90f14",
-          "crc32": "17ffa0dd",
+          "bytes": 3255,
+          "sha256": "d6a140985fd45d71e183a602f9bd55c1065d02e18f2c227e12e4d9b7264e9df9",
+          "crc32": "8d8d61a6",
           "checks": 274
         },
         {
           "path": "tests/bonus-challenge-results.json",
-          "bytes": 3724,
-          "sha256": "f193e7d80560101473dfd12ca2c3a4538a29d5adf65683894be17d853c04d3f5",
-          "crc32": "90ce2a74",
+          "bytes": 4220,
+          "sha256": "01cd4ccfda44651237f9451ee9e984d0170bf34a3a5b5cd2a2805a219ca80bee",
+          "crc32": "7d924594",
           "checks": 387
         },
         {
           "path": "tests/bonus-completion-results.json",
-          "bytes": 4457,
-          "sha256": "cb3e026db8c22a3b9eae74b1c66c6259208764440d61fbb64331db003a89b6da",
-          "crc32": "27663cd5",
-          "checks": 1278
+          "bytes": 4953,
+          "sha256": "470fd74cc3656fa0461b01575f958e989f2860db40997c881b0a6bde6f3c576b",
+          "crc32": "cfbd43eb",
+          "checks": 1283
         },
         {
           "path": "tests/night-shift-results.json",
-          "bytes": 3291,
-          "sha256": "3377361041991bd151e287f6850542a7a915facb33d6a6b0dd339c8d38642b81",
-          "crc32": "e88e8c90",
+          "bytes": 3787,
+          "sha256": "b8c256be9ded7f3d96513fb8d50ef3ce8306a39dd002e80df123942ce01f6827",
+          "crc32": "3f532ab0",
           "checks": 231
         },
         {
           "path": "tests/lantern-shroom-results.json",
-          "bytes": 8316,
-          "sha256": "3bfe67c0c99eda20c8cd297d1b6fa883aa94ac32d498b913bc7a8e1d08f93919",
-          "crc32": "9fe0f17f",
+          "bytes": 8812,
+          "sha256": "c6b6b052bbe2e814f956a981f2222e0784fa59688c3c847ca46930c5c99856dc",
+          "crc32": "84a0aa0c",
           "checks": 1724
         },
         {
           "path": "tests/garden-shuffle-results.json",
-          "bytes": 3998,
-          "sha256": "df68e2bc263add71f57ce579828a8a554352a6a4df324dfde8a728622b22c4eb",
-          "crc32": "72655fcd",
+          "bytes": 4494,
+          "sha256": "e74903f75822816e8ef153ece13b7e1570349c94870feee34349cd66d1152de8",
+          "crc32": "16042255",
           "checks": 214
         },
         {
           "path": "tests/seed-swap-results.json",
-          "bytes": 4069,
-          "sha256": "8221795cb152bf5321be91a14e50fe5c3ab5199dabe8bc307fbe63aef26e066a",
-          "crc32": "fed18b30",
+          "bytes": 4565,
+          "sha256": "6ae6fc5f4f5b13b8838be5652deddc879cbdd8755a05dfa88d8946b9383df578",
+          "crc32": "7d2eb77d",
           "checks": 587
         },
         {
           "path": "tests/mender-bloom-results.json",
-          "bytes": 3475,
-          "sha256": "5e4948ebc9a10678e0f5f3e17492cc96adc0446a4df5622098ec395b88326501",
-          "crc32": "f93c3863",
+          "bytes": 3971,
+          "sha256": "0b163d44c47886070dc96d3da410faa248d38368233bed3df59ce2f98980b4e6",
+          "crc32": "5ae22a1b",
           "checks": 523
         },
         {
           "path": "tests/intensive-care-results.json",
-          "bytes": 5158,
-          "sha256": "0329ad7e3d2d963c83a9b5a2e73fa7910ff8799e242d9b02967eaa5a7292e969",
-          "crc32": "76ed836d",
+          "bytes": 5654,
+          "sha256": "795843b5b0a8fea558f0240d13f805946e160fd7b88a669c14d196b62873b8ea",
+          "crc32": "29334dec",
           "checks": 1135
         },
         {
           "path": "tests/native-layout-results.json",
-          "bytes": 15127,
-          "sha256": "0ad0bcfccf14d90b699f7eb46bb1941abd0a0dcf4c047869eea351744bc4bc52",
-          "crc32": "31e69532",
-          "checks": 16775
+          "bytes": 17074,
+          "sha256": "6e20a59eabe7c9137e32ed14fad075f2e7a7b224aafee7a20e86a7f4c77ceac4",
+          "crc32": "1bbceea9",
+          "checks": 22757
         },
         {
           "path": "tests/care-fatigue-results.json",
-          "bytes": 2189,
-          "sha256": "2bc8f4205a20001ac317e1c9f3bb81bbb47548c3987bd949a5d94b0f8e4571cd",
-          "crc32": "6efe6f5f",
+          "bytes": 2685,
+          "sha256": "65b67424925c0376064260cf569f47177bd7ea048bf230353111e8b0e2936ece",
+          "crc32": "89cfe3cd",
           "checks": 25042
         },
         {
           "path": "tests/care-full-run-results.json",
-          "bytes": 156374,
-          "sha256": "3267cbb0563f23238c77775d51cddf3089115280d9bf7dc04ab2e669a531e818",
-          "crc32": "f1bebdc0",
-          "checks": 1000
+          "bytes": 157172,
+          "sha256": "ef1be57e346a2c6c86f6e53c2c993e85e4de985f13f273bd534bd045612ffda3",
+          "crc32": "07b6cdb9",
+          "checks": 1004
         },
         {
           "path": "tests/chain-reaction-results.json",
-          "bytes": 166940,
-          "sha256": "ade3ada9e168c709d1eb045bb1f79f21c104b1e8ddbcb80939882c4430d146f6",
-          "crc32": "b076ea4a",
-          "checks": 81327
+          "bytes": 167738,
+          "sha256": "4929df6526b0b475a5eb13cee59d175e49eaaa5eca8cfd4dd13a4c897f519377",
+          "crc32": "4b9022bd",
+          "checks": 81331
         },
         {
           "path": "tests/rally-zombie-results.json",
-          "bytes": 164578,
-          "sha256": "6e80b74b9d202f213178b78502d06e239f2ea61a7157c3dd00d2447611f8d391",
-          "crc32": "7423b97b",
-          "checks": 327546
+          "bytes": 165376,
+          "sha256": "ab7caaf3829fbfe5f7864e5c7fdec90ae950e9a8de9027c65e5bd5dc6cc1314c",
+          "crc32": "8e36deab",
+          "checks": 327550
         },
         {
           "path": "tests/rally-raid-results.json",
-          "bytes": 181693,
-          "sha256": "1e65d8fecf1b2b58f406c4d410e32cc22015ce3bc169ce041bba5a75fb904576",
-          "crc32": "3eefc77f",
-          "checks": 1040582
+          "bytes": 182491,
+          "sha256": "05954c71a598be1cfdc42bb731d6d66b58af07d3690e7d5780812d1cfc698493",
+          "crc32": "7478a92a",
+          "checks": 1040586
         },
         {
           "path": "tests/lights-out-results.json",
-          "bytes": 168007,
-          "sha256": "6dc76ff313bf622137fb9643f62ca470fb47b46fe1c6dd9a54b6f27b6e0b00d2",
-          "crc32": "15132d67",
-          "checks": 884013
+          "bytes": 168805,
+          "sha256": "27b7480201bb5c27b9490703d0baddda68a9ac58ca14bf084794e631823c81d3",
+          "crc32": "8a638a64",
+          "checks": 884017
         },
         {
           "path": "tests/garlic-run-results.json",
-          "bytes": 175571,
-          "sha256": "fbd3a98be69bf5d085ffb646b6b6f7363382fb63b77f82731930d1e0cb900935",
-          "crc32": "b3b0893a",
-          "checks": 1042788
+          "bytes": 176369,
+          "sha256": "25669db725e0621fd0e51cc692e3b95cb53ac94c45d4c836d42f5ae99be1309a",
+          "crc32": "dc14ff1d",
+          "checks": 1042792
         },
         {
           "path": "tests/bungee-business-results.json",
-          "bytes": 182692,
-          "sha256": "09d44a05ef5b326a00ddb5f9c4ee699838ed1901ab87a1a065e1c80738775c6f",
-          "crc32": "cc45d7b5",
-          "checks": 704884
+          "bytes": 183490,
+          "sha256": "768ee734ad2780f0f6b69a90dd69f7e6c2e133bea13c5dc09c41d9b3f94e6bab",
+          "crc32": "7de9072a",
+          "checks": 704888
         },
         {
           "path": "tests/cob-cannon-command-results.json",
-          "bytes": 188366,
-          "sha256": "afff572b888c557666e50459fd37b9a7617934afccac4592f716fa5b2a44c6f8",
-          "crc32": "9cdf64bd",
-          "checks": 868444
+          "bytes": 189164,
+          "sha256": "2032ca7fb189ec967fc9987a3827cd9be36f75a6e88d5f98836179759aa911f6",
+          "crc32": "369d299b",
+          "checks": 868448
         },
         {
           "path": "tests/pool-panic-results.json",
-          "bytes": 212852,
-          "sha256": "dfabbbddcc5cfdb3082a5194965b32f47337c3057d44e41b49737029d98f2343",
-          "crc32": "eff599e3",
-          "checks": 6598664
+          "bytes": 213650,
+          "sha256": "d4d9feff5e9804b9109a55ede88425fdd1e55f8e763410e78127d5987a4e3017",
+          "crc32": "f0c6a6b4",
+          "checks": 6598668
+        },
+        {
+          "path": "tests/pool-panic-endless-results.json",
+          "bytes": 266184,
+          "sha256": "1847ec6d3581742813cd1d607dffdab38fd55c91c981d4e661afaaee9d518557",
+          "crc32": "f5599517",
+          "checks": 27747114
         }
       ]
     },
@@ -283,38 +295,38 @@
         "gitApplyCheck": "PASS",
         "gitApply": "PASS",
         "everySourceByteMatches": true,
-        "sourceFiles": 848
+        "sourceFiles": 852
       },
-      "cob1": {
+      "pool1": {
         "gitApplyCheck": "PASS",
         "gitApply": "PASS",
         "everySourceByteMatches": true,
-        "sourceFiles": 848
+        "sourceFiles": 852
       }
     }
   },
   "combinedPatch": {
-    "path": "web-pool.1.patch",
-    "bytes": 14650089,
-    "sha256": "150c9b7e718b72d1b168d20f486a4e454ad2f544c279cb8d6a8cda2642812a85",
-    "crc32": "78c3c9a4",
-    "sourcePaths": 137
+    "path": "web-endless.1.patch",
+    "bytes": 14674652,
+    "sha256": "0a338c168aae8d8e18759fb98baee60f77bc255fe8cc76cde8c47c1c8c416cab",
+    "crc32": "c1565b9b",
+    "sourcePaths": 141
   },
   "incrementalPatch": {
-    "path": "cob1-to-pool1.patch",
-    "bytes": 34848,
-    "sha256": "4548001b2fe27954db06773e0faf41d13fa8a60ca27765cf5730dff0de106949",
-    "crc32": "a3b3861b",
-    "sourcePaths": 12
+    "path": "pool1-to-endless1.patch",
+    "bytes": 46257,
+    "sha256": "16f8a348dcdc8d30b252d1d08b409ed38f3e121333b993c2d88dbccb3aeeac47",
+    "crc32": "39222515",
+    "sourcePaths": 13
   },
   "parent": {
-    "id": "0.2.6-web-cob.1",
-    "sourceArchiveSha256": "f1882ce4c5a412d539d15d4ccfcd5412cc96d6ffc7b8ae5b4b374bf04418dee0",
-    "releaseManifestSha256": "eeb9248bdf7c6ac4c7cbdb42cb66f9e612f71c9e8a6a952c0f6deb22d7146f60",
+    "id": "0.2.6-web-pool.1",
+    "sourceArchiveSha256": "9d1cb0b7fdc6e10cb4ea79b869b922d98417b14c829862899c6361f80c7dc988",
+    "releaseManifestSha256": "d73b32637cb08ec50d38fbd83e735a32c62ebf6413e96023f79391148186189c",
     "scope": "Complete historical parent engine metadata is preserved in the parent property of engine-provenance.json."
   },
   "limits": [
-    "Pool Panic adds one continuous day-pool conveyor battle with eight formations and48 original zombies, eight rear LilyPads, six native mowers and56 finite native Squash, TangleKelp, CherryBomb and Jalapeno packets. Native activation, placement, conveyor, save, Retry and award rules remain intact. Earlier minigames, accepted artwork, original mode IDs, unlock rules and serialized object layouts are preserved. Full original parity remains unverified.",
+    "Pool Panic Endless adds escalating ten-formation pool flags using four original single-use conveyor plants. Accepted packets, actors and used mowers carry; each flag opens a48-packet delivery quota and only missing empty support pads return. Native flag display, high-water best records, automatic boundary saves and the existing browser persistence queue replace finite completion awards. Earlier minigames, accepted artwork, original mode IDs, unlock rules and serialized object layouts are preserved. Full original parity remains unverified.",
     "Focused production-method tests and build checks do not replace broad game or browser validation.",
     "Earlier results remain historical parent evidence only. No separately image-generated challenge illustrations are active."
   ]

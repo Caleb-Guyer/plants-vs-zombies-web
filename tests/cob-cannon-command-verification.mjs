@@ -30,9 +30,9 @@ export async function verifyCobCannonCommand({report,read,sha,engine,fullRunRepo
  assert.match(report.status,/^PASS/);
  assert.equal(report.failures,0);
  assert.equal(report.exitCode,0);
- assert.equal(Object.keys(report.sourceSha256).length,848);
+ assert.equal(Object.keys(report.sourceSha256).length,852);
  assert.deepEqual(report.sourceSha256,fullRunReport.sourceSha256);
- assert.equal(report.productionObjectCount,132);
+ assert.equal(report.productionObjectCount,134);
  assert.deepEqual(report.productionObjectSha256,fullRunReport.productionObjectSha256);
  assert.equal(report.productionBuildReceiptSha256,sha(productionBuildBytes));
  assert.deepEqual(Object.keys(report.testArtifactSha256).sort(),['cob-cannon-command-engine.js','cob-cannon-command-engine.wasm']);

@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-pool.1
-Adds Pool Panic: a continuous pool conveyor minigame using original single-use Squash, Tangle Kelp, Cherry Bomb and Jalapeno against mixed land and water waves. Native effects, placement and conveyor controls remain intact, with saves, Retry and awards. Existing mode IDs, saved object layouts, previous minigames and accepted artwork are preserved.
-Engine JavaScript SHA-256: 13268167cdfbfa7c736796a106c2b57294b077b7f90f277fcdc3baa0650cc92b
-Engine WASM SHA-256: 943d3443abb91738d18db7130ba382beea1f00bd6cdf98d40f06394c39635b3b
+PvZ-Portable 0.2.6-web-endless.1
+Adds Pool Panic Endless: varied, escalating pool conveyor flags with original single-use Squash, Tangle Kelp, Cherry Bomb and Jalapeno. Original Survival flag and best-record presentation, automatic between-flag saves and native defeat/Retry preserve replayability without finite victory awards. Existing mode IDs, saved object layouts, previous minigames and accepted artwork are preserved.
+Engine JavaScript SHA-256: cac16540c4538cbda98c25b9911d38c194db48abf7b73803780dd4c6f79be601
+Engine WASM SHA-256: 9608d3fb4419fe9da5409e6c7c87f47af751fab66b907a783475325c984869ad
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.

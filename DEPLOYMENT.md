@@ -1,5 +1,26 @@
 # GitHub Pages release: Caleb-Guyer/plants-vs-zombies-web
 
+## Endless.1 - reviewed release inputs
+
+Current engine: `0.2.6-web-endless.1`.
+
+- Exact published parent: Pool.1 source SHA-256 `9d1cb0b7fdc6e10cb4ea79b869b922d98417b14c829862899c6361f80c7dc988`, 37,098,165 bytes, 991 entries, 848 production files.
+- Current production: 852 files, including four new Pool Panic Endless implementation/presentation files.
+- Reconstructing patches: `web-endless.1.patch` and `pool1-to-endless1.patch`.
+- Ten silent complete-engine drivers link the same 134 normal Release objects except main, producing twenty backend files. All twenty-three native suites remain release gates.
+- The independent first-three-flag fixture is SHA-256 `17909bb3a7df302a7b3ac2417cd813aa378282ff231e7fd77d645cafbc5267c0`; the 469-input art fixture is SHA-256 `bcc6c2fe9450245cea71e85e26cd3db5d9f4fa1da9cbe63c817c211948bbf3a6`.
+- All fifteen browser integration suites, muted actual-browser inspection and a fresh offline source-download check remain publication gates.
+- `build/pvz-portable.js`: 209,600 bytes, SHA-256 `cac16540c4538cbda98c25b9911d38c194db48abf7b73803780dd4c6f79be601`.
+- `build/pvz-portable.wasm`: 7,772,035 bytes, SHA-256 `9608d3fb4419fe9da5409e6c7c87f47af751fab66b907a783475325c984869ad`.
+- `build/ProjectVersion.h`: 193 bytes, SHA-256 `3c3d6c3953d7bbc215b2c8bc7da66192099f3cc44febd2f6799c85c869ecac47`.
+- Corresponding source: `pvz-portable-0.2.6-web-endless.1-source.zip`, 39,931,636 bytes, 1009 entries, SHA-256 `eee4ae6dfeaaa49bbf203c37cf45ad73dad56b85d3d0079e549ed11bc3d45f25`.
+- Combined patch: `web-endless.1.patch`, 14,674,652 bytes, SHA-256 `0a338c168aae8d8e18759fb98baee60f77bc255fe8cc76cde8c47c1c8c416cab`.
+- Incremental patch: `pool1-to-endless1.patch`, 46,257 bytes, SHA-256 `16f8a348dcdc8d30b252d1d08b409ed38f3e121333b993c2d88dbccb3aeeac47`.
+- Both patches reconstruct all 852 production files exactly. Fresh source-download extraction is checked with `npm --offline run check` before publication.
+
+All twenty-three muted native suites passed: 39,350,711 checks and zero failures. All fifteen browser integration suites passed, and muted browser inspection completed for this engine. These exact artifacts are prepared for GitHub Pages publication.
+
+
 ## Pool.1 - reviewed release inputs
 
 Current engine: `0.2.6-web-pool.1`.

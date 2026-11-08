@@ -1,5 +1,12 @@
 # Plants vs. Zombies — browser playtest
 
+## Endless.1 - Pool Panic Endless
+
+`0.2.6-web-endless.1` adds Pool Panic Endless as the fifteenth Bonus card. The original pool conveyor continues through flags instead of ending after one battle. The first three flags contain 36, 46 and 56 authored zombies; later flags cap at 66 while native armor, aquatic enemies and special abilities vary the formations. The game uses the original Survival flag counter and best-record presentation. Clearing a flag saves progress and updates the personal best; a loss ends the run without a finite victory award or trophy.
+
+All twenty-three muted native suites passed: 39,350,711 checks and zero failures. All fifteen browser integration suites passed, and muted browser inspection completed for this engine. These exact artifacts are prepared for GitHub Pages publication.
+
+
 ## Pool.1 - Pool Panic
 
 `0.2.6-web-pool.1` adds Pool Panic as the fourteenth Bonus minigame. One continuous battle uses the original six-row daytime pool lawn. A finite conveyor supplies Squash, Tangle Kelp, Cherry Bomb and Jalapeno against eight formations containing 48 authored zombies: 28 on land and 20 in the water, including late Dolphin Riders. Eight preplaced Lily Pads support ground plants in the back four columns of the pool; open water remains available for Kelp. Six original mowers retain the normal Pool Cleaner purchase behavior; a fresh profile has ordinary mowers in both water rows. Only clearing the entire battle earns the normal native completion award.
