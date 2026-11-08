@@ -157,9 +157,9 @@
       "hero": "Original REANIM_ZOMBIE_DOLPHINRIDER anim_ride assembly, with complete native zombie and dolphin parts",
       "background": "IMAGE_BACKGROUND3 with original IMAGE_POOL water layer",
       "generatedArtworkUsed": false,
-      "gameplay": "An endless pool conveyor using original Squash, Tangle Kelp, Cherry Bomb and Jalapeno against escalating varied land and water waves. Native flags track progress; saved games and a separate best record preserve the run.",
+      "gameplay": "An endless pool conveyor for building a lasting defense with original Repeater, Threepeater, Tall-nut, Torchwood, Spikeweed and Lily Pad, plus Squash, Tangle Kelp, Cherry Bomb and Jalapeno. Six opening packets establish the lawn; escalating varied land and water waves preserve native flags, saved games and a separate full-width best record.",
       "artwork": "The complete original Dolphin Rider in its native riding pose is uniformly fitted inside68 by57 pixels and centered in the80 by65 Bonus picture. The original pool backdrop and IMAGE_POOL water are composited at the native software-pool position before cropping. No redrawn parts, generated image or reused Survival thumbnail.",
-      "interface": "Original conveyor, seed packets, Menu, speed and pause controls, Survival flag counter, native progress meter and footer. This card reuses the original Survival Endless longest-streak text, fonts, colors and positions for its own best flag record. No extra HUD, glove or persistent challenge tips. Large new-mode records are uniformly fitted inside the picture using the same original fonts, wording and colors; ordinary records and every stock card keep their original rendering."
+      "interface": "Original conveyor and seed packets, original shovel for rebuilding, Menu, speed and pause controls, Survival flag counter, progress meter and footer. Brief original flag-clear and huge-wave advice stays behind Pause and dialogs. A compact original Brianne12 Best stamp occupies only the portrait bottom, leaving the Dolphin hero and title clear; large records use readable k/m/b abbreviations while full uint32 totals remain stored. Every stock Survival card keeps its original rendering. No extra persistent HUD or tips below cards."
     }
   ],
   "canvas": {

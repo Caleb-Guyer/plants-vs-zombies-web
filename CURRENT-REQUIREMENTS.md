@@ -1,5 +1,14 @@
 # Current requirements
 
+## Endless.2 - persistent defense rules
+
+`0.2.6-web-endless.2` rebuilds Pool Panic Endless around persistent original defenses. Repeater, Threepeater, Tall-nut, Torchwood, Spikeweed and Lily Pad join occasional Squash, Tangle Kelp, Cherry Bomb and Jalapeno. The original shovel allows rebuilding. Finite Pool Panic keeps its original disposable-attack rules.
+
+Native conveyor entry spacing prevents accepted cards accumulating far beyond the visible belt. Weighted deliveries consider waiting duplicates, existing plants and legal spaces. Torchwood is supplied for lanes that lack one, with at most one waiting packet. Lily Pad supply stops at fourteen planted pads, leaving bare water available for Kelp. Placement still uses the original rules. Accepted packets and surviving defenses carry between flags. Each flag retains a 48-packet allowance; unissued quota expires at the clear. Eight saved spatial variants vary the lanes. Health-based pacing uses original wave fields, a native huge-wave warning and a Flag Zombie. A brief native clear banner marks each flag; pause and menus suppress it. Later flags add Jack-in-the-Box, Ladder, Zamboni and Gargantuar mechanics without changing native combat statistics. Only empty original rear Lily Pad cells are replenished; existing health and mowers are preserved. Future delivery randomness survives Continue through existing saved fields. Legacy checkpoints preserve accepted cards and actors while repairing excessive offscreen spacing. No serialized structure was enlarged. The shovel follows the native bank slide and remains clear of the conveyor and Menu. The card uses a small original-font personal-best stamp. No new permanent explanatory HUD or card tips are added. Normal audio remains available; testing is muted. Menu and the speed button now fit side by side within the original top menu strip. The compact speed button uses cropped original stone caps and the unchanged native green font. Zombie rendering order is preserved; the button no longer occupies the first row head space. Native wider Zen Garden and Tree menus keep their original geometry.
+
+All twenty-three muted native suites passed: 50,914,086 checks, zero failures. All fifteen browser integration suites passed. Muted browser inspection completed an opening flag and checked controls and save continuation on these artifacts.
+
+
 ## Endless.1 - native flags and persistent best
 
 `0.2.6-web-endless.1` adds Pool Panic Endless as the fifteenth Bonus card. The original pool conveyor continues through flags instead of ending after one battle. The first three flags contain 36, 46 and 56 authored zombies; later flags cap at 66 while native armor, aquatic enemies and special abilities vary the formations. The game uses the original Survival flag counter and best-record presentation. Clearing a flag saves progress and updates the personal best; a loss ends the run without a finite victory award or trophy.

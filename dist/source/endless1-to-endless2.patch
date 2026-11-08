@@ -1,0 +1,712 @@
+diff --git a/CMake/ProjectVersion.cmake b/CMake/ProjectVersion.cmake
+index a6430dc6b0f04fb4ed7b8fcd7b82ea25c8006a0e..cee6768c834d10b88864956c2ba1b5b6e0dd1e64 100644
+--- a/CMake/ProjectVersion.cmake
++++ b/CMake/ProjectVersion.cmake
+@@ -66,6 +66,6 @@ if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
+ endif()
+ 
+ # Browser release identity; keep binary and corresponding-source manifests aligned.
+-set(PVZP_VERSION "0.2.6-web-endless.1")
++set(PVZP_VERSION "0.2.6-web-endless.2")
+ set(PVZP_VERSION_PLAIN "0.2.6")
+ configure_file("${PROJECT_SOURCE_DIR}/CMake/ProjectVersion.h.in" "${PROJECT_BINARY_DIR}/ProjectVersion.h" @ONLY)
+diff --git a/src/Lawn/Board.cpp b/src/Lawn/Board.cpp
+index 2f665f356dba91f52c4aea8da22328634d6b7598..19a68589506784eb7e1504359ac8ee8fbed58e4d 100644
+--- a/src/Lawn/Board.cpp
++++ b/src/Lawn/Board.cpp
+@@ -1321,6 +1321,7 @@ void Board::InitSurvivalStage()
+ 
+ Rect Board::GetShovelButtonRect()
+ {
++    if (PoolPanicEndless::IsMode(mApp->mGameMode)) return Rect(600 + (mSeedBank ? mSeedBank->mX : SEED_BANK_OFFSET_X_END), 0, Sexy::IMAGE_SHOVELBANK->GetWidth(), Sexy::IMAGE_SHOVELBANK->GetHeight());
+     if (LightsOut::IsMode(mApp->mGameMode) || GarlicRun::IsMode(mApp->mGameMode)) return Rect(456, 0, Sexy::IMAGE_SHOVELBANK->GetWidth(), Sexy::IMAGE_SHOVELBANK->GetHeight());
+ 	const bool aCareTool = IntensiveCare::IsMode(mApp->mGameMode);
+ 	Rect aRect(aCareTool ? 0 : GetSeedBankExtraWidth() + 456, 0,
+@@ -1599,6 +1600,7 @@ void Board::InitLevel()
+ 		mFogBlownCountDown = 200;
+ 		mFogOffset = 1065 - LeftFogColumn() * 80;
+ 	}
++    if (PoolPanicEndless::IsMode(mApp->mGameMode)) PoolPanicEndless::PreloadResources();
+ 	mChallenge->InitLevel();
+ }
+ 
+@@ -5900,7 +5902,7 @@ void Board::NextWaveComing()
+ {
+ 	if (mCurrentWave + 1 == mNumWaves)
+ 	{
+-		if (!IsSurvivalStageWithRepick() && mApp->mGameMode != GameMode::GAMEMODE_CHALLENGE_LAST_STAND && !mApp->IsContinuousChallenge())
++		if (!IsSurvivalStageWithRepick() && mApp->mGameMode != GameMode::GAMEMODE_CHALLENGE_LAST_STAND && !mApp->IsContinuousChallenge() && !PoolPanicEndless::IsMode(mApp->mGameMode))
+ 		{
+ 			mApp->AddReanimation(0, 30, MakeRenderOrder(RenderLayer::RENDER_LAYER_ABOVE_UI, 0, 0), ReanimationType::REANIM_FINAL_WAVE);
+ 			mFinalWaveSoundCounter = 60;
+@@ -7563,7 +7565,25 @@ void Board::DrawZenButtons(Graphics* g)
+ 
+ void Board::DrawShovel(Graphics* g)
+ {
+-    if (PoolPanicEndless::IsMode(mApp->mGameMode) || PoolPanic::IsMode(mApp->mGameMode)) return;
++    if (PoolPanic::IsMode(mApp->mGameMode)) return;
++    if (PoolPanicEndless::IsMode(mApp->mGameMode))
++    {
++        if (!mShowShovel) return;
++        const Rect frame = GetShovelButtonRect();
++        g->DrawImage(IMAGE_SHOVELBANK,frame.mX,frame.mY);
++        if (mCursorObject->mCursorType != CURSOR_TYPE_SHOVEL)
++        {
++            // Keep the full original shovel inside its native frame, clear of
++            // both the conveyor backdrop and the menu/speed buttons.
++            const float scale = std::min((frame.mWidth-4)/static_cast<float>(IMAGE_SHOVEL->GetWidth()),
++                (frame.mHeight-4)/static_cast<float>(IMAGE_SHOVEL->GetHeight()));
++            const int width = FloatRoundToInt(IMAGE_SHOVEL->GetWidth()*scale);
++            const int height = FloatRoundToInt(IMAGE_SHOVEL->GetHeight()*scale);
++            const Rect icon(frame.mX+(frame.mWidth-width)/2,frame.mY+(frame.mHeight-height)/2,width,height);
++            g->DrawImage(IMAGE_SHOVEL,icon,Rect(0,0,IMAGE_SHOVEL->GetWidth(),IMAGE_SHOVEL->GetHeight()));
++        }
++        return;
++    }
+     if (GarlicRun::IsMode(mApp->mGameMode) || LightsOut::IsMode(mApp->mGameMode) || GardenShuffle::IsMode(mApp->mGameMode) || IntensiveCare::IsMode(mApp->mGameMode))
+     {
+         Rect rect = GetShovelButtonRect();
+@@ -8186,6 +8206,7 @@ void Board::DrawUITop(Graphics* g)
+ 	}
+ 
+ 	if (mAdvice->mMessageStyle != MessageStyle::MESSAGE_STYLE_SLOT_MACHINE &&
++        !(PoolPanicEndless::IsMode(mApp->mGameMode) && (mPaused || mApp->GetDialogCount() > 0)) &&
+         !((IntensiveCare::IsMode(mApp->mGameMode) || ChainReaction::IsMode(mApp->mGameMode) || GarlicRun::IsMode(mApp->mGameMode)) && mPaused))
+ 	{
+ 		if (ChainReaction::IsMode(mApp->mGameMode) && mAdvice->mMessageStyle == MessageStyle::MESSAGE_STYLE_HINT_FAST)
+diff --git a/src/Lawn/Challenge.cpp b/src/Lawn/Challenge.cpp
+index d207e25949e5bb3fd282a8f5b1faca3d28c75014..ebb2730077c360ada5d6bc78addb5fc18a7a0662 100644
+--- a/src/Lawn/Challenge.cpp
++++ b/src/Lawn/Challenge.cpp
+@@ -290,7 +290,7 @@ void Challenge::StartLevel()
+ 		mChallengeStateCounter = 400;
+ 	}
+ 	GameMode aGameMode = mApp->mGameMode;
+-    if (PoolPanicEndless::IsMode(aGameMode) || PoolPanic::IsMode(aGameMode)) mBoard->mShowShovel = false;
++    if (PoolPanic::IsMode(aGameMode)) mBoard->mShowShovel = false;
+     if (CobCannonCommand::IsMode(aGameMode))
+     {
+         mBoard->mShowShovel = false;
+diff --git a/src/Lawn/System/PoolPanicEndless.cpp b/src/Lawn/System/PoolPanicEndless.cpp
+index f507b35455dafeb73a60d8388eebf69297668f1c..8d0241da8f3de7f82ec1266f027fd0c44b46b1fe 100644
+--- a/src/Lawn/System/PoolPanicEndless.cpp
++++ b/src/Lawn/System/PoolPanicEndless.cpp
+@@ -8,9 +8,14 @@
+ #include "../LawnCommon.h"
+ #include "PlayerInfo.h"
+ #include "../../LawnApp.h"
++#include "../../GameConstants.h"
++#include "../../PvzpLib/PvzpStringFile.h"
+ #include "Common.h"
++#include "misc/MTRand.h"
+ #include <algorithm>
+ #include <climits>
++#include <cstdint>
++#include <cstring>
+ #ifdef __EMSCRIPTEN__
+ #include <emscripten/emscripten.h>
+ #endif
+@@ -19,6 +24,21 @@ namespace PoolPanicEndless
+ {
+ namespace
+ {
++int WaitingPackets(const SeedBank& bank)
++{
++    int count = 0;
++    for (int i = 0; i < bank.mNumPackets; ++i)
++        count += bank.mSeedPackets[i].mPacketType != SEED_NONE;
++    return count;
++}
++std::uint32_t SeedBits(std::int32_t saved)
++{
++    std::uint32_t bits;
++    std::memcpy(&bits,&saved,sizeof(bits));
++    return bits;
++}
++void StoreSeed(Challenge& challenge, std::uint32_t seed)
++{ std::memcpy(&challenge.mSlotMachineRollCount,&seed,sizeof(seed)); }
+ void RestoreEmptyPads(Board& board)
+ {
+     for (const Cell& cell : kLilyPads)
+@@ -30,14 +50,27 @@ void UpdateSupply(Board& board)
+     Challenge& challenge = *board.mChallenge;
+     board.mSeedBank->UpdateConveyorBelt();
+     if (challenge.mChallengeScore >= kPacketQuota ||
+-        board.mSeedBank->GetNumSeedsOnConveyorBelt() >= board.mSeedBank->mNumPackets) return;
++        WaitingPackets(*board.mSeedBank) >= board.mSeedBank->mNumPackets) return;
+     if (challenge.mConveyorBeltCounter > 0) --challenge.mConveyorBeltCounter;
+-    if (challenge.mConveyorBeltCounter != 0) return;
+-    const SeedType seed = SeedForSupply(challenge.mSurvivalStage,challenge.mChallengeScore);
++    if (challenge.mConveyorBeltCounter != 0 || !CanAcceptSupply(*board.mSeedBank)) return;
++    std::array<int,kSupplySeeds.size()> weights{};
++    int total = 0;
++    for (std::size_t i = 0; i < kSupplySeeds.size(); ++i)
++        total += weights[i] = SupplyWeight(board,kSupplySeeds[i]);
++    if (total == 0) return;
++    // The saved seed belongs only to this mode. Advancing a native MTRand
++    // seed chain preserves future deliveries through Continue without altering
++    // the global combat RNG or the serialized Challenge layout.
++    Sexy::MTRand random(SeedBits(challenge.mSlotMachineRollCount));
++    int pick = static_cast<int>(random.Next(static_cast<unsigned long>(total)));
++    std::size_t index = 0;
++    while (index+1 < weights.size() && pick >= weights[index]) pick -= weights[index++];
++    const SeedType seed = kSupplySeeds[index];
+     board.mSeedBank->AddSeed(seed);
++    StoreSeed(challenge,static_cast<std::uint32_t>(random.Next()));
+     challenge.mLastConveyorSeedType = seed;
+     ++challenge.mChallengeScore;
+-    challenge.mConveyorBeltCounter = kSupplyInterval;
++    challenge.mConveyorBeltCounter = SupplyInterval(WaitingPackets(*board.mSeedBank));
+ }
+ void CompleteFlag(Board& board)
+ {
+@@ -54,8 +87,12 @@ void CompleteFlag(Board& board)
+     board.mCurrentWave = 0;
+     board.mProgressMeterWidth = 0;
+     board.mZombieCountDown = board.mZombieCountDownStart = kBetweenDelay;
++    board.mZombieHealthToNextWave = -1;
+     RestoreEmptyPads(board);
+     board.SurvivalSaveScore();
++    const std::string flags = board.mApp->Pluralize(challenge.mSurvivalStage,"[ONE_FLAG]","[COUNT_FLAGS]");
++    board.DisplayAdvice(PvzpReplaceString("[SUCCESSFULLY_DEFENDED]","{FLAGS}",flags),
++        MESSAGE_STYLE_BIG_MIDDLE_FAST,ADVICE_NONE);
+     board.SaveGame(GetSavedGameName(kMode,board.mApp->mPlayerInfo->mId));
+ #ifdef __EMSCRIPTEN__
+     // Use the existing serialized browser persistence queue after BOTH native
+@@ -67,6 +104,104 @@ void CompleteFlag(Board& board)
+ #endif
+ }
+ }
++bool CanAcceptSupply(const SeedBank& bank)
++{
++    const int waiting = WaitingPackets(bank);
++    if (waiting >= bank.mNumPackets) return false;
++    // Native AddSeed's fallback adds 40px to the previous offset. Admission
++    // must wait until that fallback cannot push a new packet off the entry.
++    const int entry = 515-(SEED_PACKET_WIDTH+1)*waiting;
++    return waiting == 0 || bank.mSeedPackets[waiting-1].mOffsetX <= entry;
++}
++int SupplyWeight(Board& board, SeedType seed)
++{
++    int base = 0, waitingLimit = 2, boardLimit = 54;
++    switch (seed)
++    {
++    case SEED_REPEATER: base=26; waitingLimit=3; boardLimit=16; break;
++    case SEED_THREEPEATER: base=20; waitingLimit=3; boardLimit=10; break;
++    case SEED_TALLNUT: base=13; boardLimit=10; break;
++    case SEED_TORCHWOOD: base=10; waitingLimit=1; break;
++    case SEED_SPIKEWEED: base=8; boardLimit=8; break;
++    case SEED_LILYPAD: base=4; waitingLimit=1; boardLimit=14; break;
++    case SEED_SQUASH: base=6; boardLimit=4; break;
++    case SEED_TANGLEKELP: base=4; waitingLimit=1; boardLimit=4; break;
++    case SEED_CHERRYBOMB: base=7; break;
++    case SEED_JALAPENO: base=5; break;
++    default: return 0;
++    }
++    int waiting = 0, planted = 0;
++    std::array<bool,6> torchwoodRows{};
++    for (const SeedPacket& packet : board.mSeedBank->mSeedPackets)
++        waiting += packet.mPacketType == seed;
++    for (const Plant* plant : board.mPlants)
++    {
++        planted += !plant->mDead && plant->mSeedType == seed;
++        if (!plant->mDead && plant->mSeedType == SEED_TORCHWOOD && plant->mRow >= 0 && plant->mRow < 6)
++            torchwoodRows[plant->mRow] = true;
++    }
++    if (waiting >= waitingLimit || planted >= boardLimit) return 0;
++    bool legal = false;
++    if (seed == SEED_TORCHWOOD)
++    {
++        // Fire peas do not gain another multiplier from a second Torchwood.
++        // Reserve pending packets against genuinely unserved, plantable lanes.
++        int demand = 0;
++        for (int row = 0; row < 6; ++row)
++        {
++            if (torchwoodRows[row]) continue;
++            for (int col = 0; col < 9; ++col)
++                if (board.CanPlantAt(col,row,seed) == PLANTING_OK) { ++demand; break; }
++        }
++        if (waiting >= demand) return 0;
++        legal = true;
++    }
++    for (int row = 0; row < 6 && !legal; ++row)
++        for (int col = 0; col < 9 && !legal; ++col)
++            legal = board.CanPlantAt(col,row,seed) == PLANTING_OK;
++    if (!legal) return 0;
++    int weight = std::max(1,base/(1+planted/3));
++    if (waiting > 0) weight = std::max(1,weight/(waiting+1));
++    if (board.mChallenge->mLastConveyorSeedType == seed) weight = std::max(1,weight/2);
++    return weight;
++}
++void MigrateLegacy(Board& board)
++{
++    Challenge& challenge = *board.mChallenge;
++    if (!IsMode(board.mApp->mGameMode)) return;
++    if (challenge.mChallengeGridY == kRulesVersion) return;
++    const int waiting = WaitingPackets(*board.mSeedBank);
++    bool outsideEntry = false;
++    const int entryX = board.mSeedBank->mSeedPackets[0].mX+515;
++    for (int i = 0; i < waiting; ++i)
++    {
++        const SeedPacket& packet = board.mSeedBank->mSeedPackets[i];
++        outsideEntry |= packet.mX+packet.mOffsetX > entryX;
++    }
++    // Repair only the legacy over-spaced backlog. Every accepted type and
++    // order stays intact, as do all board actors, health, mowers and records.
++    if (outsideEntry)
++        for (int i = 0; i < waiting; ++i) board.mSeedBank->mSeedPackets[i].mOffsetX = 0;
++    const std::uint32_t legacySeed = SeedBits(board.mBoardRandSeed) ^
++        static_cast<std::uint32_t>(challenge.mSurvivalStage)*0x9e3779b9u ^
++        static_cast<std::uint32_t>(challenge.mChallengeScore)*0x85ebca6bu;
++    Sexy::MTRand random(legacySeed);
++    StoreSeed(challenge,static_cast<std::uint32_t>(random.Next()));
++    challenge.mChallengeGridY = kRulesVersion;
++    if (board.mCurrentWave > 0 && board.mZombieHealthToNextWave < 0)
++    {
++        board.mZombieHealthWaveStart = board.TotalZombiesHealthInWave(board.mCurrentWave-1);
++        board.mZombieHealthToNextWave = static_cast<int>(board.mZombieHealthWaveStart*0.55f);
++    }
++}
++void PreloadResources()
++{
++    for (SeedType seed : kSupplySeeds) Plant::PreloadPlantResources(seed);
++    constexpr ZombieType types[] = {ZOMBIE_NORMAL,ZOMBIE_FLAG,ZOMBIE_TRAFFIC_CONE,ZOMBIE_PAIL,
++        ZOMBIE_DOOR,ZOMBIE_FOOTBALL,ZOMBIE_NEWSPAPER,ZOMBIE_SNORKEL,ZOMBIE_DOLPHIN_RIDER,
++        ZOMBIE_JACK_IN_THE_BOX,ZOMBIE_LADDER,ZOMBIE_ZAMBONI,ZOMBIE_GARGANTUAR,ZOMBIE_IMP};
++    for (ZombieType type : types) Zombie::PreloadZombieResources(type);
++}
+ void Populate(Board& board)
+ {
+     Challenge& challenge = *board.mChallenge;
+@@ -76,6 +211,8 @@ void Populate(Board& board)
+     challenge.mChallengeScore = 0;
+     challenge.mConveyorBeltCounter = kSupplyInterval;
+     challenge.mChallengeGridX = Sexy::Rand(8);
++    challenge.mChallengeGridY = kRulesVersion;
++    StoreSeed(challenge,static_cast<std::uint32_t>(Sexy::Rand()));
+     board.mCurrentWave = board.mTotalSpawnedWaves = 0;
+     board.mZombieCountDown = board.mZombieCountDownStart = kOpeningDelay;
+     board.mZombieHealthToNextWave = -1;
+@@ -83,9 +220,8 @@ void Populate(Board& board)
+     board.mShowShovel = false;
+     board.ClearCursor();
+     FillSeedBank(*board.mSeedBank);
+-    for (int i = 0; i < kOpeningPackets; ++i)
++    for (SeedType seed : kOpeningSeeds)
+     {
+-        const SeedType seed = SeedForSupply(0,challenge.mChallengeScore);
+         board.mSeedBank->AddSeed(seed,true);
+         challenge.mLastConveyorSeedType = seed;
+         ++challenge.mChallengeScore;
+@@ -98,7 +234,8 @@ void Update(Board& board)
+     if (!IsCurrentRules(board.mApp->mGameMode,challenge.mChallengeState) ||
+         board.mApp->mGameScene != SCENE_PLAYING || board.mPaused || board.mTimeStopCounter > 0 ||
+         board.mLevelComplete || board.HasLevelAwardDropped()) return;
+-    board.mShowShovel = false;
++    MigrateLegacy(board);
++    board.mShowShovel = true;
+     UpdateSupply(board);
+     if (challenge.mChallengeState == kBetween)
+     {
+@@ -115,10 +252,37 @@ void Update(Board& board)
+     const int wave = std::clamp(board.mCurrentWave,0,kWaveCount);
+     if (wave < kWaveCount)
+     {
+-        if (challenge.mChallengeStateCounter > 0) --challenge.mChallengeStateCounter;
++        bool warningFinished = false;
++        if (challenge.mChallengeState == kHugeWave)
++        {
++            challenge.mChallengeStateCounter = board.mHugeWaveCountDown;
++            board.mZombieCountDown = challenge.mChallengeStateCounter;
++            if (board.mHugeWaveCountDown > 0) return;
++            challenge.mChallengeState = kActive;
++            warningFinished = true;
++        }
++        else
++        {
++            if (challenge.mChallengeStateCounter > 0) --challenge.mChallengeStateCounter;
++            if (wave > 0 && challenge.mChallengeStateCounter > 200 &&
++                board.mZombieCountDownStart-challenge.mChallengeStateCounter > 400 &&
++                board.TotalZombiesHealthInWave(wave-1) <= board.mZombieHealthToNextWave)
++                challenge.mChallengeStateCounter = 200;
++        }
+         board.mZombieCountDown = challenge.mChallengeStateCounter;
+         if (challenge.mChallengeStateCounter == 0)
+         {
++            if (wave == kWaveCount-1 && !warningFinished)
++            {
++                board.ClearAdviceImmediately();
++                board.DisplayAdviceAgain("[ADVICE_HUGE_WAVE]",MESSAGE_STYLE_HUGE_WAVE,ADVICE_HUGE_WAVE);
++                board.mHugeWaveCountDown = kHugeWaveDelay;
++                board.mZombieCountDown = board.mZombieCountDownStart = kHugeWaveDelay;
++                challenge.mChallengeState = kHugeWave;
++                challenge.mChallengeStateCounter = kHugeWaveDelay;
++                return;
++            }
++            if (wave != kWaveCount-1) board.NextWaveComing();
+             for (const Spawn& spawn : WaveFor(challenge.mSurvivalStage,wave,challenge.mChallengeGridX))
+             {
+                 if (spawn.mType == ZOMBIE_INVALID) continue;
+@@ -130,6 +294,8 @@ void Update(Board& board)
+             board.mCurrentWave = wave + 1;
+             if (board.mTotalSpawnedWaves < INT_MAX) ++board.mTotalSpawnedWaves;
+             if (wave == kWaveCount-1) board.mFlagRaiseCounter = 100;
++            board.mZombieHealthWaveStart = board.TotalZombiesHealthInWave(wave);
++            board.mZombieHealthToNextWave = static_cast<int>(board.mZombieHealthWaveStart*0.55f);
+             challenge.mChallengeStateCounter = FormationInterval(challenge.mSurvivalStage);
+             board.mZombieCountDown = board.mZombieCountDownStart = challenge.mChallengeStateCounter;
+         }
+diff --git a/src/Lawn/System/PoolPanicEndless.h b/src/Lawn/System/PoolPanicEndless.h
+index 02bf5f01399385a0a5c334b049118adf3351323b..a14c5fa4169230b7d73ca4976a6c8b16b60b9e22 100644
+--- a/src/Lawn/System/PoolPanicEndless.h
++++ b/src/Lawn/System/PoolPanicEndless.h
+@@ -7,6 +7,7 @@
+ #include <string_view>
+ 
+ class Board;
++class SeedBank;
+ 
+ // Separate from finite Pool Panic. All progress uses existing saved counters;
+ // native plants, packets, zombies, mowers and effects retain their own states.
+@@ -15,30 +16,32 @@ namespace PoolPanicEndless
+ inline constexpr GameMode kMode = GAMEMODE_CHALLENGE_POOL_PANIC_ENDLESS;
+ inline constexpr ChallengeState kActive = static_cast<ChallengeState>(127);
+ inline constexpr ChallengeState kBetween = static_cast<ChallengeState>(128);
++inline constexpr ChallengeState kHugeWave = static_cast<ChallengeState>(129);
++inline constexpr int kRulesVersion = 2;
+ inline constexpr int kWaveCount = 10;
+-inline constexpr int kLargestFormation = 8;
++inline constexpr int kLargestFormation = 12;
+ inline constexpr int kBankSize = 10;
+-inline constexpr int kOpeningPackets = 4;
++inline constexpr int kOpeningPackets = 6;
+ inline constexpr int kPacketQuota = 48;
+-inline constexpr int kSupplyInterval = 200;
+-inline constexpr int kOpeningDelay = 1600;
+-inline constexpr int kBetweenDelay = 1200;
+-inline constexpr int kResumeDelay = 400;
++inline constexpr int kSupplyInterval = 400;
++inline constexpr int kOpeningDelay = 1800;
++inline constexpr int kBetweenDelay = 600;
++inline constexpr int kResumeDelay = 200;
++inline constexpr int kHugeWaveDelay = 750;
+ constexpr bool IsMode(GameMode mode) { return mode == kMode; }
+ constexpr bool IsCurrentRules(GameMode mode, ChallengeState state)
+-{ return IsMode(mode) && (state == kActive || state == kBetween); }
+-inline constexpr std::array<SeedType,8> kSupplyCycle = {
+-    SEED_SQUASH, SEED_TANGLEKELP, SEED_CHERRYBOMB, SEED_TANGLEKELP,
+-    SEED_SQUASH, SEED_JALAPENO, SEED_CHERRYBOMB, SEED_TANGLEKELP
++{ return IsMode(mode) && (state == kActive || state == kBetween || state == kHugeWave); }
++inline constexpr std::array<SeedType,10> kSupplySeeds = {
++    SEED_REPEATER, SEED_THREEPEATER, SEED_TALLNUT, SEED_TORCHWOOD, SEED_SPIKEWEED,
++    SEED_LILYPAD, SEED_SQUASH, SEED_TANGLEKELP, SEED_CHERRYBOMB, SEED_JALAPENO
+ };
+-constexpr SeedType SeedForSupply(int flags, int ordinal)
+-{
+-    if (ordinal < 0 || ordinal >= kPacketQuota) return SEED_NONE;
+-    const int rotation = flags > 0 ? (flags % 8) * 3 : 0;
+-    return kSupplyCycle[(ordinal + rotation) % kSupplyCycle.size()];
+-}
++inline constexpr std::array<SeedType,kOpeningPackets> kOpeningSeeds = {
++    SEED_REPEATER, SEED_THREEPEATER, SEED_TALLNUT, SEED_REPEATER, SEED_LILYPAD, SEED_TORCHWOOD
++};
++constexpr int SupplyInterval(int waiting)
++{ return waiting > 8 ? 1000 : waiting > 6 ? 500 : waiting > 4 ? 425 : 400; }
+ constexpr int FormationInterval(int flags)
+-{ return flags >= 4 ? 800 : 1000 - (flags > 0 ? flags : 0) * 50; }
++{ return flags >= 6 ? 1400 : flags >= 3 ? 1700 - (flags-3)*100 : 2200 - (flags > 0 ? flags : 0)*200; }
+ struct Cell { int mCol; int mRow; };
+ inline constexpr std::array<Cell,8> kLilyPads = {{{0,2},{1,2},{2,2},{3,2},{0,3},{1,3},{2,3},{3,3}}};
+ struct Spawn { ZombieType mType = ZOMBIE_INVALID; int mRow = 0; int mX = 0; };
+@@ -98,29 +101,40 @@ constexpr Formation WaveFor(int flags, int wave, int variation)
+     if (flags < 3) result = ParseWave(kOpeningFlags[flags][wave]);
+     else
+     {
+-        // Later flags rotate the authored grouping, cap density, and introduce
+-        // native special abilities instead of increasing enemy statistics.
+-        const Formation source = ParseWave(kOpeningFlags[2][(wave+(flags%5)*2)%kWaveCount]);
+-        const int sourceCount = ZombieCount(source);
+-        const int count = ZombieCount(ParseWave(kOpeningFlags[0][wave])) + 3;
++        // Vary land/water pressure and introduce original counter mechanics.
++        // Density is bounded; no zombie's native statistics are changed.
++        const int growth = flags >= 11 ? 4 : (flags-3)/2;
++        const int requested = ZombieCount(ParseWave(kOpeningFlags[0][wave])) + 3 + growth;
++        const int limit = wave == kWaveCount-1 ? kLargestFormation-1 : kLargestFormation;
++        const int count = requested < limit ? requested : limit;
++        constexpr int land[4] = {0,1,4,5};
+         for (int i = 0; i < count; ++i)
+         {
+-            result[i] = source[i%sourceCount];
+-            result[i].mX = 800+(i%3)*40;
+-            const int key = (flags%16 + wave*3 + i*5) % 16;
+-            const bool water = result[i].mRow == 2 || result[i].mRow == 3;
++            const int key = (flags%19 + wave*3 + i*5) % 19;
++            const int theme = flags%3;
++            const bool water = theme == 0 ? i%2 == 1 : theme == 1 ? i%4 == 3 : i%3 != 0;
++            result[i] = {ZOMBIE_NORMAL, water ? 2+(wave+i)%2 : land[(wave+i)%4],800+(i%3)*40};
+             if (water)
+             {
+                 constexpr ZombieType types[5] = {ZOMBIE_NORMAL,ZOMBIE_TRAFFIC_CONE,ZOMBIE_PAIL,ZOMBIE_SNORKEL,ZOMBIE_DOLPHIN_RIDER};
+                 result[i].mType = types[(key+flags%5)%5];
+             }
+-            else if (flags >= 6 && key == 0) result[i].mType = ZOMBIE_GARGANTUAR;
+-            else if (flags >= 5 && key == 2) result[i].mType = ZOMBIE_LADDER;
+-            else if (flags >= 4 && key == 1) result[i].mType = ZOMBIE_JACK_IN_THE_BOX;
+-            else if (key%5 == 0) result[i].mType = ZOMBIE_FOOTBALL;
+-            else if (key%7 == 0) result[i].mType = ZOMBIE_NEWSPAPER;
++            else
++            {
++                constexpr ZombieType types[6] = {ZOMBIE_NORMAL,ZOMBIE_TRAFFIC_CONE,ZOMBIE_PAIL,ZOMBIE_DOOR,ZOMBIE_FOOTBALL,ZOMBIE_NEWSPAPER};
++                result[i].mType = types[key%6];
++                if (flags >= 3 && i == 0 && wave == 4) result[i].mType = ZOMBIE_JACK_IN_THE_BOX;
++                if (flags >= 3 && i == 0 && wave == 7) result[i].mType = ZOMBIE_LADDER;
++                if (flags >= 4 && i == 0 && wave == 5) result[i].mType = ZOMBIE_ZAMBONI;
++                if (flags >= 5 && i == 0 && wave == 8) result[i].mType = ZOMBIE_GARGANTUAR;
++            }
+         }
+     }
++    if (wave == kWaveCount-1)
++    {
++        const int count = ZombieCount(result);
++        result[count] = {ZOMBIE_FLAG,0,800+(count%3)*40};
++    }
+     for (Spawn& spawn : result) if (spawn.mType != ZOMBIE_INVALID)
+         spawn.mRow = TransformRow(spawn.mRow,flags,variation,wave);
+     return result;
+@@ -153,8 +167,12 @@ void PopulateAllowedZombies(bool (&output)[Count])
+ }
+ template<class Bank>
+ void FillSeedBank(Bank& bank) { bank.mNumPackets = kBankSize; }
++bool CanAcceptSupply(const SeedBank& bank);
++int SupplyWeight(Board& board, SeedType seed);
++void MigrateLegacy(Board& board);
++void PreloadResources();
+ void Populate(Board& board);
+ void Update(Board& board);
+ static_assert(static_cast<int>(kMode) == 87);
+-static_assert(ZombiesPerFlag(0)==36 && ZombiesPerFlag(1)==46 && ZombiesPerFlag(2)==56 && ZombiesPerFlag(3)==66);
++static_assert(ZombiesPerFlag(0)==37 && ZombiesPerFlag(1)==47 && ZombiesPerFlag(2)==57 && ZombiesPerFlag(3)==67);
+ }
+diff --git a/src/Lawn/System/PoolPanicEndlessPresentation.cpp b/src/Lawn/System/PoolPanicEndlessPresentation.cpp
+index fb05c44eaf15589848930aae7501fb7faecc47d1..8cc8809a186dd2788bb62432dc65c4363c0da306 100644
+--- a/src/Lawn/System/PoolPanicEndlessPresentation.cpp
++++ b/src/Lawn/System/PoolPanicEndlessPresentation.cpp
+@@ -10,7 +10,6 @@
+ #include "graphics/Font.h"
+ #include "graphics/MemoryImage.h"
+ #include <algorithm>
+-#include <limits>
+ #include <memory>
+ #include <string>
+ #include <vector>
+@@ -23,8 +22,29 @@ std::unique_ptr<Sexy::MemoryImage> sCard;
+ std::unique_ptr<Sexy::MemoryImage> sBestLabel;
+ uint32_t sBestRecord = 0;
+ std::string sBestText;
++std::string sBestNativeText;
+ const Sexy::_Font* sBestFront = nullptr;
+-const Sexy::_Font* sBestOutline = nullptr;
++
++std::string BestRecordText(uint32_t record)
++{
++    if (record < 1000) return "Best: " + std::to_string(record);
++    constexpr uint64_t divisors[] = {1000, 1000000, 1000000000};
++    constexpr char suffixes[] = {'k', 'm', 'b'};
++    const uint64_t value = record;
++    int unit = record >= 1000000000 ? 2 : record >= 1000000 ? 1 : 0;
++    if (unit < 2 && (value + divisors[unit] / 2) / divisors[unit] >= 1000) ++unit;
++    const uint64_t divisor = divisors[unit];
++    std::string count;
++    if (value < 10 * divisor)
++    {
++        const uint64_t tenths = (value * 10 + divisor / 2) / divisor;
++        count = std::to_string(tenths / 10);
++        if (tenths % 10) count += "." + std::to_string(tenths % 10);
++    }
++    else count = std::to_string((value + divisor / 2) / divisor);
++    count += suffixes[unit];
++    return "Best: " + count;
++}
+ 
+ std::unique_ptr<Sexy::MemoryImage> Blank(int width, int height)
+ {
+@@ -89,60 +109,27 @@ Sexy::Image* GetBonusImage()
+ 
+ bool DrawFittedBestRecord(Sexy::Graphics* graphics, uint32_t record, std::string_view nativeText, int x, int y)
+ {
+-    Sexy::_Font* front = Sexy::FONT_CONTINUUMBOLD14;
+-    Sexy::_Font* outline = Sexy::FONT_CONTINUUMBOLD14OUTLINE;
+-    if (!record || !front || !outline) return false;
+-    std::string text(nativeText);
+-    const bool unsignedRecord = record > static_cast<uint32_t>(std::numeric_limits<int>::max());
+-    if (unsignedRecord)
+-        text = PvzpReplaceString("[LONGEST_STREAK]", "{STREAK}", std::to_string(record));
+-    if (sBestLabel && record == sBestRecord && text == sBestText && front == sBestFront && outline == sBestOutline)
++    Sexy::_Font* front = Sexy::FONT_BRIANNETOD12;
++    if (!record || !front) return false;
++    if (sBestLabel && record == sBestRecord && nativeText == sBestNativeText && front == sBestFront)
+     {
+-        graphics->DrawImage(sBestLabel.get(), x + 13, y + 4);
++        graphics->DrawImage(sBestLabel.get(), x + 13, y + 51);
+         return true;
+     }
+-
+-    int widest = 0, lines = 0;
+-    size_t start = 0;
+-    for (size_t i = 0; i <= text.size(); ++i)
+-        if (i == text.size() || text[i] == '\n')
+-        {
+-            const std::string_view line(text.data() + start, i - start);
+-            widest = std::max({widest, front->StringWidth(line), outline->StringWidth(line)});
+-            ++lines;
+-            start = i + 1;
+-        }
+-    // Keep every normally fitting native label on the original draw path,
+-    // including its exact font pixels, colors and positions.
+-    if (widest <= 96 && !unsignedRecord) return false;
+-
+-    const int padding = 8;
+-    const int width = widest + padding * 2 + 2;
+-    const int height = std::max(front->GetLineSpacing(), outline->GetLineSpacing()) * lines +
+-        std::max(front->GetHeight(), outline->GetHeight()) + padding * 2;
+-    auto nativeLabel = Blank(width, height);
+-    Sexy::Graphics ink(nativeLabel.get());
++    // Keep the recognizable hero above a single small native-font stamp.
++    // Counts are abbreviated instead of shrinking original glyphs to fit.
++    auto label = Blank(80, 18);
++    Sexy::Graphics ink(label.get());
+     ink.SetLinearBlend(true);
+-    const Sexy::Rect wrap(padding, padding, widest + 2, height - padding * 2);
+-    PvzpDrawStringWrapped(&ink, text, wrap, outline, Sexy::Color::White, DS_ALIGN_CENTER);
+-    PvzpDrawStringWrapped(&ink, text, wrap, front, Sexy::Color(255, 0, 0), DS_ALIGN_CENTER);
+-    const Sexy::Rect bounds = VisibleBounds(*nativeLabel);
+-    if (bounds.mWidth <= 0 || bounds.mHeight <= 0) return false;
+-
+-    auto fitted = Blank(80, 65);
+-    Sexy::Graphics picture(fitted.get());
+-    picture.SetLinearBlend(true);
+-    picture.ClipRect(0, 0, 80, 65);
+-    const float scale = std::min({1.0f, 76.0f / bounds.mWidth, 57.0f / bounds.mHeight});
+-    PvzpDrawImageScaledF(&picture, nativeLabel.get(),
+-        40.0f - (bounds.mX + bounds.mWidth * 0.5f) * scale,
+-        32.5f - (bounds.mY + bounds.mHeight * 0.5f) * scale, scale, scale);
+-    sBestLabel = std::move(fitted);
++    const std::string text = BestRecordText(record);
++    PvzpDrawString(&ink, text, 41, 15, front, Sexy::Color(42, 42, 90), DS_ALIGN_CENTER);
++    PvzpDrawString(&ink, text, 40, 14, front, Sexy::Color(253, 245, 173), DS_ALIGN_CENTER);
++    sBestLabel = std::move(label);
+     sBestRecord = record;
+-    sBestText = std::move(text);
++    sBestText = text;
++    sBestNativeText = nativeText;
+     sBestFront = front;
+-    sBestOutline = outline;
+-    graphics->DrawImage(sBestLabel.get(), x + 13, y + 4);
++    graphics->DrawImage(sBestLabel.get(), x + 13, y + 51);
+     return true;
+ }
+ 
+@@ -152,6 +139,7 @@ void DisposeImage()
+     sBestLabel.reset();
+     sBestRecord = 0;
+     sBestText.clear();
+-    sBestFront = sBestOutline = nullptr;
++    sBestNativeText.clear();
++    sBestFront = nullptr;
+ }
+ }
+diff --git a/src/Lawn/System/PoolPanicEndlessPresentation.h b/src/Lawn/System/PoolPanicEndlessPresentation.h
+index 0af1236748d323b93cd5b68963e5864a6c5725fb..c18ba73fc4446e8e9a35593779cceb153a90554e 100644
+--- a/src/Lawn/System/PoolPanicEndlessPresentation.h
++++ b/src/Lawn/System/PoolPanicEndlessPresentation.h
+@@ -9,6 +9,7 @@ namespace Sexy { class Image; class Graphics; }
+ namespace PoolPanicEndlessPresentation
+ {
+ Sexy::Image* GetBonusImage();
++// A compact original-font record stamp leaves the portrait's upper 47 rows clear.
+ bool DrawFittedBestRecord(Sexy::Graphics* graphics, uint32_t record, std::string_view nativeText, int x, int y);
+ void DisposeImage();
+ }
+diff --git a/src/Lawn/Widget/GameButton.cpp b/src/Lawn/Widget/GameButton.cpp
+index 68c8a2596e69fb59122643d58ca168bfc3c040c8..11243c979b83cd3b5e6609f115eba059872a246e 100644
+--- a/src/Lawn/Widget/GameButton.cpp
++++ b/src/Lawn/Widget/GameButton.cpp
+@@ -74,6 +74,28 @@ void DrawStoneButton(Graphics* g, int x, int y, int theWidth, int theHeight, boo
+ 	g->DrawString(theLabel, aFontX, aFontY);
+ }
+ 
++static void DrawCompactSpeedStoneButton(Graphics* g, int x, int y, int theWidth, int theHeight, bool isDown, bool isHighLighted, const std::string& theLabel)
++{
++	Graphics aButtonGraphics(*g);
++	aButtonGraphics.ClipRect(x, y, theWidth, theHeight);
++	g = &aButtonGraphics;
++	Image* aLeftImage = isDown ? Sexy::IMAGE_BUTTON_DOWN_LEFT : Sexy::IMAGE_BUTTON_LEFT;
++	Image* aRightImage = isDown ? Sexy::IMAGE_BUTTON_DOWN_RIGHT : Sexy::IMAGE_BUTTON_RIGHT;
++	const int aLeftWidth = 22;
++	const int aRightWidth = 23;
++	const int aPressOffset = isDown ? 1 : 0;
++	// Preserve the original outer stone caps at native size. The full 71px
++	// pair cannot fit the speed control's share of the original Menu strip.
++	g->DrawImage(aLeftImage, x + aPressOffset, y, Rect(0, 0, aLeftWidth, aLeftImage->mHeight));
++	g->DrawImage(aRightImage, x + aPressOffset + aLeftWidth, y,
++		Rect(aRightImage->mWidth - aRightWidth, 0, aRightWidth, aRightImage->mHeight));
++	g->SetFont(isHighLighted ? Sexy::FONT_DWARVENTODCRAFT18BRIGHTGREENINSET : Sexy::FONT_DWARVENTODCRAFT18GREENINSET);
++	const int aFontX = x + aPressOffset + (theWidth - Sexy::FONT_DWARVENTODCRAFT18GREENINSET->StringWidth(theLabel)) / 2 + 1;
++	const int aFontY = y + aPressOffset + (theHeight - Sexy::FONT_DWARVENTODCRAFT18GREENINSET->GetAscent() / 6 - 1 + Sexy::FONT_DWARVENTODCRAFT18GREENINSET->GetAscent()) / 2 - 4;
++	g->SetColor(Color::White);
++	g->DrawString(theLabel, aFontX, aFontY);
++}
++
+ GameButton::GameButton(int theId)
+ {
+ 	mLabel = "";
+@@ -144,6 +166,11 @@ void GameButton::Draw(Graphics* g)
+ 	bool isHighLighted = IsMouseOver();
+ 	if (mDrawStoneButton)
+ 	{
++		if (mApp && mApp->mGameSpeedButton.get() == this)
++		{
++			DrawCompactSpeedStoneButton(g, mX, mY, mWidth, mHeight, isDown, isHighLighted, mLabel);
++			return;
++		}
+ 		DrawStoneButton(g, mX, mY, mWidth, mHeight, isDown, isHighLighted, mLabel);
+ 		return;
+ 	}
+diff --git a/src/LawnApp.cpp b/src/LawnApp.cpp
+index 1163df840c8341d2f05ff8c849db1ae946f8c071..ccdcd4a9bc993f8e87c2e4890dec540f061eee2f 100644
+--- a/src/LawnApp.cpp
++++ b/src/LawnApp.cpp
+@@ -1811,8 +1811,8 @@ void LawnApp::InitializeGameSpeedButton(Board* theBoard)
+ 	mGameSpeedButton->mDrawStoneButton = true;
+ 	mGameSpeedButton->mParentWidget = theBoard;
+ 	mGameSpeedButton->SetLabel(mDoubleGameSpeed ? "2x" : "1x");
+-	// The ten-packet bank and shovel fill the horizontal space beside Menu.
+-	mGameSpeedButton->Resize(681, 32, 117, 46);
++	// Share the original combat Menu strip without extending onto the lawn.
++	mGameSpeedButton->Resize(753, -10, 45, 46);
+ 	mGameSpeedButton->mBtnNoDraw = true;
+ 	mGameSpeedButton->mDisabled = true;
+ }
+@@ -1827,6 +1827,7 @@ bool LawnApp::IsGameSpeedButtonVisible() const
+ 		mGameMode != GameMode::GAMEMODE_INTRO &&
+ 		mCrazyDaveState == CrazyDaveState::CRAZY_DAVE_OFF &&
+ 		!mBoard->mMenuButton->mBtnNoDraw && mBoard->mMenuButton->mY == -10 &&
++		(mBoard->mMenuButton->mWidth == 117 || mBoard->mMenuButton->mWidth == 71) &&
+ 		mBoard->mBoardFadeOutCounter < 0 && !mBoard->mLevelComplete &&
+ 		!mBoard->mLevelAwardSpawned && !mBoard->mFinalBossKilled &&
+ 		mBoard->mNextSurvivalStageCounter == 0;
+@@ -1851,6 +1852,14 @@ void LawnApp::UpdateGameSpeedButton()
+ 	if (!mGameSpeedButton)
+ 		return;
+ 	mGameSpeedButton->mBtnNoDraw = !IsGameSpeedButtonVisible();
++	if (mBoard)
++	{
++		auto& aMenuButton = *mBoard->mMenuButton;
++		if (!mGameSpeedButton->mBtnNoDraw && aMenuButton.mWidth == 117)
++			aMenuButton.Resize(aMenuButton.mX, aMenuButton.mY, 71, aMenuButton.mHeight);
++		else if (mGameSpeedButton->mBtnNoDraw && aMenuButton.mWidth == 71)
++			aMenuButton.Resize(aMenuButton.mX, aMenuButton.mY, 117, aMenuButton.mHeight);
++	}
+ 	mGameSpeedButton->mDisabled = mGameSpeedButton->mBtnNoDraw ||
+ 		!mBoard->CanInteractWithBoardButtons() || mBoard->mIgnoreMouseUp ||
+ 		mBoard->mTimeStopCounter > 0;

@@ -1,5 +1,24 @@
 # GitHub Pages release: Caleb-Guyer/plants-vs-zombies-web
 
+## Endless.2 - reviewed release inputs
+
+Current engine: `0.2.6-web-endless.2`.
+
+- Exact published parent: Endless.1, source SHA-256 `eee4ae6dfeaaa49bbf203c37cf45ad73dad56b85d3d0079e549ed11bc3d45f25`, 39,931,636 bytes, 1009 entries, 852 production files.
+- Current production retains 852 files and the same 134 non-main Release objects.
+- Reconstructing patches: `web-endless.2.patch` and `endless1-to-endless2.patch`.
+- All prior twenty-two native suites remain gates, including finite Pool Panic. The ten complete-engine drivers produce twenty backend files.
+- `build/pvz-portable.js`: 209,600 bytes, SHA-256 `06499a385df633c4d1a6428d36e4e9eaf39a6125c3e182a78725b014f7ddc075`.
+- `build/pvz-portable.wasm`: 7,779,297 bytes, SHA-256 `95a45742959b901171c606fe3ebe3614783bb670f587a9701bc7d1f9f414b3e5`.
+- `build/ProjectVersion.h`: 193 bytes, SHA-256 `a10a9e78b19c8288da712c6e85b8ee759a3d35194141bd9f06fba6f6fea8629e`.
+- Corresponding source: `pvz-portable-0.2.6-web-endless.2-source.zip`, 40,424,282 bytes, SHA-256 `b9095c65547c3d013917ae4188e284f18eabb71a98020ca3d53f71f7365f9566`.
+- Combined patch: `web-endless.2.patch`, 14,686,988 bytes, SHA-256 `bb680ec747e8f37a749d8176812b214a0990db7b4f600b3fd19dca837aaf40dd`.
+- Incremental patch: `endless1-to-endless2.patch`, 35,111 bytes, SHA-256 `05269a579b688b846b166423e408614cfc2c9cbe88dca38edd46290bbca3feb8`.
+- Both patches reconstruct all 852 production files. Fresh source extraction and `npm --offline run check` remain required before publication.
+
+All twenty-three muted native suites passed: 50,914,086 checks, zero failures. All fifteen browser integration suites passed. Muted browser inspection completed an opening flag and checked controls and save continuation on these artifacts.
+
+
 ## Endless.1 - reviewed release inputs
 
 Current engine: `0.2.6-web-endless.1`.

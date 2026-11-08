@@ -26,13 +26,53 @@ new Function('module', 'exports', 'require', fs.readFileSync(new URL('vendor/jsz
 const JSZip = vendor.exports;
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
 const engine = JSON.parse(fs.readFileSync(new URL('game/engine-provenance.json', dist)));
-assert.equal(engine.id, '0.2.6-web-endless.1');
+assert.equal(engine.id, '0.2.6-web-endless.2');
 const currentSourceBytes = fs.readFileSync(new URL(engine.artifacts.source, new URL('game/engine-provenance.json', dist)));
 assert.equal(sha(currentSourceBytes), engine.artifacts.sourceSha256, 'Current source archive matches the engine provenance pin');
 const current = await JSZip.loadAsync(currentSourceBytes, {checkCRC32: true});
-const parentSourceBytes = fs.readFileSync(new URL('source/pvz-portable-0.2.6-web-pool.1-source.zip', dist));
-assert.equal(sha(parentSourceBytes), '9d1cb0b7fdc6e10cb4ea79b869b922d98417b14c829862899c6361f80c7dc988', 'Parent is the exact published Pool.1 source');
+const parentSourceBytes = fs.readFileSync(new URL('source/pvz-portable-0.2.6-web-endless.1-source.zip', dist));
+assert.equal(sha(parentSourceBytes), 'eee4ae6dfeaaa49bbf203c37cf45ad73dad56b85d3d0079e549ed11bc3d45f25', 'Parent is the exact published Endless.1 source');
 const parent = await JSZip.loadAsync(parentSourceBytes, {checkCRC32: true});
+// Reconstruct exact Pool.1 from its authenticated published successor.
+// Immutable raw byte deltas and848 independent whole-file pins retain the older
+// Pool/Cob/Bungee/Lights preservation proof without shipping another full ZIP.
+const parentPrefix='endless1-candidate/source/';
+const immediateParentBytes=async name=>{
+  const entry=parent.file(parentPrefix+name);assert(entry,'Missing immediate parent source: '+name);
+  return Buffer.from(await entry.async('uint8array'));
+};
+const poolReferenceBytes=fs.readFileSync(new URL('./fixtures/pool1-reference.json',import.meta.url));
+assert.equal(sha(poolReferenceBytes),'85c5e0ddfeade744d37e6317c7fb3dfea4e2d7ef5fcce2fa277e34d6045d00da');
+const poolReference=JSON.parse(poolReferenceBytes);
+assert.equal(poolReference.schema,1);
+assert.equal(poolReference.archiveSha256,'9d1cb0b7fdc6e10cb4ea79b869b922d98417b14c829862899c6361f80c7dc988');
+assert.equal(poolReference.archiveBytes,37098165);
+assert.equal(poolReference.archivePrefix,'pool1-candidate/source/');
+assert.equal(poolReference.publishedSuccessorSha256,sha(parentSourceBytes));
+assert.equal(poolReference.publishedSuccessorPrefix,parentPrefix);
+assert.equal(poolReference.sourceCount,848);
+assert.equal(Object.keys(poolReference.sourceFiles).length,848);
+assert.deepEqual(Object.keys(poolReference.publishedSuccessorReverseEdits).sort(),['CMake/ProjectVersion.cmake','src/ConstEnums.h','src/Lawn/Board.cpp','src/Lawn/Challenge.cpp','src/Lawn/System/BonusChallenge.h','src/Lawn/Widget/ChallengeScreen.cpp','src/Lawn/Widget/LawnDialog.cpp','src/Lawn/Zombie.cpp','src/LawnApp.cpp'].sort());
+const poolSources=new Map();
+for(const [name,pin] of Object.entries(poolReference.sourceFiles)) {
+  let bytes=await immediateParentBytes(name);
+  const delta=poolReference.publishedSuccessorReverseEdits[name];
+  if(delta){
+    assert.equal(bytes.length,delta.publishedEndless1Bytes);
+    assert.equal(sha(bytes),delta.publishedEndless1Sha256);
+    let previous=bytes.length+1;
+    for(const edit of [...delta.reverseEdits].reverse()){
+      const before=Buffer.from(edit.beforeBase64,'base64'),after=Buffer.from(edit.afterBase64,'base64');
+      assert(Number.isSafeInteger(edit.offset)&&edit.offset>=0&&edit.offset<previous);
+      assert.deepEqual(bytes.subarray(edit.offset,edit.offset+before.length),before,'Exact published Endless.1 byte delta: '+name);
+      bytes=Buffer.concat([bytes.subarray(0,edit.offset),after,bytes.subarray(edit.offset+before.length)]);previous=edit.offset;
+    }
+  }
+  assert.equal(bytes.length,pin.bytes);
+  assert.equal(sha(bytes),pin.sha256,'Every reconstructed complete Pool.1 source byte retains its independent historical pin: '+name);
+  assert.equal(sha(Buffer.from(bytes.toString('latin1').replace(/\r\n?/g,'\n'),'latin1')),pin.normalizedSha256);
+  poolSources.set(name,bytes);
+}
 // Preserve the two exact historical inputs required by the retained fog fix
 // without making a portable source checkout carry another complete engine ZIP.
 const lights1ReferenceBytes=fs.readFileSync(new URL('./fixtures/lights1-reference.json',import.meta.url));
@@ -53,7 +93,7 @@ for(const [name,pin] of Object.entries(lights1InputPins)) {
   assert.equal(sha(bytes),pin.sha256,'Retained historical input matches its authenticated archive bytes: '+name);
   lights1Inputs.set(name,bytes);
 }
-const prefix = 'endless1-candidate/';
+const prefix = 'endless2-candidate/';
 // The restoration reference predates Raid.1's foreground override.
 // Compact exact inputs retain archive and whole-file authentication without
 // forcing source downloads to duplicate another complete historical engine ZIP.
@@ -82,9 +122,9 @@ const read = async name => {
   assert(entry, 'Missing current production source/test: ' + name);
   return Buffer.from(await entry.async('uint8array'));
 };
-const retainedChecks = {'game-speed':66, 'qol-controls':90, 'decks-cooldowns':274,
+const retainedChecks = {'game-speed':81, 'qol-controls':90, 'decks-cooldowns':274,
   'bonus-challenge':387, 'bonus-completion':1283, 'night-shift':231, 'lantern-shroom':1724,
-  'garden-shuffle':214, 'seed-swap':587, 'mender-bloom':523, 'intensive-care':1135, 'native-layout':22757};
+  'garden-shuffle':214, 'seed-swap':587, 'mender-bloom':523, 'intensive-care':1135, 'native-layout':26138};
 const suites = [...Object.keys(retainedChecks), 'care-fatigue', 'care-full-run', 'chain-reaction', 'rally-zombie', 'rally-raid', 'lights-out', 'garlic-run', 'bungee-business', 'cob-cannon-command', 'pool-panic', 'pool-panic-endless'];
 assert.equal(suites.length, 23);
 const reports = new Map();
@@ -108,7 +148,7 @@ for (const [name, count] of Object.entries(retainedChecks))
 // Preserve all retained assertions. Raid adds one challenge-definition
 // iteration and 2,732 native footer/card/packet/layer checks; Raid.2
 // retains those cases with native-order expectations and adds14 pick controls.
-assert.equal(Object.values(retainedChecks).reduce((sum, count) => sum + count, 0), 29271);
+assert.equal(Object.values(retainedChecks).reduce((sum, count) => sum + count, 0), 32667);
 assert.equal(reports.get('care-fatigue').checks, 25042,
   'Fatigue rig coverage retains every crew pose, scoped state and restoration check');
 const fullRunReport = reports.get('care-full-run');
@@ -368,19 +408,18 @@ const currentLightsFogInputs=JSON.parse(await read('tests/lights-native-art-inpu
 assert.deepEqual(currentLightsFogInputs,expectedLightsFogInputs,'All twelve prior artwork pins and metadata remain exact; only the two authenticated original graded-fog JPEGs are appended');
 assert.equal(Object.keys(currentLightsFogInputs.sourceInputs).length,14);
 await verifyLightsOut({report:reports.get('lights-out'),read,sha,engine,fullRunReport,productionBuildBytes:fullRunProductionBuildBytes});
-assert.deepEqual(await read('tests/lights-native-art-inputs.json'), Buffer.from(await parent.file('pool1-candidate/tests/lights-native-art-inputs.json').async('uint8array')), 'All fourteen original fog artwork inputs remain byte-identical to Lights.2');
+assert.deepEqual(await read('tests/lights-native-art-inputs.json'), Buffer.from(await parent.file('endless1-candidate/tests/lights-native-art-inputs.json').async('uint8array')), 'All fourteen original fog artwork inputs remain byte-identical to Lights.2');
 await verifyGarlicRun({report:reports.get('garlic-run'),read,sha,engine,fullRunReport,productionBuildBytes:fullRunProductionBuildBytes});
 await verifyBungeeBusiness({report:reports.get('bungee-business'),read,sha,engine,fullRunReport,productionBuildBytes:fullRunProductionBuildBytes});
 await verifyCobCannonCommand({report:reports.get('cob-cannon-command'),read,sha,engine,fullRunReport,productionBuildBytes:fullRunProductionBuildBytes});
 await verifyPoolPanic({report:reports.get('pool-panic'),read,sha,engine,fullRunReport,productionBuildBytes:fullRunProductionBuildBytes});
-await verifyPoolPanicEndless({report:reports.get('pool-panic-endless'),read,sha,engine,fullRunReport,productionBuildBytes:fullRunProductionBuildBytes});
+await verifyPoolPanicEndless({report:reports.get('pool-panic-endless'),read,sha,engine,fullRunReport,productionBuildBytes:fullRunProductionBuildBytes,immediateParentBytes});
 const careBalance = reports.get('intensive-care').balanceModel;
 assert.equal(careBalance.kind, 'native healing/fatigue capacity bound; not a battle clear');
 assert(careBalance.allBedsHealHpPerSecond > careBalance.maximumCrewFatigueHpPerSecond);
 assert(careBalance.slowestSuppliedRecoveryTicks < 3000);
 assert.equal(careBalance.authoredEnemies, 40);
-const parentPrefix = 'pool1-candidate/source/';
-const parentBytes = async name => Buffer.from(await parent.file(parentPrefix + name).async('uint8array'));
+const parentBytes=async name=>{const bytes=poolSources.get(name);assert(bytes,'Missing reconstructed historical Pool source: '+name);return bytes;};
 const layoutReport = reports.get('native-layout');
 assert.equal(layoutReport.hintLines, 1);
 assert.equal(layoutReport.hintInkBottom, 576);
@@ -446,20 +485,69 @@ assert.equal(layoutReport.poolFooterCases,36);
 assert.equal(layoutReport.poolObservedNativeGeometry,true);
 assert.equal(layoutReport.poolIntroToolMutationRejected,true);
 assert.equal(layoutReport.poolFooterBaselineMutationRejected,true);
+assert.equal(layoutReport.speedHeaderRetainedChecks,25398);
+assert.equal(layoutReport.speedHeaderLayoutChecks,740);
+assert.equal(layoutReport.speedHeaderCases,32);
+assert.equal(layoutReport.speedHeaderNoExtraControlPixels,true);
+assert.equal(layoutReport.speedHeaderOldLowerBandNegativeRejected,true);
+assert.equal(layoutReport.speedHeaderOldNarrowCapsNegativeRejected,true);
+const expectedHeaderFontInk={Menu:{advance:57,normalAndDownInk:[[6,2,67,20],[7,3,68,21]]},'1x':{advance:22,normalAndDownInk:[[10,1,36,21],[11,2,37,22]]},'2x':{advance:26,normalAndDownInk:[[8,1,38,21],[9,2,39,22]]}};
+assert.deepEqual(layoutReport.speedHeaderFontInk,{DwarvenTodcraft18GreenInset:expectedHeaderFontInk,DwarvenTodcraft18BrightGreenInset:expectedHeaderFontInk});
 assert.equal(layoutReport.endlessRetainedChecks,16775);
-assert.equal(layoutReport.endlessLayoutChecks,5982);
+assert.equal(layoutReport.endlessLayoutChecks,8623);
 assert.equal(layoutReport.endlessBonusCards,1);
 assert.equal(layoutReport.endlessViewports,6);
 assert.equal(layoutReport.endlessFooterCases,84);
-assert.equal(layoutReport.endlessBestCases,10);
-assert.equal(layoutReport.endlessBankCases,64);
+assert.equal(layoutReport.endlessBestCases,14);
+assert.equal(layoutReport.endlessBankCases,96);
 assert.equal(layoutReport.endlessObservedNativeGeometry,true);
+assert.equal(layoutReport.endlessAdviceCases,16);
+assert.equal(layoutReport.endlessHeroVisibleBestStamp,true);
+assert.equal(layoutReport.endlessNativeShovelGap,true);
+assert.deepEqual(layoutReport.endlessUnclippedStampInk,{'Best: 1':[20,1,61,15],'Best: 3':[18,1,64,15],'Best: 10':[17,1,65,15],'Best: 99':[14,1,67,15],'Best: 999':[10,1,71,15],'Best: 1k':[16,1,65,15],'Best: 1.5k':[10,1,71,15],'Best: 9.9k':[8,1,74,15],'Best: 10k':[13,1,69,15],'Best: 999k':[6,1,76,15],'Best: 999m':[5,1,76,15],'Best: 1b':[17,1,65,15],'Best: 2.1b':[11,1,71,15],'Best: 4.3b':[9,1,73,15]},'Independent unclipped native Brianne12 glyph envelopes fit every stamp before any cache clipping');
+const endless2UiAssetBytes=await read('tests/endless2-ui-assets.json');
+assert.equal(sha(endless2UiAssetBytes),'4819dc77398ea7de5ccddf2ba9c7196faac68d7c4806f74cd982a973d8a17330');
+assert.equal(layoutReport.fixturesSha256['endless2-ui-assets.json'],sha(endless2UiAssetBytes));
+const endless2UiAssets=JSON.parse(endless2UiAssetBytes);
+assert.deepEqual(Object.keys(endless2UiAssets).sort(),['images/Shovel.png','images/ShovelBank.png'].sort());
+for(const [name,entry] of Object.entries(endless2UiAssets)){
+  const bytes=Buffer.from(entry.base64,'base64');assert.equal(bytes.length,entry.bytes);assert.equal(sha(bytes),entry.sha256);
+}
+const speedHeaderUiBytes=await read('tests/speed-header-ui-assets.json');
+assert.equal(sha(speedHeaderUiBytes),'2cb60b5af233ed96704e97c490fa9451ea6f3a9a3a477625c35666a065d84e91');
+assert.equal(layoutReport.fixturesSha256['speed-header-ui-assets.json'],sha(speedHeaderUiBytes));
+const speedHeaderUi=JSON.parse(speedHeaderUiBytes);
+const speedHeaderParentBytes=await read('tests/speed-header-parent.json');
+assert.equal(sha(speedHeaderParentBytes),'0279c8f024dceac19403c00d7fb50ae7f1364af17d2ecc24142a4e9b19a0cb8b');
+assert.equal(layoutReport.fixturesSha256['speed-header-parent.json'],sha(speedHeaderParentBytes));
+const speedHeaderParent=JSON.parse(speedHeaderParentBytes);assert.equal(speedHeaderParent.schema,1);
+assert.equal(speedHeaderParent.parentSourceSha256,sha(parentSourceBytes));
+for(const [name,entry] of Object.entries(speedHeaderParent.files)){
+ const bytes=await immediateParentBytes(name);assert.equal(bytes.length,entry.bytes);assert.equal(sha(bytes),entry.sha256);
+ for(const [signature,original] of Object.entries(entry.methods))assert.equal(extractLegacyFunction(bytes.toString(),signature),original,'Focused header reference retains exact complete published native button/application method');
+}
+assert.equal(speedHeaderUi.schema,1);assert.equal(speedHeaderUi.assetBundleId,engine.assetBundleId);
+assert.equal(speedHeaderUi.mainPakSha256,'5878326408285cb01f83b4fa4edcc66d65e727f6d6ee88563b5b3b287dd259fc');
+assert.deepEqual(Object.keys(speedHeaderUi.assets).sort(),['images/button_left.png','images/button_middle.png','images/button_right.png','images/button_down_left.png','images/button_down_middle.png','images/button_down_right.png','data/DwarvenTodcraft18GreenInset.txt','data/DwarvenTodcraft18GreenInset.png','data/DwarvenTodcraft18BrightGreenInset.txt','data/DwarvenTodcraft18BrightGreenInset.png'].sort());
+for(const [name,entry] of Object.entries(speedHeaderUi.assets)){
+ const bytes=Buffer.from(entry.base64,'base64');assert.equal(bytes.length,entry.bytes);assert.equal(sha(bytes),entry.sha256);
+}
+assert.deepEqual(layoutReport.speedHeaderAssetSha256,Object.fromEntries(Object.entries(speedHeaderUi.assets).map(([name,pin])=>[name,pin.sha256])));
 const endlessUiAssetBytes=await read('tests/endless-ui-assets.json');
 assert.equal(sha(endlessUiAssetBytes),'1ca4a8ab80e8920beef9d53d4e79c76c4753f882761451060c353dd56350caf7');
 assert.equal(layoutReport.fixturesSha256['endless-ui-assets.json'],sha(endlessUiAssetBytes));
 const endlessUiAssets=JSON.parse(endlessUiAssetBytes);
 const endlessArtInputs=JSON.parse(await read('tests/pool-panic-endless-native-art-inputs.json'));
-assert.equal(Object.keys(endlessArtInputs.sourceInputs).length,469);
+for(const [name,entry] of Object.entries(endless2UiAssets))assert.deepEqual({bytes:entry.bytes,sha256:entry.sha256},endlessArtInputs.sourceInputs[name],'New focused shovel geometry comes from the same independently authenticated original PAK input: '+name);
+assert.equal(Object.keys(endlessArtInputs.sourceInputs).length,643);
+const priorEndlessArtEntry=parent.file('endless1-candidate/tests/pool-panic-endless-native-art-inputs.json');
+assert(priorEndlessArtEntry,'Authenticated immediate parent retains all469 original Endless.1 artwork inputs');
+const priorEndlessArtBytes=Buffer.from(await priorEndlessArtEntry.async('uint8array'));
+assert.equal(sha(priorEndlessArtBytes),'bcc6c2fe9450245cea71e85e26cd3db5d9f4fa1da9cbe63c817c211948bbf3a6');
+const priorEndlessArt=JSON.parse(priorEndlessArtBytes);
+assert.equal(Object.keys(priorEndlessArt.sourceInputs).length,469);
+assert.deepEqual({...endlessArtInputs,sourceInputs:{}},{...priorEndlessArt,sourceInputs:{}},'Original PAK/bundle identity and every non-input artwork metadata value remain exact');
+for(const [name,pin] of Object.entries(priorEndlessArt.sourceInputs))assert.deepEqual(endlessArtInputs.sourceInputs[name],pin,'All469 prior original input pins remain exact: '+name);
 assert.equal(Object.keys(endlessUiAssets).length,8);
 for(const [name,entry] of Object.entries(endlessUiAssets)) {
   const bytes=Buffer.from(entry.base64,'base64');
@@ -498,7 +586,7 @@ assert.equal(layoutFixture.schema, 1);
 assert.equal(layoutFixture.assetBundleId, engine.assetBundleId);
 assert.equal(layoutFixture.parentSourceSha256, '540f1ee365b558e10304995692485976e91f23bb1b28c305e6ade6cd17f1ed11',
   'The preserved layout negative-control fixture identifies its original Care.1 source');
-const parentLayoutFixtureEntry = parent.file('pool1-candidate/tests/native-layout-assets.json');
+const parentLayoutFixtureEntry = parent.file('endless1-candidate/tests/native-layout-assets.json');
 assert(parentLayoutFixtureEntry, 'Authenticated Lights.1 parent retains the exact layout regression fixture');
 assert.deepEqual(layoutFixtureBytes, Buffer.from(await parentLayoutFixtureEntry.async('uint8array')),
   'Historical Care.1 negative methods and native asset fixtures retain every authenticated Lights.1 fixture byte');
@@ -532,7 +620,7 @@ function extractLegacyFunction(text, signature) {
 const parentLayoutFixture = JSON.parse(Buffer.from(await parentLayoutFixtureEntry.async('uint8array')));
 const endlessCardParent=JSON.parse(endlessCardParentBytes);
 assert.equal(endlessCardParent.schema,1);
-assert.equal(endlessCardParent.parentSourceSha256,sha(parentSourceBytes));
+assert.equal(endlessCardParent.parentSourceSha256,poolReference.archiveSha256);
 const endlessCardParentSource=await parentBytes('src/Lawn/Widget/ChallengeScreen.cpp');
 assert.equal(endlessCardParent.challengeScreenSha256,sha(endlessCardParentSource));
 assert.equal(endlessCardParent.method,extractLegacyFunction(endlessCardParentSource.toString(),'void ChallengeScreen::DrawButton('),'Best-label reference retains the full independently authenticated original native Survival/card method');
@@ -570,6 +658,8 @@ for(const [signature,method] of Object.entries(raidLayerFixture.methods)) {
     nativePath=nativePath.replace(bankGuard,'').replace(bottomGlove,'DrawShovel(g);');
   }
   if(signature==='void Board::DrawUITop(') {
+    const endlessAdvice='        !(PoolPanicEndless::IsMode(mApp->mGameMode) && (mPaused || mApp->GetDialogCount() > 0)) &&\n';
+    assert.equal(nativePath.split(endlessAdvice).length,2);nativePath=nativePath.replace(endlessAdvice,'');
     const lightsGlove='\tif (LightsOut::IsMode(mApp->mGameMode) || GarlicRun::IsMode(mApp->mGameMode)) DrawShovel(g);\n';
     assert.equal(nativePath.split(lightsGlove).length,2);
     nativePath=nativePath.replace(lightsGlove,'');
@@ -585,7 +675,7 @@ assert.equal(sha(foregroundFixtureBytes),'bb816f27d031bffa79a91ee3f281504ebee7b6
 assert.equal(layoutReport.fixturesSha256['raid1-foreground-ui.json'],sha(foregroundFixtureBytes));
 // Raid.2 authenticated these exact methods against published Raid.1. Retain
 // that fixture through the pinned parent archive without bundling another engine.
-const inheritedForegroundEntry=parent.file('pool1-candidate/tests/raid1-foreground-ui.json');
+const inheritedForegroundEntry=parent.file('endless1-candidate/tests/raid1-foreground-ui.json');
 assert(inheritedForegroundEntry,'Authenticated Lights.1 source must retain the Raid.1 regression fixture');
 const inheritedForegroundBytes=Buffer.from(await inheritedForegroundEntry.async('uint8array'));
 assert.equal(sha(inheritedForegroundBytes),'bb816f27d031bffa79a91ee3f281504ebee7b666fbe4078f6762aecc83a86b95');
@@ -616,7 +706,7 @@ const staticPlantFixture=JSON.parse(staticPlantFixtureBytes);
 assert.equal(staticPlantFixture.schema,1);
 assert.equal(staticPlantFixture.parentSourceSha256,'0bb8e6ae265488e1d1da8b472c10730f0bd17df9a56337c8acc34c4c3911a225');
 assert.equal(staticPlantFixture.signature,'bool DrawCustomPlant(');
-const inheritedStaticEntry=parent.file('pool1-candidate/tests/raid2-static-plant.json');
+const inheritedStaticEntry=parent.file('endless1-candidate/tests/raid2-static-plant.json');
 assert(inheritedStaticEntry,'Authenticated Lights.1 source retains its actual Raid.2 static-attack regression fixture');
 const inheritedStaticBytes=Buffer.from(await inheritedStaticEntry.async('uint8array'));
 assert.equal(sha(inheritedStaticBytes),'fb2fa6f1cd55ffd2ac0f3b88bb6c98e2a457d753258ef054fdd182df2f7a5ec9');
@@ -629,7 +719,7 @@ const breathingFixture=JSON.parse(breathingFixtureBytes);
 assert.equal(breathingFixture.schema,1);
 assert.equal(breathingFixture.parentSourceSha256,'dc02a3d87a227e3b6b890cd03894999dea831c62a6d184fc2a0bc281425e51a3');
 assert.equal(breathingFixture.signature,'bool DrawCustomPlant(');
-const inheritedBreathingEntry=parent.file('pool1-candidate/tests/raid3-breathing-plant.json');
+const inheritedBreathingEntry=parent.file('endless1-candidate/tests/raid3-breathing-plant.json');
 assert(inheritedBreathingEntry,'Authenticated Lights.1 retains the exact rejected Raid.3 breathing helper');
 assert.deepEqual(breathingFixtureBytes,Buffer.from(await inheritedBreathingEntry.async('uint8array')),
   'Every inherited breathing-negative source pin and method stays byte-identical');
@@ -773,7 +863,7 @@ assert.match(newDefinitions.at(-1), /\.mCol = 4/);
 console.log('PASS native I,Zombie presentation restoration preserves every prior mode/seed ID, saved layout, plant and all fourteen prior Bonus challenge identities.');
 
 const artRecordBytes=fs.readFileSync(new URL('content/native-bonus-art.json', dist));
-assert.equal(sha(artRecordBytes),'79f63cc7b4003cb55c747561f575605efe03d2ae5edcaa76c59706499c8f13f3','Reviewed fifteen-card native Bonus metadata');
+assert.equal(sha(artRecordBytes),'538175fc8c54e8efb241a129263f2c99ee8e4193fb09ace213a67e9430f7483b','Reviewed fifteen-card native Bonus metadata');
 const artRecord = JSON.parse(artRecordBytes);
 assert.match(artRecord.sourceKind, /native sprite compositions/);
 assert.equal(artRecord.generatedArtworkUsed, true, 'Generated artwork is scoped to the permitted plant sprite');
@@ -858,14 +948,21 @@ const endlessParentArtBytes=await read('tests/endless-parent-native-art.json');
 assert.equal(sha(endlessParentArtBytes),'9bda9645402a6322b20b29b69b0bdad52d1013835e8db071d07648aa95a905d8');
 assert.deepEqual({...artRecord,cards:artRecord.cards.slice(0,14)},JSON.parse(endlessParentArtBytes),'Pool Panic Endless appends only its own card and preserves all fourteen prior records and every non-card value');
 const endlessCard=artRecord.cards[14];
+const endless2ParentArtBytes=await read('tests/endless2-parent-native-art.json');
+assert.equal(sha(endless2ParentArtBytes),'79f63cc7b4003cb55c747561f575605efe03d2ae5edcaa76c59706499c8f13f3');
+const endless2ParentArt=JSON.parse(endless2ParentArtBytes);
+assert.deepEqual({...artRecord,cards:artRecord.cards.slice(0,14)},{...endless2ParentArt,cards:endless2ParentArt.cards.slice(0,14)},'All fourteen prior card records and every non-card metadata value remain exact to Endless.1');
+assert.deepEqual({...artRecord.cards[14],gameplay:'',interface:''},{...endless2ParentArt.cards[14],gameplay:'',interface:''},'The unique original Dolphin composition, name, mode and artwork provenance remain exact');
 assert.equal(endlessCard.mode,87);
 assert.equal(endlessCard.name,'Pool Panic Endless');
 assert.equal(endlessCard.background,'IMAGE_BACKGROUND3 with original IMAGE_POOL water layer');
 assert.equal(endlessCard.generatedArtworkUsed,false);
 assert.match(endlessCard.hero,/Original REANIM_ZOMBIE_DOLPHINRIDER anim_ride assembly/);
 assert.match(endlessCard.artwork,/complete original Dolphin Rider[\s\S]*68 by57[\s\S]*80 by65/);
-assert.match(endlessCard.interface,/original Survival Endless longest-streak text, fonts, colors and positions/);
-assert.equal(sha(await read('tests/pool-panic-endless-native-art-inputs.json')),'bcc6c2fe9450245cea71e85e26cd3db5d9f4fa1da9cbe63c817c211948bbf3a6');
+assert.match(endlessCard.interface,/compact original Brianne12 Best stamp[\s\S]*Dolphin hero and title clear[\s\S]*Every stock Survival card keeps its original rendering/);
+assert.match(endlessCard.interface,/No extra persistent HUD or tips below cards/);
+assert.match(endlessCard.gameplay,/Repeater, Threepeater, Tall-nut, Torchwood, Spikeweed and Lily Pad[\s\S]*Squash, Tangle Kelp, Cherry Bomb and Jalapeno/);
+assert.equal(sha(await read('tests/pool-panic-endless-native-art-inputs.json')),'65c53e2ed9cba7bc53d3dcfd36eb6a8c32c87d55f5e81be280c4a141915eb1e9');
 assert.notEqual(raidCard.interface,raid1Art.cards[8].interface);
 assert.match(artRecord.checkpointCompatibility,/Rally Raid appends mode81[\s\S]*profile record80[\s\S]*Packet77 remains outside original plant\/cache\/chooser ranges/);
 assert.equal(artRecord.animation.newGeneratedArtwork, false, 'Motion uses existing sprite/effect assets');
@@ -1119,27 +1216,32 @@ const nativeNames = ['PeaShooter_backleaf.png', 'PeaShooter_backleaf_lefttip.png
   'PeaShooter_stalk_bottom.png', 'PeaShooter_stalk_top.png', 'PeaShooter_frontleaf.png',
   'PeaShooter_frontleaf_righttip.png', 'PeaShooter_frontleaf_lefttip.png', 'SunFlower_head.png',
   'SunFlower_blink1.png', 'SunFlower_leftpetal3.png', 'SunFlower_leftpetal4.png', 'SunFlower.reanim'];
-let parentSourceCount = 0;
-for (const entry of Object.values(parent.files)) {
-  if (entry.dir || !entry.name.startsWith(parentPrefix)) continue;
-  parentSourceCount++;
-  const name = entry.name.slice(parentPrefix.length);
-  const before = Buffer.from(await entry.async('uint8array'));
-  const after = await read('source/' + name);
-  const pin = sourceManifest.files[name];
-  assert(pin && pin.bytes === after.length && pin.sha256 === sha(after));
-  if (runtimeInputs.has(name)) {
-    assert(!after.equals(before), 'Every allowed existing source delta is an actual reviewed change: ' + name);
-    continue;
-  }
-  if (releaseIdentityInputs.has(name))
-    assert.equal(after.toString().replaceAll('0.2.6-web-endless.1', '0.2.6-web-pool.1'), before.toString());
-  else assert.deepEqual(after, before, 'Every unrelated source/artwork byte remains exact: ' + name);
+const reviewedEndless2Inputs=new Set(['src/Lawn/Board.cpp','src/Lawn/Challenge.cpp','src/LawnApp.cpp','src/Lawn/Widget/GameButton.cpp',...addedRaidInputs]);
+let immediateParentCount=0;
+for(const entry of Object.values(parent.files)){
+  if(entry.dir||!entry.name.startsWith(parentPrefix))continue;
+  ++immediateParentCount;const name=entry.name.slice(parentPrefix.length);
+  const before=Buffer.from(await entry.async('uint8array')),after=await read('source/'+name),pin=sourceManifest.files[name];
+  assert(pin&&pin.bytes===after.length&&pin.sha256===sha(after));
+  if(reviewedEndless2Inputs.has(name)){assert(!after.equals(before),'Every reviewed Endless.2 source delta is an actual change: '+name);continue;}
+  if(releaseIdentityInputs.has(name))assert.equal(after.toString().replaceAll('0.2.6-web-endless.2','0.2.6-web-endless.1'),before.toString());
+  else assert.deepEqual(after,before,'Every unrelated source/artwork byte remains exact to immediate Endless.1: '+name);
 }
-assert.equal(parentSourceCount, 848);
-const addedProduction = Object.keys(sourceManifest.files).filter(name => !parent.file(parentPrefix + name));
-assert.deepEqual(addedProduction.sort(), [...addedRaidInputs].sort(), 'Pool Panic Endless adds exactly four reviewed implementation/presentation files');
-assert.equal(Object.keys(sourceManifest.files).length, parentSourceCount + addedRaidInputs.length);
+assert.equal(immediateParentCount,852);
+assert.deepEqual(Object.keys(sourceManifest.files).filter(name=>!parent.file(parentPrefix+name)),[],'Endless.2 adds no production files');
+assert.equal(Object.keys(sourceManifest.files).length,immediateParentCount);
+// Preserve the original complete Pool→Endless1 production delta inventory.
+let parentSourceCount=0;
+for(const [name,before] of poolSources){
+  ++parentSourceCount;const after=await immediateParentBytes(name);
+  if(runtimeInputs.has(name)){assert(!after.equals(before),'Every historical reviewed Endless.1 delta is actual: '+name);continue;}
+  if(releaseIdentityInputs.has(name))assert.equal(after.toString().replaceAll('0.2.6-web-endless.1','0.2.6-web-pool.1'),before.toString());
+  else assert.deepEqual(after,before,'Every historical unrelated Pool source/artwork byte remains exact: '+name);
+}
+assert.equal(parentSourceCount,848);
+const addedProduction=Object.keys(sourceManifest.files).filter(name=>!poolSources.has(name));
+assert.deepEqual(addedProduction.sort(),[...addedRaidInputs].sort(),'Endless.1 added exactly four reviewed implementation/presentation files');
+assert.equal(Object.keys(sourceManifest.files).length,parentSourceCount+addedRaidInputs.length);
 const normalizeSource = bytes => bytes.toString().replace(/\r\n?/g, '\n');
 // Reconstruct the exact historical Lights.2 Zombie from authenticated Garlic.1.
 // Its independently obtained normalized SHA pins every old source byte.
@@ -1243,6 +1345,84 @@ for (const signature of ['void DrawCareFatigue(Graphics* g, Plant& plant, Reanim
   "namespace\n{\n// Reanimation's matrix draw path does not use Graphics::SetScale."])
   assert.equal(extractLegacyFunction(afterPlant, signature), extractLegacyFunction(beforePlant, signature), 'Care fatigue rendering remains exact');
 const currentBoard = normalizeSource(await read('source/src/Lawn/Board.cpp'));
+// Remove only the five exact reviewed Endless.2 Board edits before stripping
+// older guards. Whole-file equality against the authenticated immediate parent
+// prevents a new-mode change from erasing or broadening any historic path.
+let restoredEndless1Board=currentBoard;
+for(const [addition,previous] of [
+  [
+    "    if (PoolPanicEndless::IsMode(mApp->mGameMode)) return Rect(600 + (mSeedBank ? mSeedBank->mX : SEED_BANK_OFFSET_X_END), 0, Sexy::IMAGE_SHOVELBANK->GetWidth(), Sexy::IMAGE_SHOVELBANK->GetHeight());\n",
+    ""
+  ],
+  [
+    "    if (PoolPanicEndless::IsMode(mApp->mGameMode)) PoolPanicEndless::PreloadResources();\n",
+    ""
+  ],
+  [
+    "\t\tif (!IsSurvivalStageWithRepick() && mApp->mGameMode != GameMode::GAMEMODE_CHALLENGE_LAST_STAND && !mApp->IsContinuousChallenge() && !PoolPanicEndless::IsMode(mApp->mGameMode))\n",
+    "\t\tif (!IsSurvivalStageWithRepick() && mApp->mGameMode != GameMode::GAMEMODE_CHALLENGE_LAST_STAND && !mApp->IsContinuousChallenge())\n"
+  ],
+  [
+    "    if (PoolPanic::IsMode(mApp->mGameMode)) return;\n    if (PoolPanicEndless::IsMode(mApp->mGameMode))\n    {\n        if (!mShowShovel) return;\n        const Rect frame = GetShovelButtonRect();\n        g->DrawImage(IMAGE_SHOVELBANK,frame.mX,frame.mY);\n        if (mCursorObject->mCursorType != CURSOR_TYPE_SHOVEL)\n        {\n            // Keep the full original shovel inside its native frame, clear of\n            // both the conveyor backdrop and the menu/speed buttons.\n            const float scale = std::min((frame.mWidth-4)/static_cast<float>(IMAGE_SHOVEL->GetWidth()),\n                (frame.mHeight-4)/static_cast<float>(IMAGE_SHOVEL->GetHeight()));\n            const int width = FloatRoundToInt(IMAGE_SHOVEL->GetWidth()*scale);\n            const int height = FloatRoundToInt(IMAGE_SHOVEL->GetHeight()*scale);\n            const Rect icon(frame.mX+(frame.mWidth-width)/2,frame.mY+(frame.mHeight-height)/2,width,height);\n            g->DrawImage(IMAGE_SHOVEL,icon,Rect(0,0,IMAGE_SHOVEL->GetWidth(),IMAGE_SHOVEL->GetHeight()));\n        }\n        return;\n    }\n",
+    "    if (PoolPanicEndless::IsMode(mApp->mGameMode) || PoolPanic::IsMode(mApp->mGameMode)) return;\n"
+  ],
+  [
+    "        !(PoolPanicEndless::IsMode(mApp->mGameMode) && (mPaused || mApp->GetDialogCount() > 0)) &&\n",
+    ""
+  ]
+]){
+  assert.equal(restoredEndless1Board.split(addition).length,2,'Exact reviewed Endless.2-only integration');
+  restoredEndless1Board=restoredEndless1Board.replace(addition,previous);
+}
+assert.equal(restoredEndless1Board,normalizeSource(await immediateParentBytes("src/Lawn/Board.cpp")),'Complete restored Endless.1 source matches every authenticated parent byte before older preservation checks');
+let restoredEndless1Challenge=normalizeSource(await read('source/src/Lawn/Challenge.cpp'));
+for(const [addition,previous] of [
+  [
+    "    if (PoolPanic::IsMode(aGameMode)) mBoard->mShowShovel = false;\n",
+    "    if (PoolPanicEndless::IsMode(aGameMode) || PoolPanic::IsMode(aGameMode)) mBoard->mShowShovel = false;\n"
+  ]
+]){
+  assert.equal(restoredEndless1Challenge.split(addition).length,2,'Exact reviewed Endless.2-only integration');
+  restoredEndless1Challenge=restoredEndless1Challenge.replace(addition,previous);
+}
+assert.equal(restoredEndless1Challenge,normalizeSource(await immediateParentBytes("src/Lawn/Challenge.cpp")),'Complete restored Endless.1 source matches every authenticated parent byte before older preservation checks');
+
+// Restore only the reviewed compact-header additions before older LawnApp guards.
+let restoredEndless1App=normalizeSource(await read("source/src/LawnApp.cpp"));
+for(const [addition,previous] of [
+  [
+    "\t// Share the original combat Menu strip without extending onto the lawn.\n\tmGameSpeedButton->Resize(753, -10, 45, 46);\n",
+    "\t// The ten-packet bank and shovel fill the horizontal space beside Menu.\n\tmGameSpeedButton->Resize(681, 32, 117, 46);\n"
+  ],
+  [
+    "\t\t(mBoard->mMenuButton->mWidth == 117 || mBoard->mMenuButton->mWidth == 71) &&\n",
+    ""
+  ],
+  [
+    "\tif (mBoard)\n\t{\n\t\tauto& aMenuButton = *mBoard->mMenuButton;\n\t\tif (!mGameSpeedButton->mBtnNoDraw && aMenuButton.mWidth == 117)\n\t\t\taMenuButton.Resize(aMenuButton.mX, aMenuButton.mY, 71, aMenuButton.mHeight);\n\t\telse if (mGameSpeedButton->mBtnNoDraw && aMenuButton.mWidth == 71)\n\t\t\taMenuButton.Resize(aMenuButton.mX, aMenuButton.mY, 117, aMenuButton.mHeight);\n\t}\n",
+    ""
+  ]
+]){
+ assert.equal(restoredEndless1App.split(addition).length,2,'Exact reviewed compact-header-only source delta');
+ restoredEndless1App=restoredEndless1App.replace(addition,previous);
+}
+assert.equal(restoredEndless1App,normalizeSource(await immediateParentBytes("src/LawnApp.cpp")),'Every pre-existing button/menu and application source byte matches authenticated Endless.1 after only reviewed speed-header changes');
+let restoredEndless1GameButton=normalizeSource(await read("source/src/Lawn/Widget/GameButton.cpp"));
+for(const [addition,previous] of [
+  [
+    "static void DrawCompactSpeedStoneButton(Graphics* g, int x, int y, int theWidth, int theHeight, bool isDown, bool isHighLighted, const std::string& theLabel)\n{\n\tGraphics aButtonGraphics(*g);\n\taButtonGraphics.ClipRect(x, y, theWidth, theHeight);\n\tg = &aButtonGraphics;\n\tImage* aLeftImage = isDown ? Sexy::IMAGE_BUTTON_DOWN_LEFT : Sexy::IMAGE_BUTTON_LEFT;\n\tImage* aRightImage = isDown ? Sexy::IMAGE_BUTTON_DOWN_RIGHT : Sexy::IMAGE_BUTTON_RIGHT;\n\tconst int aLeftWidth = 22;\n\tconst int aRightWidth = 23;\n\tconst int aPressOffset = isDown ? 1 : 0;\n\t// Preserve the original outer stone caps at native size. The full 71px\n\t// pair cannot fit the speed control's share of the original Menu strip.\n\tg->DrawImage(aLeftImage, x + aPressOffset, y, Rect(0, 0, aLeftWidth, aLeftImage->mHeight));\n\tg->DrawImage(aRightImage, x + aPressOffset + aLeftWidth, y,\n\t\tRect(aRightImage->mWidth - aRightWidth, 0, aRightWidth, aRightImage->mHeight));\n\tg->SetFont(isHighLighted ? Sexy::FONT_DWARVENTODCRAFT18BRIGHTGREENINSET : Sexy::FONT_DWARVENTODCRAFT18GREENINSET);\n\tconst int aFontX = x + aPressOffset + (theWidth - Sexy::FONT_DWARVENTODCRAFT18GREENINSET->StringWidth(theLabel)) / 2 + 1;\n\tconst int aFontY = y + aPressOffset + (theHeight - Sexy::FONT_DWARVENTODCRAFT18GREENINSET->GetAscent() / 6 - 1 + Sexy::FONT_DWARVENTODCRAFT18GREENINSET->GetAscent()) / 2 - 4;\n\tg->SetColor(Color::White);\n\tg->DrawString(theLabel, aFontX, aFontY);\n}\n\n",
+    ""
+  ],
+  [
+    "\t\tif (mApp && mApp->mGameSpeedButton.get() == this)\n\t\t{\n\t\t\tDrawCompactSpeedStoneButton(g, mX, mY, mWidth, mHeight, isDown, isHighLighted, mLabel);\n\t\t\treturn;\n\t\t}\n",
+    ""
+  ]
+]){
+ assert.equal(restoredEndless1GameButton.split(addition).length,2,'Exact reviewed compact-header-only source delta');
+ restoredEndless1GameButton=restoredEndless1GameButton.replace(addition,previous);
+}
+assert.equal(restoredEndless1GameButton,normalizeSource(await immediateParentBytes("src/Lawn/Widget/GameButton.cpp")),'Every pre-existing button/menu and application source byte matches authenticated Endless.1 after only reviewed speed-header changes');
+assert.equal(extractLegacyFunction(normalizeSource(await read('source/src/Lawn/Widget/GameButton.cpp')),'void DrawStoneButton('),extractLegacyFunction(restoredEndless1GameButton,'void DrawStoneButton('),'Shared native stone-button renderer remains byte exact');
 
 // Undo only reviewed Endless additions. Full prior source files then match
 // the exact authenticated Pool.1 parent, preserving every finite-mode byte.
@@ -1251,7 +1431,7 @@ const endlessZombieGuard='PoolPanicEndless::IsMode(mApp->mGameMode) || ';
 assert.equal(parentZombieFromEndless.split(endlessZombieGuard).length,2);
 parentZombieFromEndless=parentZombieFromEndless.replace(endlessZombieGuard,'');
 assert.equal(parentZombieFromEndless,publishedPoolZombie,'Every old zombie source byte and native mechanic remains exact');
-let parentBoardFromEndless=currentBoard;
+let parentBoardFromEndless=restoredEndless1Board;
 for(const [addition,count] of [
   ['\tcase GameMode::GAMEMODE_CHALLENGE_POOL_PANIC_ENDLESS:\n',1],
   ['PoolPanicEndless::IsMode(aGameMode) ? PoolPanicEndless::kActive : ',1],
@@ -1281,7 +1461,7 @@ for(const addition of ['#include "../System/PoolPanicEndless.h"\n','PoolPanicEnd
   parentDialogFromEndless=parentDialogFromEndless.replace(addition,'');
 }
 assert.equal(parentDialogFromEndless,normalizeSource(await parentBytes('src/Lawn/Widget/LawnDialog.cpp')),'Every previous native menu path remains exact; only Endless returns to its own Bonus page');
-let parentAppFromEndless=normalizeSource(await read('source/src/LawnApp.cpp'));
+let parentAppFromEndless=restoredEndless1App;
 for(const addition of ['#include "Lawn/System/PoolPanicEndlessPresentation.h"\n',
   '    PoolPanicEndlessPresentation::DisposeImage();\n',
   '    if (PoolPanicEndless::IsMode(mGameMode)) return false;\n',
@@ -1727,7 +1907,7 @@ if (process.argv.includes('--run-native')) {
         productionBuildBytes:fullRunProductionBuildBytes});
       if(name==='pool-panic-endless') await verifyPoolPanicEndless({report:actual,
         read:async input=>fs.readFileSync(path.join(temporary,input)),sha,engine,fullRunReport,
-        productionBuildBytes:fullRunProductionBuildBytes});
+        productionBuildBytes:fullRunProductionBuildBytes,immediateParentBytes});
     }
     console.log(`PASS all ${checks} assertions across 23 native suites, including complete headless Care, Chain, Rally, Raid, Lights Out, Garlic Run, Bungee Business, Cob Cannon Command, Pool Panic and Pool Panic Endless scenarios on CI.`);
   } finally {

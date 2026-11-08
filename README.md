@@ -1,5 +1,12 @@
 # Plants vs. Zombies — browser playtest
 
+## Endless.2 - lasting defenses and usable deliveries
+
+`0.2.6-web-endless.2` rebuilds Pool Panic Endless around persistent original defenses. Repeater, Threepeater, Tall-nut, Torchwood, Spikeweed and Lily Pad join occasional Squash, Tangle Kelp, Cherry Bomb and Jalapeno. The original shovel allows rebuilding. Finite Pool Panic keeps its original disposable-attack rules.
+
+All twenty-three muted native suites passed: 50,914,086 checks, zero failures. All fifteen browser integration suites passed. Muted browser inspection completed an opening flag and checked controls and save continuation on these artifacts.
+
+
 ## Endless.1 - Pool Panic Endless
 
 `0.2.6-web-endless.1` adds Pool Panic Endless as the fifteenth Bonus card. The original pool conveyor continues through flags instead of ending after one battle. The first three flags contain 36, 46 and 56 authored zombies; later flags cap at 66 while native armor, aquatic enemies and special abilities vary the formations. The game uses the original Survival flag counter and best-record presentation. Clearing a flag saves progress and updates the personal best; a loss ends the run without a finite victory award or trophy.

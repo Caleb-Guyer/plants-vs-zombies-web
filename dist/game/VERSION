@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-endless.1
-Adds Pool Panic Endless: varied, escalating pool conveyor flags with original single-use Squash, Tangle Kelp, Cherry Bomb and Jalapeno. Original Survival flag and best-record presentation, automatic between-flag saves and native defeat/Retry preserve replayability without finite victory awards. Existing mode IDs, saved object layouts, previous minigames and accepted artwork are preserved.
-Engine JavaScript SHA-256: cac16540c4538cbda98c25b9911d38c194db48abf7b73803780dd4c6f79be601
-Engine WASM SHA-256: 9608d3fb4419fe9da5409e6c7c87f47af751fab66b907a783475325c984869ad
+PvZ-Portable 0.2.6-web-endless.2
+Reworks Pool Panic Endless with a developing native pool defense, useful spaced conveyor supplies, rebuilding with the original shovel, health-paced flag waves and readable native feedback. Automatic flag saves, persistent bests and old saved-game migration preserve progress without finite victory awards. Existing mode IDs, saved object layouts, previous minigames and accepted artwork are preserved.
+Engine JavaScript SHA-256: 06499a385df633c4d1a6428d36e4e9eaf39a6125c3e182a78725b014f7ddc075
+Engine WASM SHA-256: 95a45742959b901171c606fe3ebe3614783bb670f587a9701bc7d1f9f414b3e5
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.
