@@ -1,5 +1,5 @@
 {
-  "id": "0.2.6-web-endless.2",
+  "id": "0.2.6-web-endless.3",
   "upstream": {
     "tag": "0.2.6",
     "commit": "396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
@@ -7,83 +7,53 @@
     "officialJsSha256": "0f2d7425190e49c762f6700b68b080086e3dcb8f2dc5e9724de42ce9fb508573"
   },
   "sourceArchive": {
-    "path": "pvz-portable-0.2.6-web-endless.2-source.zip",
-    "bytes": 40424282,
-    "sha256": "b9095c65547c3d013917ae4188e284f18eabb71a98020ca3d53f71f7365f9566",
-    "crc32": "76c2325a",
-    "entries": 1076,
-    "uncompressedBytes": 118202297
+    "path": "pvz-portable-0.2.6-web-endless.3-source.zip",
+    "bytes": 44423471,
+    "sha256": "206e5e16b0c4ae7c8b88afd94e627943b4cd15c56f82113fcaf4bb1adf4c13b1",
+    "crc32": "1da002b5",
+    "entries": 1254,
+    "uncompressedBytes": 135404055
   },
   "artifacts": [
     {
       "path": "build/pvz-portable.js",
       "bytes": 209600,
-      "sha256": "06499a385df633c4d1a6428d36e4e9eaf39a6125c3e182a78725b014f7ddc075",
-      "crc32": "458512d1"
+      "sha256": "f68adcd086c6eefc01fe4d856f69a0971c7a0de26e997c7a7a8738f165bc8c76",
+      "crc32": "0ce54655"
     },
     {
       "path": "build/pvz-portable.wasm",
-      "bytes": 7779297,
-      "sha256": "95a45742959b901171c606fe3ebe3614783bb670f587a9701bc7d1f9f414b3e5",
-      "crc32": "9d01919b"
+      "bytes": 7782033,
+      "sha256": "ba915021d3574aca8b3a95578320a0f9bce0dc6fad1f7fed147260b3ee7de60b",
+      "crc32": "8bb6e395"
     },
     {
       "path": "build/ProjectVersion.h",
       "bytes": 193,
-      "sha256": "a10a9e78b19c8288da712c6e85b8ee759a3d35194141bd9f06fba6f6fea8629e",
-      "crc32": "290eb64a"
+      "sha256": "0dfd37e5cf97ca12b3c84c57dc54fcdaf304d02700763a50cdad83303b74081f",
+      "crc32": "fc0bca36"
     }
   ],
   "sourceFiles": 852,
-  "sourceBytes": 25786012,
-  "sourceDeltaVsEndless1": [
+  "sourceBytes": 25791701,
+  "sourceDeltaVsEndless2": [
     {
       "path": "CMake/ProjectVersion.cmake",
-      "beforeSha256": "16ca7072d28d8605666b2a6dbbbacb005dc0e744811ae5ffc9f2533c637fa914",
-      "afterSha256": "947e796d4929666fc2bbbdc5f2d5dfa15e4e99d094312e8cca8b64d451dd5643"
-    },
-    {
-      "path": "src/Lawn/Board.cpp",
-      "beforeSha256": "b25da34f3b57c3fe96c44cc436cc93d3049c5c5f65b5008f2af70476ce98d89e",
-      "afterSha256": "2eb072415934d5781abe4dd810d664bc12497448b1b742632a6ac569a3559c90"
-    },
-    {
-      "path": "src/Lawn/Challenge.cpp",
-      "beforeSha256": "22f9c812eed29d7c5654f0692d7713c4ec9ce1a6ca127c41969cb91c490d9fed",
-      "afterSha256": "0141eeef34161353a4857efe67b934231a9d8aaa70e9c7da825dccb303b3cd20"
+      "beforeSha256": "947e796d4929666fc2bbbdc5f2d5dfa15e4e99d094312e8cca8b64d451dd5643",
+      "afterSha256": "6bc4c58a9325cfa1ccb5d68f09a870097d5219b5f00baa7e1c6b061d3a5246bb"
     },
     {
       "path": "src/Lawn/System/PoolPanicEndless.cpp",
-      "beforeSha256": "8913db4ca5a2483510bd35d4afa6330004461bff5ed5bab3c670bef2cbf22a60",
-      "afterSha256": "dae61132b49fb4a93a80ec3b0c165ee435c5bfed98fd169b93025346d12bd59d"
+      "beforeSha256": "dae61132b49fb4a93a80ec3b0c165ee435c5bfed98fd169b93025346d12bd59d",
+      "afterSha256": "fffc4ccd82d9f26bc88649a266f1588933cfc2a4ac5119290688ba37f56f9da7"
     },
     {
       "path": "src/Lawn/System/PoolPanicEndless.h",
-      "beforeSha256": "91adafb1d66d08c8492444b7baee82c18a520e116beaebbf794585494b63319e",
-      "afterSha256": "77fe260e33bf9d0ab0d5d53a7abe25d026e2180e74a2cec606d26e4eb691f2fa"
-    },
-    {
-      "path": "src/Lawn/System/PoolPanicEndlessPresentation.cpp",
-      "beforeSha256": "910630cbedbb870ff1568f78fc39deaf215ee72137aff83d203ec6d6d9ac43b4",
-      "afterSha256": "b0406cfe80d01674590ba0c79855540e2d2814758079d2a0128a793440035b0a"
-    },
-    {
-      "path": "src/Lawn/System/PoolPanicEndlessPresentation.h",
-      "beforeSha256": "9390e53f20aee9a358527d17aa283dbf0d9f30a3b3696241a8644c2d7d82a0d1",
-      "afterSha256": "2aea40cba075956b4fd1072b97b7baf5f17104b0c750072b624422c1d9b41309"
-    },
-    {
-      "path": "src/Lawn/Widget/GameButton.cpp",
-      "beforeSha256": "84475d67c5f1667ad3b285b01fc30efaa542486a93e62ddcaf720cce20867268",
-      "afterSha256": "f88ecba5ddda6d2abe027b7773d506db8e7f9df6c405305de4fd7907d0ce5606"
-    },
-    {
-      "path": "src/LawnApp.cpp",
-      "beforeSha256": "d212719b9adc07662a95ff40527b05dafe8990132ab6cd6df6764594929ec192",
-      "afterSha256": "d894e9d03bc3af76bfc3f34c880899a0648dca0520262802d975f9dfd3644791"
+      "beforeSha256": "77fe260e33bf9d0ab0d5d53a7abe25d026e2180e74a2cec606d26e4eb691f2fa",
+      "afterSha256": "f28298ffa66537963a29151fd3d9c6c171304df3e8da1762d68a5323fc13f519"
     }
   ],
-  "compiledVersionHeader": "// Generated from CMake/ProjectVersion.h.in by CMake; do not edit.\r\n#pragma once\r\n\r\n#define PVZP_VERSION \"0.2.6-web-endless.2\"\r\n#define PVZP_BUILD_NUMBER 1\r\n#define PVZP_COMMIT_DATE \"unknown\"\r\n",
+  "compiledVersionHeader": "// Generated from CMake/ProjectVersion.h.in by CMake; do not edit.\r\n#pragma once\r\n\r\n#define PVZP_VERSION \"0.2.6-web-endless.3\"\r\n#define PVZP_BUILD_NUMBER 1\r\n#define PVZP_COMMIT_DATE \"unknown\"\r\n",
   "checks": {
     "fullRelease": {
       "exitCode": 0,
@@ -96,176 +66,189 @@
       "sourceUnchangedDuringBuild": true,
       "receipt": {
         "path": "logs/build-result.json",
-        "bytes": 579,
-        "sha256": "c73cb555c339c00e51378b88f23f6e648c9a9f677df0fc3edc4d0d4ed315094a",
-        "crc32": "12c075b3"
+        "bytes": 581,
+        "sha256": "b8a96da88b4bfc463bfb10b36ec1a8397ad02c0f83102806c4aafe7b2e3220ba",
+        "crc32": "e0c3d3bf"
       }
     },
     "focusedNativeTests": {
       "status": "PASS focused native production tests",
       "failures": 0,
       "checks": 50914086,
+      "lateChecks": 29323397,
+      "totalChecksWithLate": 80237483,
       "scope": "Extracted production tests plus complete linked-engine Care, Chain Reaction, Rally Point, Rally Raid, Lights Out, Garlic Run, Bungee Business, Cob Cannon Command, Pool Panic and Pool Panic Endless scenarios; ordinary-player recovery, identifiable streamed supplies, real generated-phase play, native active/boundary/warning checkpoints, persistent best records and genuine hands-off defeats; original finite conveyor packets, six-row land/water placement and native single-use activations; actual native aiming, shell flight, explosions, full reload cycles and eight moving formations; actual native protection clearing, finite budgets, unique Bungee thefts, target-loss failure and native heist saves/replays; twenty actual five-board Garlic Run completions, four no-route losses and four isolated control cases; actual light-gated attacks, natural native fog edges at five lamp positions, glove tooltip hover/raster bounds, glove-over-fog composition, legal Plantern moves, active-combat save/Continue, native awards, failure/retry, slow-play balance, UI bounds and speed parity. Original regressions remain active. Audio output is disabled.",
+      "endlessBasePrefixReuse": {
+        "performed": true,
+        "reexecuted": false,
+        "checkpointSeal": "endless3-attempt1-native-seal.json",
+        "checkpointSealSha256": "fb62b155e119aaf8cb5b6433aacc2baa54b3b144c7a04acf9f9306d0d4854676",
+        "originalContractSha256": "d8d1b19485bd6a343c81547b0083ec52938e543ac927c3fb0263fb7d234e6e9f",
+        "originalMainRunnerSha256": "4f5d3a97fd43b74ac7c02fa96d39c635b9831cca855b129642f3168d3af194b0",
+        "originalLateRunnerSha256": "5b2bc206ec88b39987451c4591331bfe333905f506de9d7efc9dbd2c64127c5a",
+        "originalNodeScriptSha256": "3ba0698ea4029891926f9acd99244f9b25f7325846fbaa5d8a0e6a2d16c49966",
+        "sourceArtifactAndPolicyInputsUnchanged": true
+      },
       "reports": [
         {
           "path": "tests/game-speed-results.json",
           "bytes": 3079,
-          "sha256": "66f2b2cb4c4038becf54fb247da4eee43c6c85d7cf39ec63d96ce67914663ec9",
-          "crc32": "ba824dac",
+          "sha256": "f4799321debba65d01e2ad28d525ba5812892ee38e14ba6c60c81b6f1bb0c369",
+          "crc32": "5a526a63",
           "checks": 81
         },
         {
           "path": "tests/qol-controls-results.json",
           "bytes": 3159,
-          "sha256": "2f095129d3c6a20bde2f6fc942e7eee7367679832e07db00b19c5c17aabdaf51",
-          "crc32": "5041adfa",
+          "sha256": "7f70dcb3aeca98bbb87d3b25c0afd8b56f0d97909ea83c36cf747cff7ed9fbfa",
+          "crc32": "c5e7cc01",
           "checks": 90
         },
         {
           "path": "tests/decks-cooldowns-results.json",
           "bytes": 3255,
-          "sha256": "d9a48474987d0860b98b96b208893d7d99d5e904f5104f348086ba734d7bb967",
-          "crc32": "25ecff68",
+          "sha256": "49c69b054ab84c4531d47ce6444143f240218bb97befa753c59da3df12275157",
+          "crc32": "5dd8cd83",
           "checks": 274
         },
         {
           "path": "tests/bonus-challenge-results.json",
           "bytes": 4220,
-          "sha256": "babb828f9a9668c55cbf58b4c2c1db115e55570cb75dccbf26b67c8ca3f06d65",
-          "crc32": "f601862f",
+          "sha256": "a7ff750ac72a8a6cacdfacfb05cecd9a93a334a9f2ed6fb77d37174eaa8c28a4",
+          "crc32": "93a022ce",
           "checks": 387
         },
         {
           "path": "tests/bonus-completion-results.json",
           "bytes": 4953,
-          "sha256": "185e7fb194fcec83eaa62f3f486ce91b078b53ddb5004c5e60159c07b5a43440",
-          "crc32": "bf272618",
+          "sha256": "8cdc397924154222f805c804b7f3fde53fa719df40221e8483c49f6f707100c5",
+          "crc32": "8551ed86",
           "checks": 1283
         },
         {
           "path": "tests/night-shift-results.json",
           "bytes": 3787,
-          "sha256": "f33decc17ad544cafcce8f813a183ea2643cf1381236d220c243c8cc29ea9048",
-          "crc32": "9b3ce5d5",
+          "sha256": "c854cebe3b0d3f907906affc17afbacab0bed8787f19da78d657f7e657ad8fec",
+          "crc32": "611525d2",
           "checks": 231
         },
         {
           "path": "tests/lantern-shroom-results.json",
           "bytes": 8812,
-          "sha256": "b9d0d337590b8542bab6f47bdee555f09e92d3fb45339a6c4d173592b0fb1a31",
-          "crc32": "5b225348",
+          "sha256": "74d366bd0bc8b3a362668d425bcec7f96402b81f571a05ec62cb0af668413a6f",
+          "crc32": "4f0ac500",
           "checks": 1724
         },
         {
           "path": "tests/garden-shuffle-results.json",
           "bytes": 4494,
-          "sha256": "6a30dd986dc46f45b7ae3085019466e4fe7003a3e776443167a656cf0d3740d9",
-          "crc32": "650ee24c",
+          "sha256": "08b980bd8cb667f5d13b76cc87c5b20b8ebbe9cdabef3c3954a9f6a277e99682",
+          "crc32": "ecd14eb3",
           "checks": 214
         },
         {
           "path": "tests/seed-swap-results.json",
           "bytes": 4565,
-          "sha256": "17a3dd8bcaeff92c7d7f4b816560260f52aa5ec9e65e6275ffc4f99560290e63",
-          "crc32": "68e28860",
+          "sha256": "4fc4b41ef8e33b57306dfb9215faa0c1b2226c05af17d84452bccc3e5723e5a8",
+          "crc32": "cf5eada5",
           "checks": 587
         },
         {
           "path": "tests/mender-bloom-results.json",
           "bytes": 3971,
-          "sha256": "4d50456d716d5b039e2fc1b18550f9cf10d135207034e144bae31b78fec8ab7d",
-          "crc32": "a9ea4914",
+          "sha256": "28bd6e4c9d4732c1525cfece17a24b7a862cb5d25474ebf66525d48ebf1884bd",
+          "crc32": "96184b19",
           "checks": 523
         },
         {
           "path": "tests/intensive-care-results.json",
           "bytes": 5654,
-          "sha256": "e280df1cbfc1e064b86467ec5e33940c8dd4dbd961b86b4ae2bdf035b6f784be",
-          "crc32": "83c950da",
+          "sha256": "42d14e5442ae469af0f1281082b252d0e0fac3f299d5a3914d7031d92b5c098a",
+          "crc32": "f589772b",
           "checks": 1135
         },
         {
           "path": "tests/native-layout-results.json",
           "bytes": 22080,
-          "sha256": "48d4e51490871a6cf47c0fa5443ec0553bb6c97f1ae9b30c88c93b66b763cc32",
-          "crc32": "44d4e7c2",
+          "sha256": "22d8f84b944abef5ecd13fb3227553f0c11f57db0d26045d63cf3e8f574a1144",
+          "crc32": "ff27d202",
           "checks": 26138
         },
         {
           "path": "tests/care-fatigue-results.json",
           "bytes": 2685,
-          "sha256": "aaad9dbbd62d213b8bb68634b9ca933c039e9e7d4c1b5a9cc6d71ace16503612",
-          "crc32": "0353a9c3",
+          "sha256": "32e2fce491a72caa20faedf56ecb6c22228d1abdc0b9875a2c7e6ce96751e7cd",
+          "crc32": "a21e99fd",
           "checks": 25042
         },
         {
           "path": "tests/care-full-run-results.json",
           "bytes": 157172,
-          "sha256": "ac8fe1bb064a752e78b249b42c0ea6c68d984d32d271f2f1e4547fd00cb9d7d2",
-          "crc32": "cdc3c106",
+          "sha256": "acc8d9110a46dccec139b2a2f44fde095f10dc2eba942f079e1b66e0fbbe4a0e",
+          "crc32": "bfd49eb2",
           "checks": 1004
         },
         {
           "path": "tests/chain-reaction-results.json",
           "bytes": 167738,
-          "sha256": "6185242731afd1c4c4a2bc8c161244e0b54814de9a6ab3390007130a207a1d4a",
-          "crc32": "10ca724a",
+          "sha256": "1d88ea78cd2128a509ad55a0cc08bebc8f32db0faeed9b1bcaad8ccd54f65280",
+          "crc32": "5b6d0542",
           "checks": 81331
         },
         {
           "path": "tests/rally-zombie-results.json",
           "bytes": 165376,
-          "sha256": "49a0f9794caf4686aebdf9ff238055634d402e97ca936e475db6db8015dd5b48",
-          "crc32": "e99ce90c",
+          "sha256": "9c69c457f5e9d0d744083ca131bf995696e320425aeee7b51a1317bd7b62fdad",
+          "crc32": "b3e970af",
           "checks": 327550
         },
         {
           "path": "tests/rally-raid-results.json",
           "bytes": 182491,
-          "sha256": "de6d239d58d13d56be986aa786d0d5e7b08753ac207df2ddb42e50cd8c7a95d7",
-          "crc32": "b918bb1c",
+          "sha256": "9d0e85c2c53f7d3ff5e196fd6b856ab211c02e38f186784473650bd24be435d7",
+          "crc32": "8e3c9935",
           "checks": 1040586
         },
         {
           "path": "tests/lights-out-results.json",
           "bytes": 168805,
-          "sha256": "bf8c6ffe5a92ea4ab4a1c1e29a65e13e5183b2514659e8b54dccb91cc076b58d",
-          "crc32": "440a10ec",
+          "sha256": "4f21185b8a1654db7d83983d627a6c8977fb579f571a696ce488e77fba130264",
+          "crc32": "76059b48",
           "checks": 884017
         },
         {
           "path": "tests/garlic-run-results.json",
           "bytes": 176369,
-          "sha256": "99be19f362cbb807848d9d8d6bfdf56907bd66a08aadd6d314020bc74d22745c",
-          "crc32": "12d9b768",
+          "sha256": "643b62275a71c6775604595d22b8cc86f16bf1ed6c38ba2418aa11595e84cc37",
+          "crc32": "b28c9c02",
           "checks": 1042792
         },
         {
           "path": "tests/bungee-business-results.json",
           "bytes": 183490,
-          "sha256": "60ef7aee26524315dae2161950f80cd13478ba003babf643f059759c425a0ed0",
-          "crc32": "263c594e",
+          "sha256": "f9f94cf5909c29e3a342ab6228a9fa1c6021547248d56b668519ee56cb485296",
+          "crc32": "b8664e07",
           "checks": 704888
         },
         {
           "path": "tests/cob-cannon-command-results.json",
           "bytes": 189164,
-          "sha256": "643c8d1857ca9157ffca07dc108fce53adede0e0f356a18f3219d0a5de2501fd",
-          "crc32": "0660d1dc",
+          "sha256": "303dfb6e07677bc07fe7676ca77c85f607d137a825b7670b3e453128eefee0c4",
+          "crc32": "9d605e96",
           "checks": 868448
         },
         {
           "path": "tests/pool-panic-results.json",
           "bytes": 213650,
-          "sha256": "c7f8a1c9e9dc4d00fff767bdd3870052449ab74de5d4cc683f3a24a649f18997",
-          "crc32": "e797c87d",
+          "sha256": "af722be446716c145495a1e36e745dbbb8f39ed0b69cb480cfae177b59fc7a36",
+          "crc32": "dc70959b",
           "checks": 6598668
         },
         {
           "path": "tests/pool-panic-endless-results.json",
-          "bytes": 361381,
-          "sha256": "2f5c7b69e89a34fa79aab6b6091a92f6fcb284ba6aaaece89e3e8ceb1249e3af",
-          "crc32": "812610a1",
+          "bytes": 1901419,
+          "sha256": "9a97c309aecad654936aa987f99d97948eb241f0bf18ae6929b9c52328911522",
+          "crc32": "77206b6d",
           "checks": 39307093
         }
       ]
@@ -277,37 +260,82 @@
         "everySourceByteMatches": true,
         "sourceFiles": 852
       },
-      "endless1": {
+      "endless2": {
         "gitApplyCheck": "PASS",
         "gitApply": "PASS",
         "everySourceByteMatches": true,
         "sourceFiles": 852
       }
+    },
+    "historicalComparison": {
+      "scope": "Authenticated published Endless.2 historical comparison only; excluded from current .3 backend/object counts.",
+      "parentSourceArchiveSha256": "b9095c65547c3d013917ae4188e284f18eabb71a98020ca3d53f71f7365f9566",
+      "productionBuildReceiptSha256": "c73cb555c339c00e51378b88f23f6e648c9a9f677df0fc3edc4d0d4ed315094a",
+      "productionSourceFiles": 852,
+      "productionObjectCount": 134,
+      "receipt": {
+        "path": "tests/endless3-parent-build.json",
+        "bytes": 139004,
+        "sha256": "4e8c7791948153ae026f875200bcfc6c6adb89daf6b4df04ef76022fdd367d54",
+        "crc32": "fa60aee9"
+      },
+      "portableReference": {
+        "path": "tests/endless3-parent-reference.json",
+        "bytes": 138131,
+        "sha256": "a27ddd48212673c4224730f7b0053a35dcece19fabdf926688fa2844f9c14d32",
+        "crc32": "99561f08"
+      },
+      "baseHarnessSnapshot": {
+        "path": "tests/endless3-parent-base-harness.snapshot.cpp",
+        "bytes": 73164,
+        "sha256": "c598089df0689497076e24b6be046ba65cc9e5bd9fb83ce5838cbea53f005c32",
+        "crc32": "dabd3956"
+      },
+      "ordinaryPolicySnapshot": {
+        "path": "tests/endless3-parent-ordinary-policy.snapshot.h",
+        "bytes": 4156,
+        "sha256": "61550c6b99cb5ba5868bb3bcd2972fd0d8967a6599b815b7628b645ad3aa5e00",
+        "crc32": "816eab24"
+      },
+      "artifacts": [
+        {
+          "path": "tests/endless3-parent-engine.js",
+          "bytes": 249329,
+          "sha256": "d1ca4c1a98e2ce55270b346dded93018c5e5a20cf2712d9c1d3745b218e76df0",
+          "crc32": "d747defb"
+        },
+        {
+          "path": "tests/endless3-parent-engine.wasm",
+          "bytes": 8151638,
+          "sha256": "32e1ae93947e80af4be6d72dfc73b7604fd53ab9fe717cda16a756070e7f36d3",
+          "crc32": "37ffba7c"
+        }
+      ]
     }
   },
   "combinedPatch": {
-    "path": "web-endless.2.patch",
-    "bytes": 14686988,
-    "sha256": "bb680ec747e8f37a749d8176812b214a0990db7b4f600b3fd19dca837aaf40dd",
-    "crc32": "c7dc922f",
+    "path": "web-endless.3.patch",
+    "bytes": 14692784,
+    "sha256": "3a179a9ac6472c3f6b07953327505e0adda1b01e7d1ffd80a4b323542fb384b9",
+    "crc32": "3dba25b0",
     "sourcePaths": 142
   },
   "incrementalPatch": {
-    "path": "endless1-to-endless2.patch",
-    "bytes": 35111,
-    "sha256": "05269a579b688b846b166423e408614cfc2c9cbe88dca38edd46290bbca3feb8",
-    "crc32": "c0745cb0",
-    "sourcePaths": 9
+    "path": "endless2-to-endless3.patch",
+    "bytes": 12036,
+    "sha256": "a3e87c431c7e62700eb948d40f1cd7734bdd56114c646f47a6802e875e802dca",
+    "crc32": "a0051e1a",
+    "sourcePaths": 3
   },
   "parent": {
-    "id": "0.2.6-web-endless.1",
-    "sourceArchiveSha256": "eee4ae6dfeaaa49bbf203c37cf45ad73dad56b85d3d0079e549ed11bc3d45f25",
-    "releaseManifestSha256": "93544612eb349a4b277e001829c6fb643918b375c4af1faac94fe0ed1bd3c2be",
+    "id": "0.2.6-web-endless.2",
+    "sourceArchiveSha256": "b9095c65547c3d013917ae4188e284f18eabb71a98020ca3d53f71f7365f9566",
+    "releaseManifestSha256": "5b3dd2c4b85ce1cd9edd4d72dcc00a26c6905898a3fc29f6ce96f0dccf574db2",
     "scope": "Complete historical parent engine metadata is preserved in the parent property of engine-provenance.json."
   },
   "limits": [
-    "Pool Panic Endless is reworked as a native pool-defense conveyor. Original persistent shooters, Tall-nuts, Torchwood, Spikeweed and Lily Pads combine with occasional emergency instant plants. Inventory-aware weighted deliveries respect actual native entry space; the original shovel supports rebuilding. Health-paced waves, native flag warnings and clear announcements, saved supply RNG, automatic boundary checkpoints and a compact best stamp preserve a developing lawn and readable interface. Earlier minigames, accepted artwork, original mode IDs, unlock rules and serialized object layouts are preserved. Full original parity remains unverified.",
+    "Pool Panic Endless extends its late-game pressure after six unchanged opening flags. Later authored formations add original Pogo Zombies, Dancing Zombies with native Backups, and Redeye Gargantuars alongside the existing specials, with bounded increases in formation density, shorter intervals and heavier rosters. Original combat statistics remain unchanged. New complete formations wait when the existing living actors plus that formation would exceed 128; native children remain native and can exceed this admission threshold after spawning. Accepted cards, developing defenses, automatic checkpoints, saved supply randomness and existing save layouts are preserved. All fifteen cards, accepted artwork, the compact native Menu/speed controls and every earlier mode remain unchanged. Full original parity and indefinite successful play remain unverified.",
     "Focused production-method tests and build checks do not replace broad game or browser validation.",
-    "Earlier results remain historical parent evidence only. No separately image-generated challenge illustrations are active."
+    "Earlier release results remain historical parent evidence. Any reused current-O2 opening prefix is explicitly sealed, source/artifact-equivalent and revalidated; it is not described as reexecuted. No separately image-generated challenge illustrations are active."
   ]
 }

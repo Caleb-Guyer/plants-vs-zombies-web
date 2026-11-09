@@ -1,15 +1,15 @@
 {
   "schema_version": 1,
-  "current_engine": "0.2.6-web-endless.2",
+  "current_engine": "0.2.6-web-endless.3",
   "upstream_tag": "0.2.6",
   "layout": "Site-source nests current corresponding source, its immediate parent when present, the upstream baseline, the authenticated Rally.3 native I, Zombie UI reference and the current full patch. Other source archives and incremental/historical patches remain standalone downloads beside this index and in the full runtime distribution.",
   "nested_sources": [
     "pvz-portable-0.2.6-source.zip",
-    "pvz-portable-0.2.6-web-endless.1-source.zip",
-    "pvz-portable-0.2.6-web-endless.2-source.zip"
+    "pvz-portable-0.2.6-web-endless.2-source.zip",
+    "pvz-portable-0.2.6-web-endless.3-source.zip"
   ],
   "nested_patches": [
-    "web-endless.2.patch"
+    "web-endless.3.patch"
   ],
   "archives": [
     {
@@ -142,6 +142,13 @@
       "name": "pvz-portable-0.2.6-web-endless.2-source.zip",
       "bytes": 40424282,
       "sha256": "b9095c65547c3d013917ae4188e284f18eabb71a98020ca3d53f71f7365f9566",
+      "current": false,
+      "upstream": false
+    },
+    {
+      "name": "pvz-portable-0.2.6-web-endless.3-source.zip",
+      "bytes": 44423471,
+      "sha256": "206e5e16b0c4ae7c8b88afd94e627943b4cd15c56f82113fcaf4bb1adf4c13b1",
       "current": true,
       "upstream": false
     },

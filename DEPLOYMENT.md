@@ -1,5 +1,27 @@
 # GitHub Pages release: Caleb-Guyer/plants-vs-zombies-web
 
+## Endless.3 release inputs
+
+Canonical play URL: https://caleb-guyer.github.io/plants-vs-zombies-web/
+
+The current release preserves 852 production files and 134 non-main objects. Only `CMake/ProjectVersion.cmake` and `PoolPanicEndless.{h,cpp}` differ from the published .2 source. The corresponding-source package contains the twenty current complete-engine backend files plus two separately authenticated .2 comparison artifacts. The parent is compiled against its own frozen headers and objects. Portable parent receipts, source/object maps, original scaffold/policy snapshots, raw case logs, actual migration files and earned browser checkpoints support offline verification. The 746-input native-art fixture preserves all 643 original entries and adds 103 original PAK-derived inputs; no generated challenge illustrations or production artwork changes are introduced.
+
+- `build/pvz-portable.js`: 209,600 bytes; SHA-256 `f68adcd086c6eefc01fe4d856f69a0971c7a0de26e997c7a7a8738f165bc8c76`.
+- `build/pvz-portable.wasm`: 7,782,033 bytes; SHA-256 `ba915021d3574aca8b3a95578320a0f9bce0dc6fad1f7fed147260b3ee7de60b`.
+- `build/ProjectVersion.h`: 193 bytes; SHA-256 `0dfd37e5cf97ca12b3c84c57dc54fcdaf304d02700763a50cdad83303b74081f`.
+- `pvz-portable-0.2.6-web-endless.3-source.zip`: 44,423,471 bytes; SHA-256 `206e5e16b0c4ae7c8b88afd94e627943b4cd15c56f82113fcaf4bb1adf4c13b1`.
+- `web-endless.3.patch`: 14,692,784 bytes; SHA-256 `3a179a9ac6472c3f6b07953327505e0adda1b01e7d1ffd80a4b323542fb384b9`.
+- `endless2-to-endless3.patch`: 12,036 bytes; SHA-256 `a3e87c431c7e62700eb948d40f1cd7734bdd56114c646f47a6802e875e802dca`.
+
+Frozen progression contract SHA-256: `5d4bc2feddbaddb64354cadb718f6bbdebf717b7a2ca5306318103915dce005d`.
+
+The 23 retained native suites passed (50,914,086 baseline checks). The separate late-game verification passed 29,323,397 checks. The opening matrix retains 32 cases, 28 earned runs and 92 flags; four additional fresh runs earn 12 flags each across seeds 1729/7331 and 1×/2× speed (48 additional earned flags, 140 automated earned flags total). Sixteen established-defense windows, four actual parent-engine comparison windows, two crowded-wave/mechanics controls and two cross-version migration controls are explicitly separate from earned progression. All fifteen website integration suites passed with no downloaded dependencies. Tests disable audio output; ordinary play keeps its audio controls.
+
+Muted browser testing continues a genuinely earned eight-flag native checkpoint, completes at least one additional flag through visible controls, exercises Menu/speed and verifies reload/Continue. Browser evidence is bound to the shipped release engine and captured screenshots. Offscreen native raster fixtures remain layout evidence and do not claim browser/GPU equivalence.
+
+Publication uses the existing manually dispatched GitHub Pages workflow after the tested commit is pushed. The validate job checks bundled data, the browser/source package and real silent native matrices before the deploy job uploads the artifact. The release closes only after both jobs succeed and public files match the tested local bytes. Historical release evidence follows unchanged.
+
+
 ## Endless.2 - reviewed release inputs
 
 Current engine: `0.2.6-web-endless.2`.

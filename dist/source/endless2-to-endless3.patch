@@ -1,0 +1,225 @@
+diff --git a/CMake/ProjectVersion.cmake b/CMake/ProjectVersion.cmake
+index cee6768c834d10b88864956c2ba1b5b6e0dd1e64..8e2599f01c935f84f5c1499eccd1be41082c5ec9 100644
+--- a/CMake/ProjectVersion.cmake
++++ b/CMake/ProjectVersion.cmake
+@@ -66,6 +66,6 @@ if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
+ endif()
+ 
+ # Browser release identity; keep binary and corresponding-source manifests aligned.
+-set(PVZP_VERSION "0.2.6-web-endless.2")
++set(PVZP_VERSION "0.2.6-web-endless.3")
+ set(PVZP_VERSION_PLAIN "0.2.6")
+ configure_file("${PROJECT_SOURCE_DIR}/CMake/ProjectVersion.h.in" "${PROJECT_BINARY_DIR}/ProjectVersion.h" @ONLY)
+diff --git a/src/Lawn/System/PoolPanicEndless.cpp b/src/Lawn/System/PoolPanicEndless.cpp
+index 8d0241da8f3de7f82ec1266f027fd0c44b46b1fe..17f26c5d291e5fc2108b0c7427d79c0999d1ff04 100644
+--- a/src/Lawn/System/PoolPanicEndless.cpp
++++ b/src/Lawn/System/PoolPanicEndless.cpp
+@@ -45,6 +45,13 @@ void RestoreEmptyPads(Board& board)
+         if (!board.GetTopPlantAt(cell.mCol,cell.mRow,TOPPLANT_ANY))
+             board.AddPlant(cell.mCol,cell.mRow,SEED_LILYPAD,SEED_NONE);
+ }
++bool CanAdmitFormation(Board& board, const Formation& formation)
++{
++    int living = 0;
++    for (Zombie* zombie : board.mZombies)
++        living += !zombie->mDead && !zombie->IsDeadOrDying();
++    return living+ZombieCount(formation) <= kLivingActorSoftCap;
++}
+ void UpdateSupply(Board& board)
+ {
+     Challenge& challenge = *board.mChallenge;
+@@ -130,6 +137,23 @@ int SupplyWeight(Board& board, SeedType seed)
+     case SEED_JALAPENO: base=5; break;
+     default: return 0;
+     }
++    if (board.mChallenge->mSurvivalStage >= 6)
++    {
++        // Preserve the six-flag opening, then make room for native repairs
++        // and area counters instead of accumulating six spare pea shooters.
++        switch (seed)
++        {
++        case SEED_REPEATER: base=18; waitingLimit=1; break;
++        case SEED_THREEPEATER: base=14; waitingLimit=1; break;
++        case SEED_TALLNUT: base=20; break;
++        case SEED_SPIKEWEED: base=16; break;
++        case SEED_SQUASH: base=12; break;
++        case SEED_TANGLEKELP: base=10; break;
++        case SEED_CHERRYBOMB: base=16; break;
++        case SEED_JALAPENO: base=14; break;
++        default: break;
++        }
++    }
+     int waiting = 0, planted = 0;
+     std::array<bool,6> torchwoodRows{};
+     for (const SeedPacket& packet : board.mSeedBank->mSeedPackets)
+@@ -170,6 +194,13 @@ void MigrateLegacy(Board& board)
+     Challenge& challenge = *board.mChallenge;
+     if (!IsMode(board.mApp->mGameMode)) return;
+     if (challenge.mChallengeGridY == kRulesVersion) return;
++    if (challenge.mChallengeGridY >= 2)
++    {
++        // .2 already has admitted native packets and the saved local RNG.
++        // Changing the schedule must not reroll future supply or move cards.
++        challenge.mChallengeGridY = kRulesVersion;
++        return;
++    }
+     const int waiting = WaitingPackets(*board.mSeedBank);
+     bool outsideEntry = false;
+     const int entryX = board.mSeedBank->mSeedPackets[0].mX+515;
+@@ -199,7 +230,8 @@ void PreloadResources()
+     for (SeedType seed : kSupplySeeds) Plant::PreloadPlantResources(seed);
+     constexpr ZombieType types[] = {ZOMBIE_NORMAL,ZOMBIE_FLAG,ZOMBIE_TRAFFIC_CONE,ZOMBIE_PAIL,
+         ZOMBIE_DOOR,ZOMBIE_FOOTBALL,ZOMBIE_NEWSPAPER,ZOMBIE_SNORKEL,ZOMBIE_DOLPHIN_RIDER,
+-        ZOMBIE_JACK_IN_THE_BOX,ZOMBIE_LADDER,ZOMBIE_ZAMBONI,ZOMBIE_GARGANTUAR,ZOMBIE_IMP};
++        ZOMBIE_JACK_IN_THE_BOX,ZOMBIE_LADDER,ZOMBIE_ZAMBONI,ZOMBIE_GARGANTUAR,ZOMBIE_IMP,
++        ZOMBIE_POGO,ZOMBIE_DANCER,ZOMBIE_BACKUP_DANCER,ZOMBIE_REDEYE_GARGANTUAR};
+     for (ZombieType type : types) Zombie::PreloadZombieResources(type);
+ }
+ void Populate(Board& board)
+@@ -258,7 +290,6 @@ void Update(Board& board)
+             challenge.mChallengeStateCounter = board.mHugeWaveCountDown;
+             board.mZombieCountDown = challenge.mChallengeStateCounter;
+             if (board.mHugeWaveCountDown > 0) return;
+-            challenge.mChallengeState = kActive;
+             warningFinished = true;
+         }
+         else
+@@ -272,6 +303,7 @@ void Update(Board& board)
+         board.mZombieCountDown = challenge.mChallengeStateCounter;
+         if (challenge.mChallengeStateCounter == 0)
+         {
++            const Formation formation = WaveFor(challenge.mSurvivalStage,wave,challenge.mChallengeGridX);
+             if (wave == kWaveCount-1 && !warningFinished)
+             {
+                 board.ClearAdviceImmediately();
+@@ -282,8 +314,12 @@ void Update(Board& board)
+                 challenge.mChallengeStateCounter = kHugeWaveDelay;
+                 return;
+             }
++            // Native warning/music/siren ran once. Keep the warning state at
++            // zero until admission is safe, without restarting its advice.
++            if (!CanAdmitFormation(board,formation)) return;
++            if (warningFinished) challenge.mChallengeState = kActive;
+             if (wave != kWaveCount-1) board.NextWaveComing();
+-            for (const Spawn& spawn : WaveFor(challenge.mSurvivalStage,wave,challenge.mChallengeGridX))
++            for (const Spawn& spawn : formation)
+             {
+                 if (spawn.mType == ZOMBIE_INVALID) continue;
+                 Zombie* zombie = board.AddZombieInRow(spawn.mType,spawn.mRow,wave);
+diff --git a/src/Lawn/System/PoolPanicEndless.h b/src/Lawn/System/PoolPanicEndless.h
+index a14c5fa4169230b7d73ca4976a6c8b16b60b9e22..2c6a40ab250d680b726c69c428eede71cd290907 100644
+--- a/src/Lawn/System/PoolPanicEndless.h
++++ b/src/Lawn/System/PoolPanicEndless.h
+@@ -17,9 +17,10 @@ inline constexpr GameMode kMode = GAMEMODE_CHALLENGE_POOL_PANIC_ENDLESS;
+ inline constexpr ChallengeState kActive = static_cast<ChallengeState>(127);
+ inline constexpr ChallengeState kBetween = static_cast<ChallengeState>(128);
+ inline constexpr ChallengeState kHugeWave = static_cast<ChallengeState>(129);
+-inline constexpr int kRulesVersion = 2;
++inline constexpr int kRulesVersion = 3;
+ inline constexpr int kWaveCount = 10;
+-inline constexpr int kLargestFormation = 12;
++inline constexpr int kLargestFormation = 48;
++inline constexpr int kLivingActorSoftCap = 128;
+ inline constexpr int kBankSize = 10;
+ inline constexpr int kOpeningPackets = 6;
+ inline constexpr int kPacketQuota = 48;
+@@ -41,7 +42,15 @@ inline constexpr std::array<SeedType,kOpeningPackets> kOpeningSeeds = {
+ constexpr int SupplyInterval(int waiting)
+ { return waiting > 8 ? 1000 : waiting > 6 ? 500 : waiting > 4 ? 425 : 400; }
+ constexpr int FormationInterval(int flags)
+-{ return flags >= 6 ? 1400 : flags >= 3 ? 1700 - (flags-3)*100 : 2200 - (flags > 0 ? flags : 0)*200; }
++{
++    if (flags < 6) return flags >= 3 ? 1700 - (flags-3)*100 : 2200 - (flags > 0 ? flags : 0)*200;
++    return flags >= 26 ? 600 : 1400-(flags-6)*40;
++}
++constexpr int EscalationAge(int flags) { return flags >= 86 ? 80 : flags > 6 ? flags-6 : 0; }
++constexpr int HeavyPercent(int flags)
++{ const int value = 4+EscalationAge(flags)*2; return value > 80 ? 80 : value; }
++constexpr int RedeyePercent(int flags)
++{ return flags < 9 ? 0 : flags >= 78 ? 70 : flags-8; }
+ struct Cell { int mCol; int mRow; };
+ inline constexpr std::array<Cell,8> kLilyPads = {{{0,2},{1,2},{2,2},{3,2},{0,3},{1,3},{2,3},{3,3}}};
+ struct Spawn { ZombieType mType = ZOMBIE_INVALID; int mRow = 0; int mX = 0; };
+@@ -99,7 +108,7 @@ constexpr Formation WaveFor(int flags, int wave, int variation)
+     Formation result{};
+     if (flags < 0 || wave < 0 || wave >= kWaveCount || variation < 0 || variation >= 8) return result;
+     if (flags < 3) result = ParseWave(kOpeningFlags[flags][wave]);
+-    else
++    else if (flags < 6)
+     {
+         // Vary land/water pressure and introduce original counter mechanics.
+         // Density is bounded; no zombie's native statistics are changed.
+@@ -130,6 +139,66 @@ constexpr Formation WaveFor(int flags, int wave, int variation)
+             }
+         }
+     }
++    else
++    {
++        // The first six flags remain the published opening. Thereafter native
++        // density, overlap and the heavy mix keep growing on separate curves.
++        // Physical ceilings protect the native arrays; these are not uncapped.
++        const int growth = flags >= 47 ? 46 : flags-1;
++        const int requested = ZombieCount(ParseWave(kOpeningFlags[0][wave]))+growth;
++        const int limit = wave == kWaveCount-1 ? kLargestFormation-1 : kLargestFormation;
++        const int count = requested < limit ? requested : limit;
++        const int age = EscalationAge(flags);
++        const int theme = (flags-6)%6;
++        const int heavy = HeavyPercent(flags);
++        const int redeye = RedeyePercent(flags);
++        const int requestedSpecial = 16+age/2;
++        const int special = requestedSpecial < 100-heavy ? requestedSpecial : 100-heavy;
++        constexpr int land[4] = {0,1,4,5};
++        constexpr ZombieType specialists[6][5] = {
++            {ZOMBIE_DOOR,ZOMBIE_FOOTBALL,ZOMBIE_POGO,ZOMBIE_LADDER,ZOMBIE_JACK_IN_THE_BOX},
++            {ZOMBIE_LADDER,ZOMBIE_POGO,ZOMBIE_LADDER,ZOMBIE_JACK_IN_THE_BOX,ZOMBIE_FOOTBALL},
++            {ZOMBIE_ZAMBONI,ZOMBIE_JACK_IN_THE_BOX,ZOMBIE_ZAMBONI,ZOMBIE_LADDER,ZOMBIE_JACK_IN_THE_BOX},
++            {ZOMBIE_DANCER,ZOMBIE_JACK_IN_THE_BOX,ZOMBIE_DANCER,ZOMBIE_POGO,ZOMBIE_LADDER},
++            {ZOMBIE_LADDER,ZOMBIE_JACK_IN_THE_BOX,ZOMBIE_ZAMBONI,ZOMBIE_FOOTBALL,ZOMBIE_DOOR},
++            {ZOMBIE_DANCER,ZOMBIE_JACK_IN_THE_BOX,ZOMBIE_LADDER,ZOMBIE_POGO,ZOMBIE_ZAMBONI}
++        };
++        int landCount = 0, dancers = 0, vehicles = 0;
++        for (int i = 0; i < count; ++i)
++        {
++            const int key = (flags%97*13+wave*11+i*7)%101;
++            const bool water = theme == 5 ? i%3 != 0 : theme == 1 || theme == 4 ? i%4 == 3 : i%3 == 2;
++            result[i] = {ZOMBIE_NORMAL,water ? 2+(wave+i)%2 : land[(wave+landCount)%4],800+(i%4)*40};
++            if (water)
++            {
++                constexpr ZombieType types[5] = {ZOMBIE_PAIL,ZOMBIE_SNORKEL,ZOMBIE_DOLPHIN_RIDER,ZOMBIE_PAIL,ZOMBIE_TRAFFIC_CONE};
++                result[i].mType = types[(key+wave)%5];
++                if (age >= 6 && result[i].mType == ZOMBIE_TRAFFIC_CONE) result[i].mType = ZOMBIE_SNORKEL;
++                continue;
++            }
++            if (key < redeye || (flags >= 9 && wave == kWaveCount-1 && landCount == 0))
++                result[i].mType = ZOMBIE_REDEYE_GARGANTUAR;
++            else if (key < heavy) result[i].mType = ZOMBIE_GARGANTUAR;
++            else if (key < heavy+special)
++            {
++                ZombieType type = specialists[theme][(key+wave+flags%5)%5];
++                // Native summons and vehicles have wider runtime cost and
++                // replacement demand than an ordinary walking zombie.
++                if (type == ZOMBIE_DANCER && dancers >= 2) type = ZOMBIE_LADDER;
++                if (type == ZOMBIE_ZAMBONI && vehicles >= (age >= 10 ? 2 : 1)) type = ZOMBIE_JACK_IN_THE_BOX;
++                result[i].mType = type;
++                dancers += type == ZOMBIE_DANCER;
++                vehicles += type == ZOMBIE_ZAMBONI;
++            }
++            else
++            {
++                constexpr ZombieType types[5] = {ZOMBIE_PAIL,ZOMBIE_DOOR,ZOMBIE_FOOTBALL,ZOMBIE_NEWSPAPER,ZOMBIE_TRAFFIC_CONE};
++                result[i].mType = types[(key+wave)%5];
++                if (age >= 6 && result[i].mType == ZOMBIE_TRAFFIC_CONE) result[i].mType = ZOMBIE_FOOTBALL;
++            }
++            ++landCount;
++        }
++    }
+     if (wave == kWaveCount-1)
+     {
+         const int count = ZombieCount(result);
+@@ -175,4 +244,6 @@ void Populate(Board& board);
+ void Update(Board& board);
+ static_assert(static_cast<int>(kMode) == 87);
+ static_assert(ZombiesPerFlag(0)==37 && ZombiesPerFlag(1)==47 && ZombiesPerFlag(2)==57 && ZombiesPerFlag(3)==67);
++static_assert(ZombiesPerFlag(5)==77 && ZombiesPerFlag(6)==87 && ZombiesPerFlag(7)==97 && ZombiesPerFlag(11)==137);
++static_assert(ZombiesPerFlag(19)==217 && ZombiesPerFlag(39)==417 && ZombiesPerFlag(79)==480);
+ }

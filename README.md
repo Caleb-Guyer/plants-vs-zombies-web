@@ -1,5 +1,16 @@
 # Plants vs. Zombies — browser playtest
 
+## Endless.3
+
+[Play the game](https://caleb-guyer.github.io/plants-vs-zombies-web/).
+
+After the unchanged first six flags, Pool Panic Endless increases formation size, shortens wave spacing, and raises the share of native heavy zombies. Rotating assaults mix Pogo Zombies, Dancing Zombies and red-eyed Gargantuars with ladders, Jack-in-the-Boxes, Zambonis and pool attackers. Original zombie health, movement, attacks and plant statistics are retained. The lawn and remaining mowers carry forward; the game does not replace a developed defense between flags.
+
+Later conveyor deliveries favor repairs and emergency plants while limiting newly queued spare shooters. Every already accepted packet is retained. Existing Endless.2 saves upgrade their rule marker without rerolling the saved supply seed or changing actors, health, packet order, offsets, counters or best scores. The ten-card conveyor, original controls, artwork, all fifteen challenge cards and earlier modes remain unchanged.
+
+The 23 retained native suites passed (50,914,086 baseline checks). The separate late-game verification passed 29,323,397 checks. The opening matrix retains 32 cases, 28 earned runs and 92 flags; four additional fresh runs earn 12 flags each across seeds 1729/7331 and 1×/2× speed (48 additional earned flags, 140 automated earned flags total). Sixteen established-defense windows, four actual parent-engine comparison windows, two crowded-wave/mechanics controls and two cross-version migration controls are explicitly separate from earned progression. All fifteen website integration suites passed with no downloaded dependencies. Tests disable audio output; ordinary play keeps its audio controls.
+
+
 ## Endless.2 - lasting defenses and usable deliveries
 
 `0.2.6-web-endless.2` rebuilds Pool Panic Endless around persistent original defenses. Repeater, Threepeater, Tall-nut, Torchwood, Spikeweed and Lily Pad join occasional Squash, Tangle Kelp, Cherry Bomb and Jalapeno. The original shovel allows rebuilding. Finite Pool Panic keeps its original disposable-attack rules.

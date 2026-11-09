@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-endless.2
-Reworks Pool Panic Endless with a developing native pool defense, useful spaced conveyor supplies, rebuilding with the original shovel, health-paced flag waves and readable native feedback. Automatic flag saves, persistent bests and old saved-game migration preserve progress without finite victory awards. Existing mode IDs, saved object layouts, previous minigames and accepted artwork are preserved.
-Engine JavaScript SHA-256: 06499a385df633c4d1a6428d36e4e9eaf39a6125c3e182a78725b014f7ddc075
-Engine WASM SHA-256: 95a45742959b901171c606fe3ebe3614783bb670f587a9701bc7d1f9f414b3e5
+PvZ-Portable 0.2.6-web-endless.3
+Extends Pool Panic Endless late-game roster and pressure while retaining its developing native defense, original combat statistics, automatic saves, persistent bests and saved-game compatibility. Existing mode IDs, all15 cards, accepted artwork and compact native Menu/speed presentation remain unchanged.
+Engine JavaScript SHA-256: f68adcd086c6eefc01fe4d856f69a0971c7a0de26e997c7a7a8738f165bc8c76
+Engine WASM SHA-256: ba915021d3574aca8b3a95578320a0f9bce0dc6fad1f7fed147260b3ee7de60b
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.

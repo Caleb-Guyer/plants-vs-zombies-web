@@ -1,5 +1,25 @@
 # Browser parity and QA record
 
+## Endless.3 observed validation
+
+The 23 retained native suites passed (50,914,086 baseline checks). The separate late-game verification passed 29,323,397 checks. The opening matrix retains 32 cases, 28 earned runs and 92 flags; four additional fresh runs earn 12 flags each across seeds 1729/7331 and 1×/2× speed (48 additional earned flags, 140 automated earned flags total). Sixteen established-defense windows, four actual parent-engine comparison windows, two crowded-wave/mechanics controls and two cross-version migration controls are explicitly separate from earned progression. All fifteen website integration suites passed with no downloaded dependencies. Tests disable audio output; ordinary play keeps its audio controls.
+
+The comparison uses a fixed fully legal prebuilt lawn with 26 native shooters, six Torchwoods, six Tall-nuts, eight Spikeweeds and fourteen Lily Pads. Starting stages are synthetic and are never counted as earned flags. The original pre-tuning plan and both factual amendments are preserved: an uneven first fixture could lose in the parent; a separately declared balanced fixture reproduced coasting in all four parent windows. The balanced fixture was declared before its comparisons and before current balance probes. The new pressure and earned-survival acceptance thresholds were not reduced.
+
+| Starting flag | Seed | Published .2 outcome | Current outcome | Current DPS plants lost |
+| --- | --- | --- | --- | --- |
+| 12 | 1729 | completed-window, 6 mowers | native-loss, 2 mowers | 20 |
+| 12 | 7331 | completed-window, 6 mowers | native-loss, 5 mowers | 14 |
+| 20 | 1729 | completed-window, 6 mowers | native-loss, 2 mowers | 20 |
+| 20 | 7331 | completed-window, 6 mowers | native-loss, 2 mowers | 20 |
+
+A cross-run fixture assertion was corrected after source and byte-level review: native BoardBase fields 89 (resource-loading duration, signed 32-bit) and 90 (time-based game ID, signed 64-bit) vary between fresh constructions. The test validates Save4 headers, chunk/TLV structure and CRCs, normalizes only those two typed payloads in a comparison copy and recomputes its CRC. Every remaining byte must match. Original seven migration fixtures remain pinned and load unchanged in the current engine. The failed attempt and original contract are retained. Its already completed 32 optimized base cases were authenticated and revalidated from sealed actual logs against the identical engine, source, seven compiled inputs, assets and original runner; this local reuse is explicitly recorded as not reexecution. The late cases execute natively, and the default CI path executes every base and late case afresh before deployment.
+
+Muted browser testing continues a genuinely earned eight-flag native checkpoint, completes at least one additional flag through visible controls, exercises Menu/speed and verifies reload/Continue. Browser evidence is bound to the shipped release engine and captured screenshots. Offscreen native raster fixtures remain layout evidence and do not claim browser/GPU equivalence.
+
+Extended earned cases cover two fixed seeds at both speeds; late synthetic windows start at flags 8, 12, 20 and 40. They do not establish organically earned progress at flags 20/40, exhaustive strategy coverage or literal original-game parity. Earlier evidence below remains historical.
+
+
 ## Endless.2 - ordinary play and generated flags
 
 Automated complete-engine play uses visible card and actor information, ordinary packet/tile inputs and a skipped decision interval during each flag. Action decisions do not use hidden health, velocity, fuse or target fields. Separate observers validate native damage and saved actor graphs. Normal runs and their independent replays play six earned flags, including generated waves and later native specials; other progression cases play three. Eight additional seeded openings cover every actual spatial variant. Genuine no-action defeats, Retry, active and between-flag Continue, native pause/speed/shovel controls, future delivery continuity and legacy migration are separate checks. Synthetic controls do not count as earned progression. A positive run exits through the native menu; the tests do not force a developed defense to lose. The former 200-tick conveyor timing is retained as a regression-negative case. Original stone-cap pixels and native glyph masks verify the compact header; a real row-zero Conehead reproduces the old speed-button obstruction. Exact matrix, headroom and artifact pins are recorded in the downloadable verification contract and reports. Offscreen raster fixtures are layout evidence, not GPU or battle proof. Muted browser inspection separately includes a complete opening flag. These bounded results do not establish indefinite successful play or exhaustive original-game parity.

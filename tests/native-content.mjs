@@ -18,6 +18,7 @@ import {verifyBungeeBusiness} from './bungee-business-verification.mjs';
 import {verifyCobCannonCommand} from './cob-cannon-command-verification.mjs';
 import {verifyPoolPanic} from './pool-panic-verification.mjs';
 import {verifyPoolPanicEndless} from './pool-panic-endless-verification.mjs';
+import {verifyPoolPanicEndlessProgression} from './pool-panic-endless-progression-verification.mjs';
 
 const require = createRequire(import.meta.url);
 const dist = new URL('../dist/', import.meta.url);
@@ -26,13 +27,70 @@ new Function('module', 'exports', 'require', fs.readFileSync(new URL('vendor/jsz
 const JSZip = vendor.exports;
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
 const engine = JSON.parse(fs.readFileSync(new URL('game/engine-provenance.json', dist)));
-assert.equal(engine.id, '0.2.6-web-endless.2');
+assert.equal(engine.id, '0.2.6-web-endless.3');
 const currentSourceBytes = fs.readFileSync(new URL(engine.artifacts.source, new URL('game/engine-provenance.json', dist)));
 assert.equal(sha(currentSourceBytes), engine.artifacts.sourceSha256, 'Current source archive matches the engine provenance pin');
 const current = await JSZip.loadAsync(currentSourceBytes, {checkCRC32: true});
-const parentSourceBytes = fs.readFileSync(new URL('source/pvz-portable-0.2.6-web-endless.1-source.zip', dist));
-assert.equal(sha(parentSourceBytes), 'eee4ae6dfeaaa49bbf203c37cf45ad73dad56b85d3d0079e549ed11bc3d45f25', 'Parent is the exact published Endless.1 source');
-const parent = await JSZip.loadAsync(parentSourceBytes, {checkCRC32: true});
+const publishedEndless2Bytes = fs.readFileSync(new URL('source/pvz-portable-0.2.6-web-endless.2-source.zip', dist));
+assert.equal(sha(publishedEndless2Bytes), 'b9095c65547c3d013917ae4188e284f18eabb71a98020ca3d53f71f7365f9566');
+assert.equal(publishedEndless2Bytes.length,40424282);
+assert.equal(engine.parent.id,'0.2.6-web-endless.2');
+assert.equal(engine.parent.artifacts.sourceSha256,sha(publishedEndless2Bytes));
+const publishedEndless2=await JSZip.loadAsync(publishedEndless2Bytes,{checkCRC32:true});
+const publishedEndless2Prefix='endless2-candidate/source/';
+const publishedEndless2Read=async name=>{
+  assert(name&&!name.includes('..')&&!/[\\:]/.test(name)&&!name.startsWith('/'));
+  const entry=publishedEndless2.file('endless2-candidate/'+name);assert(entry,'Missing authenticated published Endless.2 input: '+name);
+  return Buffer.from(await entry.async('uint8array'));
+};
+const parentProductionBuildBytes=await publishedEndless2Read('logs/build-result.json');
+const publishedEndless2Source=async name=>{
+  const entry=publishedEndless2.file(publishedEndless2Prefix+name);assert(entry,'Missing published Endless.2 input: '+name);
+  return Buffer.from(await entry.async('uint8array'));
+};
+// Reconstruct the independently pinned historical inputs from the exact .2
+// successor, so a fresh offline source download needs only its immediate parent.
+const endless1ReferenceBytes=fs.readFileSync(new URL('./fixtures/endless1-reference.json',import.meta.url));
+assert.equal(sha(endless1ReferenceBytes),'a9be67e4a3493cd3b3d182ea4dddced137ce8a553c2a2a3949b0c9d9eb899d86');
+const endless1Reference=JSON.parse(endless1ReferenceBytes);
+const historicalParentArchiveSha='eee4ae6dfeaaa49bbf203c37cf45ad73dad56b85d3d0079e549ed11bc3d45f25';
+assert.equal(endless1Reference.schema,1);
+assert.equal(endless1Reference.archiveSha256,historicalParentArchiveSha);
+assert.equal(endless1Reference.archiveBytes,39931636);
+assert.equal(endless1Reference.archivePrefix,'endless1-candidate/');
+assert.equal(endless1Reference.publishedSuccessorSha256,sha(publishedEndless2Bytes));
+assert.equal(endless1Reference.publishedSuccessorBytes,publishedEndless2Bytes.length);
+assert.equal(endless1Reference.publishedSuccessorPrefix,'endless2-candidate/');
+assert.equal(endless1Reference.sourceCount,852);
+assert.equal(engine.parent.parent.artifacts.sourceSha256,historicalParentArchiveSha);
+assert.equal(Object.keys(endless1Reference.files).length,858);
+assert.deepEqual(Object.keys(endless1Reference.reverseEdits).sort(),[
+  'source/CMake/ProjectVersion.cmake','source/src/Lawn/Board.cpp','source/src/Lawn/Challenge.cpp',
+  'source/src/Lawn/System/PoolPanicEndless.cpp','source/src/Lawn/System/PoolPanicEndless.h',
+  'source/src/Lawn/System/PoolPanicEndlessPresentation.cpp','source/src/Lawn/System/PoolPanicEndlessPresentation.h',
+  'source/src/Lawn/Widget/GameButton.cpp','source/src/LawnApp.cpp','tests/pool-panic-endless-native-art-inputs.json',
+].sort());
+const parent=new JSZip();
+for(const [name,pin] of Object.entries(endless1Reference.files)){
+  assert(/^(source|tests)\//.test(name)&&!name.includes('..')&&!/[\\:]/.test(name));
+  const entry=publishedEndless2.file('endless2-candidate/'+name);assert(entry);
+  let bytes=Buffer.from(await entry.async('uint8array'));
+  const delta=endless1Reference.reverseEdits[name];
+  if(delta){
+    assert.equal(bytes.length,delta.successorBytes);assert.equal(sha(bytes),delta.successorSha256);
+    let previous=bytes.length+1;
+    for(const edit of [...delta.edits].reverse()){
+      const before=Buffer.from(edit.beforeBase64,'base64'),after=Buffer.from(edit.afterBase64,'base64');
+      assert(Number.isSafeInteger(edit.offset)&&edit.offset>=0&&edit.offset<previous);
+      assert.deepEqual(bytes.subarray(edit.offset,edit.offset+before.length),before,'Authenticated .2 to .1 byte delta: '+name);
+      bytes=Buffer.concat([bytes.subarray(0,edit.offset),after,bytes.subarray(edit.offset+before.length)]);
+      previous=edit.offset;
+    }
+  }
+  assert.equal(bytes.length,pin.bytes);assert.equal(sha(bytes),pin.sha256,'Complete historical input: '+name);
+  assert.equal(sha(Buffer.from(bytes.toString('latin1').replace(/\r\n?/g,'\n'),'latin1')),pin.normalizedSha256);
+  parent.file('endless1-candidate/'+name,bytes);
+}
 // Reconstruct exact Pool.1 from its authenticated published successor.
 // Immutable raw byte deltas and848 independent whole-file pins retain the older
 // Pool/Cob/Bungee/Lights preservation proof without shipping another full ZIP.
@@ -48,7 +106,7 @@ assert.equal(poolReference.schema,1);
 assert.equal(poolReference.archiveSha256,'9d1cb0b7fdc6e10cb4ea79b869b922d98417b14c829862899c6361f80c7dc988');
 assert.equal(poolReference.archiveBytes,37098165);
 assert.equal(poolReference.archivePrefix,'pool1-candidate/source/');
-assert.equal(poolReference.publishedSuccessorSha256,sha(parentSourceBytes));
+assert.equal(poolReference.publishedSuccessorSha256,historicalParentArchiveSha);
 assert.equal(poolReference.publishedSuccessorPrefix,parentPrefix);
 assert.equal(poolReference.sourceCount,848);
 assert.equal(Object.keys(poolReference.sourceFiles).length,848);
@@ -93,7 +151,7 @@ for(const [name,pin] of Object.entries(lights1InputPins)) {
   assert.equal(sha(bytes),pin.sha256,'Retained historical input matches its authenticated archive bytes: '+name);
   lights1Inputs.set(name,bytes);
 }
-const prefix = 'endless2-candidate/';
+const prefix = 'endless3-candidate/';
 // The restoration reference predates Raid.1's foreground override.
 // Compact exact inputs retain archive and whole-file authentication without
 // forcing source downloads to duplicate another complete historical engine ZIP.
@@ -414,6 +472,8 @@ await verifyBungeeBusiness({report:reports.get('bungee-business'),read,sha,engin
 await verifyCobCannonCommand({report:reports.get('cob-cannon-command'),read,sha,engine,fullRunReport,productionBuildBytes:fullRunProductionBuildBytes});
 await verifyPoolPanic({report:reports.get('pool-panic'),read,sha,engine,fullRunReport,productionBuildBytes:fullRunProductionBuildBytes});
 await verifyPoolPanicEndless({report:reports.get('pool-panic-endless'),read,sha,engine,fullRunReport,productionBuildBytes:fullRunProductionBuildBytes,immediateParentBytes});
+await verifyPoolPanicEndlessProgression({report:reports.get('pool-panic-endless'),read,sha,engine,fullRunReport,
+  productionBuildBytes:fullRunProductionBuildBytes,parentRead:publishedEndless2Read,parentProductionBuildBytes});
 const careBalance = reports.get('intensive-care').balanceModel;
 assert.equal(careBalance.kind, 'native healing/fatigue capacity bound; not a battle clear');
 assert(careBalance.allBedsHealHpPerSecond > careBalance.maximumCrewFatigueHpPerSecond);
@@ -521,7 +581,7 @@ const speedHeaderParentBytes=await read('tests/speed-header-parent.json');
 assert.equal(sha(speedHeaderParentBytes),'0279c8f024dceac19403c00d7fb50ae7f1364af17d2ecc24142a4e9b19a0cb8b');
 assert.equal(layoutReport.fixturesSha256['speed-header-parent.json'],sha(speedHeaderParentBytes));
 const speedHeaderParent=JSON.parse(speedHeaderParentBytes);assert.equal(speedHeaderParent.schema,1);
-assert.equal(speedHeaderParent.parentSourceSha256,sha(parentSourceBytes));
+assert.equal(speedHeaderParent.parentSourceSha256,historicalParentArchiveSha);
 for(const [name,entry] of Object.entries(speedHeaderParent.files)){
  const bytes=await immediateParentBytes(name);assert.equal(bytes.length,entry.bytes);assert.equal(sha(bytes),entry.sha256);
  for(const [signature,original] of Object.entries(entry.methods))assert.equal(extractLegacyFunction(bytes.toString(),signature),original,'Focused header reference retains exact complete published native button/application method');
@@ -1217,12 +1277,26 @@ const nativeNames = ['PeaShooter_backleaf.png', 'PeaShooter_backleaf_lefttip.png
   'PeaShooter_frontleaf_righttip.png', 'PeaShooter_frontleaf_lefttip.png', 'SunFlower_head.png',
   'SunFlower_blink1.png', 'SunFlower_leftpetal3.png', 'SunFlower_leftpetal4.png', 'SunFlower.reanim'];
 const reviewedEndless2Inputs=new Set(['src/Lawn/Board.cpp','src/Lawn/Challenge.cpp','src/LawnApp.cpp','src/Lawn/Widget/GameButton.cpp',...addedRaidInputs]);
+const reviewedEndless3Inputs=new Set(['CMake/ProjectVersion.cmake','src/Lawn/System/PoolPanicEndless.cpp','src/Lawn/System/PoolPanicEndless.h']);
+const publishedEndless2Names=Object.values(publishedEndless2.files)
+  .filter(entry=>!entry.dir&&entry.name.startsWith(publishedEndless2Prefix))
+  .map(entry=>entry.name.slice(publishedEndless2Prefix.length));
+assert.equal(publishedEndless2Names.length,852);
+assert.deepEqual(Object.keys(sourceManifest.files).sort(),publishedEndless2Names.sort(),'Endless.3 preserves every production path');
+const actualEndless3Changes=[];
+for(const name of publishedEndless2Names){
+  const before=await publishedEndless2Source(name),after=await read('source/'+name);
+  const pin=sourceManifest.files[name];assert.equal(pin.bytes,after.length);assert.equal(pin.sha256,sha(after));
+  if(!after.equals(before))actualEndless3Changes.push(name);
+  if(!reviewedEndless3Inputs.has(name))assert.deepEqual(after,before,'Every unrelated mode, sprite and UI byte remains exact to published Endless.2: '+name);
+  if(releaseIdentityInputs.has(name))assert.equal(after.toString().replaceAll('0.2.6-web-endless.3','0.2.6-web-endless.2'),before.toString());
+}
+assert.deepEqual(actualEndless3Changes.sort(),[...reviewedEndless3Inputs].sort());
 let immediateParentCount=0;
 for(const entry of Object.values(parent.files)){
   if(entry.dir||!entry.name.startsWith(parentPrefix))continue;
   ++immediateParentCount;const name=entry.name.slice(parentPrefix.length);
-  const before=Buffer.from(await entry.async('uint8array')),after=await read('source/'+name),pin=sourceManifest.files[name];
-  assert(pin&&pin.bytes===after.length&&pin.sha256===sha(after));
+  const before=Buffer.from(await entry.async('uint8array')),after=await publishedEndless2Source(name);
   if(reviewedEndless2Inputs.has(name)){assert(!after.equals(before),'Every reviewed Endless.2 source delta is an actual change: '+name);continue;}
   if(releaseIdentityInputs.has(name))assert.equal(after.toString().replaceAll('0.2.6-web-endless.2','0.2.6-web-endless.1'),before.toString());
   else assert.deepEqual(after,before,'Every unrelated source/artwork byte remains exact to immediate Endless.1: '+name);
@@ -1908,6 +1982,9 @@ if (process.argv.includes('--run-native')) {
       if(name==='pool-panic-endless') await verifyPoolPanicEndless({report:actual,
         read:async input=>fs.readFileSync(path.join(temporary,input)),sha,engine,fullRunReport,
         productionBuildBytes:fullRunProductionBuildBytes,immediateParentBytes});
+      if(name==='pool-panic-endless') await verifyPoolPanicEndlessProgression({report:actual,
+        read:async input=>fs.readFileSync(path.join(temporary,input)),sha,engine,fullRunReport,
+        productionBuildBytes:fullRunProductionBuildBytes,parentRead:publishedEndless2Read,parentProductionBuildBytes});
     }
     console.log(`PASS all ${checks} assertions across 23 native suites, including complete headless Care, Chain, Rally, Raid, Lights Out, Garlic Run, Bungee Business, Cob Cannon Command, Pool Panic and Pool Panic Endless scenarios on CI.`);
   } finally {

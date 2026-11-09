@@ -153,7 +153,7 @@ function verifyScenario(row,identity){
 
 export async function verifyPoolPanicEndless({report,read,sha,engine,fullRunReport,productionBuildBytes,immediateParentBytes}){
  equalFields(report,{execution:'complete-production-engine',optimization:'O2',failures:0,exitCode:0,nativeArtInputs:643});
- assert.match(report.status,/^PASS/);assert.equal(engine.id,'0.2.6-web-endless.2');
+ assert.match(report.status,/^PASS/);assert.equal(engine.id,'0.2.6-web-endless.3');
  assert.equal(Object.keys(report.sourceSha256).length,852);assert.deepEqual(report.sourceSha256,fullRunReport.sourceSha256);
  for(const [file,pin] of Object.entries(report.sourceSha256)){digest(pin);assert.equal(sha(await read(file)),pin);}
  assert.equal(report.productionObjectCount,134);assert.equal(Object.keys(report.productionObjectSha256).length,134);
@@ -167,7 +167,11 @@ export async function verifyPoolPanicEndless({report,read,sha,engine,fullRunRepo
   ['pool-panic-endless-assets.json','assetFixtureSha256'],['pool-panic-endless-harness.cpp','generatedHarnessSha256']])
   assert.equal(sha(await read('tests/'+file)),report[field]);
  const policyPin=sha(await read('tests/pool-panic-endless-ordinary-policy.h'));
- assert.deepEqual(report.testInputSha256,{'pool-panic-endless-ordinary-policy.h':policyPin},'Pure ordinary-player policy is an explicit test-only build input');
+ const inputs=['pool-panic-endless-ordinary-policy.h','endless3-late-fragment.cpp','endless3-late-policy.h',
+  'endless3-late-actions.h','endless3-narrow-controls.h','endless3-early-equivalence.h','endless3-migration-controls.h'];
+ assert.deepEqual(Object.keys(report.testInputSha256).sort(),inputs.sort(),'Only the reviewed opening, progression and migration drivers extend the test entry point');
+ assert.equal(report.testInputSha256['pool-panic-endless-ordinary-policy.h'],policyPin,'The original pure ordinary-player policy remains an explicit unchanged build input');
+ for(const name of inputs)assert.equal(report.testInputSha256[name],sha(await read('tests/'+name)),'Exact reviewed test-only input: '+name);
  const build=JSON.parse(await read('tests/pool-panic-endless-build.json'));
  for(const field of ['execution','optimization','productionObjectCount','productionBuildReceiptSha256','generatedHarnessSha256',
   'builderSha256','testArtifactSha256','sourceSha256','productionObjectSha256','testInputSha256'])
