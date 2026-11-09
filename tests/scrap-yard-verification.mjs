@@ -1,13 +1,17 @@
 // SPDX-License-Identifier: MIT
 // Independent native-case/log verification. Synthetic controls never count as wins.
 import assert from 'node:assert/strict';
-import {CURRENT_ENGINE_ID, CURRENT_SOURCE_COUNT, CURRENT_OBJECT_COUNT, ENDLESS3_ENGINE_ID, ENDLESS3_ARCHIVE_SHA256} from './native-release-context.mjs';
+import fs from 'node:fs';
+import {CURRENT_ENGINE_ID, CURRENT_SOURCE_COUNT, CURRENT_OBJECT_COUNT, ENDLESS3_ENGINE_ID,
+ ENDLESS3_ARCHIVE_SHA256, SCRAP_ENGINE_ID, SCRAP_ARCHIVE_SHA256, CURRENT_SCRAP_RETENTION_SHA256,
+ historicalEngine, verifyRetainedParentInputs} from './native-release-context.mjs';
 
 // Preregistered contract authenticated after all18 actual O2 cases passed.
 const finalContractPin = '2ada5367e1e3683d6adf3c373d3a58b304e5f2311c18c89c2de690e48dd8fb1c';
 const preTuningPlanPin = 'a16899a690af106364adc884b835dc9f90a55443cc92cc62022e2e3f8ab79a0a';
 const previousArtPin = '538175fc8c54e8efb241a129263f2c99ee8e4193fb09ace213a67e9430f7483b';
 const nativeArtPin = '952a51285a84e7b6cf232fdb96ddad60b65eb6d495db4a8b052d38ff241fd45b';
+const publishedScrapArtPin = '183cb482642023f7b1ed7102052143b0c5bf543204150626670c832d4db3eaf0';
 // Exact inputs from the authenticated published .3 archive's
 // tests/endless3-earned-checkpoints/late-earned-1x-1729/earned-flag-8 outputs.
 const legacyPins = {
@@ -237,11 +241,27 @@ export async function verifyScrapYard({report, read, sha, engine, fullRunReport,
   assert.equal(sha(contractBytes), finalContractPin);
   assert.equal(report.verificationContractSha256, finalContractPin);
   const contract = JSON.parse(contractBytes);
-  fields(contract, {schemaVersion: 1, engineId: CURRENT_ENGINE_ID, mode: 88, profileIndex: 87,
+  fields(contract, {schemaVersion: 1, engineId: SCRAP_ENGINE_ID, mode: 88, profileIndex: 87,
     rulesVersion: 1, startingSun: 800, historicalPreTuningStartingSun: 200,
-    sourceCount: CURRENT_SOURCE_COUNT, productionObjectCount: CURRENT_OBJECT_COUNT,
+    sourceCount: 856, productionObjectCount: 136,
     preTuningPlanSha256: preTuningPlanPin, nativeArtInputs: 866, nativeArtFixtureSha256: nativeArtPin});
   fields(report, {engineId: CURRENT_ENGINE_ID, mode: 88, profileIndex: 87, rulesVersion: 1, startingSun: 800});
+  const retained = await verifyRetainedParentInputs({read, sha});
+  const adapterBytes = await read('tests/ambush1-scrap-retention.json');
+  assert.equal(sha(adapterBytes), CURRENT_SCRAP_RETENTION_SHA256,
+    'Independently pinned current execution envelope for the unchanged Scrap cases');
+  assert.equal(report.retentionAdapterSha256, CURRENT_SCRAP_RETENTION_SHA256);
+  const adapter = JSON.parse(adapterBytes);
+  fields(adapter, {schemaVersion: 1, parentEngineId: SCRAP_ENGINE_ID, engineId: CURRENT_ENGINE_ID,
+    parentArchiveSha256: SCRAP_ARCHIVE_SHA256, historicalContractSha256: finalContractPin,
+    sourceCount: CURRENT_SOURCE_COUNT, productionObjectCount: CURRENT_OBJECT_COUNT, all18CasesFresh: true});
+  assert.deepEqual(Object.keys(adapter.fixtureOverrides), ['tests/test-scrap-yard.py'],
+    'Only the current Scrap Python execution envelope overlays the immutable contract');
+  assert.equal(retained.files['scrap-yard-verification-contract.json'].sha256, finalContractPin);
+  const historicalRunner = await read('tests/ambush1-retained-parent/test-scrap-yard.py');
+  assert.equal(sha(historicalRunner), retained.files['test-scrap-yard.py'].sha256);
+  assert.equal(sha(historicalRunner), contract.fixtureSha256['tests/test-scrap-yard.py'],
+    'The original runner and all of its assertions retain their published contract pin');
   assert.deepEqual(contract.matrix, matrix);
   assert.deepEqual(contract.startingPlants, startingPlants);
   fields(contract.formationObservation, {nativeOpeningTicks: 1800, nativeFormationGapTicks: 3500,
@@ -255,7 +275,9 @@ export async function verifyScrapYard({report, read, sha, engine, fullRunReport,
   assert.equal(Object.keys(contract.fixtureSha256).length, 14);
   for (const [name, pin] of Object.entries(contract.fixtureSha256)) {
     safeName(name); assert(name.startsWith('tests/')); digest(pin);
-    assert.equal(sha(await read(name)), pin, 'Independently frozen Scrap fixture: ' + name);
+    const currentPin = Object.hasOwn(adapter.fixtureOverrides, name) ? adapter.fixtureOverrides[name] : pin;
+    digest(currentPin);
+    assert.equal(sha(await read(name)), currentPin, 'Frozen Scrap input or its separately authenticated execution envelope: ' + name);
   }
   fields(contract.acceptance, {naturalWinCases: 12, noActionNativeLossCases: 4, isolatedControlCases: 2,
     nativeFormations: 6, nativeAuthoredZombies: 38, normalMinimumMowers: 2, savedMinimumMowers: 1,
@@ -268,8 +290,10 @@ export async function verifyScrapYard({report, read, sha, engine, fullRunReport,
     profileEntry: 'endless3-candidate/tests/endless3-earned-checkpoints/late-earned-1x-1729/earned-flag-8-profile.dat',
     saveEntry: 'endless3-candidate/tests/endless3-earned-checkpoints/late-earned-1x-1729/earned-flag-8.v4',
     fixtureKind: 'actual published native earned flag8 profile/save; not synthetic'});
-  assert.equal(engine.parent.id, ENDLESS3_ENGINE_ID);
-  assert.equal(engine.parent.artifacts.sourceSha256, ENDLESS3_ARCHIVE_SHA256);
+  const historyEngine = historicalEngine(engine, ENDLESS3_ENGINE_ID);
+  assert.equal(historyEngine.id, ENDLESS3_ENGINE_ID);
+  assert.equal(historyEngine.artifacts.sourceSha256, ENDLESS3_ARCHIVE_SHA256);
+  assert.equal(historicalEngine(engine, SCRAP_ENGINE_ID).artifacts.sourceSha256, SCRAP_ARCHIVE_SHA256);
   for (const [name, pin] of Object.entries(legacyPins)) {
     const bytes = Buffer.from(await read('tests/' + name));
     assert.equal(bytes.length, pin.bytes); assert.equal(sha(bytes), pin.sha256);
@@ -328,8 +352,14 @@ export async function verifyScrapYard({report, read, sha, engine, fullRunReport,
   await verifySourceBounds({read});
   assert.equal(sha(previousArtBytes), previousArtPin);
   const currentArt = JSON.parse(currentArtBytes), previousArt = JSON.parse(previousArtBytes);
-  assert.equal(currentArt.cards.length, 16);
-  assert.deepEqual({...currentArt, cards: currentArt.cards.slice(0, 15)}, previousArt);
-  fields(currentArt.cards[15], {mode: 88, name: 'Scrap Yard', generatedArtworkUsed: false, background: 'IMAGE_BACKGROUND2'});
+  const publishedArtBytes = fs.readFileSync(new URL('./fixtures/scrap1-native-bonus-art.json', import.meta.url));
+  assert.equal(sha(publishedArtBytes), publishedScrapArtPin);
+  const publishedArt = JSON.parse(publishedArtBytes);
+  assert.equal(publishedArt.cards.length, 16);
+  assert.deepEqual({...publishedArt, cards: publishedArt.cards.slice(0, 15)}, previousArt);
+  assert.equal(currentArt.cards.length, 17);
+  assert.deepEqual({...currentArt, cards: currentArt.cards.slice(0, 16)}, publishedArt,
+    'Every published card, including Scrap Yard, retains its exact original metadata');
+  fields(publishedArt.cards[15], {mode: 88, name: 'Scrap Yard', generatedArtworkUsed: false, background: 'IMAGE_BACKGROUND2'});
   return {cases: 18, wins: 12, nativeLosses: 4, syntheticControls: 2, checks: report.checks};
 }

@@ -1,15 +1,15 @@
 {
   "schema_version": 1,
-  "current_engine": "0.2.6-web-scrap.1",
+  "current_engine": "0.2.6-web-ambush.1",
   "upstream_tag": "0.2.6",
-  "layout": "Site-source nests current corresponding source, the upstream baseline, the historical Endless.2 comparator, the independently pinned complete Endless.3 parent projection, the native I, Zombie UI reference and the current full patch. Exact historical source archives remain standalone downloads beside this index and in the full runtime distribution. Linked native test artifacts are losslessly packed; the included decoder restores their exact pinned bytes.",
+  "layout": "Site-source nests current corresponding source, the upstream baseline, the historical Endless.2 comparator, independently pinned complete Scrap.1 and Endless.3 source projections, the native I, Zombie UI reference and the current full patch. Exact historical source archives remain standalone downloads beside this index and in the full runtime distribution. Linked native test artifacts are losslessly packed; the included decoder restores their exact pinned bytes.",
   "nested_sources": [
     "pvz-portable-0.2.6-source.zip",
     "pvz-portable-0.2.6-web-endless.2-source.zip",
-    "pvz-portable-0.2.6-web-scrap.1-source.zip"
+    "pvz-portable-0.2.6-web-ambush.1-source.zip"
   ],
   "nested_patches": [
-    "web-scrap.1.patch"
+    "web-ambush.1.patch"
   ],
   "archives": [
     {
@@ -18,6 +18,13 @@
       "sha256": "40af59aa49d936ad21756a1a28ee14d8db51e6aaccbee44c647c2913e9c83556",
       "current": false,
       "upstream": true
+    },
+    {
+      "name": "pvz-portable-0.2.6-web-ambush.1-source.zip",
+      "bytes": 25841863,
+      "sha256": "6da0b6e19d56b3b345a684d379453abecff055a6d788cc17bd161f412bf3e7c9",
+      "current": true,
+      "upstream": false
     },
     {
       "name": "pvz-portable-0.2.6-web-bungee.1-source.zip",
@@ -331,7 +338,7 @@
       "name": "pvz-portable-0.2.6-web-scrap.1-source.zip",
       "bytes": 23463237,
       "sha256": "6ccb876d55621aa8c31b405c2495b97203fec344905a0920440607557c291a63",
-      "current": true,
+      "current": false,
       "upstream": false
     },
     {

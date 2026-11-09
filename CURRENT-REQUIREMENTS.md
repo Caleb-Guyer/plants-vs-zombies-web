@@ -1,5 +1,27 @@
 # Current requirements
 
+## Vase Ambush accepted behavior
+
+- Append Bonus card 17 using original artwork and native controls.
+- Clear five fixed I, Zombie gardens by releasing the finite army inside the original windowed vases.
+- Preserve stock plant and zombie health, attacks, armor, movement and animations.
+- Keep an uncluttered original-game interface, with no card tips or extra HUD.
+- Preserve current-garden saves, pending hammer animation, active combat and transition state. Retry and Restart keep the garden; New Game starts over.
+- Award only after all five gardens. Preserve existing save layouts and challenge records.
+- Run automated tests with sound off and publish the verified update through the existing GitHub Pages workflow.
+
+### Vase Ambush native verification
+
+The frozen 860-source/138-object engine passes **25 native suites, 57,505,302 baseline checks and zero failures**, plus 29,323,409 separately counted Endless late checks (86,828,711 combined). Vase Ambush contributes 4,621,563 checks across 28 playable cases and two separately identified synthetic controls. The matrix covers both seeds at 1x/2x, native victory and genuine wrong-order defeat/retry, save/Continue before release, during the hammer, during combat and between gardens, and a full replay with a 150-tick hesitation on every garden. All earlier native suites execute against this build; historical comparison artifacts remain separately identified.
+
+The visible test policy uses original on-screen cues: disappeared mines, Magnets holding metal and a chewing Chomper. It does not read hidden health, cooldowns or future randomness to choose inputs. Earlier failed tuning policies remain identified as failed development evidence; synthetic probes earn no credit. Browser checks and publication follow this native gate.
+
+Muted browser checks cover the native card, hammer/release animation, 2x speed and Menu/reload/Continue. Four fresh active timing windows and the separate quiet control pair pass the existing budgets. One earlier paused scheduling outlier is retained and explained in [the QA record](PARITY-QA.md#vase-ambush-browser-verification); these are scoped observations, not a guarantee of universal smoothness. All seventeen offline integration suites are required before publication.
+
+## Historical requirements and results
+
+The sections below describe earlier releases; references to a current build apply to that historical release.
+
 ## Scrap.1 accepted behavior
 
 - Add Scrap Yard as Bonus card 16 without rearranging the existing fifteen cards or introducing an extra HUD.

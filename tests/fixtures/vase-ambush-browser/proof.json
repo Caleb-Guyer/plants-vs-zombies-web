@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "engine": {
+    "id": "0.2.6-web-ambush.1",
+    "jsSha256": "4222ab8ec9b6cc49176fc55fae1aa08174487544a34cee3176907b92b08994d6",
+    "wasmSha256": "a6e1f8b5ed4293513f1919ff840d74f81b7420112bba08302b03969f82a06a46"
+  },
+  "browser": "ChatGPT in-app browser",
+  "viewport": {
+    "width": 1280,
+    "height": 720,
+    "dpr": 1
+  },
+  "nativeCanvas": {
+    "width": 800,
+    "height": 600
+  },
+  "normalPage": "http://127.0.0.1:4244/?testing=1",
+  "performanceHUDAbsent": true,
+  "mutedIndicatorThroughout": true,
+  "syntheticProfile": true,
+  "earnedFullBrowserWins": 0,
+  "observations": [
+    "Original Bonus card17 and all earlier cards visible without extra tips.",
+    "Native vase hammer and three consecutive legal releases observed through browser input.",
+    "Native Menu save followed by reload/Continue restored garden1/5, one eaten brain and eight unopened vases.",
+    "Native Continue New Game confirmation restarted garden1/5 with all ten vases and zero eaten brains.",
+    "Original 1x/2x stone button changed to2x; native plants attacked and released zombies moved.",
+    "Final browser tab closed; temporary viewport and visibility restored."
+  ],
+  "screenshots": [
+    {
+      "path": "tests/fixtures/vase-ambush-browser/vase-ambush-catalog-final.jpg",
+      "bytes": 119176,
+      "sha256": "72f710760b169d303015e901d99548770c516ef8a837e5cc083fd4f175c6690d"
+    },
+    {
+      "path": "tests/fixtures/vase-ambush-browser/vase-ambush-gameplay-final.jpg",
+      "bytes": 137163,
+      "sha256": "34e36a74b311643b75e05c1131983610f936e9472f668bcd3d7aedb8f2664fbd"
+    },
+    {
+      "path": "tests/fixtures/vase-ambush-browser/vase-ambush-continue-final.jpg",
+      "bytes": 129812,
+      "sha256": "ede97fccfb5d70d86fd611face66d1714cc37cd887dc5dfbcd6e7102044986f3"
+    }
+  ],
+  "limits": "Caller-observed browser/UI coverage, not an additional full-game win, exhaustive parity or universal performance proof."
+}

@@ -1,5 +1,42 @@
 # GitHub Pages release: Caleb-Guyer/plants-vs-zombies-web
 
+## Vase Ambush artifacts
+
+Current engine: `0.2.6-web-ambush.1`, with 860 production files and 138 non-main native objects. Mode 89 appends Bonus card 17 and uses reserved record 88. No serialized structure was enlarged. Its independently pinned parent is the published Scrap.1 source archive, SHA-256 `6ccb876d55621aa8c31b405c2495b97203fec344905a0920440607557c291a63`.
+
+The frozen native build passes **25 native suites, 57,505,302 baseline checks and zero failures**, plus 29,323,409 separately counted Endless late checks (86,828,711 combined). The source ZIP includes 1,836 entries and reconstructable full/incremental patches. Four source files are added and eleven existing files change relative to Scrap.1. All retained native matrices run freshly against current objects.
+
+| Validated artifact | Bytes | SHA-256 |
+| --- | ---: | --- |
+| [Native JavaScript](dist/game/pvz-portable.js) | 209,600 | `4222ab8ec9b6cc49176fc55fae1aa08174487544a34cee3176907b92b08994d6` |
+| [Native WebAssembly](dist/game/pvz-portable.wasm) | 7,809,381 | `a6e1f8b5ed4293513f1919ff840d74f81b7420112bba08302b03969f82a06a46` |
+| [Current native source ZIP](dist/source/pvz-portable-0.2.6-web-ambush.1-source.zip) | 25,841,863 | `6da0b6e19d56b3b345a684d379453abecff055a6d788cc17bd161f412bf3e7c9` |
+| [Full upstream patch](dist/source/web-ambush.1.patch) | 14,734,781 | `96b304e276704c211e75ab13655db84ffea176017a3f01308bf155cb10f5d20d` |
+| [Scrap.1-to-Ambush.1 patch](dist/source/scrap1-to-ambush1.patch) | 50,357 | `a2968bbdf23150a43f2143bef3cedabf13730b5090f7620317fd0256fc0662c5` |
+
+The native artifact codec restores 24 current files and two historical comparator files with exact individual byte hashes. The site-source ZIP includes current source, upstream source and the actual Endless.2 comparator. Two authenticated projections reconstruct the complete Scrap.1 and Endless.3 parent sources; full historical archives remain separate downloads. The 100 MiB static-file gate remains enforced.
+
+Publication uses the existing manual GitHub Pages workflow after pushing the tested commit. The native and browser checks must pass before deployment; public file hashes are then compared with these local release files. Local validation and public deployment are distinct records.
+
+### Vase Ambush browser verification
+
+Muted inspection of the normal game page confirmed the seventeenth native Bonus card, original hammer/release animation, moving attackers, and the 1x/2x stone control. Opening Menu saved the garden; reload and Continue restored one eaten brain and eight unopened vases. The native New Game confirmation reset the first garden to ten vases and zero eaten brains. These are browser observations, not extra full-game wins. [Browser evidence](tests/fixtures/vase-ambush-browser/proof.json) binds three screenshots to the shipped engine.
+
+Fresh performance observations cover four active 15-second windows on the retained synthetic Flag 20/40 checkpoints, plus two quiet paused controls. All four active windows remain in play through their end screenshots. The existing callback, scheduling, synchronous-save and long-task budgets pass for that controlled set; the paired paused scheduling p95 difference is below 1 ms. No additional performance fix was made from these measurements.
+
+| Starting flag | Speed | Native callback p95 | Native callback max | Save capture max |
+| --- | --- | --- | --- | --- |
+| 20 | 1x | 1.2 ms | 5.3 ms | 4.5 ms |
+| 20 | 2x | 1.3 ms | 2.1 ms | 4.3 ms |
+| 40 | 1x | 1.6 ms | 4.7 ms | 4.8 ms |
+| 40 | 2x | 1.6 ms | 2.6 ms | 4.7 ms |
+
+An initial paused diagnostic recorded one 346.7 ms scheduling gap, with no matching native/save spike or reported long task. Its cause was not established. The subsequent quiet native/clock controls passed with maximum gaps of 6.5/6.3 ms, without screenshots during their timed intervals. The failed raw record remains alongside the passing controls, and the verifier confirms that it fails the unchanged scheduling budget. These short, single-device CPU/scheduling observations do not establish universal smoothness, GPU completion time or delivered-frame FPS.
+
+## Historical deployment records
+
+The sections below describe earlier releases; references to a current build apply to that historical release.
+
 ## Scrap.1 release
 
 Current engine: `0.2.6-web-scrap.1`, with 856 production files and 136 non-main native objects. Scrap Yard appends mode 88 and Bonus card 16, reusing a reserved record slot without modifying the native save layout. Its independent parent is the published Endless.3 source archive, SHA-256 `206e5e16b0c4ae7c8b88afd94e627943b4cd15c56f82113fcaf4bb1adf4c13b1`.

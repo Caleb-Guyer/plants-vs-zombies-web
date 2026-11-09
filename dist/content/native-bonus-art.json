@@ -170,6 +170,16 @@
       "gameplay": "A six-formation nighttime defense built around original Magnet-shrooms. Collect native sun released by successful metal pulls, then spend it on the fixed Magnet-shroom, Wall-nut, Cherry Bomb, Jalapeno and Squash bank. Original metal removal, armor, plant costs, recharge, attacks, mowers and finite completion rules remain active.",
       "artwork": "The complete original Magnet-shroom sits beside original recovered Buckethead and Ladder Zombie parts. All native parts retain their painted edges and aspect ratios; the complete composition is fitted once within the centered68 by57 hero bounds inside the original80 by65 Bonus picture. No generated illustration or reused Survival thumbnail.",
       "interface": "Name-only sixteenth Bonus card in the first column of the native fourth row. Original fixed seed bank, sun counter, shovel, Menu, speed and pause controls, wave meter and native footer. No persistent challenge tips, score counter or additional HUD."
+    },
+    {
+      "mode": 89,
+      "name": "Vase Ambush",
+      "hero": "Original IMAGE_SCARY_POT zombie vase with its native Plantern window, cached Conehead and original IMAGE_BRAIN",
+      "background": "IMAGE_BACKGROUND1",
+      "generatedArtworkUsed": false,
+      "gameplay": "Five authored I, Zombie gardens are cleared with a fixed army contained in native zombie vases. Choose the release order and timing to protect fragile support, counter frost, bait Chompers and mines, and coordinate lanes against shared fire. Original combat statistics, brains, hammer, shatter and stage transitions remain active.",
+      "artwork": "The original transparent gray zombie vase and cached Conehead retain their native drawing offsets. The centered original80 by65 Bonus portrait fits the vase within47 by56 and the separate brain within20 by18 pixels with a3pixel gap. No generated illustration or reused Survival thumbnail.",
+      "interface": "Name-only seventeenth Bonus card in the second column of the native fourth row. Original vase highlight and hammer cursor, cardboard defenders, brains, Menu, speed, pause, brain meter and stage footer. No seed bank, shovel, persistent challenge tips or added HUD."
     }
   ],
   "canvas": {

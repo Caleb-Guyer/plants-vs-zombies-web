@@ -1,5 +1,23 @@
 # Plants vs. Zombies — browser playtest
 
+## Vase Ambush
+
+[Play the game](https://caleb-guyer.github.io/plants-vs-zombies-web/).
+
+Vase Ambush is the seventeenth Bonus minigame: five authored reverse Vasebreaker gardens. Break the original windowed vases to release a finite zombie army, then choose the order and timing to eat all five brains. Later gardens combine original armor, frost, Chompers, Potato Mines, Magnet-shrooms and cross-lane fire. Original plant and zombie combat statistics remain intact.
+
+The original vase hammer, cardboard plants, zombie artwork, brain counter, Menu, pause and speed controls provide the interface. There are no card tips or extra instructional panels. Opening Menu or pausing saves the current garden; Continue restores that saved garden. Try Again and Options Restart reset the current garden; New Game in the Continue dialog starts the first. Only the fifth clear grants the native completion award. Testing disables audio output; ordinary play retains its audio controls.
+
+The frozen 860-source/138-object engine passes **25 native suites, 57,505,302 baseline checks and zero failures**, plus 29,323,409 separately counted Endless late checks (86,828,711 combined). Vase Ambush contributes 4,621,563 checks across 28 playable cases and two separately identified synthetic controls. The matrix covers both seeds at 1x/2x, native victory and genuine wrong-order defeat/retry, save/Continue before release, during the hammer, during combat and between gardens, and a full replay with a 150-tick hesitation on every garden. All earlier native suites execute against this build; historical comparison artifacts remain separately identified.
+
+The native-art fixture authenticates 942 original PAK inputs and retains all sixteen earlier Bonus card records. Save layouts and earlier challenge records remain compatible. See [QA scope](PARITY-QA.md#vase-ambush-native-verification) and [release artifacts](DEPLOYMENT.md#vase-ambush-artifacts). Browser verification and publication are recorded separately; these tests do not establish exhaustive parity or universal difficulty.
+
+Muted browser checks cover the native card, hammer/release animation, 2x speed and Menu/reload/Continue. Four fresh active timing windows and the separate quiet control pair pass the existing budgets. One earlier paused scheduling outlier is retained and explained in [the QA record](PARITY-QA.md#vase-ambush-browser-verification); these are scoped observations, not a guarantee of universal smoothness. All seventeen offline integration suites are required before publication.
+
+## Historical release notes
+
+The sections below describe earlier releases; references to a current build apply to that historical release.
+
 ## Scrap Yard
 
 Scrap Yard is the sixteenth Bonus minigame. On a nighttime lawn, Magnet-shrooms turn successfully removed metal into two normal sun pickups worth 50 sun. Collect them to fund Cherry Bombs, Jalapeños and Squash while Wall-nuts protect the magnets. Three original Peashooters support alternating lanes; the other two need your tools. Six formations mix original metal-bearing zombies, followed by native heavy and special attackers. The seed packets, combat statistics, cooldowns, sun counter and effects use the original game systems.

@@ -1,7 +1,7 @@
 {
-  "engineId": "0.2.6-web-scrap.1",
+  "engineId": "0.2.6-web-ambush.1",
   "engineWasmMatchesMetadata": true,
-  "engineWasmSha256": "a9b1cc5296b9bcb5f4045b18f9bb30c6ae95823a2658afb6a3ea5a70932f6102",
+  "engineWasmSha256": "a6e1f8b5ed4293513f1919ff840d74f81b7420112bba08302b03969f82a06a46",
   "files": {
     "audio-controls.js": {
       "baseBytes": 12216,
@@ -22,28 +22,28 @@
       "servedSha256": "5488eb8cf5d38d2d999e29a5b3aca45ecff02f8ee49356ccb327de8676111dc4"
     },
     "game/engine-provenance.json": {
-      "baseBytes": 163348,
-      "baseSha256": "0887d3b4c24f8db8ae7283453663756bbc2937cf7f5559eb8a72639c95af56b1",
-      "servedBytes": 163348,
-      "servedSha256": "0887d3b4c24f8db8ae7283453663756bbc2937cf7f5559eb8a72639c95af56b1"
+      "baseBytes": 168162,
+      "baseSha256": "45fb0ac2c035bfae1aeb19a504277f796f4811a1855159a1b10fc9dcb1681092",
+      "servedBytes": 168162,
+      "servedSha256": "45fb0ac2c035bfae1aeb19a504277f796f4811a1855159a1b10fc9dcb1681092"
     },
     "game/pvz-portable.js": {
       "baseBytes": 209600,
-      "baseSha256": "ea0dda8ee8444491421cd9e1b9ee600d8e98292e4c726d7d466383e5c6c7ef6e",
+      "baseSha256": "4222ab8ec9b6cc49176fc55fae1aa08174487544a34cee3176907b92b08994d6",
       "servedBytes": 209600,
-      "servedSha256": "ea0dda8ee8444491421cd9e1b9ee600d8e98292e4c726d7d466383e5c6c7ef6e"
+      "servedSha256": "4222ab8ec9b6cc49176fc55fae1aa08174487544a34cee3176907b92b08994d6"
     },
     "game/pvz-portable.wasm": {
-      "baseBytes": 7791069,
-      "baseSha256": "a9b1cc5296b9bcb5f4045b18f9bb30c6ae95823a2658afb6a3ea5a70932f6102",
-      "servedBytes": 7791069,
-      "servedSha256": "a9b1cc5296b9bcb5f4045b18f9bb30c6ae95823a2658afb6a3ea5a70932f6102"
+      "baseBytes": 7809381,
+      "baseSha256": "a6e1f8b5ed4293513f1919ff840d74f81b7420112bba08302b03969f82a06a46",
+      "servedBytes": 7809381,
+      "servedSha256": "a6e1f8b5ed4293513f1919ff840d74f81b7420112bba08302b03969f82a06a46"
     },
     "index.html": {
-      "baseBytes": 6441,
-      "baseSha256": "f56a31ed4f47a3b6fac6a980ce6a58bf6eeb522580400ddd776e180538a5df3a",
-      "servedBytes": 6441,
-      "servedSha256": "f56a31ed4f47a3b6fac6a980ce6a58bf6eeb522580400ddd776e180538a5df3a"
+      "baseBytes": 6450,
+      "baseSha256": "b3cca5b166eb7448ab01f471453c63474c6a1658d7ad8733bb2d22e3fe84a1be",
+      "servedBytes": 6450,
+      "servedSha256": "b3cca5b166eb7448ab01f471453c63474c6a1658d7ad8733bb2d22e3fe84a1be"
     },
     "launcher.js": {
       "baseBytes": 10755,
@@ -71,9 +71,9 @@
     },
     "runtime.js": {
       "baseBytes": 2931,
-      "baseSha256": "410eaf99c0863dd810f1bd5d3f2d5ef0bf82c43485643a3b7ab6cbd946444c54",
+      "baseSha256": "08867b443370edbf0628667952efb526f4632b3f2d86ba64d8d0fb95071f0937",
       "servedBytes": 2931,
-      "servedSha256": "410eaf99c0863dd810f1bd5d3f2d5ef0bf82c43485643a3b7ab6cbd946444c54"
+      "servedSha256": "08867b443370edbf0628667952efb526f4632b3f2d86ba64d8d0fb95071f0937"
     },
     "save-recovery.js": {
       "baseBytes": 4921,

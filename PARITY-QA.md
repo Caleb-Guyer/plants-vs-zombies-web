@@ -1,5 +1,38 @@
 # Browser parity and QA record
 
+## Vase Ambush native verification
+
+Vase Ambush is the seventeenth Bonus minigame: five authored reverse Vasebreaker gardens. Break the original windowed vases to release a finite zombie army, then choose the order and timing to eat all five brains. Later gardens combine original armor, frost, Chompers, Potato Mines, Magnet-shrooms and cross-lane fire. Original plant and zombie combat statistics remain intact.
+
+The frozen 860-source/138-object engine passes **25 native suites, 57,505,302 baseline checks and zero failures**, plus 29,323,409 separately counted Endless late checks (86,828,711 combined). Vase Ambush contributes 4,621,563 checks across 28 playable cases and two separately identified synthetic controls. The matrix covers both seeds at 1x/2x, native victory and genuine wrong-order defeat/retry, save/Continue before release, during the hammer, during combat and between gardens, and a full replay with a 150-tick hesitation on every garden. All earlier native suites execute against this build; historical comparison artifacts remain separately identified.
+
+The 30-case matrix consists of seven playable scenarios (solution, four save phases, natural defeat/retry and replay), each run at 1x/2x with seeds 1729/7331, plus two explicitly synthetic controls. The four replay cases complete a second five-garden run. Controls cover native navigation, idle thinking time, double-click rejection, stock armor, all 100 legacy profile records and an actual earlier-engine save. Synthetic visual setups and developer probes do not count as wins.
+
+The 942-input art fixture authenticates the original PAK resources. Native raster comparisons check moving top-row heads against original I, Zombie rendering and keep the footer and brain meter within the canvas. These are offscreen raster checks, not browser/GPU parity evidence. Earlier failed policies, their exact logs, and the tested source changes are retained separately from the passing release matrix.
+
+Original serialization layouts remain unchanged. The current native-source archive includes all 860 production files, thirteen focused suites and twelve complete-engine test drivers. Its lossless pack contains 24 current JS/WASM files and two explicitly historical comparator files. Independent reverse projections authenticate all 856 parent Scrap files and all 852 earlier Endless.3 files. Every retained complete-engine matrix is freshly run on this release; no historical result is presented as current execution.
+
+Audio output is disabled during automated testing. Normal audio controls remain available. Browser verification and publication are recorded separately. This is scoped regression coverage, not exhaustive original-game parity or a guarantee of balance for every strategy.
+
+### Vase Ambush browser verification
+
+Muted inspection of the normal game page confirmed the seventeenth native Bonus card, original hammer/release animation, moving attackers, and the 1x/2x stone control. Opening Menu saved the garden; reload and Continue restored one eaten brain and eight unopened vases. The native New Game confirmation reset the first garden to ten vases and zero eaten brains. These are browser observations, not extra full-game wins. [Browser evidence](tests/fixtures/vase-ambush-browser/proof.json) binds three screenshots to the shipped engine.
+
+Fresh performance observations cover four active 15-second windows on the retained synthetic Flag 20/40 checkpoints, plus two quiet paused controls. All four active windows remain in play through their end screenshots. The existing callback, scheduling, synchronous-save and long-task budgets pass for that controlled set; the paired paused scheduling p95 difference is below 1 ms. No additional performance fix was made from these measurements.
+
+| Starting flag | Speed | Native callback p95 | Native callback max | Save capture max |
+| --- | --- | --- | --- | --- |
+| 20 | 1x | 1.2 ms | 5.3 ms | 4.5 ms |
+| 20 | 2x | 1.3 ms | 2.1 ms | 4.3 ms |
+| 40 | 1x | 1.6 ms | 4.7 ms | 4.8 ms |
+| 40 | 2x | 1.6 ms | 2.6 ms | 4.7 ms |
+
+An initial paused diagnostic recorded one 346.7 ms scheduling gap, with no matching native/save spike or reported long task. Its cause was not established. The subsequent quiet native/clock controls passed with maximum gaps of 6.5/6.3 ms, without screenshots during their timed intervals. The failed raw record remains alongside the passing controls, and the verifier confirms that it fails the unchanged scheduling budget. These short, single-device CPU/scheduling observations do not establish universal smoothness, GPU completion time or delivered-frame FPS.
+
+## Historical QA records
+
+The sections below describe earlier releases; references to a current build apply to that historical release.
+
 ## Scrap.1 QA scope
 
 Scrap Yard adds a native minigame rather than changing original combat statistics. The current-engine matrix covers ordinary click-driven play, real hands-off defeat/retry, 1x/2x parity, exact save/Continue graphs, sun pickup accounting, native metal-removal effects and preserved old challenge records. Narrow synthetic mechanic controls are identified separately from playable runs. Failed development policies remain private evidence and are not counted as wins.

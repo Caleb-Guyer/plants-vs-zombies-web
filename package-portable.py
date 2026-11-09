@@ -26,6 +26,7 @@ SOURCE_DOWNLOADS = DIST / "source" / "source-downloads.json"
 # Current publication target is GitHub Pages, via the existing Pages workflow.
 # https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-large-files-on-github
 MAX_STATIC_ASSET_BYTES = 100 * 1024 * 1024
+AMBUSH_PARENT_REFERENCE_SHA256 = "6771fc13bae02cb70dd8de12192f1f18e50302904a7ef1c784a790e6ccb51dd3"
 REQUIRED_ROOT = (
     ".gitattributes", "README.md", "CURRENT-REQUIREMENTS.md", "PARITY-QA.md", "package.json", "server.mjs",
     "verify-port.mjs", "prepare-port.mjs",
@@ -82,6 +83,9 @@ def parent_source_input(engine):
             or any(character not in "0123456789abcdef" for character in expected)):
         raise ValueError("Invalid immediate-parent source SHA-256")
     path = DIST / "game" / reference
+    if engine.get("id") == "0.2.6-web-ambush.1" and not path.exists():
+        authenticate_ambush_parent(engine)
+        return None
     if engine.get("id") == "0.2.6-web-scrap.1" and not path.exists():
         # Offline site-source retains the independently pinned complete parent
         # projection instead of nesting a second 44 MB engine test archive.
@@ -96,7 +100,7 @@ def parent_source_input(engine):
     return path.resolve()
 
 
-def authenticate_scrap_parent(engine):
+def authenticate_scrap_parent(engine, current_sources=None):
     fixture = ROOT / "tests/fixtures/scrap1-parent-reference.json"
     raw = fixture.read_bytes()
     if hashlib.sha256(raw).hexdigest() != "8b58d26c299ca9c277f091354c5ec90b4fc5f1af0fc38ab76169880fd164299e":
@@ -105,27 +109,74 @@ def authenticate_scrap_parent(engine):
     if (engine["parent"]["id"] != reference["parent"]["id"] or
             engine["parent"]["artifacts"]["sourceSha256"] != reference["parent"]["archiveSha256"]):
         raise ValueError("Scrap Yard parent identity differs from the projection")
+    if current_sources is None:
+        current = DIST / "game" / engine["artifacts"]["source"]
+        if hashlib.sha256(current.read_bytes()).hexdigest() != engine["artifacts"]["sourceSha256"]:
+            raise ValueError("Scrap Yard source archive differs from provenance")
+        with zipfile.ZipFile(current) as archive:
+            current_sources = {name: archive.read("scrap1-candidate/source/" + name)
+                               for name in reference["files"]}
+    for name, pin in reference["files"].items():
+        data = current_sources[name]
+        delta = reference["reverseEdits"].get(name)
+        if delta:
+            if (len(data) != delta["currentBytes"] or
+                    hashlib.sha256(data).hexdigest() != delta["currentSha256"]):
+                raise ValueError("Changed current parent-projection input: " + name)
+            for edit in reversed(delta["edits"]):
+                offset = edit["offset"]
+                before = base64.b64decode(edit["beforeBase64"], validate=True)
+                after = base64.b64decode(edit["afterBase64"], validate=True)
+                if data[offset:offset + len(before)] != before:
+                    raise ValueError("Invalid parent reverse edit: " + name)
+                data = data[:offset] + after + data[offset + len(before):]
+        if len(data) != pin["bytes"] or hashlib.sha256(data).hexdigest() != pin["sha256"]:
+            raise ValueError("Parent source projection failed: " + name)
+    return reference
+
+
+def authenticate_ambush_parent(engine):
+    """Authenticate complete Scrap and Endless.3 sources without duplicate ZIPs."""
+    raw = (ROOT / "tests/fixtures/ambush1-parent-reference.json").read_bytes()
+    if hashlib.sha256(raw).hexdigest() != AMBUSH_PARENT_REFERENCE_SHA256:
+        raise ValueError("Vase Ambush parent projection differs from its reviewed fixture")
+    reference = json.loads(raw)
+    if (engine["id"] != "0.2.6-web-ambush.1" or reference["schemaVersion"] != 1 or
+            reference["current"] != {"id": engine["id"], "sourceCount": 860} or
+            reference["parent"]["id"] != "0.2.6-web-scrap.1" or
+            reference["parent"]["archivePrefix"] != "scrap1-candidate/source/" or
+            engine["parent"]["id"] != reference["parent"]["id"] or
+            reference["parent"]["archiveSha256"] != "6ccb876d55621aa8c31b405c2495b97203fec344905a0920440607557c291a63" or
+            engine["parent"]["artifacts"]["sourceSha256"] != reference["parent"]["archiveSha256"] or
+            len(reference["files"]) != 856):
+        raise ValueError("Vase Ambush parent identity differs from the projection")
     current = DIST / "game" / engine["artifacts"]["source"]
     if hashlib.sha256(current.read_bytes()).hexdigest() != engine["artifacts"]["sourceSha256"]:
-        raise ValueError("Scrap Yard source archive differs from provenance")
+        raise ValueError("Vase Ambush source differs from provenance")
+    restored = {}
     with zipfile.ZipFile(current) as archive:
         for name, pin in reference["files"].items():
-            data = archive.read("scrap1-candidate/source/" + name)
+            data = archive.read("ambush1-candidate/source/" + name)
             delta = reference["reverseEdits"].get(name)
             if delta:
-                if (len(data) != delta["currentBytes"] or
-                        hashlib.sha256(data).hexdigest() != delta["currentSha256"]):
-                    raise ValueError("Changed current parent-projection input: " + name)
+                if len(data) != delta["currentBytes"] or hashlib.sha256(data).hexdigest() != delta["currentSha256"]:
+                    raise ValueError("Changed Ambush parent-projection input: " + name)
+                previous = len(data) + 1
                 for edit in reversed(delta["edits"]):
                     offset = edit["offset"]
                     before = base64.b64decode(edit["beforeBase64"], validate=True)
                     after = base64.b64decode(edit["afterBase64"], validate=True)
-                    if data[offset:offset + len(before)] != before:
-                        raise ValueError("Invalid parent reverse edit: " + name)
+                    if (not isinstance(offset, int) or offset < 0 or offset >= previous or
+                            offset + len(before) > previous or offset + len(before) > len(data) or
+                            data[offset:offset + len(before)] != before):
+                        raise ValueError("Invalid Ambush parent reverse edit: " + name)
                     data = data[:offset] + after + data[offset + len(before):]
+                    previous = offset
             if len(data) != pin["bytes"] or hashlib.sha256(data).hexdigest() != pin["sha256"]:
-                raise ValueError("Parent source projection failed: " + name)
-    return reference
+                raise ValueError("Complete Scrap parent source failed: " + name)
+            restored[name] = data
+    authenticate_scrap_parent(engine["parent"], restored)
+    return restored
 
 
 def nested_source_inputs(engine, paths, baseline):
@@ -139,8 +190,11 @@ def nested_source_inputs(engine, paths, baseline):
             or hashlib.sha256(native_ui.read_bytes()).hexdigest()
             != "d9861034849eca9d637197aa78a1bae4c90b5656db91ca102d8c903100031edd"):
         raise ValueError("Authenticated native I, Zombie UI fixture is missing or changed")
-    if engine.get("id") == "0.2.6-web-scrap.1":
-        authenticate_scrap_parent(engine)
+    if engine.get("id") in {"0.2.6-web-scrap.1", "0.2.6-web-ambush.1"}:
+        if engine["id"] == "0.2.6-web-ambush.1":
+            authenticate_ambush_parent(engine)
+        else:
+            authenticate_scrap_parent(engine)
         comparator = DIST / "source/pvz-portable-0.2.6-web-endless.2-source.zip"
         if hashlib.sha256(comparator.read_bytes()).hexdigest() != "b9095c65547c3d013917ae4188e284f18eabb71a98020ca3d53f71f7365f9566":
             raise ValueError("Historical Endless.2 comparator archive differs")
@@ -214,7 +268,7 @@ def regenerate_source_downloads():
         "schema_version": 1,
         "current_engine": engine["id"],
         "upstream_tag": engine["upstream"]["tag"],
-        "layout": "Site-source nests current corresponding source, the upstream baseline, the historical Endless.2 comparator, the independently pinned complete Endless.3 parent projection, the native I, Zombie UI reference and the current full patch. Exact historical source archives remain standalone downloads beside this index and in the full runtime distribution. Linked native test artifacts are losslessly packed; the included decoder restores their exact pinned bytes.",
+        "layout": "Site-source nests current corresponding source, the upstream baseline, the historical Endless.2 comparator, independently pinned complete Scrap.1 and Endless.3 source projections, the native I, Zombie UI reference and the current full patch. Exact historical source archives remain standalone downloads beside this index and in the full runtime distribution. Linked native test artifacts are losslessly packed; the included decoder restores their exact pinned bytes.",
         "nested_sources": [path.name for path in nested],
         "nested_patches": [paths["patch"].name],
         "archives": archives,

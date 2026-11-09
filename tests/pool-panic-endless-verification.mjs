@@ -2,7 +2,8 @@
 // Independent checks of the packaged complete-engine report and fixed design
 // contract. Synthetic controls and render samples never count as earned flags.
 import assert from 'node:assert/strict';
-import {CURRENT_ENGINE_ID, CURRENT_SOURCE_COUNT, CURRENT_OBJECT_COUNT, SCRAP_ENDLESS_RETENTION_SHA256} from './native-release-context.mjs';
+import {CURRENT_ENGINE_ID, CURRENT_SOURCE_COUNT, CURRENT_OBJECT_COUNT,
+ CURRENT_ENDLESS_RETENTION_SHA256, SCRAP_ENDLESS_RETENTION_SHA256} from './native-release-context.mjs';
 
 const names=['normal','save-between-flags','save-active','retry-no-action','no-action','controls'];
 const matrix=[1729,7331].flatMap(seed=>names.flatMap(name=>[1,2].map(speed=>[name,speed,seed])));
@@ -155,7 +156,9 @@ function verifyScenario(row,identity){
 export async function verifyPoolPanicEndless({report,read,sha,engine,fullRunReport,productionBuildBytes,immediateParentBytes}){
  equalFields(report,{execution:'complete-production-engine',optimization:'O2',failures:0,exitCode:0,nativeArtInputs:643});
  assert.match(report.status,/^PASS/);assert.equal(engine.id,CURRENT_ENGINE_ID);
- assert.equal(report.retentionAdapterSha256,SCRAP_ENDLESS_RETENTION_SHA256);
+ assert.equal(report.retentionAdapterSha256,CURRENT_ENDLESS_RETENTION_SHA256);
+ assert.equal(sha(await read('tests/ambush1-endless-retention.json')),CURRENT_ENDLESS_RETENTION_SHA256);
+ // The earlier published execution adapter remains independent historical data.
  assert.equal(sha(await read('tests/scrap1-endless-retention.json')),SCRAP_ENDLESS_RETENTION_SHA256);
  assert.equal(Object.keys(report.sourceSha256).length,CURRENT_SOURCE_COUNT);assert.deepEqual(report.sourceSha256,fullRunReport.sourceSha256);
  for(const [file,pin] of Object.entries(report.sourceSha256)){digest(pin);assert.equal(sha(await read(file)),pin);}

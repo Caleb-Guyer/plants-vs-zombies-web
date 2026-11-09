@@ -11,7 +11,7 @@ import {createRequire} from 'node:module';
 import {spawnSync} from 'node:child_process';
 import {inflateSync} from 'node:zlib';
 import {fileURLToPath} from 'node:url';
-import {CURRENT_ENGINE_ID, CURRENT_SOURCE_COUNT, CURRENT_OBJECT_COUNT, SCRAP_SOURCE_ADDITIONS, SCRAP_PARENT_REFERENCE_SHA256, reconstructEndless3Sources} from './native-release-context.mjs';
+import {CURRENT_ENGINE_ID, CURRENT_SOURCE_COUNT, CURRENT_OBJECT_COUNT, SCRAP_SOURCE_ADDITIONS, SCRAP_PARENT_REFERENCE_SHA256, AMBUSH_PARENT_REFERENCE_SHA256, AMBUSH_SOURCE_ADDITIONS, reconstructScrapSources, reconstructEndless3Sources} from './native-release-context.mjs';
 import {restoreNativeArtifactPack} from './native-artifact-pack.mjs';
 import {verifyRallyRaid} from './rally-raid-verification.mjs';
 import {verifyLightsOut} from './lights-out-verification.mjs';
@@ -22,6 +22,8 @@ import {verifyPoolPanic} from './pool-panic-verification.mjs';
 import {verifyPoolPanicEndless} from './pool-panic-endless-verification.mjs';
 import {verifyPoolPanicEndlessProgression} from './pool-panic-endless-progression-verification.mjs';
 import {verifyScrapYard} from './scrap-yard-verification.mjs';
+import {verifyVaseAmbush} from './vase-ambush-verification.mjs';
+import {verifyAmbushFocusedRetention} from './ambush-focused-retention-verification.mjs';
 
 const require = createRequire(import.meta.url);
 const dist = new URL('../dist/', import.meta.url);
@@ -31,12 +33,14 @@ const JSZip = vendor.exports;
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
 const engine = JSON.parse(fs.readFileSync(new URL('game/engine-provenance.json', dist)));
 assert.equal(engine.id, CURRENT_ENGINE_ID);
-const historyEngine = engine.parent;
+const scrapEngine = engine.parent;
+assert.equal(scrapEngine.id, '0.2.6-web-scrap.1');
+const historyEngine = scrapEngine.parent;
 assert.equal(historyEngine.id, '0.2.6-web-endless.3');
 const currentSourceBytes = fs.readFileSync(new URL(engine.artifacts.source, new URL('game/engine-provenance.json', dist)));
 assert.equal(sha(currentSourceBytes), engine.artifacts.sourceSha256, 'Current source archive matches the engine provenance pin');
 const current = await JSZip.loadAsync(currentSourceBytes, {checkCRC32: true});
-const prefix = 'scrap1-candidate/';
+const prefix = 'ambush1-candidate/';
 await restoreNativeArtifactPack(current, prefix);
 const publishedEndless2Bytes = fs.readFileSync(new URL('source/pvz-portable-0.2.6-web-endless.2-source.zip', dist));
 assert.equal(sha(publishedEndless2Bytes), 'b9095c65547c3d013917ae4188e284f18eabb71a98020ca3d53f71f7365f9566');
@@ -186,9 +190,16 @@ const read = async name => {
   assert(entry, 'Missing current production source/test: ' + name);
   return Buffer.from(await entry.async('uint8array'));
 };
+const scrapReferenceBytes = fs.readFileSync(new URL('./fixtures/ambush1-parent-reference.json', import.meta.url));
+assert.equal(sha(scrapReferenceBytes), AMBUSH_PARENT_REFERENCE_SHA256);
+const scrapSource = await reconstructScrapSources({referenceBytes:scrapReferenceBytes,read,sha,engine});
+const scrapSourceRead = async name => {
+  assert(name.startsWith('source/'), 'Parent projection supplies only production source');
+  const bytes = scrapSource.files.get(name.slice(7)); assert(bytes, 'Missing complete Scrap source: ' + name); return bytes;
+};
 const historyReferenceBytes = fs.readFileSync(new URL('./fixtures/scrap1-parent-reference.json', import.meta.url));
 assert.equal(sha(historyReferenceBytes), SCRAP_PARENT_REFERENCE_SHA256);
-const historySource = await reconstructEndless3Sources({referenceBytes: historyReferenceBytes, read, sha, engine});
+const historySource = await reconstructEndless3Sources({referenceBytes: historyReferenceBytes, read:scrapSourceRead, sha, engine:scrapEngine});
 const historyRead = async name => {
   assert(name.startsWith('source/'), 'Historical source projection cannot supply executable/report inputs');
   const bytes = historySource.files.get(name.slice('source/'.length));
@@ -198,11 +209,13 @@ const historyRead = async name => {
 const retainedChecks = {'game-speed':81, 'qol-controls':90, 'decks-cooldowns':274,
   'bonus-challenge':387, 'bonus-completion':1283, 'night-shift':231, 'lantern-shroom':1724,
   'garden-shuffle':214, 'seed-swap':587, 'mender-bloom':523, 'intensive-care':1135, 'native-layout':26138};
-const focusedCheckExtensions = {'bonus-completion':19, 'native-layout':333};
+const scrapFocusedCheckExtensions = {'bonus-completion':19, 'native-layout':333};
+const vaseFocusedCheckExtensions = {'bonus-challenge':7, 'bonus-completion':77, 'native-layout':686};
+const focusedCheckExtensions = {'bonus-challenge':7, 'bonus-completion':96, 'native-layout':1019};
 const retainedSuites = [...Object.keys(retainedChecks), 'care-fatigue', 'care-full-run', 'chain-reaction', 'rally-zombie', 'rally-raid', 'lights-out', 'garlic-run', 'bungee-business', 'cob-cannon-command', 'pool-panic', 'pool-panic-endless'];
 assert.equal(retainedSuites.length, 23);
-const suites = [...retainedSuites, 'scrap-yard'];
-assert.equal(suites.length, 24);
+const suites = [...retainedSuites, 'scrap-yard', 'vase-ambush'];
+assert.equal(suites.length, 25);
 const reports = new Map();
 let checks = 0;
 for (const name of suites) {
@@ -226,14 +239,16 @@ for (const [name, count] of Object.entries(retainedChecks))
 // iteration and 2,732 native footer/card/packet/layer checks; Raid.2
 // retains those cases with native-order expectations and adds14 pick controls.
 assert.equal(Object.values(retainedChecks).reduce((sum, count) => sum + count, 0), 32667);
-assert.equal(Object.values(focusedCheckExtensions).reduce((sum, count) => sum + count, 0), 352);
+assert.equal(Object.values(scrapFocusedCheckExtensions).reduce((sum, count) => sum + count, 0), 352);
+assert.equal(Object.values(vaseFocusedCheckExtensions).reduce((sum, count) => sum + count, 0), 770);
+assert.equal(Object.values(focusedCheckExtensions).reduce((sum, count) => sum + count, 0), 1122);
 assert.equal(reports.get('care-fatigue').checks, 25042,
   'Fatigue rig coverage retains every crew pose, scoped state and restoration check');
 const focusedRetentionBytes = await read('tests/scrap1-focused-retention/adaptations.json');
 assert.equal(sha(focusedRetentionBytes), 'd8398969b25626a3449c645d4c3400b6905c14635132ffffebf95cb91d02d0c1');
 const focusedRetention = JSON.parse(focusedRetentionBytes);
 assert.equal(focusedRetention.schemaVersion,1);
-assert.equal(focusedRetention.engineId,engine.id);
+assert.equal(focusedRetention.engineId,scrapEngine.id);
 assert.equal(focusedRetention.parentEngineId,historyEngine.id);
 assert.equal(focusedRetention.parentArchiveSha256,'206e5e16b0c4ae7c8b88afd94e627943b4cd15c56f82113fcaf4bb1adf4c13b1');
 assert.equal(focusedRetention.allCasesFresh,true);
@@ -245,11 +260,12 @@ for(const [name,record] of Object.entries(focusedRetention.runners)) {
   const original=await read('tests/'+record.originalSnapshot);
   assert.equal(original.length,record.originalBytes);
   assert.equal(sha(original),record.originalSha256,'Every original focused runner retains its exact authenticated published bytes: '+name);
-  assert.equal(sha(await read('tests/'+record.runner)),record.runnerSha256,'Current focused runner is exactly the reviewed compatibility adaptation: '+name);
+  assert.equal(sha(await read('tests/ambush1-retained-parent/'+record.runner)),record.runnerSha256,'Published Scrap focused runner remains the reviewed compatibility adaptation: '+name);
   assert.equal(record.baselineChecks,name==='care-fatigue'?25042:retainedChecks[name]);
-  assert.equal(record.appendedChecks,focusedCheckExtensions[name]||0);
-  assert.equal(reports.get(name).checks,record.baselineChecks+record.appendedChecks);
+  assert.equal(record.appendedChecks,scrapFocusedCheckExtensions[name]||0);
+  assert.equal(reports.get(name).checks,record.baselineChecks+record.appendedChecks+(vaseFocusedCheckExtensions[name]||0));
 }
+await verifyAmbushFocusedRetention({read,sha,engine,reports});
 const fullRunReport = reports.get('care-full-run');
 assert.equal(fullRunReport.checks, Object.keys(fullRunReport.sourceSha256).length + 152, 'Complete-engine provenance and required native scenario checks are retained');
 assert.equal(fullRunReport.execution, 'complete-production-engine',
@@ -519,6 +535,10 @@ await verifyScrapYard({report:reports.get('scrap-yard'),read,sha,engine,fullRunR
   productionBuildBytes:fullRunProductionBuildBytes,
   currentArtBytes:fs.readFileSync(new URL('content/native-bonus-art.json',dist)),
   previousArtBytes:fs.readFileSync(new URL('./fixtures/endless3-native-bonus-art.json',import.meta.url))});
+await verifyVaseAmbush({report:reports.get('vase-ambush'),read,sha,engine,fullRunReport,
+  productionBuildBytes:fullRunProductionBuildBytes,
+  currentArtBytes:fs.readFileSync(new URL('content/native-bonus-art.json',dist)),
+  previousArtBytes:fs.readFileSync(new URL('./fixtures/scrap1-native-bonus-art.json',import.meta.url))});
 const careBalance = reports.get('intensive-care').balanceModel;
 assert.equal(careBalance.kind, 'native healing/fatigue capacity bound; not a battle clear');
 assert(careBalance.allBedsHealHpPerSecond > careBalance.maximumCrewFatigueHpPerSecond);
@@ -899,11 +919,12 @@ assert.equal(newModes.get('GAMEMODE_CHALLENGE_COB_CANNON_COMMAND'),85);
 assert.equal(newModes.get('GAMEMODE_CHALLENGE_POOL_PANIC'),86);
 assert.equal(newModes.get('GAMEMODE_CHALLENGE_POOL_PANIC_ENDLESS'),87);
 assert.equal(newModes.get('GAMEMODE_CHALLENGE_SCRAP_YARD'),88);
-assert.equal(newModes.get('NUM_GAME_MODES'),89);
+assert.equal(newModes.get('NUM_GAME_MODES'),90);
+assert.equal(newModes.get('GAMEMODE_CHALLENGE_VASE_AMBUSH'),89);
 const publishedModes = enumValues((await historyRead('source/src/ConstEnums.h')).toString(), 'GameMode');
 assert.equal(publishedModes.get('NUM_GAME_MODES'),88);
-assert.deepEqual([...newModes].filter(([name])=>!['GAMEMODE_CHALLENGE_SCRAP_YARD','NUM_GAME_MODES'].includes(name)), [...publishedModes].filter(([name])=>name!=='NUM_GAME_MODES'), 'All published mode IDs0..87 remain exact; only mode88 is appended');
-assert.deepEqual([...newModes].filter(([name])=>!['GAMEMODE_CHALLENGE_POOL_PANIC_ENDLESS','GAMEMODE_CHALLENGE_SCRAP_YARD','NUM_GAME_MODES'].includes(name)),[...oldModes].filter(([name])=>name!=='NUM_GAME_MODES'),'Every prior mode ID remains exact');
+assert.deepEqual([...newModes].filter(([name])=>!['GAMEMODE_CHALLENGE_SCRAP_YARD','GAMEMODE_CHALLENGE_VASE_AMBUSH','NUM_GAME_MODES'].includes(name)), [...publishedModes].filter(([name])=>name!=='NUM_GAME_MODES'), 'All published mode IDs0..87 remain exact; only mode88 is appended');
+assert.deepEqual([...newModes].filter(([name])=>!['GAMEMODE_CHALLENGE_POOL_PANIC_ENDLESS','GAMEMODE_CHALLENGE_SCRAP_YARD','GAMEMODE_CHALLENGE_VASE_AMBUSH','NUM_GAME_MODES'].includes(name)),[...oldModes].filter(([name])=>name!=='NUM_GAME_MODES'),'Every prior mode ID remains exact');
 assert.deepEqual([...enumValues(newEnums, 'ChallengePage')], [...enumValues(oldEnums, 'ChallengePage')],
   'Cold Front uses the existing Bonus page without changing any page IDs');
 const oldZombieIds = enumValues(oldEnums, 'ZombieType'), newZombieIds = enumValues(newEnums, 'ZombieType');
@@ -955,12 +976,20 @@ assert.deepEqual(newDefinitions.slice(0,oldDefinitions.length), oldDefinitions, 
 const publishedDefinitions = definitions((await historyRead('source/src/Lawn/Widget/ChallengeScreen.cpp')).toString());
 assert.equal(publishedDefinitions.length, oldDefinitions.length+1);
 assert.deepEqual(newDefinitions.slice(0,publishedDefinitions.length), publishedDefinitions, 'Every one of the fifteen published Bonus cards and all original catalog entries remains exact');
-assert.equal(newDefinitions.length, publishedDefinitions.length+1);
-assert.match(newDefinitions.at(-1), /GAMEMODE_CHALLENGE_SCRAP_YARD/);
-assert.match(newDefinitions.at(-1), /Scrap Yard/);
-assert.match(newDefinitions.at(-1), /CHALLENGE_PAGE_BONUS/);
-assert.match(newDefinitions.at(-1), /\.mRow = 4/);
-assert.match(newDefinitions.at(-1), /\.mCol = 0/);
+assert.equal(newDefinitions.length, publishedDefinitions.length+2);
+const scrapDefinitions=definitions((await scrapSourceRead('source/src/Lawn/Widget/ChallengeScreen.cpp')).toString());
+assert.equal(scrapDefinitions.length,publishedDefinitions.length+1);
+assert.deepEqual(newDefinitions.slice(0,scrapDefinitions.length),scrapDefinitions,'Every original and all sixteen published Bonus definitions are exact');
+assert.match(newDefinitions.at(-2), /GAMEMODE_CHALLENGE_SCRAP_YARD/);
+assert.match(newDefinitions.at(-2), /Scrap Yard/);
+assert.match(newDefinitions.at(-2), /CHALLENGE_PAGE_BONUS/);
+assert.match(newDefinitions.at(-2), /\.mRow = 4/);
+assert.match(newDefinitions.at(-2), /\.mCol = 0/);
+assert.match(newDefinitions.at(-1),/GAMEMODE_CHALLENGE_VASE_AMBUSH/);
+assert.match(newDefinitions.at(-1),/Vase Ambush/);
+assert.match(newDefinitions.at(-1),/CHALLENGE_PAGE_BONUS/);
+assert.match(newDefinitions.at(-1),/\.mRow = 4/);
+assert.match(newDefinitions.at(-1),/\.mCol = 1/);
 assert.match(newDefinitions[81], /GAMEMODE_CHALLENGE_LIGHTS_OUT/);
 assert.match(newDefinitions[81], /Lights Out/);
 assert.match(newDefinitions[81], /CHALLENGE_PAGE_BONUS/);
@@ -990,7 +1019,15 @@ const publishedArtBytes = fs.readFileSync(new URL('./fixtures/endless3-native-bo
 assert.equal(sha(publishedArtBytes),'538175fc8c54e8efb241a129263f2c99ee8e4193fb09ace213a67e9430f7483b','Independent reviewed fifteen-card native Bonus metadata');
 const publishedArt = JSON.parse(publishedArtBytes);
 const currentArtRecord = JSON.parse(artRecordBytes);
-assert.equal(currentArtRecord.cards.length,16);
+assert.equal(currentArtRecord.cards.length,17);
+const scrapArtBytes=fs.readFileSync(new URL('./fixtures/scrap1-native-bonus-art.json',import.meta.url));
+assert.equal(sha(scrapArtBytes),'183cb482642023f7b1ed7102052143b0c5bf543204150626670c832d4db3eaf0','Independently retained published sixteen-card metadata');
+const scrapArt=JSON.parse(scrapArtBytes);
+assert.equal(scrapArt.cards.length,16);
+assert.deepEqual({...currentArtRecord,cards:currentArtRecord.cards.slice(0,16)},scrapArt,'All sixteen prior native card records remain exact');
+assert.equal(currentArtRecord.cards[16].mode,89);
+assert.equal(currentArtRecord.cards[16].name,'Vase Ambush');
+assert.equal(currentArtRecord.cards[16].generatedArtworkUsed,false);
 assert.deepEqual({...currentArtRecord,cards:currentArtRecord.cards.slice(0,15)},publishedArt, 'All fifteen published card records and every non-card metadata value remain exact');
 assert.equal(currentArtRecord.cards[15].mode,88);
 assert.equal(currentArtRecord.cards[15].name,'Scrap Yard');
@@ -1323,7 +1360,7 @@ assert.deepEqual(fs.readFileSync(new URL('generation.json', artworkUrl)), genera
 const sourceManifest = JSON.parse(await read('source-manifest.json'));
 assert.equal(sourceManifest.version, engine.id);
 assert.deepEqual(Object.keys(sourceManifest.files).sort(),
-  [...Object.keys(historySource.manifest.files), ...SCRAP_SOURCE_ADDITIONS].sort(),
+  [...Object.keys(historySource.manifest.files), ...SCRAP_SOURCE_ADDITIONS, ...AMBUSH_SOURCE_ADDITIONS].sort(),
   'Scrap Yard retains all852 published paths and appends only its four implementation/presentation files');
 const completeProductionSources = Object.fromEntries(Object.entries(sourceManifest.files)
   .map(([name, pin]) => ['source/' + name, pin.sha256]));
@@ -2022,7 +2059,7 @@ if (process.argv.includes('--run-native')) {
     }
     for (const name of suites) {
       const args = [path.join(temporary, 'tests/test-' + name + '.py'), '--native'];
-      if (['care-full-run','chain-reaction','rally-zombie','rally-raid','lights-out','garlic-run','bungee-business','cob-cannon-command','pool-panic','pool-panic-endless','scrap-yard'].includes(name)) args.push('--asset-root', fileURLToPath(new URL('game-assets/', dist)));
+      if (['care-full-run','chain-reaction','rally-zombie','rally-raid','lights-out','garlic-run','bungee-business','cob-cannon-command','pool-panic','pool-panic-endless','scrap-yard','vase-ambush'].includes(name)) args.push('--asset-root', fileURLToPath(new URL('game-assets/', dist)));
       const run = spawnSync('python', args, {encoding: 'utf8'});
       assert.equal(run.status, 0, (run.error?.message || '') + run.stdout + run.stderr);
       const actual = JSON.parse(fs.readFileSync(path.join(temporary, 'tests/' + name + '-results.json')));
@@ -2031,7 +2068,7 @@ if (process.argv.includes('--run-native')) {
       assert.equal(actual.exitCode, 0);
       assert.match(actual.status, /^PASS/);
       assert.deepEqual(actual.sourceSha256, reports.get(name).sourceSha256);
-      if(['care-full-run','chain-reaction','rally-zombie','rally-raid','lights-out','garlic-run','bungee-business','cob-cannon-command','pool-panic','pool-panic-endless','scrap-yard'].includes(name)) {
+      if(['care-full-run','chain-reaction','rally-zombie','rally-raid','lights-out','garlic-run','bungee-business','cob-cannon-command','pool-panic','pool-panic-endless','scrap-yard','vase-ambush'].includes(name)) {
         assert.equal(actual.productionObjectCount,CURRENT_OBJECT_COUNT);
         assert.deepEqual(actual.productionObjectSha256,fullRunReport.productionObjectSha256);
         assert.equal(actual.productionBuildReceiptSha256,sha(fullRunProductionBuildBytes));
@@ -2065,8 +2102,13 @@ if (process.argv.includes('--run-native')) {
         productionBuildBytes:fullRunProductionBuildBytes,
         currentArtBytes:fs.readFileSync(new URL('content/native-bonus-art.json',dist)),
         previousArtBytes:fs.readFileSync(new URL('./fixtures/endless3-native-bonus-art.json',import.meta.url))});
+      if(name==='vase-ambush') await verifyVaseAmbush({report:actual,
+        read:async input=>fs.readFileSync(path.join(temporary,input)),sha,engine,fullRunReport,
+        productionBuildBytes:fullRunProductionBuildBytes,
+        currentArtBytes:fs.readFileSync(new URL('content/native-bonus-art.json',dist)),
+        previousArtBytes:fs.readFileSync(new URL('./fixtures/scrap1-native-bonus-art.json',import.meta.url))});
     }
-    console.log(`PASS all ${checks} assertions across 24 native suites, including complete headless Care, Chain, Rally, Raid, Lights Out, Garlic Run, Bungee Business, Cob Cannon Command, Pool Panic, Pool Panic Endless and Scrap Yard scenarios on CI.`);
+    console.log(`PASS all ${checks} assertions across 25 native suites, including complete headless Care, Chain, Rally, Raid, Lights Out, Garlic Run, Bungee Business, Cob Cannon Command, Pool Panic, Pool Panic Endless, Scrap Yard and Vase Ambush scenarios on CI.`);
   } finally {
     const resolved = fs.realpathSync(temporary);
     assert.equal(path.dirname(resolved), temporaryRoot);

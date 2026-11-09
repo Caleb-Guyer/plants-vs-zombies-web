@@ -8,6 +8,7 @@ import {fileURLToPath} from 'node:url';
 import {createHash} from 'node:crypto';
 import {createRequire} from 'node:module';
 import {analyzeCapture, statistics} from './performance/metrics.mjs';
+import {historicalEngine} from './native-release-context.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
@@ -50,7 +51,8 @@ assert.equal(checkpoints.fixtureSetup.postSetupHealthActorOrRngEdits, false);
 // These exact checkpoints were exported by the published parent. Fresh current
 // captures demonstrate load compatibility without rewriting fixture provenance.
 assert.equal(checkpoints.provenance.nativeEngineVersion, '0.2.6-web-endless.3');
-assert.equal(checkpoints.provenance.nativePublishedWasmSha256, engine.parent.artifacts.wasmSha256);
+assert.equal(checkpoints.provenance.nativePublishedWasmSha256,
+  historicalEngine(engine, '0.2.6-web-endless.3').artifacts.wasmSha256);
 assert.equal(checkpoints.provenance.nativePublishedWasmBytes, 7782033);
 assert.equal(baseline.checkpointCompatibility.sourceEngine, checkpoints.provenance.nativeEngineVersion);
 assert.equal(baseline.checkpointCompatibility.loadedByEngine, engine.id);
@@ -133,4 +135,14 @@ for (const [key, values] of [['frameGapMs', gaps], ['nativeCallbackMs', []], ['s
 }
 assert(Math.abs(paused.analysis.stats.rafGaps.p95 - clockStats.p95) <= baseline.maxControlP95DeltaMs,
   'Native observation overhead exceeds the explicitly chosen paired-control bound');
-console.log('PASS retained browser CPU/scheduling baseline:4 active15s windows, paired paused controls, raw traces and fixture/screenshot pins; not fresh execution or GPU/FPS proof.');
+// Preserve failed observations as failures alongside the passing controlled set.
+// A raw hash, unchanged manifest and the actual analyzer must agree on why each
+// diagnostic failed; it cannot silently become passing performance evidence.
+for (const row of baseline.diagnostics ?? []) {
+  unique(row); assert.equal(row.includedInPassingBudgetSet, false);
+  assert.equal(row.expectedBudgetFailure, 'rafGaps.max');
+  assert.deepEqual(row.scenario, {phase: 'paused', speed: 1, crowd: 20}); checkpointFor(row, 'paused');
+  assert.throws(() => analyze(row), /rafGaps\.max budget exceeded/,
+    'Retained failed diagnostic must genuinely fail the unchanged scheduling budget');
+}
+console.log('PASS retained browser CPU/scheduling baseline:4 active15s windows, paired paused controls, raw traces, retained failed diagnostics and fixture/screenshot pins; not fresh execution or GPU/FPS proof.');

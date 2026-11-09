@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "purpose": "Retained actual-browser CPU and scheduling observations, not GPU presentation or earned progression.",
   "engine": {
-    "id": "0.2.6-web-scrap.1",
-    "jsSha256": "ea0dda8ee8444491421cd9e1b9ee600d8e98292e4c726d7d466383e5c6c7ef6e",
-    "wasmSha256": "a9b1cc5296b9bcb5f4045b18f9bb30c6ae95823a2658afb6a3ea5a70932f6102"
+    "id": "0.2.6-web-ambush.1",
+    "jsSha256": "4222ab8ec9b6cc49176fc55fae1aa08174487544a34cee3176907b92b08994d6",
+    "wasmSha256": "a6e1f8b5ed4293513f1919ff840d74f81b7420112bba08302b03969f82a06a46"
   },
   "probe": {
     "path": "tests/performance/probe.js",
@@ -18,8 +18,8 @@
   },
   "expectedManifest": {
     "path": "tests/fixtures/performance/capture-manifest.json",
-    "bytes": 5913,
-    "sha256": "52dd4ea821e23aaacbff5ab2ae6e0c1e9fb2885d2ffba7260d95371c3fcdf103"
+    "bytes": 5914,
+    "sha256": "10149792f7710f4d6c8bbf6efbad8f17f43bedd93c4ba8dbfa3bcb8bb85a4c79"
   },
   "checkpoints": {
     "path": "tests/fixtures/performance/checkpoints.json",
@@ -53,7 +53,7 @@
     "viewport": {
       "width": 1280,
       "height": 720,
-      "dpr": 1
+      "dpr": 1.0000000298023224
     },
     "canvas": {
       "width": 800,
@@ -64,11 +64,11 @@
   },
   "cases": [
     {
-      "label": "v2-scrap1-final-release-active20-early-1x-native",
+      "label": "v2-ambush1-final-release-active20-early-1x-native",
       "report": {
-        "path": "tests/fixtures/performance/captures/v2-scrap1-final-release-active20-early-1x-native.json",
-        "bytes": 273870,
-        "sha256": "688cd808b8ae5e4a16c6ad85b5852f587651bb415b850e9be3ab25315669cffc"
+        "path": "tests/fixtures/performance/captures/v2-ambush1-final-release-active20-early-1x-native.json",
+        "bytes": 357257,
+        "sha256": "7196faa22c50eb20006dba73d0d28f26be97c4598df96fa75864aea0d1494cca"
       },
       "scenario": {
         "phase": "active",
@@ -78,24 +78,24 @@
       "checkpointKey": "20-early-active33",
       "screenshots": {
         "start": {
-          "path": "tests/fixtures/performance/screenshots/v2-scrap1-final-release-active20-early-1x-start.jpg",
-          "bytes": 200063,
-          "sha256": "d58d8fdf734e37052d185a9dbd3212fe51eb05a0e0272a8b9270ce1ed95f017a"
+          "path": "tests/fixtures/performance/screenshots/v2-ambush1-final-release-active20-early-1x-start.jpg",
+          "bytes": 191593,
+          "sha256": "903662bcffdbaeea3c0856779a33f5147742e1c6777bc4e5ffa09cedffa3b82a"
         },
         "end": {
-          "path": "tests/fixtures/performance/screenshots/v2-scrap1-final-release-active20-early-1x-end.jpg",
-          "bytes": 215630,
-          "sha256": "258aeb3d3e8a9e56a01fce042d17dee0ba3b2c3e5c791d0cd467809b78f79a6e"
+          "path": "tests/fixtures/performance/screenshots/v2-ambush1-final-release-active20-early-1x-end.jpg",
+          "bytes": 205669,
+          "sha256": "c8f37379ea6796031d5a484b3d02e4b7ac1e7c3f06d09c5c2c6c9a9b059294d5"
         }
       },
       "activeThroughout": true
     },
     {
-      "label": "v2-scrap1-final-release-active20-early-2x-native",
+      "label": "v2-ambush1-final-release-active20-early-2x-native",
       "report": {
-        "path": "tests/fixtures/performance/captures/v2-scrap1-final-release-active20-early-2x-native.json",
-        "bytes": 276322,
-        "sha256": "7b94c122a136c348199c02e02a0bed3fe4252051ac3de3a18afea98e0588ed13"
+        "path": "tests/fixtures/performance/captures/v2-ambush1-final-release-active20-early-2x-native.json",
+        "bytes": 353214,
+        "sha256": "091e7744db56bb772fb18a8846acbc1d7659ada8e4bf91b21e125b1db4a65bd6"
       },
       "scenario": {
         "phase": "active",
@@ -105,24 +105,24 @@
       "checkpointKey": "20-early-active33",
       "screenshots": {
         "start": {
-          "path": "tests/fixtures/performance/screenshots/v2-scrap1-final-release-active20-early-2x-start.jpg",
-          "bytes": 199904,
-          "sha256": "482d1c110a383dd0c411f221f1639843a0fb9bab2106885b093ccc22a79c8a35"
+          "path": "tests/fixtures/performance/screenshots/v2-ambush1-final-release-active20-early-2x-start.jpg",
+          "bytes": 192327,
+          "sha256": "e09b6708f9fba7d6f6400c8c68b98503b352ea5b563bcaf8a4f6d341f3629511"
         },
         "end": {
-          "path": "tests/fixtures/performance/screenshots/v2-scrap1-final-release-active20-early-2x-end.jpg",
-          "bytes": 202834,
-          "sha256": "f021bd801841d71eea20582b10aed214716e337a4b3d76e4bb3041e936b03f59"
+          "path": "tests/fixtures/performance/screenshots/v2-ambush1-final-release-active20-early-2x-end.jpg",
+          "bytes": 189601,
+          "sha256": "ef6dcaf1b0228dd0dfc6f18b95efeee33af72473213bf612cb9a907c3f03d665"
         }
       },
       "activeThroughout": true
     },
     {
-      "label": "v2-scrap1-final-release-active40-1x-native",
+      "label": "v2-ambush1-final-release-active40-1x-native",
       "report": {
-        "path": "tests/fixtures/performance/captures/v2-scrap1-final-release-active40-1x-native.json",
-        "bytes": 272760,
-        "sha256": "cfa802c54f9392864755e7cdfc63e24881d388cbc6d4d88567e716fcf0824369"
+        "path": "tests/fixtures/performance/captures/v2-ambush1-final-release-active40-1x-native.json",
+        "bytes": 353399,
+        "sha256": "99f243404bb15f4499688fe1641a047287dd0aaf2d237fb25efc356e16753df4"
       },
       "scenario": {
         "phase": "active",
@@ -132,24 +132,24 @@
       "checkpointKey": "40-active74",
       "screenshots": {
         "start": {
-          "path": "tests/fixtures/performance/screenshots/v2-scrap1-final-release-active40-1x-start.jpg",
-          "bytes": 202877,
-          "sha256": "993c406b91ae865cfc2c74cd051b5710983495679dd46108f4e0fc94e2c3ea6b"
+          "path": "tests/fixtures/performance/screenshots/v2-ambush1-final-release-active40-1x-start.jpg",
+          "bytes": 194105,
+          "sha256": "29cac0daebab90f274a2674ebf0c7151fb06cdc797e3bf1641a032ee201eefef"
         },
         "end": {
-          "path": "tests/fixtures/performance/screenshots/v2-scrap1-final-release-active40-1x-end.jpg",
-          "bytes": 211063,
-          "sha256": "9cd74cc7f5a58fcf8c230d34a81ee77455925ed769eee7f84b7b3aea6e9c62ce"
+          "path": "tests/fixtures/performance/screenshots/v2-ambush1-final-release-active40-1x-end.jpg",
+          "bytes": 196434,
+          "sha256": "963d80407ca7ec3941a4c6facb07ad56f2a5e2fd605dbd15ca435550cb5e5902"
         }
       },
       "activeThroughout": true
     },
     {
-      "label": "v2-scrap1-final-release-active40-2x-native",
+      "label": "v2-ambush1-final-release-active40-2x-native",
       "report": {
-        "path": "tests/fixtures/performance/captures/v2-scrap1-final-release-active40-2x-native.json",
-        "bytes": 275359,
-        "sha256": "a590bfa26a8834387fdd1f6b4ce32461bd16fc42a2c1563649f5f6291bb9ff13"
+        "path": "tests/fixtures/performance/captures/v2-ambush1-final-release-active40-2x-native.json",
+        "bytes": 353885,
+        "sha256": "19b6de85d311a3204a84d0b9b33d66a1cac5dab9b4c57dd00c7c497d63d1e5ac"
       },
       "scenario": {
         "phase": "active",
@@ -159,14 +159,14 @@
       "checkpointKey": "40-active74",
       "screenshots": {
         "start": {
-          "path": "tests/fixtures/performance/screenshots/v2-scrap1-final-release-active40-2x-start.jpg",
-          "bytes": 204002,
-          "sha256": "9f8ef26002dad73b49563f5ff1ee3692b3e543d124ec241571b79af754421ca3"
+          "path": "tests/fixtures/performance/screenshots/v2-ambush1-final-release-active40-2x-start.jpg",
+          "bytes": 200525,
+          "sha256": "77f5ff8915f675198436ce9afa9cf2b407f30de9e0199e70ddd274e7c22fb2d9"
         },
         "end": {
-          "path": "tests/fixtures/performance/screenshots/v2-scrap1-final-release-active40-2x-end.jpg",
-          "bytes": 203836,
-          "sha256": "d2546ec27613c2f54ee8ac9ab75a0935b6a024c039bfbd9164351b341a3ec756"
+          "path": "tests/fixtures/performance/screenshots/v2-ambush1-final-release-active40-2x-end.jpg",
+          "bytes": 179571,
+          "sha256": "380e4a466bf708b1d617fc834b8ae3c2d801fe3210a5f5d86056f815ea3d23ba"
         }
       },
       "activeThroughout": true
@@ -174,11 +174,11 @@
   ],
   "controls": [
     {
-      "label": "v2-scrap1-final-release-paused20-1x-native",
+      "label": "v2-ambush1-final-release-paused20-1x-native-quiet",
       "report": {
-        "path": "tests/fixtures/performance/captures/v2-scrap1-final-release-paused20-1x-native.json",
-        "bytes": 274300,
-        "sha256": "c1502f6311e070fee9e30bf9c895d008f99431361198421b2233773354f9225c"
+        "path": "tests/fixtures/performance/captures/v2-ambush1-final-release-paused20-1x-native-quiet.json",
+        "bytes": 262579,
+        "sha256": "438ff6c0bfe365f499f96f6e697060db0708a54db800d77d5a8df0025b2ebdd1"
       },
       "scenario": {
         "phase": "paused",
@@ -189,11 +189,11 @@
       "mode": "native-raf"
     },
     {
-      "label": "v2-scrap1-final-release-paused20-1x-clock",
+      "label": "v2-ambush1-final-release-paused20-1x-clock-quiet",
       "report": {
-        "path": "tests/fixtures/performance/captures/v2-scrap1-final-release-paused20-1x-clock.json",
-        "bytes": 70407,
-        "sha256": "52a9cfb824c965ae00265c0d8866e31b2ec20334f4ba63f9bececc4bb121fa65"
+        "path": "tests/fixtures/performance/captures/v2-ambush1-final-release-paused20-1x-clock-quiet.json",
+        "bytes": 70914,
+        "sha256": "9922796f2c0c1a5ca48cafa12e2403dbe46168230075522a5ea87f76b6969d27"
       },
       "scenario": {
         "phase": "paused",
@@ -204,17 +204,38 @@
       "mode": "raf-only"
     }
   ],
+  "diagnostics": [
+    {
+      "label": "v2-ambush1-final-release-paused20-1x-native",
+      "report": {
+        "path": "tests/fixtures/performance/captures/v2-ambush1-final-release-paused20-1x-native.json",
+        "bytes": 259530,
+        "sha256": "fab4e98c71c814d51d6583cfebe1d857c3a46ed399b42bb966a3ee6e822e4eb8"
+      },
+      "scenario": {
+        "phase": "paused",
+        "speed": 1,
+        "crowd": 20
+      },
+      "checkpointKey": "20-crowded-render75",
+      "expectedBudgetFailure": "rafGaps.max",
+      "includedInPassingBudgetSet": false,
+      "cause": "Unattributed scheduling gap; no proven game-code cause."
+    }
+  ],
   "checkpointCompatibility": {
     "sourceEngine": "0.2.6-web-endless.3",
-    "loadedByEngine": "0.2.6-web-scrap.1",
+    "loadedByEngine": "0.2.6-web-ambush.1",
     "originalBytesPreserved": true
   },
   "operatorObservations": [
     "Each active final window starts and ends in the playing lawn; Remember Speed was disabled through native Options to initialize1x; after resuming and observing native play, the original stone speed button selected2x before the corresponding paused setup.",
     "All final windows used the visible IAB host preview and document-visible pages, with no visibility/resize/audio changes. The other test tools were idle during each timed interval. Start/end screenshots bracket every active window.",
-    "All captures use muted testing,1280x720 viewport,DPR1 and native800x600 canvas.",
+    "All captures use muted testing,1280x720 viewport,DPR1.0000000298023224 and native800x600 canvas.",
     "Parent-produced checkpoint bytes were preserved and loaded through the current engine UI.",
-    "No served engine or shell bytes changed during these measurements."
+    "No served engine or shell bytes changed during these measurements.",
+    "The first paused native diagnostic recorded one346.7ms rAF gap, with zero long tasks and native callback/save maxima2.3/4.7ms. The cause was not established; its complete raw record is retained as a failed diagnostic, not passing performance evidence.",
+    "The separate quiet paired controls made no screenshots during or immediately after arming their timed intervals. They stayed on the same paused lawn and unchanged engine; their passing results do not erase the earlier scheduling outlier."
   ],
   "limits": "Host preview conditions are caller-observed, not inferred from page visibility. Earlier failed diagnostic captures are retained separately; these short windows do not establish universal or GPU/presentation performance. Single-device short windows and caller-declared scenarios with screenshots. Scheduling is not delivered FPS; native callback CPU is not GPU completion timing. Future engine/shell changes require matching fresh observations."
 }
