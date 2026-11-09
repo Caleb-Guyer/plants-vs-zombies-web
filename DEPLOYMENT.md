@@ -1,5 +1,14 @@
 # GitHub Pages release: Caleb-Guyer/plants-vs-zombies-web
 
+## Late-game performance checks
+
+This update adds developer performance tooling and retained browser evidence while keeping the shipped native engine and runtime unchanged.
+
+The developer-only harness is documented in `tests/performance/README.md`. Run `python tests/performance/preview.py --port 4241` and open `http://127.0.0.1:4241/?testing=1` on an isolated test origin. Its controls are injected into local responses; normal public game pages have no performance HUD. `npm --offline run check` runs sixteen integration suites, including 58 measurement-analysis unit cases and validation of the retained raw traces. Retained trace validation is not a new browser execution. Engine/shell hash changes invalidate these observations until matching new captures are recorded.
+
+The source packager retains the tools, synthetic fixtures, raw traces and screenshots. The existing100MiB static-file limit remains enforced. GitHub Pages runs the integration and fresh native-game checks before deployment.
+
+
 ## Endless.3 release inputs
 
 Canonical play URL: https://caleb-guyer.github.io/plants-vs-zombies-web/

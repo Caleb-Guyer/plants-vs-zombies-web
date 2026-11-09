@@ -1,0 +1,160 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Synthetic developer checkpoints for crowded-board performance measurements. These contain generated test profiles, not real user data or earned progression.",
+  "manualImportOnly": true,
+  "automaticallyImportedByGame": false,
+  "fixtureSetup": {
+    "startingPlants": 60,
+    "layoutSha256": "d62015fcf710758e380cb31ba8bab4e0c8bc76c7c05dc0228b9c169f68fcda85",
+    "startingStagesAreSynthetic": true,
+    "wavesAdvanceThroughNativeEngine": true,
+    "forcedCrowd": false,
+    "postSetupHealthActorOrRngEdits": false,
+    "audioOutputDuringCapture": false,
+    "note": "Native pause/save records the synthetic starting stage as best. That native board/profile value is preserved and must not be interpreted as earned progress."
+  },
+  "provenance": {
+    "nativeEngineVersion": "0.2.6-web-endless.3",
+    "nativePublishedWasmBytes": 7782033,
+    "nativePublishedWasmSha256": "ba915021d3574aca8b3a95578320a0f9bce0dc6fad1f7fed147260b3ee7de60b",
+    "normalBuildReceiptSha256": "b8a96da88b4bfc463bfb10b36ec1a8397ad02c0f83102806c4aafe7b2e3220ba",
+    "productionSourceFiles": 852,
+    "productionObjects": 134,
+    "sourceAggregateAlgorithm": "SHA256 of UTF-8 JSON source-path-to-SHA256 map, keys sorted, compact separators",
+    "sourceAggregateSha256": "42565ebd6b8a20686cc3ee32d7200ff3994a2cef7f60ca06bc3de1a4894d3af1",
+    "fixtureExportDriverSha256": "54cf48504f9fec599b46a169a64b1c68804359c5324b4d6e362d5ef4aa29ea44",
+    "fixtureExportFragmentSha256": "b641e9edfa509b1585cdc4e94f07ae8b03fa773b4732e204f73787446b0becab",
+    "fixtureExportBuilderSha256": "8db8a28f91c45078d730196eff08dea0d85ca6260d8ee678d5c6a5a004202c5d",
+    "fixtureExportOptimization": "O1-development",
+    "fixtureExportWasmSha256": "ee1a27261a1ff4f2be8eea2873673b7e3ee7f461f2b9ae089d4fa0d37e238d73",
+    "nativeBaseHarnessSha256": "e7f8b05dcd0a79f08ec37d69853e1d6517e6c2f9b957aa116bddad114dfc8ff8"
+  },
+  "checkpoints": {
+    "20-early-active33": {
+      "id": "20-early-active33",
+      "file": "browser-perf-flag20-live32.zip",
+      "bytes": 34341,
+      "sha256": "d78894b6d3d2a85ffb7abdf635e107130a5ec876d735a665a3a5225347fd266a",
+      "entries": {
+        "userdata/users.dat": {
+          "bytes": 27,
+          "sha256": "2f341aaaf0df90815068b96670d2f3776f630ab6cfcd2e2a6c174d816a019aa8"
+        },
+        "userdata/user1.dat": {
+          "bytes": 886,
+          "sha256": "82ce7816d6e6c7b761961217f8c0f2f7c99c422687a0620a56b02a126c7dd041"
+        },
+        "userdata/game1_87.v4": {
+          "bytes": 476206,
+          "sha256": "d8227725faabd8820337940204fe6d2699c4fca479d6de52835b4b3ca28e0c72"
+        }
+      },
+      "profileDisplayName": "Perf Flag20",
+      "nativeProfileId": 1,
+      "syntheticStartingFixture": true,
+      "earnedFlags": 0,
+      "pausedAtExport": true,
+      "savedCompletedFlags": 19,
+      "nativeBestFromSyntheticStateAndSave": 19,
+      "currentWave": 2,
+      "liveZombies": 33,
+      "naturalPeakDuringBoundedCapture": 82,
+      "plants": 58,
+      "projectiles": 47,
+      "particles": 103,
+      "reanimations": 170,
+      "mowersRemaining": 6,
+      "nativeFormationsSinceSyntheticStart": 2,
+      "nativeTicksSinceSyntheticStart": 1680,
+      "boardAndProfileBytesUnchanged": true,
+      "benchmarkRole": "active-gameplay",
+      "nativeSpeedTargets": [
+        1,
+        2
+      ]
+    },
+    "20-crowded-render75": {
+      "id": "20-crowded-render75",
+      "file": "browser-perf-flag20-live64.zip",
+      "bytes": 45945,
+      "sha256": "99e9db6c745a4f72ebe31fefacaa95ed804d5eef4f3f33e7dc2b3d19e5c9839b",
+      "entries": {
+        "userdata/users.dat": {
+          "bytes": 27,
+          "sha256": "2f341aaaf0df90815068b96670d2f3776f630ab6cfcd2e2a6c174d816a019aa8"
+        },
+        "userdata/user1.dat": {
+          "bytes": 886,
+          "sha256": "82ce7816d6e6c7b761961217f8c0f2f7c99c422687a0620a56b02a126c7dd041"
+        },
+        "userdata/game1_87.v4": {
+          "bytes": 582575,
+          "sha256": "ba520938faad77f04b47fc24384a68e06cd9f0c8b02faa0f85e1d8db2577c8ba"
+        }
+      },
+      "profileDisplayName": "Perf Flag20",
+      "nativeProfileId": 1,
+      "syntheticStartingFixture": true,
+      "earnedFlags": 0,
+      "pausedAtExport": true,
+      "savedCompletedFlags": 19,
+      "nativeBestFromSyntheticStateAndSave": 19,
+      "currentWave": 5,
+      "liveZombies": 75,
+      "naturalPeakDuringBoundedCapture": 82,
+      "plants": 40,
+      "projectiles": 24,
+      "particles": 163,
+      "reanimations": 180,
+      "mowersRemaining": 6,
+      "nativeFormationsSinceSyntheticStart": 5,
+      "nativeTicksSinceSyntheticStart": 4320,
+      "boardAndProfileBytesUnchanged": true,
+      "benchmarkRole": "paused-render-control",
+      "note": "Near a natural breach; use while paused to isolate rendering, not as an all-active gameplay window."
+    },
+    "40-active74": {
+      "id": "40-active74",
+      "file": "browser-perf-flag40-live64.zip",
+      "bytes": 41434,
+      "sha256": "f91470c93ae9836496d4963603e1366e49dd9cd4c41ee2cd6baafbb4c5363bb9",
+      "entries": {
+        "userdata/users.dat": {
+          "bytes": 27,
+          "sha256": "18ec20f3eeb004776dd2bc665089f8b71e3b169d51277169b3763d89acfe2f8f"
+        },
+        "userdata/user1.dat": {
+          "bytes": 886,
+          "sha256": "0f5696649e9a2ee81f20b93bbfd7a0a6a4bf243c5d8173c0daa5c7df1cdd4507"
+        },
+        "userdata/game1_87.v4": {
+          "bytes": 666617,
+          "sha256": "85a17b77dc2b45e139cf5c45f9495c4459d6d33b8b9c4ff566bd03203a6e518a"
+        }
+      },
+      "profileDisplayName": "Perf Flag40",
+      "nativeProfileId": 1,
+      "syntheticStartingFixture": true,
+      "earnedFlags": 0,
+      "pausedAtExport": true,
+      "savedCompletedFlags": 39,
+      "nativeBestFromSyntheticStateAndSave": 39,
+      "currentWave": 2,
+      "liveZombies": 74,
+      "naturalPeakDuringBoundedCapture": 108,
+      "plants": 60,
+      "projectiles": 59,
+      "particles": 82,
+      "reanimations": 231,
+      "mowersRemaining": 6,
+      "nativeFormationsSinceSyntheticStart": 2,
+      "nativeTicksSinceSyntheticStart": 1400,
+      "boardAndProfileBytesUnchanged": true,
+      "benchmarkRole": "active-gameplay",
+      "nativeSpeedTargets": [
+        1,
+        2
+      ]
+    }
+  }
+}

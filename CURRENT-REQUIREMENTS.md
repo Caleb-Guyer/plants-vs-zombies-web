@@ -1,5 +1,14 @@
 # Current requirements
 
+## Late-game performance checks
+
+Four muted 15-second browser windows cover synthetic Flag 20 and Flag 40 lawns at 1× and 2×. On the measured machine, native callback CPU p95 was 1.2–1.8 ms; the largest native callback was 6.0 ms. Across the active runs and paused control, full synchronous save capture peaked at 4.3 ms, and no 50 ms long tasks occurred. These are short, single-device CPU/scheduling observations, not GPU completion or delivered-frame FPS measurements. No engine or runtime change was justified by these measurements.
+
+The developer-only harness is documented in `tests/performance/README.md`. Run `python tests/performance/preview.py --port 4241` and open `http://127.0.0.1:4241/?testing=1` on an isolated test origin. Its controls are injected into local responses; normal public game pages have no performance HUD. `npm --offline run check` runs sixteen integration suites, including 58 measurement-analysis unit cases and validation of the retained raw traces. Retained trace validation is not a new browser execution. Engine/shell hash changes invalidate these observations until matching new captures are recorded.
+
+The native engine remains `0.2.6-web-endless.3`. Gameplay, artwork, audio controls and save behavior retain their published bytes.
+
+
 ## Endless.3 accepted behavior
 
 After the unchanged first six flags, Pool Panic Endless increases formation size, shortens wave spacing, and raises the share of native heavy zombies. Rotating assaults mix Pogo Zombies, Dancing Zombies and red-eyed Gargantuars with ladders, Jack-in-the-Boxes, Zambonis and pool attackers. Original zombie health, movement, attacks and plant statistics are retained. The lawn and remaining mowers carry forward; the game does not replace a developed defense between flags.

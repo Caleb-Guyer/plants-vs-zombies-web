@@ -1,0 +1,214 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Retained actual-browser CPU and scheduling observations, not GPU presentation or earned progression.",
+  "engine": {
+    "id": "0.2.6-web-endless.3",
+    "jsSha256": "f68adcd086c6eefc01fe4d856f69a0971c7a0de26e997c7a7a8738f165bc8c76",
+    "wasmSha256": "ba915021d3574aca8b3a95578320a0f9bce0dc6fad1f7fed147260b3ee7de60b"
+  },
+  "probe": {
+    "path": "tests/performance/probe.js",
+    "bytes": 10060,
+    "sha256": "f5f9309cc585fd6ea6aad44f84c5c2552b682b21fd4769578693f321154ba99b"
+  },
+  "recorder": {
+    "path": "tests/performance/recorded-preview.py",
+    "bytes": 8088,
+    "sha256": "8be4afca064d280802b4286c4c7d5fdde23955349893d5dda729a807c7c563bb"
+  },
+  "expectedManifest": {
+    "path": "tests/fixtures/performance/capture-manifest.json",
+    "bytes": 6047,
+    "sha256": "4a233c31ba90df849c9824e5f68e8f71896cbba36e53c9239cd83d40dc119055"
+  },
+  "checkpoints": {
+    "path": "tests/fixtures/performance/checkpoints.json",
+    "bytes": 6411,
+    "sha256": "ae5d72cab3ea0c56d42e77ac373dd74b821fdc1409f420a3f536b70a10105d75"
+  },
+  "budgets": {
+    "nativeCallbacks": {
+      "p95": 8,
+      "max": 33.5
+    },
+    "rafGaps": {
+      "p95": 25,
+      "max": 50
+    },
+    "saveCaptures": {
+      "p95": 8,
+      "max": 16.7
+    },
+    "longTasks": {
+      "count": 0,
+      "max": 50
+    }
+  },
+  "minObservationMs": 15000,
+  "minSaveCaptures": 2,
+  "maxControlP95DeltaMs": 1,
+  "observedContext": {
+    "visibility": "visible",
+    "audioMuted": true,
+    "viewport": {
+      "width": 1280,
+      "height": 720,
+      "dpr": 1.5
+    },
+    "canvas": {
+      "width": 800,
+      "height": 600,
+      "cssWidth": 960,
+      "cssHeight": 720
+    }
+  },
+  "cases": [
+    {
+      "label": "v2-active20-early-1x-native",
+      "report": {
+        "path": "tests/fixtures/performance/captures/v2-active20-early-1x-native.json",
+        "bytes": 349750,
+        "sha256": "9628f747f54276e0e6ef5543201d84eab03919627c52e1ec5f8f38f1562199e5"
+      },
+      "scenario": {
+        "phase": "active",
+        "speed": 1,
+        "crowd": 20
+      },
+      "checkpointKey": "20-early-active33",
+      "screenshots": {
+        "start": {
+          "path": "tests/fixtures/performance/screenshots/v2-active20-early-1x-start.jpg",
+          "bytes": 191692,
+          "sha256": "6dc52b0a8fdbac4a297a8bf0788702426ab42f344d6fa8e9a2e5373472e4b4f0"
+        },
+        "end": {
+          "path": "tests/fixtures/performance/screenshots/v2-active20-early-1x-end.jpg",
+          "bytes": 202145,
+          "sha256": "e285107d31d35f6ce636eb84084cdbe9452ca61bfffc2053184f3a6e66ec28b3"
+        }
+      },
+      "activeThroughout": true
+    },
+    {
+      "label": "v2-active20-early-2x-native",
+      "report": {
+        "path": "tests/fixtures/performance/captures/v2-active20-early-2x-native.json",
+        "bytes": 353374,
+        "sha256": "f16279bb9671a8bbf70bdb80ded72152a4af1d419e1031a83081f364ebc58cfe"
+      },
+      "scenario": {
+        "phase": "active",
+        "speed": 2,
+        "crowd": 20
+      },
+      "checkpointKey": "20-early-active33",
+      "screenshots": {
+        "start": {
+          "path": "tests/fixtures/performance/screenshots/v2-active20-early-2x-start.jpg",
+          "bytes": 192750,
+          "sha256": "bf2db02207d65aa7bf215ca61afc958a4ab1da7abe874e25b67435528d9a8c8b"
+        },
+        "end": {
+          "path": "tests/fixtures/performance/screenshots/v2-active20-early-2x-end.jpg",
+          "bytes": 195680,
+          "sha256": "58e0a2bff71ce4989feb9ad73a34f93bd569abafe881cfc87fb6d69a662ac842"
+        }
+      },
+      "activeThroughout": true
+    },
+    {
+      "label": "v2-active40-1x-native",
+      "report": {
+        "path": "tests/fixtures/performance/captures/v2-active40-1x-native.json",
+        "bytes": 356885,
+        "sha256": "d44c35b88878fd369510f97daef437e0c422006a803d9b192e63fd610282b47c"
+      },
+      "scenario": {
+        "phase": "active",
+        "speed": 1,
+        "crowd": 40
+      },
+      "checkpointKey": "40-active74",
+      "screenshots": {
+        "start": {
+          "path": "tests/fixtures/performance/screenshots/v2-active40-1x-start.jpg",
+          "bytes": 194159,
+          "sha256": "e01439368911a558f9efdbbb927bc2fc2c0584e083dc9e712e5c0f3170058819"
+        },
+        "end": {
+          "path": "tests/fixtures/performance/screenshots/v2-active40-1x-end.jpg",
+          "bytes": 201969,
+          "sha256": "15ba207ea9aed9ee54f9ceb9dc8c5f579e2a4107e6bf07eb879d807d9760dcef"
+        }
+      },
+      "activeThroughout": true
+    },
+    {
+      "label": "v2-active40-2x-native",
+      "report": {
+        "path": "tests/fixtures/performance/captures/v2-active40-2x-native.json",
+        "bytes": 355228,
+        "sha256": "a43e7501b6ba997ba0ecf6ee1ef3ec0307a5cca78b97e0a5229036b3fdf5f108"
+      },
+      "scenario": {
+        "phase": "active",
+        "speed": 2,
+        "crowd": 40
+      },
+      "checkpointKey": "40-active74",
+      "screenshots": {
+        "start": {
+          "path": "tests/fixtures/performance/screenshots/v2-active40-2x-start.jpg",
+          "bytes": 194563,
+          "sha256": "1eb154f40bb9b5125b79dee4262f8387d8d0fceae982ec08b78de8f9cbb61452"
+        },
+        "end": {
+          "path": "tests/fixtures/performance/screenshots/v2-active40-2x-end.jpg",
+          "bytes": 178942,
+          "sha256": "bafa31b6ffa001f051243b28f9c973da73e47daa987c4463a1ffb846f79895a1"
+        }
+      },
+      "activeThroughout": true
+    }
+  ],
+  "controls": [
+    {
+      "label": "v2-paused20-1x-native",
+      "report": {
+        "path": "tests/fixtures/performance/captures/v2-paused20-1x-native.json",
+        "bytes": 354874,
+        "sha256": "22dfe97ef5a1eee7f29b0d1dc2fb566f4de335d956de7a45632f910a03324fbe"
+      },
+      "scenario": {
+        "phase": "paused",
+        "speed": 1,
+        "crowd": 20
+      },
+      "checkpointKey": "20-crowded-render75",
+      "mode": "native-raf"
+    },
+    {
+      "label": "v2-paused20-1x-clock",
+      "report": {
+        "path": "tests/fixtures/performance/captures/v2-paused20-1x-clock.json",
+        "bytes": 87091,
+        "sha256": "2b850e87affcedb43cff448b4b0e9a3342cf1b9d8eda1d5b9ef6c43494d219ce"
+      },
+      "scenario": {
+        "phase": "paused",
+        "speed": 1,
+        "crowd": 20
+      },
+      "checkpointKey": "20-crowded-render75",
+      "mode": "raf-only"
+    }
+  ],
+  "operatorObservations": [
+    "Each active final window starts and ends in the playing lawn; native1x/2x controls were configured before arming.",
+    "All captures use muted testing,1280x720viewport,DPR1.5 and native800x600canvas.",
+    "Earlier near-breach flag20 explorations included the native loss sequence and are excluded from all-active acceptance; their original files remain in private outputs.",
+    "No runtime, gameplay, artwork, save logic or native engine bytes were changed during this performance pass."
+  ],
+  "limits": "Single-device short windows and caller-declared scenarios with screenshots. Scheduling is not delivered FPS; native callback CPU is not GPU completion timing. Future engine/shell changes require matching fresh observations."
+}

@@ -1,5 +1,23 @@
 # Browser parity and QA record
 
+## Late-game performance checks
+
+Four muted 15-second browser windows cover synthetic Flag 20 and Flag 40 lawns at 1× and 2×. On the measured machine, native callback CPU p95 was 1.2–1.8 ms; the largest native callback was 6.0 ms. Across the active runs and paused control, full synchronous save capture peaked at 4.3 ms, and no 50 ms long tasks occurred. These are short, single-device CPU/scheduling observations, not GPU completion or delivered-frame FPS measurements. No engine or runtime change was justified by these measurements.
+
+| Starting flag | Speed | Native CPU p95 | Native CPU max | Save capture max |
+| --- | --- | --- | --- | --- |
+|20|1×|1.2ms|5.5ms|3.3ms|
+|20|2×|1.3ms|4.2ms|3.4ms|
+|40|1×|1.8ms|5.2ms|4.0ms|
+|40|2×|1.8ms|6.0ms|3.8ms|
+
+The same snapshot is restored separately for each speed. The active Flag20 fixture begins with33 living zombies and58 plants; Flag40 begins with74 living zombies and60 plants. A separate75-zombie paused lawn supplies a native-timing/rAF-only observer comparison. All four accepted windows begin and end in active play. Earlier near-breach Flag20 explorations crossed into the loss sequence and are excluded from all-active acceptance. All snapshots are synthetic developer data with zero earned-progression claims.
+
+The developer-only harness is documented in `tests/performance/README.md`. Run `python tests/performance/preview.py --port 4241` and open `http://127.0.0.1:4241/?testing=1` on an isolated test origin. Its controls are injected into local responses; normal public game pages have no performance HUD. `npm --offline run check` runs sixteen integration suites, including 58 measurement-analysis unit cases and validation of the retained raw traces. Retained trace validation is not a new browser execution. Engine/shell hash changes invalidate these observations until matching new captures are recorded.
+
+The explicit budgets are native callback p95≤8ms/max≤33.5ms; scheduling-gap p95≤25ms/max≤50ms; synchronous capture p95≤8ms/max≤16.7ms; zero long tasks; at least two save captures in each15-second native window. The paired control allows≤1ms p95 scheduling difference. These bounds were chosen before the final captures; no engine tuning or threshold relaxation was performed.
+
+
 ## Endless.3 observed validation
 
 The 23 retained native suites passed (50,914,086 baseline checks). The separate late-game verification passed 29,323,397 checks. The opening matrix retains 32 cases, 28 earned runs and 92 flags; four additional fresh runs earn 12 flags each across seeds 1729/7331 and 1×/2× speed (48 additional earned flags, 140 automated earned flags total). Sixteen established-defense windows, four actual parent-engine comparison windows, two crowded-wave/mechanics controls and two cross-version migration controls are explicitly separate from earned progression. All fifteen website integration suites passed with no downloaded dependencies. Tests disable audio output; ordinary play keeps its audio controls.
