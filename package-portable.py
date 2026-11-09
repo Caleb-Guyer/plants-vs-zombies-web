@@ -7,6 +7,7 @@ Game asset payloads remain separate served files and in the full runtime archive
 Private QA data and original native executables are never distribution inputs.
 """
 import argparse
+import base64
 import hashlib
 import io
 import importlib.util
@@ -81,6 +82,11 @@ def parent_source_input(engine):
             or any(character not in "0123456789abcdef" for character in expected)):
         raise ValueError("Invalid immediate-parent source SHA-256")
     path = DIST / "game" / reference
+    if engine.get("id") == "0.2.6-web-scrap.1" and not path.exists():
+        # Offline site-source retains the independently pinned complete parent
+        # projection instead of nesting a second 44 MB engine test archive.
+        authenticate_scrap_parent(engine)
+        return None
     if (path.is_symlink() or not path.is_file()
             or not path.resolve().is_relative_to(DIST.resolve())
             or path.resolve().parent != (DIST / "source").resolve()):
@@ -88,6 +94,38 @@ def parent_source_input(engine):
     if hashlib.sha256(path.read_bytes()).hexdigest() != expected:
         raise ValueError("Immediate-parent source does not match engine provenance")
     return path.resolve()
+
+
+def authenticate_scrap_parent(engine):
+    fixture = ROOT / "tests/fixtures/scrap1-parent-reference.json"
+    raw = fixture.read_bytes()
+    if hashlib.sha256(raw).hexdigest() != "8b58d26c299ca9c277f091354c5ec90b4fc5f1af0fc38ab76169880fd164299e":
+        raise ValueError("Scrap Yard parent projection differs from its reviewed fixture")
+    reference = json.loads(raw)
+    if (engine["parent"]["id"] != reference["parent"]["id"] or
+            engine["parent"]["artifacts"]["sourceSha256"] != reference["parent"]["archiveSha256"]):
+        raise ValueError("Scrap Yard parent identity differs from the projection")
+    current = DIST / "game" / engine["artifacts"]["source"]
+    if hashlib.sha256(current.read_bytes()).hexdigest() != engine["artifacts"]["sourceSha256"]:
+        raise ValueError("Scrap Yard source archive differs from provenance")
+    with zipfile.ZipFile(current) as archive:
+        for name, pin in reference["files"].items():
+            data = archive.read("scrap1-candidate/source/" + name)
+            delta = reference["reverseEdits"].get(name)
+            if delta:
+                if (len(data) != delta["currentBytes"] or
+                        hashlib.sha256(data).hexdigest() != delta["currentSha256"]):
+                    raise ValueError("Changed current parent-projection input: " + name)
+                for edit in reversed(delta["edits"]):
+                    offset = edit["offset"]
+                    before = base64.b64decode(edit["beforeBase64"], validate=True)
+                    after = base64.b64decode(edit["afterBase64"], validate=True)
+                    if data[offset:offset + len(before)] != before:
+                        raise ValueError("Invalid parent reverse edit: " + name)
+                    data = data[:offset] + after + data[offset + len(before):]
+            if len(data) != pin["bytes"] or hashlib.sha256(data).hexdigest() != pin["sha256"]:
+                raise ValueError("Parent source projection failed: " + name)
+    return reference
 
 
 def nested_source_inputs(engine, paths, baseline):
@@ -101,6 +139,12 @@ def nested_source_inputs(engine, paths, baseline):
             or hashlib.sha256(native_ui.read_bytes()).hexdigest()
             != "d9861034849eca9d637197aa78a1bae4c90b5656db91ca102d8c903100031edd"):
         raise ValueError("Authenticated native I, Zombie UI fixture is missing or changed")
+    if engine.get("id") == "0.2.6-web-scrap.1":
+        authenticate_scrap_parent(engine)
+        comparator = DIST / "source/pvz-portable-0.2.6-web-endless.2-source.zip"
+        if hashlib.sha256(comparator.read_bytes()).hexdigest() != "b9095c65547c3d013917ae4188e284f18eabb71a98020ca3d53f71f7365f9566":
+            raise ValueError("Historical Endless.2 comparator archive differs")
+        return [baseline, comparator, paths["source"]]
     return list(dict.fromkeys([baseline, *([parent] if parent else []), paths["source"]]))
 
 
@@ -170,7 +214,7 @@ def regenerate_source_downloads():
         "schema_version": 1,
         "current_engine": engine["id"],
         "upstream_tag": engine["upstream"]["tag"],
-        "layout": "Site-source nests current corresponding source, its immediate parent when present, the upstream baseline, the authenticated Rally.3 native I, Zombie UI reference and the current full patch. Other source archives and incremental/historical patches remain standalone downloads beside this index and in the full runtime distribution.",
+        "layout": "Site-source nests current corresponding source, the upstream baseline, the historical Endless.2 comparator, the independently pinned complete Endless.3 parent projection, the native I, Zombie UI reference and the current full patch. Exact historical source archives remain standalone downloads beside this index and in the full runtime distribution. Linked native test artifacts are losslessly packed; the included decoder restores their exact pinned bytes.",
         "nested_sources": [path.name for path in nested],
         "nested_patches": [paths["patch"].name],
         "archives": archives,

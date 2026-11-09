@@ -1,6 +1,22 @@
 # Current requirements
 
-## Late-game performance checks
+## Scrap.1 accepted behavior
+
+- Add Scrap Yard as Bonus card 16 without rearranging the existing fifteen cards or introducing an extra HUD.
+- Use the original night lawn, five normal seed packets, five starting Magnet-shrooms, five Wall-nuts, three original Peashooters in alternating lanes and 800 sun. The other two lanes require player tools and can share a center Cherry Bomb. Keep 35 seconds between formations; removing armor must never accelerate a wave.
+- Reward an actual successful eligible native metal pull exactly once with two normal 25-sun pickups. Failed, repeated and unrelated pulls receive no extra reward.
+- Keep native zombie health, movement, abilities, plant prices, recharge timers, damage, explosions and loss conditions.
+- Complete six formations, award through the native completion flow, and preserve mid-pull and visible-sun saves and existing challenge records.
+- Test with audio output disabled. Ordinary play keeps its audio controls.
+- Publish only after current-engine automated regression and browser checks pass.
+
+### Scrap.1 validation result
+
+The frozen current release passes all 24 native suites: **52,882,925 baseline checks**, plus a separately counted **29,323,403 Endless late checks**, with zero failures (**82,206,328 combined**). Thirteen focused suites preserve their original 57,709 checks and add 352 Scrap catalog, completion and layout checks. Eleven complete-engine suites link the current 136 non-main objects from all 856 production sources. All retained Endless base and late cases were freshly executed, without reusing earlier run results.
+
+The 18 Scrap cases pass 1,968,447 checks: twelve actual native wins, four genuine hands-off losses and two separate mechanic/history controls across both seeds and both speeds. Normal wins retain at least three mowers, exceeding the unchanged two-mower gate; saved wins retain three or four. Native reward accounting, observed mid-pull and loose-sun Continue graphs, all 100 legacy profile records and 866 original art inputs pass their checks. Audio output stays disabled during automation. These results establish the native gate; browser validation and publication are recorded separately.
+
+## Historical Endless.3 performance checks
 
 Four muted 15-second browser windows cover synthetic Flag 20 and Flag 40 lawns at 1× and 2×. On the measured machine, native callback CPU p95 was 1.2–1.8 ms; the largest native callback was 6.0 ms. Across the active runs and paused control, full synchronous save capture peaked at 4.3 ms, and no 50 ms long tasks occurred. These are short, single-device CPU/scheduling observations, not GPU completion or delivered-frame FPS measurements. No engine or runtime change was justified by these measurements.
 
@@ -1201,3 +1217,7 @@ A historical muted local Software.6 run verified its Information/source identity
 Agent testing remains `?testing=1` quiet; normal-player audio and public preference/save keys remain unchanged. These local observations do not establish deployment or anonymous public-runtime verification.
 
 Static native equations and synthetic actual-code tests do not certify an authentic original framebuffer. DD16/other layouts, driver/D3D shortcuts, volatile/cache/device recovery, fractional/rotated/matrix/triangle/coverage paths, offscreen tint/additive, dense-scene performance and complete gameplay comparisons remain separate. Software.6 left the native nonaxis additive-AA no-op discrepancy unchanged; the strict Software.8 screen override described above addresses its reviewed API/state scope, with no ordinary game caller proved. Keep all levels, modes and every plant/zombie ability in the active exact-game goal.
+
+## 2026-11-09 - Scrap.1 scoped browser performance evidence
+
+Performance evidence (2026-11-09): The [six final muted browser observations](tests/fixtures/performance/baseline.json) passed the unchanged budgets on synthetic established Endless checkpoints at 1x/2x, plus paired paused controls. Across the six 15-second windows, rAF-gap p95 was 6.1 ms and max was 7.1 ms; native-callback p95 reached 1.9 ms/max 5.4 ms, synchronous save capture reached 5.5 ms, and no long tasks were recorded. Native 3D was selected, the IAB host preview and page were visible, and active start/end HUD images are retained. The game canvas now requests the standard advisory high-performance WebGL preference during context creation; observed device information still identified Intel graphics. [Earlier failed and excluded diagnostics](tests/fixtures/performance/diagnostics/context.json) remain unchanged. These short observations do not isolate a unique cause or establish dedicated-GPU selection, displayed FPS, GPU completion, universal smoothness or full original-game parity. Local evidence precedes publication; the Pages workflow reruns native checks before deployment.

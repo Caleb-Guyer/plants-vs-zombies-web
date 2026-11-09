@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import {CURRENT_ENGINE_ID, CURRENT_SOURCE_COUNT, CURRENT_OBJECT_COUNT} from './native-release-context.mjs';
 
 const names=['normal','save-continue','retry-no-light','no-move','controls'];
 const controls=['lightFootprint','fogMatchesLight','litBottomBaseClear','unlitFireBlocked','pendingFireBlocked',
@@ -9,6 +10,10 @@ const visualEvidence={fogEdgeRows:5,fogBranchCount:2,croppedFogNegatives:10,misp
 
 export async function verifyLightsOut({report,read,sha,engine,fullRunReport,productionBuildBytes}) {
  assert.equal(report.execution,'complete-production-engine');
+ assert.equal(engine.id,CURRENT_ENGINE_ID);
+ assert.equal(Object.keys(report.sourceSha256).length,CURRENT_SOURCE_COUNT);
+ assert.equal(report.productionObjectCount,CURRENT_OBJECT_COUNT);
+ assert.equal(Object.keys(report.productionObjectSha256).length,CURRENT_OBJECT_COUNT);
  assert.equal(report.optimization,'O2');
  assert.equal(report.failures,0);
  assert.equal(report.exitCode,0);

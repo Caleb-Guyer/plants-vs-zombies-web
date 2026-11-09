@@ -1,6 +1,33 @@
 # Browser parity and QA record
 
-## Late-game performance checks
+## Scrap.1 QA scope
+
+Scrap Yard adds a native minigame rather than changing original combat statistics. The current-engine matrix covers ordinary click-driven play, real hands-off defeat/retry, 1x/2x parity, exact save/Continue graphs, sun pickup accounting, native metal-removal effects and preserved old challenge records. Narrow synthetic mechanic controls are identified separately from playable runs. Failed development policies remain private evidence and are not counted as wins.
+
+Retained earlier suites execute against the new 856-file/136-object engine. The historical Endless.2 comparison uses its own frozen 852-file/134-object build; it is not labeled as current-engine execution. Existing Endless cases and late-game gates retain their reviewed contracts through an explicit two-runner retention adapter.
+
+This is scoped regression coverage, not a claim of exhaustive original-game parity or flawless balance for every player.
+
+### Scrap.1 validated native results
+
+The frozen `0.2.6-web-scrap.1` release passes **24 current native suites, 52,882,925 baseline checks and zero failures**. These comprise thirteen focused production-method suites and eleven complete-engine suites linked against the current 856-source/136-object build. The focused suites retain all 57,709 earlier checks and append 352 checks for the added catalog row, native completion ownership and layout. All 32 retained Endless base cases and 28 late cases were freshly executed. The late block contributes **29,323,403 separate checks**; the combined total is **82,206,328**. The frozen 852-source/134-object Endless.2 comparator remains historical evidence.
+
+Scrap Yard's preregistered 18-case matrix passes **1,968,447 checks**, with no resource-capacity warnings. Normal play, mid-pull save/Continue, loose-sun save/Continue and no-action runs each cover seeds 1729 and 7331 at 1x and 2x; two separately identified controls cover 1x/1729 and 2x/7331. The twelve playable wins reach native state 131 after all six formations and 38 authored zombies, with a real native award coin and one credit to reserved record 87. The four no-action runs genuinely lose. Normal wins preserve the following mower headroom; the eight saved wins retain three or four mowers.
+
+| Seed | Speed | Mowers remaining in normal win |
+| --- | --- | --- |
+| 1729 | 1x | 5 |
+| 1729 | 2x | 4 |
+| 7331 | 1x | 4 |
+| 7331 | 2x | 3 |
+
+The controls independently verify seven stock zombie metal kinds and a placed ladder, exactly two normal 25-sun coins for each successful eligible pull, and no extra reward for failed, repeated or wrong-mode pulls. Observed save graphs preserve the native packet, actor, Magnet-item, coin and phase state across Continue. An actual published Endless.3 earned-flag-8 profile/save fixture preserves all 100 profile records, round-trips the profile bytes exactly and continues the observed old save graph without awarding a Scrap trophy. The native-art fixture authenticates 866 PAK inputs, retaining all 746 earlier inputs and adding 120 dependencies for Magnet metal, the night card, plants and enemies. All fifteen earlier Bonus-card metadata records remain exact.
+
+Formation observations account for the sampler running after both native updates at 2x: the first sample may lag the native 1,800-tick opening by one tick, while all subsequent observed gaps remain exactly 3,500 ticks. One normal 2x/7331 run reaches actual victory during the driver's placement latency; the driver stops only after confirming native terminal victory, preserving its exact-cost and cooldown assertions. Every run reports silent hardware and no opened audio device. This coverage does not establish exhaustive save-file equivalence, balance for every strategy or browser rendering performance.
+
+The source ZIP binds contract SHA-256 `2ada5367e1e3683d6adf3c373d3a58b304e5f2311c18c89c2de690e48dd8fb1c`, native-art fixture SHA-256 `952a51285a84e7b6cf232fdb96ddad60b65eb6d495db4a8b052d38ff241fd45b` and Scrap report SHA-256 `412722a274b82d80c04b7fed0979fab6d2c3137f85a7846b5cf67ad0f46157d0`. The staged `native-content`, fileless-generator and Zombatar-export Node checks also pass. [Build provenance](dist/source/build-provenance.json) records every current report and artifact digest.
+
+## Historical Endless.3 performance checks
 
 Four muted 15-second browser windows cover synthetic Flag 20 and Flag 40 lawns at 1× and 2×. On the measured machine, native callback CPU p95 was 1.2–1.8 ms; the largest native callback was 6.0 ms. Across the active runs and paused control, full synchronous save capture peaked at 4.3 ms, and no 50 ms long tasks occurred. These are short, single-device CPU/scheduling observations, not GPU completion or delivered-frame FPS measurements. No engine or runtime change was justified by these measurements.
 
@@ -2036,3 +2063,5 @@ Original Menu/Main Menu/Leave saved the checkpoint; main Quit/confirmation retur
 The post-restart error-level console query returned no entries.
 
 At this earlier basic Software.7 checkpoint, no finite win, earned unlock, explicit hit/chill comparison, save-export byte comparison, direct corrected-callback trace, authentic original frame/JPEG equality or dense-scene performance was credited. Later private Software.7 Zombiquarium and Survival: Day wins are separately recorded in the current source/build context above; they do not transfer to Software.8. Full 1:1 parity remains active and incomplete.
+
+Performance evidence (2026-11-09): The [six final muted browser observations](tests/fixtures/performance/baseline.json) passed the unchanged budgets on synthetic established Endless checkpoints at 1x/2x, plus paired paused controls. Across the six 15-second windows, rAF-gap p95 was 6.1 ms and max was 7.1 ms; native-callback p95 reached 1.9 ms/max 5.4 ms, synchronous save capture reached 5.5 ms, and no long tasks were recorded. Native 3D was selected, the IAB host preview and page were visible, and active start/end HUD images are retained. The game canvas now requests the standard advisory high-performance WebGL preference during context creation; observed device information still identified Intel graphics. [Earlier failed and excluded diagnostics](tests/fixtures/performance/diagnostics/context.json) remain unchanged. These short observations do not isolate a unique cause or establish dedicated-GPU selection, displayed FPS, GPU completion, universal smoothness or full original-game parity. Local evidence precedes publication; the Pages workflow reruns native checks before deployment.

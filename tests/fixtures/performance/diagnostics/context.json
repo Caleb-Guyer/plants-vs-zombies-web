@@ -1,0 +1,1497 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Preserve actual Scrap.1 performance diagnostics, including failed visible-host-preview observations. These are not acceptance captures or substitutes for the separately recorded final matrix.",
+  "engineId": "0.2.6-web-scrap.1",
+  "engineWasmSha256": "a9b1cc5296b9bcb5f4045b18f9bb30c6ae95823a2658afb6a3ea5a70932f6102",
+  "probeSha256": "f5f9309cc585fd6ea6aad44f84c5c2552b682b21fd4769578693f321154ba99b",
+  "existingFrameGapBudgetMs": {
+    "p95": 25,
+    "max": 50
+  },
+  "budgetsAndRawResultsModified": false,
+  "hostPreviewAndPageVisibilityAreDifferent": true,
+  "observations": [
+    {
+      "file": "v2-scrap1-active20-early-1x-native.json",
+      "bytes": 120667,
+      "sha256": "a8bc649ba76ffa229677780a77fbbb094ffe09a6e477c66023dfe9cbe5549b9a",
+      "role": "active/native diagnostic; rAF budget failed",
+      "label": "v2-scrap1-active20-early-1x-native",
+      "mode": "native-raf",
+      "elapsedMs": 15001.800000011921,
+      "hostLivePreviewVisible": true,
+      "hostLivePreviewStateEvidence": "External browser-controller observation reported by publisher; not inferred from document.visibilityState.",
+      "recordedPageVisibility": {
+        "start": "visible",
+        "end": "visible",
+        "changes": []
+      },
+      "viewport": {
+        "width": 1280,
+        "height": 720,
+        "dpr": 1
+      },
+      "canvas": {
+        "width": 800,
+        "height": 600,
+        "cssWidth": 960,
+        "cssHeight": 720
+      },
+      "frameGapMs": {
+        "samples": 976,
+        "p50": 12.5,
+        "p95": 37.5,
+        "p99": 54.19999999999709,
+        "max": 104.09999999999854,
+        "over33": 54,
+        "over50": 13,
+        "over100": 1
+      },
+      "nativeCallbackMs": {
+        "samples": 977,
+        "p50": 1.300000011920929,
+        "p95": 2,
+        "p99": 2.300000011920929,
+        "max": 4.699999988079071,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0
+      },
+      "saveCaptureMs": {
+        "samples": 3,
+        "p50": 4,
+        "p95": 4.5,
+        "p99": 4.5,
+        "max": 4.5,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0
+      },
+      "longTasks": [],
+      "frameGapBudgetPassed": false
+    },
+    {
+      "file": "v2-scrap1-paused20-1x-native.json",
+      "bytes": 77640,
+      "sha256": "10161e1064648e513af5cfaf11d7f08ce1e24310ff2bcc306a33b23a5ea943cf",
+      "role": "paused/native diagnostic; rAF budget failed",
+      "label": "v2-scrap1-paused20-1x-native",
+      "mode": "native-raf",
+      "elapsedMs": 15000.199999988079,
+      "hostLivePreviewVisible": true,
+      "hostLivePreviewStateEvidence": "External browser-controller observation reported by publisher; not inferred from document.visibilityState.",
+      "recordedPageVisibility": {
+        "start": "visible",
+        "end": "visible",
+        "changes": []
+      },
+      "viewport": {
+        "width": 1280,
+        "height": 720,
+        "dpr": 1
+      },
+      "canvas": {
+        "width": 800,
+        "height": 600,
+        "cssWidth": 960,
+        "cssHeight": 720
+      },
+      "frameGapMs": {
+        "samples": 514,
+        "p50": 25.099999999998545,
+        "p95": 45.900000000001455,
+        "p99": 75,
+        "max": 125,
+        "over33": 122,
+        "over50": 20,
+        "over100": 1
+      },
+      "nativeCallbackMs": {
+        "samples": 515,
+        "p50": 1.600000023841858,
+        "p95": 2.100000023841858,
+        "p99": 2.199999988079071,
+        "max": 3.600000023841858,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0
+      },
+      "saveCaptureMs": {
+        "samples": 3,
+        "p50": 4.599999964237213,
+        "p95": 5.100000023841858,
+        "p99": 5.100000023841858,
+        "max": 5.100000023841858,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0
+      },
+      "longTasks": [],
+      "frameGapBudgetPassed": false
+    },
+    {
+      "file": "v2-scrap1-paused20-1x-clock.json",
+      "bytes": 41590,
+      "sha256": "d5ebe214d09c7489dee49c58bf400f8032824bfc76c39db1a3a0fea1a63d971d",
+      "role": "paused/clock-only diagnostic; rAF budget failed",
+      "label": "v2-scrap1-paused20-1x-clock",
+      "mode": "raf-only",
+      "elapsedMs": 15000.100000023842,
+      "hostLivePreviewVisible": true,
+      "hostLivePreviewStateEvidence": "External browser-controller observation reported by publisher; not inferred from document.visibilityState.",
+      "recordedPageVisibility": {
+        "start": "visible",
+        "end": "visible",
+        "changes": []
+      },
+      "viewport": {
+        "width": 1280,
+        "height": 720,
+        "dpr": 1
+      },
+      "canvas": {
+        "width": 800,
+        "height": 600,
+        "cssWidth": 960,
+        "cssHeight": 720
+      },
+      "frameGapMs": {
+        "samples": 856,
+        "p50": 16.60000000000582,
+        "p95": 29.20000000001164,
+        "p99": 66.80000000000291,
+        "max": 108.39999999999418,
+        "over33": 21,
+        "over50": 12,
+        "over100": 2
+      },
+      "nativeCallbackMs": {
+        "samples": 0,
+        "p50": 0,
+        "p95": 0,
+        "p99": 0,
+        "max": 0,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0
+      },
+      "saveCaptureMs": {
+        "samples": 0,
+        "p50": 0,
+        "p95": 0,
+        "p99": 0,
+        "max": 0,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0
+      },
+      "longTasks": [],
+      "frameGapBudgetPassed": false
+    },
+    {
+      "file": "v2-scrap1-diagnostic-paused-background-clock.json",
+      "bytes": 86608,
+      "sha256": "4a466687470fd2913f9a39d1425cf7b8e3772ec0ac8eb3898dcf00bbd9360c53",
+      "role": "paired paused/clock-only host-preview-hidden diagnostic",
+      "label": "v2-scrap1-diagnostic-paused-background-clock",
+      "mode": "raf-only",
+      "elapsedMs": 15001.899999976158,
+      "hostLivePreviewVisible": false,
+      "hostLivePreviewStateEvidence": "External browser-controller observation reported by publisher; not inferred from document.visibilityState.",
+      "recordedPageVisibility": {
+        "start": "visible",
+        "end": "visible",
+        "changes": []
+      },
+      "viewport": {
+        "width": 1280,
+        "height": 720,
+        "dpr": 1
+      },
+      "canvas": {
+        "width": 800,
+        "height": 600,
+        "cssWidth": 960,
+        "cssHeight": 720
+      },
+      "frameGapMs": {
+        "samples": 3488,
+        "p50": 4.199999999982538,
+        "p95": 4.300000000017462,
+        "p99": 8.39999999999418,
+        "max": 8.5,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0
+      },
+      "nativeCallbackMs": {
+        "samples": 0,
+        "p50": 0,
+        "p95": 0,
+        "p99": 0,
+        "max": 0,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0
+      },
+      "saveCaptureMs": {
+        "samples": 0,
+        "p50": 0,
+        "p95": 0,
+        "p99": 0,
+        "max": 0,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0
+      },
+      "longTasks": [],
+      "frameGapBudgetPassed": true
+    },
+    {
+      "file": "v2-scrap1-background-active20-early-1x-native.json",
+      "bytes": 93032,
+      "sha256": "9dd33d814a4f8b3139de4482ee208bee5cfa639fd7f499176cbd81c6cb1827da",
+      "role": "active/native diagnostic with host preview hidden; rAF budget still failed",
+      "label": "v2-scrap1-background-active20-early-1x-native",
+      "mode": "native-raf",
+      "elapsedMs": 15001.399999976158,
+      "hostLivePreviewVisible": false,
+      "hostLivePreviewStateEvidence": "External browser-controller observation reported by publisher; not inferred from document.visibilityState.",
+      "recordedPageVisibility": {
+        "start": "visible",
+        "end": "visible",
+        "changes": []
+      },
+      "viewport": {
+        "width": 1280,
+        "height": 720,
+        "dpr": 1
+      },
+      "canvas": {
+        "width": 800,
+        "height": 600,
+        "cssWidth": 960,
+        "cssHeight": 720
+      },
+      "frameGapMs": {
+        "samples": 664,
+        "p50": 20.80000000000291,
+        "p95": 37.400000000001455,
+        "p99": 62.400000000001455,
+        "max": 95.90000000000146,
+        "over33": 36,
+        "over50": 12,
+        "over100": 0
+      },
+      "nativeCallbackMs": {
+        "samples": 665,
+        "p50": 1.5999999642372131,
+        "p95": 2.099999964237213,
+        "p99": 2.399999976158142,
+        "max": 5.299999952316284,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0
+      },
+      "saveCaptureMs": {
+        "samples": 3,
+        "p50": 4.5,
+        "p95": 5,
+        "p99": 5,
+        "max": 5,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0
+      },
+      "longTasks": [],
+      "frameGapBudgetPassed": false
+    }
+  ],
+  "interpretation": "Earlier failed traces remain failures under their original unchanged budgets. The final separate six-case production matrix passed. Private card-skip and unchanged-production recovery windows do not isolate thumbnail causality. Earlier 2x controls with late or Game Over ending evidence are excluded from active-play acceptance. Scheduling varied across diagnostic windows; the standard high-performance WebGL hint is advisory, not proof of an exclusive cause, dedicated GPU selection, universal smoothness or presented FPS.",
+  "limitations": [
+    "Host live-preview state is external controller context; the in-page probe records document.visibilityState, not whether the host preview is shown.",
+    "rAF scheduling and native callback CPU do not measure presented frames, GPU completion, or foreground visual smoothness.",
+    "Clock-only zero callback/save sample counts mean those timing hooks were disabled, not that the game performed no work.",
+    "Native callback timing excludes asynchronous compositor/GPU completion; save-capture timing excludes asynchronous worker/IndexedDB latency.",
+    "Active-play claims require separate before/after board-progression evidence so automatic pause/focus behavior cannot be mistaken for active work.",
+    "Failed visible-host-preview observations remain failures of their original25/50ms scheduling budget; later scoped background-host observations do not erase or reclassify them."
+  ],
+  "nativeOptionsEvidence": {
+    "screenshotPath": "tests/fixtures/performance/diagnostics/background-benchmark-options.jpg",
+    "bytes": 82477,
+    "sha256": "9976bb08177ec7c1ba0df18dd8566aa9c2c429e42f9f7f1b03cc93b46d8208d8",
+    "observedNativeAutoPauseChecked": false,
+    "observedNativeRememberSpeedChecked": false,
+    "observedNativeRechargeTimersChecked": false,
+    "nativeRendererSelection": "Not shown in this More Options image. A WebGL context alone does not distinguish native software versus3D rendering; renderer must be matched separately."
+  },
+  "parentComparison": {
+    "status": "One matched prior-release 1x active window passed. Current retake and same-origin current comparison failed. The later old-release 2x control ended Game Over and exceeded the save p95 budget; it is not accepted full-active 2x evidence. No exclusive version-causality conclusion.",
+    "sourceCommit": "cc0ce20d517812066d5ef96de7173042030b5c57",
+    "engineId": "0.2.6-web-endless.3",
+    "engineWasmSha256": "ba915021d3574aca8b3a95578320a0f9bce0dc6fad1f7fed147260b3ee7de60b",
+    "report": {
+      "path": "tests/fixtures/performance/diagnostics/v2-scrap1-parent-active20-1x-native.json",
+      "bytes": 222730,
+      "sha256": "9f1b363702bba91d23f23ff7fc9c71e5145a7621e3c8b376f60c19dcc304dbca"
+    },
+    "images": {
+      "parent-active20-start.jpg": {
+        "path": "tests/fixtures/performance/diagnostics/parent-active20-start.jpg",
+        "bytes": 199546,
+        "sha256": "88387ae3c019c92ceee3ad088d403c77fafa1a9e1d0f84b918d3c299fc38836d"
+      },
+      "parent-active20-end.jpg": {
+        "path": "tests/fixtures/performance/diagnostics/parent-active20-end.jpg",
+        "bytes": 216781,
+        "sha256": "f648542ac5d06f8c3c025aa1d61c78f33a1276c2478b00f211bb5b7622281244"
+      },
+      "parent-renderer-options.jpg": {
+        "path": "tests/fixtures/performance/diagnostics/parent-renderer-options.jpg",
+        "bytes": 113396,
+        "sha256": "3dec9f88b8a2c65c8c54ee0c766f31eab517e8d4b23144e7b6a2900cfb9a3216"
+      },
+      "parent-benchmark-options.jpg": {
+        "path": "tests/fixtures/performance/diagnostics/parent-benchmark-options.jpg",
+        "bytes": 82925,
+        "sha256": "0f9d43d0b71796edd80c739ffdb2cae14c27997ea460afbe7f886d120388d17c"
+      }
+    },
+    "runtimeSnapshotProvenance": {
+      "path": "tests/fixtures/performance/diagnostics/parent-runtime-snapshot-provenance.json",
+      "bytes": 17276,
+      "sha256": "337b4be592acfac809762eb0443d7833c6c638e5e67fb6da6bf4dd846f8e6694"
+    },
+    "externalNativeOptions": {
+      "acceleration3DChecked": true,
+      "autoPauseChecked": false,
+      "rememberSpeedChecked": false,
+      "evidence": "Publisher matched through native UI; separate renderer and More Options images retained."
+    },
+    "mode": "native-raf",
+    "declaredScenario": {
+      "phase": "active",
+      "speed": 1,
+      "crowd": 20
+    },
+    "recordedPageVisibility": {
+      "start": "visible",
+      "end": "visible",
+      "changes": []
+    },
+    "viewport": {
+      "width": 1280,
+      "height": 720,
+      "dpr": 1
+    },
+    "canvas": {
+      "width": 800,
+      "height": 600,
+      "cssWidth": 960,
+      "cssHeight": 720
+    },
+    "frameGapMs": {
+      "samples": 2070,
+      "p50": 4.2999999999883585,
+      "p95": 12.599999999976717,
+      "p99": 16.70000000001164,
+      "max": 29.199999999953434,
+      "over33": 0,
+      "over50": 0,
+      "over100": 0
+    },
+    "nativeCallbackMs": {
+      "samples": 2071,
+      "p50": 1,
+      "p95": 2,
+      "p99": 2.5,
+      "max": 8.200000047683716,
+      "over33": 0,
+      "over50": 0,
+      "over100": 0
+    },
+    "saveCaptureMs": {
+      "samples": 3,
+      "p50": 6.699999988079071,
+      "p95": 7,
+      "p99": 7,
+      "max": 7,
+      "over33": 0,
+      "over50": 0,
+      "over100": 0
+    },
+    "frameGapBudgetPassed": true
+  },
+  "currentABARetest": {
+    "report": {
+      "path": "tests/fixtures/performance/diagnostics/v2-scrap1-final-active20-early-1x-native.json",
+      "bytes": 119845,
+      "sha256": "2a34b6f45a31b99654b4e930bb744da58b0cefc53899fa2e012103830f769589"
+    },
+    "images": {
+      "v2-scrap1-final-active20-early-1x-start.jpg": {
+        "path": "tests/fixtures/performance/diagnostics/v2-scrap1-final-active20-early-1x-start.jpg",
+        "bytes": 201045,
+        "sha256": "ce11e6565a709f71ceabc233b1eff40d705687977846acf20d5508d92484477b"
+      },
+      "v2-scrap1-final-active20-early-1x-end.jpg": {
+        "path": "tests/fixtures/performance/diagnostics/v2-scrap1-final-active20-early-1x-end.jpg",
+        "bytes": 218366,
+        "sha256": "2c3624f62c5c0cd9205d802c2544d59ff7aa594053a0e7a0d330ec5149292ffb"
+      },
+      "current-hardware-renderer-options.jpg": {
+        "path": "tests/fixtures/performance/diagnostics/current-hardware-renderer-options.jpg",
+        "bytes": 179537,
+        "sha256": "d01df38e2f6cf5ae0908f5893df3a3f6bdd933ebcb331f6644ee9307d17e10fb"
+      }
+    },
+    "label": "v2-scrap1-final-active20-early-1x-native",
+    "mode": "native-raf",
+    "engineId": "0.2.6-web-scrap.1",
+    "engineWasmSha256": "a9b1cc5296b9bcb5f4045b18f9bb30c6ae95823a2658afb6a3ea5a70932f6102",
+    "declaredScenario": {
+      "phase": "active",
+      "speed": 1,
+      "crowd": 20
+    },
+    "frameGapMs": {
+      "samples": 943,
+      "p50": 16.599999999998545,
+      "p95": 29.099999999998545,
+      "p99": 41.599999999998545,
+      "max": 91.69999999999709,
+      "over33": 16,
+      "over50": 5,
+      "over100": 0
+    },
+    "nativeCallbackMs": {
+      "samples": 944,
+      "p50": 1.300000011920929,
+      "p95": 1.9000000357627869,
+      "p99": 2.199999988079071,
+      "max": 5.599999964237213,
+      "over33": 0,
+      "over50": 0,
+      "over100": 0
+    },
+    "saveCaptureMs": {
+      "samples": 3,
+      "p50": 5,
+      "p95": 5.099999964237213,
+      "p99": 5.099999964237213,
+      "max": 5.099999964237213,
+      "over33": 0,
+      "over50": 0,
+      "over100": 0
+    },
+    "frameGapBudgetPassed": false,
+    "native3DAccelerationChecked": true
+  },
+  "attemptedSoftwareDiagnostic": {
+    "report": {
+      "path": "tests/fixtures/performance/diagnostics/v2-scrap1-software-active20-1x-native.json",
+      "bytes": 106863,
+      "sha256": "75a73905e3070e74fea167a911ba9db3d1d89c1773f8e1634854fa59cedc2e0a"
+    },
+    "images": {
+      "software-active20-start.jpg": {
+        "path": "tests/fixtures/performance/diagnostics/software-active20-start.jpg",
+        "bytes": 200700,
+        "sha256": "7173349f50a95f52165801ae21e7f221498efb4884687151711d4921097babcf"
+      },
+      "software-active20-end.jpg": {
+        "path": "tests/fixtures/performance/diagnostics/software-active20-end.jpg",
+        "bytes": 210345,
+        "sha256": "4e8acc50e71615dd276a8d40c50b3c3f146c326b0d103ba9a34f989fb314f4e3"
+      },
+      "current-software-renderer-options.jpg": {
+        "path": "tests/fixtures/performance/diagnostics/current-software-renderer-options.jpg",
+        "bytes": 179163,
+        "sha256": "5721f1bd4c0db589630b1647745ab5bcc5fafe1ec967683931acc16c7c4a022f"
+      },
+      "current-renderer-after-software-import.jpg": {
+        "path": "tests/fixtures/performance/diagnostics/current-renderer-after-software-import.jpg",
+        "bytes": 179144,
+        "sha256": "5d148670520cf899d048e21b40232ea5857111b90659a851d06f28662adf5d78"
+      }
+    },
+    "label": "v2-scrap1-software-active20-1x-native",
+    "mode": "native-raf",
+    "engineId": "0.2.6-web-scrap.1",
+    "engineWasmSha256": "a9b1cc5296b9bcb5f4045b18f9bb30c6ae95823a2658afb6a3ea5a70932f6102",
+    "declaredScenario": {
+      "phase": "active",
+      "speed": 1,
+      "crowd": 20
+    },
+    "frameGapMs": {
+      "samples": 810,
+      "p50": 16.69999999999709,
+      "p95": 33.299999999995634,
+      "p99": 58.299999999995634,
+      "max": 112.5,
+      "over33": 29,
+      "over50": 13,
+      "over100": 1
+    },
+    "nativeCallbackMs": {
+      "samples": 811,
+      "p50": 1.5,
+      "p95": 2.099999964237213,
+      "p99": 2.300000011920929,
+      "max": 5.599999964237213,
+      "over33": 0,
+      "over50": 0,
+      "over100": 0
+    },
+    "saveCaptureMs": {
+      "samples": 3,
+      "p50": 5.799999952316284,
+      "p95": 6.599999964237213,
+      "p99": 6.599999964237213,
+      "max": 6.599999964237213,
+      "over33": 0,
+      "over50": 0,
+      "over100": 0
+    },
+    "frameGapBudgetPassed": false,
+    "actuallySoftwareEvidence": false,
+    "native3DAccelerationCheckedAfterImport": true,
+    "qualification": "The software setting was requested before importing/reloading, but post-import native Options visibly had3D Acceleration checked again. The report label is preserved verbatim and must not be treated as software-renderer performance evidence."
+  },
+  "sameOriginCurrentComparison": {
+    "report": {
+      "path": "tests/fixtures/performance/diagnostics/v2-scrap1-sameorigin-active20-early-1x-native.json",
+      "bytes": 114798,
+      "sha256": "e01fbd32611c57cd4da621af9d7cb9a02e71bda45060eab8d7b4faec6e1199f6"
+    },
+    "images": {
+      "v2-scrap1-sameorigin-active20-early-1x-start.jpg": {
+        "path": "tests/fixtures/performance/diagnostics/v2-scrap1-sameorigin-active20-early-1x-start.jpg",
+        "bytes": 200800,
+        "sha256": "6c9253618caf1d0b81ad8479e80eb9c65b03e4acd44d61b8717f7acbd6c9fb65"
+      },
+      "v2-scrap1-sameorigin-active20-early-1x-end.jpg": {
+        "path": "tests/fixtures/performance/diagnostics/v2-scrap1-sameorigin-active20-early-1x-end.jpg",
+        "bytes": 214985,
+        "sha256": "dee11caadad7c18821a194de745abd78bae8b1daaf4875f24af1af5b2d07b084"
+      }
+    },
+    "label": "v2-scrap1-sameorigin-active20-early-1x-native",
+    "mode": "native-raf",
+    "engineId": "0.2.6-web-scrap.1",
+    "engineWasmSha256": "a9b1cc5296b9bcb5f4045b18f9bb30c6ae95823a2658afb6a3ea5a70932f6102",
+    "declaredScenario": {
+      "phase": "active",
+      "speed": 1,
+      "crowd": 20
+    },
+    "frameGapMs": {
+      "samples": 890,
+      "p50": 16.60000000000582,
+      "p95": 29.19999999999709,
+      "p99": 45.80000000000291,
+      "max": 91.69999999999709,
+      "over33": 23,
+      "over50": 5,
+      "over100": 0
+    },
+    "nativeCallbackMs": {
+      "samples": 891,
+      "p50": 1.300000011920929,
+      "p95": 1.899999976158142,
+      "p99": 2.199999988079071,
+      "max": 4.799999952316284,
+      "over33": 0,
+      "over50": 0,
+      "over100": 0
+    },
+    "saveCaptureMs": {
+      "samples": 3,
+      "p50": 4.800000011920929,
+      "p95": 5.100000023841858,
+      "p99": 5.100000023841858,
+      "max": 5.100000023841858,
+      "over33": 0,
+      "over50": 0,
+      "over100": 0
+    },
+    "frameGapBudgetPassed": false,
+    "nativeCallbackBudgetPassed": true,
+    "officialRecorderSha256": "12998a23837b556ba40914e8baed2f46bcb789e980a6e280c4f1061c7c33100a",
+    "native3DAccelerationChecked": true,
+    "origin": "http://127.0.0.1:4243",
+    "priorReleaseSharedOrigin": true
+  },
+  "appliedSoftwareDiagnostic": {
+    "report": {
+      "path": "tests/fixtures/performance/diagnostics/v2-scrap1-appliedsoftware-active20-1x-native.json",
+      "bytes": 77144,
+      "sha256": "ed033ef878281f460a524b9b32609f9a7de3b0978bf5547ce79621d3d18858a1"
+    },
+    "images": {
+      "appliedsoftware-active20-start.jpg": {
+        "path": "tests/fixtures/performance/diagnostics/appliedsoftware-active20-start.jpg",
+        "bytes": 200361,
+        "sha256": "3679b1855bc1e8cbda8193a4bd5d2b8279560bf804d8b7fd92d5c1fa2bb415f4"
+      },
+      "appliedsoftware-active20-end.jpg": {
+        "path": "tests/fixtures/performance/diagnostics/appliedsoftware-active20-end.jpg",
+        "bytes": 214347,
+        "sha256": "6cb687c67df41bf9f41718371721dfe1b64c887dd88cda107d3a1024ee3e3164"
+      },
+      "applied-software-renderer-options.jpg": {
+        "path": "tests/fixtures/performance/diagnostics/applied-software-renderer-options.jpg",
+        "bytes": 173471,
+        "sha256": "db98d685c240ee3b85a394606bd2e01412ef0e2cf428afb645a2592b9b42d733"
+      }
+    },
+    "label": "v2-scrap1-appliedsoftware-active20-1x-native",
+    "mode": "native-raf",
+    "engineId": "0.2.6-web-scrap.1",
+    "engineWasmSha256": "a9b1cc5296b9bcb5f4045b18f9bb30c6ae95823a2658afb6a3ea5a70932f6102",
+    "declaredScenario": {
+      "phase": "active",
+      "speed": 1,
+      "crowd": 20
+    },
+    "frameGapMs": {
+      "samples": 496,
+      "p50": 25,
+      "p95": 54.19999999999709,
+      "p99": 83.5,
+      "max": 112.60000000000582,
+      "over33": 127,
+      "over50": 34,
+      "over100": 3
+    },
+    "nativeCallbackMs": {
+      "samples": 497,
+      "p50": 21,
+      "p95": 25.599999964237213,
+      "p99": 27.399999976158142,
+      "max": 30,
+      "over33": 0,
+      "over50": 0,
+      "over100": 0
+    },
+    "saveCaptureMs": {
+      "samples": 3,
+      "p50": 3.900000035762787,
+      "p95": 5.399999976158142,
+      "p99": 5.399999976158142,
+      "max": 5.399999976158142,
+      "over33": 0,
+      "over50": 0,
+      "over100": 0
+    },
+    "frameGapBudgetPassed": false,
+    "nativeCallbackBudgetPassed": false,
+    "officialRecorderSha256": "12998a23837b556ba40914e8baed2f46bcb789e980a6e280c4f1061c7c33100a",
+    "actuallySoftwareEvidence": true,
+    "native3DAccelerationCheckedAfterImportAndOptionsReopen": false,
+    "qualification": "Unlike the earlier software-labeled attempt, native3D was switched off after import, Options closed and reopened, and the unchecked value captured before this window. This actual software run fails the original native-callback p95 budget as well as the rAF budget."
+  },
+  "unchangedProductionRecovery": {
+    "report": {
+      "path": "tests/fixtures/performance/diagnostics/v2-scrap1-post-isolation-active20-early-1x-native.json",
+      "bytes": 341869,
+      "sha256": "d9ea1859d63c9812be38da6e496b69cf3dcfa5d1e4ab65d84b690d174d6a497c"
+    },
+    "images": {
+      "v2-scrap1-post-isolation-active20-early-1x-start.jpg": {
+        "path": "tests/fixtures/performance/diagnostics/v2-scrap1-post-isolation-active20-early-1x-start.jpg",
+        "bytes": 199828,
+        "sha256": "e961ec5aa19b836994411f3d5fec175689d036636a651e1c605a69d4edccd15f"
+      },
+      "v2-scrap1-post-isolation-active20-early-1x-end.jpg": {
+        "path": "tests/fixtures/performance/diagnostics/v2-scrap1-post-isolation-active20-early-1x-end.jpg",
+        "bytes": 211981,
+        "sha256": "5c6a5ec04fc7f24bc8a573495179f9f658f32aaa8252efabe8b149d7b94b8499"
+      },
+      "production-hardware-options.jpg": {
+        "path": "tests/fixtures/performance/diagnostics/production-hardware-options.jpg",
+        "bytes": 112914,
+        "sha256": "05b69b0d91eb5667a3de9ac6ab5d71aac398ea34ab220ccf6ccae5a30b517082"
+      },
+      "production-benchmark-options.jpg": {
+        "path": "tests/fixtures/performance/diagnostics/production-benchmark-options.jpg",
+        "bytes": 82975,
+        "sha256": "086363c0369882d322815c2a65ead5c25627527f628ec433eb07631d164dfb61"
+      }
+    },
+    "engineId": "0.2.6-web-scrap.1",
+    "engineWasmSha256": "a9b1cc5296b9bcb5f4045b18f9bb30c6ae95823a2658afb6a3ea5a70932f6102",
+    "mode": "native-raf",
+    "declaredScenario": {
+      "phase": "active",
+      "speed": 1,
+      "crowd": 20
+    },
+    "frameGapMs": {
+      "samples": 3504,
+      "p50": 4.19999999999709,
+      "p95": 4.30000000000291,
+      "p99": 8.30000000000291,
+      "max": 12.5,
+      "over33": 0,
+      "over50": 0,
+      "over100": 0
+    },
+    "nativeCallbackMs": {
+      "samples": 3505,
+      "p50": 0,
+      "p95": 1.199999988079071,
+      "p99": 1.7999999523162842,
+      "max": 5.5,
+      "over33": 0,
+      "over50": 0,
+      "over100": 0
+    },
+    "saveCaptureMs": {
+      "samples": 3,
+      "p50": 5.900000035762787,
+      "p95": 6.299999952316284,
+      "p99": 6.299999952316284,
+      "max": 6.299999952316284,
+      "over33": 0,
+      "over50": 0,
+      "over100": 0
+    },
+    "frameGapBudgetPassed": true,
+    "nativeCallbackBudgetPassed": true,
+    "native3DAccelerationChecked": true,
+    "autoPauseChecked": false,
+    "rememberSpeedChecked": false,
+    "interpretation": "Unchanged productiona9 passed on the same4244 origin after private card-isolation. This is not evidence that removing the card fixed anything. A long tool/file-chooser stall and time/environment changes confound that sequence; no productionC++ fix is supported. Final full production capture matrix remains separately required."
+  },
+  "laterDiagnostics": {
+    "production2xLateEndshot": {
+      "report": {
+        "path": "tests/fixtures/performance/diagnostics/v2-scrap1-post-isolation-active20-early-2x-native.json",
+        "bytes": 342817,
+        "sha256": "96f42de99d0733252114000a3f7ba020093c115e25b0dd68127c0ee3dae59c8a"
+      },
+      "images": [
+        {
+          "path": "tests/fixtures/performance/diagnostics/v2-scrap1-post-isolation-active20-early-2x-start.jpg",
+          "bytes": 200487,
+          "sha256": "4590543e75d86f3d33e2be62d72e307a137c009ba13d5d93b91733258de9d90d"
+        },
+        {
+          "path": "tests/fixtures/performance/diagnostics/v2-scrap1-post-isolation-active20-early-2x-end.jpg",
+          "bytes": 208243,
+          "sha256": "0f8a8dfbedadf87a757a62deac4560c4e9275c731203145a0ad603277ac73c5e"
+        }
+      ],
+      "qualification": "Timing budgets passed, but the operator obtained the ending image late after extra unpaused time and native ending UI appeared. Excluded from all-active acceptance.",
+      "acceptanceCapture": false,
+      "declaredScenario": {
+        "phase": "active",
+        "speed": 2,
+        "crowd": 20
+      },
+      "frameGapMs": {
+        "samples": 3514,
+        "p50": 4.19999999999709,
+        "p95": 4.30000000000291,
+        "p99": 8.30000000000291,
+        "max": 8.5,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0
+      },
+      "nativeCallbackMs": {
+        "samples": 3515,
+        "p50": 0,
+        "p95": 1.300000011920929,
+        "p99": 1.800000011920929,
+        "max": 4.5,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0
+      },
+      "saveCaptureMs": {
+        "samples": 3,
+        "p50": 4,
+        "p95": 7.800000011920929,
+        "p99": 7.800000011920929,
+        "max": 7.800000011920929,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0
+      }
+    },
+    "production2xArtifactWatcherRetake": {
+      "report": {
+        "path": "tests/fixtures/performance/diagnostics/v2-scrap1-post-isolation-final-active20-early-2x-native.json",
+        "bytes": 117911,
+        "sha256": "25aa69f8202307de24eef4422cf220ac865dcda3c226892e8dd285933a6d694a"
+      },
+      "images": [
+        {
+          "path": "tests/fixtures/performance/diagnostics/v2-scrap1-post-isolation-final-active20-early-2x-start.jpg",
+          "bytes": 200950,
+          "sha256": "e85a6cd791c8a36e1c900ff70c5d0df6f53210e0e48f352e4abeef4cc8dbb11e"
+        },
+        {
+          "path": "tests/fixtures/performance/diagnostics/v2-scrap1-post-isolation-final-active20-early-2x-end.jpg",
+          "bytes": 199936,
+          "sha256": "a2ecf85445d9bcba51d9ea7c160f7cebbfad2388ef56e6b943dbd83b1a0939f2"
+        }
+      ],
+      "qualification": "Original rAF budget failed. A host Python artifact watcher ran during this window, but a subsequent quiet window also failed; watcher causality is not established.",
+      "acceptanceCapture": false,
+      "declaredScenario": {
+        "phase": "active",
+        "speed": 2,
+        "crowd": 20
+      },
+      "frameGapMs": {
+        "samples": 922,
+        "p50": 12.599999999998545,
+        "p95": 33.30000000000291,
+        "p99": 54.10000000000582,
+        "max": 87.5,
+        "over33": 32,
+        "over50": 10,
+        "over100": 0
+      },
+      "nativeCallbackMs": {
+        "samples": 923,
+        "p50": 1.5,
+        "p95": 2.199999988079071,
+        "p99": 2.599999964237213,
+        "max": 5.900000035762787,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0
+      },
+      "saveCaptureMs": {
+        "samples": 3,
+        "p50": 4.199999988079071,
+        "p95": 4.399999976158142,
+        "p99": 4.399999976158142,
+        "max": 4.399999976158142,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0
+      }
+    },
+    "production2xQuietRetake": {
+      "report": {
+        "path": "tests/fixtures/performance/diagnostics/v2-scrap1-quiet-active20-early-2x-native.json",
+        "bytes": 126033,
+        "sha256": "09d56bd771f6f3d5045624e906444f464248242178119983d9a839a2e4d0a06a"
+      },
+      "images": [
+        {
+          "path": "tests/fixtures/performance/diagnostics/v2-scrap1-quiet-active20-early-2x-start.jpg",
+          "bytes": 200434,
+          "sha256": "d92138ce09e55f9f276921169d4288af0a63955159681ef136b19206ba79781b"
+        },
+        {
+          "path": "tests/fixtures/performance/diagnostics/v2-scrap1-quiet-active20-early-2x-end.jpg",
+          "bytes": 200654,
+          "sha256": "a359ab395e15a9c85925ed0e69b36995412b915cd0efadf6a7ce8166517615e0"
+        }
+      ],
+      "qualification": "Quiet window still failed the original rAF budget. Low synchronous native callback elapsed times do not explain the scheduling gap or establish presented smoothness.",
+      "acceptanceCapture": false,
+      "declaredScenario": {
+        "phase": "active",
+        "speed": 2,
+        "crowd": 20
+      },
+      "frameGapMs": {
+        "samples": 1011,
+        "p50": 12.5,
+        "p95": 29.099999999998545,
+        "p99": 37.599999999998545,
+        "max": 70.90000000000146,
+        "over33": 15,
+        "over50": 5,
+        "over100": 0
+      },
+      "nativeCallbackMs": {
+        "samples": 1012,
+        "p50": 1.5,
+        "p95": 2,
+        "p99": 2.399999976158142,
+        "max": 4.899999976158142,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0
+      },
+      "saveCaptureMs": {
+        "samples": 3,
+        "p50": 5.100000023841858,
+        "p95": 5.300000011920929,
+        "p99": 5.300000011920929,
+        "max": 5.300000011920929,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0
+      }
+    },
+    "parent2xEndedControl": {
+      "report": {
+        "path": "tests/fixtures/performance/diagnostics/v2-parent-matched-active20-early-2x-native.json",
+        "bytes": 344145,
+        "sha256": "afa9c8202a6722ca980a66ef6ea1092b0de395281cc732b58c04cf73f33a7f0b"
+      },
+      "images": [
+        {
+          "path": "tests/fixtures/performance/diagnostics/parent2x-start.jpg",
+          "bytes": 210920,
+          "sha256": "c102e95c6c4ce9eb7bbe1ff82533032aa0fe45c40dbbf061eb23673cec85b856"
+        },
+        {
+          "path": "tests/fixtures/performance/diagnostics/parent2x-end.jpg",
+          "bytes": 146570,
+          "sha256": "cf447c6457831286bbb1fcbf3a888a3bce8804f3e04354187e82fde3d7c53432"
+        }
+      ],
+      "qualification": "Old release control ended Game Over after extra unpaused setup; full-active 2x evidence is invalid. rAF timing passed, but save p95 8.1 ms exceeds the unchanged 8 ms limit.",
+      "acceptanceCapture": false,
+      "declaredScenario": {
+        "phase": "active",
+        "speed": 2,
+        "crowd": 20
+      },
+      "frameGapMs": {
+        "samples": 3516,
+        "p50": 4.19999999999709,
+        "p95": 4.30000000000291,
+        "p99": 8.30000000000291,
+        "max": 12.5,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0
+      },
+      "nativeCallbackMs": {
+        "samples": 3517,
+        "p50": 0,
+        "p95": 1.5,
+        "p99": 1.800000011920929,
+        "max": 3.700000047683716,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0
+      },
+      "saveCaptureMs": {
+        "samples": 3,
+        "p50": 6.5,
+        "p95": 8.099999964237213,
+        "p99": 8.099999964237213,
+        "max": 8.099999964237213,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0
+      }
+    },
+    "privateCardSkip": {
+      "report": {
+        "path": "tests/fixtures/performance/diagnostics/v2-scrap1-skipcard-active20-1x-native.json",
+        "bytes": 349516,
+        "sha256": "06a83e536c2704104b80179ac0232666db6f856b9933395efe97080c6953fde9"
+      },
+      "images": [
+        {
+          "path": "tests/fixtures/performance/diagnostics/skip-active20-start.jpg",
+          "bytes": 199724,
+          "sha256": "28914c5f15a6ab16e35a0480805a02b6b3bac887c5387cf90e24f1ef13b0681d"
+        },
+        {
+          "path": "tests/fixtures/performance/diagnostics/skip-active20-end.jpg",
+          "bytes": 215038,
+          "sha256": "65f9c94f309f3384d460d30b225047a0909861fe6abe734bd03c7a3b4a2b5f2c"
+        }
+      ],
+      "qualification": "Private native card-skip diagnostic passed after a roughly 2176-second file-picker/tool stall. A later unchanged production window also passed; this does not support a thumbnail-cause or C++ fix claim.",
+      "acceptanceCapture": false,
+      "declaredScenario": {
+        "phase": "active",
+        "speed": 1,
+        "crowd": 20
+      },
+      "frameGapMs": {
+        "samples": 3506,
+        "p50": 4.199999999720603,
+        "p95": 4.300000000279397,
+        "p99": 8.300000000279397,
+        "max": 8.600000000093132,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0
+      },
+      "nativeCallbackMs": {
+        "samples": 3507,
+        "p50": 0,
+        "p95": 1.199999988079071,
+        "p99": 1.399999976158142,
+        "max": 5.5,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0
+      },
+      "saveCaptureMs": {
+        "samples": 3,
+        "p50": 3.5,
+        "p95": 3.799999952316284,
+        "p99": 3.799999952316284,
+        "max": 3.799999952316284,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0
+      },
+      "provenance": [
+        {
+          "path": "tests/fixtures/performance/diagnostics/private-card-skip-provenance.json",
+          "bytes": 244163,
+          "sha256": "111a179f0e77b06fce0c4355dcc7786fb92f945add189a604bedc307c772f03d"
+        }
+      ]
+    },
+    "privateHighPreference2x": {
+      "report": {
+        "path": "tests/fixtures/performance/diagnostics/v2-private-highpref-active20-early-2x-native.json",
+        "bytes": 353902,
+        "sha256": "334f9e511d2ab5b361f6415507ac5a213b27ea110ff2495995685ee3f16c7a61"
+      },
+      "images": [
+        {
+          "path": "tests/fixtures/performance/diagnostics/highpref-active20-2x-start.jpg",
+          "bytes": 200506,
+          "sha256": "15232374376ead708d1a9c9337f8f9cb729fa06d927c57b9c5ebd704910e8f11"
+        },
+        {
+          "path": "tests/fixtures/performance/diagnostics/highpref-active20-2x-end.jpg",
+          "bytes": 202732,
+          "sha256": "a4bdf346f147d8471c1026a4a960a451c1fccea4c0c2a0c21b3b766570123776"
+        }
+      ],
+      "qualification": "Bounded private shell-only advisory-hint diagnostic passed with unchanged native a9/ea0. This is a diagnostic, not the final release matrix or an isolated causal comparison.",
+      "acceptanceCapture": false,
+      "declaredScenario": {
+        "phase": "active",
+        "speed": 2,
+        "crowd": 20
+      },
+      "frameGapMs": {
+        "samples": 3590,
+        "p50": 4.19999999999709,
+        "p95": 4.299999999995634,
+        "p99": 4.30000000000291,
+        "max": 8.599999999998545,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0
+      },
+      "nativeCallbackMs": {
+        "samples": 3591,
+        "p50": 0,
+        "p95": 1.5999999642372131,
+        "p99": 2,
+        "max": 5.599999964237213,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0
+      },
+      "saveCaptureMs": {
+        "samples": 3,
+        "p50": 5.800000011920929,
+        "p95": 6.800000011920929,
+        "p99": 6.800000011920929,
+        "max": 6.800000011920929,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0
+      },
+      "provenance": [
+        {
+          "path": "tests/fixtures/performance/diagnostics/private-high-preference-shell-provenance.json",
+          "bytes": 12102,
+          "sha256": "5fb9eb6fda03f3fbd3a7f22ca96cbea5cb1c25962882d6869861624ccb44ba7e"
+        }
+      ]
+    }
+  },
+  "menuOnlyGPUObservations": [
+    {
+      "report": {
+        "path": "tests/fixtures/performance/diagnostics/gpu-current-menu-3d-deviceinfo.json",
+        "bytes": 693570,
+        "sha256": "50682c9836da17c8b0b0615fd0890ec09987a939a417713a9f7de13ec935ff97"
+      },
+      "actualObservedScope": "Native title/menu only; no imported crowded board.",
+      "declaredScenarioIsNotGameplayEvidence": true,
+      "acceptanceCapture": false,
+      "contexts": [
+        {
+          "type": "webgl",
+          "info": {
+            "version": "WebGL 1.0 (OpenGL ES 2.0 Chromium)",
+            "shadingLanguageVersion": "WebGL GLSL ES 1.0 (OpenGL ES GLSL ES 1.0 Chromium)",
+            "vendor": "WebKit",
+            "renderer": "WebKit WebGL",
+            "unmaskedVendor": "Google Inc. (Intel)",
+            "unmaskedRenderer": "ANGLE (Intel, Intel(R) Graphics (0x00007D67) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+            "contextAttributes": {
+              "alpha": false,
+              "antialias": false,
+              "depth": false,
+              "desynchronized": false,
+              "failIfMajorPerformanceCaveat": false,
+              "powerPreference": "default",
+              "premultipliedAlpha": true,
+              "preserveDrawingBuffer": false,
+              "stencil": false,
+              "xrCompatible": false
+            },
+            "drawingBufferWidth": 800,
+            "drawingBufferHeight": 600
+          }
+        }
+      ],
+      "qualification": "The private menu panel hardcoded declared phase active; that label is not evidence of active gameplay. Both actual unmasked renderers remained Intel 0x7D67. The high-performance request was reflected in actual context attributes, with no NVIDIA-selection claim or time-matched causal comparison."
+    },
+    {
+      "report": {
+        "path": "tests/fixtures/performance/diagnostics/gpu-current-menu-highpref-3d-deviceinfo.json",
+        "bytes": 1541808,
+        "sha256": "901b8f2bd28049756b6bde73aed258e72d717d63fb8530ab95c8d6a5b2d3ecee"
+      },
+      "actualObservedScope": "Native title/menu only; no imported crowded board.",
+      "declaredScenarioIsNotGameplayEvidence": true,
+      "acceptanceCapture": false,
+      "contexts": [
+        {
+          "type": "webgl",
+          "info": {
+            "version": "WebGL 1.0 (OpenGL ES 2.0 Chromium)",
+            "shadingLanguageVersion": "WebGL GLSL ES 1.0 (OpenGL ES GLSL ES 1.0 Chromium)",
+            "vendor": "WebKit",
+            "renderer": "WebKit WebGL",
+            "unmaskedVendor": "Google Inc. (Intel)",
+            "unmaskedRenderer": "ANGLE (Intel, Intel(R) Graphics (0x00007D67) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+            "contextAttributes": {
+              "alpha": false,
+              "antialias": false,
+              "depth": false,
+              "desynchronized": false,
+              "failIfMajorPerformanceCaveat": false,
+              "powerPreference": "high-performance",
+              "premultipliedAlpha": true,
+              "preserveDrawingBuffer": false,
+              "stencil": false,
+              "xrCompatible": false
+            },
+            "drawingBufferWidth": 800,
+            "drawingBufferHeight": 600
+          }
+        }
+      ],
+      "qualification": "The private menu panel hardcoded declared phase active; that label is not evidence of active gameplay. Both actual unmasked renderers remained Intel 0x7D67. The high-performance request was reflected in actual context attributes, with no NVIDIA-selection claim or time-matched causal comparison.",
+      "provenance": {
+        "path": "tests/fixtures/performance/diagnostics/private-high-preference-gpu-provenance.json",
+        "bytes": 1438,
+        "sha256": "02b33abd49cf9e0eb57cd2967422d96a6e561c0109ddbe49e69974b5a5d9f506"
+      }
+    }
+  ],
+  "finalProductionMatrix": {
+    "baseline": {
+      "path": "tests/fixtures/performance/baseline.json",
+      "bytes": 8169,
+      "sha256": "e587a50a40e6977081388bcbe4332a496dac832a984cc2fa14cc81c35db1f279"
+    },
+    "captureManifest": {
+      "path": "tests/fixtures/performance/capture-manifest.json",
+      "bytes": 5913,
+      "sha256": "52dd4ea821e23aaacbff5ab2ae6e0c1e9fb2885d2ffba7260d95371c3fcdf103"
+    },
+    "status": "PASS: six separate 15-second scoped observations satisfy all unchanged timing budgets.",
+    "runtimeSha256": "410eaf99c0863dd810f1bd5d3f2d5ef0bf82c43485643a3b7ab6cbd946444c54",
+    "nativeCodeUnchanged": true,
+    "highPerformancePreference": "Standard advisory context-creation hint; browser retains GPU selection authority.",
+    "hostPreviewVisible": true,
+    "pageDocumentVisible": true,
+    "audioMuted": true,
+    "native3DSelected": true,
+    "operatorContext": "Four active HUD start/end pairs and two paused controls; exact synthetic developer checkpoints. No host tools during the 17/18-second operator capture windows.",
+    "cases": [
+      {
+        "bytes": 273870,
+        "sha256": "688cd808b8ae5e4a16c6ad85b5852f587651bb415b850e9be3ab25315669cffc",
+        "label": "v2-scrap1-final-release-active20-early-1x-native",
+        "mode": "native-raf",
+        "scenario": {
+          "phase": "active",
+          "speed": 1,
+          "crowd": 20
+        },
+        "elapsedMs": 15001.100000023842,
+        "frameGapMs": {
+          "samples": 2667,
+          "p50": 5.5,
+          "p95": 6.100000000005821,
+          "p99": 6.5,
+          "max": 6.700000000000728,
+          "over33": 0,
+          "over50": 0,
+          "over100": 0
+        },
+        "nativeCallbackMs": {
+          "samples": 2668,
+          "p50": 0.7999999523162842,
+          "p95": 1.199999988079071,
+          "p99": 1.399999976158142,
+          "max": 4.399999976158142,
+          "over33": 0,
+          "over50": 0,
+          "over100": 0
+        },
+        "saveCaptureMs": {
+          "samples": 3,
+          "p50": 4.799999952316284,
+          "p95": 5.5,
+          "p99": 5.5,
+          "max": 5.5,
+          "over33": 0,
+          "over50": 0,
+          "over100": 0
+        },
+        "longTaskCount": 0,
+        "preconditionStatus": "PASS measurement preconditions; not a performance-budget verdict",
+        "summaryMatchesRawSamples": true
+      },
+      {
+        "bytes": 276322,
+        "sha256": "7b94c122a136c348199c02e02a0bed3fe4252051ac3de3a18afea98e0588ed13",
+        "label": "v2-scrap1-final-release-active20-early-2x-native",
+        "mode": "native-raf",
+        "scenario": {
+          "phase": "active",
+          "speed": 2,
+          "crowd": 20
+        },
+        "elapsedMs": 15000.300000011921,
+        "frameGapMs": {
+          "samples": 2668,
+          "p50": 5.5,
+          "p95": 6.100000000005821,
+          "p99": 6.5,
+          "max": 6.7000000000116415,
+          "over33": 0,
+          "over50": 0,
+          "over100": 0
+        },
+        "nativeCallbackMs": {
+          "samples": 2669,
+          "p50": 0.8999999761581421,
+          "p95": 1.2999999523162842,
+          "p99": 1.5,
+          "max": 4.399999976158142,
+          "over33": 0,
+          "over50": 0,
+          "over100": 0
+        },
+        "saveCaptureMs": {
+          "samples": 3,
+          "p50": 4.099999964237213,
+          "p95": 4.200000047683716,
+          "p99": 4.200000047683716,
+          "max": 4.200000047683716,
+          "over33": 0,
+          "over50": 0,
+          "over100": 0
+        },
+        "longTaskCount": 0,
+        "preconditionStatus": "PASS measurement preconditions; not a performance-budget verdict",
+        "summaryMatchesRawSamples": true
+      },
+      {
+        "bytes": 272760,
+        "sha256": "cfa802c54f9392864755e7cdfc63e24881d388cbc6d4d88567e716fcf0824369",
+        "label": "v2-scrap1-final-release-active40-1x-native",
+        "mode": "native-raf",
+        "scenario": {
+          "phase": "active",
+          "speed": 1,
+          "crowd": 40
+        },
+        "elapsedMs": 15000.900000035763,
+        "frameGapMs": {
+          "samples": 2668,
+          "p50": 5.5,
+          "p95": 6.099999999998545,
+          "p99": 6.5,
+          "max": 7.100000000005821,
+          "over33": 0,
+          "over50": 0,
+          "over100": 0
+        },
+        "nativeCallbackMs": {
+          "samples": 2669,
+          "p50": 1,
+          "p95": 1.899999976158142,
+          "p99": 2.199999988079071,
+          "max": 5.100000023841858,
+          "over33": 0,
+          "over50": 0,
+          "over100": 0
+        },
+        "saveCaptureMs": {
+          "samples": 3,
+          "p50": 5.100000023841858,
+          "p95": 5.400000035762787,
+          "p99": 5.400000035762787,
+          "max": 5.400000035762787,
+          "over33": 0,
+          "over50": 0,
+          "over100": 0
+        },
+        "longTaskCount": 0,
+        "preconditionStatus": "PASS measurement preconditions; not a performance-budget verdict",
+        "summaryMatchesRawSamples": true
+      },
+      {
+        "bytes": 275359,
+        "sha256": "a590bfa26a8834387fdd1f6b4ce32461bd16fc42a2c1563649f5f6291bb9ff13",
+        "label": "v2-scrap1-final-release-active40-2x-native",
+        "mode": "native-raf",
+        "scenario": {
+          "phase": "active",
+          "speed": 2,
+          "crowd": 40
+        },
+        "elapsedMs": 15001.900000035763,
+        "frameGapMs": {
+          "samples": 2670,
+          "p50": 5.5,
+          "p95": 6.099999999998545,
+          "p99": 6.5,
+          "max": 6.80000000000291,
+          "over33": 0,
+          "over50": 0,
+          "over100": 0
+        },
+        "nativeCallbackMs": {
+          "samples": 2671,
+          "p50": 1.199999988079071,
+          "p95": 1.899999976158142,
+          "p99": 2.300000011920929,
+          "max": 5.399999976158142,
+          "over33": 0,
+          "over50": 0,
+          "over100": 0
+        },
+        "saveCaptureMs": {
+          "samples": 3,
+          "p50": 4.599999964237213,
+          "p95": 5.199999988079071,
+          "p99": 5.199999988079071,
+          "max": 5.199999988079071,
+          "over33": 0,
+          "over50": 0,
+          "over100": 0
+        },
+        "longTaskCount": 0,
+        "preconditionStatus": "PASS measurement preconditions; not a performance-budget verdict",
+        "summaryMatchesRawSamples": true
+      },
+      {
+        "bytes": 274300,
+        "sha256": "c1502f6311e070fee9e30bf9c895d008f99431361198421b2233773354f9225c",
+        "label": "v2-scrap1-final-release-paused20-1x-native",
+        "mode": "native-raf",
+        "scenario": {
+          "phase": "paused",
+          "speed": 1,
+          "crowd": 20
+        },
+        "elapsedMs": 15000.300000011921,
+        "frameGapMs": {
+          "samples": 2679,
+          "p50": 5.5,
+          "p95": 6.099999999998545,
+          "p99": 6.400000000001455,
+          "max": 6.69999999999709,
+          "over33": 0,
+          "over50": 0,
+          "over100": 0
+        },
+        "nativeCallbackMs": {
+          "samples": 2680,
+          "p50": 1,
+          "p95": 1.600000023841858,
+          "p99": 1.800000011920929,
+          "max": 2.399999976158142,
+          "over33": 0,
+          "over50": 0,
+          "over100": 0
+        },
+        "saveCaptureMs": {
+          "samples": 3,
+          "p50": 4.899999976158142,
+          "p95": 5.300000011920929,
+          "p99": 5.300000011920929,
+          "max": 5.300000011920929,
+          "over33": 0,
+          "over50": 0,
+          "over100": 0
+        },
+        "longTaskCount": 0,
+        "preconditionStatus": "PASS measurement preconditions; not a performance-budget verdict",
+        "summaryMatchesRawSamples": true
+      },
+      {
+        "bytes": 70407,
+        "sha256": "52a9cfb824c965ae00265c0d8866e31b2ec20334f4ba63f9bececc4bb121fa65",
+        "label": "v2-scrap1-final-release-paused20-1x-clock",
+        "mode": "raf-only",
+        "scenario": {
+          "phase": "paused",
+          "speed": 1,
+          "crowd": 20
+        },
+        "elapsedMs": 15000.800000011921,
+        "frameGapMs": {
+          "samples": 2672,
+          "p50": 5.5,
+          "p95": 6.100000000005821,
+          "p99": 6.5,
+          "max": 7,
+          "over33": 0,
+          "over50": 0,
+          "over100": 0
+        },
+        "nativeCallbackMs": {
+          "samples": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0,
+          "over33": 0,
+          "over50": 0,
+          "over100": 0
+        },
+        "saveCaptureMs": {
+          "samples": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0,
+          "over33": 0,
+          "over50": 0,
+          "over100": 0
+        },
+        "longTaskCount": 0,
+        "preconditionStatus": "PASS measurement preconditions; not a performance-budget verdict",
+        "summaryMatchesRawSamples": true
+      }
+    ],
+    "limitations": "Short single-machine windows measure rAF scheduling and synchronous callback/save elapsed wall time, not displayed FPS, GPU completion, or universal performance. Clock-only empty timing arrays mean disabled timing hooks, not zero work. Local evidence precedes publication; Pages reruns native checks before deployment."
+  }
+}

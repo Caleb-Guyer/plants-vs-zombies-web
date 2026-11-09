@@ -1,0 +1,17 @@
+{
+  "purpose": "Private advisory high-performance GPU preference experiment; no OS setting, production source, native binary or performance budget changes",
+  "nativeDist": "C:\\Users\\caleb\\Documents\\Codex\\2026-10-25\\co\\work\\plants-vs-zombies-web-release\\dist",
+  "unchangedGpuProbeSha256": "359ab6ea6e876340eb79fb91132058bda726e706c923c496ff6b15069c3e36b5",
+  "originalProbePath": "C:\\Users\\caleb\\Documents\\Codex\\2026-10-25\\co\\outputs\\pvz-scrap1-release\\gpu-call-diagnostics\\gpu-probe.js",
+  "helperSha256": "a571be556db6ac647d068045944083463e206eed50e33709c7851c5a58dd5c4c",
+  "privateServerSha256": "de5327562f329e4ff619bbde94f089b53058011e46ec60252e69c4179d02fa53",
+  "defaultPowerMenuReferenceSha256": "50682c9836da17c8b0b0615fd0890ec09987a939a417713a9f7de13ec935ff97",
+  "helperOrder": "Unchanged359ab GPU recorder, then one-context hint, then original application head scripts. The helper restores the preceding recorder wrapper after the first successful eligible context.",
+  "actualVerificationRequired": [
+    "contexts[].info.contextAttributes.powerPreference",
+    "contexts[].info.unmaskedRenderer",
+    "contexts[].info.unmaskedVendor"
+  ],
+  "specification": "https://registry.khronos.org/webgl/specs/latest/1.0/#WEBGLCONTEXTATTRIBUTES",
+  "specificationScope": "Khronos describes powerPreference as a hint that the implementation may ignore; requesting high-performance does not prove GPU selection."
+}

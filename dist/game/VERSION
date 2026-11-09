@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-endless.3
-Extends Pool Panic Endless late-game roster and pressure while retaining its developing native defense, original combat statistics, automatic saves, persistent bests and saved-game compatibility. Existing mode IDs, all15 cards, accepted artwork and compact native Menu/speed presentation remain unchanged.
-Engine JavaScript SHA-256: f68adcd086c6eefc01fe4d856f69a0971c7a0de26e997c7a7a8738f165bc8c76
-Engine WASM SHA-256: ba915021d3574aca8b3a95578320a0f9bce0dc6fad1f7fed147260b3ee7de60b
+PvZ-Portable 0.2.6-web-scrap.1
+Adds Scrap Yard: a finite night defense where native metal pulls fund original explosive plants. Existing modes, statistics, artwork and saved layouts remain intact.
+Engine JavaScript SHA-256: ea0dda8ee8444491421cd9e1b9ee600d8e98292e4c726d7d466383e5c6c7ef6e
+Engine WASM SHA-256: a9b1cc5296b9bcb5f4045b18f9bb30c6ae95823a2658afb6a3ea5a70932f6102
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.

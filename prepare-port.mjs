@@ -5,7 +5,50 @@ const scripts=[...upstream.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(match=
 if(scripts.length!==2)throw new Error('Unexpected upstream shell; inspect before integrating.');
 const notice='/* PvZ-Portable web shell, Copyright (C) 2026 Zhou Qiankang.\n * LGPL-3.0-or-later. Adapted from 0.2.6; corresponding source in /source/.\n * The current engine build is documented in /game/engine-provenance.json.\n */\n';
 const assetRevision=engine.artifacts.wasmSha256.slice(0,12);
-await writeFile('dist/runtime.js',notice+scripts[0]+'\nModule.locateFile=function(name,prefix){return (prefix||"./game/")+name+"?v='+assetRevision+'";};\n');
+// A creation-time advisory hint, scoped to the actual game canvas. The browser
+// still selects the device; this neither changes native rendering nor OS settings.
+function preferGameCanvasGPU(canvas) {
+  'use strict';
+  if(!canvas)return;
+  const own=Object.getOwnPropertyDescriptor(canvas,'getContext');
+  if(own&&(!('value' in own)||(!own.configurable&&!own.writable)))return;
+  if(!own&&!Object.isExtensible(canvas))return;
+  const original=canvas.getContext;
+  if(typeof original!=='function')return;
+  let completed=false,installed;
+  function createContext(type,attributes) {
+    if(completed||this!==canvas||!['webgl','webgl2','experimental-webgl'].includes(type))return Reflect.apply(original,this,arguments);
+    let forwarded=arguments;
+    if(attributes==null||typeof attributes==='object'||typeof attributes==='function') {
+      const requested=attributes??Object.create(null);
+      const hinted=new Proxy(Object.create(null),{get(_target,key) {
+        // Let native WebIDL dictionary reads retain their order, getter receiver,
+        // conversion and errors. Only valid primitive preferences are overridden.
+        const value=Reflect.get(requested,key,requested);
+        return key==='powerPreference'&&(value===undefined||value==='default'||value==='low-power'||value==='high-performance')?'high-performance':value;
+      }});
+      forwarded=Array.from(arguments);forwarded[1]=hinted;
+    }
+    const context=Reflect.apply(original,this,forwarded);
+    if(context) {
+      completed=true;
+      try {
+        const current=Object.getOwnPropertyDescriptor(canvas,'getContext');
+        if(current?.value===createContext&&current.writable===installed?.writable&&
+          current.enumerable===installed?.enumerable&&current.configurable===installed?.configurable) {
+          if(own)Object.defineProperty(canvas,'getContext',own);
+          else delete canvas.getContext;
+        }
+      }catch{ /* Cleanup must not replace a successful native context result. */ }
+    }
+    return context;
+  }
+  try {
+    Object.defineProperty(canvas,'getContext',own?{...own,value:createContext}:{value:createContext,writable:true,configurable:true});
+    installed=Object.getOwnPropertyDescriptor(canvas,'getContext');
+  }catch{ /* Leave protected canvases and native context creation unchanged. */ }
+}
+await writeFile('dist/runtime.js',notice+scripts[0]+';\n('+preferGameCanvasGPU.toString()+')(Module.canvas);\nModule.locateFile=function(name,prefix){return (prefix||"./game/")+name+"?v='+assetRevision+'";};\n');
 const startHook='await ensureSaveFsReady(),document.body';
 if(scripts[1].split(startHook).length!==2)throw new Error('Unexpected upstream start sequence; inspect before integrating.');
 function replaceOnce(source, before, after) {
@@ -182,7 +225,7 @@ for(const path of ['dist/index.html','dist/index-port.html']){
   if(!html.includes('<script src="./bundled-assets.js"></script>'))throw new Error('Bundled asset loader missing from '+path);
   const revised=html.replace(/src="\.\/game\/pvz-portable\.js(?:\?v=[^"]*)?"/,'src="./game/pvz-portable.js?v='+engine.artifacts.jsSha256.slice(0,12)+'"')
     .replace(/href="\.\/port\.css(?:\?v=[^"]*)?"/,'href="./port.css?v=fullscreen2"')
-    .replace(/src="\.\/(runtime|loader)\.js(?:\?v=[^"]*)?"/g,'src="./$1.js?v=endless3"')
+    .replace(/src="\.\/(runtime|loader)\.js(?:\?v=[^"]*)?"/g,'src="./$1.js?v=scrap1"')
     .replace(/href="\.\/source\/[^"]+" download>Engine source/,'href="'+sourceHref+'" download>Engine source')
     .replace(/(<span id="engine-build-id">)[^<]*(<\/span>)/,'$1'+engine.id+'$2')
     .replace(/(<span id="engine-build-id">[^<]*<\/span>)[^<]*(?= © 2026)/,'$1 '+engine.caption);

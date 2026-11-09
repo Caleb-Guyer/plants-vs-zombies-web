@@ -1,0 +1,395 @@
+{
+  "status": "EXACT tracked old dist snapshot; no source archives copied",
+  "commit": "cc0ce20d517812066d5ef96de7173042030b5c57",
+  "distFiles": 76,
+  "distBytes": 54201454,
+  "excludedPrefix": "dist/source/",
+  "engineId": "0.2.6-web-endless.3",
+  "engineWasmSha256": "ba915021d3574aca8b3a95578320a0f9bce0dc6fad1f7fed147260b3ee7de60b",
+  "files": {
+    "dist/.nojekyll": {
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "dist/audio-controls.js": {
+      "gitBlob": "54cf8d7631c974f1ecb2c65c68f2df199013c1cf",
+      "bytes": 12216,
+      "sha256": "95e6a1b3e7ccae54ee797e8ed3b63668b672ee51f55978dc4d29231ec225a343"
+    },
+    "dist/bundled-assets.js": {
+      "gitBlob": "f603114ce3faa245e66035b2274f5c6e9cd03ce1",
+      "bytes": 8188,
+      "sha256": "07449dfe0aca7efb7888c62d598b54dc0be5cdfaadab6961e5f9977f87db6e8c"
+    },
+    "dist/content/chill-shroom/base.png": {
+      "gitBlob": "94e3197c3103062ec014178404fc7099669b4116",
+      "bytes": 105,
+      "sha256": "9744e7994b207ae5420e57ea7247231222aa148b2b972f181cbea33e792db096"
+    },
+    "dist/content/chill-shroom/blink1.png": {
+      "gitBlob": "2d79cb9ad3b132ddba0fa2b63ba4831faee37bab",
+      "bytes": 2781,
+      "sha256": "9512ddaf1f8575d8b4b6df58a7409014ad971838dc244700bc9ea29a0f0a7961"
+    },
+    "dist/content/chill-shroom/blink2.png": {
+      "gitBlob": "ee831f8c2ec698f5f3b8843392ee4ace2e367afc",
+      "bytes": 2749,
+      "sha256": "7ec170364879d93aa8d0108c6a3afa81146a4d5b2c50bcb8caf8d7eb753a3059"
+    },
+    "dist/content/chill-shroom/body.png": {
+      "gitBlob": "5900bbe9183be4133f660d00a70998101b2eca66",
+      "bytes": 2769,
+      "sha256": "c519fa620cd673b36c02a62cc892acbc06384f19487ebf1ee631c310f2c45cdd"
+    },
+    "dist/content/chill-shroom/canonical.png": {
+      "gitBlob": "decfa4c6a73a182ae56b13d7298cc7d3d8d01cd3",
+      "bytes": 8142,
+      "sha256": "8f72af8ed59ac1e173c5d894d99369f4b6f2ed766a5db9edcb36e1d36a7aa93b"
+    },
+    "dist/content/chill-shroom/cap.png": {
+      "gitBlob": "7fc7f754ec801b96a15212aa2b5f5006e72f6bb0",
+      "bytes": 5825,
+      "sha256": "0f3ee1ecc32196ab87db381ed15293a210ee6f9b66c725ec42cb3467cf4fc506"
+    },
+    "dist/content/chill-shroom/extraction.json": {
+      "gitBlob": "1973504bb853ddba2ac1d3e138a050e6d5169760",
+      "bytes": 1516,
+      "sha256": "b639b70e79eb09ba117c3ca52e54c8ce54a294ad947f44b7b75d96a41f24ba99"
+    },
+    "dist/content/chill-shroom/generation.json": {
+      "gitBlob": "9dfa0547d0fd2b6c003c68ad58ca1b7314f86156",
+      "bytes": 10422,
+      "sha256": "5f1279fcfa2df9cadf6f9df676d57f0805b05c8c2f288480e630e1379894cf9d"
+    },
+    "dist/content/chill-shroom/provenance.json": {
+      "gitBlob": "33bd60b754106182738bcfc26c61425787d458f1",
+      "bytes": 2554,
+      "sha256": "a7492ff37c6ccc99a2f34d9f230802dfd6204804c69a17ca3446cd93a0f067e4"
+    },
+    "dist/content/mender-bloom/blink.png": {
+      "gitBlob": "a06ec3c304345276c6c03629975d555f7f2d5db0",
+      "bytes": 7750,
+      "sha256": "1f52b3f1145c0aa0a512509b92f4743d159549784c33634ae69b9d3a74193502"
+    },
+    "dist/content/mender-bloom/canonical.png": {
+      "gitBlob": "26c9bef4b800e358b5eb292e002a5be5f400b807",
+      "bytes": 7765,
+      "sha256": "23be52c6b86e50a19dee75fd55851d97d394d0674e418c5b4946c9bbe7f2aa0b"
+    },
+    "dist/content/mender-bloom/extraction.json": {
+      "gitBlob": "b7c1993dbf18e162ada1b41a7a819ee679e7d969",
+      "bytes": 2598,
+      "sha256": "904c59e1ec6e487ef1c902d4dbf96eaf44cdb153fc08f4cfd8a3df5785fc1ab4"
+    },
+    "dist/content/mender-bloom/generation.json": {
+      "gitBlob": "2de41709740ea69ff444a1e72cae04065e45f8da",
+      "bytes": 6662,
+      "sha256": "c2d5a614b9c9059bd79e3a9d3c439ea02bb20adb35d660b05e24e5e45a50a5a3"
+    },
+    "dist/content/mender-bloom/head-blink.png": {
+      "gitBlob": "8924103522385359f4d9ef88c69887b028643716",
+      "bytes": 5490,
+      "sha256": "8b8c60f37f116e46ecf35e21e382ba11f3e99299aa009c4ef516434b8115a58d"
+    },
+    "dist/content/mender-bloom/head.png": {
+      "gitBlob": "dd1696316487c80cbc257d25044bc2015f0ac5e4",
+      "bytes": 5495,
+      "sha256": "30f867a3bd5f14d6e14cf57ad0bc9000a69d3a0cabb1a0026a516d9cd38bac5b"
+    },
+    "dist/content/mender-bloom/provenance.json": {
+      "gitBlob": "9f52664b653a9fa308a99bda911a392fa6ae066a",
+      "bytes": 6279,
+      "sha256": "dd39ececfc7bc064967aacfc090e93fce640a3a250ce9aa7b4c6ceaff03f1ce8"
+    },
+    "dist/content/mender-bloom/stem.png": {
+      "gitBlob": "2cd6cafb4179460e22a922581c9fcebd5a6866a8",
+      "bytes": 2765,
+      "sha256": "e23f660180de218dca4ca7692f005b67115d7998e0303a7b1a68b4e9a78b2f02"
+    },
+    "dist/content/native-bonus-art.json": {
+      "gitBlob": "515ef645cf7633424233b648672350d577765e42",
+      "bytes": 17680,
+      "sha256": "538175fc8c54e8efb241a129263f2c99ee8e4193fb09ace213a67e9430f7483b"
+    },
+    "dist/game-assets/README.txt": {
+      "gitBlob": "176d4193c3fbee9e7a0ebb7c6ff1f6e362cf0996",
+      "bytes": 1438,
+      "sha256": "34ca4bb95dd48c310e1e2bf76bee7ffd6a089e6d3819c1e8f606ed7dd3731302"
+    },
+    "dist/game-assets/manifest.json": {
+      "gitBlob": "cd7c7f5603507d948e67f4cc2baf8e5182e0ebce",
+      "bytes": 3176,
+      "sha256": "5488eb8cf5d38d2d999e29a5b3aca45ecff02f8ee49356ccb327de8676111dc4"
+    },
+    "dist/game-assets/parts/main-000.bin": {
+      "gitBlob": "b9077ce2e88311847c064ff3f63a6e555084a953",
+      "bytes": 8388608,
+      "sha256": "0f4d6e3008711bde26a95c13bb853e98c2630585cf0a72cbae22d4cd5b5b40c4"
+    },
+    "dist/game-assets/parts/main-001.bin": {
+      "gitBlob": "b31125b884f3dde491be9f3706f9f0e2b765a88c",
+      "bytes": 8388608,
+      "sha256": "438f5230ab0f7a898ffdd2449d68ee10243522c3d579c85f8b84d992aeaccf8e"
+    },
+    "dist/game-assets/parts/main-002.bin": {
+      "gitBlob": "1efb34f87988b79a93deabe46877d5cb9e2011d2",
+      "bytes": 8388608,
+      "sha256": "d40dc148638485f3b83f99c75b0da7c9040bae0d98ade07a85e514713ae0ddae"
+    },
+    "dist/game-assets/parts/main-003.bin": {
+      "gitBlob": "b5e68353916cccc94a31a9f1543ac6c32fdb7406",
+      "bytes": 8388608,
+      "sha256": "707462927b727cb6a6c1f37292aa9c972505ecd357f0527f843162bf9238e898"
+    },
+    "dist/game-assets/parts/main-004.bin": {
+      "gitBlob": "075ebf21c9557a1cc296006ac1a10a3cad132cbf",
+      "bytes": 8388608,
+      "sha256": "edccbb459c28ee6f1f161174a85ef6a9a729abe16011333b2b37861ab1b8f40c"
+    },
+    "dist/game-assets/parts/main-005.bin": {
+      "gitBlob": "120e7fb4c41fffd6f04d8a065de5fff4ed4fba9d",
+      "bytes": 3510140,
+      "sha256": "c774160ab5ecc4006a4eb7a922aa836c0a4771eb726c6b821ec73dcbdb08f5e9"
+    },
+    "dist/game-assets/properties/Layout.xml": {
+      "gitBlob": "a5d22b090c2f810fcc2f9f1a0999f729c9865500",
+      "bytes": 584,
+      "sha256": "41112aab62a796e9fe90c0654c127a8f2e053f3cc2ab6ac35aa3f8a99ab5578c"
+    },
+    "dist/game-assets/properties/default.xml": {
+      "gitBlob": "983bae5f9517a832041bbe8b9d51684b8907631a",
+      "bytes": 2570,
+      "sha256": "4a051495830ca117435c2972dda5af7a4355d33964d904c335eb140dcf2e904c"
+    },
+    "dist/game-assets/properties/partner.xml": {
+      "gitBlob": "d0d52a0fa63c2b408eaaa4b9ffe105efdd54d4cb",
+      "bytes": 667,
+      "sha256": "4e7ff623b419e36feb578eaccb5e80b838290b01c2d2ae282a0648cecbd80290"
+    },
+    "dist/game-assets/properties/partner.xml.sig": {
+      "gitBlob": "5f9ff8d6b9eda2d6a9b8b3ec707caae78c3513be",
+      "bytes": 24,
+      "sha256": "ca5b57ce55e4c7dac8086656e7b63c41d56e1cc98a6208391f6fbfa800887537"
+    },
+    "dist/game-assets/properties/partner_logo.jpg": {
+      "gitBlob": "ee900bb12c858f85f7d8c7f145ad3b6a307360e2",
+      "bytes": 5499,
+      "sha256": "8bea233c40ddf74decf3ddd0a3d4cef8e1229ca3a756384e78d319aca0b63113"
+    },
+    "dist/game/VERSION": {
+      "gitBlob": "89f730c59ee08190b1927321d25178989947452f",
+      "bytes": 642,
+      "sha256": "0b7a0e880d07bbdc3fae56a03dc34be235ef93916ad6d912667a19b8d8a3c76a"
+    },
+    "dist/game/engine-provenance.json": {
+      "gitBlob": "9c70ac2d2f793ffa94d356259905f701b65872e3",
+      "bytes": 158644,
+      "sha256": "1dfea4b7ef7ac5f1927ab933f361a49a29f3119c0569a3fc270df1b55b44ee09"
+    },
+    "dist/game/pvz-portable.js": {
+      "gitBlob": "d1fac5e9ee450a83f32c29f2759b1721f05f158f",
+      "bytes": 209600,
+      "sha256": "f68adcd086c6eefc01fe4d856f69a0971c7a0de26e997c7a7a8738f165bc8c76"
+    },
+    "dist/game/pvz-portable.wasm": {
+      "gitBlob": "4bac156c17b407482532541491fc7b1292a98117",
+      "bytes": 7782033,
+      "sha256": "ba915021d3574aca8b3a95578320a0f9bce0dc6fad1f7fed147260b3ee7de60b"
+    },
+    "dist/index-port.html": {
+      "gitBlob": "9c7c7d0646f4f3da70c6151dfd73e5e66cdde827",
+      "bytes": 6458,
+      "sha256": "e8fa2492c0b7d5558f467128d74ef48d02bc73d8edd555314cfa57101bd86c63"
+    },
+    "dist/index.html": {
+      "gitBlob": "9c7c7d0646f4f3da70c6151dfd73e5e66cdde827",
+      "bytes": 6458,
+      "sha256": "e8fa2492c0b7d5558f467128d74ef48d02bc73d8edd555314cfa57101bd86c63"
+    },
+    "dist/launcher.js": {
+      "gitBlob": "ca17450c19d62353cb8a3a3ad4a8a27d43ce2175",
+      "bytes": 10755,
+      "sha256": "9e41170068f913e8f966d650953972a311f57e7efb6241340fa6c5a349d3cfdd"
+    },
+    "dist/licenses/GPL-3.0.txt": {
+      "gitBlob": "10926e87f113fb026c366866d6fa466061562870",
+      "bytes": 35148,
+      "sha256": "0ae0485a5bd37a63e63603596417e4eb0e653334fa6c7f932ca3a0e85d4af227"
+    },
+    "dist/licenses/JSZIP.txt": {
+      "gitBlob": "f8250b37a61862ea61ea9a93d5d423cad395a364",
+      "bytes": 33753,
+      "sha256": "566c953c6090b1218ca6217dd7359d45dde46581968586dc607d59a78af6a9c4"
+    },
+    "dist/licenses/LGPL-3.0.txt": {
+      "gitBlob": "0a041280bd00a9d068f503b8ee7ce35214bd24a1",
+      "bytes": 7652,
+      "sha256": "e3a994d82e644b03a792a930f574002658412f62407f5fee083f2555c5f23118"
+    },
+    "dist/loader.js": {
+      "gitBlob": "c9f118636f6dca7430c336e659e2bfc16579278a",
+      "bytes": 10670,
+      "sha256": "a183ed4e17810de2431989f3ebc263d2f511d1514c53e73c8933b8486bced73a"
+    },
+    "dist/original-ui.js": {
+      "gitBlob": "5f10c3c98402d48e0224e43b7560a7d8aa2f81d8",
+      "bytes": 2774,
+      "sha256": "a8f0aab63956a0280f03520671b712c2709da353c287be430592c64ba91ffe5b"
+    },
+    "dist/port.css": {
+      "gitBlob": "8b42d824d5dc6305f513d541ef3c6557252ce8fd",
+      "bytes": 11410,
+      "sha256": "6020b3fb0e1517aa9c9c1bab93873cf5c5c9f2204e3c0d9f3335853789e6b821"
+    },
+    "dist/runtime.js": {
+      "gitBlob": "dabc74192ab8326b558c147e1557a41d1d552d4e",
+      "bytes": 763,
+      "sha256": "72483fa24202448c1f21792bcd022ac7a6eabd05365d7bd1a5eece4da9ecbc6c"
+    },
+    "dist/save-recovery.js": {
+      "gitBlob": "492272df8284bdd1674974d48c06bdedeef4f2e8",
+      "bytes": 4921,
+      "sha256": "eff0eb9325e0bdc18c1f76582e9f260a07ffbf680b3ada25763f1972204e84bf"
+    },
+    "dist/save-storage-core.js": {
+      "gitBlob": "880880486752537b4650ff3518ca5c35e36daf2c",
+      "bytes": 13211,
+      "sha256": "5473e221a0b86818835a9ed5a1b473d718ae14da9838c7e37d99bdef48203bee"
+    },
+    "dist/save-storage-worker.js": {
+      "gitBlob": "7d51f38872c1edc9817b5eb3cb4d8f20ea3e748c",
+      "bytes": 1864,
+      "sha256": "4951c5dd05dcc2c79dd99f4ddeba19935ffd23a69dd6726e4b4e1b819772a246"
+    },
+    "dist/save-storage.js": {
+      "gitBlob": "6c3595cd0e12799ff356f06b09625031981e70d4",
+      "bytes": 9518,
+      "sha256": "e46cef9257f3608f0edbd1af4c0424e09665aa919aed5e5e16d234045ef1c49c"
+    },
+    "dist/save-transfer.js": {
+      "gitBlob": "5257ba7f0c676e3da53e92c6b24478f193c6496a",
+      "bytes": 16375,
+      "sha256": "de0c5b67863c8f307906d4d1c739b05ef0d32d5f854a8d77581750a37dd6f314"
+    },
+    "dist/steam-compat.js": {
+      "gitBlob": "13e5609f77912a1708d61db53855dc078419d8c0",
+      "bytes": 5185,
+      "sha256": "ace261bed202e3f99a242ac6b6dc2f532c1967d1b803a0e91a38461db44311eb"
+    },
+    "dist/test-profiles.js": {
+      "gitBlob": "4f7374bdb594e210bdb3d14ade4fab70f8ceb5a7",
+      "bytes": 10112,
+      "sha256": "b93318eb4738b199d39dbf10ad6313e11fd2350dc4526c64216b2a13c27e1ce0"
+    },
+    "dist/testing/README.txt": {
+      "gitBlob": "a198578284e6095fa0213f58dffdc444a5ebaa84",
+      "bytes": 2428,
+      "sha256": "a555dd07a9c2217c5106b581b9929a4594ed479e1a16695c6ecb8b5a9eacf760"
+    },
+    "dist/testing/test-profiles.zip": {
+      "gitBlob": "0c5f375c59ddfe62b28791234ec92383341eb934",
+      "bytes": 6307,
+      "sha256": "26a47b5a62c29427ee19c1609e26b51eb5ca7795107d50cfadd29b839da8e7cc"
+    },
+    "dist/ui/README.txt": {
+      "gitBlob": "18dff0ca07feadae664961d7741e26545db43d4f",
+      "bytes": 236,
+      "sha256": "194515332e8cebd3b2e22d4d21300c3a371a71de110167f4eb67a48bf222c622"
+    },
+    "dist/ui/original-ui-inventory.json": {
+      "gitBlob": "4bfbb30142a01c5bbb32357271185bebab83e778",
+      "bytes": 3670,
+      "sha256": "57cdba60816dcd54fee3f1e3d2f77aae57986d93bc27f0478131acaa9ddba533"
+    },
+    "dist/ui/qol-dialog-bottomleft.png": {
+      "gitBlob": "e68577f405d928274c23492793a858a46c266ff8",
+      "bytes": 6043,
+      "sha256": "d92dfe7c3e8467e589232c10c05239abdcaf0e553a5477f4f95286f8f0d1976e"
+    },
+    "dist/ui/qol-dialog-bottommiddle.png": {
+      "gitBlob": "a88c003f0e59c7020d9c62ab246ecf8feb8ef334",
+      "bytes": 3127,
+      "sha256": "4139a4d023a3c39427be4f3ce72061f047253285c5354bce343348306af7c92c"
+    },
+    "dist/ui/qol-dialog-bottomright.png": {
+      "gitBlob": "90a430f28cfdc3f6efc8984315f89c75791d9a39",
+      "bytes": 6380,
+      "sha256": "7561df9f0fb80e423bdac347bf165309af0a780b48412b786531356119cbc8ba"
+    },
+    "dist/ui/qol-dialog-centerleft.png": {
+      "gitBlob": "469ff1641834793422b0efd49cb5c3d2753bfe09",
+      "bytes": 1959,
+      "sha256": "15ef3b9badc0cbb6b6ef0ecc9ddb6f5a3a540543f785a53b57cd5698c7fe0e88"
+    },
+    "dist/ui/qol-dialog-centermiddle.png": {
+      "gitBlob": "d3dcfb9a06b476cd666c51af8c37db45967fa7e3",
+      "bytes": 367,
+      "sha256": "5e339ba4b104f1c9660351668ed5cfb11176e18671f11536f624ecf93d95b7d3"
+    },
+    "dist/ui/qol-dialog-centerright.png": {
+      "gitBlob": "891ce992cefccc6a835d15fc4d92f81fd913e52c",
+      "bytes": 2148,
+      "sha256": "ef5fdc74936870b1460cd89f5a048cfedd7ca5dffe73f578b7822e794c05eadc"
+    },
+    "dist/ui/qol-dialog-topleft.png": {
+      "gitBlob": "9b96ebe90239df558daf79e45a724a9537445fb7",
+      "bytes": 5704,
+      "sha256": "4860437be14e2d87686b117ae8c925754696e179a176dff4ac0f20b480a9f7aa"
+    },
+    "dist/ui/qol-dialog-topmiddle.png": {
+      "gitBlob": "6d5115bb6fdef272b76a8243d33e1a0070884d68",
+      "bytes": 2760,
+      "sha256": "530e9288724ca72bd2fb4ec628fbebea35c388b2da0380a8656daeb2c5ca8ab5"
+    },
+    "dist/ui/qol-dialog-topright.png": {
+      "gitBlob": "a11b41aabfc806c60e5a0cab1283af16e84d7fc5",
+      "bytes": 6384,
+      "sha256": "fc69f02366520f5e77576593cf5dc1f037c2853d331c53ba88c47ce255ec1685"
+    },
+    "dist/ui/qol-font-bright.json": {
+      "gitBlob": "f1b32518904f79f3d288f7bfca8790546da3c672",
+      "bytes": 11567,
+      "sha256": "61c0dc2c85c97f9ff3f46fdd6df6fa993882f15712ebfc530e00183d49028bfe"
+    },
+    "dist/ui/qol-font-bright.png": {
+      "gitBlob": "2d2af34b536d2a875f66cdccbb3f717d910c5733",
+      "bytes": 52103,
+      "sha256": "4b348162d745e31430187d326c5d5b9a82a505784e67dd3d48fde3438ad4cdf3"
+    },
+    "dist/ui/qol-font-green.json": {
+      "gitBlob": "6622ea871c87a9ad1a84612b289e23f91e77b703",
+      "bytes": 11566,
+      "sha256": "541fa8af3a68df048319b904a9e1660258645db7bdf2c80df3877c37db009541"
+    },
+    "dist/ui/qol-font-green.png": {
+      "gitBlob": "21a4a74eeab25a94849526ce539ce5bff87ffa5f",
+      "bytes": 51292,
+      "sha256": "f3b5bb1247a75966184b16d36d5653c680055bf284edfb4dd3aa1098e026b661"
+    },
+    "dist/ui/qol-stone-left.png": {
+      "gitBlob": "b7ec9c21d65e0452fa0f7202ab58a8953e5876ac",
+      "bytes": 1896,
+      "sha256": "4bbc52c480ad97c8a611c5e76f93898ed567f7c603965f389fb69a40b6f3490c"
+    },
+    "dist/ui/qol-stone-middle.png": {
+      "gitBlob": "5889e9795016b916c2924c2f0d92877841409f2f",
+      "bytes": 1342,
+      "sha256": "4a78caf163579cf9baac8db6581dde177a0a635002c852efedbbe17ce81d89c3"
+    },
+    "dist/ui/qol-stone-right.png": {
+      "gitBlob": "754ff4fe7615eca1604215f54acd02a86d347316",
+      "bytes": 1710,
+      "sha256": "18f7690e01f84c4e543b4b7a20fcfea9dac80df1c4833d621a345eb55d77d26b"
+    },
+    "dist/vendor/jszip.min.js": {
+      "gitBlob": "ff4cfd5e8fdc49176c2d1d409afa897f40be01f4",
+      "bytes": 97630,
+      "sha256": "acc7e41455a80765b5fd9c7ee1b8078a6d160bbbca455aeae854de65c947d59e"
+    }
+  },
+  "probeSha256": "f5f9309cc585fd6ea6aad44f84c5c2552b682b21fd4769578693f321154ba99b",
+  "serverSourceSha256": "8be4afca064d280802b4286c4c7d5fdde23955349893d5dda729a807c7c563bb",
+  "privateServerSha256": "bfdf9ad5f455e5d68af3fa209fb426cad4a0cf222aabfe0c99f5ab3341f664f2",
+  "serverAdaptation": "Only the private dist directory points to this exact Git snapshot; runtime metadata and files are unchanged."
+}

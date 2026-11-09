@@ -11,6 +11,8 @@ import {createRequire} from 'node:module';
 import {spawnSync} from 'node:child_process';
 import {inflateSync} from 'node:zlib';
 import {fileURLToPath} from 'node:url';
+import {CURRENT_ENGINE_ID, CURRENT_SOURCE_COUNT, CURRENT_OBJECT_COUNT, SCRAP_SOURCE_ADDITIONS, SCRAP_PARENT_REFERENCE_SHA256, reconstructEndless3Sources} from './native-release-context.mjs';
+import {restoreNativeArtifactPack} from './native-artifact-pack.mjs';
 import {verifyRallyRaid} from './rally-raid-verification.mjs';
 import {verifyLightsOut} from './lights-out-verification.mjs';
 import {verifyGarlicRun} from './garlic-run-verification.mjs';
@@ -19,6 +21,7 @@ import {verifyCobCannonCommand} from './cob-cannon-command-verification.mjs';
 import {verifyPoolPanic} from './pool-panic-verification.mjs';
 import {verifyPoolPanicEndless} from './pool-panic-endless-verification.mjs';
 import {verifyPoolPanicEndlessProgression} from './pool-panic-endless-progression-verification.mjs';
+import {verifyScrapYard} from './scrap-yard-verification.mjs';
 
 const require = createRequire(import.meta.url);
 const dist = new URL('../dist/', import.meta.url);
@@ -27,15 +30,19 @@ new Function('module', 'exports', 'require', fs.readFileSync(new URL('vendor/jsz
 const JSZip = vendor.exports;
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
 const engine = JSON.parse(fs.readFileSync(new URL('game/engine-provenance.json', dist)));
-assert.equal(engine.id, '0.2.6-web-endless.3');
+assert.equal(engine.id, CURRENT_ENGINE_ID);
+const historyEngine = engine.parent;
+assert.equal(historyEngine.id, '0.2.6-web-endless.3');
 const currentSourceBytes = fs.readFileSync(new URL(engine.artifacts.source, new URL('game/engine-provenance.json', dist)));
 assert.equal(sha(currentSourceBytes), engine.artifacts.sourceSha256, 'Current source archive matches the engine provenance pin');
 const current = await JSZip.loadAsync(currentSourceBytes, {checkCRC32: true});
+const prefix = 'scrap1-candidate/';
+await restoreNativeArtifactPack(current, prefix);
 const publishedEndless2Bytes = fs.readFileSync(new URL('source/pvz-portable-0.2.6-web-endless.2-source.zip', dist));
 assert.equal(sha(publishedEndless2Bytes), 'b9095c65547c3d013917ae4188e284f18eabb71a98020ca3d53f71f7365f9566');
 assert.equal(publishedEndless2Bytes.length,40424282);
-assert.equal(engine.parent.id,'0.2.6-web-endless.2');
-assert.equal(engine.parent.artifacts.sourceSha256,sha(publishedEndless2Bytes));
+assert.equal(historyEngine.parent.id,'0.2.6-web-endless.2');
+assert.equal(historyEngine.parent.artifacts.sourceSha256,sha(publishedEndless2Bytes));
 const publishedEndless2=await JSZip.loadAsync(publishedEndless2Bytes,{checkCRC32:true});
 const publishedEndless2Prefix='endless2-candidate/source/';
 const publishedEndless2Read=async name=>{
@@ -62,7 +69,7 @@ assert.equal(endless1Reference.publishedSuccessorSha256,sha(publishedEndless2Byt
 assert.equal(endless1Reference.publishedSuccessorBytes,publishedEndless2Bytes.length);
 assert.equal(endless1Reference.publishedSuccessorPrefix,'endless2-candidate/');
 assert.equal(endless1Reference.sourceCount,852);
-assert.equal(engine.parent.parent.artifacts.sourceSha256,historicalParentArchiveSha);
+assert.equal(historyEngine.parent.parent.artifacts.sourceSha256,historicalParentArchiveSha);
 assert.equal(Object.keys(endless1Reference.files).length,858);
 assert.deepEqual(Object.keys(endless1Reference.reverseEdits).sort(),[
   'source/CMake/ProjectVersion.cmake','source/src/Lawn/Board.cpp','source/src/Lawn/Challenge.cpp',
@@ -151,7 +158,6 @@ for(const [name,pin] of Object.entries(lights1InputPins)) {
   assert.equal(sha(bytes),pin.sha256,'Retained historical input matches its authenticated archive bytes: '+name);
   lights1Inputs.set(name,bytes);
 }
-const prefix = 'endless3-candidate/';
 // The restoration reference predates Raid.1's foreground override.
 // Compact exact inputs retain archive and whole-file authentication without
 // forcing source downloads to duplicate another complete historical engine ZIP.
@@ -180,11 +186,23 @@ const read = async name => {
   assert(entry, 'Missing current production source/test: ' + name);
   return Buffer.from(await entry.async('uint8array'));
 };
+const historyReferenceBytes = fs.readFileSync(new URL('./fixtures/scrap1-parent-reference.json', import.meta.url));
+assert.equal(sha(historyReferenceBytes), SCRAP_PARENT_REFERENCE_SHA256);
+const historySource = await reconstructEndless3Sources({referenceBytes: historyReferenceBytes, read, sha, engine});
+const historyRead = async name => {
+  assert(name.startsWith('source/'), 'Historical source projection cannot supply executable/report inputs');
+  const bytes = historySource.files.get(name.slice('source/'.length));
+  assert(bytes, 'Missing authenticated published Endless.3 source: ' + name);
+  return bytes;
+};
 const retainedChecks = {'game-speed':81, 'qol-controls':90, 'decks-cooldowns':274,
   'bonus-challenge':387, 'bonus-completion':1283, 'night-shift':231, 'lantern-shroom':1724,
   'garden-shuffle':214, 'seed-swap':587, 'mender-bloom':523, 'intensive-care':1135, 'native-layout':26138};
-const suites = [...Object.keys(retainedChecks), 'care-fatigue', 'care-full-run', 'chain-reaction', 'rally-zombie', 'rally-raid', 'lights-out', 'garlic-run', 'bungee-business', 'cob-cannon-command', 'pool-panic', 'pool-panic-endless'];
-assert.equal(suites.length, 23);
+const focusedCheckExtensions = {'bonus-completion':19, 'native-layout':333};
+const retainedSuites = [...Object.keys(retainedChecks), 'care-fatigue', 'care-full-run', 'chain-reaction', 'rally-zombie', 'rally-raid', 'lights-out', 'garlic-run', 'bungee-business', 'cob-cannon-command', 'pool-panic', 'pool-panic-endless'];
+assert.equal(retainedSuites.length, 23);
+const suites = [...retainedSuites, 'scrap-yard'];
+assert.equal(suites.length, 24);
 const reports = new Map();
 let checks = 0;
 for (const name of suites) {
@@ -202,21 +220,44 @@ for (const name of suites) {
   reports.set(name, result);
 }
 for (const [name, count] of Object.entries(retainedChecks))
-  assert.equal(reports.get(name).checks, count, 'Every retained suite keeps its old assertions and reviewed appended coverage: ' + name);
+  assert.equal(reports.get(name).checks, count + (focusedCheckExtensions[name] || 0),
+    'Every retained suite keeps its old assertions and reviewed appended coverage: ' + name);
 // Preserve all retained assertions. Raid adds one challenge-definition
 // iteration and 2,732 native footer/card/packet/layer checks; Raid.2
 // retains those cases with native-order expectations and adds14 pick controls.
 assert.equal(Object.values(retainedChecks).reduce((sum, count) => sum + count, 0), 32667);
+assert.equal(Object.values(focusedCheckExtensions).reduce((sum, count) => sum + count, 0), 352);
 assert.equal(reports.get('care-fatigue').checks, 25042,
   'Fatigue rig coverage retains every crew pose, scoped state and restoration check');
+const focusedRetentionBytes = await read('tests/scrap1-focused-retention/adaptations.json');
+assert.equal(sha(focusedRetentionBytes), 'd8398969b25626a3449c645d4c3400b6905c14635132ffffebf95cb91d02d0c1');
+const focusedRetention = JSON.parse(focusedRetentionBytes);
+assert.equal(focusedRetention.schemaVersion,1);
+assert.equal(focusedRetention.engineId,engine.id);
+assert.equal(focusedRetention.parentEngineId,historyEngine.id);
+assert.equal(focusedRetention.parentArchiveSha256,'206e5e16b0c4ae7c8b88afd94e627943b4cd15c56f82113fcaf4bb1adf4c13b1');
+assert.equal(focusedRetention.allCasesFresh,true);
+assert.deepEqual(Object.keys(focusedRetention.runners).sort(),[...Object.keys(retainedChecks),'care-fatigue'].sort());
+for(const [name,record] of Object.entries(focusedRetention.runners)) {
+  assert.equal(record.runner,'test-'+name+'.py');
+  assert.equal(record.publishedArchivePath,'endless3-candidate/tests/'+record.runner);
+  assert.equal(record.originalSnapshot,'scrap1-focused-retention/originals/'+record.runner);
+  const original=await read('tests/'+record.originalSnapshot);
+  assert.equal(original.length,record.originalBytes);
+  assert.equal(sha(original),record.originalSha256,'Every original focused runner retains its exact authenticated published bytes: '+name);
+  assert.equal(sha(await read('tests/'+record.runner)),record.runnerSha256,'Current focused runner is exactly the reviewed compatibility adaptation: '+name);
+  assert.equal(record.baselineChecks,name==='care-fatigue'?25042:retainedChecks[name]);
+  assert.equal(record.appendedChecks,focusedCheckExtensions[name]||0);
+  assert.equal(reports.get(name).checks,record.baselineChecks+record.appendedChecks);
+}
 const fullRunReport = reports.get('care-full-run');
 assert.equal(fullRunReport.checks, Object.keys(fullRunReport.sourceSha256).length + 152, 'Complete-engine provenance and required native scenario checks are retained');
 assert.equal(fullRunReport.execution, 'complete-production-engine',
   'Care scenarios execute the complete linked engine, not an extracted combat model');
-assert.equal(fullRunReport.productionObjectCount, 134, 'Complete engine drivers link all 134 normal production objects except main');
-assert.equal(Object.keys(fullRunReport.productionObjectSha256).length, 134);
+assert.equal(fullRunReport.productionObjectCount, CURRENT_OBJECT_COUNT, 'Complete engine drivers link all current normal production objects except main');
+assert.equal(Object.keys(fullRunReport.productionObjectSha256).length, CURRENT_OBJECT_COUNT);
 for (const digest of Object.values(fullRunReport.productionObjectSha256)) assert.match(digest, /^[a-f0-9]{64}$/);
-assert.equal(Object.keys(fullRunReport.sourceSha256).length, 852,
+assert.equal(Object.keys(fullRunReport.sourceSha256).length, CURRENT_SOURCE_COUNT,
   'Complete engine scenarios pin every production source input, not an extracted combat model');
 const fullRunArtifactNames = ['care-full-run-engine.js', 'care-full-run-engine.wasm'];
 assert.deepEqual(Object.keys(fullRunReport.testArtifactSha256).sort(), [...fullRunArtifactNames].sort());
@@ -236,7 +277,7 @@ const fullRunProductionBuild = JSON.parse(fullRunProductionBuildBytes);
 assert.equal(fullRunProductionBuild.exitCode, 0);
 assert.equal(fullRunProductionBuild.sourceUnchangedDuringBuild, true);
 assert.equal(fullRunProductionBuild.status, 'PASS');
-assert.equal(fullRunProductionBuild.sourceFiles, 852);
+assert.equal(fullRunProductionBuild.sourceFiles, CURRENT_SOURCE_COUNT);
 const fullRunBuild = JSON.parse(await read('tests/care-full-run-build.json'));
 for (const name of ['execution', 'productionObjectCount', 'productionBuildReceiptSha256',
   'generatedHarnessSha256', 'builderSha256', 'testArtifactSha256', 'sourceSha256', 'productionObjectSha256'])
@@ -474,6 +515,10 @@ await verifyPoolPanic({report:reports.get('pool-panic'),read,sha,engine,fullRunR
 await verifyPoolPanicEndless({report:reports.get('pool-panic-endless'),read,sha,engine,fullRunReport,productionBuildBytes:fullRunProductionBuildBytes,immediateParentBytes});
 await verifyPoolPanicEndlessProgression({report:reports.get('pool-panic-endless'),read,sha,engine,fullRunReport,
   productionBuildBytes:fullRunProductionBuildBytes,parentRead:publishedEndless2Read,parentProductionBuildBytes});
+await verifyScrapYard({report:reports.get('scrap-yard'),read,sha,engine,fullRunReport,
+  productionBuildBytes:fullRunProductionBuildBytes,
+  currentArtBytes:fs.readFileSync(new URL('content/native-bonus-art.json',dist)),
+  previousArtBytes:fs.readFileSync(new URL('./fixtures/endless3-native-bonus-art.json',import.meta.url))});
 const careBalance = reports.get('intensive-care').balanceModel;
 assert.equal(careBalance.kind, 'native healing/fatigue capacity bound; not a battle clear');
 assert(careBalance.allBedsHealHpPerSecond > careBalance.maximumCrewFatigueHpPerSecond);
@@ -481,6 +526,12 @@ assert(careBalance.slowestSuppliedRecoveryTicks < 3000);
 assert.equal(careBalance.authoredEnemies, 40);
 const parentBytes=async name=>{const bytes=poolSources.get(name);assert(bytes,'Missing reconstructed historical Pool source: '+name);return bytes;};
 const layoutReport = reports.get('native-layout');
+assert.equal(layoutReport.scrapRetainedChecks,26138);
+assert.equal(layoutReport.scrapLayoutChecks,333);
+assert.equal(layoutReport.scrapBonusCards,1);
+assert.equal(layoutReport.scrapViewports,6);
+assert.equal(layoutReport.scrapFixedBankCases,8);
+assert.equal(layoutReport.scrapFooterCases,28);
 assert.equal(layoutReport.hintLines, 1);
 assert.equal(layoutReport.hintInkBottom, 576);
 assert.equal(layoutReport.legacyHintLines, 2);
@@ -705,7 +756,7 @@ for(const [signature,method] of Object.entries(raidLayerFixture.methods))
     'src/Lawn/SeedPacket.cpp':'src/Lawn/Board.cpp')).toString(),signature),
     'Restored UI/effects retain the actual authenticated native I,Zombie method: '+signature);
 for(const [signature,method] of Object.entries(raidLayerFixture.methods)) {
-  const currentMethod=extractLegacyFunction((await read('source/'+(signature.includes('SeedPacket::')?'src/Lawn/SeedPacket.cpp':'src/Lawn/Board.cpp'))).toString(),signature);
+  const currentMethod=extractLegacyFunction((await historyRead('source/'+(signature.includes('SeedPacket::')?'src/Lawn/SeedPacket.cpp':'src/Lawn/Board.cpp'))).toString(),signature);
   let nativePath=currentMethod;
   if(signature==='void Board::DrawUIBottom(') {
     const cobBankGuard='!CobCannonCommand::IsMode(mApp->mGameMode) && ';
@@ -847,8 +898,12 @@ assert.equal(newModes.get('GAMEMODE_CHALLENGE_BUNGEE_BUSINESS'),84);
 assert.equal(newModes.get('GAMEMODE_CHALLENGE_COB_CANNON_COMMAND'),85);
 assert.equal(newModes.get('GAMEMODE_CHALLENGE_POOL_PANIC'),86);
 assert.equal(newModes.get('GAMEMODE_CHALLENGE_POOL_PANIC_ENDLESS'),87);
-assert.equal(newModes.get('NUM_GAME_MODES'),88);
-assert.deepEqual([...newModes].filter(([name])=>name!=='GAMEMODE_CHALLENGE_POOL_PANIC_ENDLESS'&&name!=='NUM_GAME_MODES'),[...oldModes].filter(([name])=>name!=='NUM_GAME_MODES'),'Every prior mode ID remains exact');
+assert.equal(newModes.get('GAMEMODE_CHALLENGE_SCRAP_YARD'),88);
+assert.equal(newModes.get('NUM_GAME_MODES'),89);
+const publishedModes = enumValues((await historyRead('source/src/ConstEnums.h')).toString(), 'GameMode');
+assert.equal(publishedModes.get('NUM_GAME_MODES'),88);
+assert.deepEqual([...newModes].filter(([name])=>!['GAMEMODE_CHALLENGE_SCRAP_YARD','NUM_GAME_MODES'].includes(name)), [...publishedModes].filter(([name])=>name!=='NUM_GAME_MODES'), 'All published mode IDs0..87 remain exact; only mode88 is appended');
+assert.deepEqual([...newModes].filter(([name])=>!['GAMEMODE_CHALLENGE_POOL_PANIC_ENDLESS','GAMEMODE_CHALLENGE_SCRAP_YARD','NUM_GAME_MODES'].includes(name)),[...oldModes].filter(([name])=>name!=='NUM_GAME_MODES'),'Every prior mode ID remains exact');
 assert.deepEqual([...enumValues(newEnums, 'ChallengePage')], [...enumValues(oldEnums, 'ChallengePage')],
   'Cold Front uses the existing Bonus page without changing any page IDs');
 const oldZombieIds = enumValues(oldEnums, 'ZombieType'), newZombieIds = enumValues(newEnums, 'ZombieType');
@@ -897,7 +952,15 @@ const oldDefinitions = definitions((await parentBytes('src/Lawn/Widget/Challenge
 const newDefinitions = definitions((await read('source/src/Lawn/Widget/ChallengeScreen.cpp')).toString());
 assert.equal(oldDefinitions.length, 86);
 assert.deepEqual(newDefinitions.slice(0,oldDefinitions.length), oldDefinitions, 'Every original and all fourteen prior Bonus challenge definitions remain exact');
-assert.equal(newDefinitions.length, oldDefinitions.length+1);
+const publishedDefinitions = definitions((await historyRead('source/src/Lawn/Widget/ChallengeScreen.cpp')).toString());
+assert.equal(publishedDefinitions.length, oldDefinitions.length+1);
+assert.deepEqual(newDefinitions.slice(0,publishedDefinitions.length), publishedDefinitions, 'Every one of the fifteen published Bonus cards and all original catalog entries remains exact');
+assert.equal(newDefinitions.length, publishedDefinitions.length+1);
+assert.match(newDefinitions.at(-1), /GAMEMODE_CHALLENGE_SCRAP_YARD/);
+assert.match(newDefinitions.at(-1), /Scrap Yard/);
+assert.match(newDefinitions.at(-1), /CHALLENGE_PAGE_BONUS/);
+assert.match(newDefinitions.at(-1), /\.mRow = 4/);
+assert.match(newDefinitions.at(-1), /\.mCol = 0/);
 assert.match(newDefinitions[81], /GAMEMODE_CHALLENGE_LIGHTS_OUT/);
 assert.match(newDefinitions[81], /Lights Out/);
 assert.match(newDefinitions[81], /CHALLENGE_PAGE_BONUS/);
@@ -907,24 +970,33 @@ assert.match(newDefinitions[82], /GAMEMODE_CHALLENGE_GARLIC_RUN/);
 assert.match(newDefinitions[83], /GAMEMODE_CHALLENGE_BUNGEE_BUSINESS/);
 assert.match(newDefinitions[84], /GAMEMODE_CHALLENGE_COB_CANNON_COMMAND/);
 assert.match(newDefinitions[85], /GAMEMODE_CHALLENGE_POOL_PANIC/);
-assert.match(newDefinitions.at(-1), /GAMEMODE_CHALLENGE_POOL_PANIC_ENDLESS/);
+assert.match(newDefinitions[86], /GAMEMODE_CHALLENGE_POOL_PANIC_ENDLESS/);
 assert.match(newDefinitions[82], /Garlic Run/);
 assert.match(newDefinitions[83], /Bungee Business/);
 assert.match(newDefinitions[84], /Cob Cannon Command/);
 assert.match(newDefinitions[85], /Pool Panic/);
-assert.match(newDefinitions.at(-1), /Pool Panic Endless/);
-assert.match(newDefinitions.at(-1), /CHALLENGE_PAGE_BONUS/);
-assert.match(newDefinitions.at(-1), /\.mRow = 3/);
+assert.match(newDefinitions[86], /Pool Panic Endless/);
+assert.match(newDefinitions[86], /CHALLENGE_PAGE_BONUS/);
+assert.match(newDefinitions[86], /\.mRow = 3/);
 assert.match(newDefinitions[82], /\.mCol = 0/);
 assert.match(newDefinitions[83], /\.mCol = 1/);
 assert.match(newDefinitions[84], /\.mCol = 2/);
 assert.match(newDefinitions[85], /\.mCol = 3/);
-assert.match(newDefinitions.at(-1), /\.mCol = 4/);
+assert.match(newDefinitions[86], /\.mCol = 4/);
 console.log('PASS native I,Zombie presentation restoration preserves every prior mode/seed ID, saved layout, plant and all fourteen prior Bonus challenge identities.');
 
 const artRecordBytes=fs.readFileSync(new URL('content/native-bonus-art.json', dist));
-assert.equal(sha(artRecordBytes),'538175fc8c54e8efb241a129263f2c99ee8e4193fb09ace213a67e9430f7483b','Reviewed fifteen-card native Bonus metadata');
-const artRecord = JSON.parse(artRecordBytes);
+const publishedArtBytes = fs.readFileSync(new URL('./fixtures/endless3-native-bonus-art.json', import.meta.url));
+assert.equal(sha(publishedArtBytes),'538175fc8c54e8efb241a129263f2c99ee8e4193fb09ace213a67e9430f7483b','Independent reviewed fifteen-card native Bonus metadata');
+const publishedArt = JSON.parse(publishedArtBytes);
+const currentArtRecord = JSON.parse(artRecordBytes);
+assert.equal(currentArtRecord.cards.length,16);
+assert.deepEqual({...currentArtRecord,cards:currentArtRecord.cards.slice(0,15)},publishedArt, 'All fifteen published card records and every non-card metadata value remain exact');
+assert.equal(currentArtRecord.cards[15].mode,88);
+assert.equal(currentArtRecord.cards[15].name,'Scrap Yard');
+assert.equal(currentArtRecord.cards[15].generatedArtworkUsed,false);
+// Retain every older artwork assertion against the authenticated unchanged prefix.
+const artRecord = {...currentArtRecord,cards:currentArtRecord.cards.slice(0,15)};
 assert.match(artRecord.sourceKind, /native sprite compositions/);
 assert.equal(artRecord.generatedArtworkUsed, true, 'Generated artwork is scoped to the permitted plant sprite');
 assert.equal(artRecord.standaloneChallengeIllustrations, false, 'Cards contain actual sprites, not separately generated illustrations');
@@ -1250,11 +1322,14 @@ assert.deepEqual(fs.readFileSync(new URL('generation.json', artworkUrl)), genera
 
 const sourceManifest = JSON.parse(await read('source-manifest.json'));
 assert.equal(sourceManifest.version, engine.id);
+assert.deepEqual(Object.keys(sourceManifest.files).sort(),
+  [...Object.keys(historySource.manifest.files), ...SCRAP_SOURCE_ADDITIONS].sort(),
+  'Scrap Yard retains all852 published paths and appends only its four implementation/presentation files');
 const completeProductionSources = Object.fromEntries(Object.entries(sourceManifest.files)
   .map(([name, pin]) => ['source/' + name, pin.sha256]));
 assert.deepEqual(fullRunReport.sourceSha256, completeProductionSources,
   'Every full-engine source input matches the complete published production manifest');
-assert.equal(Object.keys(completeProductionSources).length,852);
+assert.equal(Object.keys(completeProductionSources).length,CURRENT_SOURCE_COUNT);
 for(const [name,result] of reports)
   for(const [input,pin] of Object.entries(result.sourceSha256))
     assert.equal(completeProductionSources[input],pin,'Every native suite uses this same complete release source: '+name+'/'+input);
@@ -1282,11 +1357,11 @@ const publishedEndless2Names=Object.values(publishedEndless2.files)
   .filter(entry=>!entry.dir&&entry.name.startsWith(publishedEndless2Prefix))
   .map(entry=>entry.name.slice(publishedEndless2Prefix.length));
 assert.equal(publishedEndless2Names.length,852);
-assert.deepEqual(Object.keys(sourceManifest.files).sort(),publishedEndless2Names.sort(),'Endless.3 preserves every production path');
+assert.deepEqual(Object.keys(historySource.manifest.files).sort(),publishedEndless2Names.sort(),'Endless.3 preserves every production path');
 const actualEndless3Changes=[];
 for(const name of publishedEndless2Names){
-  const before=await publishedEndless2Source(name),after=await read('source/'+name);
-  const pin=sourceManifest.files[name];assert.equal(pin.bytes,after.length);assert.equal(pin.sha256,sha(after));
+  const before=await publishedEndless2Source(name),after=await historyRead('source/'+name);
+  const pin=historySource.manifest.files[name];assert.equal(pin.bytes,after.length);assert.equal(pin.sha256,sha(after));
   if(!after.equals(before))actualEndless3Changes.push(name);
   if(!reviewedEndless3Inputs.has(name))assert.deepEqual(after,before,'Every unrelated mode, sprite and UI byte remains exact to published Endless.2: '+name);
   if(releaseIdentityInputs.has(name))assert.equal(after.toString().replaceAll('0.2.6-web-endless.3','0.2.6-web-endless.2'),before.toString());
@@ -1302,8 +1377,8 @@ for(const entry of Object.values(parent.files)){
   else assert.deepEqual(after,before,'Every unrelated source/artwork byte remains exact to immediate Endless.1: '+name);
 }
 assert.equal(immediateParentCount,852);
-assert.deepEqual(Object.keys(sourceManifest.files).filter(name=>!parent.file(parentPrefix+name)),[],'Endless.2 adds no production files');
-assert.equal(Object.keys(sourceManifest.files).length,immediateParentCount);
+assert.deepEqual(Object.keys(historySource.manifest.files).filter(name=>!parent.file(parentPrefix+name)),[],'Endless.2 adds no production files');
+assert.equal(Object.keys(historySource.manifest.files).length,immediateParentCount);
 // Preserve the original complete Pool→Endless1 production delta inventory.
 let parentSourceCount=0;
 for(const [name,before] of poolSources){
@@ -1313,9 +1388,9 @@ for(const [name,before] of poolSources){
   else assert.deepEqual(after,before,'Every historical unrelated Pool source/artwork byte remains exact: '+name);
 }
 assert.equal(parentSourceCount,848);
-const addedProduction=Object.keys(sourceManifest.files).filter(name=>!poolSources.has(name));
+const addedProduction=Object.keys(historySource.manifest.files).filter(name=>!poolSources.has(name));
 assert.deepEqual(addedProduction.sort(),[...addedRaidInputs].sort(),'Endless.1 added exactly four reviewed implementation/presentation files');
-assert.equal(Object.keys(sourceManifest.files).length,parentSourceCount+addedRaidInputs.length);
+assert.equal(Object.keys(historySource.manifest.files).length,parentSourceCount+addedRaidInputs.length);
 const normalizeSource = bytes => bytes.toString().replace(/\r\n?/g, '\n');
 // Reconstruct the exact historical Lights.2 Zombie from authenticated Garlic.1.
 // Its independently obtained normalized SHA pins every old source byte.
@@ -1402,7 +1477,7 @@ assert.equal(sha(Buffer.from(parentBoardFromBungee)),'fd58ac067e264888eb1608c733
 const afterBoard=parentBoardFromBungee;
 
 
-const currentWalkingZombie=normalizeSource(await read('source/src/Lawn/Zombie.cpp'));
+const currentWalkingZombie=normalizeSource(await historyRead('source/src/Lawn/Zombie.cpp'));
 let priorZombiePath=afterWalkingZombie;
 for(const addition of [' || GarlicRun::HoldsZombie(*this)',' || GarlicRun::IsMode(mApp->mGameMode)']) {
   assert.equal(priorZombiePath.split(addition).length,2);
@@ -1410,15 +1485,15 @@ for(const addition of [' || GarlicRun::HoldsZombie(*this)',' || GarlicRun::IsMod
 }
 assert.equal(sha(Buffer.from(priorZombiePath)),'8eb437a83daa301cf56e4ddff1623381c933b26e8abd1dfc2823278d51201160','Only the Garlic planning hold and no-intermediate-award guards may change; the complete reconstructed Zombie matches independently authenticated Lights.2 bytes');
 const beforeRaidPresentation=normalizeSource(await parentBytes('src/Lawn/System/RallyRaidPresentation.cpp'));
-const afterRaidPresentation=normalizeSource(await read('source/src/Lawn/System/RallyRaidPresentation.cpp'));
+const afterRaidPresentation=normalizeSource(await historyRead('source/src/Lawn/System/RallyRaidPresentation.cpp'));
 for(const signature of ['Sexy::Image* GetBonusImage(', 'std::string LevelLabel(', 'void DisposeImage('])
   assert.equal(extractLegacyFunction(afterRaidPresentation,signature),extractLegacyFunction(beforeRaidPresentation,signature),'Accepted Raid card/progression/cache lifecycle stays exact');
 const beforePlant = normalizeSource(await parentBytes('src/Lawn/Plant.cpp'));
-const afterPlant = normalizeSource(await read('source/src/Lawn/Plant.cpp'));
+const afterPlant = normalizeSource(await historyRead('source/src/Lawn/Plant.cpp'));
 for (const signature of ['void DrawCareFatigue(Graphics* g, Plant& plant, Reanimation& body, float baseY)',
   "namespace\n{\n// Reanimation's matrix draw path does not use Graphics::SetScale."])
   assert.equal(extractLegacyFunction(afterPlant, signature), extractLegacyFunction(beforePlant, signature), 'Care fatigue rendering remains exact');
-const currentBoard = normalizeSource(await read('source/src/Lawn/Board.cpp'));
+const currentBoard = normalizeSource(await historyRead('source/src/Lawn/Board.cpp'));
 // Remove only the five exact reviewed Endless.2 Board edits before stripping
 // older guards. Whole-file equality against the authenticated immediate parent
 // prevents a new-mode change from erasing or broadening any historic path.
@@ -1449,7 +1524,7 @@ for(const [addition,previous] of [
   restoredEndless1Board=restoredEndless1Board.replace(addition,previous);
 }
 assert.equal(restoredEndless1Board,normalizeSource(await immediateParentBytes("src/Lawn/Board.cpp")),'Complete restored Endless.1 source matches every authenticated parent byte before older preservation checks');
-let restoredEndless1Challenge=normalizeSource(await read('source/src/Lawn/Challenge.cpp'));
+let restoredEndless1Challenge=normalizeSource(await historyRead('source/src/Lawn/Challenge.cpp'));
 for(const [addition,previous] of [
   [
     "    if (PoolPanic::IsMode(aGameMode)) mBoard->mShowShovel = false;\n",
@@ -1462,7 +1537,7 @@ for(const [addition,previous] of [
 assert.equal(restoredEndless1Challenge,normalizeSource(await immediateParentBytes("src/Lawn/Challenge.cpp")),'Complete restored Endless.1 source matches every authenticated parent byte before older preservation checks');
 
 // Restore only the reviewed compact-header additions before older LawnApp guards.
-let restoredEndless1App=normalizeSource(await read("source/src/LawnApp.cpp"));
+let restoredEndless1App=normalizeSource(await historyRead("source/src/LawnApp.cpp"));
 for(const [addition,previous] of [
   [
     "\t// Share the original combat Menu strip without extending onto the lawn.\n\tmGameSpeedButton->Resize(753, -10, 45, 46);\n",
@@ -1481,7 +1556,7 @@ for(const [addition,previous] of [
  restoredEndless1App=restoredEndless1App.replace(addition,previous);
 }
 assert.equal(restoredEndless1App,normalizeSource(await immediateParentBytes("src/LawnApp.cpp")),'Every pre-existing button/menu and application source byte matches authenticated Endless.1 after only reviewed speed-header changes');
-let restoredEndless1GameButton=normalizeSource(await read("source/src/Lawn/Widget/GameButton.cpp"));
+let restoredEndless1GameButton=normalizeSource(await historyRead("source/src/Lawn/Widget/GameButton.cpp"));
 for(const [addition,previous] of [
   [
     "static void DrawCompactSpeedStoneButton(Graphics* g, int x, int y, int theWidth, int theHeight, bool isDown, bool isHighLighted, const std::string& theLabel)\n{\n\tGraphics aButtonGraphics(*g);\n\taButtonGraphics.ClipRect(x, y, theWidth, theHeight);\n\tg = &aButtonGraphics;\n\tImage* aLeftImage = isDown ? Sexy::IMAGE_BUTTON_DOWN_LEFT : Sexy::IMAGE_BUTTON_LEFT;\n\tImage* aRightImage = isDown ? Sexy::IMAGE_BUTTON_DOWN_RIGHT : Sexy::IMAGE_BUTTON_RIGHT;\n\tconst int aLeftWidth = 22;\n\tconst int aRightWidth = 23;\n\tconst int aPressOffset = isDown ? 1 : 0;\n\t// Preserve the original outer stone caps at native size. The full 71px\n\t// pair cannot fit the speed control's share of the original Menu strip.\n\tg->DrawImage(aLeftImage, x + aPressOffset, y, Rect(0, 0, aLeftWidth, aLeftImage->mHeight));\n\tg->DrawImage(aRightImage, x + aPressOffset + aLeftWidth, y,\n\t\tRect(aRightImage->mWidth - aRightWidth, 0, aRightWidth, aRightImage->mHeight));\n\tg->SetFont(isHighLighted ? Sexy::FONT_DWARVENTODCRAFT18BRIGHTGREENINSET : Sexy::FONT_DWARVENTODCRAFT18GREENINSET);\n\tconst int aFontX = x + aPressOffset + (theWidth - Sexy::FONT_DWARVENTODCRAFT18GREENINSET->StringWidth(theLabel)) / 2 + 1;\n\tconst int aFontY = y + aPressOffset + (theHeight - Sexy::FONT_DWARVENTODCRAFT18GREENINSET->GetAscent() / 6 - 1 + Sexy::FONT_DWARVENTODCRAFT18GREENINSET->GetAscent()) / 2 - 4;\n\tg->SetColor(Color::White);\n\tg->DrawString(theLabel, aFontX, aFontY);\n}\n\n",
@@ -1496,7 +1571,7 @@ for(const [addition,previous] of [
  restoredEndless1GameButton=restoredEndless1GameButton.replace(addition,previous);
 }
 assert.equal(restoredEndless1GameButton,normalizeSource(await immediateParentBytes("src/Lawn/Widget/GameButton.cpp")),'Every pre-existing button/menu and application source byte matches authenticated Endless.1 after only reviewed speed-header changes');
-assert.equal(extractLegacyFunction(normalizeSource(await read('source/src/Lawn/Widget/GameButton.cpp')),'void DrawStoneButton('),extractLegacyFunction(restoredEndless1GameButton,'void DrawStoneButton('),'Shared native stone-button renderer remains byte exact');
+assert.equal(extractLegacyFunction(normalizeSource(await historyRead('source/src/Lawn/Widget/GameButton.cpp')),'void DrawStoneButton('),extractLegacyFunction(restoredEndless1GameButton,'void DrawStoneButton('),'Shared native stone-button renderer remains byte exact');
 
 // Undo only reviewed Endless additions. Full prior source files then match
 // the exact authenticated Pool.1 parent, preserving every finite-mode byte.
@@ -1517,7 +1592,7 @@ for(const [addition,count] of [
   parentBoardFromEndless=parentBoardFromEndless.replaceAll(addition,'');
 }
 assert.equal(parentBoardFromEndless,publishedPoolBoard,'Every previous Board, native flag logic, font, UI, actor/planting and physics path remains byte exact outside the new mode');
-let parentScreenFromEndless=normalizeSource(await read('source/src/Lawn/Widget/ChallengeScreen.cpp'));
+let parentScreenFromEndless=normalizeSource(await historyRead('source/src/Lawn/Widget/ChallengeScreen.cpp'));
 for(const [addition,replacement] of [
   ['#include "../System/PoolPanicEndlessPresentation.h"\n',''],
   [',\n\t{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_POOL_PANIC_ENDLESS, .mChallengeIconIndex = 0, .mPage = ChallengePage::CHALLENGE_PAGE_BONUS, .mRow = 3, .mCol = 4, .mChallengeName = "Pool Panic Endless" }',''],
@@ -1529,7 +1604,7 @@ for(const [addition,replacement] of [
   parentScreenFromEndless=parentScreenFromEndless.replace(addition,replacement);
 }
 assert.equal(parentScreenFromEndless,publishedPoolScreen,'All fourteen previous card bitmaps/dispatches, native controls, stock Survival high-score code and source bytes remain exact');
-let parentDialogFromEndless=normalizeSource(await read('source/src/Lawn/Widget/LawnDialog.cpp'));
+let parentDialogFromEndless=normalizeSource(await historyRead('source/src/Lawn/Widget/LawnDialog.cpp'));
 for(const addition of ['#include "../System/PoolPanicEndless.h"\n','PoolPanicEndless::IsMode(mApp->mGameMode) || ']) {
   assert.equal(parentDialogFromEndless.split(addition).length,2);
   parentDialogFromEndless=parentDialogFromEndless.replace(addition,'');
@@ -1947,7 +2022,7 @@ if (process.argv.includes('--run-native')) {
     }
     for (const name of suites) {
       const args = [path.join(temporary, 'tests/test-' + name + '.py'), '--native'];
-      if (['care-full-run','chain-reaction','rally-zombie','rally-raid','lights-out','garlic-run','bungee-business','cob-cannon-command','pool-panic','pool-panic-endless'].includes(name)) args.push('--asset-root', fileURLToPath(new URL('game-assets/', dist)));
+      if (['care-full-run','chain-reaction','rally-zombie','rally-raid','lights-out','garlic-run','bungee-business','cob-cannon-command','pool-panic','pool-panic-endless','scrap-yard'].includes(name)) args.push('--asset-root', fileURLToPath(new URL('game-assets/', dist)));
       const run = spawnSync('python', args, {encoding: 'utf8'});
       assert.equal(run.status, 0, (run.error?.message || '') + run.stdout + run.stderr);
       const actual = JSON.parse(fs.readFileSync(path.join(temporary, 'tests/' + name + '-results.json')));
@@ -1956,8 +2031,8 @@ if (process.argv.includes('--run-native')) {
       assert.equal(actual.exitCode, 0);
       assert.match(actual.status, /^PASS/);
       assert.deepEqual(actual.sourceSha256, reports.get(name).sourceSha256);
-      if(['care-full-run','chain-reaction','rally-zombie','rally-raid','lights-out','garlic-run','bungee-business','cob-cannon-command','pool-panic','pool-panic-endless'].includes(name)) {
-        assert.equal(actual.productionObjectCount,134);
+      if(['care-full-run','chain-reaction','rally-zombie','rally-raid','lights-out','garlic-run','bungee-business','cob-cannon-command','pool-panic','pool-panic-endless','scrap-yard'].includes(name)) {
+        assert.equal(actual.productionObjectCount,CURRENT_OBJECT_COUNT);
         assert.deepEqual(actual.productionObjectSha256,fullRunReport.productionObjectSha256);
         assert.equal(actual.productionBuildReceiptSha256,sha(fullRunProductionBuildBytes));
       }
@@ -1985,8 +2060,13 @@ if (process.argv.includes('--run-native')) {
       if(name==='pool-panic-endless') await verifyPoolPanicEndlessProgression({report:actual,
         read:async input=>fs.readFileSync(path.join(temporary,input)),sha,engine,fullRunReport,
         productionBuildBytes:fullRunProductionBuildBytes,parentRead:publishedEndless2Read,parentProductionBuildBytes});
+      if(name==='scrap-yard') await verifyScrapYard({report:actual,
+        read:async input=>fs.readFileSync(path.join(temporary,input)),sha,engine,fullRunReport,
+        productionBuildBytes:fullRunProductionBuildBytes,
+        currentArtBytes:fs.readFileSync(new URL('content/native-bonus-art.json',dist)),
+        previousArtBytes:fs.readFileSync(new URL('./fixtures/endless3-native-bonus-art.json',import.meta.url))});
     }
-    console.log(`PASS all ${checks} assertions across 23 native suites, including complete headless Care, Chain, Rally, Raid, Lights Out, Garlic Run, Bungee Business, Cob Cannon Command, Pool Panic and Pool Panic Endless scenarios on CI.`);
+    console.log(`PASS all ${checks} assertions across 24 native suites, including complete headless Care, Chain, Rally, Raid, Lights Out, Garlic Run, Bungee Business, Cob Cannon Command, Pool Panic, Pool Panic Endless and Scrap Yard scenarios on CI.`);
   } finally {
     const resolved = fs.realpathSync(temporary);
     assert.equal(path.dirname(resolved), temporaryRoot);

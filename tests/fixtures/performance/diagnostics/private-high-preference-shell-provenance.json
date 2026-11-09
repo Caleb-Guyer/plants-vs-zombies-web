@@ -1,0 +1,326 @@
+{
+  "status": "PRIVATE shell-only advisory diagnostic; no native build or performance verdict",
+  "notForRelease": true,
+  "sourceEngineId": "0.2.6-web-scrap.1",
+  "runtimeFilesCopied": 76,
+  "excludedPrefix": "source/",
+  "nativeWasmSha256": "a9b1cc5296b9bcb5f4045b18f9bb30c6ae95823a2658afb6a3ea5a70932f6102",
+  "nativeJsSha256": "ea0dda8ee8444491421cd9e1b9ee600d8e98292e4c726d7d466383e5c6c7ef6e",
+  "unchangedOriginalRuntimeFiles": 75,
+  "changedOnlyOriginalFile": "index.html",
+  "indexAddition": "<script src=\"./high-power-init.js\" defer></script>",
+  "indexOriginalSha256": "f56a31ed4f47a3b6fac6a980ce6a58bf6eeb522580400ddd776e180538a5df3a",
+  "indexPrivateSha256": "c5d5cf00dd6aeee9be3adebf5273a1a2f5cb7ff7c2b73aafc4e48d34b86997f4",
+  "helper": {
+    "path": "high-power-init.js",
+    "bytes": 1977,
+    "sha256": "a571be556db6ac647d068045944083463e206eed50e33709c7851c5a58dd5c4c",
+    "source": "outputs\\pvz-scrap1-release\\gpu-high-power-hint\\high-power-init.js"
+  },
+  "files": {
+    ".nojekyll": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "audio-controls.js": {
+      "bytes": 12216,
+      "sha256": "95e6a1b3e7ccae54ee797e8ed3b63668b672ee51f55978dc4d29231ec225a343"
+    },
+    "bundled-assets.js": {
+      "bytes": 8188,
+      "sha256": "07449dfe0aca7efb7888c62d598b54dc0be5cdfaadab6961e5f9977f87db6e8c"
+    },
+    "content/chill-shroom/base.png": {
+      "bytes": 105,
+      "sha256": "9744e7994b207ae5420e57ea7247231222aa148b2b972f181cbea33e792db096"
+    },
+    "content/chill-shroom/blink1.png": {
+      "bytes": 2781,
+      "sha256": "9512ddaf1f8575d8b4b6df58a7409014ad971838dc244700bc9ea29a0f0a7961"
+    },
+    "content/chill-shroom/blink2.png": {
+      "bytes": 2749,
+      "sha256": "7ec170364879d93aa8d0108c6a3afa81146a4d5b2c50bcb8caf8d7eb753a3059"
+    },
+    "content/chill-shroom/body.png": {
+      "bytes": 2769,
+      "sha256": "c519fa620cd673b36c02a62cc892acbc06384f19487ebf1ee631c310f2c45cdd"
+    },
+    "content/chill-shroom/canonical.png": {
+      "bytes": 8142,
+      "sha256": "8f72af8ed59ac1e173c5d894d99369f4b6f2ed766a5db9edcb36e1d36a7aa93b"
+    },
+    "content/chill-shroom/cap.png": {
+      "bytes": 5825,
+      "sha256": "0f3ee1ecc32196ab87db381ed15293a210ee6f9b66c725ec42cb3467cf4fc506"
+    },
+    "content/chill-shroom/extraction.json": {
+      "bytes": 1516,
+      "sha256": "b639b70e79eb09ba117c3ca52e54c8ce54a294ad947f44b7b75d96a41f24ba99"
+    },
+    "content/chill-shroom/generation.json": {
+      "bytes": 10422,
+      "sha256": "5f1279fcfa2df9cadf6f9df676d57f0805b05c8c2f288480e630e1379894cf9d"
+    },
+    "content/chill-shroom/provenance.json": {
+      "bytes": 2554,
+      "sha256": "a7492ff37c6ccc99a2f34d9f230802dfd6204804c69a17ca3446cd93a0f067e4"
+    },
+    "content/mender-bloom/blink.png": {
+      "bytes": 7750,
+      "sha256": "1f52b3f1145c0aa0a512509b92f4743d159549784c33634ae69b9d3a74193502"
+    },
+    "content/mender-bloom/canonical.png": {
+      "bytes": 7765,
+      "sha256": "23be52c6b86e50a19dee75fd55851d97d394d0674e418c5b4946c9bbe7f2aa0b"
+    },
+    "content/mender-bloom/extraction.json": {
+      "bytes": 2598,
+      "sha256": "904c59e1ec6e487ef1c902d4dbf96eaf44cdb153fc08f4cfd8a3df5785fc1ab4"
+    },
+    "content/mender-bloom/generation.json": {
+      "bytes": 6662,
+      "sha256": "c2d5a614b9c9059bd79e3a9d3c439ea02bb20adb35d660b05e24e5e45a50a5a3"
+    },
+    "content/mender-bloom/head-blink.png": {
+      "bytes": 5490,
+      "sha256": "8b8c60f37f116e46ecf35e21e382ba11f3e99299aa009c4ef516434b8115a58d"
+    },
+    "content/mender-bloom/head.png": {
+      "bytes": 5495,
+      "sha256": "30f867a3bd5f14d6e14cf57ad0bc9000a69d3a0cabb1a0026a516d9cd38bac5b"
+    },
+    "content/mender-bloom/provenance.json": {
+      "bytes": 6279,
+      "sha256": "dd39ececfc7bc064967aacfc090e93fce640a3a250ce9aa7b4c6ceaff03f1ce8"
+    },
+    "content/mender-bloom/stem.png": {
+      "bytes": 2765,
+      "sha256": "e23f660180de218dca4ca7692f005b67115d7998e0303a7b1a68b4e9a78b2f02"
+    },
+    "content/native-bonus-art.json": {
+      "bytes": 18948,
+      "sha256": "183cb482642023f7b1ed7102052143b0c5bf543204150626670c832d4db3eaf0"
+    },
+    "game/engine-provenance.json": {
+      "bytes": 163348,
+      "sha256": "0887d3b4c24f8db8ae7283453663756bbc2937cf7f5559eb8a72639c95af56b1"
+    },
+    "game/pvz-portable.js": {
+      "bytes": 209600,
+      "sha256": "ea0dda8ee8444491421cd9e1b9ee600d8e98292e4c726d7d466383e5c6c7ef6e"
+    },
+    "game/pvz-portable.wasm": {
+      "bytes": 7791069,
+      "sha256": "a9b1cc5296b9bcb5f4045b18f9bb30c6ae95823a2658afb6a3ea5a70932f6102"
+    },
+    "game/VERSION": {
+      "bytes": 500,
+      "sha256": "372dc22c0a5a6af75713abf05c8495663832ba2deeaf80a64491972446eff6ec"
+    },
+    "game-assets/manifest.json": {
+      "bytes": 3176,
+      "sha256": "5488eb8cf5d38d2d999e29a5b3aca45ecff02f8ee49356ccb327de8676111dc4"
+    },
+    "game-assets/parts/main-000.bin": {
+      "bytes": 8388608,
+      "sha256": "0f4d6e3008711bde26a95c13bb853e98c2630585cf0a72cbae22d4cd5b5b40c4"
+    },
+    "game-assets/parts/main-001.bin": {
+      "bytes": 8388608,
+      "sha256": "438f5230ab0f7a898ffdd2449d68ee10243522c3d579c85f8b84d992aeaccf8e"
+    },
+    "game-assets/parts/main-002.bin": {
+      "bytes": 8388608,
+      "sha256": "d40dc148638485f3b83f99c75b0da7c9040bae0d98ade07a85e514713ae0ddae"
+    },
+    "game-assets/parts/main-003.bin": {
+      "bytes": 8388608,
+      "sha256": "707462927b727cb6a6c1f37292aa9c972505ecd357f0527f843162bf9238e898"
+    },
+    "game-assets/parts/main-004.bin": {
+      "bytes": 8388608,
+      "sha256": "edccbb459c28ee6f1f161174a85ef6a9a729abe16011333b2b37861ab1b8f40c"
+    },
+    "game-assets/parts/main-005.bin": {
+      "bytes": 3510140,
+      "sha256": "c774160ab5ecc4006a4eb7a922aa836c0a4771eb726c6b821ec73dcbdb08f5e9"
+    },
+    "game-assets/properties/default.xml": {
+      "bytes": 2570,
+      "sha256": "4a051495830ca117435c2972dda5af7a4355d33964d904c335eb140dcf2e904c"
+    },
+    "game-assets/properties/Layout.xml": {
+      "bytes": 584,
+      "sha256": "41112aab62a796e9fe90c0654c127a8f2e053f3cc2ab6ac35aa3f8a99ab5578c"
+    },
+    "game-assets/properties/partner.xml": {
+      "bytes": 667,
+      "sha256": "4e7ff623b419e36feb578eaccb5e80b838290b01c2d2ae282a0648cecbd80290"
+    },
+    "game-assets/properties/partner.xml.sig": {
+      "bytes": 24,
+      "sha256": "ca5b57ce55e4c7dac8086656e7b63c41d56e1cc98a6208391f6fbfa800887537"
+    },
+    "game-assets/properties/partner_logo.jpg": {
+      "bytes": 5499,
+      "sha256": "8bea233c40ddf74decf3ddd0a3d4cef8e1229ca3a756384e78d319aca0b63113"
+    },
+    "game-assets/README.txt": {
+      "bytes": 1438,
+      "sha256": "34ca4bb95dd48c310e1e2bf76bee7ffd6a089e6d3819c1e8f606ed7dd3731302"
+    },
+    "index-port.html": {
+      "bytes": 6441,
+      "sha256": "f56a31ed4f47a3b6fac6a980ce6a58bf6eeb522580400ddd776e180538a5df3a"
+    },
+    "index.html": {
+      "bytes": 6441,
+      "sha256": "f56a31ed4f47a3b6fac6a980ce6a58bf6eeb522580400ddd776e180538a5df3a"
+    },
+    "launcher.js": {
+      "bytes": 10755,
+      "sha256": "9e41170068f913e8f966d650953972a311f57e7efb6241340fa6c5a349d3cfdd"
+    },
+    "licenses/GPL-3.0.txt": {
+      "bytes": 35148,
+      "sha256": "0ae0485a5bd37a63e63603596417e4eb0e653334fa6c7f932ca3a0e85d4af227"
+    },
+    "licenses/JSZIP.txt": {
+      "bytes": 33753,
+      "sha256": "566c953c6090b1218ca6217dd7359d45dde46581968586dc607d59a78af6a9c4"
+    },
+    "licenses/LGPL-3.0.txt": {
+      "bytes": 7652,
+      "sha256": "e3a994d82e644b03a792a930f574002658412f62407f5fee083f2555c5f23118"
+    },
+    "loader.js": {
+      "bytes": 10670,
+      "sha256": "a183ed4e17810de2431989f3ebc263d2f511d1514c53e73c8933b8486bced73a"
+    },
+    "original-ui.js": {
+      "bytes": 2774,
+      "sha256": "a8f0aab63956a0280f03520671b712c2709da353c287be430592c64ba91ffe5b"
+    },
+    "port.css": {
+      "bytes": 11410,
+      "sha256": "6020b3fb0e1517aa9c9c1bab93873cf5c5c9f2204e3c0d9f3335853789e6b821"
+    },
+    "runtime.js": {
+      "bytes": 763,
+      "sha256": "00be9ed6d36fb02a51ca5cc2ade9f7fc44a69218940bd61e11410fb0ec6fa07a"
+    },
+    "save-recovery.js": {
+      "bytes": 4921,
+      "sha256": "eff0eb9325e0bdc18c1f76582e9f260a07ffbf680b3ada25763f1972204e84bf"
+    },
+    "save-storage-core.js": {
+      "bytes": 13211,
+      "sha256": "5473e221a0b86818835a9ed5a1b473d718ae14da9838c7e37d99bdef48203bee"
+    },
+    "save-storage-worker.js": {
+      "bytes": 1864,
+      "sha256": "4951c5dd05dcc2c79dd99f4ddeba19935ffd23a69dd6726e4b4e1b819772a246"
+    },
+    "save-storage.js": {
+      "bytes": 9518,
+      "sha256": "e46cef9257f3608f0edbd1af4c0424e09665aa919aed5e5e16d234045ef1c49c"
+    },
+    "save-transfer.js": {
+      "bytes": 16375,
+      "sha256": "de0c5b67863c8f307906d4d1c739b05ef0d32d5f854a8d77581750a37dd6f314"
+    },
+    "steam-compat.js": {
+      "bytes": 5185,
+      "sha256": "ace261bed202e3f99a242ac6b6dc2f532c1967d1b803a0e91a38461db44311eb"
+    },
+    "test-profiles.js": {
+      "bytes": 10112,
+      "sha256": "b93318eb4738b199d39dbf10ad6313e11fd2350dc4526c64216b2a13c27e1ce0"
+    },
+    "testing/README.txt": {
+      "bytes": 2428,
+      "sha256": "a555dd07a9c2217c5106b581b9929a4594ed479e1a16695c6ecb8b5a9eacf760"
+    },
+    "testing/test-profiles.zip": {
+      "bytes": 6307,
+      "sha256": "26a47b5a62c29427ee19c1609e26b51eb5ca7795107d50cfadd29b839da8e7cc"
+    },
+    "ui/original-ui-inventory.json": {
+      "bytes": 3670,
+      "sha256": "57cdba60816dcd54fee3f1e3d2f77aae57986d93bc27f0478131acaa9ddba533"
+    },
+    "ui/qol-dialog-bottomleft.png": {
+      "bytes": 6043,
+      "sha256": "d92dfe7c3e8467e589232c10c05239abdcaf0e553a5477f4f95286f8f0d1976e"
+    },
+    "ui/qol-dialog-bottommiddle.png": {
+      "bytes": 3127,
+      "sha256": "4139a4d023a3c39427be4f3ce72061f047253285c5354bce343348306af7c92c"
+    },
+    "ui/qol-dialog-bottomright.png": {
+      "bytes": 6380,
+      "sha256": "7561df9f0fb80e423bdac347bf165309af0a780b48412b786531356119cbc8ba"
+    },
+    "ui/qol-dialog-centerleft.png": {
+      "bytes": 1959,
+      "sha256": "15ef3b9badc0cbb6b6ef0ecc9ddb6f5a3a540543f785a53b57cd5698c7fe0e88"
+    },
+    "ui/qol-dialog-centermiddle.png": {
+      "bytes": 367,
+      "sha256": "5e339ba4b104f1c9660351668ed5cfb11176e18671f11536f624ecf93d95b7d3"
+    },
+    "ui/qol-dialog-centerright.png": {
+      "bytes": 2148,
+      "sha256": "ef5fdc74936870b1460cd89f5a048cfedd7ca5dffe73f578b7822e794c05eadc"
+    },
+    "ui/qol-dialog-topleft.png": {
+      "bytes": 5704,
+      "sha256": "4860437be14e2d87686b117ae8c925754696e179a176dff4ac0f20b480a9f7aa"
+    },
+    "ui/qol-dialog-topmiddle.png": {
+      "bytes": 2760,
+      "sha256": "530e9288724ca72bd2fb4ec628fbebea35c388b2da0380a8656daeb2c5ca8ab5"
+    },
+    "ui/qol-dialog-topright.png": {
+      "bytes": 6384,
+      "sha256": "fc69f02366520f5e77576593cf5dc1f037c2853d331c53ba88c47ce255ec1685"
+    },
+    "ui/qol-font-bright.json": {
+      "bytes": 11567,
+      "sha256": "61c0dc2c85c97f9ff3f46fdd6df6fa993882f15712ebfc530e00183d49028bfe"
+    },
+    "ui/qol-font-bright.png": {
+      "bytes": 52103,
+      "sha256": "4b348162d745e31430187d326c5d5b9a82a505784e67dd3d48fde3438ad4cdf3"
+    },
+    "ui/qol-font-green.json": {
+      "bytes": 11566,
+      "sha256": "541fa8af3a68df048319b904a9e1660258645db7bdf2c80df3877c37db009541"
+    },
+    "ui/qol-font-green.png": {
+      "bytes": 51292,
+      "sha256": "f3b5bb1247a75966184b16d36d5653c680055bf284edfb4dd3aa1098e026b661"
+    },
+    "ui/qol-stone-left.png": {
+      "bytes": 1896,
+      "sha256": "4bbc52c480ad97c8a611c5e76f93898ed567f7c603965f389fb69a40b6f3490c"
+    },
+    "ui/qol-stone-middle.png": {
+      "bytes": 1342,
+      "sha256": "4a78caf163579cf9baac8db6581dde177a0a635002c852efedbbe17ce81d89c3"
+    },
+    "ui/qol-stone-right.png": {
+      "bytes": 1710,
+      "sha256": "18f7690e01f84c4e543b4b7a20fcfea9dac80df1c4833d621a345eb55d77d26b"
+    },
+    "ui/README.txt": {
+      "bytes": 236,
+      "sha256": "194515332e8cebd3b2e22d4d21300c3a371a71de110167f4eb67a48bf222c622"
+    },
+    "vendor/jszip.min.js": {
+      "bytes": 97630,
+      "sha256": "acc7e41455a80765b5fd9c7ee1b8078a6d160bbbca455aeae854de65c947d59e"
+    }
+  }
+}

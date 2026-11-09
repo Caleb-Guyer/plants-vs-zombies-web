@@ -2,6 +2,7 @@
 // Independent checks of the packaged complete-engine report and fixed design
 // contract. Synthetic controls and render samples never count as earned flags.
 import assert from 'node:assert/strict';
+import {CURRENT_ENGINE_ID, CURRENT_SOURCE_COUNT, CURRENT_OBJECT_COUNT, SCRAP_ENDLESS_RETENTION_SHA256} from './native-release-context.mjs';
 
 const names=['normal','save-between-flags','save-active','retry-no-action','no-action','controls'];
 const matrix=[1729,7331].flatMap(seed=>names.flatMap(name=>[1,2].map(speed=>[name,speed,seed])));
@@ -153,10 +154,12 @@ function verifyScenario(row,identity){
 
 export async function verifyPoolPanicEndless({report,read,sha,engine,fullRunReport,productionBuildBytes,immediateParentBytes}){
  equalFields(report,{execution:'complete-production-engine',optimization:'O2',failures:0,exitCode:0,nativeArtInputs:643});
- assert.match(report.status,/^PASS/);assert.equal(engine.id,'0.2.6-web-endless.3');
- assert.equal(Object.keys(report.sourceSha256).length,852);assert.deepEqual(report.sourceSha256,fullRunReport.sourceSha256);
+ assert.match(report.status,/^PASS/);assert.equal(engine.id,CURRENT_ENGINE_ID);
+ assert.equal(report.retentionAdapterSha256,SCRAP_ENDLESS_RETENTION_SHA256);
+ assert.equal(sha(await read('tests/scrap1-endless-retention.json')),SCRAP_ENDLESS_RETENTION_SHA256);
+ assert.equal(Object.keys(report.sourceSha256).length,CURRENT_SOURCE_COUNT);assert.deepEqual(report.sourceSha256,fullRunReport.sourceSha256);
  for(const [file,pin] of Object.entries(report.sourceSha256)){digest(pin);assert.equal(sha(await read(file)),pin);}
- assert.equal(report.productionObjectCount,134);assert.equal(Object.keys(report.productionObjectSha256).length,134);
+ assert.equal(report.productionObjectCount,CURRENT_OBJECT_COUNT);assert.equal(Object.keys(report.productionObjectSha256).length,CURRENT_OBJECT_COUNT);
  assert.deepEqual(report.productionObjectSha256,fullRunReport.productionObjectSha256);
  for(const pin of Object.values(report.productionObjectSha256))digest(pin);
  assert.equal(report.productionBuildReceiptSha256,sha(productionBuildBytes));
@@ -251,6 +254,6 @@ export async function verifyPoolPanicEndless({report,read,sha,engine,fullRunRepo
  assert.equal(report.scenarios.filter(row=>row.outcome==='native-loss').length,summary.nativeStandaloneLossCases);
  assert.equal(report.scenarios.filter(row=>row.outcome==='controls-pass').length,summary.isolatedControlCases);
  assert.equal([...report.scenarios,...corpus].filter(row=>row.finiteVictory).length,summary.finiteVictoryCases);
- assert.equal(report.checks,852+[...report.scenarios,...corpus].reduce((sum,row)=>sum+row.checks,0)+pairs.length);
+ assert.equal(report.checks,CURRENT_SOURCE_COUNT+[...report.scenarios,...corpus].reduce((sum,row)=>sum+row.checks,0)+pairs.length);
  console.log('PASS Pool Panic Endless2:32 actual cases,28 earned runs/92 flags, all8 saved opening variations, native defeats/checkpoints/high-water bests and12 actual speed-pair comparisons.');
 }

@@ -34,7 +34,7 @@ assert.deepEqual(baseline.engine, {id: engine.id, jsSha256: engine.artifacts.jsS
 assert.equal(sha(read('dist/game/pvz-portable.js')), baseline.engine.jsSha256);
 assert.equal(sha(read('dist/game/pvz-portable.wasm')), baseline.engine.wasmSha256);
 assert.equal(baseline.probe.path, 'tests/performance/probe.js'); pinned(baseline.probe);
-assert.equal(baseline.recorder.path, 'tests/performance/recorded-preview.py'); pinned(baseline.recorder);
+assert.equal(baseline.recorder.path, 'tests/performance/preview.py'); pinned(baseline.recorder);
 const manifest = json(pinned(baseline.expectedManifest));
 assert.equal(manifest.engineId, baseline.engine.id); assert.equal(manifest.engineWasmSha256, baseline.engine.wasmSha256);
 assert.equal(manifest.probeSha256, baseline.probe.sha256); assert.equal(manifest.serverSha256, baseline.recorder.sha256);
@@ -47,9 +47,14 @@ assert.equal(checkpoints.schemaVersion, 1); assert.equal(checkpoints.manualImpor
 assert.equal(checkpoints.automaticallyImportedByGame, false);
 assert.equal(checkpoints.fixtureSetup.startingStagesAreSynthetic, true);
 assert.equal(checkpoints.fixtureSetup.postSetupHealthActorOrRngEdits, false);
-assert.equal(checkpoints.provenance.nativeEngineVersion, baseline.engine.id);
-assert.equal(checkpoints.provenance.nativePublishedWasmSha256, baseline.engine.wasmSha256);
-assert.equal(checkpoints.provenance.nativePublishedWasmBytes, read('dist/game/pvz-portable.wasm').length);
+// These exact checkpoints were exported by the published parent. Fresh current
+// captures demonstrate load compatibility without rewriting fixture provenance.
+assert.equal(checkpoints.provenance.nativeEngineVersion, '0.2.6-web-endless.3');
+assert.equal(checkpoints.provenance.nativePublishedWasmSha256, engine.parent.artifacts.wasmSha256);
+assert.equal(checkpoints.provenance.nativePublishedWasmBytes, 7782033);
+assert.equal(baseline.checkpointCompatibility.sourceEngine, checkpoints.provenance.nativeEngineVersion);
+assert.equal(baseline.checkpointCompatibility.loadedByEngine, engine.id);
+assert.equal(baseline.checkpointCompatibility.originalBytesPreserved, true);
 const require = createRequire(import.meta.url), vendor = {exports: {}};
 new Function('module', 'exports', 'require', read('dist/vendor/jszip.min.js').toString())(vendor, vendor.exports, require);
 const checkpointNames = Object.keys(checkpoints.checkpoints); assert.equal(checkpointNames.length, 3);

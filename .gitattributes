@@ -1,6 +1,7 @@
 # Preserve checksum-pinned engine artifacts on Windows checkouts.
 dist/game/pvz-portable.js -text
-dist/source/*.patch -text
+# Generated patch context preserves upstream whitespace as checksum-pinned data.
+dist/source/*.patch -text -whitespace
 *.wasm binary
 *.zip binary
 
@@ -13,3 +14,7 @@ dist/** -text
 # Generator source must have stable newlines on Windows and Linux checkouts.
 *.mjs text eol=lf
 *.py text eol=lf
+
+# Raw browser evidence keeps its original recorder bytes on every platform.
+tests/fixtures/performance/captures/*.json -text whitespace=cr-at-eol
+tests/fixtures/performance/diagnostics/*.json -text whitespace=cr-at-eol

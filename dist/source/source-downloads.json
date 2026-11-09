@@ -1,15 +1,15 @@
 {
   "schema_version": 1,
-  "current_engine": "0.2.6-web-endless.3",
+  "current_engine": "0.2.6-web-scrap.1",
   "upstream_tag": "0.2.6",
-  "layout": "Site-source nests current corresponding source, its immediate parent when present, the upstream baseline, the authenticated Rally.3 native I, Zombie UI reference and the current full patch. Other source archives and incremental/historical patches remain standalone downloads beside this index and in the full runtime distribution.",
+  "layout": "Site-source nests current corresponding source, the upstream baseline, the historical Endless.2 comparator, the independently pinned complete Endless.3 parent projection, the native I, Zombie UI reference and the current full patch. Exact historical source archives remain standalone downloads beside this index and in the full runtime distribution. Linked native test artifacts are losslessly packed; the included decoder restores their exact pinned bytes.",
   "nested_sources": [
     "pvz-portable-0.2.6-source.zip",
     "pvz-portable-0.2.6-web-endless.2-source.zip",
-    "pvz-portable-0.2.6-web-endless.3-source.zip"
+    "pvz-portable-0.2.6-web-scrap.1-source.zip"
   ],
   "nested_patches": [
-    "web-endless.3.patch"
+    "web-scrap.1.patch"
   ],
   "archives": [
     {
@@ -149,7 +149,7 @@
       "name": "pvz-portable-0.2.6-web-endless.3-source.zip",
       "bytes": 44423471,
       "sha256": "206e5e16b0c4ae7c8b88afd94e627943b4cd15c56f82113fcaf4bb1adf4c13b1",
-      "current": true,
+      "current": false,
       "upstream": false
     },
     {
@@ -325,6 +325,13 @@
       "bytes": 21368282,
       "sha256": "2deb50f9a38d8599453f567f5458a20505d552956df0bc442e649e49ea1c5c24",
       "current": false,
+      "upstream": false
+    },
+    {
+      "name": "pvz-portable-0.2.6-web-scrap.1-source.zip",
+      "bytes": 23463237,
+      "sha256": "6ccb876d55621aa8c31b405c2495b97203fec344905a0920440607557c291a63",
+      "current": true,
       "upstream": false
     },
     {

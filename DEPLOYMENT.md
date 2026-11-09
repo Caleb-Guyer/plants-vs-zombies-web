@@ -1,6 +1,35 @@
 # GitHub Pages release: Caleb-Guyer/plants-vs-zombies-web
 
-## Late-game performance checks
+## Scrap.1 release
+
+Current engine: `0.2.6-web-scrap.1`, with 856 production files and 136 non-main native objects. Scrap Yard appends mode 88 and Bonus card 16, reusing a reserved record slot without modifying the native save layout. Its independent parent is the published Endless.3 source archive, SHA-256 `206e5e16b0c4ae7c8b88afd94e627943b4cd15c56f82113fcaf4bb1adf4c13b1`.
+
+The native source ZIP includes full current source, build recipes, test contracts, raw evidence and a lossless shared XZ pack for all exact linked test artifacts. Run its included `unpack-native-artifacts.py` before invoking a native CLI directly. Browser integration checks decode the same pack in memory and retain individual artifact hash checks. No external dependency download is needed for decoding.
+
+The site-source ZIP nests current source, upstream source and the actual Endless.2 historical comparator. A reviewed fixture independently reconstructs and authenticates all 852 parent Endless.3 source files; the full parent archive remains a standalone public download. This avoids duplicate compiled test binaries and retains the 100 MiB static asset gate.
+
+Publication uses the existing manual GitHub Pages workflow after pushing the tested commit. Both validation and deployment must succeed, then public files must match the local release.
+
+### Scrap.1 validated artifacts
+
+The installed local release passes all 24 current native suites: **52,882,925 baseline checks**, plus **29,323,403 separate Endless late checks**, with zero failures (**82,206,328 combined**). The current 856-source/136-object build includes thirteen changed paths relative to published Endless.3: four additions and nine modifications. Both the 146-path full upstream patch and the thirteen-path incremental patch reconstruct every current production source byte. The source ZIP contains 1,536 entries. Staged native-content, fileless-generator and Zombatar-export checks pass; publication and hosted-file verification follow separately.
+
+| Validated file | Bytes | SHA-256 |
+| --- | ---: | --- |
+| [Native JavaScript](dist/game/pvz-portable.js) | 209,600 | `ea0dda8ee8444491421cd9e1b9ee600d8e98292e4c726d7d466383e5c6c7ef6e` |
+| [Native WebAssembly](dist/game/pvz-portable.wasm) | 7,791,069 | `a9b1cc5296b9bcb5f4045b18f9bb30c6ae95823a2658afb6a3ea5a70932f6102` |
+| [Current native source ZIP](dist/source/pvz-portable-0.2.6-web-scrap.1-source.zip) | 23,463,237 | `6ccb876d55621aa8c31b405c2495b97203fec344905a0920440607557c291a63` |
+| [Full upstream patch](dist/source/web-scrap.1.patch) | 14,711,040 | `d49bd4f9bb8dd3dd94e7b218dd79f692f7a305a0667d387dc7744af7bc75bf63` |
+| [Endless.3-to-Scrap.1 patch](dist/source/endless3-to-scrap1.patch) | 37,965 | `ba6341a82625e89df359fb53cd28a13c2b1855481c63fadb99c9e884dde5d97c` |
+| Source ZIP: `tests/native-artifacts.json` | 4,769 | `539e6267d973dc7a4a3651aa6ac3012520b6c2a1d41ff2e28b7cc5f57cf3a37a` |
+| Source ZIP: `tests/native-artifacts.xz` | 4,754,220 | `cf51348d5317d9a67d04891289f177c3c93f3a29fca9fe8417a168bfad649f05` |
+| Source ZIP: `unpack-native-artifacts.py` | 3,711 | `91c4c57422ff03e9dd5c9b5adeb66b825d1c23aee2c1e377510a1bafdc622f66` |
+
+The XZ pack restores 100,539,540 exact bytes across 22 current JS/WASM files and two separately identified historical comparator files; decoded raw SHA-256 is `2d3f05a4cc3b63ea63a2b9a2e32235f02f44c4bebe010ae21f1c7777f40f5a69`. Its index retains individual file offsets, lengths and hashes. [Build provenance](dist/source/build-provenance.json), SHA-256 `7c367b652b007dbd5aa9eb692341cc568a60bb549b8a527e580271e1f7aeec4b`, binds these artifacts and all 24 reports to the normal Release receipt, SHA-256 `11147d26bc00177ab9d292986fbc6a5fef0bb99425020ea4116e8c12b944ece4`. [Engine provenance](dist/game/engine-provenance.json) has SHA-256 `0887d3b4c24f8db8ae7283453663756bbc2937cf7f5559eb8a72639c95af56b1`.
+
+Scrap's 18 cases produce twelve native wins, four genuine idle losses and two mechanic/history controls, with 1,968,447 checks and 866 authenticated original native art inputs. Normal wins retain three to five mowers and saved wins three or four. The [QA record](PARITY-QA.md#scrap1-validated-native-results) records the exact matrix, contract and report pins. These are local validation results, not a claim that this release is already deployed.
+
+## Historical Endless.3 performance checks
 
 This update adds developer performance tooling and retained browser evidence while keeping the shipped native engine and runtime unchanged.
 

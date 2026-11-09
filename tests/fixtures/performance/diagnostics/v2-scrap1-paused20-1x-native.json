@@ -1,0 +1,3233 @@
+{
+  "schemaVersion": 2,
+  "kind": "actual-browser-rAF-scheduling-native-callback-and-save-capture-CPU",
+  "label": "v2-scrap1-paused20-1x-native",
+  "mode": "native-raf",
+  "declaredScenario": {
+    "phase": "paused",
+    "speed": 1,
+    "crowd": 20
+  },
+  "measuredAt": "2026-11-09T17:00:15.921Z",
+  "startedAt": 40473,
+  "finishedAt": 55473.19999998808,
+  "elapsedMs": 15000.199999988079,
+  "requestedMs": 15000,
+  "startState": {
+    "visibility": "visible",
+    "audioMuted": true,
+    "viewport": {
+      "width": 1280,
+      "height": 720,
+      "dpr": 1
+    },
+    "canvas": {
+      "width": 800,
+      "height": 600,
+      "cssWidth": 960,
+      "cssHeight": 720
+    }
+  },
+  "endState": {
+    "visibility": "visible",
+    "audioMuted": true,
+    "viewport": {
+      "width": 1280,
+      "height": 720,
+      "dpr": 1
+    },
+    "canvas": {
+      "width": 800,
+      "height": 600,
+      "cssWidth": 960,
+      "cssHeight": 720
+    }
+  },
+  "visibilityChanges": [],
+  "audioChanges": [],
+  "resizeChanges": [],
+  "pageManifest": {
+    "engineId": "0.2.6-web-scrap.1",
+    "engineWasmMatchesMetadata": true,
+    "engineWasmSha256": "a9b1cc5296b9bcb5f4045b18f9bb30c6ae95823a2658afb6a3ea5a70932f6102",
+    "files": {
+      "audio-controls.js": {
+        "baseBytes": 12216,
+        "baseSha256": "95e6a1b3e7ccae54ee797e8ed3b63668b672ee51f55978dc4d29231ec225a343",
+        "servedBytes": 12216,
+        "servedSha256": "95e6a1b3e7ccae54ee797e8ed3b63668b672ee51f55978dc4d29231ec225a343"
+      },
+      "bundled-assets.js": {
+        "baseBytes": 8188,
+        "baseSha256": "07449dfe0aca7efb7888c62d598b54dc0be5cdfaadab6961e5f9977f87db6e8c",
+        "servedBytes": 8188,
+        "servedSha256": "07449dfe0aca7efb7888c62d598b54dc0be5cdfaadab6961e5f9977f87db6e8c"
+      },
+      "game-assets/manifest.json": {
+        "baseBytes": 3176,
+        "baseSha256": "5488eb8cf5d38d2d999e29a5b3aca45ecff02f8ee49356ccb327de8676111dc4",
+        "servedBytes": 3176,
+        "servedSha256": "5488eb8cf5d38d2d999e29a5b3aca45ecff02f8ee49356ccb327de8676111dc4"
+      },
+      "game/engine-provenance.json": {
+        "baseBytes": 163348,
+        "baseSha256": "0887d3b4c24f8db8ae7283453663756bbc2937cf7f5559eb8a72639c95af56b1",
+        "servedBytes": 163348,
+        "servedSha256": "0887d3b4c24f8db8ae7283453663756bbc2937cf7f5559eb8a72639c95af56b1"
+      },
+      "game/pvz-portable.js": {
+        "baseBytes": 209600,
+        "baseSha256": "ea0dda8ee8444491421cd9e1b9ee600d8e98292e4c726d7d466383e5c6c7ef6e",
+        "servedBytes": 209600,
+        "servedSha256": "ea0dda8ee8444491421cd9e1b9ee600d8e98292e4c726d7d466383e5c6c7ef6e"
+      },
+      "game/pvz-portable.wasm": {
+        "baseBytes": 7791069,
+        "baseSha256": "a9b1cc5296b9bcb5f4045b18f9bb30c6ae95823a2658afb6a3ea5a70932f6102",
+        "servedBytes": 7791069,
+        "servedSha256": "a9b1cc5296b9bcb5f4045b18f9bb30c6ae95823a2658afb6a3ea5a70932f6102"
+      },
+      "index.html": {
+        "baseBytes": 6441,
+        "baseSha256": "f56a31ed4f47a3b6fac6a980ce6a58bf6eeb522580400ddd776e180538a5df3a",
+        "servedBytes": 6441,
+        "servedSha256": "f56a31ed4f47a3b6fac6a980ce6a58bf6eeb522580400ddd776e180538a5df3a"
+      },
+      "launcher.js": {
+        "baseBytes": 10755,
+        "baseSha256": "9e41170068f913e8f966d650953972a311f57e7efb6241340fa6c5a349d3cfdd",
+        "servedBytes": 10755,
+        "servedSha256": "9e41170068f913e8f966d650953972a311f57e7efb6241340fa6c5a349d3cfdd"
+      },
+      "loader.js": {
+        "baseBytes": 10670,
+        "baseSha256": "a183ed4e17810de2431989f3ebc263d2f511d1514c53e73c8933b8486bced73a",
+        "servedBytes": 10670,
+        "servedSha256": "a183ed4e17810de2431989f3ebc263d2f511d1514c53e73c8933b8486bced73a"
+      },
+      "original-ui.js": {
+        "baseBytes": 2774,
+        "baseSha256": "a8f0aab63956a0280f03520671b712c2709da353c287be430592c64ba91ffe5b",
+        "servedBytes": 2774,
+        "servedSha256": "a8f0aab63956a0280f03520671b712c2709da353c287be430592c64ba91ffe5b"
+      },
+      "port.css": {
+        "baseBytes": 11410,
+        "baseSha256": "6020b3fb0e1517aa9c9c1bab93873cf5c5c9f2204e3c0d9f3335853789e6b821",
+        "servedBytes": 11410,
+        "servedSha256": "6020b3fb0e1517aa9c9c1bab93873cf5c5c9f2204e3c0d9f3335853789e6b821"
+      },
+      "runtime.js": {
+        "baseBytes": 763,
+        "baseSha256": "00be9ed6d36fb02a51ca5cc2ade9f7fc44a69218940bd61e11410fb0ec6fa07a",
+        "servedBytes": 763,
+        "servedSha256": "00be9ed6d36fb02a51ca5cc2ade9f7fc44a69218940bd61e11410fb0ec6fa07a"
+      },
+      "save-recovery.js": {
+        "baseBytes": 4921,
+        "baseSha256": "eff0eb9325e0bdc18c1f76582e9f260a07ffbf680b3ada25763f1972204e84bf",
+        "servedBytes": 4921,
+        "servedSha256": "eff0eb9325e0bdc18c1f76582e9f260a07ffbf680b3ada25763f1972204e84bf"
+      },
+      "save-storage-core.js": {
+        "baseBytes": 13211,
+        "baseSha256": "5473e221a0b86818835a9ed5a1b473d718ae14da9838c7e37d99bdef48203bee",
+        "servedBytes": 13211,
+        "servedSha256": "5473e221a0b86818835a9ed5a1b473d718ae14da9838c7e37d99bdef48203bee"
+      },
+      "save-storage-worker.js": {
+        "baseBytes": 1864,
+        "baseSha256": "4951c5dd05dcc2c79dd99f4ddeba19935ffd23a69dd6726e4b4e1b819772a246",
+        "servedBytes": 1864,
+        "servedSha256": "4951c5dd05dcc2c79dd99f4ddeba19935ffd23a69dd6726e4b4e1b819772a246"
+      },
+      "save-storage.js": {
+        "baseBytes": 9518,
+        "baseSha256": "e46cef9257f3608f0edbd1af4c0424e09665aa919aed5e5e16d234045ef1c49c",
+        "servedBytes": 9751,
+        "servedSha256": "0ca8a5caf1e426ac8c634a452471e3542905c9226b00639676b32d06463f5936"
+      },
+      "save-transfer.js": {
+        "baseBytes": 16375,
+        "baseSha256": "de0c5b67863c8f307906d4d1c739b05ef0d32d5f854a8d77581750a37dd6f314",
+        "servedBytes": 16375,
+        "servedSha256": "de0c5b67863c8f307906d4d1c739b05ef0d32d5f854a8d77581750a37dd6f314"
+      },
+      "steam-compat.js": {
+        "baseBytes": 5185,
+        "baseSha256": "ace261bed202e3f99a242ac6b6dc2f532c1967d1b803a0e91a38461db44311eb",
+        "servedBytes": 5185,
+        "servedSha256": "ace261bed202e3f99a242ac6b6dc2f532c1967d1b803a0e91a38461db44311eb"
+      },
+      "test-profiles.js": {
+        "baseBytes": 10112,
+        "baseSha256": "b93318eb4738b199d39dbf10ad6313e11fd2350dc4526c64216b2a13c27e1ce0",
+        "servedBytes": 10112,
+        "servedSha256": "b93318eb4738b199d39dbf10ad6313e11fd2350dc4526c64216b2a13c27e1ce0"
+      }
+    },
+    "htmlInstrumentation": "Original index bytes are pinned; local JSON manifest/probe tags are added before other head content.",
+    "nativeHook": {
+      "global": "MainLoop",
+      "method": "runIter",
+      "source": "MainLoop.runIter(iterFunc) / callUserCallback(func)",
+      "supported": true
+    },
+    "probeSha256": "f5f9309cc585fd6ea6aad44f84c5c2552b682b21fd4769578693f321154ba99b",
+    "saveStorageBaseSha256": "e46cef9257f3608f0edbd1af4c0424e09665aa919aed5e5e16d234045ef1c49c",
+    "saveStorageServedSha256": "0ca8a5caf1e426ac8c634a452471e3542905c9226b00639676b32d06463f5936",
+    "schemaVersion": 2,
+    "serverFileMatchesRunningCode": true,
+    "serverSha256": "12998a23837b556ba40914e8baed2f46bcb789e980a6e280c4f1061c7c33100a"
+  },
+  "loadedProbeSha256": "f5f9309cc585fd6ea6aad44f84c5c2552b682b21fd4769578693f321154ba99b",
+  "captureStartManifest": {
+    "engineId": "0.2.6-web-scrap.1",
+    "engineWasmMatchesMetadata": true,
+    "engineWasmSha256": "a9b1cc5296b9bcb5f4045b18f9bb30c6ae95823a2658afb6a3ea5a70932f6102",
+    "files": {
+      "audio-controls.js": {
+        "baseBytes": 12216,
+        "baseSha256": "95e6a1b3e7ccae54ee797e8ed3b63668b672ee51f55978dc4d29231ec225a343",
+        "servedBytes": 12216,
+        "servedSha256": "95e6a1b3e7ccae54ee797e8ed3b63668b672ee51f55978dc4d29231ec225a343"
+      },
+      "bundled-assets.js": {
+        "baseBytes": 8188,
+        "baseSha256": "07449dfe0aca7efb7888c62d598b54dc0be5cdfaadab6961e5f9977f87db6e8c",
+        "servedBytes": 8188,
+        "servedSha256": "07449dfe0aca7efb7888c62d598b54dc0be5cdfaadab6961e5f9977f87db6e8c"
+      },
+      "game-assets/manifest.json": {
+        "baseBytes": 3176,
+        "baseSha256": "5488eb8cf5d38d2d999e29a5b3aca45ecff02f8ee49356ccb327de8676111dc4",
+        "servedBytes": 3176,
+        "servedSha256": "5488eb8cf5d38d2d999e29a5b3aca45ecff02f8ee49356ccb327de8676111dc4"
+      },
+      "game/engine-provenance.json": {
+        "baseBytes": 163348,
+        "baseSha256": "0887d3b4c24f8db8ae7283453663756bbc2937cf7f5559eb8a72639c95af56b1",
+        "servedBytes": 163348,
+        "servedSha256": "0887d3b4c24f8db8ae7283453663756bbc2937cf7f5559eb8a72639c95af56b1"
+      },
+      "game/pvz-portable.js": {
+        "baseBytes": 209600,
+        "baseSha256": "ea0dda8ee8444491421cd9e1b9ee600d8e98292e4c726d7d466383e5c6c7ef6e",
+        "servedBytes": 209600,
+        "servedSha256": "ea0dda8ee8444491421cd9e1b9ee600d8e98292e4c726d7d466383e5c6c7ef6e"
+      },
+      "game/pvz-portable.wasm": {
+        "baseBytes": 7791069,
+        "baseSha256": "a9b1cc5296b9bcb5f4045b18f9bb30c6ae95823a2658afb6a3ea5a70932f6102",
+        "servedBytes": 7791069,
+        "servedSha256": "a9b1cc5296b9bcb5f4045b18f9bb30c6ae95823a2658afb6a3ea5a70932f6102"
+      },
+      "index.html": {
+        "baseBytes": 6441,
+        "baseSha256": "f56a31ed4f47a3b6fac6a980ce6a58bf6eeb522580400ddd776e180538a5df3a",
+        "servedBytes": 6441,
+        "servedSha256": "f56a31ed4f47a3b6fac6a980ce6a58bf6eeb522580400ddd776e180538a5df3a"
+      },
+      "launcher.js": {
+        "baseBytes": 10755,
+        "baseSha256": "9e41170068f913e8f966d650953972a311f57e7efb6241340fa6c5a349d3cfdd",
+        "servedBytes": 10755,
+        "servedSha256": "9e41170068f913e8f966d650953972a311f57e7efb6241340fa6c5a349d3cfdd"
+      },
+      "loader.js": {
+        "baseBytes": 10670,
+        "baseSha256": "a183ed4e17810de2431989f3ebc263d2f511d1514c53e73c8933b8486bced73a",
+        "servedBytes": 10670,
+        "servedSha256": "a183ed4e17810de2431989f3ebc263d2f511d1514c53e73c8933b8486bced73a"
+      },
+      "original-ui.js": {
+        "baseBytes": 2774,
+        "baseSha256": "a8f0aab63956a0280f03520671b712c2709da353c287be430592c64ba91ffe5b",
+        "servedBytes": 2774,
+        "servedSha256": "a8f0aab63956a0280f03520671b712c2709da353c287be430592c64ba91ffe5b"
+      },
+      "port.css": {
+        "baseBytes": 11410,
+        "baseSha256": "6020b3fb0e1517aa9c9c1bab93873cf5c5c9f2204e3c0d9f3335853789e6b821",
+        "servedBytes": 11410,
+        "servedSha256": "6020b3fb0e1517aa9c9c1bab93873cf5c5c9f2204e3c0d9f3335853789e6b821"
+      },
+      "runtime.js": {
+        "baseBytes": 763,
+        "baseSha256": "00be9ed6d36fb02a51ca5cc2ade9f7fc44a69218940bd61e11410fb0ec6fa07a",
+        "servedBytes": 763,
+        "servedSha256": "00be9ed6d36fb02a51ca5cc2ade9f7fc44a69218940bd61e11410fb0ec6fa07a"
+      },
+      "save-recovery.js": {
+        "baseBytes": 4921,
+        "baseSha256": "eff0eb9325e0bdc18c1f76582e9f260a07ffbf680b3ada25763f1972204e84bf",
+        "servedBytes": 4921,
+        "servedSha256": "eff0eb9325e0bdc18c1f76582e9f260a07ffbf680b3ada25763f1972204e84bf"
+      },
+      "save-storage-core.js": {
+        "baseBytes": 13211,
+        "baseSha256": "5473e221a0b86818835a9ed5a1b473d718ae14da9838c7e37d99bdef48203bee",
+        "servedBytes": 13211,
+        "servedSha256": "5473e221a0b86818835a9ed5a1b473d718ae14da9838c7e37d99bdef48203bee"
+      },
+      "save-storage-worker.js": {
+        "baseBytes": 1864,
+        "baseSha256": "4951c5dd05dcc2c79dd99f4ddeba19935ffd23a69dd6726e4b4e1b819772a246",
+        "servedBytes": 1864,
+        "servedSha256": "4951c5dd05dcc2c79dd99f4ddeba19935ffd23a69dd6726e4b4e1b819772a246"
+      },
+      "save-storage.js": {
+        "baseBytes": 9518,
+        "baseSha256": "e46cef9257f3608f0edbd1af4c0424e09665aa919aed5e5e16d234045ef1c49c",
+        "servedBytes": 9751,
+        "servedSha256": "0ca8a5caf1e426ac8c634a452471e3542905c9226b00639676b32d06463f5936"
+      },
+      "save-transfer.js": {
+        "baseBytes": 16375,
+        "baseSha256": "de0c5b67863c8f307906d4d1c739b05ef0d32d5f854a8d77581750a37dd6f314",
+        "servedBytes": 16375,
+        "servedSha256": "de0c5b67863c8f307906d4d1c739b05ef0d32d5f854a8d77581750a37dd6f314"
+      },
+      "steam-compat.js": {
+        "baseBytes": 5185,
+        "baseSha256": "ace261bed202e3f99a242ac6b6dc2f532c1967d1b803a0e91a38461db44311eb",
+        "servedBytes": 5185,
+        "servedSha256": "ace261bed202e3f99a242ac6b6dc2f532c1967d1b803a0e91a38461db44311eb"
+      },
+      "test-profiles.js": {
+        "baseBytes": 10112,
+        "baseSha256": "b93318eb4738b199d39dbf10ad6313e11fd2350dc4526c64216b2a13c27e1ce0",
+        "servedBytes": 10112,
+        "servedSha256": "b93318eb4738b199d39dbf10ad6313e11fd2350dc4526c64216b2a13c27e1ce0"
+      }
+    },
+    "htmlInstrumentation": "Original index bytes are pinned; local JSON manifest/probe tags are added before other head content.",
+    "nativeHook": {
+      "global": "MainLoop",
+      "method": "runIter",
+      "source": "MainLoop.runIter(iterFunc) / callUserCallback(func)",
+      "supported": true
+    },
+    "probeSha256": "f5f9309cc585fd6ea6aad44f84c5c2552b682b21fd4769578693f321154ba99b",
+    "saveStorageBaseSha256": "e46cef9257f3608f0edbd1af4c0424e09665aa919aed5e5e16d234045ef1c49c",
+    "saveStorageServedSha256": "0ca8a5caf1e426ac8c634a452471e3542905c9226b00639676b32d06463f5936",
+    "schemaVersion": 2,
+    "serverFileMatchesRunningCode": true,
+    "serverSha256": "12998a23837b556ba40914e8baed2f46bcb789e980a6e280c4f1061c7c33100a"
+  },
+  "captureEndManifest": {
+    "engineId": "0.2.6-web-scrap.1",
+    "engineWasmMatchesMetadata": true,
+    "engineWasmSha256": "a9b1cc5296b9bcb5f4045b18f9bb30c6ae95823a2658afb6a3ea5a70932f6102",
+    "files": {
+      "audio-controls.js": {
+        "baseBytes": 12216,
+        "baseSha256": "95e6a1b3e7ccae54ee797e8ed3b63668b672ee51f55978dc4d29231ec225a343",
+        "servedBytes": 12216,
+        "servedSha256": "95e6a1b3e7ccae54ee797e8ed3b63668b672ee51f55978dc4d29231ec225a343"
+      },
+      "bundled-assets.js": {
+        "baseBytes": 8188,
+        "baseSha256": "07449dfe0aca7efb7888c62d598b54dc0be5cdfaadab6961e5f9977f87db6e8c",
+        "servedBytes": 8188,
+        "servedSha256": "07449dfe0aca7efb7888c62d598b54dc0be5cdfaadab6961e5f9977f87db6e8c"
+      },
+      "game-assets/manifest.json": {
+        "baseBytes": 3176,
+        "baseSha256": "5488eb8cf5d38d2d999e29a5b3aca45ecff02f8ee49356ccb327de8676111dc4",
+        "servedBytes": 3176,
+        "servedSha256": "5488eb8cf5d38d2d999e29a5b3aca45ecff02f8ee49356ccb327de8676111dc4"
+      },
+      "game/engine-provenance.json": {
+        "baseBytes": 163348,
+        "baseSha256": "0887d3b4c24f8db8ae7283453663756bbc2937cf7f5559eb8a72639c95af56b1",
+        "servedBytes": 163348,
+        "servedSha256": "0887d3b4c24f8db8ae7283453663756bbc2937cf7f5559eb8a72639c95af56b1"
+      },
+      "game/pvz-portable.js": {
+        "baseBytes": 209600,
+        "baseSha256": "ea0dda8ee8444491421cd9e1b9ee600d8e98292e4c726d7d466383e5c6c7ef6e",
+        "servedBytes": 209600,
+        "servedSha256": "ea0dda8ee8444491421cd9e1b9ee600d8e98292e4c726d7d466383e5c6c7ef6e"
+      },
+      "game/pvz-portable.wasm": {
+        "baseBytes": 7791069,
+        "baseSha256": "a9b1cc5296b9bcb5f4045b18f9bb30c6ae95823a2658afb6a3ea5a70932f6102",
+        "servedBytes": 7791069,
+        "servedSha256": "a9b1cc5296b9bcb5f4045b18f9bb30c6ae95823a2658afb6a3ea5a70932f6102"
+      },
+      "index.html": {
+        "baseBytes": 6441,
+        "baseSha256": "f56a31ed4f47a3b6fac6a980ce6a58bf6eeb522580400ddd776e180538a5df3a",
+        "servedBytes": 6441,
+        "servedSha256": "f56a31ed4f47a3b6fac6a980ce6a58bf6eeb522580400ddd776e180538a5df3a"
+      },
+      "launcher.js": {
+        "baseBytes": 10755,
+        "baseSha256": "9e41170068f913e8f966d650953972a311f57e7efb6241340fa6c5a349d3cfdd",
+        "servedBytes": 10755,
+        "servedSha256": "9e41170068f913e8f966d650953972a311f57e7efb6241340fa6c5a349d3cfdd"
+      },
+      "loader.js": {
+        "baseBytes": 10670,
+        "baseSha256": "a183ed4e17810de2431989f3ebc263d2f511d1514c53e73c8933b8486bced73a",
+        "servedBytes": 10670,
+        "servedSha256": "a183ed4e17810de2431989f3ebc263d2f511d1514c53e73c8933b8486bced73a"
+      },
+      "original-ui.js": {
+        "baseBytes": 2774,
+        "baseSha256": "a8f0aab63956a0280f03520671b712c2709da353c287be430592c64ba91ffe5b",
+        "servedBytes": 2774,
+        "servedSha256": "a8f0aab63956a0280f03520671b712c2709da353c287be430592c64ba91ffe5b"
+      },
+      "port.css": {
+        "baseBytes": 11410,
+        "baseSha256": "6020b3fb0e1517aa9c9c1bab93873cf5c5c9f2204e3c0d9f3335853789e6b821",
+        "servedBytes": 11410,
+        "servedSha256": "6020b3fb0e1517aa9c9c1bab93873cf5c5c9f2204e3c0d9f3335853789e6b821"
+      },
+      "runtime.js": {
+        "baseBytes": 763,
+        "baseSha256": "00be9ed6d36fb02a51ca5cc2ade9f7fc44a69218940bd61e11410fb0ec6fa07a",
+        "servedBytes": 763,
+        "servedSha256": "00be9ed6d36fb02a51ca5cc2ade9f7fc44a69218940bd61e11410fb0ec6fa07a"
+      },
+      "save-recovery.js": {
+        "baseBytes": 4921,
+        "baseSha256": "eff0eb9325e0bdc18c1f76582e9f260a07ffbf680b3ada25763f1972204e84bf",
+        "servedBytes": 4921,
+        "servedSha256": "eff0eb9325e0bdc18c1f76582e9f260a07ffbf680b3ada25763f1972204e84bf"
+      },
+      "save-storage-core.js": {
+        "baseBytes": 13211,
+        "baseSha256": "5473e221a0b86818835a9ed5a1b473d718ae14da9838c7e37d99bdef48203bee",
+        "servedBytes": 13211,
+        "servedSha256": "5473e221a0b86818835a9ed5a1b473d718ae14da9838c7e37d99bdef48203bee"
+      },
+      "save-storage-worker.js": {
+        "baseBytes": 1864,
+        "baseSha256": "4951c5dd05dcc2c79dd99f4ddeba19935ffd23a69dd6726e4b4e1b819772a246",
+        "servedBytes": 1864,
+        "servedSha256": "4951c5dd05dcc2c79dd99f4ddeba19935ffd23a69dd6726e4b4e1b819772a246"
+      },
+      "save-storage.js": {
+        "baseBytes": 9518,
+        "baseSha256": "e46cef9257f3608f0edbd1af4c0424e09665aa919aed5e5e16d234045ef1c49c",
+        "servedBytes": 9751,
+        "servedSha256": "0ca8a5caf1e426ac8c634a452471e3542905c9226b00639676b32d06463f5936"
+      },
+      "save-transfer.js": {
+        "baseBytes": 16375,
+        "baseSha256": "de0c5b67863c8f307906d4d1c739b05ef0d32d5f854a8d77581750a37dd6f314",
+        "servedBytes": 16375,
+        "servedSha256": "de0c5b67863c8f307906d4d1c739b05ef0d32d5f854a8d77581750a37dd6f314"
+      },
+      "steam-compat.js": {
+        "baseBytes": 5185,
+        "baseSha256": "ace261bed202e3f99a242ac6b6dc2f532c1967d1b803a0e91a38461db44311eb",
+        "servedBytes": 5185,
+        "servedSha256": "ace261bed202e3f99a242ac6b6dc2f532c1967d1b803a0e91a38461db44311eb"
+      },
+      "test-profiles.js": {
+        "baseBytes": 10112,
+        "baseSha256": "b93318eb4738b199d39dbf10ad6313e11fd2350dc4526c64216b2a13c27e1ce0",
+        "servedBytes": 10112,
+        "servedSha256": "b93318eb4738b199d39dbf10ad6313e11fd2350dc4526c64216b2a13c27e1ce0"
+      }
+    },
+    "htmlInstrumentation": "Original index bytes are pinned; local JSON manifest/probe tags are added before other head content.",
+    "nativeHook": {
+      "global": "MainLoop",
+      "method": "runIter",
+      "source": "MainLoop.runIter(iterFunc) / callUserCallback(func)",
+      "supported": true
+    },
+    "probeSha256": "f5f9309cc585fd6ea6aad44f84c5c2552b682b21fd4769578693f321154ba99b",
+    "saveStorageBaseSha256": "e46cef9257f3608f0edbd1af4c0424e09665aa919aed5e5e16d234045ef1c49c",
+    "saveStorageServedSha256": "0ca8a5caf1e426ac8c634a452471e3542905c9226b00639676b32d06463f5936",
+    "schemaVersion": 2,
+    "serverFileMatchesRunningCode": true,
+    "serverSha256": "12998a23837b556ba40914e8baed2f46bcb789e980a6e280c4f1061c7c33100a"
+  },
+  "nativeHookAvailable": true,
+  "contexts": [
+    {
+      "type": "webgl",
+      "canvasId": "canvas",
+      "version": "WebGL 1.0 (OpenGL ES 2.0 Chromium)",
+      "renderer": "WebKit WebGL",
+      "vendor": "WebKit"
+    }
+  ],
+  "longTaskObserverAvailable": true,
+  "longTasks": [],
+  "samples": {
+    "rafTimestamps": [
+      40484.3,
+      40501,
+      40530.2,
+      40567.6,
+      40588.5,
+      40605.1,
+      40621.8,
+      40650.9,
+      40692.6,
+      40726,
+      40750.9,
+      40780.2,
+      40805.2,
+      40830.2,
+      40863.5,
+      40901,
+      40938.5,
+      40959.3,
+      41026.1,
+      41071.9,
+      41101,
+      41126,
+      41151,
+      41184.3,
+      41209.3,
+      41246.8,
+      41280.1,
+      41300.9,
+      41334.3,
+      41371.8,
+      41401,
+      41438.5,
+      41459.4,
+      41475.9,
+      41492.7,
+      41526,
+      41555.1,
+      41580.2,
+      41613.4,
+      41634.3,
+      41659.3,
+      41676,
+      41709.3,
+      41734.3,
+      41775.9,
+      41826,
+      41863.5,
+      41901,
+      41942.7,
+      41976,
+      42013.4,
+      42059.3,
+      42109.3,
+      42134.3,
+      42167.7,
+      42201,
+      42238.5,
+      42280.2,
+      42317.6,
+      42355.1,
+      42392.6,
+      42430.1,
+      42467.7,
+      42501,
+      42596.8,
+      42667.6,
+      42721.8,
+      42767.7,
+      42792.7,
+      42821.8,
+      42842.7,
+      42871.8,
+      42896.8,
+      42909.3,
+      42934.3,
+      42955.2,
+      42976,
+      42996.8,
+      43013.5,
+      43030.1,
+      43051,
+      43067.6,
+      43080.1,
+      43092.7,
+      43100.9,
+      43126,
+      43142.7,
+      43159.4,
+      43167.6,
+      43192.7,
+      43209.3,
+      43217.7,
+      43238.5,
+      43271.8,
+      43288.5,
+      43309.3,
+      43326,
+      43371.8,
+      43405.1,
+      43430.1,
+      43451,
+      43480.2,
+      43517.7,
+      43555.2,
+      43588.4,
+      43609.3,
+      43638.5,
+      43659.3,
+      43696.8,
+      43721.9,
+      43742.6,
+      43767.7,
+      43784.3,
+      43796.8,
+      43826,
+      43855.2,
+      43880.1,
+      43905.1,
+      43926,
+      43951,
+      43971.8,
+      43996.8,
+      44013.5,
+      44021.8,
+      44034.3,
+      44055.1,
+      44067.7,
+      44088.5,
+      44113.5,
+      44134.3,
+      44155.1,
+      44175.9,
+      44205.2,
+      44242.7,
+      44263.4,
+      44288.5,
+      44334.4,
+      44376,
+      44401,
+      44446.8,
+      44467.6,
+      44513.5,
+      44542.6,
+      44571.8,
+      44601,
+      44642.6,
+      44667.7,
+      44701,
+      44726,
+      44755.2,
+      44792.6,
+      44826,
+      44867.7,
+      44896.8,
+      44934.3,
+      44971.8,
+      45009.3,
+      45038.4,
+      45071.9,
+      45100.9,
+      45134.3,
+      45159.3,
+      45176,
+      45209.3,
+      45238.5,
+      45276.1,
+      45300.9,
+      45326,
+      45359.3,
+      45384.3,
+      45417.7,
+      45442.7,
+      45471.8,
+      45501,
+      45534.3,
+      45576,
+      45613.5,
+      45638.4,
+      45667.6,
+      45688.5,
+      45709.3,
+      45730.2,
+      45759.3,
+      45776,
+      45800.9,
+      45821.8,
+      45851,
+      45896.8,
+      45930.2,
+      45955.1,
+      45971.8,
+      46026,
+      46059.4,
+      46084.3,
+      46109.3,
+      46126,
+      46150.9,
+      46175.9,
+      46221.8,
+      46251,
+      46271.8,
+      46301,
+      46330.2,
+      46367.6,
+      46392.7,
+      46409.3,
+      46434.4,
+      46459.3,
+      46488.5,
+      46505.2,
+      46534.4,
+      46563.5,
+      46580.2,
+      46600.9,
+      46630.2,
+      46655.1,
+      46696.8,
+      46721.8,
+      46746.8,
+      46788.5,
+      46809.3,
+      46846.8,
+      46880.1,
+      46892.7,
+      46905.1,
+      46938.5,
+      46980.2,
+      47021.8,
+      47046.8,
+      47076.1,
+      47092.7,
+      47142.7,
+      47159.3,
+      47180.2,
+      47205.1,
+      47238.5,
+      47263.4,
+      47296.8,
+      47342.6,
+      47363.5,
+      47392.6,
+      47409.3,
+      47434.3,
+      47459.4,
+      47475.9,
+      47505.1,
+      47526,
+      47580.1,
+      47617.7,
+      47646.8,
+      47680.1,
+      47696.8,
+      47721.9,
+      47763.5,
+      47817.7,
+      47851,
+      47876,
+      47892.6,
+      47930.2,
+      47967.7,
+      48013.5,
+      48030.2,
+      48055.1,
+      48084.3,
+      48117.7,
+      48138.4,
+      48167.7,
+      48192.6,
+      48230.2,
+      48255.2,
+      48296.8,
+      48334.3,
+      48371.8,
+      48450.9,
+      48546.9,
+      48605.1,
+      48659.4,
+      48684.3,
+      48713.5,
+      48738.4,
+      48776,
+      48809.3,
+      48838.5,
+      48859.3,
+      48892.6,
+      48913.5,
+      48938.5,
+      48963.5,
+      48988.4,
+      49005.2,
+      49026,
+      49046.8,
+      49071.8,
+      49092.7,
+      49113.4,
+      49138.5,
+      49155.2,
+      49167.6,
+      49196.8,
+      49217.7,
+      49238.5,
+      49263.5,
+      49284.3,
+      49309.4,
+      49326,
+      49346.8,
+      49376,
+      49405.2,
+      49451,
+      49476,
+      49501,
+      49538.5,
+      49563.5,
+      49588.5,
+      49613.5,
+      49630.1,
+      49642.7,
+      49663.5,
+      49688.5,
+      49713.5,
+      49738.5,
+      49771.8,
+      49788.5,
+      49809.3,
+      49826,
+      49842.7,
+      49855.2,
+      49871.9,
+      49884.4,
+      49896.8,
+      49913.5,
+      49930.2,
+      49946.8,
+      49959.3,
+      49976.6,
+      50001,
+      50017.6,
+      50042.7,
+      50071.8,
+      50109.4,
+      50130.2,
+      50151,
+      50184.3,
+      50221.8,
+      50263.5,
+      50284.3,
+      50313.4,
+      50342.6,
+      50371.8,
+      50409.3,
+      50434.3,
+      50459.3,
+      50480.1,
+      50513.5,
+      50538.5,
+      50571.8,
+      50596.8,
+      50625.9,
+      50646.8,
+      50663.5,
+      50701,
+      50721.8,
+      50746.8,
+      50767.7,
+      50805.1,
+      50830.1,
+      50859.3,
+      50884.3,
+      50913.5,
+      50942.7,
+      50980.2,
+      51009.3,
+      51042.6,
+      51067.7,
+      51096.9,
+      51121.8,
+      51142.7,
+      51167.7,
+      51192.6,
+      51209.3,
+      51226,
+      51242.7,
+      51276,
+      51326,
+      51396.8,
+      51476,
+      51513.5,
+      51538.5,
+      51563.5,
+      51596.8,
+      51621.8,
+      51667.6,
+      51705.2,
+      51726,
+      51759.3,
+      51792.6,
+      51817.7,
+      51851,
+      51892.7,
+      51917.7,
+      51942.7,
+      51971.9,
+      52005.2,
+      52034.3,
+      52051,
+      52071.8,
+      52126,
+      52201,
+      52326,
+      52376,
+      52421.9,
+      52459.3,
+      52492.7,
+      52526,
+      52559.4,
+      52588.5,
+      52630.2,
+      52651,
+      52684.3,
+      52696.9,
+      52717.7,
+      52738.5,
+      52780.2,
+      52805.2,
+      52830.1,
+      52867.6,
+      52892.7,
+      52917.7,
+      52934.3,
+      52955.2,
+      52992.7,
+      53009.4,
+      53042.7,
+      53067.7,
+      53096.9,
+      53134.3,
+      53155.1,
+      53188.5,
+      53221.8,
+      53246.8,
+      53292.7,
+      53313.5,
+      53334.3,
+      53371.8,
+      53413.5,
+      53467.9,
+      53526,
+      53571.8,
+      53626,
+      53663.5,
+      53701,
+      53726,
+      53763.5,
+      53788.5,
+      53813.5,
+      53834.3,
+      53863.5,
+      53888.5,
+      53905.2,
+      53930.2,
+      53946.8,
+      53951,
+      53971.8,
+      53988.5,
+      54013.5,
+      54021.9,
+      54034.3,
+      54051,
+      54071.8,
+      54101,
+      54121.9,
+      54155.2,
+      54184.4,
+      54209.3,
+      54234.4,
+      54280.2,
+      54326,
+      54363.5,
+      54396.9,
+      54425.9,
+      54467.6,
+      54496.8,
+      54534.4,
+      54571.8,
+      54605.2,
+      54634.3,
+      54663.5,
+      54696.8,
+      54726,
+      54759.3,
+      54805.2,
+      54842.6,
+      54876,
+      54896.9,
+      54917.6,
+      54959.3,
+      54992.6,
+      55030.2,
+      55051,
+      55088.5,
+      55113.4,
+      55146.8,
+      55176,
+      55201,
+      55242.7,
+      55263.5,
+      55280.1,
+      55313.5,
+      55338.5,
+      55363.5,
+      55380.2,
+      55401,
+      55426,
+      55451,
+      55467.7
+    ],
+    "nativeCallbacks": [
+      {
+        "at": 12,
+        "ms": 1.9000000357627869
+      },
+      {
+        "at": 28.69999998807907,
+        "ms": 1.5
+      },
+      {
+        "at": 59.10000002384186,
+        "ms": 1.5999999642372131
+      },
+      {
+        "at": 95.90000003576279,
+        "ms": 1.7999999523162842
+      },
+      {
+        "at": 117,
+        "ms": 1.699999988079071
+      },
+      {
+        "at": 133,
+        "ms": 1.800000011920929
+      },
+      {
+        "at": 151.9000000357628,
+        "ms": 1.2999999523162842
+      },
+      {
+        "at": 180.9000000357628,
+        "ms": 1.5
+      },
+      {
+        "at": 220.60000002384186,
+        "ms": 1.899999976158142
+      },
+      {
+        "at": 255.10000002384186,
+        "ms": 1.899999976158142
+      },
+      {
+        "at": 281,
+        "ms": 1.699999988079071
+      },
+      {
+        "at": 307.30000001192093,
+        "ms": 1.600000023841858
+      },
+      {
+        "at": 333.80000001192093,
+        "ms": 1.399999976158142
+      },
+      {
+        "at": 358.19999998807907,
+        "ms": 1.5
+      },
+      {
+        "at": 393.19999998807907,
+        "ms": 1.800000011920929
+      },
+      {
+        "at": 430.60000002384186,
+        "ms": 1.5
+      },
+      {
+        "at": 466.5,
+        "ms": 1.5
+      },
+      {
+        "at": 488.69999998807907,
+        "ms": 1.5
+      },
+      {
+        "at": 553.5,
+        "ms": 1.5
+      },
+      {
+        "at": 601.3000000119209,
+        "ms": 1.399999976158142
+      },
+      {
+        "at": 630.6999999880791,
+        "ms": 1.9000000357627869
+      },
+      {
+        "at": 654.5,
+        "ms": 1.800000011920929
+      },
+      {
+        "at": 678.6000000238419,
+        "ms": 1.5
+      },
+      {
+        "at": 711.5,
+        "ms": 1.5
+      },
+      {
+        "at": 738.5,
+        "ms": 1.800000011920929
+      },
+      {
+        "at": 775.3000000119209,
+        "ms": 1.600000023841858
+      },
+      {
+        "at": 809.1999999880791,
+        "ms": 2
+      },
+      {
+        "at": 830.5,
+        "ms": 1.5
+      },
+      {
+        "at": 861.6999999880791,
+        "ms": 1.600000023841858
+      },
+      {
+        "at": 899,
+        "ms": 1.5
+      },
+      {
+        "at": 930.6000000238419,
+        "ms": 1.5999999642372131
+      },
+      {
+        "at": 966.1000000238419,
+        "ms": 1.800000011920929
+      },
+      {
+        "at": 987.5,
+        "ms": 2
+      },
+      {
+        "at": 1003.6999999880791,
+        "ms": 1.800000011920929
+      },
+      {
+        "at": 1022.9000000357628,
+        "ms": 1.5
+      },
+      {
+        "at": 1055.5,
+        "ms": 1.699999988079071
+      },
+      {
+        "at": 1084.800000011921,
+        "ms": 1.699999988079071
+      },
+      {
+        "at": 1110.4000000357628,
+        "ms": 1.399999976158142
+      },
+      {
+        "at": 1141,
+        "ms": 1.5
+      },
+      {
+        "at": 1163.199999988079,
+        "ms": 1.5
+      },
+      {
+        "at": 1188.300000011921,
+        "ms": 1.699999988079071
+      },
+      {
+        "at": 1204.800000011921,
+        "ms": 1.300000011920929
+      },
+      {
+        "at": 1238.9000000357628,
+        "ms": 1.699999988079071
+      },
+      {
+        "at": 1264.1000000238419,
+        "ms": 1.5
+      },
+      {
+        "at": 1305.5,
+        "ms": 1.699999988079071
+      },
+      {
+        "at": 1353.4000000357628,
+        "ms": 1.7999999523162842
+      },
+      {
+        "at": 1391,
+        "ms": 1.800000011920929
+      },
+      {
+        "at": 1430.300000011921,
+        "ms": 1.699999988079071
+      },
+      {
+        "at": 1471.4000000357628,
+        "ms": 1.699999988079071
+      },
+      {
+        "at": 1503.6000000238419,
+        "ms": 1.5999999642372131
+      },
+      {
+        "at": 1542,
+        "ms": 2.100000023841858
+      },
+      {
+        "at": 1586.6000000238419,
+        "ms": 1.5
+      },
+      {
+        "at": 1638.800000011921,
+        "ms": 1.600000023841858
+      },
+      {
+        "at": 1663.4000000357628,
+        "ms": 1.5999999642372131
+      },
+      {
+        "at": 1697.1000000238419,
+        "ms": 1.5999999642372131
+      },
+      {
+        "at": 1728.1000000238419,
+        "ms": 1.800000011920929
+      },
+      {
+        "at": 1765.800000011921,
+        "ms": 1.5
+      },
+      {
+        "at": 1809.800000011921,
+        "ms": 2.100000023841858
+      },
+      {
+        "at": 1845.9000000357628,
+        "ms": 1.5
+      },
+      {
+        "at": 1882.800000011921,
+        "ms": 2.100000023841858
+      },
+      {
+        "at": 1920.5,
+        "ms": 2.100000023841858
+      },
+      {
+        "at": 1959.699999988079,
+        "ms": 3.600000023841858
+      },
+      {
+        "at": 1996.9000000357628,
+        "ms": 2.199999988079071
+      },
+      {
+        "at": 2029.300000011921,
+        "ms": 2.100000023841858
+      },
+      {
+        "at": 2126,
+        "ms": 1.4000000357627869
+      },
+      {
+        "at": 2195.100000023842,
+        "ms": 1.5
+      },
+      {
+        "at": 2251.900000035763,
+        "ms": 1.7999999523162842
+      },
+      {
+        "at": 2295.300000011921,
+        "ms": 2
+      },
+      {
+        "at": 2320.600000023842,
+        "ms": 1.5
+      },
+      {
+        "at": 2349,
+        "ms": 1.4000000357627869
+      },
+      {
+        "at": 2371.800000011921,
+        "ms": 1.399999976158142
+      },
+      {
+        "at": 2400.800000011921,
+        "ms": 1.399999976158142
+      },
+      {
+        "at": 2424.199999988079,
+        "ms": 1.7000000476837158
+      },
+      {
+        "at": 2437,
+        "ms": 1.4000000357627869
+      },
+      {
+        "at": 2461.5,
+        "ms": 1.800000011920929
+      },
+      {
+        "at": 2484.5,
+        "ms": 1.5
+      },
+      {
+        "at": 2503.800000011921,
+        "ms": 1.300000011920929
+      },
+      {
+        "at": 2525.100000023842,
+        "ms": 1.5
+      },
+      {
+        "at": 2540.900000035763,
+        "ms": 1.699999988079071
+      },
+      {
+        "at": 2559.199999988079,
+        "ms": 1.5
+      },
+      {
+        "at": 2580.400000035763,
+        "ms": 1.5999999642372131
+      },
+      {
+        "at": 2595.900000035763,
+        "ms": 2.099999964237213
+      },
+      {
+        "at": 2610.300000011921,
+        "ms": 1.699999988079071
+      },
+      {
+        "at": 2622.800000011921,
+        "ms": 1.300000011920929
+      },
+      {
+        "at": 2629.900000035763,
+        "ms": 1.399999976158142
+      },
+      {
+        "at": 2655.699999988079,
+        "ms": 1.5
+      },
+      {
+        "at": 2672.800000011921,
+        "ms": 2.199999988079071
+      },
+      {
+        "at": 2689.199999988079,
+        "ms": 2
+      },
+      {
+        "at": 2697.199999988079,
+        "ms": 2
+      },
+      {
+        "at": 2719.900000035763,
+        "ms": 1.399999976158142
+      },
+      {
+        "at": 2736.699999988079,
+        "ms": 1.9000000357627869
+      },
+      {
+        "at": 2745.100000023842,
+        "ms": 1.5
+      },
+      {
+        "at": 2765.800000011921,
+        "ms": 2
+      },
+      {
+        "at": 2799.100000023842,
+        "ms": 1.699999988079071
+      },
+      {
+        "at": 2815.800000011921,
+        "ms": 1.699999988079071
+      },
+      {
+        "at": 2837,
+        "ms": 1.5
+      },
+      {
+        "at": 2855.5,
+        "ms": 1.5
+      },
+      {
+        "at": 2900.300000011921,
+        "ms": 1.800000011920929
+      },
+      {
+        "at": 2934.699999988079,
+        "ms": 1.9000000357627869
+      },
+      {
+        "at": 2958.800000011921,
+        "ms": 2
+      },
+      {
+        "at": 2980.600000023842,
+        "ms": 2
+      },
+      {
+        "at": 3008.199999988079,
+        "ms": 1.5
+      },
+      {
+        "at": 3047.300000011921,
+        "ms": 2
+      },
+      {
+        "at": 3082.600000023842,
+        "ms": 1.5
+      },
+      {
+        "at": 3116.100000023842,
+        "ms": 1.5999999642372131
+      },
+      {
+        "at": 3138.699999988079,
+        "ms": 1.600000023841858
+      },
+      {
+        "at": 3166.800000011921,
+        "ms": 1.5
+      },
+      {
+        "at": 3188.300000011921,
+        "ms": 1.5
+      },
+      {
+        "at": 3224.300000011921,
+        "ms": 1.699999988079071
+      },
+      {
+        "at": 3252.100000023842,
+        "ms": 1.5999999642372131
+      },
+      {
+        "at": 3271.400000035763,
+        "ms": 1.699999988079071
+      },
+      {
+        "at": 3296.300000011921,
+        "ms": 1.5
+      },
+      {
+        "at": 3311.600000023842,
+        "ms": 1.5
+      },
+      {
+        "at": 3325.199999988079,
+        "ms": 1.4000000357627869
+      },
+      {
+        "at": 3354.800000011921,
+        "ms": 1.800000011920929
+      },
+      {
+        "at": 3384.100000023842,
+        "ms": 1.5999999642372131
+      },
+      {
+        "at": 3407.400000035763,
+        "ms": 1.5999999642372131
+      },
+      {
+        "at": 3433.699999988079,
+        "ms": 1.9000000357627869
+      },
+      {
+        "at": 3453.199999988079,
+        "ms": 1.600000023841858
+      },
+      {
+        "at": 3481.100000023842,
+        "ms": 1.699999988079071
+      },
+      {
+        "at": 3499.100000023842,
+        "ms": 1.5
+      },
+      {
+        "at": 3524,
+        "ms": 1.800000011920929
+      },
+      {
+        "at": 3540.900000035763,
+        "ms": 2.199999988079071
+      },
+      {
+        "at": 3549.199999988079,
+        "ms": 1.5
+      },
+      {
+        "at": 3563.600000023842,
+        "ms": 1.5999999642372131
+      },
+      {
+        "at": 3582.900000035763,
+        "ms": 2
+      },
+      {
+        "at": 3596.900000035763,
+        "ms": 1.5
+      },
+      {
+        "at": 3616.5,
+        "ms": 1.5
+      },
+      {
+        "at": 3641.100000023842,
+        "ms": 1.899999976158142
+      },
+      {
+        "at": 3663.5,
+        "ms": 2.100000023841858
+      },
+      {
+        "at": 3683.5,
+        "ms": 1.600000023841858
+      },
+      {
+        "at": 3703.400000035763,
+        "ms": 1.5
+      },
+      {
+        "at": 3733.199999988079,
+        "ms": 2
+      },
+      {
+        "at": 3770,
+        "ms": 1.9000000357627869
+      },
+      {
+        "at": 3793,
+        "ms": 1.800000011920929
+      },
+      {
+        "at": 3816.300000011921,
+        "ms": 1.899999976158142
+      },
+      {
+        "at": 3862.100000023842,
+        "ms": 1.399999976158142
+      },
+      {
+        "at": 3903.199999988079,
+        "ms": 1.300000011920929
+      },
+      {
+        "at": 3930.100000023842,
+        "ms": 1.800000011920929
+      },
+      {
+        "at": 3974.300000011921,
+        "ms": 1.600000023841858
+      },
+      {
+        "at": 3997,
+        "ms": 1.699999988079071
+      },
+      {
+        "at": 4041,
+        "ms": 2.300000011920929
+      },
+      {
+        "at": 4069.900000035763,
+        "ms": 1.5999999642372131
+      },
+      {
+        "at": 4099.800000011921,
+        "ms": 1.5
+      },
+      {
+        "at": 4128.600000023842,
+        "ms": 2
+      },
+      {
+        "at": 4169.900000035763,
+        "ms": 2.099999964237213
+      },
+      {
+        "at": 4195.5,
+        "ms": 1.4000000357627869
+      },
+      {
+        "at": 4229.300000011921,
+        "ms": 1.600000023841858
+      },
+      {
+        "at": 4254.199999988079,
+        "ms": 1.600000023841858
+      },
+      {
+        "at": 4284.199999988079,
+        "ms": 1.5
+      },
+      {
+        "at": 4321.5,
+        "ms": 1.5
+      },
+      {
+        "at": 4353.5,
+        "ms": 1.9000000357627869
+      },
+      {
+        "at": 4395,
+        "ms": 1.9000000357627869
+      },
+      {
+        "at": 4426.5,
+        "ms": 1.9000000357627869
+      },
+      {
+        "at": 4462,
+        "ms": 1.699999988079071
+      },
+      {
+        "at": 4499.5,
+        "ms": 2
+      },
+      {
+        "at": 4538.300000011921,
+        "ms": 1.5
+      },
+      {
+        "at": 4566.300000011921,
+        "ms": 1.600000023841858
+      },
+      {
+        "at": 4601,
+        "ms": 1.5
+      },
+      {
+        "at": 4630,
+        "ms": 1.5
+      },
+      {
+        "at": 4662.100000023842,
+        "ms": 1.5999999642372131
+      },
+      {
+        "at": 4688.400000035763,
+        "ms": 1.699999988079071
+      },
+      {
+        "at": 4703.800000011921,
+        "ms": 1.600000023841858
+      },
+      {
+        "at": 4738.800000011921,
+        "ms": 2.100000023841858
+      },
+      {
+        "at": 4765.699999988079,
+        "ms": 1.4000000357627869
+      },
+      {
+        "at": 4805.5,
+        "ms": 1.4000000357627869
+      },
+      {
+        "at": 4831.100000023842,
+        "ms": 1.5999999642372131
+      },
+      {
+        "at": 4856.199999988079,
+        "ms": 1.4000000357627869
+      },
+      {
+        "at": 4887.699999988079,
+        "ms": 1.5
+      },
+      {
+        "at": 4911.5,
+        "ms": 2
+      },
+      {
+        "at": 4945.300000011921,
+        "ms": 2
+      },
+      {
+        "at": 4971.800000011921,
+        "ms": 1.800000011920929
+      },
+      {
+        "at": 5000.600000023842,
+        "ms": 1.399999976158142
+      },
+      {
+        "at": 5028.800000011921,
+        "ms": 1.899999976158142
+      },
+      {
+        "at": 5062.100000023842,
+        "ms": 1.5
+      },
+      {
+        "at": 5103.5,
+        "ms": 1.800000011920929
+      },
+      {
+        "at": 5140.699999988079,
+        "ms": 1.4000000357627869
+      },
+      {
+        "at": 5166.699999988079,
+        "ms": 1.600000023841858
+      },
+      {
+        "at": 5196.300000011921,
+        "ms": 1.399999976158142
+      },
+      {
+        "at": 5216.100000023842,
+        "ms": 1.699999988079071
+      },
+      {
+        "at": 5238.5,
+        "ms": 1.800000011920929
+      },
+      {
+        "at": 5258.900000035763,
+        "ms": 1.399999976158142
+      },
+      {
+        "at": 5288.400000035763,
+        "ms": 1.5999999642372131
+      },
+      {
+        "at": 5303.199999988079,
+        "ms": 1.5
+      },
+      {
+        "at": 5328.400000035763,
+        "ms": 1.699999988079071
+      },
+      {
+        "at": 5350.699999988079,
+        "ms": 1.600000023841858
+      },
+      {
+        "at": 5379.400000035763,
+        "ms": 1.5999999642372131
+      },
+      {
+        "at": 5424.100000023842,
+        "ms": 1.899999976158142
+      },
+      {
+        "at": 5459.400000035763,
+        "ms": 1.399999976158142
+      },
+      {
+        "at": 5485,
+        "ms": 2.100000023841858
+      },
+      {
+        "at": 5499.5,
+        "ms": 1.600000023841858
+      },
+      {
+        "at": 5553.100000023842,
+        "ms": 1.5
+      },
+      {
+        "at": 5587.300000011921,
+        "ms": 1.5
+      },
+      {
+        "at": 5614.300000011921,
+        "ms": 2.100000023841858
+      },
+      {
+        "at": 5637.699999988079,
+        "ms": 1.4000000357627869
+      },
+      {
+        "at": 5653.400000035763,
+        "ms": 1.5
+      },
+      {
+        "at": 5678.5,
+        "ms": 1.5
+      },
+      {
+        "at": 5704.400000035763,
+        "ms": 2.199999988079071
+      },
+      {
+        "at": 5751.100000023842,
+        "ms": 1.5
+      },
+      {
+        "at": 5778.900000035763,
+        "ms": 1.899999976158142
+      },
+      {
+        "at": 5800.800000011921,
+        "ms": 1.600000023841858
+      },
+      {
+        "at": 5830.5,
+        "ms": 1.600000023841858
+      },
+      {
+        "at": 5857.300000011921,
+        "ms": 2
+      },
+      {
+        "at": 5894.900000035763,
+        "ms": 1.899999976158142
+      },
+      {
+        "at": 5920.800000011921,
+        "ms": 1.600000023841858
+      },
+      {
+        "at": 5937.100000023842,
+        "ms": 1.899999976158142
+      },
+      {
+        "at": 5961.699999988079,
+        "ms": 1.7000000476837158
+      },
+      {
+        "at": 5987.900000035763,
+        "ms": 1.5
+      },
+      {
+        "at": 6016.300000011921,
+        "ms": 1.899999976158142
+      },
+      {
+        "at": 6033,
+        "ms": 1.600000023841858
+      },
+      {
+        "at": 6063.400000035763,
+        "ms": 1.5999999642372131
+      },
+      {
+        "at": 6092.100000023842,
+        "ms": 1.5999999642372131
+      },
+      {
+        "at": 6107.800000011921,
+        "ms": 1.399999976158142
+      },
+      {
+        "at": 6129.699999988079,
+        "ms": 1.5
+      },
+      {
+        "at": 6157.400000035763,
+        "ms": 1.399999976158142
+      },
+      {
+        "at": 6182.400000035763,
+        "ms": 1.5999999642372131
+      },
+      {
+        "at": 6224.5,
+        "ms": 1.5
+      },
+      {
+        "at": 6250,
+        "ms": 1.600000023841858
+      },
+      {
+        "at": 6275.600000023842,
+        "ms": 1.5
+      },
+      {
+        "at": 6317,
+        "ms": 1.5
+      },
+      {
+        "at": 6336.400000035763,
+        "ms": 1.399999976158142
+      },
+      {
+        "at": 6375.100000023842,
+        "ms": 1.699999988079071
+      },
+      {
+        "at": 6407.600000023842,
+        "ms": 1.5999999642372131
+      },
+      {
+        "at": 6420.5,
+        "ms": 1.800000011920929
+      },
+      {
+        "at": 6433.199999988079,
+        "ms": 1.7000000476837158
+      },
+      {
+        "at": 6466.400000035763,
+        "ms": 1.899999976158142
+      },
+      {
+        "at": 6509.300000011921,
+        "ms": 1.600000023841858
+      },
+      {
+        "at": 6549.5,
+        "ms": 1.600000023841858
+      },
+      {
+        "at": 6576.900000035763,
+        "ms": 1.5
+      },
+      {
+        "at": 6604.699999988079,
+        "ms": 1.5
+      },
+      {
+        "at": 6621,
+        "ms": 1.5
+      },
+      {
+        "at": 6670.300000011921,
+        "ms": 1.899999976158142
+      },
+      {
+        "at": 6686.600000023842,
+        "ms": 1.699999988079071
+      },
+      {
+        "at": 6708.600000023842,
+        "ms": 1.5
+      },
+      {
+        "at": 6733.100000023842,
+        "ms": 1.899999976158142
+      },
+      {
+        "at": 6766.400000035763,
+        "ms": 1.899999976158142
+      },
+      {
+        "at": 6792.400000035763,
+        "ms": 1.7999999523162842
+      },
+      {
+        "at": 6825,
+        "ms": 1.699999988079071
+      },
+      {
+        "at": 6870.199999988079,
+        "ms": 1.9000000357627869
+      },
+      {
+        "at": 6892.100000023842,
+        "ms": 1.5
+      },
+      {
+        "at": 6921.699999988079,
+        "ms": 1.5
+      },
+      {
+        "at": 6936.5,
+        "ms": 1.4000000357627869
+      },
+      {
+        "at": 6963,
+        "ms": 1.699999988079071
+      },
+      {
+        "at": 6987,
+        "ms": 2.100000023841858
+      },
+      {
+        "at": 7003.300000011921,
+        "ms": 1.600000023841858
+      },
+      {
+        "at": 7032.800000011921,
+        "ms": 1.5
+      },
+      {
+        "at": 7055.600000023842,
+        "ms": 1.5
+      },
+      {
+        "at": 7107.5,
+        "ms": 1.600000023841858
+      },
+      {
+        "at": 7146.900000035763,
+        "ms": 1.699999988079071
+      },
+      {
+        "at": 7176.5,
+        "ms": 1.800000011920929
+      },
+      {
+        "at": 7207.5,
+        "ms": 1.699999988079071
+      },
+      {
+        "at": 7224,
+        "ms": 1.300000011920929
+      },
+      {
+        "at": 7252.199999988079,
+        "ms": 1.4000000357627869
+      },
+      {
+        "at": 7291.199999988079,
+        "ms": 2.100000023841858
+      },
+      {
+        "at": 7345.300000011921,
+        "ms": 2
+      },
+      {
+        "at": 7379.300000011921,
+        "ms": 1.600000023841858
+      },
+      {
+        "at": 7403.600000023842,
+        "ms": 1.800000011920929
+      },
+      {
+        "at": 7420.100000023842,
+        "ms": 1.800000011920929
+      },
+      {
+        "at": 7457.800000011921,
+        "ms": 2
+      },
+      {
+        "at": 7496.900000035763,
+        "ms": 1.5999999642372131
+      },
+      {
+        "at": 7541.800000011921,
+        "ms": 1.800000011920929
+      },
+      {
+        "at": 7557.900000035763,
+        "ms": 1.5
+      },
+      {
+        "at": 7583.800000011921,
+        "ms": 1.600000023841858
+      },
+      {
+        "at": 7612,
+        "ms": 1.9000000357627869
+      },
+      {
+        "at": 7645.199999988079,
+        "ms": 2
+      },
+      {
+        "at": 7667.900000035763,
+        "ms": 1.5999999642372131
+      },
+      {
+        "at": 7696.300000011921,
+        "ms": 1.600000023841858
+      },
+      {
+        "at": 7720.600000023842,
+        "ms": 1.800000011920929
+      },
+      {
+        "at": 7759.900000035763,
+        "ms": 1.699999988079071
+      },
+      {
+        "at": 7784.199999988079,
+        "ms": 1.7000000476837158
+      },
+      {
+        "at": 7824.300000011921,
+        "ms": 1.600000023841858
+      },
+      {
+        "at": 7863.900000035763,
+        "ms": 2.199999988079071
+      },
+      {
+        "at": 7901.5,
+        "ms": 2
+      },
+      {
+        "at": 7978.699999988079,
+        "ms": 1.800000011920929
+      },
+      {
+        "at": 8074.600000023842,
+        "ms": 1.899999976158142
+      },
+      {
+        "at": 8134.900000035763,
+        "ms": 1.899999976158142
+      },
+      {
+        "at": 8188.699999988079,
+        "ms": 1.5
+      },
+      {
+        "at": 8213.600000023842,
+        "ms": 1.5
+      },
+      {
+        "at": 8241.100000023842,
+        "ms": 1.899999976158142
+      },
+      {
+        "at": 8265.600000023842,
+        "ms": 1.399999976158142
+      },
+      {
+        "at": 8303.699999988079,
+        "ms": 1.5
+      },
+      {
+        "at": 8337.699999988079,
+        "ms": 1.4000000357627869
+      },
+      {
+        "at": 8365.600000023842,
+        "ms": 1.5
+      },
+      {
+        "at": 8387.300000011921,
+        "ms": 1.399999976158142
+      },
+      {
+        "at": 8420.199999988079,
+        "ms": 1.7000000476837158
+      },
+      {
+        "at": 8442.5,
+        "ms": 1.699999988079071
+      },
+      {
+        "at": 8467.699999988079,
+        "ms": 1.4000000357627869
+      },
+      {
+        "at": 8490.699999988079,
+        "ms": 2.100000023841858
+      },
+      {
+        "at": 8516.600000023842,
+        "ms": 1.399999976158142
+      },
+      {
+        "at": 8532.600000023842,
+        "ms": 1.5999999642372131
+      },
+      {
+        "at": 8554.199999988079,
+        "ms": 1.5
+      },
+      {
+        "at": 8575,
+        "ms": 1.4000000357627869
+      },
+      {
+        "at": 8600.5,
+        "ms": 1.5
+      },
+      {
+        "at": 8621.600000023842,
+        "ms": 1.300000011920929
+      },
+      {
+        "at": 8643.100000023842,
+        "ms": 1.5
+      },
+      {
+        "at": 8667.5,
+        "ms": 1.5
+      },
+      {
+        "at": 8683.199999988079,
+        "ms": 1.5
+      },
+      {
+        "at": 8696.699999988079,
+        "ms": 1.4000000357627869
+      },
+      {
+        "at": 8724.5,
+        "ms": 1.9000000357627869
+      },
+      {
+        "at": 8745.5,
+        "ms": 1.699999988079071
+      },
+      {
+        "at": 8767.900000035763,
+        "ms": 1.5999999642372131
+      },
+      {
+        "at": 8792.800000011921,
+        "ms": 1.5
+      },
+      {
+        "at": 8811.600000023842,
+        "ms": 1.5
+      },
+      {
+        "at": 8836.600000023842,
+        "ms": 1.199999988079071
+      },
+      {
+        "at": 8853.900000035763,
+        "ms": 1.399999976158142
+      },
+      {
+        "at": 8876.199999988079,
+        "ms": 1.7000000476837158
+      },
+      {
+        "at": 8903.400000035763,
+        "ms": 1.5
+      },
+      {
+        "at": 8933.5,
+        "ms": 1.5
+      },
+      {
+        "at": 8979.800000011921,
+        "ms": 1.600000023841858
+      },
+      {
+        "at": 9003.199999988079,
+        "ms": 1.7000000476837158
+      },
+      {
+        "at": 9030.800000011921,
+        "ms": 1.5
+      },
+      {
+        "at": 9066.900000035763,
+        "ms": 1.5999999642372131
+      },
+      {
+        "at": 9092.800000011921,
+        "ms": 1.5
+      },
+      {
+        "at": 9117,
+        "ms": 1.5
+      },
+      {
+        "at": 9141,
+        "ms": 1.800000011920929
+      },
+      {
+        "at": 9157.300000011921,
+        "ms": 1.300000011920929
+      },
+      {
+        "at": 9170.199999988079,
+        "ms": 1.600000023841858
+      },
+      {
+        "at": 9192.199999988079,
+        "ms": 1.5
+      },
+      {
+        "at": 9216.199999988079,
+        "ms": 1.600000023841858
+      },
+      {
+        "at": 9242.600000023842,
+        "ms": 1.399999976158142
+      },
+      {
+        "at": 9268.400000035763,
+        "ms": 1.699999988079071
+      },
+      {
+        "at": 9299.800000011921,
+        "ms": 1.699999988079071
+      },
+      {
+        "at": 9318,
+        "ms": 1.4000000357627869
+      },
+      {
+        "at": 9338.800000011921,
+        "ms": 1.300000011920929
+      },
+      {
+        "at": 9353.900000035763,
+        "ms": 1.2999999523162842
+      },
+      {
+        "at": 9369.900000035763,
+        "ms": 1.5999999642372131
+      },
+      {
+        "at": 9384.800000011921,
+        "ms": 1.399999976158142
+      },
+      {
+        "at": 9400.300000011921,
+        "ms": 1.300000011920929
+      },
+      {
+        "at": 9411.800000011921,
+        "ms": 1.300000011920929
+      },
+      {
+        "at": 9426.300000011921,
+        "ms": 1.300000011920929
+      },
+      {
+        "at": 9442,
+        "ms": 1.300000011920929
+      },
+      {
+        "at": 9459.5,
+        "ms": 1.300000011920929
+      },
+      {
+        "at": 9474.300000011921,
+        "ms": 1.600000023841858
+      },
+      {
+        "at": 9488,
+        "ms": 1.199999988079071
+      },
+      {
+        "at": 9506,
+        "ms": 1.600000023841858
+      },
+      {
+        "at": 9528.300000011921,
+        "ms": 1.899999976158142
+      },
+      {
+        "at": 9546.800000011921,
+        "ms": 1.600000023841858
+      },
+      {
+        "at": 9570.199999988079,
+        "ms": 1.800000011920929
+      },
+      {
+        "at": 9599.800000011921,
+        "ms": 1.600000023841858
+      },
+      {
+        "at": 9636.5,
+        "ms": 1.4000000357627869
+      },
+      {
+        "at": 9659.400000035763,
+        "ms": 1.5999999642372131
+      },
+      {
+        "at": 9680.100000023842,
+        "ms": 1.5
+      },
+      {
+        "at": 9711.800000011921,
+        "ms": 1.899999976158142
+      },
+      {
+        "at": 9749.5,
+        "ms": 1.800000011920929
+      },
+      {
+        "at": 9790.699999988079,
+        "ms": 1.4000000357627869
+      },
+      {
+        "at": 9812.100000023842,
+        "ms": 1.699999988079071
+      },
+      {
+        "at": 9840.800000011921,
+        "ms": 1.699999988079071
+      },
+      {
+        "at": 9870.300000011921,
+        "ms": 1.800000011920929
+      },
+      {
+        "at": 9901.400000035763,
+        "ms": 1.5999999642372131
+      },
+      {
+        "at": 9938.199999988079,
+        "ms": 1.600000023841858
+      },
+      {
+        "at": 9964.300000011921,
+        "ms": 1.5
+      },
+      {
+        "at": 9987.800000011921,
+        "ms": 1.399999976158142
+      },
+      {
+        "at": 10007.900000035763,
+        "ms": 1.399999976158142
+      },
+      {
+        "at": 10042.5,
+        "ms": 1.600000023841858
+      },
+      {
+        "at": 10068.199999988079,
+        "ms": 1.800000011920929
+      },
+      {
+        "at": 10099.400000035763,
+        "ms": 1.5999999642372131
+      },
+      {
+        "at": 10125.600000023842,
+        "ms": 1.5
+      },
+      {
+        "at": 10153.400000035763,
+        "ms": 1.399999976158142
+      },
+      {
+        "at": 10175.300000011921,
+        "ms": 1.399999976158142
+      },
+      {
+        "at": 10190.800000011921,
+        "ms": 1.699999988079071
+      },
+      {
+        "at": 10228.199999988079,
+        "ms": 1.7000000476837158
+      },
+      {
+        "at": 10251.199999988079,
+        "ms": 1.5
+      },
+      {
+        "at": 10275.400000035763,
+        "ms": 1.5
+      },
+      {
+        "at": 10295.699999988079,
+        "ms": 1.5
+      },
+      {
+        "at": 10333.5,
+        "ms": 1.5
+      },
+      {
+        "at": 10358.100000023842,
+        "ms": 1.5
+      },
+      {
+        "at": 10386.600000023842,
+        "ms": 1.5
+      },
+      {
+        "at": 10411.5,
+        "ms": 1.5
+      },
+      {
+        "at": 10440.900000035763,
+        "ms": 1.5
+      },
+      {
+        "at": 10471.400000035763,
+        "ms": 1.899999976158142
+      },
+      {
+        "at": 10509.400000035763,
+        "ms": 1.399999976158142
+      },
+      {
+        "at": 10536.800000011921,
+        "ms": 1.399999976158142
+      },
+      {
+        "at": 10571.199999988079,
+        "ms": 1.600000023841858
+      },
+      {
+        "at": 10594.800000011921,
+        "ms": 1.5
+      },
+      {
+        "at": 10624.100000023842,
+        "ms": 1.5999999642372131
+      },
+      {
+        "at": 10649.800000011921,
+        "ms": 1.5
+      },
+      {
+        "at": 10670.900000035763,
+        "ms": 1.5999999642372131
+      },
+      {
+        "at": 10696.699999988079,
+        "ms": 1.5
+      },
+      {
+        "at": 10719.900000035763,
+        "ms": 2.399999976158142
+      },
+      {
+        "at": 10739,
+        "ms": 2.300000011920929
+      },
+      {
+        "at": 10755.300000011921,
+        "ms": 1.399999976158142
+      },
+      {
+        "at": 10770.199999988079,
+        "ms": 1.9000000357627869
+      },
+      {
+        "at": 10804.699999988079,
+        "ms": 2
+      },
+      {
+        "at": 10855.199999988079,
+        "ms": 2.300000011920929
+      },
+      {
+        "at": 10926.800000011921,
+        "ms": 1.699999988079071
+      },
+      {
+        "at": 11003.5,
+        "ms": 1.300000011920929
+      },
+      {
+        "at": 11041.699999988079,
+        "ms": 1.5
+      },
+      {
+        "at": 11067.699999988079,
+        "ms": 1.5
+      },
+      {
+        "at": 11090.800000011921,
+        "ms": 1.600000023841858
+      },
+      {
+        "at": 11126.100000023842,
+        "ms": 1.399999976158142
+      },
+      {
+        "at": 11149.800000011921,
+        "ms": 2.199999988079071
+      },
+      {
+        "at": 11197.600000023842,
+        "ms": 1.899999976158142
+      },
+      {
+        "at": 11232.400000035763,
+        "ms": 1.5
+      },
+      {
+        "at": 11256.300000011921,
+        "ms": 2.199999988079071
+      },
+      {
+        "at": 11288.300000011921,
+        "ms": 1.5
+      },
+      {
+        "at": 11321.199999988079,
+        "ms": 1.800000011920929
+      },
+      {
+        "at": 11345.800000011921,
+        "ms": 1.399999976158142
+      },
+      {
+        "at": 11380.199999988079,
+        "ms": 1.600000023841858
+      },
+      {
+        "at": 11420.699999988079,
+        "ms": 1.5
+      },
+      {
+        "at": 11447.699999988079,
+        "ms": 1.5
+      },
+      {
+        "at": 11471.400000035763,
+        "ms": 1.5
+      },
+      {
+        "at": 11501.400000035763,
+        "ms": 1.5999999642372131
+      },
+      {
+        "at": 11534.800000011921,
+        "ms": 1.399999976158142
+      },
+      {
+        "at": 11564,
+        "ms": 1.5
+      },
+      {
+        "at": 11579.400000035763,
+        "ms": 1.5999999642372131
+      },
+      {
+        "at": 11601.400000035763,
+        "ms": 1.5999999642372131
+      },
+      {
+        "at": 11654.400000035763,
+        "ms": 2
+      },
+      {
+        "at": 11728.900000035763,
+        "ms": 1.5
+      },
+      {
+        "at": 11853.400000035763,
+        "ms": 1.899999976158142
+      },
+      {
+        "at": 11906.199999988079,
+        "ms": 2
+      },
+      {
+        "at": 11949,
+        "ms": 1.5
+      },
+      {
+        "at": 11989.199999988079,
+        "ms": 1.4000000357627869
+      },
+      {
+        "at": 12019.900000035763,
+        "ms": 1.699999988079071
+      },
+      {
+        "at": 12056.100000023842,
+        "ms": 1.899999976158142
+      },
+      {
+        "at": 12086.5,
+        "ms": 1.4000000357627869
+      },
+      {
+        "at": 12117.199999988079,
+        "ms": 1.5
+      },
+      {
+        "at": 12159.5,
+        "ms": 1.600000023841858
+      },
+      {
+        "at": 12178.5,
+        "ms": 1.800000011920929
+      },
+      {
+        "at": 12213.5,
+        "ms": 1.600000023841858
+      },
+      {
+        "at": 12226.600000023842,
+        "ms": 1.300000011920929
+      },
+      {
+        "at": 12246.900000035763,
+        "ms": 1.699999988079071
+      },
+      {
+        "at": 12266.400000035763,
+        "ms": 1.7999999523162842
+      },
+      {
+        "at": 12307.800000011921,
+        "ms": 1.699999988079071
+      },
+      {
+        "at": 12332.600000023842,
+        "ms": 1.899999976158142
+      },
+      {
+        "at": 12357.300000011921,
+        "ms": 1.5
+      },
+      {
+        "at": 12394.900000035763,
+        "ms": 1.5
+      },
+      {
+        "at": 12421.400000035763,
+        "ms": 1.5
+      },
+      {
+        "at": 12445.400000035763,
+        "ms": 1.5
+      },
+      {
+        "at": 12462.100000023842,
+        "ms": 1.399999976158142
+      },
+      {
+        "at": 12484.100000023842,
+        "ms": 1.5
+      },
+      {
+        "at": 12520.199999988079,
+        "ms": 1.600000023841858
+      },
+      {
+        "at": 12536.800000011921,
+        "ms": 1.899999976158142
+      },
+      {
+        "at": 12572.699999988079,
+        "ms": 1.9000000357627869
+      },
+      {
+        "at": 12597.300000011921,
+        "ms": 1.5
+      },
+      {
+        "at": 12626.5,
+        "ms": 2.199999988079071
+      },
+      {
+        "at": 12662.5,
+        "ms": 1.5
+      },
+      {
+        "at": 12684.600000023842,
+        "ms": 2.099999964237213
+      },
+      {
+        "at": 12718.400000035763,
+        "ms": 2.099999964237213
+      },
+      {
+        "at": 12751.600000023842,
+        "ms": 1.5
+      },
+      {
+        "at": 12776.199999988079,
+        "ms": 1.600000023841858
+      },
+      {
+        "at": 12820.300000011921,
+        "ms": 1.800000011920929
+      },
+      {
+        "at": 12842.800000011921,
+        "ms": 1.5
+      },
+      {
+        "at": 12861.900000035763,
+        "ms": 1.5
+      },
+      {
+        "at": 12898.900000035763,
+        "ms": 1.5999999642372131
+      },
+      {
+        "at": 12941.400000035763,
+        "ms": 1.7999999523162842
+      },
+      {
+        "at": 12995.800000011921,
+        "ms": 1.600000023841858
+      },
+      {
+        "at": 13055.699999988079,
+        "ms": 1.600000023841858
+      },
+      {
+        "at": 13099.699999988079,
+        "ms": 1.7000000476837158
+      },
+      {
+        "at": 13154,
+        "ms": 1.4000000357627869
+      },
+      {
+        "at": 13192,
+        "ms": 1.5
+      },
+      {
+        "at": 13229.400000035763,
+        "ms": 1.5999999642372131
+      },
+      {
+        "at": 13254.199999988079,
+        "ms": 1.5
+      },
+      {
+        "at": 13291,
+        "ms": 1.9000000357627869
+      },
+      {
+        "at": 13316.199999988079,
+        "ms": 2
+      },
+      {
+        "at": 13342.900000035763,
+        "ms": 1.699999988079071
+      },
+      {
+        "at": 13362.699999988079,
+        "ms": 1.300000011920929
+      },
+      {
+        "at": 13391.400000035763,
+        "ms": 1.899999976158142
+      },
+      {
+        "at": 13417.199999988079,
+        "ms": 1.9000000357627869
+      },
+      {
+        "at": 13432.300000011921,
+        "ms": 1.600000023841858
+      },
+      {
+        "at": 13457.600000023842,
+        "ms": 1.800000011920929
+      },
+      {
+        "at": 13474.900000035763,
+        "ms": 1.2999999523162842
+      },
+      {
+        "at": 13480.400000035763,
+        "ms": 1.2999999523162842
+      },
+      {
+        "at": 13499.199999988079,
+        "ms": 1.9000000357627869
+      },
+      {
+        "at": 13517.400000035763,
+        "ms": 1.5
+      },
+      {
+        "at": 13542.600000023842,
+        "ms": 1.699999988079071
+      },
+      {
+        "at": 13550.600000023842,
+        "ms": 1.699999988079071
+      },
+      {
+        "at": 13564.100000023842,
+        "ms": 1.199999988079071
+      },
+      {
+        "at": 13578.600000023842,
+        "ms": 1.5
+      },
+      {
+        "at": 13599.300000011921,
+        "ms": 1.899999976158142
+      },
+      {
+        "at": 13630,
+        "ms": 1.4000000357627869
+      },
+      {
+        "at": 13650.600000023842,
+        "ms": 1.699999988079071
+      },
+      {
+        "at": 13684.199999988079,
+        "ms": 1.7000000476837158
+      },
+      {
+        "at": 13712.100000023842,
+        "ms": 1.5
+      },
+      {
+        "at": 13737.100000023842,
+        "ms": 1.300000011920929
+      },
+      {
+        "at": 13763.900000035763,
+        "ms": 1.399999976158142
+      },
+      {
+        "at": 13809.699999988079,
+        "ms": 1.5
+      },
+      {
+        "at": 13853.300000011921,
+        "ms": 1.699999988079071
+      },
+      {
+        "at": 13890.699999988079,
+        "ms": 1.5
+      },
+      {
+        "at": 13924.199999988079,
+        "ms": 2
+      },
+      {
+        "at": 13954.100000023842,
+        "ms": 1.5
+      },
+      {
+        "at": 13995.300000011921,
+        "ms": 2.100000023841858
+      },
+      {
+        "at": 14024.699999988079,
+        "ms": 1.5
+      },
+      {
+        "at": 14062,
+        "ms": 1.600000023841858
+      },
+      {
+        "at": 14101.600000023842,
+        "ms": 1.899999976158142
+      },
+      {
+        "at": 14132.400000035763,
+        "ms": 1.7999999523162842
+      },
+      {
+        "at": 14163.400000035763,
+        "ms": 1.5999999642372131
+      },
+      {
+        "at": 14191.600000023842,
+        "ms": 1.899999976158142
+      },
+      {
+        "at": 14224.800000011921,
+        "ms": 2
+      },
+      {
+        "at": 14253.699999988079,
+        "ms": 1.9000000357627869
+      },
+      {
+        "at": 14288.600000023842,
+        "ms": 1.5999999642372131
+      },
+      {
+        "at": 14332.699999988079,
+        "ms": 1.5
+      },
+      {
+        "at": 14370.5,
+        "ms": 1.600000023841858
+      },
+      {
+        "at": 14405.600000023842,
+        "ms": 1.699999988079071
+      },
+      {
+        "at": 14424.800000011921,
+        "ms": 1.399999976158142
+      },
+      {
+        "at": 14447.300000011921,
+        "ms": 1.600000023841858
+      },
+      {
+        "at": 14489.5,
+        "ms": 1.699999988079071
+      },
+      {
+        "at": 14519.900000035763,
+        "ms": 1.699999988079071
+      },
+      {
+        "at": 14557.300000011921,
+        "ms": 1.5
+      },
+      {
+        "at": 14580.400000035763,
+        "ms": 1.5
+      },
+      {
+        "at": 14615.699999988079,
+        "ms": 2
+      },
+      {
+        "at": 14643.5,
+        "ms": 1.600000023841858
+      },
+      {
+        "at": 14675.800000011921,
+        "ms": 1.800000011920929
+      },
+      {
+        "at": 14704.5,
+        "ms": 1.9000000357627869
+      },
+      {
+        "at": 14729.699999988079,
+        "ms": 1.600000023841858
+      },
+      {
+        "at": 14769.900000035763,
+        "ms": 1.7999999523162842
+      },
+      {
+        "at": 14791.100000023842,
+        "ms": 1.699999988079071
+      },
+      {
+        "at": 14807.5,
+        "ms": 1.4000000357627869
+      },
+      {
+        "at": 14842.5,
+        "ms": 1.699999988079071
+      },
+      {
+        "at": 14866.699999988079,
+        "ms": 1.4000000357627869
+      },
+      {
+        "at": 14892.699999988079,
+        "ms": 1.800000011920929
+      },
+      {
+        "at": 14907.600000023842,
+        "ms": 1.5999999642372131
+      },
+      {
+        "at": 14929.5,
+        "ms": 1.600000023841858
+      },
+      {
+        "at": 14955,
+        "ms": 1.600000023841858
+      },
+      {
+        "at": 14979.699999988079,
+        "ms": 1.5
+      },
+      {
+        "at": 14995.5,
+        "ms": 1.300000011920929
+      }
+    ],
+    "saveCaptures": [
+      {
+        "at": 2850,
+        "ms": 5.100000023841858,
+        "bytes": 1904528,
+        "files": 256
+      },
+      {
+        "at": 7849.600000023842,
+        "ms": 4.599999964237213,
+        "bytes": 1904528,
+        "files": 256
+      },
+      {
+        "at": 12849.400000035763,
+        "ms": 4.5,
+        "bytes": 1904528,
+        "files": 256
+      }
+    ]
+  },
+  "frameGapMs": {
+    "samples": 514,
+    "p50": 25.099999999998545,
+    "p95": 45.900000000001455,
+    "p99": 75,
+    "max": 125,
+    "over33": 122,
+    "over50": 20,
+    "over100": 1
+  },
+  "nativeCallbackMs": {
+    "samples": 515,
+    "p50": 1.600000023841858,
+    "p95": 2.100000023841858,
+    "p99": 2.199999988079071,
+    "max": 3.600000023841858,
+    "over33": 0,
+    "over50": 0,
+    "over100": 0
+  },
+  "saveCaptureMs": {
+    "samples": 3,
+    "p50": 4.599999964237213,
+    "p95": 5.100000023841858,
+    "p99": 5.100000023841858,
+    "max": 5.100000023841858,
+    "over33": 0,
+    "over50": 0,
+    "over100": 0
+  },
+  "averageObservedRAFHz": 34.304630457706544,
+  "limitations": "rAF scheduling is not native/delivered FPS or GPU completion. Native callback CPU excludes browser compositor/GPU completion. Capture CPU includes the full unchanged synchronous file walk and byte copies; it does not measure async worker/IndexedDB latency. Scenario/speed/crowd require caller fixture and screenshot evidence. raf-only restores original native callback and disables capture timing; it is an observer-overhead control.",
+  "status": "PASS measurement preconditions; not a performance-budget verdict",
+  "validationErrors": [],
+  "serverManifestAtReceipt": {
+    "schemaVersion": 2,
+    "engineId": "0.2.6-web-scrap.1",
+    "engineWasmSha256": "a9b1cc5296b9bcb5f4045b18f9bb30c6ae95823a2658afb6a3ea5a70932f6102",
+    "engineWasmMatchesMetadata": true,
+    "serverSha256": "12998a23837b556ba40914e8baed2f46bcb789e980a6e280c4f1061c7c33100a",
+    "serverFileMatchesRunningCode": true,
+    "probeSha256": "f5f9309cc585fd6ea6aad44f84c5c2552b682b21fd4769578693f321154ba99b",
+    "saveStorageBaseSha256": "e46cef9257f3608f0edbd1af4c0424e09665aa919aed5e5e16d234045ef1c49c",
+    "saveStorageServedSha256": "0ca8a5caf1e426ac8c634a452471e3542905c9226b00639676b32d06463f5936",
+    "files": {
+      "audio-controls.js": {
+        "baseSha256": "95e6a1b3e7ccae54ee797e8ed3b63668b672ee51f55978dc4d29231ec225a343",
+        "servedSha256": "95e6a1b3e7ccae54ee797e8ed3b63668b672ee51f55978dc4d29231ec225a343",
+        "baseBytes": 12216,
+        "servedBytes": 12216
+      },
+      "bundled-assets.js": {
+        "baseSha256": "07449dfe0aca7efb7888c62d598b54dc0be5cdfaadab6961e5f9977f87db6e8c",
+        "servedSha256": "07449dfe0aca7efb7888c62d598b54dc0be5cdfaadab6961e5f9977f87db6e8c",
+        "baseBytes": 8188,
+        "servedBytes": 8188
+      },
+      "game-assets/manifest.json": {
+        "baseSha256": "5488eb8cf5d38d2d999e29a5b3aca45ecff02f8ee49356ccb327de8676111dc4",
+        "servedSha256": "5488eb8cf5d38d2d999e29a5b3aca45ecff02f8ee49356ccb327de8676111dc4",
+        "baseBytes": 3176,
+        "servedBytes": 3176
+      },
+      "game/engine-provenance.json": {
+        "baseSha256": "0887d3b4c24f8db8ae7283453663756bbc2937cf7f5559eb8a72639c95af56b1",
+        "servedSha256": "0887d3b4c24f8db8ae7283453663756bbc2937cf7f5559eb8a72639c95af56b1",
+        "baseBytes": 163348,
+        "servedBytes": 163348
+      },
+      "game/pvz-portable.js": {
+        "baseSha256": "ea0dda8ee8444491421cd9e1b9ee600d8e98292e4c726d7d466383e5c6c7ef6e",
+        "servedSha256": "ea0dda8ee8444491421cd9e1b9ee600d8e98292e4c726d7d466383e5c6c7ef6e",
+        "baseBytes": 209600,
+        "servedBytes": 209600
+      },
+      "game/pvz-portable.wasm": {
+        "baseSha256": "a9b1cc5296b9bcb5f4045b18f9bb30c6ae95823a2658afb6a3ea5a70932f6102",
+        "servedSha256": "a9b1cc5296b9bcb5f4045b18f9bb30c6ae95823a2658afb6a3ea5a70932f6102",
+        "baseBytes": 7791069,
+        "servedBytes": 7791069
+      },
+      "index.html": {
+        "baseSha256": "f56a31ed4f47a3b6fac6a980ce6a58bf6eeb522580400ddd776e180538a5df3a",
+        "servedSha256": "f56a31ed4f47a3b6fac6a980ce6a58bf6eeb522580400ddd776e180538a5df3a",
+        "baseBytes": 6441,
+        "servedBytes": 6441
+      },
+      "launcher.js": {
+        "baseSha256": "9e41170068f913e8f966d650953972a311f57e7efb6241340fa6c5a349d3cfdd",
+        "servedSha256": "9e41170068f913e8f966d650953972a311f57e7efb6241340fa6c5a349d3cfdd",
+        "baseBytes": 10755,
+        "servedBytes": 10755
+      },
+      "loader.js": {
+        "baseSha256": "a183ed4e17810de2431989f3ebc263d2f511d1514c53e73c8933b8486bced73a",
+        "servedSha256": "a183ed4e17810de2431989f3ebc263d2f511d1514c53e73c8933b8486bced73a",
+        "baseBytes": 10670,
+        "servedBytes": 10670
+      },
+      "original-ui.js": {
+        "baseSha256": "a8f0aab63956a0280f03520671b712c2709da353c287be430592c64ba91ffe5b",
+        "servedSha256": "a8f0aab63956a0280f03520671b712c2709da353c287be430592c64ba91ffe5b",
+        "baseBytes": 2774,
+        "servedBytes": 2774
+      },
+      "port.css": {
+        "baseSha256": "6020b3fb0e1517aa9c9c1bab93873cf5c5c9f2204e3c0d9f3335853789e6b821",
+        "servedSha256": "6020b3fb0e1517aa9c9c1bab93873cf5c5c9f2204e3c0d9f3335853789e6b821",
+        "baseBytes": 11410,
+        "servedBytes": 11410
+      },
+      "runtime.js": {
+        "baseSha256": "00be9ed6d36fb02a51ca5cc2ade9f7fc44a69218940bd61e11410fb0ec6fa07a",
+        "servedSha256": "00be9ed6d36fb02a51ca5cc2ade9f7fc44a69218940bd61e11410fb0ec6fa07a",
+        "baseBytes": 763,
+        "servedBytes": 763
+      },
+      "save-recovery.js": {
+        "baseSha256": "eff0eb9325e0bdc18c1f76582e9f260a07ffbf680b3ada25763f1972204e84bf",
+        "servedSha256": "eff0eb9325e0bdc18c1f76582e9f260a07ffbf680b3ada25763f1972204e84bf",
+        "baseBytes": 4921,
+        "servedBytes": 4921
+      },
+      "save-storage-core.js": {
+        "baseSha256": "5473e221a0b86818835a9ed5a1b473d718ae14da9838c7e37d99bdef48203bee",
+        "servedSha256": "5473e221a0b86818835a9ed5a1b473d718ae14da9838c7e37d99bdef48203bee",
+        "baseBytes": 13211,
+        "servedBytes": 13211
+      },
+      "save-storage-worker.js": {
+        "baseSha256": "4951c5dd05dcc2c79dd99f4ddeba19935ffd23a69dd6726e4b4e1b819772a246",
+        "servedSha256": "4951c5dd05dcc2c79dd99f4ddeba19935ffd23a69dd6726e4b4e1b819772a246",
+        "baseBytes": 1864,
+        "servedBytes": 1864
+      },
+      "save-storage.js": {
+        "baseSha256": "e46cef9257f3608f0edbd1af4c0424e09665aa919aed5e5e16d234045ef1c49c",
+        "servedSha256": "0ca8a5caf1e426ac8c634a452471e3542905c9226b00639676b32d06463f5936",
+        "baseBytes": 9518,
+        "servedBytes": 9751
+      },
+      "save-transfer.js": {
+        "baseSha256": "de0c5b67863c8f307906d4d1c739b05ef0d32d5f854a8d77581750a37dd6f314",
+        "servedSha256": "de0c5b67863c8f307906d4d1c739b05ef0d32d5f854a8d77581750a37dd6f314",
+        "baseBytes": 16375,
+        "servedBytes": 16375
+      },
+      "steam-compat.js": {
+        "baseSha256": "ace261bed202e3f99a242ac6b6dc2f532c1967d1b803a0e91a38461db44311eb",
+        "servedSha256": "ace261bed202e3f99a242ac6b6dc2f532c1967d1b803a0e91a38461db44311eb",
+        "baseBytes": 5185,
+        "servedBytes": 5185
+      },
+      "test-profiles.js": {
+        "baseSha256": "b93318eb4738b199d39dbf10ad6313e11fd2350dc4526c64216b2a13c27e1ce0",
+        "servedSha256": "b93318eb4738b199d39dbf10ad6313e11fd2350dc4526c64216b2a13c27e1ce0",
+        "baseBytes": 10112,
+        "servedBytes": 10112
+      }
+    },
+    "nativeHook": {
+      "supported": true,
+      "global": "MainLoop",
+      "method": "runIter",
+      "source": "MainLoop.runIter(iterFunc) / callUserCallback(func)"
+    },
+    "htmlInstrumentation": "Original index bytes are pinned; local JSON manifest/probe tags are added before other head content."
+  }
+}

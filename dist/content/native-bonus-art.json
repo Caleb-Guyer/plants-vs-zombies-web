@@ -160,6 +160,16 @@
       "gameplay": "An endless pool conveyor for building a lasting defense with original Repeater, Threepeater, Tall-nut, Torchwood, Spikeweed and Lily Pad, plus Squash, Tangle Kelp, Cherry Bomb and Jalapeno. Six opening packets establish the lawn; escalating varied land and water waves preserve native flags, saved games and a separate full-width best record.",
       "artwork": "The complete original Dolphin Rider in its native riding pose is uniformly fitted inside68 by57 pixels and centered in the80 by65 Bonus picture. The original pool backdrop and IMAGE_POOL water are composited at the native software-pool position before cropping. No redrawn parts, generated image or reused Survival thumbnail.",
       "interface": "Original conveyor and seed packets, original shovel for rebuilding, Menu, speed and pause controls, Survival flag counter, progress meter and footer. Brief original flag-clear and huge-wave advice stays behind Pause and dialogs. A compact original Brianne12 Best stamp occupies only the portrait bottom, leaving the Dolphin hero and title clear; large records use readable k/m/b abbreviations while full uint32 totals remain stored. Every stock Survival card keeps its original rendering. No extra persistent HUD or tips below cards."
+    },
+    {
+      "mode": 88,
+      "name": "Scrap Yard",
+      "hero": "Original REANIM_MAGNETSHROOM idle rig with original IMAGE_REANIM_ZOMBIE_BUCKET1 and IMAGE_REANIM_ZOMBIE_LADDER_1 recovered metal",
+      "background": "IMAGE_BACKGROUND2",
+      "generatedArtworkUsed": false,
+      "gameplay": "A six-formation nighttime defense built around original Magnet-shrooms. Collect native sun released by successful metal pulls, then spend it on the fixed Magnet-shroom, Wall-nut, Cherry Bomb, Jalapeno and Squash bank. Original metal removal, armor, plant costs, recharge, attacks, mowers and finite completion rules remain active.",
+      "artwork": "The complete original Magnet-shroom sits beside original recovered Buckethead and Ladder Zombie parts. All native parts retain their painted edges and aspect ratios; the complete composition is fitted once within the centered68 by57 hero bounds inside the original80 by65 Bonus picture. No generated illustration or reused Survival thumbnail.",
+      "interface": "Name-only sixteenth Bonus card in the first column of the native fourth row. Original fixed seed bank, sun counter, shovel, Menu, speed and pause controls, wave meter and native footer. No persistent challenge tips, score counter or additional HUD."
     }
   ],
   "canvas": {

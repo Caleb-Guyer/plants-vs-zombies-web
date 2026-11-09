@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "purpose": "Retained actual-browser CPU and scheduling observations, not GPU presentation or earned progression.",
   "engine": {
-    "id": "0.2.6-web-endless.3",
-    "jsSha256": "f68adcd086c6eefc01fe4d856f69a0971c7a0de26e997c7a7a8738f165bc8c76",
-    "wasmSha256": "ba915021d3574aca8b3a95578320a0f9bce0dc6fad1f7fed147260b3ee7de60b"
+    "id": "0.2.6-web-scrap.1",
+    "jsSha256": "ea0dda8ee8444491421cd9e1b9ee600d8e98292e4c726d7d466383e5c6c7ef6e",
+    "wasmSha256": "a9b1cc5296b9bcb5f4045b18f9bb30c6ae95823a2658afb6a3ea5a70932f6102"
   },
   "probe": {
     "path": "tests/performance/probe.js",
@@ -12,14 +12,14 @@
     "sha256": "f5f9309cc585fd6ea6aad44f84c5c2552b682b21fd4769578693f321154ba99b"
   },
   "recorder": {
-    "path": "tests/performance/recorded-preview.py",
-    "bytes": 8088,
-    "sha256": "8be4afca064d280802b4286c4c7d5fdde23955349893d5dda729a807c7c563bb"
+    "path": "tests/performance/preview.py",
+    "bytes": 9024,
+    "sha256": "12998a23837b556ba40914e8baed2f46bcb789e980a6e280c4f1061c7c33100a"
   },
   "expectedManifest": {
     "path": "tests/fixtures/performance/capture-manifest.json",
-    "bytes": 6047,
-    "sha256": "4a233c31ba90df849c9824e5f68e8f71896cbba36e53c9239cd83d40dc119055"
+    "bytes": 5913,
+    "sha256": "52dd4ea821e23aaacbff5ab2ae6e0c1e9fb2885d2ffba7260d95371c3fcdf103"
   },
   "checkpoints": {
     "path": "tests/fixtures/performance/checkpoints.json",
@@ -53,7 +53,7 @@
     "viewport": {
       "width": 1280,
       "height": 720,
-      "dpr": 1.5
+      "dpr": 1
     },
     "canvas": {
       "width": 800,
@@ -64,11 +64,11 @@
   },
   "cases": [
     {
-      "label": "v2-active20-early-1x-native",
+      "label": "v2-scrap1-final-release-active20-early-1x-native",
       "report": {
-        "path": "tests/fixtures/performance/captures/v2-active20-early-1x-native.json",
-        "bytes": 349750,
-        "sha256": "9628f747f54276e0e6ef5543201d84eab03919627c52e1ec5f8f38f1562199e5"
+        "path": "tests/fixtures/performance/captures/v2-scrap1-final-release-active20-early-1x-native.json",
+        "bytes": 273870,
+        "sha256": "688cd808b8ae5e4a16c6ad85b5852f587651bb415b850e9be3ab25315669cffc"
       },
       "scenario": {
         "phase": "active",
@@ -78,24 +78,24 @@
       "checkpointKey": "20-early-active33",
       "screenshots": {
         "start": {
-          "path": "tests/fixtures/performance/screenshots/v2-active20-early-1x-start.jpg",
-          "bytes": 191692,
-          "sha256": "6dc52b0a8fdbac4a297a8bf0788702426ab42f344d6fa8e9a2e5373472e4b4f0"
+          "path": "tests/fixtures/performance/screenshots/v2-scrap1-final-release-active20-early-1x-start.jpg",
+          "bytes": 200063,
+          "sha256": "d58d8fdf734e37052d185a9dbd3212fe51eb05a0e0272a8b9270ce1ed95f017a"
         },
         "end": {
-          "path": "tests/fixtures/performance/screenshots/v2-active20-early-1x-end.jpg",
-          "bytes": 202145,
-          "sha256": "e285107d31d35f6ce636eb84084cdbe9452ca61bfffc2053184f3a6e66ec28b3"
+          "path": "tests/fixtures/performance/screenshots/v2-scrap1-final-release-active20-early-1x-end.jpg",
+          "bytes": 215630,
+          "sha256": "258aeb3d3e8a9e56a01fce042d17dee0ba3b2c3e5c791d0cd467809b78f79a6e"
         }
       },
       "activeThroughout": true
     },
     {
-      "label": "v2-active20-early-2x-native",
+      "label": "v2-scrap1-final-release-active20-early-2x-native",
       "report": {
-        "path": "tests/fixtures/performance/captures/v2-active20-early-2x-native.json",
-        "bytes": 353374,
-        "sha256": "f16279bb9671a8bbf70bdb80ded72152a4af1d419e1031a83081f364ebc58cfe"
+        "path": "tests/fixtures/performance/captures/v2-scrap1-final-release-active20-early-2x-native.json",
+        "bytes": 276322,
+        "sha256": "7b94c122a136c348199c02e02a0bed3fe4252051ac3de3a18afea98e0588ed13"
       },
       "scenario": {
         "phase": "active",
@@ -105,24 +105,24 @@
       "checkpointKey": "20-early-active33",
       "screenshots": {
         "start": {
-          "path": "tests/fixtures/performance/screenshots/v2-active20-early-2x-start.jpg",
-          "bytes": 192750,
-          "sha256": "bf2db02207d65aa7bf215ca61afc958a4ab1da7abe874e25b67435528d9a8c8b"
+          "path": "tests/fixtures/performance/screenshots/v2-scrap1-final-release-active20-early-2x-start.jpg",
+          "bytes": 199904,
+          "sha256": "482d1c110a383dd0c411f221f1639843a0fb9bab2106885b093ccc22a79c8a35"
         },
         "end": {
-          "path": "tests/fixtures/performance/screenshots/v2-active20-early-2x-end.jpg",
-          "bytes": 195680,
-          "sha256": "58e0a2bff71ce4989feb9ad73a34f93bd569abafe881cfc87fb6d69a662ac842"
+          "path": "tests/fixtures/performance/screenshots/v2-scrap1-final-release-active20-early-2x-end.jpg",
+          "bytes": 202834,
+          "sha256": "f021bd801841d71eea20582b10aed214716e337a4b3d76e4bb3041e936b03f59"
         }
       },
       "activeThroughout": true
     },
     {
-      "label": "v2-active40-1x-native",
+      "label": "v2-scrap1-final-release-active40-1x-native",
       "report": {
-        "path": "tests/fixtures/performance/captures/v2-active40-1x-native.json",
-        "bytes": 356885,
-        "sha256": "d44c35b88878fd369510f97daef437e0c422006a803d9b192e63fd610282b47c"
+        "path": "tests/fixtures/performance/captures/v2-scrap1-final-release-active40-1x-native.json",
+        "bytes": 272760,
+        "sha256": "cfa802c54f9392864755e7cdfc63e24881d388cbc6d4d88567e716fcf0824369"
       },
       "scenario": {
         "phase": "active",
@@ -132,24 +132,24 @@
       "checkpointKey": "40-active74",
       "screenshots": {
         "start": {
-          "path": "tests/fixtures/performance/screenshots/v2-active40-1x-start.jpg",
-          "bytes": 194159,
-          "sha256": "e01439368911a558f9efdbbb927bc2fc2c0584e083dc9e712e5c0f3170058819"
+          "path": "tests/fixtures/performance/screenshots/v2-scrap1-final-release-active40-1x-start.jpg",
+          "bytes": 202877,
+          "sha256": "993c406b91ae865cfc2c74cd051b5710983495679dd46108f4e0fc94e2c3ea6b"
         },
         "end": {
-          "path": "tests/fixtures/performance/screenshots/v2-active40-1x-end.jpg",
-          "bytes": 201969,
-          "sha256": "15ba207ea9aed9ee54f9ceb9dc8c5f579e2a4107e6bf07eb879d807d9760dcef"
+          "path": "tests/fixtures/performance/screenshots/v2-scrap1-final-release-active40-1x-end.jpg",
+          "bytes": 211063,
+          "sha256": "9cd74cc7f5a58fcf8c230d34a81ee77455925ed769eee7f84b7b3aea6e9c62ce"
         }
       },
       "activeThroughout": true
     },
     {
-      "label": "v2-active40-2x-native",
+      "label": "v2-scrap1-final-release-active40-2x-native",
       "report": {
-        "path": "tests/fixtures/performance/captures/v2-active40-2x-native.json",
-        "bytes": 355228,
-        "sha256": "a43e7501b6ba997ba0ecf6ee1ef3ec0307a5cca78b97e0a5229036b3fdf5f108"
+        "path": "tests/fixtures/performance/captures/v2-scrap1-final-release-active40-2x-native.json",
+        "bytes": 275359,
+        "sha256": "a590bfa26a8834387fdd1f6b4ce32461bd16fc42a2c1563649f5f6291bb9ff13"
       },
       "scenario": {
         "phase": "active",
@@ -159,14 +159,14 @@
       "checkpointKey": "40-active74",
       "screenshots": {
         "start": {
-          "path": "tests/fixtures/performance/screenshots/v2-active40-2x-start.jpg",
-          "bytes": 194563,
-          "sha256": "1eb154f40bb9b5125b79dee4262f8387d8d0fceae982ec08b78de8f9cbb61452"
+          "path": "tests/fixtures/performance/screenshots/v2-scrap1-final-release-active40-2x-start.jpg",
+          "bytes": 204002,
+          "sha256": "9f8ef26002dad73b49563f5ff1ee3692b3e543d124ec241571b79af754421ca3"
         },
         "end": {
-          "path": "tests/fixtures/performance/screenshots/v2-active40-2x-end.jpg",
-          "bytes": 178942,
-          "sha256": "bafa31b6ffa001f051243b28f9c973da73e47daa987c4463a1ffb846f79895a1"
+          "path": "tests/fixtures/performance/screenshots/v2-scrap1-final-release-active40-2x-end.jpg",
+          "bytes": 203836,
+          "sha256": "d2546ec27613c2f54ee8ac9ab75a0935b6a024c039bfbd9164351b341a3ec756"
         }
       },
       "activeThroughout": true
@@ -174,11 +174,11 @@
   ],
   "controls": [
     {
-      "label": "v2-paused20-1x-native",
+      "label": "v2-scrap1-final-release-paused20-1x-native",
       "report": {
-        "path": "tests/fixtures/performance/captures/v2-paused20-1x-native.json",
-        "bytes": 354874,
-        "sha256": "22dfe97ef5a1eee7f29b0d1dc2fb566f4de335d956de7a45632f910a03324fbe"
+        "path": "tests/fixtures/performance/captures/v2-scrap1-final-release-paused20-1x-native.json",
+        "bytes": 274300,
+        "sha256": "c1502f6311e070fee9e30bf9c895d008f99431361198421b2233773354f9225c"
       },
       "scenario": {
         "phase": "paused",
@@ -189,11 +189,11 @@
       "mode": "native-raf"
     },
     {
-      "label": "v2-paused20-1x-clock",
+      "label": "v2-scrap1-final-release-paused20-1x-clock",
       "report": {
-        "path": "tests/fixtures/performance/captures/v2-paused20-1x-clock.json",
-        "bytes": 87091,
-        "sha256": "2b850e87affcedb43cff448b4b0e9a3342cf1b9d8eda1d5b9ef6c43494d219ce"
+        "path": "tests/fixtures/performance/captures/v2-scrap1-final-release-paused20-1x-clock.json",
+        "bytes": 70407,
+        "sha256": "52a9cfb824c965ae00265c0d8866e31b2ec20334f4ba63f9bececc4bb121fa65"
       },
       "scenario": {
         "phase": "paused",
@@ -204,11 +204,17 @@
       "mode": "raf-only"
     }
   ],
+  "checkpointCompatibility": {
+    "sourceEngine": "0.2.6-web-endless.3",
+    "loadedByEngine": "0.2.6-web-scrap.1",
+    "originalBytesPreserved": true
+  },
   "operatorObservations": [
-    "Each active final window starts and ends in the playing lawn; native1x/2x controls were configured before arming.",
-    "All captures use muted testing,1280x720viewport,DPR1.5 and native800x600canvas.",
-    "Earlier near-breach flag20 explorations included the native loss sequence and are excluded from all-active acceptance; their original files remain in private outputs.",
-    "No runtime, gameplay, artwork, save logic or native engine bytes were changed during this performance pass."
+    "Each active final window starts and ends in the playing lawn; Remember Speed was disabled through native Options to initialize1x; after resuming and observing native play, the original stone speed button selected2x before the corresponding paused setup.",
+    "All final windows used the visible IAB host preview and document-visible pages, with no visibility/resize/audio changes. The other test tools were idle during each timed interval. Start/end screenshots bracket every active window.",
+    "All captures use muted testing,1280x720 viewport,DPR1 and native800x600 canvas.",
+    "Parent-produced checkpoint bytes were preserved and loaded through the current engine UI.",
+    "No served engine or shell bytes changed during these measurements."
   ],
-  "limits": "Single-device short windows and caller-declared scenarios with screenshots. Scheduling is not delivered FPS; native callback CPU is not GPU completion timing. Future engine/shell changes require matching fresh observations."
+  "limits": "Host preview conditions are caller-observed, not inferred from page visibility. Earlier failed diagnostic captures are retained separately; these short windows do not establish universal or GPU/presentation performance. Single-device short windows and caller-declared scenarios with screenshots. Scheduling is not delivered FPS; native callback CPU is not GPU completion timing. Future engine/shell changes require matching fresh observations."
 }

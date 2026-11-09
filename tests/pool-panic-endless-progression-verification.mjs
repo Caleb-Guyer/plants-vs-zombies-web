@@ -2,6 +2,7 @@
 // Independent verification of actual late-game combat. Synthetic lawn windows
 // are never earned progress; developmental/O1 output is never release proof.
 import assert from 'node:assert/strict';
+import {CURRENT_ENGINE_ID, CURRENT_SOURCE_COUNT, CURRENT_OBJECT_COUNT, ENDLESS3_ENGINE_ID, SCRAP_ENDLESS_RETENTION_SHA256} from './native-release-context.mjs';
 
 const seeds = [1729, 7331];
 const milestones = [8, 12, 20, 40];
@@ -570,21 +571,24 @@ async function verifyBasePrefixReuse(report, build, {read, sha, productionBuildB
   for (const row of report.openingCorpus) assert.equal(row.seed, firstSeeds.get(row.nativeVariation));
 }
 
-async function bindBackend(build, {read, sha, fullRunReport, productionBuildBytes, parent = false}) {
-  fields(build, {execution: 'complete-production-engine', optimization: 'O2', productionObjectCount: 134});
+async function bindBackend(build, {read, sha, fullRunReport, productionBuildBytes}) {
+  fields(build, {execution: 'complete-production-engine', optimization: 'O2', productionObjectCount: CURRENT_OBJECT_COUNT});
   assert.equal(build.productionBuildReceiptSha256, sha(productionBuildBytes));
-  assert.equal(Object.keys(build.sourceSha256).length, 852);
+  assert.equal(Object.keys(build.sourceSha256).length, CURRENT_SOURCE_COUNT);
   assert.deepEqual(build.sourceSha256, fullRunReport.sourceSha256);
-  assert.equal(Object.keys(build.productionObjectSha256).length, 134);
+  assert.equal(Object.keys(build.productionObjectSha256).length, CURRENT_OBJECT_COUNT);
   assert.deepEqual(build.productionObjectSha256, fullRunReport.productionObjectSha256);
   for (const [path, pin] of Object.entries(build.sourceSha256)) {
     assert(path.startsWith('source/')); digest(pin);
-    assert.equal(sha(await read(safeName(path))), pin, `${parent ? 'Published parent' : 'Current'} source byte binding`);
+    assert.equal(sha(await read(safeName(path))), pin, 'Current source byte binding');
   }
   for (const pin of Object.values(build.productionObjectSha256)) digest(pin);
 }
 
 export async function verifyPublishedParentReference({read, parentRead, sha, engine, parentProductionBuildBytes}) {
+  assert.equal(engine.id, CURRENT_ENGINE_ID);
+  const historyEngine = engine.parent;
+  assert.equal(historyEngine.id, ENDLESS3_ENGINE_ID);
   const bytes = await read('tests/endless3-parent-reference.json');
   assert.equal(sha(bytes), knownFixturePins['endless3-parent-reference.json']);
   const reference = jsonOf(bytes);
@@ -598,8 +602,8 @@ export async function verifyPublishedParentReference({read, parentRead, sha, eng
     ordinaryPolicySha256: '61550c6b99cb5ba5868bb3bcd2972fd0d8967a6599b815b7628b645ad3aa5e00',
     ordinaryPolicySnapshot: 'endless3-parent-ordinary-policy.snapshot.h',
     publishedBackendReceiptSha256: 'd5d9a12d18d6a0287871f0f97154afb6980cdb7946bd913f33fd2c54dd228c27'});
-  assert.equal(engine.parent.id, reference.parentEngineId);
-  assert.equal(engine.parent.artifacts.sourceSha256, reference.parentArchiveSha256);
+  assert.equal(historyEngine.parent.id, reference.parentEngineId);
+  assert.equal(historyEngine.parent.artifacts.sourceSha256, reference.parentArchiveSha256);
   const actualReceiptBytes = await parentRead('logs/build-result.json');
   assert.equal(sha(actualReceiptBytes), reference.productionBuildReceiptSha256);
   assert.equal(sha(parentProductionBuildBytes), reference.productionBuildReceiptSha256);
@@ -647,10 +651,47 @@ export async function verifyPublishedParentReference({read, parentRead, sha, eng
   return reference;
 }
 
+export async function verifyEndlessRetentionAdapter({report, read, sha}) {
+  const bytes = await read('tests/scrap1-endless-retention.json');
+  assert.equal(sha(bytes), SCRAP_ENDLESS_RETENTION_SHA256, 'Independently pinned current execution-envelope adapter');
+  const adapter = jsonOf(bytes);
+  fields(adapter, {schemaVersion: 1, engineId: CURRENT_ENGINE_ID, historicalContractSha256: finalContractPin,
+    productionSourceFiles: CURRENT_SOURCE_COUNT, productionObjectCount: CURRENT_OBJECT_COUNT, freshAllCasesRequired: true});
+  assert.equal(report.retentionAdapterSha256, SCRAP_ENDLESS_RETENTION_SHA256);
+  assert.equal(report.lateGame.retentionAdapterSha256, SCRAP_ENDLESS_RETENTION_SHA256);
+  assert(!Object.hasOwn(report, 'basePrefixReuse'), 'Every current opening and late native case must execute freshly');
+  const contractBytes = await read('tests/endless3-verification-contract.json');
+  assert.equal(sha(contractBytes), finalContractPin, 'The original progression contract is retained byte exactly');
+  const contract = jsonOf(contractBytes), runners = ['test-endless3-late.py', 'test-pool-panic-endless.py'];
+  assert.deepEqual(Object.keys(adapter.runnerSha256).sort(), runners);
+  assert.deepEqual(Object.keys(adapter.historicalRunners).sort(), runners);
+  assert.deepEqual(adapter.historicalRunners, {
+    'test-pool-panic-endless.py': {snapshot: 'scrap1-retained-base-runner.snapshot.py',
+      sha256: '39a7a8487081bcca42d71660de9e99a924e6ad1ee9a16fd3f9e07eaef66a3a51'},
+    'test-endless3-late.py': {snapshot: 'scrap1-retained-late-runner.snapshot.py',
+      sha256: '246c6d6eadb0f050547ef3fca29de7bd2811daac35495f85313d8c0cd66f3d7f'},
+  });
+  for (const name of runners) {
+    const pin = adapter.runnerSha256[name], historical = adapter.historicalRunners[name];
+    digest(pin); assert.equal(sha(await read('tests/' + name)), pin, 'Current execution envelope is exactly the reviewed runner: ' + name);
+    assert.equal(historical.sha256, contract.fixtureSha256[name], 'Original runner remains authenticated by the frozen contract');
+    assert.equal(sha(await read('tests/' + safeName(historical.snapshot))), historical.sha256,
+      'Retain every byte of the published runner and its original assertions: ' + name);
+  }
+  const fixtures = {...contract.fixtureSha256, ...adapter.runnerSha256};
+  assert.deepEqual(Object.keys(fixtures).sort(), Object.keys(contract.fixtureSha256).sort());
+  assert.deepEqual(Object.keys(fixtures).filter(name => fixtures[name] !== contract.fixtureSha256[name]).sort(), runners,
+    'Only the two current Python runner pins overlay the original frozen fixture inventory');
+  return fixtures;
+}
+
 export async function verifyPoolPanicEndlessProgression({report, read, sha, engine, fullRunReport,
   productionBuildBytes, parentRead, parentProductionBuildBytes}) {
-  assert.equal(engine.id, '0.2.6-web-endless.3');
-  assert.equal(engine.parent.id, '0.2.6-web-endless.2');
+  assert.equal(engine.id, CURRENT_ENGINE_ID);
+  const historyEngine = engine.parent;
+  assert.equal(historyEngine.id, ENDLESS3_ENGINE_ID);
+  assert.equal(historyEngine.parent.id, '0.2.6-web-endless.2');
+  assert(!Object.hasOwn(report, 'basePrefixReuse'), 'The current Scrap release must freshly execute every retained Endless native case');
   fields(report, {execution: 'complete-production-engine', optimization: 'O2', failures: 0, exitCode: 0});
   assert.match(report.status, /^PASS/);
   assert(report.lateGame && typeof report.lateGame === 'object', 'Final lateGame evidence is required');
@@ -677,7 +718,8 @@ export async function verifyPoolPanicEndlessProgression({report, read, sha, engi
   fields(late, {schemaVersion: 1, rulesVersion: 3, status: 'PASS', contractSha256: finalContractPin,
     parentReferenceSha256: knownFixturePins['endless3-parent-reference.json'],
     earnedFlagCount: 48, syntheticEarnedFlagCount: 0});
-  assert.deepEqual(late.fixtureSha256, contract.fixtureSha256);
+  const retainedFixturePins = await verifyEndlessRetentionAdapter({report, read, sha});
+  assert.deepEqual(late.fixtureSha256, retainedFixturePins);
   for (const [path, pin] of Object.entries(late.fixtureSha256)) {
     safeName(path); digest(pin); assert.equal(sha(await read('tests/' + path)), pin, 'Final frozen fixture: ' + path);
   }
@@ -763,7 +805,7 @@ export async function verifyPoolPanicEndlessProgression({report, read, sha, engi
     .reduce((sum, row) => sum + row.countedEarnedFlags, 0), 0);
   await verifyEarlyEquivalence(late.earlyEquivalence, {read, sha});
   await verifyEarnedExports(late.exports, late.earnedRuns, {read, sha});
-  assert.equal(late.checks, 852 + 134 + 480 + 24 + allRows.reduce((sum, row) => sum + row.checks, 0),
+  assert.equal(late.checks, CURRENT_SOURCE_COUNT + CURRENT_OBJECT_COUNT + 480 + 24 + allRows.reduce((sum, row) => sum + row.checks, 0),
     'Native checks plus explicit source/object and complete early-comparison observations');
   return {earnedRuns: 4, earnedFlags: 48, syntheticWindows: 16, parentWindows: 4,
     narrowControls: 2, migrationControls: 2, checks: late.checks};

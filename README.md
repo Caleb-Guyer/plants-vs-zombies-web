@@ -1,6 +1,20 @@
 # Plants vs. Zombies — browser playtest
 
-## Late-game performance checks
+## Scrap Yard
+
+Scrap Yard is the sixteenth Bonus minigame. On a nighttime lawn, Magnet-shrooms turn successfully removed metal into two normal sun pickups worth 50 sun. Collect them to fund Cherry Bombs, Jalapeños and Squash while Wall-nuts protect the magnets. Three original Peashooters support alternating lanes; the other two need your tools. Six formations mix original metal-bearing zombies, followed by native heavy and special attackers. The seed packets, combat statistics, cooldowns, sun counter and effects use the original game systems.
+
+The new card uses original native game artwork. Existing cards and saves remain compatible; Scrap Yard uses a previously reserved challenge-record slot. Testing disables audio output, while ordinary play retains its audio controls.
+
+The corresponding source includes all 856 production files and eleven current complete-engine test drivers. Their compiled JS/WASM files share a lossless XZ pack; the included decoder restores every exact pinned byte. The historical Endless.2 comparator remains separately identified. Offline site-source includes the current source, upstream source, that comparator and an independently authenticated complete Endless.3 parent projection. Historical full archives remain separate downloads.
+
+### Validated native release
+
+All 24 current native suites pass with **52,882,925 checks and zero failures**: thirteen focused production-method suites and eleven complete-engine suites built from the current 856 sources and 136 non-main objects. The separate retained Endless late block passes another **29,323,403 checks**, for **82,206,328 combined**. All retained Endless cases were freshly executed; historical comparison builds remain separately identified.
+
+Scrap Yard contributes 18 cases and 1,968,447 checks: twelve native wins, four genuine hands-off losses and two mechanic/history controls. Normal wins retain three to five mowers; saved wins retain three or four. The tests authenticate 866 original native art inputs, preserve all fifteen older Bonus cards, and verify native metal rewards, save/Continue graphs and old profile records with audio output disabled. See [the QA record](PARITY-QA.md#scrap1-validated-native-results) for the matrix and [release artifact pins](DEPLOYMENT.md#scrap1-validated-artifacts) for the locally validated files.
+
+## Historical Endless.3 performance checks
 
 Four muted 15-second browser windows cover synthetic Flag 20 and Flag 40 lawns at 1× and 2×. On the measured machine, native callback CPU p95 was 1.2–1.8 ms; the largest native callback was 6.0 ms. Across the active runs and paused control, full synchronous save capture peaked at 4.3 ms, and no 50 ms long tasks occurred. These are short, single-device CPU/scheduling observations, not GPU completion or delivered-frame FPS measurements. No engine or runtime change was justified by these measurements.
 
@@ -1015,3 +1029,5 @@ Current corresponding source is [Chill.4 engine source](dist/source/pvz-portable
 Public v15 preserved the three approved XML resource files' original CRLF bytes in Git and added the matching attributes rule, closing the fresh-checkout checksum blocker without changing the Software.7 runtime. GitHub Pages publication succeeded on 2026-10-31 through [release workflow 41230962473](https://github.com/Caleb-Guyer/plants-vs-zombies-web/actions/runs/41230962473). The bounded hosted startup check does not establish full game parity. The user authorized publication of the current build on 2026-10-31 while full 1:1 parity remains unverified; publication does not mark that goal complete.
 
 PvZ-Portable © 2026 Zhou Qiankang and contributors, LGPL-3.0-or-later; bundled dependencies retain their licenses. Plants vs. Zombies and its original names, characters and assets belong to PopCap/Electronic Arts. This unofficial community-engine playtest has no affiliation or endorsement.
+
+Performance evidence (2026-11-09): The [six final muted browser observations](tests/fixtures/performance/baseline.json) passed the unchanged budgets on synthetic established Endless checkpoints at 1x/2x, plus paired paused controls. Across the six 15-second windows, rAF-gap p95 was 6.1 ms and max was 7.1 ms; native-callback p95 reached 1.9 ms/max 5.4 ms, synchronous save capture reached 5.5 ms, and no long tasks were recorded. Native 3D was selected, the IAB host preview and page were visible, and active start/end HUD images are retained. The game canvas now requests the standard advisory high-performance WebGL preference during context creation; observed device information still identified Intel graphics. [Earlier failed and excluded diagnostics](tests/fixtures/performance/diagnostics/context.json) remain unchanged. These short observations do not isolate a unique cause or establish dedicated-GPU selection, displayed FPS, GPU completion, universal smoothness or full original-game parity. Local evidence precedes publication; the Pages workflow reruns native checks before deployment.
