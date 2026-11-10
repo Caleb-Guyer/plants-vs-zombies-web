@@ -12,7 +12,9 @@ The frozen 860-source/138-object engine passes **25 native suites, 57,505,302 ba
 
 The native-art fixture authenticates 942 original PAK inputs and retains all sixteen earlier Bonus card records. Save layouts and earlier challenge records remain compatible. See [QA scope](PARITY-QA.md#vase-ambush-native-verification) and [release artifacts](DEPLOYMENT.md#vase-ambush-artifacts). Browser verification and publication are recorded separately; these tests do not establish exhaustive parity or universal difficulty.
 
-Muted browser checks cover the native card, hammer/release animation, 2x speed and Menu/reload/Continue. Four fresh active timing windows and the separate quiet control pair pass the existing budgets. One earlier paused scheduling outlier is retained and explained in [the QA record](PARITY-QA.md#vase-ambush-browser-verification); these are scoped observations, not a guarantee of universal smoothness. All seventeen offline integration suites are required before publication.
+Muted browser checks cover the native card, hammer/release animation, 2x speed and Menu/reload/Continue. Four fresh active timing windows and the separate quiet control pair pass the existing budgets. One earlier paused scheduling outlier is retained and explained in [the QA record](PARITY-QA.md#vase-ambush-browser-verification); these are scoped observations, not a guarantee of universal smoothness. All eighteen offline integration suites are required before publication, including Pages staging and size checks.
+
+Pages serves the current game and source downloads. Older engine source archives remain in GitHub at the immutable URLs listed in [the source inventory](dist/source/source-downloads.json), keeping the upload within Pages' supported size limit. The complete runtime package still includes those archives.
 
 ## Historical release notes
 

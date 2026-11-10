@@ -13,7 +13,9 @@ import io
 import importlib.util
 import json
 from pathlib import Path, PurePosixPath
+import re
 import shutil
+import subprocess
 import sys
 import tempfile
 import zipfile
@@ -253,22 +255,50 @@ def regenerate_source_downloads():
     """Deterministic inventory from existing archive bytes; no inferred URL or hash."""
     engine, paths, baseline = engine_inputs()
     nested = nested_source_inputs(engine, paths, baseline)
+    previous = {}
+    if SOURCE_DOWNLOADS.is_file():
+        previous = {item["name"]: item for item in json.loads(SOURCE_DOWNLOADS.read_text("utf-8"))["archives"]}
+    revision = None
+
+    def historical_url(path, digest):
+        nonlocal revision
+        old = previous.get(path.name, {})
+        pattern = (r"https://raw\.githubusercontent\.com/Caleb-Guyer/plants-vs-zombies-web/"
+                   r"[0-9a-f]{40}/dist/source/" + re.escape(path.name))
+        if old.get("sha256") == digest and re.fullmatch(pattern, old.get("url", "")):
+            return old["url"]  # Also keeps offline source repackaging independent of Git.
+        if revision is None:
+            repository = Path(subprocess.check_output(
+                ["git", "rev-parse", "--show-toplevel"], cwd=ROOT, text=True).strip()).resolve()
+            if repository != ROOT.resolve():
+                raise ValueError("New historical source URLs require this release repository")
+            revision = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
+            if not re.fullmatch(r"[0-9a-f]{40}", revision):
+                raise ValueError("Invalid historical source revision")
+        committed = subprocess.check_output(["git", "show", revision + ":dist/source/" + path.name], cwd=ROOT)
+        if hashlib.sha256(committed).hexdigest() != digest:
+            raise ValueError("Commit the exact historical source archive before publishing: " + path.name)
+        return ("https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/"
+                + revision + "/dist/source/" + path.name)
+
     archives = []
     for path in sorted((DIST / "source").glob("pvz-portable-*-source.zip")):
         if not path.is_file() or path.is_symlink():
             raise ValueError(f"Source download must be a regular file: {path}")
         data = path.read_bytes()
+        digest = hashlib.sha256(data).hexdigest()
+        current = path.resolve() == paths["source"]
+        upstream = path == baseline
         archives.append({"name": path.name, "bytes": len(data),
-                         "sha256": hashlib.sha256(data).hexdigest(),
-                         "current": path.resolve() == paths["source"],
-                         "upstream": path == baseline})
+                         "sha256": digest, "current": current, "upstream": upstream,
+                         "url": "./" + path.name if current or upstream else historical_url(path, digest)})
     if sum(item["current"] for item in archives) != 1 or sum(item["upstream"] for item in archives) != 1:
         raise ValueError("Current and upstream source downloads must both exist")
     index = {
         "schema_version": 1,
         "current_engine": engine["id"],
         "upstream_tag": engine["upstream"]["tag"],
-        "layout": "Site-source nests current corresponding source, the upstream baseline, the historical Endless.2 comparator, independently pinned complete Scrap.1 and Endless.3 source projections, the native I, Zombie UI reference and the current full patch. Exact historical source archives remain standalone downloads beside this index and in the full runtime distribution. Linked native test artifacts are losslessly packed; the included decoder restores their exact pinned bytes.",
+        "layout": "Site-source nests current corresponding source, the upstream baseline, the historical Endless.2 comparator, independently pinned complete Scrap.1 and Endless.3 source projections, the native I, Zombie UI reference and the current full patch. Each archives[].url is its download location: current and upstream source stay on Pages; historical source archives use immutable GitHub repository URLs and remain in the full runtime distribution. Resolve historical relative source references in retained provenance through this inventory. Linked native test artifacts are losslessly packed; the included decoder restores their exact pinned bytes.",
         "nested_sources": [path.name for path in nested],
         "nested_patches": [paths["patch"].name],
         "archives": archives,

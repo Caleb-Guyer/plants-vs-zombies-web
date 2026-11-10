@@ -18,6 +18,8 @@ The native artifact codec restores 24 current files and two historical comparato
 
 Publication uses the existing manual GitHub Pages workflow after pushing the tested commit. The native and browser checks must pass before deployment; public file hashes are then compared with these local release files. Local validation and public deployment are distinct records.
 
+The first Ambush upload exceeded GitHub Pages' supported 1 GB site size and timed out while syncing files, including a deploy-only retry. The workflow now stages a copy with `stage-pages.py`, omitting only historical native source ZIPs from Pages. Those exact archives remain in this repository and the complete runtime package. Their immutable GitHub download URLs and byte hashes are listed in `dist/source/source-downloads.json`; resolve historical relative source references in retained provenance through that inventory. Current engine source, upstream source, the self-contained site-source download, all patches, licenses and runtime files stay on Pages. A conservative tar-size check rejects uploads above 1,000,000,000 bytes before upload.
+
 ### Vase Ambush browser verification
 
 Muted inspection of the normal game page confirmed the seventeenth native Bonus card, original hammer/release animation, moving attackers, and the 1x/2x stone control. Opening Menu saved the garden; reload and Continue restored one eaten brain and eight unopened vases. The native New Game confirmation reset the first garden to ten vases and zero eaten brains. These are browser observations, not extra full-game wins. [Browser evidence](tests/fixtures/vase-ambush-browser/proof.json) binds three screenshots to the shipped engine.

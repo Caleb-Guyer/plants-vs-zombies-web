@@ -2,7 +2,7 @@
   "schema_version": 1,
   "current_engine": "0.2.6-web-ambush.1",
   "upstream_tag": "0.2.6",
-  "layout": "Site-source nests current corresponding source, the upstream baseline, the historical Endless.2 comparator, independently pinned complete Scrap.1 and Endless.3 source projections, the native I, Zombie UI reference and the current full patch. Exact historical source archives remain standalone downloads beside this index and in the full runtime distribution. Linked native test artifacts are losslessly packed; the included decoder restores their exact pinned bytes.",
+  "layout": "Site-source nests current corresponding source, the upstream baseline, the historical Endless.2 comparator, independently pinned complete Scrap.1 and Endless.3 source projections, the native I, Zombie UI reference and the current full patch. Each archives[].url is its download location: current and upstream source stay on Pages; historical source archives use immutable GitHub repository URLs and remain in the full runtime distribution. Resolve historical relative source references in retained provenance through this inventory. Linked native test artifacts are losslessly packed; the included decoder restores their exact pinned bytes.",
   "nested_sources": [
     "pvz-portable-0.2.6-source.zip",
     "pvz-portable-0.2.6-web-endless.2-source.zip",
@@ -17,385 +17,440 @@
       "bytes": 4276717,
       "sha256": "40af59aa49d936ad21756a1a28ee14d8db51e6aaccbee44c647c2913e9c83556",
       "current": false,
-      "upstream": true
+      "upstream": true,
+      "url": "./pvz-portable-0.2.6-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-ambush.1-source.zip",
       "bytes": 25841863,
       "sha256": "6da0b6e19d56b3b345a684d379453abecff055a6d788cc17bd161f412bf3e7c9",
       "current": true,
-      "upstream": false
+      "upstream": false,
+      "url": "./pvz-portable-0.2.6-web-ambush.1-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-bungee.1-source.zip",
       "bytes": 31850177,
       "sha256": "452205b2a2e383a74183423ddcd730db978abe0ed086f8463c168c75142f9062",
       "current": false,
-      "upstream": false
+      "upstream": false,
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-bungee.1-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-care.1-source.zip",
       "bytes": 13584266,
       "sha256": "540f1ee365b558e10304995692485976e91f23bb1b28c305e6ade6cd17f1ed11",
       "current": false,
-      "upstream": false
+      "upstream": false,
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-care.1-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-care.2-source.zip",
       "bytes": 13696830,
       "sha256": "d8c52ecbb0f4f417b871137fb2a27017a2cb8699b1f6702fb363399a7ea7bf98",
       "current": false,
-      "upstream": false
+      "upstream": false,
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-care.2-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-care.3-source.zip",
       "bytes": 16224578,
       "sha256": "50d01dd1bbd793e1cda1dfbc74a70ca6724eee8741dab9260d188b3f49c882d4",
       "current": false,
-      "upstream": false
+      "upstream": false,
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-care.3-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-chain.1-source.zip",
       "bytes": 18774227,
       "sha256": "2794ff25f7427a2d3c1032bb9e2671f5b425701d7944d274f7c94e26ffb132a7",
       "current": false,
-      "upstream": false
+      "upstream": false,
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-chain.1-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-chill.1-source.zip",
       "bytes": 10943275,
       "sha256": "e451a8f08f442070e2855e5a64832e3a8ad263a881d37308394b198642271118",
       "current": false,
-      "upstream": false
+      "upstream": false,
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-chill.1-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-chill.2-source.zip",
       "bytes": 4570036,
       "sha256": "e9bf4039b9652cfe9817abdde2119859e033ae7af08cdf7f12c3ffb028b9f5ca",
       "current": false,
-      "upstream": false
+      "upstream": false,
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-chill.2-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-chill.3-source.zip",
       "bytes": 4603427,
       "sha256": "3248007cf32dc65c44b5a8474f3ed8465cb5fe849697cf77695e6c830af53aca",
       "current": false,
-      "upstream": false
+      "upstream": false,
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-chill.3-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-chill.4-source.zip",
       "bytes": 5813693,
       "sha256": "d8551acdc9f49704634b668d5abb2b461c3f1db683e19a228d0a9dd78785edae",
       "current": false,
-      "upstream": false
+      "upstream": false,
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-chill.4-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-chill.5-source.zip",
       "bytes": 6500652,
       "sha256": "8e97e5f49981a5e7a9a230e6651c586d6b9e3434ab22092dc30c7aa897d1c0ab",
       "current": false,
-      "upstream": false
+      "upstream": false,
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-chill.5-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-chill.6-source.zip",
       "bytes": 9249381,
       "sha256": "518d779b9948ac8a2d124db8f7929f13acf1121f38953d4ebee367518da17104",
       "current": false,
-      "upstream": false
+      "upstream": false,
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-chill.6-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-chill.7-source.zip",
       "bytes": 9257802,
       "sha256": "450613f4d14df23380549081b154d40c11587151d37e749a74f5118a11534605",
       "current": false,
-      "upstream": false
+      "upstream": false,
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-chill.7-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-chill.8-source.zip",
       "bytes": 9283046,
       "sha256": "04bd204805f83ce8322952fbba81a9e5a2d73bdf1eeafaf95b4a5c7ccf33d367",
       "current": false,
-      "upstream": false
+      "upstream": false,
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-chill.8-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-chill.9-source.zip",
       "bytes": 9308592,
       "sha256": "7fa3d16079cca928812a965ec7bdcd15c7f157570d14607895c31067d06e49f0",
       "current": false,
-      "upstream": false
+      "upstream": false,
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-chill.9-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-cob.1-source.zip",
       "bytes": 34458383,
       "sha256": "f1882ce4c5a412d539d15d4ccfcd5412cc96d6ffc7b8ae5b4b374bf04418dee0",
       "current": false,
-      "upstream": false
+      "upstream": false,
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-cob.1-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-content.1-source.zip",
       "bytes": 4778159,
       "sha256": "4a8c06629b3d6d87b7ea9b3f10a6b845c764eb9d9875beeb1b82fba82f346922",
       "current": false,
-      "upstream": false
+      "upstream": false,
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-content.1-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-endless.1-source.zip",
       "bytes": 39931636,
       "sha256": "eee4ae6dfeaaa49bbf203c37cf45ad73dad56b85d3d0079e549ed11bc3d45f25",
       "current": false,
-      "upstream": false
+      "upstream": false,
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-endless.1-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-endless.2-source.zip",
       "bytes": 40424282,
       "sha256": "b9095c65547c3d013917ae4188e284f18eabb71a98020ca3d53f71f7365f9566",
       "current": false,
-      "upstream": false
+      "upstream": false,
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-endless.2-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-endless.3-source.zip",
       "bytes": 44423471,
       "sha256": "206e5e16b0c4ae7c8b88afd94e627943b4cd15c56f82113fcaf4bb1adf4c13b1",
       "current": false,
-      "upstream": false
+      "upstream": false,
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-endless.3-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-garden.1-source.zip",
       "bytes": 9342093,
       "sha256": "34807be9b16aafc8e1e8bc9fd4da840df0ce9ae5667157cf51e61f4571d95122",
       "current": false,
-      "upstream": false
+      "upstream": false,
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-garden.1-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-garlic.1-source.zip",
       "bytes": 29234821,
       "sha256": "389c3ab2ca51747139b34f2162d9dd8b81a973919222974cce4e8431e495749c",
       "current": false,
-      "upstream": false
+      "upstream": false,
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-garlic.1-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-lantern.1-source.zip",
       "bytes": 6034293,
       "sha256": "c0f1ce050347d68672afa2139fe3da05ea2934fae9ea377a9fc45a2454c55244",
       "current": false,
-      "upstream": false
+      "upstream": false,
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-lantern.1-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-lantern.2-source.zip",
       "bytes": 6037932,
       "sha256": "64da4037777bcbc12ceb0715612e2855c31da4979c66ab85455ae466f9ac64ee",
       "current": false,
-      "upstream": false
+      "upstream": false,
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-lantern.2-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-lights.1-source.zip",
       "bytes": 26618089,
       "sha256": "5f35953986e985af0de8a572fa8bac4657ceaaee42e6db1f9cd84b7c6d3d7b8e",
       "current": false,
-      "upstream": false
+      "upstream": false,
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-lights.1-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-lights.2-source.zip",
       "bytes": 26630296,
       "sha256": "030d6dac37fbb4eca15ec4a852e2904ac6993ff598d824c7ef8a092804b6d26a",
       "current": false,
-      "upstream": false
+      "upstream": false,
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-lights.2-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-mender.1-source.zip",
       "bytes": 11905661,
       "sha256": "d91f663297f7787be7063f478027cd4935ff4285c9dbed600c1c71703d1e08a3",
       "current": false,
-      "upstream": false
+      "upstream": false,
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-mender.1-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-mender.2-source.zip",
       "bytes": 11952232,
       "sha256": "2d40f382100860e1f64e3475ee2e0b299875df5458e488099b226c19a3d6ee24",
       "current": false,
-      "upstream": false
+      "upstream": false,
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-mender.2-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-mender.3-source.zip",
       "bytes": 13544751,
       "sha256": "5a6392e1d5415c3d7f5d3f2bad3114abb54a35bc13df5366be84b718c2d5bd1f",
       "current": false,
-      "upstream": false
+      "upstream": false,
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-mender.3-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-night.1-source.zip",
       "bytes": 4791403,
       "sha256": "7b77f6f892a5f29b43bbb825307abb9c453f74e5990023d1adf11545a632cb65",
       "current": false,
-      "upstream": false
+      "upstream": false,
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-night.1-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-parity.2-source.zip",
       "bytes": 4287443,
       "sha256": "42d91e6841a48214888d6b50e95e4249b050f6ccd7b520512693d079af53f580",
       "current": false,
-      "upstream": false
+      "upstream": false,
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-parity.2-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-parity.3-source.zip",
       "bytes": 4303675,
       "sha256": "d12c29eec4885dfd9419cba57b17980a6506812aa634dd9de85cf63eed260230",
       "current": false,
-      "upstream": false
+      "upstream": false,
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-parity.3-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-parity.4-source.zip",
       "bytes": 4350325,
       "sha256": "574e760c35cd4409da74a30c8d8d196bddf05e78efc5453e99eb782ff7c6a208",
       "current": false,
-      "upstream": false
+      "upstream": false,
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-parity.4-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-polish.1-source.zip",
       "bytes": 4775271,
       "sha256": "aba3e5a40370a81826c6dc61e5f04ad1742dda405bffc3da86e24edcd981391d",
       "current": false,
-      "upstream": false
+      "upstream": false,
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-polish.1-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-pool.1-source.zip",
       "bytes": 37098165,
       "sha256": "9d1cb0b7fdc6e10cb4ea79b869b922d98417b14c829862899c6361f80c7dc988",
       "current": false,
-      "upstream": false
+      "upstream": false,
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-pool.1-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-qol.1-source.zip",
       "bytes": 4816285,
       "sha256": "cfb04160423d2bf5d66cf414daa476e0b292951a9c4cc31d5fd6e9eb884cadeb",
       "current": false,
-      "upstream": false
+      "upstream": false,
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-qol.1-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-qol.2-source.zip",
       "bytes": 4739286,
       "sha256": "9d77a0a5e2a367630bded271996e7ccffd081bc4cf7f77e16892591812a6f841",
       "current": false,
-      "upstream": false
+      "upstream": false,
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-qol.2-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-raid.1-source.zip",
       "bytes": 23958264,
       "sha256": "50e122044bb767eb9c78cf8c38c9cd48de022f8b3f966b69b3bd29a7bbafdb8c",
       "current": false,
-      "upstream": false
+      "upstream": false,
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-raid.1-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-raid.2-source.zip",
       "bytes": 23967714,
       "sha256": "0bb8e6ae265488e1d1da8b472c10730f0bd17df9a56337c8acc34c4c3911a225",
       "current": false,
-      "upstream": false
+      "upstream": false,
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-raid.2-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-raid.3-source.zip",
       "bytes": 23994234,
       "sha256": "dc02a3d87a227e3b6b890cd03894999dea831c62a6d184fc2a0bc281425e51a3",
       "current": false,
-      "upstream": false
+      "upstream": false,
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-raid.3-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-raid.4-source.zip",
       "bytes": 24005557,
       "sha256": "8c068366dc208d692d0e5d7afd286cc4ec34312564e7f8a6deace562d59a5512",
       "current": false,
-      "upstream": false
+      "upstream": false,
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-raid.4-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-raid.5-source.zip",
       "bytes": 24033055,
       "sha256": "1415b9a6f916b9780abd3425c5ea9ab32436c1ee56f1e59b89e0ce4d3db78307",
       "current": false,
-      "upstream": false
+      "upstream": false,
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-raid.5-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-rally.1-source.zip",
       "bytes": 21343650,
       "sha256": "a37ba37528139bc38df887a027c7c54aadfb2065897f32a48a556b3dc15df63e",
       "current": false,
-      "upstream": false
+      "upstream": false,
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-rally.1-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-rally.2-source.zip",
       "bytes": 21354025,
       "sha256": "8d7c3d5a54bdebb57d36cd1b8a6d33f87ca68e7c0b39c905838f1a83173f8b82",
       "current": false,
-      "upstream": false
+      "upstream": false,
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-rally.2-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-rally.3-source.zip",
       "bytes": 21368282,
       "sha256": "2deb50f9a38d8599453f567f5458a20505d552956df0bc442e649e49ea1c5c24",
       "current": false,
-      "upstream": false
+      "upstream": false,
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-rally.3-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-scrap.1-source.zip",
       "bytes": 23463237,
       "sha256": "6ccb876d55621aa8c31b405c2495b97203fec344905a0920440607557c291a63",
       "current": false,
-      "upstream": false
+      "upstream": false,
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-scrap.1-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-seedswap.1-source.zip",
       "bytes": 9379580,
       "sha256": "0db62a66059ebc4891181044609fa949d2c623b0a05181930c2734a0f7aeeb18",
       "current": false,
-      "upstream": false
+      "upstream": false,
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-seedswap.1-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-software.10-source.zip",
       "bytes": 5233817,
       "sha256": "62bf399ffeedde34ec9946b4aece8fce4cb4ffb119739d3b55d2025bc4cda261",
       "current": false,
-      "upstream": false
+      "upstream": false,
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-software.10-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-software.4-source.zip",
       "bytes": 4816352,
       "sha256": "649863914351065e939ada9a09cd61f63c12839de970912eb984420910b94458",
       "current": false,
-      "upstream": false
+      "upstream": false,
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-software.4-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-software.6-source.zip",
       "bytes": 5460587,
       "sha256": "0358d6b633c2c900f49a89d948dc6b72ab542a56bea6fa8de66f33f40d708794",
       "current": false,
-      "upstream": false
+      "upstream": false,
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-software.6-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-software.7-source.zip",
       "bytes": 5816054,
       "sha256": "66b4cf8c473f1c9e6293a60cb2d7864b24cd91b0803745a77ef62c1669cacc3a",
       "current": false,
-      "upstream": false
+      "upstream": false,
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-software.7-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-software.8-source.zip",
       "bytes": 4579507,
       "sha256": "6a6470f33dec2c763c595062fa407fbb691a92d43093a64b1d322b6905d7621b",
       "current": false,
-      "upstream": false
+      "upstream": false,
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-software.8-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-software.9-source.zip",
       "bytes": 5145870,
       "sha256": "b4ca8b710fe2c61ead0ab5ee1f1a4dffbae92e7c9c705b8ac2e3c4e0f4f83fc4",
       "current": false,
-      "upstream": false
+      "upstream": false,
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-software.9-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-zombatar-source.zip",
       "bytes": 4281012,
       "sha256": "f7119893eb13d04eacca0fbd3ced518cf2c7a00aae0ef1237e8a250d5966f029",
       "current": false,
-      "upstream": false
+      "upstream": false,
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-zombatar-source.zip"
     }
   ]
 }

@@ -34,10 +34,12 @@ jobs:
         run: node tests/native-content.mjs --run-native
       - name: Configure Pages
         uses: actions/configure-pages@v5
+      - name: Stage site within Pages size limit
+        run: python stage-pages.py --output "${{ runner.temp }}/pvz-pages"
       - name: Upload static game only
         uses: actions/upload-pages-artifact@v4
         with:
-          path: dist
+          path: ${{ runner.temp }}/pvz-pages
 
   deploy:
     needs: validate
