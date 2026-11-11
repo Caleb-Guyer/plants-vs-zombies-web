@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-ambush.1
-Adds Vase Ambush: five authored reverse Vasebreaker gardens cleared with a fixed army released through native vases. Existing modes, statistics, artwork and saved layouts remain intact.
-Engine JavaScript SHA-256: 4222ab8ec9b6cc49176fc55fae1aa08174487544a34cee3176907b92b08994d6
-Engine WASM SHA-256: a6e1f8b5ed4293513f1919ff840d74f81b7420112bba08302b03969f82a06a46
+PvZ-Portable 0.2.6-web-torch.1
+Adds Torchbearer Zombie, an original-art one-use fire attacker, the finite Fire Drill introduction and earned Pool Panic Endless torch formations. Native combat, prior modes, original artwork and saved layouts remain preserved outside the reviewed additions.
+Engine JavaScript SHA-256: da8757962f625d0805bb4cd9db15a1b6ee8cfc6ab7d88c952c462f629ee455b0
+Engine WASM SHA-256: 7fa8c0a42b32f3398fea94dee62ad9180a5921e8f9978a536e79e287d5a0f68a
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.

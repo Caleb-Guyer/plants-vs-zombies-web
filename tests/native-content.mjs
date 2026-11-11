@@ -11,7 +11,7 @@ import {createRequire} from 'node:module';
 import {spawnSync} from 'node:child_process';
 import {inflateSync} from 'node:zlib';
 import {fileURLToPath} from 'node:url';
-import {CURRENT_ENGINE_ID, CURRENT_SOURCE_COUNT, CURRENT_OBJECT_COUNT, SCRAP_SOURCE_ADDITIONS, SCRAP_PARENT_REFERENCE_SHA256, AMBUSH_PARENT_REFERENCE_SHA256, AMBUSH_SOURCE_ADDITIONS, reconstructScrapSources, reconstructEndless3Sources} from './native-release-context.mjs';
+import {CURRENT_ENGINE_ID, CURRENT_SOURCE_COUNT, CURRENT_OBJECT_COUNT, SCRAP_SOURCE_ADDITIONS, SCRAP_PARENT_REFERENCE_SHA256, AMBUSH_PARENT_REFERENCE_SHA256, AMBUSH_SOURCE_ADDITIONS, TORCH_SOURCE_ADDITIONS, TORCH_PARENT_REFERENCE_SHA256, reconstructAmbushSources, reconstructAmbushFocusedEvidence, reconstructScrapSources, reconstructEndless3Sources, verifyTorchRetainedParentInputs} from './native-release-context.mjs';
 import {restoreNativeArtifactPack} from './native-artifact-pack.mjs';
 import {verifyRallyRaid} from './rally-raid-verification.mjs';
 import {verifyLightsOut} from './lights-out-verification.mjs';
@@ -23,7 +23,9 @@ import {verifyPoolPanicEndless} from './pool-panic-endless-verification.mjs';
 import {verifyPoolPanicEndlessProgression} from './pool-panic-endless-progression-verification.mjs';
 import {verifyScrapYard} from './scrap-yard-verification.mjs';
 import {verifyVaseAmbush} from './vase-ambush-verification.mjs';
+import {verifyTorchbearer} from './torchbearer-verification.mjs';
 import {verifyAmbushFocusedRetention} from './ambush-focused-retention-verification.mjs';
+import {verifyTorchFocusedRetention,TORCH_FOCUSED_CHECK_EXTENSIONS} from './torch-focused-retention-verification.mjs';
 
 const require = createRequire(import.meta.url);
 const dist = new URL('../dist/', import.meta.url);
@@ -33,14 +35,16 @@ const JSZip = vendor.exports;
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
 const engine = JSON.parse(fs.readFileSync(new URL('game/engine-provenance.json', dist)));
 assert.equal(engine.id, CURRENT_ENGINE_ID);
-const scrapEngine = engine.parent;
+const ambushEngine = engine.parent;
+assert.equal(ambushEngine.id, '0.2.6-web-ambush.1');
+const scrapEngine = ambushEngine.parent;
 assert.equal(scrapEngine.id, '0.2.6-web-scrap.1');
 const historyEngine = scrapEngine.parent;
 assert.equal(historyEngine.id, '0.2.6-web-endless.3');
 const currentSourceBytes = fs.readFileSync(new URL(engine.artifacts.source, new URL('game/engine-provenance.json', dist)));
 assert.equal(sha(currentSourceBytes), engine.artifacts.sourceSha256, 'Current source archive matches the engine provenance pin');
 const current = await JSZip.loadAsync(currentSourceBytes, {checkCRC32: true});
-const prefix = 'ambush1-candidate/';
+const prefix = 'torch1-candidate/';
 await restoreNativeArtifactPack(current, prefix);
 const publishedEndless2Bytes = fs.readFileSync(new URL('source/pvz-portable-0.2.6-web-endless.2-source.zip', dist));
 assert.equal(sha(publishedEndless2Bytes), 'b9095c65547c3d013917ae4188e284f18eabb71a98020ca3d53f71f7365f9566');
@@ -190,9 +194,20 @@ const read = async name => {
   assert(entry, 'Missing current production source/test: ' + name);
   return Buffer.from(await entry.async('uint8array'));
 };
+const ambushReferenceBytes = fs.readFileSync(new URL('./fixtures/torch1-parent-reference.json', import.meta.url));
+assert.equal(sha(ambushReferenceBytes), TORCH_PARENT_REFERENCE_SHA256);
+const ambushSource = await reconstructAmbushSources({referenceBytes:ambushReferenceBytes,read,sha,engine});
+const publishedAmbushRead=await reconstructAmbushFocusedEvidence({
+  referenceBytes:fs.readFileSync(new URL('./fixtures/ambush1-focused-reference.json',import.meta.url)),
+  read,sha,engine,sourceFiles:ambushSource.files});
+const ambushSourceRead = async name => {
+  assert(name.startsWith('source/'), 'Parent projection supplies only production source');
+  const bytes = ambushSource.files.get(name.slice(7)); assert(bytes, 'Missing complete Ambush source: ' + name); return bytes;
+};
+await verifyTorchRetainedParentInputs({read,sha});
 const scrapReferenceBytes = fs.readFileSync(new URL('./fixtures/ambush1-parent-reference.json', import.meta.url));
 assert.equal(sha(scrapReferenceBytes), AMBUSH_PARENT_REFERENCE_SHA256);
-const scrapSource = await reconstructScrapSources({referenceBytes:scrapReferenceBytes,read,sha,engine});
+const scrapSource = await reconstructScrapSources({referenceBytes:scrapReferenceBytes,read:ambushSourceRead,sha,engine:ambushEngine});
 const scrapSourceRead = async name => {
   assert(name.startsWith('source/'), 'Parent projection supplies only production source');
   const bytes = scrapSource.files.get(name.slice(7)); assert(bytes, 'Missing complete Scrap source: ' + name); return bytes;
@@ -214,8 +229,8 @@ const vaseFocusedCheckExtensions = {'bonus-challenge':7, 'bonus-completion':77, 
 const focusedCheckExtensions = {'bonus-challenge':7, 'bonus-completion':96, 'native-layout':1019};
 const retainedSuites = [...Object.keys(retainedChecks), 'care-fatigue', 'care-full-run', 'chain-reaction', 'rally-zombie', 'rally-raid', 'lights-out', 'garlic-run', 'bungee-business', 'cob-cannon-command', 'pool-panic', 'pool-panic-endless'];
 assert.equal(retainedSuites.length, 23);
-const suites = [...retainedSuites, 'scrap-yard', 'vase-ambush'];
-assert.equal(suites.length, 25);
+const suites = [...retainedSuites, 'scrap-yard', 'vase-ambush', 'torchbearer'];
+assert.equal(suites.length, 26);
 const reports = new Map();
 let checks = 0;
 for (const name of suites) {
@@ -233,7 +248,7 @@ for (const name of suites) {
   reports.set(name, result);
 }
 for (const [name, count] of Object.entries(retainedChecks))
-  assert.equal(reports.get(name).checks, count + (focusedCheckExtensions[name] || 0),
+  assert.equal(reports.get(name).checks, count + (focusedCheckExtensions[name] || 0)+(TORCH_FOCUSED_CHECK_EXTENSIONS[name]||0),
     'Every retained suite keeps its old assertions and reviewed appended coverage: ' + name);
 // Preserve all retained assertions. Raid adds one challenge-definition
 // iteration and 2,732 native footer/card/packet/layer checks; Raid.2
@@ -242,7 +257,7 @@ assert.equal(Object.values(retainedChecks).reduce((sum, count) => sum + count, 0
 assert.equal(Object.values(scrapFocusedCheckExtensions).reduce((sum, count) => sum + count, 0), 352);
 assert.equal(Object.values(vaseFocusedCheckExtensions).reduce((sum, count) => sum + count, 0), 770);
 assert.equal(Object.values(focusedCheckExtensions).reduce((sum, count) => sum + count, 0), 1122);
-assert.equal(reports.get('care-fatigue').checks, 25042,
+assert.equal(reports.get('care-fatigue').checks, 25042+(TORCH_FOCUSED_CHECK_EXTENSIONS['care-fatigue']||0),
   'Fatigue rig coverage retains every crew pose, scoped state and restoration check');
 const focusedRetentionBytes = await read('tests/scrap1-focused-retention/adaptations.json');
 assert.equal(sha(focusedRetentionBytes), 'd8398969b25626a3449c645d4c3400b6905c14635132ffffebf95cb91d02d0c1');
@@ -263,9 +278,13 @@ for(const [name,record] of Object.entries(focusedRetention.runners)) {
   assert.equal(sha(await read('tests/ambush1-retained-parent/'+record.runner)),record.runnerSha256,'Published Scrap focused runner remains the reviewed compatibility adaptation: '+name);
   assert.equal(record.baselineChecks,name==='care-fatigue'?25042:retainedChecks[name]);
   assert.equal(record.appendedChecks,scrapFocusedCheckExtensions[name]||0);
-  assert.equal(reports.get(name).checks,record.baselineChecks+record.appendedChecks+(vaseFocusedCheckExtensions[name]||0));
+  assert.equal(reports.get(name).checks,record.baselineChecks+record.appendedChecks+(vaseFocusedCheckExtensions[name]||0)+(TORCH_FOCUSED_CHECK_EXTENSIONS[name]||0));
 }
-await verifyAmbushFocusedRetention({read,sha,engine,reports});
+const publishedAmbushFocusedReports=new Map();
+for(const name of [...Object.keys(retainedChecks),'care-fatigue'])
+  publishedAmbushFocusedReports.set(name,JSON.parse(await publishedAmbushRead('tests/'+name+'-results.json')));
+await verifyAmbushFocusedRetention({read:publishedAmbushRead,sha,engine:ambushEngine,reports:publishedAmbushFocusedReports});
+await verifyTorchFocusedRetention({read,sha,engine,reports});
 const fullRunReport = reports.get('care-full-run');
 assert.equal(fullRunReport.checks, Object.keys(fullRunReport.sourceSha256).length + 152, 'Complete-engine provenance and required native scenario checks are retained');
 assert.equal(fullRunReport.execution, 'complete-production-engine',
@@ -539,6 +558,10 @@ await verifyVaseAmbush({report:reports.get('vase-ambush'),read,sha,engine,fullRu
   productionBuildBytes:fullRunProductionBuildBytes,
   currentArtBytes:fs.readFileSync(new URL('content/native-bonus-art.json',dist)),
   previousArtBytes:fs.readFileSync(new URL('./fixtures/scrap1-native-bonus-art.json',import.meta.url))});
+await verifyTorchbearer({report:reports.get('torchbearer'),read,sha,engine,fullRunReport,
+  productionBuildBytes:fullRunProductionBuildBytes,
+  currentArtBytes:fs.readFileSync(new URL('content/native-bonus-art.json',dist)),
+  previousArtBytes:fs.readFileSync(new URL('./fixtures/ambush1-native-bonus-art.json',import.meta.url))});
 const careBalance = reports.get('intensive-care').balanceModel;
 assert.equal(careBalance.kind, 'native healing/fatigue capacity bound; not a battle clear');
 assert(careBalance.allBedsHealHpPerSecond > careBalance.maximumCrewFatigueHpPerSecond);
@@ -919,12 +942,16 @@ assert.equal(newModes.get('GAMEMODE_CHALLENGE_COB_CANNON_COMMAND'),85);
 assert.equal(newModes.get('GAMEMODE_CHALLENGE_POOL_PANIC'),86);
 assert.equal(newModes.get('GAMEMODE_CHALLENGE_POOL_PANIC_ENDLESS'),87);
 assert.equal(newModes.get('GAMEMODE_CHALLENGE_SCRAP_YARD'),88);
-assert.equal(newModes.get('NUM_GAME_MODES'),90);
+assert.equal(newModes.get('NUM_GAME_MODES'),91);
 assert.equal(newModes.get('GAMEMODE_CHALLENGE_VASE_AMBUSH'),89);
+assert.equal(newModes.get('GAMEMODE_CHALLENGE_FIRE_DRILL'),90);
+const ambushModes = enumValues((await ambushSourceRead('source/src/ConstEnums.h')).toString(), 'GameMode');
+assert.deepEqual([...newModes].filter(([name])=>!['GAMEMODE_CHALLENGE_FIRE_DRILL','NUM_GAME_MODES'].includes(name)),
+  [...ambushModes].filter(([name])=>name!=='NUM_GAME_MODES'),'All published mode IDs0..89 remain exact');
 const publishedModes = enumValues((await historyRead('source/src/ConstEnums.h')).toString(), 'GameMode');
 assert.equal(publishedModes.get('NUM_GAME_MODES'),88);
-assert.deepEqual([...newModes].filter(([name])=>!['GAMEMODE_CHALLENGE_SCRAP_YARD','GAMEMODE_CHALLENGE_VASE_AMBUSH','NUM_GAME_MODES'].includes(name)), [...publishedModes].filter(([name])=>name!=='NUM_GAME_MODES'), 'All published mode IDs0..87 remain exact; only mode88 is appended');
-assert.deepEqual([...newModes].filter(([name])=>!['GAMEMODE_CHALLENGE_POOL_PANIC_ENDLESS','GAMEMODE_CHALLENGE_SCRAP_YARD','GAMEMODE_CHALLENGE_VASE_AMBUSH','NUM_GAME_MODES'].includes(name)),[...oldModes].filter(([name])=>name!=='NUM_GAME_MODES'),'Every prior mode ID remains exact');
+assert.deepEqual([...newModes].filter(([name])=>!['GAMEMODE_CHALLENGE_SCRAP_YARD','GAMEMODE_CHALLENGE_VASE_AMBUSH','GAMEMODE_CHALLENGE_FIRE_DRILL','NUM_GAME_MODES'].includes(name)), [...publishedModes].filter(([name])=>name!=='NUM_GAME_MODES'), 'All published mode IDs0..87 remain exact');
+assert.deepEqual([...newModes].filter(([name])=>!['GAMEMODE_CHALLENGE_POOL_PANIC_ENDLESS','GAMEMODE_CHALLENGE_SCRAP_YARD','GAMEMODE_CHALLENGE_VASE_AMBUSH','GAMEMODE_CHALLENGE_FIRE_DRILL','NUM_GAME_MODES'].includes(name)),[...oldModes].filter(([name])=>name!=='NUM_GAME_MODES'),'Every prior mode ID remains exact');
 assert.deepEqual([...enumValues(newEnums, 'ChallengePage')], [...enumValues(oldEnums, 'ChallengePage')],
   'Cold Front uses the existing Bonus page without changing any page IDs');
 const oldZombieIds = enumValues(oldEnums, 'ZombieType'), newZombieIds = enumValues(newEnums, 'ZombieType');
@@ -932,8 +959,11 @@ for (const [key,value] of oldZombieIds) if (!['NUM_ZOMBIE_TYPES','ZOMBIE_CACHED_
   assert.equal(newZombieIds.get(key), value, 'Every original gameplay zombie ID remains stable: '+key);
 assert.equal(oldZombieIds.get('NUM_ZOMBIE_TYPES'),34);
 assert.equal(newZombieIds.get('ZOMBIE_RALLY'),33);
-assert.equal(newZombieIds.get('NUM_ZOMBIE_TYPES'),34);
-assert.equal(newZombieIds.size,oldZombieIds.size);
+assert.equal(newZombieIds.get('ZOMBIE_TORCHBEARER'),34);
+assert.equal(newZombieIds.get('NUM_ZOMBIE_TYPES'),35);
+assert.equal(newZombieIds.size,oldZombieIds.size+1);
+for(const sentinel of ['ZOMBIE_CACHED_POLEVAULTER_WITH_POLE','NUM_CACHED_ZOMBIE_TYPES'])
+  assert.equal(newZombieIds.get(sentinel),oldZombieIds.get(sentinel)+1,'Only transient zombie cache capacity grows');
 function zombieDefinitions(text) {
   const table=text.slice(text.indexOf('gZombieDefs['));
   return [...table.slice(0,table.indexOf('};')).matchAll(/\{\s*\.mZombieType\s*=[^}]+\}/g)].map(m=>m[0].replace(/\s+/g,' ').trim());
@@ -942,8 +972,9 @@ const parentZombieDefs=zombieDefinitions((await parentBytes('src/Lawn/Zombie.cpp
 const currentZombieDefs=zombieDefinitions((await read('source/src/Lawn/Zombie.cpp')).toString());
 assert.equal(parentZombieDefs.length,34);
 assert.deepEqual(currentZombieDefs.slice(0,34),parentZombieDefs);
-assert.equal(currentZombieDefs.length,34);
-assert.match(currentZombieDefs.at(-1),/ZOMBIE_RALLY/);
+assert.equal(currentZombieDefs.length,35);
+assert.match(currentZombieDefs[33],/ZOMBIE_RALLY/);
+assert.match(currentZombieDefs.at(-1),/ZOMBIE_TORCHBEARER/);
 assert.match(currentZombieDefs.at(-1),/mPickWeight = 0/);
 const oldSeeds = enumValues(oldEnums, 'SeedType'), newSeeds = enumValues(newEnums, 'SeedType');
 for (const [key, value] of oldSeeds) assert.equal(newSeeds.get(key), value, 'Every original and special seed ID stays stable: ' + key);
@@ -976,20 +1007,28 @@ assert.deepEqual(newDefinitions.slice(0,oldDefinitions.length), oldDefinitions, 
 const publishedDefinitions = definitions((await historyRead('source/src/Lawn/Widget/ChallengeScreen.cpp')).toString());
 assert.equal(publishedDefinitions.length, oldDefinitions.length+1);
 assert.deepEqual(newDefinitions.slice(0,publishedDefinitions.length), publishedDefinitions, 'Every one of the fifteen published Bonus cards and all original catalog entries remains exact');
-assert.equal(newDefinitions.length, publishedDefinitions.length+2);
+assert.equal(newDefinitions.length, publishedDefinitions.length+3);
 const scrapDefinitions=definitions((await scrapSourceRead('source/src/Lawn/Widget/ChallengeScreen.cpp')).toString());
 assert.equal(scrapDefinitions.length,publishedDefinitions.length+1);
 assert.deepEqual(newDefinitions.slice(0,scrapDefinitions.length),scrapDefinitions,'Every original and all sixteen published Bonus definitions are exact');
-assert.match(newDefinitions.at(-2), /GAMEMODE_CHALLENGE_SCRAP_YARD/);
-assert.match(newDefinitions.at(-2), /Scrap Yard/);
-assert.match(newDefinitions.at(-2), /CHALLENGE_PAGE_BONUS/);
-assert.match(newDefinitions.at(-2), /\.mRow = 4/);
-assert.match(newDefinitions.at(-2), /\.mCol = 0/);
-assert.match(newDefinitions.at(-1),/GAMEMODE_CHALLENGE_VASE_AMBUSH/);
-assert.match(newDefinitions.at(-1),/Vase Ambush/);
-assert.match(newDefinitions.at(-1),/CHALLENGE_PAGE_BONUS/);
-assert.match(newDefinitions.at(-1),/\.mRow = 4/);
-assert.match(newDefinitions.at(-1),/\.mCol = 1/);
+assert.match(newDefinitions[87], /GAMEMODE_CHALLENGE_SCRAP_YARD/);
+assert.match(newDefinitions[87], /Scrap Yard/);
+assert.match(newDefinitions[87], /CHALLENGE_PAGE_BONUS/);
+assert.match(newDefinitions[87], /\.mRow = 4/);
+assert.match(newDefinitions[87], /\.mCol = 0/);
+assert.match(newDefinitions[88],/GAMEMODE_CHALLENGE_VASE_AMBUSH/);
+assert.match(newDefinitions[88],/Vase Ambush/);
+assert.match(newDefinitions[88],/CHALLENGE_PAGE_BONUS/);
+assert.match(newDefinitions[88],/\.mRow = 4/);
+assert.match(newDefinitions[88],/\.mCol = 1/);
+const ambushDefinitions=definitions((await ambushSourceRead('source/src/Lawn/Widget/ChallengeScreen.cpp')).toString());
+assert.deepEqual(newDefinitions.slice(0,89),ambushDefinitions,'All seventeen published Bonus cards retain their exact definitions');
+assert.equal(newDefinitions.length,90);
+assert.match(newDefinitions[89],/GAMEMODE_CHALLENGE_FIRE_DRILL/);
+assert.match(newDefinitions[89],/Fire Drill/);
+assert.match(newDefinitions[89],/CHALLENGE_PAGE_BONUS/);
+assert.match(newDefinitions[89],/\.mRow = 4/);
+assert.match(newDefinitions[89],/\.mCol = 2/);
 assert.match(newDefinitions[81], /GAMEMODE_CHALLENGE_LIGHTS_OUT/);
 assert.match(newDefinitions[81], /Lights Out/);
 assert.match(newDefinitions[81], /CHALLENGE_PAGE_BONUS/);
@@ -1019,7 +1058,16 @@ const publishedArtBytes = fs.readFileSync(new URL('./fixtures/endless3-native-bo
 assert.equal(sha(publishedArtBytes),'538175fc8c54e8efb241a129263f2c99ee8e4193fb09ace213a67e9430f7483b','Independent reviewed fifteen-card native Bonus metadata');
 const publishedArt = JSON.parse(publishedArtBytes);
 const currentArtRecord = JSON.parse(artRecordBytes);
-assert.equal(currentArtRecord.cards.length,17);
+assert.equal(currentArtRecord.cards.length,18);
+const ambushArtBytes=fs.readFileSync(new URL('./fixtures/ambush1-native-bonus-art.json',import.meta.url));
+assert.equal(sha(ambushArtBytes),'e4b04a29302b31268b9aed1563c7a03bccd174fdb55f36bb7bda75a832df74e4');
+const ambushArt=JSON.parse(ambushArtBytes);
+assert.equal(ambushArt.cards.length,17);
+assert.deepEqual({...currentArtRecord,cards:currentArtRecord.cards.slice(0,17)},ambushArt,'All seventeen prior native card records remain exact');
+assert.equal(currentArtRecord.cards[17].mode,90);
+assert.equal(currentArtRecord.cards[17].name,'Fire Drill');
+assert.equal(currentArtRecord.cards[17].generatedArtworkUsed,false);
+for(const field of ['tip','tips','descriptionBelowCard'])assert(!Object.hasOwn(currentArtRecord.cards[17],field));
 const scrapArtBytes=fs.readFileSync(new URL('./fixtures/scrap1-native-bonus-art.json',import.meta.url));
 assert.equal(sha(scrapArtBytes),'183cb482642023f7b1ed7102052143b0c5bf543204150626670c832d4db3eaf0','Independently retained published sixteen-card metadata');
 const scrapArt=JSON.parse(scrapArtBytes);
@@ -1360,8 +1408,8 @@ assert.deepEqual(fs.readFileSync(new URL('generation.json', artworkUrl)), genera
 const sourceManifest = JSON.parse(await read('source-manifest.json'));
 assert.equal(sourceManifest.version, engine.id);
 assert.deepEqual(Object.keys(sourceManifest.files).sort(),
-  [...Object.keys(historySource.manifest.files), ...SCRAP_SOURCE_ADDITIONS, ...AMBUSH_SOURCE_ADDITIONS].sort(),
-  'Scrap Yard retains all852 published paths and appends only its four implementation/presentation files');
+  [...Object.keys(historySource.manifest.files), ...SCRAP_SOURCE_ADDITIONS, ...AMBUSH_SOURCE_ADDITIONS, ...TORCH_SOURCE_ADDITIONS].sort(),
+  'Torchbearer retains every860 published Ambush source path and appends only eight implementation/presentation files');
 const completeProductionSources = Object.fromEntries(Object.entries(sourceManifest.files)
   .map(([name, pin]) => ['source/' + name, pin.sha256]));
 assert.deepEqual(fullRunReport.sourceSha256, completeProductionSources,
@@ -2059,7 +2107,7 @@ if (process.argv.includes('--run-native')) {
     }
     for (const name of suites) {
       const args = [path.join(temporary, 'tests/test-' + name + '.py'), '--native'];
-      if (['care-full-run','chain-reaction','rally-zombie','rally-raid','lights-out','garlic-run','bungee-business','cob-cannon-command','pool-panic','pool-panic-endless','scrap-yard','vase-ambush'].includes(name)) args.push('--asset-root', fileURLToPath(new URL('game-assets/', dist)));
+      if (['care-full-run','chain-reaction','rally-zombie','rally-raid','lights-out','garlic-run','bungee-business','cob-cannon-command','pool-panic','pool-panic-endless','scrap-yard','vase-ambush','torchbearer'].includes(name)) args.push('--asset-root', fileURLToPath(new URL('game-assets/', dist)));
       const run = spawnSync('python', args, {encoding: 'utf8'});
       assert.equal(run.status, 0, (run.error?.message || '') + run.stdout + run.stderr);
       const actual = JSON.parse(fs.readFileSync(path.join(temporary, 'tests/' + name + '-results.json')));
@@ -2068,7 +2116,7 @@ if (process.argv.includes('--run-native')) {
       assert.equal(actual.exitCode, 0);
       assert.match(actual.status, /^PASS/);
       assert.deepEqual(actual.sourceSha256, reports.get(name).sourceSha256);
-      if(['care-full-run','chain-reaction','rally-zombie','rally-raid','lights-out','garlic-run','bungee-business','cob-cannon-command','pool-panic','pool-panic-endless','scrap-yard','vase-ambush'].includes(name)) {
+      if(['care-full-run','chain-reaction','rally-zombie','rally-raid','lights-out','garlic-run','bungee-business','cob-cannon-command','pool-panic','pool-panic-endless','scrap-yard','vase-ambush','torchbearer'].includes(name)) {
         assert.equal(actual.productionObjectCount,CURRENT_OBJECT_COUNT);
         assert.deepEqual(actual.productionObjectSha256,fullRunReport.productionObjectSha256);
         assert.equal(actual.productionBuildReceiptSha256,sha(fullRunProductionBuildBytes));
@@ -2107,8 +2155,13 @@ if (process.argv.includes('--run-native')) {
         productionBuildBytes:fullRunProductionBuildBytes,
         currentArtBytes:fs.readFileSync(new URL('content/native-bonus-art.json',dist)),
         previousArtBytes:fs.readFileSync(new URL('./fixtures/scrap1-native-bonus-art.json',import.meta.url))});
+      if(name==='torchbearer') await verifyTorchbearer({report:actual,
+        read:async input=>fs.readFileSync(path.join(temporary,input)),sha,engine,fullRunReport,
+        productionBuildBytes:fullRunProductionBuildBytes,
+        currentArtBytes:fs.readFileSync(new URL('content/native-bonus-art.json',dist)),
+        previousArtBytes:fs.readFileSync(new URL('./fixtures/ambush1-native-bonus-art.json',import.meta.url))});
     }
-    console.log(`PASS all ${checks} assertions across 25 native suites, including complete headless Care, Chain, Rally, Raid, Lights Out, Garlic Run, Bungee Business, Cob Cannon Command, Pool Panic, Pool Panic Endless, Scrap Yard and Vase Ambush scenarios on CI.`);
+    console.log(`PASS all ${checks} assertions across 26 native suites, including complete headless Care, Chain, Rally, Raid, Lights Out, Garlic Run, Bungee Business, Cob Cannon Command, Pool Panic, Pool Panic Endless, Scrap Yard, Vase Ambush and Torchbearer scenarios on CI.`);
   } finally {
     const resolved = fs.realpathSync(temporary);
     assert.equal(path.dirname(resolved), temporaryRoot);

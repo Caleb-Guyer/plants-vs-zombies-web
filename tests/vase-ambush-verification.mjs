@@ -3,7 +3,8 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {CURRENT_ENGINE_ID, CURRENT_SOURCE_COUNT, CURRENT_OBJECT_COUNT,
- reconstructScrapSources} from './native-release-context.mjs';
+ AMBUSH_ENGINE_ID, AMBUSH_ARCHIVE_SHA256, CURRENT_VASE_RETENTION_SHA256,
+ reconstructAmbushSources, reconstructScrapSources, verifyTorchRetainedParentInputs} from './native-release-context.mjs';
 
 // Accepted only after independent review of the complete actual O2 matrix,
 // all thirty raw results, sixteen fixed inputs and current production graph.
@@ -229,6 +230,17 @@ function method(source, signature) {
 }
 
 export async function verifyVaseSourceBounds({read, sha, engine}) {
+ if (engine.id === CURRENT_ENGINE_ID) {
+  const referenceBytes = fs.readFileSync(new URL('./fixtures/torch1-parent-reference.json', import.meta.url));
+  const parent = await reconstructAmbushSources({referenceBytes,read,sha,engine});
+  const projectedRead = async name => name.startsWith('source/') ?
+   (assert(parent.files.has(name.slice(7))), parent.files.get(name.slice(7))) : read(name);
+  for(const name of ['VaseAmbush.cpp','VaseAmbush.h','VaseAmbushPresentation.cpp','VaseAmbushPresentation.h'])
+   assert.deepEqual(await read('source/src/Lawn/System/'+name),parent.files.get('src/Lawn/System/'+name),
+    'Every existing Vase puzzle and renderer byte remains unchanged by Torchbearer: '+name);
+  return verifyVaseSourceBounds({read:projectedRead,sha,engine:engine.parent});
+ }
+ assert.equal(engine.id,AMBUSH_ENGINE_ID);
  const referenceBytes = fs.readFileSync(new URL('./fixtures/ambush1-parent-reference.json', import.meta.url));
  const parent = await reconstructScrapSources({referenceBytes, read, sha, engine});
  const normalized = bytes => text(bytes).replace(/\r\n?/g, '\n');
@@ -595,8 +607,8 @@ export async function verifyVaseAmbush({report, read, sha, engine, fullRunReport
  assert(acceptedContractPins.has(contractPin), 'The complete final O2 Vase Ambush matrix and contract have not been accepted');
  const contract = json(contractBytes);
  assert.equal(report.verificationContractSha256, contractPin);
- fields(contract, {schemaVersion: 1, engineId: CURRENT_ENGINE_ID, mode: 89, profileIndex: 88, rulesVersion: 1,
-  sourceCount: CURRENT_SOURCE_COUNT, productionObjectCount: CURRENT_OBJECT_COUNT, playablePrimaryRuns: 28,
+ fields(contract, {schemaVersion: 1, engineId: AMBUSH_ENGINE_ID, mode: 89, profileIndex: 88, rulesVersion: 1,
+  sourceCount: 860, productionObjectCount: 138, playablePrimaryRuns: 28,
   isolatedSyntheticControls: 2, nativeSpeedPairs: 14, expectedFullBoards: 5, expectedBrainsPerBoard: 5,
   expectedPrimaryWins: 28, expectedReplayWins: 4, expectedGenuineBadPlanLosses: 4, originalArtInputs: 942,
   maximumBoardTicks: 40000, maximumSpeedPairTickDelta: 30});
@@ -640,9 +652,25 @@ export async function verifyVaseAmbush({report, read, sha, engine, fullRunReport
   'tests/build-vase-ambush.py', 'tests/test-vase-ambush.py'];
  assert.deepEqual(Object.keys(contract.fixtureSha256).sort(), [...requiredFixtures].sort(),
   'The final sixteen actual native inputs are complete and bounded');
+ const retained=await verifyTorchRetainedParentInputs({read,sha});
+ const adapterBytes=await read('tests/torch1-vase-retention.json');
+ assert(CURRENT_VASE_RETENTION_SHA256,'The current Vase execution envelope has not been accepted');
+ assert.equal(sha(adapterBytes),CURRENT_VASE_RETENTION_SHA256);
+ assert.equal(report.retentionAdapterSha256,CURRENT_VASE_RETENTION_SHA256);
+ const adapter=json(adapterBytes);
+ fields(adapter,{schemaVersion:1,parentEngineId:AMBUSH_ENGINE_ID,parentArchiveSha256:AMBUSH_ARCHIVE_SHA256,
+  engineId:CURRENT_ENGINE_ID,historicalContractSha256:contractPin,sourceCount:CURRENT_SOURCE_COUNT,
+  productionObjectCount:CURRENT_OBJECT_COUNT,all30CasesFresh:true});
+ assert.deepEqual(Object.keys(adapter.fixtureOverrides),['tests/test-vase-ambush.py']);
+ assert.equal(retained.files['vase-ambush-verification-contract.json'].sha256,contractPin);
+ const originalRunner=await read('tests/torch1-retained-parent/test-vase-ambush.py');
+ assert.equal(sha(originalRunner),retained.files['test-vase-ambush.py'].sha256);
+ assert.equal(sha(originalRunner),contract.fixtureSha256['tests/test-vase-ambush.py']);
  for (const name of requiredFixtures) assert(Object.hasOwn(contract.fixtureSha256, name), 'Independent final input pin: ' + name);
  for (const [name, pin] of Object.entries(contract.fixtureSha256)) {
-  safeName(name); assert(name.startsWith('tests/')); digest(pin); assert.equal(sha(await read(name)), pin, 'Final frozen native input: ' + name);
+  safeName(name); assert(name.startsWith('tests/')); digest(pin);
+  const currentPin=Object.hasOwn(adapter.fixtureOverrides,name)?adapter.fixtureOverrides[name]:pin;
+  digest(currentPin);assert.equal(sha(await read(name)),currentPin,'Original frozen Vase input or independently accepted current execution envelope: '+name);
  }
  for (const [name, pin] of Object.entries(historicalPins)) {
   assert.equal(contract.fixtureSha256[name], pin); assert.equal(sha(await read(name)), pin, 'Original development/legacy bytes remain separate: ' + name);
@@ -706,7 +734,7 @@ export async function verifyVaseAmbush({report, read, sha, engine, fullRunReport
  }
  assert.equal(sha(previousArtBytes), previousCardPin);
  const currentArt = json(currentArtBytes), previousArt = json(previousArtBytes);
- assert.equal(previousArt.cards.length, 16); assert.equal(currentArt.cards.length, 17);
+ assert.equal(previousArt.cards.length, 16); assert.equal(currentArt.cards.length, 18);
  assert.deepEqual({...currentArt, cards: currentArt.cards.slice(0, 16)}, previousArt);
  fields(currentArt.cards[16], {mode: 89, name: 'Vase Ambush', generatedArtworkUsed: false, background: 'IMAGE_BACKGROUND1'});
  for (const name of ['tip', 'tips', 'descriptionBelowCard']) assert(!Object.hasOwn(currentArt.cards[16], name));

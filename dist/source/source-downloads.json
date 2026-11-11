@@ -1,15 +1,15 @@
 {
   "schema_version": 1,
-  "current_engine": "0.2.6-web-ambush.1",
+  "current_engine": "0.2.6-web-torch.1",
   "upstream_tag": "0.2.6",
-  "layout": "Site-source nests current corresponding source, the upstream baseline, the historical Endless.2 comparator, independently pinned complete Scrap.1 and Endless.3 source projections, the native I, Zombie UI reference and the current full patch. Each archives[].url is its download location: current and upstream source stay on Pages; historical source archives use immutable GitHub repository URLs and remain in the full runtime distribution. Resolve historical relative source references in retained provenance through this inventory. Linked native test artifacts are losslessly packed; the included decoder restores their exact pinned bytes.",
+  "layout": "Site-source nests current corresponding source, the upstream baseline, the historical Endless.2 comparator, independently pinned complete Ambush.1, Scrap.1 and Endless.3 source projections, the native I, Zombie UI reference and the current full patch. Each archives[].url is its download location: current and upstream source stay on Pages; historical source archives use immutable GitHub repository URLs and remain in the full runtime distribution. Resolve historical relative source references in retained provenance through this inventory. Linked native test artifacts are losslessly packed; the included decoder restores their exact pinned bytes.",
   "nested_sources": [
     "pvz-portable-0.2.6-source.zip",
     "pvz-portable-0.2.6-web-endless.2-source.zip",
-    "pvz-portable-0.2.6-web-ambush.1-source.zip"
+    "pvz-portable-0.2.6-web-torch.1-source.zip"
   ],
   "nested_patches": [
-    "web-ambush.1.patch"
+    "web-torch.1.patch"
   ],
   "archives": [
     {
@@ -24,9 +24,9 @@
       "name": "pvz-portable-0.2.6-web-ambush.1-source.zip",
       "bytes": 25841863,
       "sha256": "6da0b6e19d56b3b345a684d379453abecff055a6d788cc17bd161f412bf3e7c9",
-      "current": true,
+      "current": false,
       "upstream": false,
-      "url": "./pvz-portable-0.2.6-web-ambush.1-source.zip"
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/6c8bbd659fd75cc85cd286815cf859694268100b/dist/source/pvz-portable-0.2.6-web-ambush.1-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-bungee.1-source.zip",
@@ -443,6 +443,14 @@
       "current": false,
       "upstream": false,
       "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-software.9-source.zip"
+    },
+    {
+      "name": "pvz-portable-0.2.6-web-torch.1-source.zip",
+      "bytes": 31527598,
+      "sha256": "f0c4ec0f485878514831dc31df28316211b417608e03cb39855ecb109b8c4f1e",
+      "current": true,
+      "upstream": false,
+      "url": "./pvz-portable-0.2.6-web-torch.1-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-zombatar-source.zip",

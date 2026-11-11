@@ -1,0 +1,1327 @@
+diff --git a/CMake/ProjectVersion.cmake b/CMake/ProjectVersion.cmake
+index 537514c982f1ed82dec06c3f786766b7614f352e..0b76e8a64ebff1a8d7542faa9d69db4f211058e2 100644
+--- a/CMake/ProjectVersion.cmake
++++ b/CMake/ProjectVersion.cmake
+@@ -66,6 +66,6 @@ if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
+ endif()
+ 
+ # Browser release identity; keep binary and corresponding-source manifests aligned.
+-set(PVZP_VERSION "0.2.6-web-ambush.1")
++set(PVZP_VERSION "0.2.6-web-torch.1")
+ set(PVZP_VERSION_PLAIN "0.2.6")
+ configure_file("${PROJECT_SOURCE_DIR}/CMake/ProjectVersion.h.in" "${PROJECT_BINARY_DIR}/ProjectVersion.h" @ONLY)
+diff --git a/src/ConstEnums.h b/src/ConstEnums.h
+index 66b3b8cfbe12a85884d9e9499ddd388c81efd0c4..4ec392c503a2734f871317bad1cab9f089958e6e 100644
+--- a/src/ConstEnums.h
++++ b/src/ConstEnums.h
+@@ -469,7 +469,8 @@ enum GameMode : int32_t
+ 	GAMEMODE_CHALLENGE_POOL_PANIC_ENDLESS = 87,
+ 	GAMEMODE_CHALLENGE_SCRAP_YARD = 88,
+ 	GAMEMODE_CHALLENGE_VASE_AMBUSH = 89,
+-	NUM_GAME_MODES = 90
++	GAMEMODE_CHALLENGE_FIRE_DRILL = 90,
++	NUM_GAME_MODES = 91
+ };
+ enum GameObjectType : int32_t
+ {
+@@ -1396,6 +1397,7 @@ enum ZombieType : int32_t
+ 	ZOMBIE_TALLNUT_HEAD,
+ 	ZOMBIE_REDEYE_GARGANTUAR,
+ 	ZOMBIE_RALLY,
++	ZOMBIE_TORCHBEARER,
+ 	NUM_ZOMBIE_TYPES,
+ 	ZOMBIE_CACHED_POLEVAULTER_WITH_POLE,
+ 	NUM_CACHED_ZOMBIE_TYPES
+diff --git a/src/Lawn/Board.cpp b/src/Lawn/Board.cpp
+index e0571b7621033b6bd0d8fcdd1590c0e87ae7d387..0a062e66ce4ce2141c85e42467e37f56e8151087 100644
+--- a/src/Lawn/Board.cpp
++++ b/src/Lawn/Board.cpp
+@@ -915,6 +915,7 @@ void Board::PickBackground()
+ 	case GameMode::GAMEMODE_CHALLENGE_RALLY_POINT:
+ 	case GameMode::GAMEMODE_CHALLENGE_RALLY_RAID:
+ 	case GameMode::GAMEMODE_CHALLENGE_VASE_AMBUSH:
++	case GameMode::GAMEMODE_CHALLENGE_FIRE_DRILL:
+ 	case GameMode::GAMEMODE_SURVIVAL_HARD_STAGE_1:
+ 	case GameMode::GAMEMODE_SURVIVAL_ENDLESS_STAGE_1:
+ 	case GameMode::GAMEMODE_CHALLENGE_WAR_AND_PEAS:
+@@ -1396,7 +1397,7 @@ void Board::InitLevel()
+     // A fresh game opts into the new mechanics. Loaded revision-1 checkpoints
+     // never pass through InitLevel and keep their original state and rules.
+     if (BonusChallenge::IsMode(aGameMode))
+-        mChallenge->mChallengeState = VaseAmbush::IsMode(aGameMode) ? VaseAmbush::kActive : ScrapYard::IsMode(aGameMode) ? ScrapYard::kState : PoolPanicEndless::IsMode(aGameMode) ? PoolPanicEndless::kActive : PoolPanic::IsMode(aGameMode) ? PoolPanic::kActive : CobCannonCommand::IsMode(aGameMode) ? CobCannonCommand::kActive : BungeeBusiness::IsMode(aGameMode) ? BungeeBusiness::kActive : GarlicRun::IsMode(aGameMode) ? GarlicRun::kPlanning : LightsOut::IsMode(aGameMode) ? LightsOut::kState : RallyRaid::IsMode(aGameMode) ? RallyRaid::kActive :
++        mChallenge->mChallengeState = FireDrill::IsMode(aGameMode) ? FireDrill::kActive : VaseAmbush::IsMode(aGameMode) ? VaseAmbush::kActive : ScrapYard::IsMode(aGameMode) ? ScrapYard::kState : PoolPanicEndless::IsMode(aGameMode) ? PoolPanicEndless::kActive : PoolPanic::IsMode(aGameMode) ? PoolPanic::kActive : CobCannonCommand::IsMode(aGameMode) ? CobCannonCommand::kActive : BungeeBusiness::IsMode(aGameMode) ? BungeeBusiness::kActive : GarlicRun::IsMode(aGameMode) ? GarlicRun::kPlanning : LightsOut::IsMode(aGameMode) ? LightsOut::kState : RallyRaid::IsMode(aGameMode) ? RallyRaid::kActive :
+             RallyZombie::IsMode(aGameMode) ? RallyZombie::kState :
+             ChainReaction::IsMode(aGameMode) ? ChainReaction::kPlanning :
+             IntensiveCare::IsMode(aGameMode) ? IntensiveCare::kState :
+@@ -1604,6 +1605,7 @@ void Board::InitLevel()
+ 		mFogOffset = 1065 - LeftFogColumn() * 80;
+ 	}
+     if (VaseAmbush::IsMode(mApp->mGameMode)) VaseAmbush::PreloadResources();
++    if (FireDrill::IsMode(mApp->mGameMode)) FireDrill::PreloadResources();
+     if (ScrapYard::IsMode(mApp->mGameMode)) ScrapYard::PreloadResources();
+     if (PoolPanicEndless::IsMode(mApp->mGameMode)) PoolPanicEndless::PreloadResources();
+ 	mChallenge->InitLevel();
+@@ -1621,6 +1623,7 @@ Reanimation* Board::CreateRakeReanim(float theRakeX, float theRakeY, int theRend
+ void Board::PlaceRake()
+ {
+     if (VaseAmbush::IsMode(mApp->mGameMode)) return;
++    if (FireDrill::IsMode(mApp->mGameMode)) return;
+     if (ScrapYard::IsMode(mApp->mGameMode)) return;
+     if (PoolPanicEndless::IsMode(mApp->mGameMode) || PoolPanic::IsMode(mApp->mGameMode) || CobCannonCommand::IsMode(mApp->mGameMode) || BungeeBusiness::IsMode(mApp->mGameMode) || ChainReaction::IsMode(mApp->mGameMode) || GarlicRun::IsMode(mApp->mGameMode)) return;
+     if (LightsOut::IsMode(mApp->mGameMode) || GardenShuffle::IsMode(mApp->mGameMode) || SeedSwap::IsMode(mApp->mGameMode) || IntensiveCare::IsMode(mApp->mGameMode)) return;
+@@ -7388,7 +7391,7 @@ void Board::DrawLevel(Graphics* g)
+ 
+ 	int aPosX = 780;
+ 	int aPosY = 595;
+-    if (VaseAmbush::IsMode(mApp->mGameMode) || ScrapYard::IsMode(mApp->mGameMode) || PoolPanicEndless::IsMode(mApp->mGameMode) || PoolPanic::IsMode(mApp->mGameMode) || CobCannonCommand::IsMode(mApp->mGameMode) || BungeeBusiness::IsMode(mApp->mGameMode) || RallyRaid::IsMode(mApp->mGameMode)) aPosY = 592;
++    if (FireDrill::IsMode(mApp->mGameMode) || VaseAmbush::IsMode(mApp->mGameMode) || ScrapYard::IsMode(mApp->mGameMode) || PoolPanicEndless::IsMode(mApp->mGameMode) || PoolPanic::IsMode(mApp->mGameMode) || CobCannonCommand::IsMode(mApp->mGameMode) || BungeeBusiness::IsMode(mApp->mGameMode) || RallyRaid::IsMode(mApp->mGameMode)) aPosY = 592;
+ 	if (HasProgressMeter())
+ 	{
+ 		aPosX = 593;
+@@ -9452,6 +9455,7 @@ bool Board::StageIsNight()
+ 
+ bool Board::StageHasGraveStones()
+ {
++    if (FireDrill::IsMode(mApp->mGameMode)) return false;
+     if (ScrapYard::IsMode(mApp->mGameMode)) return false;
+     if (LightsOut::IsMode(mApp->mGameMode)) return false;
+     if (mChallenge && LanternGlow::IsMode(mApp->mGameMode) && BonusChallenge::IsCurrentRules(mApp->mGameMode, mChallenge->mChallengeState)) return false;
+@@ -9978,6 +9982,7 @@ void Board::DropLootPiece(int thePosX, int thePosY, int theDropFactor)
+ bool Board::CanDropLoot()
+ {
+     if (VaseAmbush::IsMode(mApp->mGameMode)) return false;
++    if (FireDrill::IsMode(mApp->mGameMode)) return false;
+     if (ScrapYard::IsMode(mApp->mGameMode)) return false;
+ 	if (PoolPanicEndless::IsMode(mApp->mGameMode) || PoolPanic::IsMode(mApp->mGameMode) || CobCannonCommand::IsMode(mApp->mGameMode) || BungeeBusiness::IsMode(mApp->mGameMode) || ChainReaction::IsMode(mApp->mGameMode) || RallyRaid::IsMode(mApp->mGameMode) || GarlicRun::IsMode(mApp->mGameMode)) return false;
+ 	return !mCutScene->ShouldRunUpsellBoard() && (!mApp->IsFirstTimeAdventureMode() || mLevel >= 11);
+diff --git a/src/Lawn/Challenge.cpp b/src/Lawn/Challenge.cpp
+index 58ec05ef435e3a84f29b1087f5a27e19bb29bf86..29b574324e150eb91db7b27f76320b8803c8cfb1 100644
+--- a/src/Lawn/Challenge.cpp
++++ b/src/Lawn/Challenge.cpp
+@@ -125,6 +125,11 @@ void Challenge::InitLevel()
+         VaseAmbush::Populate(*mBoard);
+         return;
+     }
++    if (FireDrill::IsMode(mApp->mGameMode))
++    {
++        FireDrill::Populate(*mBoard);
++        return;
++    }
+     if (ScrapYard::IsMode(mApp->mGameMode))
+     {
+         ScrapYard::Populate(*mBoard);
+@@ -2146,6 +2151,11 @@ void Challenge::Update()
+         VaseAmbush::Update(*mBoard);
+         return;
+     }
++    if (FireDrill::IsMode(mApp->mGameMode))
++    {
++        FireDrill::Update(*mBoard);
++        return;
++    }
+     if (ScrapYard::IsMode(mApp->mGameMode))
+     {
+         ScrapYard::Update(*mBoard);
+@@ -2964,6 +2974,7 @@ void Challenge::WhackAZombieSpawning()
+ 
+ bool Challenge::UpdateZombieSpawning()
+ {
++    if (FireDrill::IsMode(mApp->mGameMode)) return true;
+     if (ScrapYard::IsMode(mApp->mGameMode)) return true;
+     if (PoolPanicEndless::IsMode(mApp->mGameMode) || PoolPanic::IsMode(mApp->mGameMode) || CobCannonCommand::IsMode(mApp->mGameMode) || ChainReaction::IsMode(mApp->mGameMode) || GarlicRun::IsMode(mApp->mGameMode)) return true;
+     if (BonusChallenge::IsSetup(mApp->mGameMode, mChallengeState)) return true;
+diff --git a/src/Lawn/Challenge.h b/src/Lawn/Challenge.h
+index 8b6ac8c2d38f383dd86c55437aa30ed085a43a63..354cfdc29b27a4b7ac952a6db5cb719c2f7295db 100644
+--- a/src/Lawn/Challenge.h
++++ b/src/Lawn/Challenge.h
+@@ -484,6 +484,7 @@ inline constexpr ZombieAllowedLevels gZombieAllowedLevels[NUM_ZOMBIE_TYPES] = {
+ 	{ ZOMBIE_TALLNUT_HEAD, {0} },
+ 	{ ZOMBIE_REDEYE_GARGANTUAR, {0} },
+ 	{ ZOMBIE_RALLY, {0} },
++	{ ZOMBIE_TORCHBEARER, {0} },
+ };
+ 
+ inline constexpr SeedType gArtChallengeWallnut[MAX_GRID_SIZE_Y][MAX_GRID_SIZE_X] = {
+diff --git a/src/Lawn/System/BonusChallenge.h b/src/Lawn/System/BonusChallenge.h
+index 408a88ae9ae57f0dea0738c0f97254dc77c66762..c4f19fb04d7810691100390c1f0adf2b7f5a735e 100644
+--- a/src/Lawn/System/BonusChallenge.h
++++ b/src/Lawn/System/BonusChallenge.h
+@@ -18,6 +18,7 @@
+ #include "PoolPanicEndless.h"
+ #include "ScrapYard.h"
+ #include "VaseAmbush.h"
++#include "FireDrill.h"
+ #include <array>
+ #include <cstddef>
+ #include <string_view>
+@@ -59,7 +60,7 @@ inline constexpr std::array<Wave, kWaveCount> kWaves = {{
+     {2, 6, 0, 2}, {2, 5, 2, 2}, {2, 6, 0, 3}, {3, 7, 2, 3}
+ }};
+ 
+-constexpr bool IsMode(GameMode mode) { return VaseAmbush::IsMode(mode) || ScrapYard::IsMode(mode) || PoolPanicEndless::IsMode(mode) || PoolPanic::IsMode(mode) || CobCannonCommand::IsMode(mode) || BungeeBusiness::IsMode(mode) || GarlicRun::IsMode(mode) || LightsOut::IsMode(mode) || mode == kMode || NightShift::IsMode(mode) || LanternGlow::IsMode(mode) || GardenShuffle::IsMode(mode) || SeedSwap::IsMode(mode) || IntensiveCare::IsMode(mode) || ChainReaction::IsMode(mode) || RallyZombie::IsMode(mode) || RallyRaid::IsMode(mode); }
++constexpr bool IsMode(GameMode mode) { return FireDrill::IsMode(mode) || VaseAmbush::IsMode(mode) || ScrapYard::IsMode(mode) || PoolPanicEndless::IsMode(mode) || PoolPanic::IsMode(mode) || CobCannonCommand::IsMode(mode) || BungeeBusiness::IsMode(mode) || GarlicRun::IsMode(mode) || LightsOut::IsMode(mode) || mode == kMode || NightShift::IsMode(mode) || LanternGlow::IsMode(mode) || GardenShuffle::IsMode(mode) || SeedSwap::IsMode(mode) || IntensiveCare::IsMode(mode) || ChainReaction::IsMode(mode) || RallyZombie::IsMode(mode) || RallyRaid::IsMode(mode); }
+ constexpr bool IsFlagWave(int wave) { return wave >= 0 && wave < kWaveCount && (wave + 1) % 10 == 0; }
+ constexpr int ZombieCount(int wave)
+ {
+@@ -109,13 +110,14 @@ void FillSeedBank(Bank& bank)
+ }
+ 
+ // Shared routing keeps the original Cone Zone data and helpers unchanged.
+-constexpr int StartingSun(GameMode mode) { return VaseAmbush::IsMode(mode) ? 0 : ScrapYard::IsMode(mode) ? ScrapYard::kStartingSun : PoolPanicEndless::IsMode(mode) ? 0 : PoolPanic::IsMode(mode) ? 0 : CobCannonCommand::IsMode(mode) ? 0 : BungeeBusiness::IsMode(mode) ? BungeeBusiness::kBoards[0].mSun : GarlicRun::IsMode(mode) ? 0 : LightsOut::IsMode(mode) ? 0 : RallyRaid::IsMode(mode) ? RallyRaid::kBoards[0].mSun : RallyZombie::IsMode(mode) ? RallyZombie::kStartingSun : ChainReaction::IsMode(mode) ? 0 : IntensiveCare::IsMode(mode) ? 0 : SeedSwap::IsMode(mode) ? 0 : GardenShuffle::IsMode(mode) ? 0 : LanternGlow::IsMode(mode) ? LanternGlow::kStartingSun : NightShift::IsMode(mode) ? NightShift::kStartingSun : kStartingSun; }
+-constexpr int SeedCount(GameMode mode) { return VaseAmbush::IsMode(mode) ? 0 : ScrapYard::IsMode(mode) ? static_cast<int>(ScrapYard::kSeeds.size()) : PoolPanicEndless::IsMode(mode) ? PoolPanicEndless::kBankSize : PoolPanic::IsMode(mode) ? PoolPanic::kBankSize : CobCannonCommand::IsMode(mode) ? 0 : BungeeBusiness::IsMode(mode) ? BungeeBusiness::kSeedCount : GarlicRun::IsMode(mode) ? 0 : LightsOut::IsMode(mode) ? 0 : RallyRaid::IsMode(mode) ? RallyRaid::kSeedCount : RallyZombie::IsMode(mode) ? static_cast<int>(RallyZombie::kSeeds.size()) : ChainReaction::IsMode(mode) ? ChainReaction::kSeedCount : IntensiveCare::IsMode(mode) ? IntensiveCare::kSeedCount : SeedSwap::IsMode(mode) ? 0 : GardenShuffle::IsMode(mode) ? 0 : static_cast<int>(LanternGlow::IsMode(mode) ? LanternGlow::kSeeds.size() : NightShift::IsMode(mode) ? NightShift::kSeeds.size() : kSeeds.size()); }
++constexpr int StartingSun(GameMode mode) { return FireDrill::IsMode(mode) ? FireDrill::kStartingSun : VaseAmbush::IsMode(mode) ? 0 : ScrapYard::IsMode(mode) ? ScrapYard::kStartingSun : PoolPanicEndless::IsMode(mode) ? 0 : PoolPanic::IsMode(mode) ? 0 : CobCannonCommand::IsMode(mode) ? 0 : BungeeBusiness::IsMode(mode) ? BungeeBusiness::kBoards[0].mSun : GarlicRun::IsMode(mode) ? 0 : LightsOut::IsMode(mode) ? 0 : RallyRaid::IsMode(mode) ? RallyRaid::kBoards[0].mSun : RallyZombie::IsMode(mode) ? RallyZombie::kStartingSun : ChainReaction::IsMode(mode) ? 0 : IntensiveCare::IsMode(mode) ? 0 : SeedSwap::IsMode(mode) ? 0 : GardenShuffle::IsMode(mode) ? 0 : LanternGlow::IsMode(mode) ? LanternGlow::kStartingSun : NightShift::IsMode(mode) ? NightShift::kStartingSun : kStartingSun; }
++constexpr int SeedCount(GameMode mode) { return FireDrill::IsMode(mode) ? static_cast<int>(FireDrill::kSeeds.size()) : VaseAmbush::IsMode(mode) ? 0 : ScrapYard::IsMode(mode) ? static_cast<int>(ScrapYard::kSeeds.size()) : PoolPanicEndless::IsMode(mode) ? PoolPanicEndless::kBankSize : PoolPanic::IsMode(mode) ? PoolPanic::kBankSize : CobCannonCommand::IsMode(mode) ? 0 : BungeeBusiness::IsMode(mode) ? BungeeBusiness::kSeedCount : GarlicRun::IsMode(mode) ? 0 : LightsOut::IsMode(mode) ? 0 : RallyRaid::IsMode(mode) ? RallyRaid::kSeedCount : RallyZombie::IsMode(mode) ? static_cast<int>(RallyZombie::kSeeds.size()) : ChainReaction::IsMode(mode) ? ChainReaction::kSeedCount : IntensiveCare::IsMode(mode) ? IntensiveCare::kSeedCount : SeedSwap::IsMode(mode) ? 0 : GardenShuffle::IsMode(mode) ? 0 : static_cast<int>(LanternGlow::IsMode(mode) ? LanternGlow::kSeeds.size() : NightShift::IsMode(mode) ? NightShift::kSeeds.size() : kSeeds.size()); }
+ 
+ template<std::size_t Waves, std::size_t Slots>
+ int PopulateWaves(GameMode mode, ZombieType (&output)[Waves][Slots])
+ {
+     if (VaseAmbush::IsMode(mode)) return VaseAmbush::PopulateWaves(output);
++    if (FireDrill::IsMode(mode)) return FireDrill::PopulateWaves(output);
+     if (ScrapYard::IsMode(mode)) return ScrapYard::PopulateWaves(output);
+     if (PoolPanicEndless::IsMode(mode)) return PoolPanicEndless::PopulateWaves(output);
+     if (PoolPanic::IsMode(mode)) return PoolPanic::PopulateWaves(output);
+@@ -136,6 +138,7 @@ template<std::size_t Count>
+ void PopulateAllowedZombies(GameMode mode, bool (&output)[Count])
+ {
+     if (VaseAmbush::IsMode(mode)) VaseAmbush::PopulateAllowedZombies(output);
++    else if (FireDrill::IsMode(mode)) FireDrill::PopulateAllowedZombies(output);
+     else if (ScrapYard::IsMode(mode)) ScrapYard::PopulateAllowedZombies(output);
+     else if (PoolPanicEndless::IsMode(mode)) PoolPanicEndless::PopulateAllowedZombies(output);
+     else if (PoolPanic::IsMode(mode)) PoolPanic::PopulateAllowedZombies(output);
+@@ -158,6 +161,7 @@ template<class Bank>
+ void FillSeedBank(GameMode mode, Bank& bank)
+ {
+     if (VaseAmbush::IsMode(mode)) bank.mNumPackets = 0;
++    else if (FireDrill::IsMode(mode)) FireDrill::FillSeedBank(bank);
+     else if (ScrapYard::IsMode(mode)) ScrapYard::FillSeedBank(bank);
+     else if (PoolPanicEndless::IsMode(mode)) PoolPanicEndless::FillSeedBank(bank);
+     else if (PoolPanic::IsMode(mode)) PoolPanic::FillSeedBank(bank);
+@@ -185,6 +189,7 @@ inline constexpr ChallengeState kColdDefendState = static_cast<ChallengeState>(1
+ constexpr bool IsCurrentRules(GameMode mode, ChallengeState state)
+ {
+     if (VaseAmbush::IsMode(mode)) return VaseAmbush::IsCurrentRules(mode, state);
++    if (FireDrill::IsMode(mode)) return FireDrill::IsCurrentRules(mode, state);
+     if (ScrapYard::IsMode(mode)) return ScrapYard::IsCurrentRules(mode, state);
+     if (PoolPanicEndless::IsMode(mode)) return PoolPanicEndless::IsCurrentRules(mode, state);
+     if (PoolPanic::IsMode(mode)) return PoolPanic::IsCurrentRules(mode, state);
+@@ -212,6 +217,7 @@ constexpr bool IsDefending(GameMode mode, ChallengeState state) { return Lantern
+ constexpr int WaveCount(GameMode mode, ChallengeState state)
+ {
+     if (VaseAmbush::IsMode(mode)) return VaseAmbush::kBoardCount;
++    if (FireDrill::IsMode(mode)) return FireDrill::kWaveCount;
+     if (ScrapYard::IsMode(mode)) return ScrapYard::kWaveCount;
+     if (PoolPanicEndless::IsMode(mode)) return PoolPanicEndless::kWaveCount;
+     if (PoolPanic::IsMode(mode)) return PoolPanic::kWaveCount;
+@@ -230,6 +236,7 @@ constexpr int WaveCount(GameMode mode, ChallengeState state)
+ constexpr int StartingSun(GameMode mode, ChallengeState state)
+ {
+     if (VaseAmbush::IsMode(mode)) return 0;
++    if (FireDrill::IsMode(mode)) return FireDrill::kStartingSun;
+     if (ScrapYard::IsMode(mode)) return ScrapYard::kStartingSun;
+     if (BungeeBusiness::IsMode(mode)) return BungeeBusiness::kBoards[0].mSun;
+     if (RallyRaid::IsMode(mode)) return RallyRaid::kBoards[0].mSun;
+@@ -319,6 +326,7 @@ template<std::size_t Waves, std::size_t Slots>
+ int PopulateWaves(GameMode mode, ChallengeState state, ZombieType (&output)[Waves][Slots])
+ {
+     if (VaseAmbush::IsMode(mode)) return VaseAmbush::PopulateWaves(output);
++    if (FireDrill::IsMode(mode)) return FireDrill::PopulateWaves(output);
+     if (ScrapYard::IsMode(mode)) return ScrapYard::PopulateWaves(output);
+     if (PoolPanicEndless::IsMode(mode)) return PoolPanicEndless::PopulateWaves(output);
+     if (PoolPanic::IsMode(mode)) return PoolPanic::PopulateWaves(output);
+@@ -349,6 +357,7 @@ template<class Bank>
+ void FillSeedBank(GameMode mode, ChallengeState state, Bank& bank)
+ {
+     if (VaseAmbush::IsMode(mode)) { bank.mNumPackets = 0; return; }
++    if (FireDrill::IsMode(mode)) { FireDrill::FillSeedBank(bank); return; }
+     if (ScrapYard::IsMode(mode)) { ScrapYard::FillSeedBank(bank); return; }
+     if (PoolPanicEndless::IsMode(mode)) { PoolPanicEndless::FillSeedBank(bank); return; }
+     if (PoolPanic::IsMode(mode)) { PoolPanic::FillSeedBank(bank); return; }
+diff --git a/src/Lawn/System/FireDrill.cpp b/src/Lawn/System/FireDrill.cpp
+new file mode 100644
+index 0000000000000000000000000000000000000000..b6a2a0df9f6f3b26eb3ab3a75dd9167604db878b
+--- /dev/null
++++ b/src/Lawn/System/FireDrill.cpp
+@@ -0,0 +1,80 @@
++// SPDX-License-Identifier: LGPL-3.0-or-later
++#include "FireDrill.h"
++#include "../Board.h"
++#include "../Challenge.h"
++#include "../Plant.h"
++#include "../SeedPacket.h"
++#include "../Zombie.h"
++#include "../../LawnApp.h"
++#include <algorithm>
++#include "PlayerInfo.h"
++
++namespace FireDrill
++{
++bool IsUnlocked(const LawnApp* app)
++{ return app && app->mPlayerInfo && app->mPlayerInfo->mChallengeRecords[kProfileIndex]>0; }
++
++void PreloadResources()
++{
++    for(SeedType seed:kSeeds) Plant::PreloadPlantResources(seed);
++    for(const Formation& wave:kFormations) for(const Spawn& spawn:wave)
++        if(spawn.mType!=ZOMBIE_INVALID) Zombie::PreloadZombieResources(spawn.mType);
++}
++
++void Populate(Board& board)
++{
++    Challenge& challenge = *board.mChallenge;
++    challenge.mChallengeState = kActive;
++    challenge.mChallengeStateCounter = kOpeningDelay;
++    challenge.mSurvivalStage = 0;
++    challenge.mChallengeScore = 0;
++    challenge.mChallengeGridY = kRulesVersion;
++    board.mCurrentWave = board.mTotalSpawnedWaves = 0;
++    board.mZombieCountDown = board.mZombieCountDownStart = kOpeningDelay;
++    board.mZombieHealthToNextWave = -1;
++    board.mSunMoney = kStartingSun;
++    board.mShowShovel = true;
++    board.ClearCursor();
++    FillSeedBank(*board.mSeedBank);
++    for (const StartingPlant& plant : kStartingPlants)
++        board.AddPlant(plant.mCol,plant.mRow,plant.mSeed,SEED_NONE);
++}
++
++void Update(Board& board)
++{
++    Challenge& challenge = *board.mChallenge;
++    if (!IsCurrentRules(board.mApp->mGameMode,challenge.mChallengeState) || challenge.mChallengeState != kActive ||
++        board.mApp->mGameScene != SCENE_PLAYING || board.mPaused || board.mTimeStopCounter > 0 ||
++        board.mLevelComplete || board.HasLevelAwardDropped()) return;
++    board.mShowShovel = true;
++    const int next = std::clamp(challenge.mSurvivalStage,0,kWaveCount);
++    if (next < kWaveCount)
++    {
++        if (challenge.mChallengeStateCounter > 0) --challenge.mChallengeStateCounter;
++        // Keep deliberate recovery time between authored formations.
++        board.mZombieCountDown = challenge.mChallengeStateCounter;
++        if (challenge.mChallengeStateCounter != 0) return;
++        board.NextWaveComing();
++        for (const Spawn& spawn : kFormations[next])
++        {
++            if (spawn.mType == ZOMBIE_INVALID) continue;
++            Zombie* zombie = board.AddZombieInRow(spawn.mType,spawn.mRow,next);
++            zombie->mPosX = static_cast<float>(spawn.mX);
++            zombie->mX = spawn.mX;
++            zombie->UpdateReanim();
++        }
++        challenge.mSurvivalStage = next + 1;
++        board.mCurrentWave = board.mTotalSpawnedWaves = next + 1;
++        board.mZombieHealthWaveStart = board.TotalZombiesHealthInWave(next);
++        board.mZombieHealthToNextWave = -1;
++        challenge.mChallengeStateCounter = kFormationInterval;
++        board.mZombieCountDown = board.mZombieCountDownStart = kFormationInterval;
++        return;
++    }
++    if (board.AreEnemyZombiesOnScreen()) return;
++    board.ClearCursor();
++    board.ClearAdviceImmediately();
++    challenge.mChallengeState = kFinished;
++    challenge.SpawnLevelAward(4,2);
++}
++}
+diff --git a/src/Lawn/System/FireDrill.h b/src/Lawn/System/FireDrill.h
+new file mode 100644
+index 0000000000000000000000000000000000000000..f0012d991fd5edb61d197205b30f713c42a67d92
+--- /dev/null
++++ b/src/Lawn/System/FireDrill.h
+@@ -0,0 +1,84 @@
++// SPDX-License-Identifier: LGPL-3.0-or-later
++#pragma once
++#include "../../ConstEnums.h"
++#include <array>
++
++class Board;
++class LawnApp;
++
++namespace FireDrill
++{
++inline constexpr GameMode kMode = GAMEMODE_CHALLENGE_FIRE_DRILL;
++inline constexpr ChallengeState kActive = static_cast<ChallengeState>(136);
++inline constexpr ChallengeState kState = kActive;
++inline constexpr ChallengeState kFinished = static_cast<ChallengeState>(137);
++inline constexpr int kRulesVersion = 1;
++inline constexpr int kStartingSun = 425;
++inline constexpr int kWaveCount = 6;
++inline constexpr int kLargestFormation = 10;
++inline constexpr int kOpeningDelay = 1000;
++inline constexpr int kFormationInterval = 2400;
++inline constexpr int kProfileIndex = 89;
++constexpr bool IsMode(GameMode mode) { return mode == kMode; }
++constexpr bool IsCurrentRules(GameMode mode, ChallengeState state)
++{ return IsMode(mode) && (state == kActive || state == kFinished); }
++inline constexpr std::array<SeedType,7> kSeeds = {SEED_SUNFLOWER,SEED_PEASHOOTER,
++    SEED_SNOWPEA,SEED_WALLNUT,SEED_POTATOMINE,SEED_CHERRYBOMB,SEED_SQUASH};
++struct StartingPlant { SeedType mSeed; int mCol; int mRow; };
++inline constexpr std::array<StartingPlant,8> kStartingPlants = {{{SEED_SUNFLOWER,0,0},
++    {SEED_SUNFLOWER,0,1},{SEED_SUNFLOWER,0,2},{SEED_SUNFLOWER,0,3},{SEED_SUNFLOWER,0,4},
++    {SEED_PEASHOOTER,1,0},{SEED_PEASHOOTER,1,2},{SEED_PEASHOOTER,1,4}}};
++struct Spawn { ZombieType mType = ZOMBIE_INVALID; int mRow = 0; int mX = 0; };
++using Formation = std::array<Spawn,kLargestFormation>;
++// Exposed torches, shielded escorts and pairs exercise ice, bait and recovery.
++// Every attacker uses its normal statistics and original combat behavior.
++inline constexpr std::array<Formation,kWaveCount> kFormations = {{
++    {{{ZOMBIE_TORCHBEARER,1,800},{ZOMBIE_NORMAL,2,840},{ZOMBIE_TORCHBEARER,3,800}}},
++    {{{ZOMBIE_TRAFFIC_CONE,0,800},{ZOMBIE_TORCHBEARER,0,870},{ZOMBIE_TORCHBEARER,2,800},
++      {ZOMBIE_TRAFFIC_CONE,4,800},{ZOMBIE_TORCHBEARER,4,870}}},
++    {{{ZOMBIE_DOOR,1,800},{ZOMBIE_TORCHBEARER,1,870},{ZOMBIE_DOOR,3,800},
++      {ZOMBIE_TORCHBEARER,3,870},{ZOMBIE_NORMAL,2,800},{ZOMBIE_TORCHBEARER,2,920}}},
++    {{{ZOMBIE_TORCHBEARER,0,800},{ZOMBIE_TORCHBEARER,0,880},{ZOMBIE_TORCHBEARER,2,800},
++      {ZOMBIE_TORCHBEARER,2,880},{ZOMBIE_TORCHBEARER,4,800},{ZOMBIE_TORCHBEARER,4,880},
++      {ZOMBIE_PAIL,1,800},{ZOMBIE_PAIL,3,800}}},
++    {{{ZOMBIE_DOOR,0,800},{ZOMBIE_TORCHBEARER,0,870},{ZOMBIE_FOOTBALL,1,880},
++      {ZOMBIE_DOOR,2,800},{ZOMBIE_TORCHBEARER,2,870},{ZOMBIE_FOOTBALL,3,880},
++      {ZOMBIE_DOOR,4,800},{ZOMBIE_TORCHBEARER,4,870}}},
++    {{{ZOMBIE_TORCHBEARER,0,800},{ZOMBIE_TORCHBEARER,1,800},{ZOMBIE_TORCHBEARER,2,800},
++      {ZOMBIE_TORCHBEARER,3,800},{ZOMBIE_TORCHBEARER,4,800},{ZOMBIE_TRAFFIC_CONE,0,870},
++      {ZOMBIE_PAIL,1,870},{ZOMBIE_DOOR,2,870},{ZOMBIE_PAIL,3,870},{ZOMBIE_TRAFFIC_CONE,4,870}}}
++}};
++constexpr int ZombieCount(int wave)
++{
++    if(wave<0 || wave>=kWaveCount) return 0;
++    int count=0;for(const Spawn& spawn:kFormations[wave]) count+=spawn.mType!=ZOMBIE_INVALID;
++    return count;
++}
++template<std::size_t Waves,std::size_t Slots>
++int PopulateWaves(ZombieType (&output)[Waves][Slots])
++{
++    static_assert(Waves>=kWaveCount && Slots>kLargestFormation);
++    for(auto& wave:output)for(auto& zombie:wave)zombie=ZOMBIE_INVALID;
++    for(int wave=0;wave<kWaveCount;++wave)
++        for(int i=0;i<ZombieCount(wave);++i)output[wave][i]=kFormations[wave][i].mType;
++    return kWaveCount;
++}
++template<std::size_t Count>
++void PopulateAllowedZombies(bool (&output)[Count])
++{
++    static_assert(Count>static_cast<std::size_t>(ZOMBIE_TORCHBEARER));
++    for(auto& allowed:output)allowed=false;
++    for(const Formation& wave:kFormations)for(const Spawn& spawn:wave)
++        if(spawn.mType!=ZOMBIE_INVALID)output[spawn.mType]=true;
++}
++template<class Bank> void FillSeedBank(Bank& bank)
++{
++    bank.mNumPackets=static_cast<int>(kSeeds.size());
++    for(int i=0;i<bank.mNumPackets;++i)bank.mSeedPackets[i].SetPacketType(kSeeds[i]);
++}
++bool IsUnlocked(const LawnApp* app);
++void PreloadResources();
++void Populate(Board& board);
++void Update(Board& board);
++static_assert(static_cast<int>(kMode)==90 && ZombieCount(0)==3 && ZombieCount(5)==10);
++}
+diff --git a/src/Lawn/System/FireDrillPresentation.cpp b/src/Lawn/System/FireDrillPresentation.cpp
+new file mode 100644
+index 0000000000000000000000000000000000000000..54d2f394b30fd2be5ccef268a346c886f2825c34
+--- /dev/null
++++ b/src/Lawn/System/FireDrillPresentation.cpp
+@@ -0,0 +1,77 @@
++// SPDX-License-Identifier: LGPL-3.0-or-later
++#include "FireDrillPresentation.h"
++#include "TorchbearerPresentation.h"
++#include "../Zombie.h"
++#include "../../LawnApp.h"
++#include "../../Resources.h"
++#include "../../PvzpLib/Reanimator.h"
++#include "../../PvzpLib/PvzpCommon.h"
++#include "graphics/MemoryImage.h"
++#include <algorithm>
++#include <memory>
++#include <vector>
++
++namespace FireDrillPresentation
++{
++namespace
++{
++std::unique_ptr<Sexy::MemoryImage> sCard;
++std::unique_ptr<Sexy::MemoryImage> Blank(int width, int height)
++{
++    std::vector<uint32_t> pixels(width * height, 0);
++    auto image = std::make_unique<Sexy::MemoryImage>();
++    image->SetBits(pixels.data(), width, height);
++    return image;
++}
++Sexy::Rect Bounds(Sexy::MemoryImage& image)
++{
++    int left = image.GetWidth(), top = image.GetHeight(), right = -1, bottom = -1;
++    const uint32_t* pixels = image.GetBits();
++    for (int y = 0; y < image.GetHeight(); ++y) for (int x = 0; x < image.GetWidth(); ++x)
++        if ((pixels[y * image.GetWidth() + x] >> 24) > 8)
++        {left = std::min(left, x); top = std::min(top, y); right = std::max(right, x); bottom = std::max(bottom, y);}
++    return right < left ? Sexy::Rect() : Sexy::Rect(left, top, right-left+1, bottom-top+1);
++}
++void Fit(Sexy::Graphics& graphics, Sexy::MemoryImage& image, float centerX, float baseline,
++    float maxWidth, float maxHeight)
++{
++    const Sexy::Rect bounds = Bounds(image);
++    if (bounds.mWidth <= 0 || bounds.mHeight <= 0) return;
++    const float scale = std::min(maxWidth / bounds.mWidth, maxHeight / bounds.mHeight);
++    PvzpDrawImageScaledF(&graphics, &image, centerX - (bounds.mX + bounds.mWidth * .5f) * scale,
++        baseline - (bounds.mY + bounds.mHeight) * scale, scale, scale);
++}
++}
++
++Sexy::Image* GetBonusImage()
++{
++    if (sCard) return sCard.get();
++    if (!PvzpLoadResources("DelayLoad_Background1") || !Sexy::IMAGE_BACKGROUND1) return nullptr;
++    auto zombie = Blank(240, 230);
++    Sexy::Graphics zombieGraphics(zombie.get()); zombieGraphics.SetLinearBlend(true);
++    Reanimation carrier;
++    carrier.ReanimationInitializeType(95, 45, REANIM_ZOMBIE);
++    carrier.SetFramesForLayer("anim_idle");
++    Zombie::SetupReanimLayers(&carrier, ZOMBIE_TORCHBEARER);
++    TorchbearerPresentation::PrepareRig(carrier);
++    carrier.Draw(&zombieGraphics);
++    TorchbearerPresentation::DrawRig(&zombieGraphics, carrier, true, .25f);
++    auto snowpea = Blank(160, 150);
++    Sexy::Graphics plantGraphics(snowpea.get()); plantGraphics.SetLinearBlend(true);
++    Reanimation plant;
++    plant.ReanimationInitializeType(30, 35, REANIM_SNOWPEA);
++    plant.SetFramesForLayer("anim_idle");
++    plant.Draw(&plantGraphics);
++    plant.SetFramesForLayer("anim_head_idle");
++    plant.Draw(&plantGraphics);
++    auto card = Blank(80, 65);
++    Sexy::Graphics picture(card.get()); picture.SetLinearBlend(true);
++    picture.DrawImage(Sexy::IMAGE_BACKGROUND1, Sexy::Rect(0,0,80,65), Sexy::Rect(400,140,480,390));
++    Fit(picture, *zombie, 29, 61, 46, 57);
++    Fit(picture, *snowpea, 62, 61, 32, 35);
++    sCard = std::move(card);
++    return sCard.get();
++}
++
++void DisposeImage() { sCard.reset(); }
++}
+diff --git a/src/Lawn/System/FireDrillPresentation.h b/src/Lawn/System/FireDrillPresentation.h
+new file mode 100644
+index 0000000000000000000000000000000000000000..2d83950fdfca65dc2666e15e352af10b60031295
+--- /dev/null
++++ b/src/Lawn/System/FireDrillPresentation.h
+@@ -0,0 +1,8 @@
++// SPDX-License-Identifier: LGPL-3.0-or-later
++#pragma once
++namespace Sexy { class Image; }
++namespace FireDrillPresentation
++{
++Sexy::Image* GetBonusImage();
++void DisposeImage();
++}
+diff --git a/src/Lawn/System/PoolPanicEndless.cpp b/src/Lawn/System/PoolPanicEndless.cpp
+index 17f26c5d291e5fc2108b0c7427d79c0999d1ff04..cc1b7675f5b6ee0fe612951f813715454d66f338 100644
+--- a/src/Lawn/System/PoolPanicEndless.cpp
++++ b/src/Lawn/System/PoolPanicEndless.cpp
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: LGPL-3.0-or-later
+ #include "PoolPanicEndless.h"
++#include "FireDrill.h"
+ #include "../Board.h"
+ #include "../Challenge.h"
+ #include "../Plant.h"
+@@ -72,7 +73,11 @@ void UpdateSupply(Board& board)
+     int pick = static_cast<int>(random.Next(static_cast<unsigned long>(total)));
+     std::size_t index = 0;
+     while (index+1 < weights.size() && pick >= weights[index]) pick -= weights[index++];
+-    const SeedType seed = kSupplySeeds[index];
++    // One cold counter per flag arrives before the new late-game torch roster.
++    // The normal quota, bank capacity, saved seed and delivery cadence apply.
++    const bool coldSupply = FireDrill::IsUnlocked(board.mApp) &&
++        challenge.mSurvivalStage >= 8 && challenge.mChallengeScore == 0;
++    const SeedType seed = coldSupply ? SEED_SNOWPEA : kSupplySeeds[index];
+     board.mSeedBank->AddSeed(seed);
+     StoreSeed(challenge,static_cast<std::uint32_t>(random.Next()));
+     challenge.mLastConveyorSeedType = seed;
+@@ -228,6 +233,8 @@ void MigrateLegacy(Board& board)
+ void PreloadResources()
+ {
+     for (SeedType seed : kSupplySeeds) Plant::PreloadPlantResources(seed);
++    Plant::PreloadPlantResources(SEED_SNOWPEA);
++    Zombie::PreloadZombieResources(ZOMBIE_TORCHBEARER);
+     constexpr ZombieType types[] = {ZOMBIE_NORMAL,ZOMBIE_FLAG,ZOMBIE_TRAFFIC_CONE,ZOMBIE_PAIL,
+         ZOMBIE_DOOR,ZOMBIE_FOOTBALL,ZOMBIE_NEWSPAPER,ZOMBIE_SNORKEL,ZOMBIE_DOLPHIN_RIDER,
+         ZOMBIE_JACK_IN_THE_BOX,ZOMBIE_LADDER,ZOMBIE_ZAMBONI,ZOMBIE_GARGANTUAR,ZOMBIE_IMP,
+@@ -303,7 +310,9 @@ void Update(Board& board)
+         board.mZombieCountDown = challenge.mChallengeStateCounter;
+         if (challenge.mChallengeStateCounter == 0)
+         {
+-            const Formation formation = WaveFor(challenge.mSurvivalStage,wave,challenge.mChallengeGridX);
++            const Formation formation = WithTorchbearers(
++                WaveFor(challenge.mSurvivalStage,wave,challenge.mChallengeGridX),
++                challenge.mSurvivalStage,wave,FireDrill::IsUnlocked(board.mApp));
+             if (wave == kWaveCount-1 && !warningFinished)
+             {
+                 board.ClearAdviceImmediately();
+diff --git a/src/Lawn/System/PoolPanicEndless.h b/src/Lawn/System/PoolPanicEndless.h
+index 2c6a40ab250d680b726c69c428eede71cd290907..39d7a88b7ce94f230c5b83d7fb77eedeb922dea3 100644
+--- a/src/Lawn/System/PoolPanicEndless.h
++++ b/src/Lawn/System/PoolPanicEndless.h
+@@ -214,6 +214,25 @@ constexpr int ZombiesPerFlag(int flags)
+     for (int wave = 0; wave < kWaveCount; ++wave) count += ZombieCount(WaveFor(flags,wave,0));
+     return count;
+ }
++
++// Fire Drill completion opts into the new enemy. Keep the published opening,
++// population counts, heavy attackers and water lanes unchanged.
++constexpr Formation WithTorchbearers(Formation formation,int flags,int wave,bool unlocked)
++{
++    if(!unlocked || flags<9 || (wave!=2 && wave!=6 && wave!=8)) return formation;
++    int remaining=wave==8 ? 2 : 1;
++    const int count=ZombieCount(formation);
++    for(int step=0;step<count && remaining>0;++step)
++    {
++        Spawn& spawn=formation[(step+flags+wave)%count];
++        if(spawn.mRow==2 || spawn.mRow==3) continue;
++        if(spawn.mType!=ZOMBIE_NORMAL && spawn.mType!=ZOMBIE_TRAFFIC_CONE &&
++           spawn.mType!=ZOMBIE_PAIL && spawn.mType!=ZOMBIE_NEWSPAPER) continue;
++        spawn.mType=ZOMBIE_TORCHBEARER;
++        --remaining;
++    }
++    return formation;
++}
+ template<std::size_t Waves,std::size_t Slots>
+ int PopulateWaves(ZombieType (&output)[Waves][Slots])
+ {
+diff --git a/src/Lawn/System/ReanimationLawn.cpp b/src/Lawn/System/ReanimationLawn.cpp
+index 772546b47b6246e14dec425557b17d27c4b5347d..6423ca7aa69b37747fe89c67a1d53c6303a21e35 100644
+--- a/src/Lawn/System/ReanimationLawn.cpp
++++ b/src/Lawn/System/ReanimationLawn.cpp
+@@ -24,6 +24,7 @@
+ #include "../../LawnApp.h"
+ #include "ReanimationLawn.h"
+ #include "RallyPresentation.h"
++#include "TorchbearerPresentation.h"
+ #include "../../PvzpLib/PvzpDebug.h"
+ #include "graphics/Color.h"
+ #include "../../PvzpLib/Reanimator.h"
+@@ -281,6 +282,7 @@ std::unique_ptr<MemoryImage> ReanimatorCache::MakeCachedZombieFrame(ZombieType t
+ 		aReanim.SetFramesForLayer("anim_idle");
+ 		Zombie::SetupReanimLayers(&aReanim, aUseZombieType);
+ 		if (theZombieType == ZOMBIE_RALLY) RallyPresentation::PrepareRig(aReanim);
++		if (theZombieType == ZOMBIE_TORCHBEARER) TorchbearerPresentation::PrepareRig(aReanim);
+ 
+ 		if (theZombieType == ZombieType::ZOMBIE_DOOR)
+ 			aReanim.AssignRenderGroupToTrack("anim_screendoor", RENDER_GROUP_NORMAL);
+@@ -293,6 +295,7 @@ std::unique_ptr<MemoryImage> ReanimatorCache::MakeCachedZombieFrame(ZombieType t
+ 		}
+ 		aReanim.Draw(&aMemoryGraphics);
+ 		if (theZombieType == ZOMBIE_RALLY) RallyPresentation::DrawRig(&aMemoryGraphics, aReanim);
++		if (theZombieType == ZOMBIE_TORCHBEARER) TorchbearerPresentation::DrawRig(&aMemoryGraphics, aReanim, true, .25f);
+ 	}
+ 	else if (aZombieDef.mReanimationType == ReanimationType::REANIM_BOSS)
+ 	{
+diff --git a/src/Lawn/System/TorchbearerPresentation.cpp b/src/Lawn/System/TorchbearerPresentation.cpp
+new file mode 100644
+index 0000000000000000000000000000000000000000..1bffb79be1e7720b517a879757a43e94eb69fe4f
+--- /dev/null
++++ b/src/Lawn/System/TorchbearerPresentation.cpp
+@@ -0,0 +1,233 @@
++// SPDX-License-Identifier: LGPL-3.0-or-later
++#include "TorchbearerPresentation.h"
++#include "TorchbearerZombie.h"
++#include "../Zombie.h"
++#include "../../LawnApp.h"
++#include "../../PvzpLib/Reanimator.h"
++#include "../../PvzpLib/ReanimAtlas.h"
++#include "../../PvzpLib/PvzpCommon.h"
++#include "graphics/MemoryImage.h"
++#include <algorithm>
++#include <cmath>
++#include <memory>
++#include <vector>
++
++namespace TorchbearerPresentation
++{
++namespace
++{
++constexpr int kFingersGroup = 10;
++constexpr const char* kHand = "Zombie_flaghand";
++constexpr const char* kArm = "Zombie_innerarm_screendoor";
++struct Cache
++{
++    std::unique_ptr<Reanimation> arms;
++    std::unique_ptr<Reanimation> flame;
++    std::unique_ptr<Sexy::MemoryImage> shaft;
++};
++Cache& Images() { static Cache cache; return cache; }
++
++std::unique_ptr<Sexy::MemoryImage> CopyTrackImage(Reanimation& rig, const char* name)
++{
++    const int index = rig.FindTrackIndex(name);
++    Sexy::Image* source = rig.mDefinition->mTracks.tracks[index].mTransforms.mTransforms[0].mImage;
++    if (!source) return nullptr;
++    Sexy::Rect bounds;
++    if (auto* atlas = rig.mDefinition->mReanimAtlas)
++    {
++        const auto* image = atlas->GetEncodedReanimAtlas(source);
++        if (!image) return nullptr;
++        bounds = Sexy::Rect(image->mX, image->mY, image->mWidth, image->mHeight);
++        source = atlas->mMemoryImage.get();
++    }
++    else bounds = Sexy::Rect(0, 0, source->GetCelWidth(), source->GetCelHeight());
++    auto* original = dynamic_cast<Sexy::MemoryImage*>(source);
++    if (!original) return nullptr;
++    std::vector<uint32_t> pixels(bounds.mWidth * bounds.mHeight);
++    for (int y = 0; y < bounds.mHeight; ++y)
++        std::copy_n(original->GetBits() + (bounds.mY + y) * original->GetWidth() + bounds.mX,
++            bounds.mWidth, pixels.data() + y * bounds.mWidth);
++    auto image = std::make_unique<Sexy::MemoryImage>();
++    image->SetBits(pixels.data(), bounds.mWidth, bounds.mHeight);
++    return image;
++}
++
++Sexy::MemoryImage* Shaft()
++{
++    Cache& cache = Images();
++    if (!cache.shaft)
++    {
++        Reanimation original;
++        original.ReanimationInitializeType(0, 0, REANIM_FLAG);
++        cache.shaft = CopyTrackImage(original, "Zombie_flagpole");
++    }
++    return cache.shaft.get();
++}
++
++void CopyAppearance(Reanimation& target, const Reanimation& source)
++{
++    target.mOverlayMatrix = source.mOverlayMatrix;
++    target.mColorOverride = source.mColorOverride;
++    target.mExtraAdditiveColor = source.mExtraAdditiveColor;
++    target.mEnableExtraAdditiveDraw = source.mEnableExtraAdditiveDraw;
++    target.mExtraOverlayColor = source.mExtraOverlayColor;
++    target.mEnableExtraOverlayDraw = source.mEnableExtraOverlayDraw;
++    target.mFilterEffect = source.mFilterEffect;
++}
++
++Reanimation& Arms(Reanimation& carrier, float attackProgress)
++{
++    Cache& cache = Images();
++    if (!cache.arms)
++    {
++        cache.arms = std::make_unique<Reanimation>();
++        cache.arms->ReanimationInitializeType(0, 0, REANIM_ZOMBIE);
++        cache.arms->AssignRenderGroupToPrefix("", RENDER_GROUP_HIDDEN);
++        cache.arms->AssignRenderGroupToTrack(kArm, RENDER_GROUP_NORMAL);
++        cache.arms->AssignRenderGroupToTrack(kHand, kFingersGroup);
++    }
++    Reanimation& arms = *cache.arms;
++    CopyAppearance(arms, carrier);
++    arms.mFrameStart = carrier.mFrameStart;
++    arms.mFrameCount = carrier.mFrameCount;
++    arms.mAnimTime = carrier.mAnimTime;
++    arms.mLoopType = carrier.mLoopType;
++    for (const char* name : {kArm, kHand})
++    {
++        auto& target = arms.mTrackInstances[arms.FindTrackIndex(name)];
++        const auto& source = carrier.mTrackInstances[carrier.FindTrackIndex(name)];
++        target.mBlendTransform = source.mBlendTransform;
++        target.mBlendTime = source.mBlendTime;
++        target.mBlendCounter = source.mBlendCounter;
++        target.mShakeX = source.mShakeX;
++        target.mShakeY = source.mShakeY;
++        target.mImageOverride = source.mImageOverride;
++    }
++    // Rotate the entire original carrying arm, closed fingers and held torch
++    // together. The attachment never slides independently through the hand.
++    if (attackProgress > 0.0f)
++    {
++        SexyTransform2D shoulder;
++        arms.GetTrackMatrix(arms.FindTrackIndex(kArm), shoulder);
++        const float x = shoulder.m02 - shoulder.m00 * 7.0f - shoulder.m01 * 13.0f;
++        const float y = shoulder.m12 - shoulder.m10 * 7.0f - shoulder.m11 * 13.0f;
++        const float reach = std::sin(std::clamp(attackProgress, 0.0f, 1.0f) * 3.14159265f);
++        const float angle = -0.28f * reach;
++        SexyMatrix3 turn;
++        turn.LoadIdentity();
++        turn.m00 = turn.m11 = std::cos(angle);
++        turn.m01 = -std::sin(angle); turn.m10 = std::sin(angle);
++        turn.m02 = x - turn.m00 * x - turn.m01 * y - reach * 3.0f;
++        turn.m12 = y - turn.m10 * x - turn.m11 * y;
++        arms.mOverlayMatrix = turn * arms.mOverlayMatrix;
++    }
++    return arms;
++}
++
++Reanimation& Flame()
++{
++    Cache& cache = Images();
++    if (!cache.flame)
++    {
++        cache.flame = std::make_unique<Reanimation>();
++        cache.flame->ReanimationInitializeType(0, 0, REANIM_TORCHWOOD);
++        cache.flame->SetFramesForLayer("anim_idle");
++        cache.flame->AssignRenderGroupToPrefix("", RENDER_GROUP_HIDDEN);
++        cache.flame->AssignRenderGroupToPrefix("Torchwood_fire", RENDER_GROUP_NORMAL);
++    }
++    return *cache.flame;
++}
++}
++
++void PrepareRig(Reanimation& carrier)
++{
++    if (carrier.mReanimationType != REANIM_ZOMBIE || !carrier.mDefinition || !carrier.mTrackInstances) return;
++    if (!carrier.TrackExists(kHand) || !carrier.TrackExists(kArm)) return;
++    carrier.AssignRenderGroupToPrefix("anim_innerarm", RENDER_GROUP_HIDDEN);
++    carrier.AssignRenderGroupToTrack(kArm, RENDER_GROUP_HIDDEN);
++    carrier.AssignRenderGroupToTrack(kHand, RENDER_GROUP_HIDDEN);
++}
++
++void Initialize(Zombie& zombie)
++{
++    if (zombie.mZombieType != ZOMBIE_TORCHBEARER || !zombie.mApp) return;
++    if (auto* carrier = zombie.mApp->ReanimationTryToGet(zombie.mBodyReanimID)) PrepareRig(*carrier);
++}
++
++void DrawRig(Sexy::Graphics* graphics, Reanimation& carrier, bool lit, float animationTime,
++    bool hasArm, bool hasObject, float attackProgress)
++{
++    if (carrier.mReanimationType != REANIM_ZOMBIE || !carrier.mDefinition || !carrier.mTrackInstances ||
++        !carrier.TrackExists(kHand) || !carrier.TrackExists(kArm)) return;
++    // mHasArm describes the stock OUTER arm. The inner carrying hand survives
++    // that native limb loss and continues to hold its torch.
++    (void)hasArm;
++    Reanimation& arms = Arms(carrier, attackProgress);
++    arms.DrawRenderGroup(graphics, RENDER_GROUP_NORMAL);
++    if (!hasObject)
++    {
++        arms.DrawRenderGroup(graphics, kFingersGroup);
++        return;
++    }
++    Sexy::MemoryImage* shaft = Shaft();
++    if (!shaft) { arms.DrawRenderGroup(graphics, kFingersGroup); return; }
++    SexyTransform2D hand;
++    arms.GetTrackMatrix(arms.FindTrackIndex(kHand), hand);
++    // DrawTrack has no GetTrackMatrix attachment half-pixel bias. Native hand
++    // pixels(9,12) enclose opaque shaft pixel(10,88) in the original86x110
++    // pole canvas. Its upper transparent margin is part of that native image.
++    SexyMatrix3Translation(hand, 0.5f, 0.5f);
++    SexyMatrix3 local;
++    local.LoadIdentity(); local.m00 = local.m11 = 0.90f;
++    local.m02 = -0.5f - local.m00 * (10.0f - shaft->GetWidth() * 0.5f);
++    local.m12 = -0.5f - local.m11 * (88.0f - shaft->GetHeight() * 0.5f);
++    SexyMatrix3 pole = hand * local;
++    SexyMatrix3 drawPole = pole;
++    SexyMatrix3Translation(drawPole, graphics->mTransX, graphics->mTransY);
++    Sexy::Color color = carrier.mColorOverride;
++    if (!lit)
++    {
++        color.mRed = color.mRed * 120 / 255;
++        color.mGreen = color.mGreen * 110 / 255;
++        color.mBlue = color.mBlue * 100 / 255;
++    }
++    if (graphics->GetColorizeImages()) color = ColorsMultiply(color, graphics->GetColor());
++    carrier.ReanimBltMatrix(graphics, shaft, drawPole, graphics->mClipRect, color,
++        graphics->GetDrawMode(), Sexy::Rect(0, 0, shaft->GetWidth(), shaft->GetHeight()));
++    if (lit)
++    {
++        Reanimation& flame = Flame();
++        SexyMatrix3 flameLocal;
++        flameLocal.LoadIdentity();
++        flameLocal.m00 = 0.42f; flameLocal.m11 = 0.48f;
++        flameLocal.m02 = (26.0f - shaft->GetWidth() * 0.5f) - flameLocal.m00 * 45.0f;
++        flameLocal.m12 = (38.0f - shaft->GetHeight() * 0.5f) - flameLocal.m11 * 40.0f;
++        flame.mOverlayMatrix = pole * flameLocal;
++        flame.mAnimTime = animationTime - std::floor(animationTime);
++        flame.mColorOverride = Sexy::Color(255, 255, 255, carrier.mColorOverride.mAlpha);
++        flame.mEnableExtraAdditiveDraw = false;
++        flame.mEnableExtraOverlayDraw = false;
++        flame.Draw(graphics);
++    }
++    // The original closed fingers are always the final foreground layer.
++    arms.DrawRenderGroup(graphics, kFingersGroup);
++}
++
++void Draw(Zombie& zombie, Sexy::Graphics* graphics, const ZombieDrawPosition&)
++{
++    if (zombie.mZombieType != ZOMBIE_TORCHBEARER || !zombie.mApp || zombie.mDead ||
++        zombie.mZombiePhase == PHASE_ZOMBIE_MOWERED || zombie.mMoweredReanimID != REANIMATIONID_NULL) return;
++    auto* carrier = zombie.mApp->ReanimationTryToGet(zombie.mBodyReanimID);
++    if (!carrier) return;
++    const bool holding = zombie.mHasHead && zombie.mZombiePhase == PHASE_ZOMBIE_NORMAL;
++    const float progress = zombie.mSummonCounter > 0 ?
++        1.0f - zombie.mSummonCounter / static_cast<float>(TorchbearerZombie::kBurnWindupTicks) : 0.0f;
++    DrawRig(graphics, *carrier, zombie.mHasObject, carrier->mAnimTime * 2.0f,
++        zombie.mHasArm, holding, progress);
++}
++
++void DisposeImage()
++{
++    Cache& cache = Images(); cache.arms.reset(); cache.flame.reset(); cache.shaft.reset();
++}
++}
+diff --git a/src/Lawn/System/TorchbearerPresentation.h b/src/Lawn/System/TorchbearerPresentation.h
+new file mode 100644
+index 0000000000000000000000000000000000000000..c514d6893333feb3ad567915aab844eb23066240
+--- /dev/null
++++ b/src/Lawn/System/TorchbearerPresentation.h
+@@ -0,0 +1,17 @@
++// SPDX-License-Identifier: LGPL-3.0-or-later
++#pragma once
++class Zombie;
++class ZombieDrawPosition;
++class Reanimation;
++namespace Sexy { class Graphics; }
++
++namespace TorchbearerPresentation
++{
++void Initialize(Zombie& zombie);
++void PrepareRig(Reanimation& carrier);
++void Draw(Zombie& zombie, Sexy::Graphics* graphics, const ZombieDrawPosition& position);
++void DrawRig(Sexy::Graphics* graphics, Reanimation& carrier, bool lit = true,
++    float animationTime = 0.0f, bool hasArm = true, bool hasObject = true,
++    float attackProgress = 0.0f);
++void DisposeImage();
++}
+diff --git a/src/Lawn/System/TorchbearerZombie.cpp b/src/Lawn/System/TorchbearerZombie.cpp
+new file mode 100644
+index 0000000000000000000000000000000000000000..940ee9a8e0c1449b4176c1d10b7e2704492dbab0
+--- /dev/null
++++ b/src/Lawn/System/TorchbearerZombie.cpp
+@@ -0,0 +1,127 @@
++// SPDX-License-Identifier: LGPL-3.0-or-later
++#include "TorchbearerZombie.h"
++#include "../Board.h"
++#include "../Challenge.h"
++#include "../Plant.h"
++#include "../Zombie.h"
++#include "../../LawnApp.h"
++#include "../../PvzpLib/PvzpFoley.h"
++#include "../../PvzpLib/PvzpParticle.h"
++#include <algorithm>
++
++namespace TorchbearerZombie
++{
++namespace
++{
++bool CanCarry(const Zombie& zombie)
++{
++    // The torch is held in the native flag carrier's INNER hand. Losing the
++    // ordinary OUTER arm does not remove that grip or provide a second counter.
++    return !zombie.mDead && zombie.mBodyHealth > 0 && zombie.mHasHead &&
++        !zombie.mMindControlled && !zombie.mBlowingAway && !zombie.mInPool &&
++        zombie.mZombiePhase == PHASE_ZOMBIE_NORMAL && zombie.mZombieHeight == HEIGHT_ZOMBIE_NORMAL;
++}
++
++bool IsBurnable(const Plant& plant)
++{
++    if (plant.mDead || plant.mPlantHealth <= 0 ||
++        plant.mSeedType == SEED_SPIKEWEED || plant.mSeedType == SEED_SPIKEROCK) return false;
++    // Preserve the original bite protections: an armed mine and an awake
++    // instant-use plant get their normal opportunity to activate.
++    if (plant.mState == STATE_FLOWERPOT_INVULNERABLE || plant.mState == STATE_LILYPAD_INVULNERABLE ||
++        plant.mState == STATE_SQUASH_LOOK || plant.mState == STATE_SQUASH_PRE_LAUNCH) return false;
++    if (plant.mSeedType == SEED_POTATOMINE && plant.mState != STATE_NOTREADY) return false;
++    if (!plant.mIsAsleep)
++    {
++        switch (plant.mSeedType)
++        {
++        case SEED_JALAPENO: case SEED_CHERRYBOMB: case SEED_DOOMSHROOM:
++        case SEED_ICESHROOM: case SEED_HYPNOSHROOM: case SEED_BLOVER:
++            return false;
++        default: break;
++        }
++    }
++    return true;
++}
++
++void CancelWindup(Zombie& zombie)
++{
++    const bool attacking = IsAttacking(zombie);
++    zombie.mSummonCounter = 0;
++    zombie.mTargetPlantID = PLANTID_NULL;
++    if (attacking && !zombie.mDead && zombie.mHasHead && zombie.mBodyHealth > 0 &&
++        zombie.mZombiePhase == PHASE_ZOMBIE_NORMAL) zombie.StopEating();
++}
++}
++
++bool IsZombie(const Zombie& zombie) { return zombie.mZombieType == kType; }
++bool IsLit(const Zombie& zombie) { return IsZombie(zombie) && zombie.mHasObject; }
++bool IsAttacking(const Zombie& zombie)
++{
++    return IsLit(zombie) && zombie.mSummonCounter > 0;
++}
++float AttackProgress(const Zombie& zombie)
++{
++    return IsAttacking(zombie) ?
++        1.0f - std::clamp(zombie.mSummonCounter, 0, kBurnWindupTicks) / float(kBurnWindupTicks) : 0.0f;
++}
++
++void Extinguish(Zombie& zombie)
++{
++    if (!IsZombie(zombie)) return;
++    CancelWindup(zombie);
++    zombie.mHasObject = false;
++}
++
++void ValidateState(Zombie& zombie)
++{
++    if (!IsZombie(zombie)) return;
++    if (!CanCarry(zombie) || zombie.mChilledCounter > 0 || zombie.mIceTrapCounter > 0)
++        Extinguish(zombie);
++}
++
++bool TryStartBurn(Zombie& zombie, Plant& plant)
++{
++    if (!IsLit(zombie) || !CanCarry(zombie) || !zombie.mBoard || !IsBurnable(plant) ||
++        zombie.IsImmobilizied() || zombie.mChilledCounter > 0 ||
++        zombie.FindPlantTarget(ATTACKTYPE_CHEW) != &plant) return false;
++    if (!IsAttacking(zombie))
++    {
++        zombie.mTargetPlantID = static_cast<PlantID>(zombie.mBoard->mPlants.DataArrayGetID(&plant));
++        zombie.mSummonCounter = kBurnWindupTicks;
++        zombie.StartEating();
++    }
++    return true;
++}
++
++void Update(Zombie& zombie)
++{
++    if (!IsZombie(zombie)) return;
++    ValidateState(zombie);
++    if (!IsAttacking(zombie) || zombie.IsImmobilizied() || !zombie.mBoard) return;
++
++    Plant* target = zombie.mBoard->mPlants.DataArrayTryToGet(static_cast<unsigned int>(zombie.mTargetPlantID));
++    // A shoveled bait, replaced layer or moving target cannot redirect a strike
++    // into a different plant. The still-lit torch can be aimed again normally.
++    if (!target || !IsBurnable(*target) || zombie.FindPlantTarget(ATTACKTYPE_CHEW) != target)
++    {
++        CancelWindup(zombie);
++        return;
++    }
++    if (--zombie.mSummonCounter > 0) return;
++
++    zombie.mHasObject = false;
++    zombie.mTargetPlantID = PLANTID_NULL;
++    // Reuse the original finite fireball burst at a single-plant scale. It
++    // contains the native flame/smoke artwork and deals no area damage.
++    if (PvzpParticleSystem* burst = zombie.mApp->AddPvzpParticle(target->mX + 40.0f,
++        target->mY + 45.0f, zombie.mRenderOrder + 1, PARTICLE_FIREBALL_DEATH))
++        burst->OverrideScale(nullptr, 0.32f);
++    zombie.mApp->PlayFoley(FOLEY_FIREPEA);
++    target->mPlantHealth = 0;
++    ++zombie.mBoard->mPlantsEaten;
++    target->Die();
++    zombie.mBoard->mChallenge->ZombieAtePlant(target);
++    zombie.StopEating();
++}
++}
+diff --git a/src/Lawn/System/TorchbearerZombie.h b/src/Lawn/System/TorchbearerZombie.h
+new file mode 100644
+index 0000000000000000000000000000000000000000..1bd9fc340e1b6aa7583e3fd0d83ef344c0a65c49
+--- /dev/null
++++ b/src/Lawn/System/TorchbearerZombie.h
+@@ -0,0 +1,30 @@
++// SPDX-License-Identifier: LGPL-3.0-or-later
++#pragma once
++
++#include "../../ConstEnums.h"
++
++class Plant;
++class Zombie;
++
++// One torch, one ordinary eating target. The existing native saved fields hold
++// the flame (mHasObject), windup (mSummonCounter) and exact target (mTargetPlantID).
++// No actor, board or profile serialization layout changes are required.
++namespace TorchbearerZombie
++{
++inline constexpr ZombieType kType = ZOMBIE_TORCHBEARER;
++inline constexpr int kBodyHealth = 270;
++inline constexpr int kBurnWindupTicks = 35;
++inline constexpr int kZombieValue = 3;
++
++bool IsZombie(const Zombie& zombie);
++bool IsLit(const Zombie& zombie);
++bool IsAttacking(const Zombie& zombie);
++float AttackProgress(const Zombie& zombie);
++bool TryStartBurn(Zombie& zombie, Plant& plant);
++void ValidateState(Zombie& zombie);
++void Update(Zombie& zombie);
++void Extinguish(Zombie& zombie);
++
++static_assert(static_cast<int>(kType) == 34);
++static_assert(static_cast<int>(GAMEMODE_CHALLENGE_FIRE_DRILL) == 90);
++}
+diff --git a/src/Lawn/Widget/AlmanacDialog.cpp b/src/Lawn/Widget/AlmanacDialog.cpp
+index 15c6fa0b002d3a4fa642ddb76c963fff4db2e93e..aab69aae9549f29e81137e627d540d0131599aac 100644
+--- a/src/Lawn/Widget/AlmanacDialog.cpp
++++ b/src/Lawn/Widget/AlmanacDialog.cpp
+@@ -252,6 +252,7 @@ void AlmanacDialog::Update()
+ ZombieType AlmanacDialog::GetZombieType(int theIndex)
+ {
+ 	if (theIndex == NUM_ALMANAC_ZOMBIES) return ZOMBIE_RALLY;
++	if (theIndex == NUM_ALMANAC_ZOMBIES + 1) return ZOMBIE_TORCHBEARER;
+ 	return theIndex < NUM_ZOMBIE_TYPES ? (ZombieType)theIndex : ZOMBIE_INVALID;
+ }
+ 
+@@ -493,6 +494,7 @@ void AlmanacDialog::DrawZombies(Graphics* g)
+ 	const ZombieDefinition& aZombieDef = GetZombieDefinition(mSelectedZombie);
+ 	std::string aName = ZombieHasSilhouette(mSelectedZombie) ? "???" : std::format("[{}]", aZombieDef.mZombieName);
+ 	if (mSelectedZombie == ZOMBIE_RALLY) aName = "Rally Zombie";
++	else if (mSelectedZombie == ZOMBIE_TORCHBEARER) aName = "Torchbearer Zombie";
+ 	PvzpDrawString(g, aName, 613, 362, Sexy::FONT_DWARVENTODCRAFT18GREENINSET, Color(190, 255, 235, 255), DS_ALIGN_CENTER);
+ 
+ 	std::string aDescription;
+@@ -508,6 +510,15 @@ void AlmanacDialog::DrawZombies(Graphics* g)
+ 				"{SHORTLINE}\n"
+ 				"{FLAVOR}He rehearsed a stirring speech for the invasion. Then he saw the lawn. "
+ 				"\"Braaaains!\" It was all coming back to him.";
++		else if (mSelectedZombie == ZOMBIE_TORCHBEARER)
++			aDescription = "{NORMAL}Burns one plant before his torch goes out.\n"
++				"{SHORTLINE}\n"
++				"{KEYWORD}Toughness:{STAT} low\n"
++				"{KEYWORD}Speed:{STAT} slow\n"
++				"{KEYWORD}Special:{STAT} one-use torch\n"
++				"{KEYWORD}Weakness:{STAT} cold extinguishes his torch\n"
++				"{SHORTLINE}\n"
++				"{FLAVOR}He brought a light snack. The light is doing all the work.";
+ 		else aDescription = PvzpStringTranslate(std::format("[{}_DESCRIPTION]", aZombieDef.mZombieName));
+ 		aAlign = DS_ALIGN_LEFT;
+ 	}
+@@ -610,6 +621,7 @@ bool AlmanacDialog::ZombieIsShown(ZombieType theZombieType)
+ {
+ 	// Bonus content occupies an unused native window; no Adventure zombie moves.
+ 	if (theZombieType == ZOMBIE_RALLY) return true;
++	if (theZombieType == ZOMBIE_TORCHBEARER) return true;
+ 	// trial mode only shows zombies up to the Snorkel Zombie
+ 	if (mApp->IsTrialStageLocked() && theZombieType > ZombieType::ZOMBIE_SNORKEL)
+ 		return false;
+@@ -637,6 +649,7 @@ bool AlmanacDialog::ZombieIsShown(ZombieType theZombieType)
+ bool AlmanacDialog::ZombieHasDescription(ZombieType theZombieType)
+ {
+ 	if (theZombieType == ZOMBIE_RALLY) return true;
++	if (theZombieType == ZOMBIE_TORCHBEARER) return true;
+ 	int aLevel = mApp->mPlayerInfo->GetLevel();
+ 	int aStart = GetZombieDefinition(theZombieType).mStartingLevel;
+ 
+@@ -661,6 +674,8 @@ void AlmanacDialog::GetZombiePosition(ZombieType theZombieType, int& x, int& y)
+ {
+ 	if (theZombieType == ZOMBIE_RALLY)
+ 		x = 22, y = 486;
++	else if (theZombieType == ZOMBIE_TORCHBEARER)
++		x = 107, y = 486;
+ 	else if (theZombieType == ZombieType::ZOMBIE_BOSS)
+ 		x = 192, y = 486;
+ 	else
+diff --git a/src/Lawn/Widget/AlmanacDialog.h b/src/Lawn/Widget/AlmanacDialog.h
+index 54c482be232ffbdee154eb67d924ece296d09404..3de7a3d1c65c1f19e5f2f78611cc3e73c3382f70 100644
+--- a/src/Lawn/Widget/AlmanacDialog.h
++++ b/src/Lawn/Widget/AlmanacDialog.h
+@@ -28,7 +28,7 @@
+ 
+ constexpr const int NUM_ALMANAC_SEEDS = 49;
+ constexpr const int NUM_ALMANAC_ZOMBIES = 26;
+-constexpr const int NUM_ADDON_ALMANAC_ZOMBIES = 1;
++constexpr const int NUM_ADDON_ALMANAC_ZOMBIES = 2;
+ 
+ constexpr const float			ALMANAC_PLANT_POSITION_X		= 578.0f;
+ constexpr const float			ALMANAC_PLANT_POSITION_Y		= 140.0f;
+diff --git a/src/Lawn/Widget/ChallengeScreen.cpp b/src/Lawn/Widget/ChallengeScreen.cpp
+index 0cac50fcfcb74c7d755def37d9c84f0dbbdfdc31..e6da1ee9b825db07b1ef91674242554cddc464e5 100644
+--- a/src/Lawn/Widget/ChallengeScreen.cpp
++++ b/src/Lawn/Widget/ChallengeScreen.cpp
+@@ -37,6 +37,7 @@
+ #include "../System/PoolPanicEndlessPresentation.h"
+ #include "../System/ScrapYardPresentation.h"
+ #include "../System/VaseAmbushPresentation.h"
++#include "../System/FireDrillPresentation.h"
+ #include "../../PvzpLib/PvzpDebug.h"
+ #include "../../PvzpLib/PvzpFoley.h"
+ #include "../../PvzpLib/PvzpCommon.h"
+@@ -136,7 +137,8 @@ constinit const ChallengeDefinition gChallengeDefs[NUM_CHALLENGE_MODES] = {
+ 	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_POOL_PANIC, .mChallengeIconIndex = 0, .mPage = ChallengePage::CHALLENGE_PAGE_BONUS, .mRow = 3, .mCol = 3, .mChallengeName = "Pool Panic" },
+ 	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_POOL_PANIC_ENDLESS, .mChallengeIconIndex = 0, .mPage = ChallengePage::CHALLENGE_PAGE_BONUS, .mRow = 3, .mCol = 4, .mChallengeName = "Pool Panic Endless" },
+ 	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_SCRAP_YARD, .mChallengeIconIndex = 0, .mPage = ChallengePage::CHALLENGE_PAGE_BONUS, .mRow = 4, .mCol = 0, .mChallengeName = "Scrap Yard" },
+-	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_VASE_AMBUSH, .mChallengeIconIndex = 0, .mPage = ChallengePage::CHALLENGE_PAGE_BONUS, .mRow = 4, .mCol = 1, .mChallengeName = "Vase Ambush" }
++	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_VASE_AMBUSH, .mChallengeIconIndex = 0, .mPage = ChallengePage::CHALLENGE_PAGE_BONUS, .mRow = 4, .mCol = 1, .mChallengeName = "Vase Ambush" },
++	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_FIRE_DRILL, .mChallengeIconIndex = 0, .mPage = ChallengePage::CHALLENGE_PAGE_BONUS, .mRow = 4, .mCol = 2, .mChallengeName = "Fire Drill" }
+ };
+ 
+ ChallengeScreen::ChallengeScreen(LawnApp* theApp, ChallengePage thePage)
+@@ -439,7 +441,8 @@ int ChallengeScreen::AccomplishmentsNeeded(int theChallengeIndex)
+ // Native portraits retain the original 80x65 minigame window and frame.
+ void DrawBonusIcon(Graphics* g, GameMode mode, int x, int y)
+ {
+-    if (Image* image = mode == GAMEMODE_CHALLENGE_VASE_AMBUSH ? VaseAmbushPresentation::GetBonusImage() :
++    if (Image* image = mode == GAMEMODE_CHALLENGE_FIRE_DRILL ? FireDrillPresentation::GetBonusImage() :
++        mode == GAMEMODE_CHALLENGE_VASE_AMBUSH ? VaseAmbushPresentation::GetBonusImage() :
+         mode == GAMEMODE_CHALLENGE_SCRAP_YARD ? ScrapYardPresentation::GetBonusImage() :
+         mode == GAMEMODE_CHALLENGE_POOL_PANIC_ENDLESS ? PoolPanicEndlessPresentation::GetBonusImage() :
+         mode == GAMEMODE_CHALLENGE_POOL_PANIC ? PoolPanicPresentation::GetBonusImage() :
+diff --git a/src/Lawn/Zombie.cpp b/src/Lawn/Zombie.cpp
+index 618b5a3899c25289a152700f3f62a5046820d2e1..eaa1b949618d2f828b6ac66cce0403de4b37653d 100644
+--- a/src/Lawn/Zombie.cpp
++++ b/src/Lawn/Zombie.cpp
+@@ -28,6 +28,8 @@
+ #include "Zombie.h"
+ #include "System/BonusChallenge.h"
+ #include "System/RallyPresentation.h"
++#include "System/TorchbearerZombie.h"
++#include "System/TorchbearerPresentation.h"
+ #include "Cutscene.h"
+ #include "GridItem.h"
+ #include "LawnMower.h"
+@@ -114,6 +116,7 @@ constinit const ZombieDefinition gZombieDefs[NUM_ZOMBIE_TYPES] = {
+ 	{ .mZombieType = ZOMBIE_TALLNUT_HEAD, .mReanimationType = REANIM_ZOMBIE, .mZombieValue = 4, .mStartingLevel = 99, .mFirstAllowedWave = 10, .mPickWeight = 2000, .mZombieName = "ZOMBIE" },
+ 	{ .mZombieType = ZOMBIE_REDEYE_GARGANTUAR, .mReanimationType = REANIM_GARGANTUAR, .mZombieValue = 10, .mStartingLevel = 48, .mFirstAllowedWave = 15, .mPickWeight = 6000, .mZombieName = "REDEYED_GARGANTUAR" },
+     { .mZombieType = ZOMBIE_RALLY, .mReanimationType = REANIM_ZOMBIE, .mZombieValue = 3, .mStartingLevel = 99, .mFirstAllowedWave = 1, .mPickWeight = 0, .mZombieName = "RALLY_ZOMBIE" },
++    { .mZombieType = ZOMBIE_TORCHBEARER, .mReanimationType = REANIM_ZOMBIE, .mZombieValue = TorchbearerZombie::kZombieValue, .mStartingLevel = 99, .mFirstAllowedWave = 1, .mPickWeight = 0, .mZombieName = "TORCHBEARER_ZOMBIE" },
+ };
+ 
+ static ZombieType gBossZombieList[] = {
+@@ -262,6 +265,13 @@ void Zombie::ZombieInitialize(int theRow, ZombieType theType, bool theVariant, Z
+         mSummonCounter = RallyZombie::kWarmupTicks;
+         break;
+ 
++    case ZombieType::ZOMBIE_TORCHBEARER:
++        mVariant = false;
++        LoadPlainZombieReanim();
++        mBodyHealth = TorchbearerZombie::kBodyHealth;
++        mHasObject = true;
++        break;
++
+ 	case ZombieType::ZOMBIE_DUCKY_TUBE:
+ 		LoadPlainZombieReanim();
+ 		break;
+@@ -896,6 +906,7 @@ void Zombie::ZombieInitialize(int theRow, ZombieType theType, bool theVariant, Z
+ 
+ 	InitializeConeZoneHelm();
+     if (RallyZombie::IsZombie(*this)) RallyPresentation::Initialize(*this);
++    if (TorchbearerZombie::IsZombie(*this)) TorchbearerPresentation::Initialize(*this);
+ 
+ 	mBodyMaxHealth = mBodyHealth;
+ 	mHelmMaxHealth = mHelmHealth;
+@@ -3595,6 +3606,7 @@ void Zombie::DropHead(unsigned int theDamageFlags)
+ 	}
+ 
+ 	mHasHead = false;
++    if (TorchbearerZombie::IsZombie(*this)) TorchbearerZombie::Extinguish(*this);
+     if (GetConeReanim()) DropHelm(theDamageFlags);
+ 	SetupReanimForLostHead();
+ 	if (TestBit(theDamageFlags, DamageFlags::DAMAGE_DOESNT_LEAVE_BODY))
+@@ -4393,6 +4405,7 @@ void Zombie::Update()
+     }
+ 
+ 	mZombieAge++;
++    if (TorchbearerZombie::IsZombie(*this)) TorchbearerZombie::ValidateState(*this);
+     if (RallyZombie::IsZombie(*this) && !IsOnBoard()) RallyZombie::Update(*this);
+ 	bool doUpdate = false;
+ 	if (mApp->mGameScene == GameScenes::SCENE_LEVEL_INTRO && mZombieType == ZombieType::ZOMBIE_BOSS)
+@@ -4515,6 +4528,7 @@ void Zombie::UpdateClimbingLadder()
+ 
+ void Zombie::UpdateActions()
+ {
++    if (TorchbearerZombie::IsZombie(*this)) TorchbearerZombie::Update(*this);
+ 	if (mZombieHeight == ZombieHeight::HEIGHT_UP_LADDER)
+ 	{
+ 		UpdateClimbingLadder();
+@@ -4912,6 +4926,7 @@ void Zombie::UpdateYuckyFace()
+ 
+ void Zombie::AnimateChewSound()
+ {
++    if (TorchbearerZombie::IsAttacking(*this)) return;
+ 	if (mZombiePhase == ZombiePhase::PHASE_SNORKEL_UP_TO_EAT)
+ 		return;
+ 
+@@ -4968,6 +4983,7 @@ void Zombie::AnimateChewSound()
+ 
+ void Zombie::AnimateChewEffect()
+ {
++    if (TorchbearerZombie::IsAttacking(*this)) return;
+ 	if (mZombiePhase == ZombiePhase::PHASE_SNORKEL_UP_TO_EAT)
+ 		return;
+ 
+@@ -5859,6 +5875,8 @@ void Zombie::DrawReanim(Graphics* g, const ZombieDrawPosition& theDrawPos, int t
+ 	}
+     if (RallyZombie::IsZombie(*this) && theBaseRenderGroup == RENDER_GROUP_NORMAL)
+         RallyPresentation::Draw(*this, g, theDrawPos);
++    if (TorchbearerZombie::IsZombie(*this) && theBaseRenderGroup == RENDER_GROUP_NORMAL)
++        TorchbearerPresentation::Draw(*this, g, theDrawPos);
+ 
+ 	if (mShieldType != ShieldType::SHIELDTYPE_NONE)
+ 	{
+@@ -6935,6 +6953,7 @@ void Zombie::StopEating()
+ 
+ void Zombie::CheckIfPreyCaught()
+ {
++    if (TorchbearerZombie::IsAttacking(*this)) return;
+ 	if (mZombieType == ZombieType::ZOMBIE_BUNGEE ||
+ 		mZombieType == ZombieType::ZOMBIE_GARGANTUAR ||
+ 		mZombieType == ZombieType::ZOMBIE_REDEYE_GARGANTUAR ||
+@@ -7104,6 +7123,7 @@ void Zombie::StartMindControlled()
+ {
+ 	mApp->PlaySample(SOUND_MINDCONTROLLED);
+ 	mMindControlled = true;
++    if (TorchbearerZombie::IsZombie(*this)) TorchbearerZombie::Extinguish(*this);
+ 	mLastPortalX = -1;
+ 
+ 	if (mZombieType == ZombieType::ZOMBIE_DANCER)
+@@ -7202,6 +7222,8 @@ void Zombie::EatPlant(Plant* thePlant)
+ 		return;
+ 	}
+ 
++    if (TorchbearerZombie::TryStartBurn(*this, *thePlant)) return;
++
+ 	if (mChilledCounter > 0 && mZombieAge % 2 == 1)
+ 		return;
+ 
+@@ -7256,6 +7278,7 @@ void Zombie::EatZombie(Zombie* theZombie)
+ bool Zombie::TrySpawnLevelAward()
+ {
+     if (VaseAmbush::IsMode(mApp->mGameMode)) return false;
++    if (FireDrill::IsMode(mApp->mGameMode)) return false;
+     if (ScrapYard::IsMode(mApp->mGameMode) || PoolPanicEndless::IsMode(mApp->mGameMode) || PoolPanic::IsMode(mApp->mGameMode) || CobCannonCommand::IsMode(mApp->mGameMode) || BungeeBusiness::IsMode(mApp->mGameMode) || ChainReaction::IsMode(mApp->mGameMode) || GarlicRun::IsMode(mApp->mGameMode)) return false;
+ 	if (!IsOnBoard() || mBoard->HasLevelAwardDropped() || mBoard->mLevelComplete || mDroppedLoot)
+ 	{
+@@ -7551,6 +7574,7 @@ void Zombie::BungeeDie()
+ 
+ void Zombie::DieNoLoot()
+ {
++    if (TorchbearerZombie::IsZombie(*this)) TorchbearerZombie::Extinguish(*this);
+ 	StopZombieSound();
+ 	AttachmentDie(mAttachmentID);
+ 	mApp->RemoveReanimation(mBodyReanimID);
+@@ -7654,6 +7678,8 @@ void Zombie::ApplyChill(bool theIsIceTrap)
+ 	if (!CanBeChilled())
+ 		return;
+ 
++    if (TorchbearerZombie::IsZombie(*this)) TorchbearerZombie::Extinguish(*this);
++
+ 	if (mChilledCounter == 0)
+ 	{
+ 		mApp->PlayFoley(FoleyType::FOLEY_FROZEN);
+@@ -10699,6 +10725,12 @@ void Zombie::PreloadZombieResources(ZombieType theZombieType)
+ 		ReanimatorEnsureDefinitionLoaded(aZombieDef.mReanimationType, true);
+ 	}
+ 
++    if (theZombieType == ZOMBIE_TORCHBEARER)
++    {
++        ReanimatorEnsureDefinitionLoaded(REANIM_FLAG, true);
++        ReanimatorEnsureDefinitionLoaded(REANIM_TORCHWOOD, true);
++    }
++
+ 	if (theZombieType == ZombieType::ZOMBIE_DIGGER)
+ 	{
+ 		ReanimatorEnsureDefinitionLoaded(ReanimationType::REANIM_DIGGER_DIRT, true);
+diff --git a/src/LawnApp.cpp b/src/LawnApp.cpp
+index 75423912c43d550c17d1e665cd03f4fb8e599325..cfbd8c25f31cc2ecb056386f3fe9b74aeae2d896 100644
+--- a/src/LawnApp.cpp
++++ b/src/LawnApp.cpp
+@@ -47,6 +47,8 @@
+ #include "Lawn/System/PoolPanicEndlessPresentation.h"
+ #include "Lawn/System/ScrapYardPresentation.h"
+ #include "Lawn/System/VaseAmbushPresentation.h"
++#include "Lawn/System/FireDrillPresentation.h"
++#include "Lawn/System/TorchbearerPresentation.h"
+ #include "Lawn/System/LanternShroom.h"
+ #include "Lawn/System/MenderBloom.h"
+ #include "Lawn/System/SaveGame.h"
+@@ -232,6 +234,8 @@ LawnApp::~LawnApp()
+     PoolPanicPresentation::DisposeImage();
+     ScrapYardPresentation::DisposeImage();
+     VaseAmbushPresentation::DisposeImage();
++    FireDrillPresentation::DisposeImage();
++    TorchbearerPresentation::DisposeImage();
+     PoolPanicEndlessPresentation::DisposeImage();
+ #ifdef __EMSCRIPTEN__
+ 	emscripten_set_fullscreenchange_callback(EMSCRIPTEN_EVENT_TARGET_DOCUMENT, nullptr, EM_FALSE, nullptr);

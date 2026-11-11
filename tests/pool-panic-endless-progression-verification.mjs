@@ -4,7 +4,8 @@
 import assert from 'node:assert/strict';
 import {CURRENT_ENGINE_ID, CURRENT_SOURCE_COUNT, CURRENT_OBJECT_COUNT, ENDLESS3_ENGINE_ID,
  SCRAP_ENGINE_ID, CURRENT_ENDLESS_RETENTION_SHA256, SCRAP_ENDLESS_RETENTION_SHA256,
- historicalEngine, verifyRetainedParentInputs} from './native-release-context.mjs';
+ AMBUSH_ENGINE_ID,AMBUSH_ENDLESS_RETENTION_SHA256,
+ historicalEngine, verifyRetainedParentInputs,verifyTorchRetainedParentInputs} from './native-release-context.mjs';
 
 const seeds = [1729, 7331];
 const milestones = [8, 12, 20, 40];
@@ -654,7 +655,7 @@ export async function verifyPublishedParentReference({read, parentRead, sha, eng
 }
 
 export async function verifyEndlessRetentionAdapter({report, read, sha}) {
-  const bytes = await read('tests/ambush1-endless-retention.json');
+  const bytes = await read('tests/torch1-endless-retention.json');
   assert.equal(sha(bytes), CURRENT_ENDLESS_RETENTION_SHA256, 'Independently pinned current execution-envelope adapter');
   const adapter = jsonOf(bytes);
   fields(adapter, {schemaVersion: 1, engineId: CURRENT_ENGINE_ID, historicalContractSha256: finalContractPin,
@@ -663,6 +664,16 @@ export async function verifyEndlessRetentionAdapter({report, read, sha}) {
   assert.equal(report.lateGame.retentionAdapterSha256, CURRENT_ENDLESS_RETENTION_SHA256);
   assert(!Object.hasOwn(report, 'basePrefixReuse'), 'Every current opening and late native case must execute freshly');
   const retained = await verifyRetainedParentInputs({read, sha});
+  const ambushRetained=await verifyTorchRetainedParentInputs({read,sha});
+  const ambushAdapterBytes=await read('tests/ambush1-endless-retention.json');
+  assert.equal(sha(ambushAdapterBytes),AMBUSH_ENDLESS_RETENTION_SHA256);
+  assert.equal(adapter.publishedAmbushAdapterSha256,AMBUSH_ENDLESS_RETENTION_SHA256);
+  assert.equal(ambushRetained.files['ambush1-endless-retention.json'].sha256,AMBUSH_ENDLESS_RETENTION_SHA256);
+  const ambushAdapter=jsonOf(ambushAdapterBytes);
+  fields(ambushAdapter,{schemaVersion:1,engineId:AMBUSH_ENGINE_ID,historicalContractSha256:finalContractPin,
+    productionSourceFiles:860,productionObjectCount:138,freshAllCasesRequired:true});
+  for(const runner of ['test-endless3-late.py','test-pool-panic-endless.py'])
+    assert.equal(ambushAdapter.runnerSha256[runner],ambushRetained.files[runner].sha256);
   const publishedBytes = await read('tests/scrap1-endless-retention.json');
   assert.equal(sha(publishedBytes), SCRAP_ENDLESS_RETENTION_SHA256,
     'The published Scrap execution envelope is retained byte exactly');

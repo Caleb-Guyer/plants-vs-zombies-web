@@ -1,0 +1,263 @@
+{
+  "schemaVersion": 1,
+  "sourceKind": "native sprite compositions using the approved whole-character plant rig",
+  "assetBundleId": "sha256:b468b22439430ca4a36035b886a74bd831a86b2a1a36c39d3203396f5b75d093",
+  "assetManifest": "../game-assets/manifest.json",
+  "generatedArtworkUsed": true,
+  "plant": {
+    "displayName": "Chill-shroom",
+    "nativeReanimation": "REANIM_ICESHROOM",
+    "spriteOverride": "chill-shroom/provenance.json",
+    "scope": "Accepted painted Chill-shroom and shared rig retained. A Cold Front win, including an existing valid win, unlocks the native addon packet for normal seed selection and saved decks.",
+    "unlock": {
+      "winMode": 75,
+      "originalSeedId": 75,
+      "runtimeChooserSlot": 49,
+      "originalChooserCountPreserved": 49,
+      "savedArrayCapacityPreserved": 53,
+      "customImitaterCopy": false
+    },
+    "almanac": "Native compact catalog packet, formatted statistics, brown italic character biography and animated portrait; unlocks after Cold Front including an existing valid win."
+  },
+  "cards": [
+    {
+      "mode": 73,
+      "name": "Cone Zone",
+      "hero": "original conehead zombie portrait",
+      "background": "IMAGE_BACKGROUND1",
+      "gameplay": "Native bowling conveyor, ten waves and one flag; cone-armored native variants and normal, explosive and giant Wall-nuts. Giant physics are unchanged from native Bowling 2.",
+      "variants": [
+        "regular conehead",
+        "screen door with cone",
+        "newspaper with cone",
+        "pole-vaulter with cone",
+        "ladder with cone",
+        "jack-in-the-box with cone",
+        "football with cone",
+        "flag with cone"
+      ],
+      "coneArmorHealth": 370
+    },
+    {
+      "mode": 74,
+      "name": "Night Shift",
+      "hero": "REANIM_PUFFSHROOM",
+      "background": "IMAGE_BACKGROUND2",
+      "gameplay": "Native nighttime graveyard-control conveyor. Four initial graves, safe empty-tile growth capped at six, warned rises before waves 4/7/10 of at most three normal zombies, guaranteed Grave Busters and a wider mushroom mix. Ten waves and one flag. All eligible mature graves receive the native warning before a capped rise."
+    },
+    {
+      "mode": 75,
+      "name": "Cold Front",
+      "hero": "Approved Chill-shroom shared DrawRig",
+      "background": "IMAGE_BACKGROUND2",
+      "gameplay": "Native preparation and defense puzzle: 1500 sun, no graves or income, four waves; the original Lets Rock button starts combat."
+    },
+    {
+      "mode": 76,
+      "name": "Garden Shuffle",
+      "hero": "REANIM_PEASHOOTER body/head with original IMAGE_ZEN_GARDENGLOVE",
+      "background": "IMAGE_BACKGROUND1",
+      "gameplay": "Fixed garden of three Repeaters, a Snow Pea and two Wall-nuts. Move existing living plants with the native glove; health and attack state persist. Ten rotating-lane waves, forty authored zombies, one-second move cooldown and no sun or seed economy."
+    },
+    {
+      "mode": 77,
+      "name": "Seed Swap",
+      "hero": "REANIM_WALLNUT with original Repeater seed packet",
+      "background": "IMAGE_BACKGROUND1",
+      "gameplay": "Fixed garden of two Peashooters and one Wall-nut per lane. Zombie kills drop native seed packets. Plant only by replacing a living plant; no sun economy, seed bank or shovel. Ten waves change the enemy mix."
+    },
+    {
+      "mode": 78,
+      "name": "Intensive Lawn Care",
+      "hero": "Approved Mender-bloom DrawRig with original Flower Pot and IMAGE_ZEN_GARDENGLOVE",
+      "background": "IMAGE_BACKGROUND1",
+      "gameplay": "Conveyor patients start wounded. Move the same living combat plants between a protected Flower Pot healing bed beside fixed Mender-blooms and the front lines with the native glove. Active combat tires deployed plants; bed patients recover with normal Mender healing and cannot fire. Ten authored waves, five starting Repeaters and Wall-nuts, one-second move cooldown and no sun economy."
+    },
+    {
+      "mode": 79,
+      "name": "Chain Reaction",
+      "hero": "Original REANIM_CHERRYBOMB and REANIM_JALAPENO idle sprites with armed REANIM_POTATOMINE",
+      "background": "IMAGE_BACKGROUND1",
+      "generatedArtworkUsed": false,
+      "gameplay": "Five hand-arranged explosive puzzles. Place a finite supply of Cherry Bombs, Jalapenos and Potato Mines, then use the native Let's Rock button. Native blasts and walking zombies resolve each arrangement; one trophy follows the fifth board."
+    },
+    {
+      "mode": 80,
+      "name": "Rally Point",
+      "hero": "Original REANIM_ZOMBIE body and articulated original arm tracks, with native-coded shaded megaphone",
+      "background": "IMAGE_BACKGROUND1",
+      "generatedArtworkUsed": false,
+      "gameplay": "Ten authored day-lawn waves built around Rally Zombie groups. A fixed six-plant bank and seven starting plants provide immediate counterplay; native sun, planting, recharge, mowers, armor and victory rules remain active. Calls briefly raise eligible nearby walkers to 1.45 times their base speed, do not stack and stop when their source is frozen, buttered, eating, headless or armless.",
+      "artwork": "The unmodified native head, body, legs and arm images supply the character. The original reaching arm pose is blended into each walking pose to raise and lower a shaded ivory megaphone with a brick-red rim. The 80 by 65 card is rendered from this actual rig, fitted to the existing centered portrait bounds.",
+      "almanac": "One additional native zombie window in the unused bottom-left space; original zombie positions and Dr. Zomboss are retained. The portrait animates using the same rig and call clock, with native formatted statistics and brown italic character biography."
+    },
+    {
+      "mode": 81,
+      "name": "Rally Raid",
+      "hero": "Original repaired Rally Zombie rig and IMAGE_BRAIN, composed at native card resolution",
+      "background": "IMAGE_BACKGROUND1",
+      "generatedArtworkUsed": false,
+      "gameplay": "Five fixed I, Zombie boards. Spend a finite sun budget to deploy normal, conehead, buckethead, screen-door and Rally Zombies on the right-hand lawn. Eat all five native brains on each board; Chill-shroom and Mender-bloom join the authored cardboard defenses. Only board five grants the completion award.",
+      "artwork": "The existing original zombie rig and repaired closed grip accompany an original brain sprite rendered at final card resolution, fitted up to 22 by 20 pixels. The combined composition fits the centered 68 by 57 hero bounds inside the native 80 by 65 card. No separately generated illustration is used.",
+      "interface": "Original I, Zombie bank, brains, deployment line, native pause/Menu/speed controls and brain meter. Native footer shows board progress. Raid uses the original I, Zombie draw order and packet-feedback layers; top-row zombie heads render in front of the bank exactly as in that mode."
+    },
+    {
+      "mode": 82,
+      "name": "Lights Out",
+      "hero": "Original REANIM_PLANTERN idle rig, centered over original nighttime lawn with original fog cels",
+      "background": "IMAGE_BACKGROUND2 with IMAGE_FOG_SOFTWARE",
+      "generatedArtworkUsed": false,
+      "gameplay": "Move one living Plantern between five rail cells with the native glove. Fixed defenders attack only inside its two-tile Manhattan light footprint. A short opening introduces the light before authored waves require lane changes; original combat, mowers, pause, speed and completion rules remain active.",
+      "artwork": "The complete original Plantern body, eyes, stem and leaves are rendered from its unmodified native rig. Two original software-fog cels sit behind its silhouette. The composition uses the same centered 68 by 57 hero bounds inside the existing 80 by 65 card; no separately generated illustration is used.",
+      "interface": "Name-only tenth Bonus card in the native fifth column of row two. The original glove uses one bounded draw and hit rectangle, and the normal Menu/speed controls and footer remain clear."
+    },
+    {
+      "mode": 83,
+      "name": "Garlic Run",
+      "hero": "Original REANIM_GARLIC idle rig with original REANIM_SPIKEWEED and armed REANIM_POTATOMINE",
+      "background": "IMAGE_BACKGROUND1",
+      "generatedArtworkUsed": false,
+      "gameplay": "Five short native routing puzzles. Reposition living Garlic with the original glove to steer native zombies through fixed Spikeweed and Potato Mine traps; original plant artwork, attacks, health and garlic diversion remain active.",
+      "artwork": "The complete original Garlic is the centered hero above a small route made from original Spikeweed and armed Potato Mine rigs. The composition fits the same centered 68 by 57 hero bounds inside the native 80 by 65 card; no separately generated illustration is used.",
+      "interface": "Name-only eleventh Bonus card in the first column of row three. Native glove, preparation Start button, Menu/speed controls and board footer use the existing game style."
+    },
+    {
+      "mode": 84,
+      "name": "Bungee Business",
+      "hero": "Original REANIM_BUNGEE raising rig carrying the original REANIM_SUNFLOWER, with original REANIM_UMBRELLALEAF support",
+      "background": "IMAGE_BACKGROUND1",
+      "generatedArtworkUsed": false,
+      "gameplay": "Five native heist puzzles. Spend a limited zombie budget to clear Umbrella-leaf coverage, then steal the Sunflowers with actual Bungee Zombies and original native abduction mechanics.",
+      "artwork": "The original Bungee raising pose and carried Sunflower use the native body/plant offset and forearm occlusion order. An original Umbrella-leaf supports the composition; its complete visible bounds are centered and fitted to the same 68 by 57 hero area inside the native 80 by 65 card. No separately generated illustration is used.",
+      "interface": "Name-only twelfth Bonus card in the second column of row three. The original I, Zombie bank, sun budget, Menu/speed controls and native footer retain the existing game style."
+    },
+    {
+      "mode": 85,
+      "name": "Cob Cannon Command",
+      "hero": "Original REANIM_COBCANNON loaded idle rig; the complete two-square cannon is uniformly fitted and centered",
+      "background": "IMAGE_BACKGROUND1",
+      "generatedArtworkUsed": false,
+      "gameplay": "A continuous artillery battle against moving native zombie formations. Preplaced Cob Cannons keep their original initial arming, two-click aiming, projectile flight, blast and reload mechanics.",
+      "artwork": "The complete original loaded Cob Cannon assembly is rendered at native resolution, then fitted once within68 by57 pixels at the center of the80 by65 native Bonus picture. No redrawn parts, generated image or reused Survival picture.",
+      "interface": "Original Cob Cannon target reticle, Menu, speed and pause controls, native wave progress and footer. No plant chooser, persistent challenge tips or additional HUD."
+    },
+    {
+      "mode": 86,
+      "name": "Pool Panic",
+      "hero": "Original REANIM_SQUASH, REANIM_TANGLEKELP aquarium pose and REANIM_LILYPAD rigs, rendered together with complete native parts",
+      "background": "IMAGE_BACKGROUND3 with original IMAGE_POOL water layer",
+      "generatedArtworkUsed": false,
+      "gameplay": "A native pool conveyor minigame using single-use Squash, Tangle Kelp, Cherry Bomb and Jalapeno against mixed land and water zombies. Rear Lily Pads support water-lane planting.",
+      "artwork": "The original Squash rests on an original Lily Pad beside Tangle Kelp in its native packet and Almanac aquarium pose. Their complete native assembly is uniformly fitted inside68 by57 pixels, centered in the80 by65 Bonus picture over the original pool backdrop and IMAGE_POOL water composited at the native software-pool position before cropping. No redrawn parts, generated image or Survival thumbnail.",
+      "interface": "Original conveyor belt, seed packets, Menu, speed and pause controls, native progress meter and footer. No glove, extra HUD or persistent challenge tips."
+    },
+    {
+      "mode": 87,
+      "name": "Pool Panic Endless",
+      "hero": "Original REANIM_ZOMBIE_DOLPHINRIDER anim_ride assembly, with complete native zombie and dolphin parts",
+      "background": "IMAGE_BACKGROUND3 with original IMAGE_POOL water layer",
+      "generatedArtworkUsed": false,
+      "gameplay": "An endless pool conveyor for building a lasting defense with original Repeater, Threepeater, Tall-nut, Torchwood, Spikeweed and Lily Pad, plus Squash, Tangle Kelp, Cherry Bomb and Jalapeno. Six opening packets establish the lawn; escalating varied land and water waves preserve native flags, saved games and a separate full-width best record.",
+      "artwork": "The complete original Dolphin Rider in its native riding pose is uniformly fitted inside68 by57 pixels and centered in the80 by65 Bonus picture. The original pool backdrop and IMAGE_POOL water are composited at the native software-pool position before cropping. No redrawn parts, generated image or reused Survival thumbnail.",
+      "interface": "Original conveyor and seed packets, original shovel for rebuilding, Menu, speed and pause controls, Survival flag counter, progress meter and footer. Brief original flag-clear and huge-wave advice stays behind Pause and dialogs. A compact original Brianne12 Best stamp occupies only the portrait bottom, leaving the Dolphin hero and title clear; large records use readable k/m/b abbreviations while full uint32 totals remain stored. Every stock Survival card keeps its original rendering. No extra persistent HUD or tips below cards."
+    },
+    {
+      "mode": 88,
+      "name": "Scrap Yard",
+      "hero": "Original REANIM_MAGNETSHROOM idle rig with original IMAGE_REANIM_ZOMBIE_BUCKET1 and IMAGE_REANIM_ZOMBIE_LADDER_1 recovered metal",
+      "background": "IMAGE_BACKGROUND2",
+      "generatedArtworkUsed": false,
+      "gameplay": "A six-formation nighttime defense built around original Magnet-shrooms. Collect native sun released by successful metal pulls, then spend it on the fixed Magnet-shroom, Wall-nut, Cherry Bomb, Jalapeno and Squash bank. Original metal removal, armor, plant costs, recharge, attacks, mowers and finite completion rules remain active.",
+      "artwork": "The complete original Magnet-shroom sits beside original recovered Buckethead and Ladder Zombie parts. All native parts retain their painted edges and aspect ratios; the complete composition is fitted once within the centered68 by57 hero bounds inside the original80 by65 Bonus picture. No generated illustration or reused Survival thumbnail.",
+      "interface": "Name-only sixteenth Bonus card in the first column of the native fourth row. Original fixed seed bank, sun counter, shovel, Menu, speed and pause controls, wave meter and native footer. No persistent challenge tips, score counter or additional HUD."
+    },
+    {
+      "mode": 89,
+      "name": "Vase Ambush",
+      "hero": "Original IMAGE_SCARY_POT zombie vase with its native Plantern window, cached Conehead and original IMAGE_BRAIN",
+      "background": "IMAGE_BACKGROUND1",
+      "generatedArtworkUsed": false,
+      "gameplay": "Five authored I, Zombie gardens are cleared with a fixed army contained in native zombie vases. Choose the release order and timing to protect fragile support, counter frost, bait Chompers and mines, and coordinate lanes against shared fire. Original combat statistics, brains, hammer, shatter and stage transitions remain active.",
+      "artwork": "The original transparent gray zombie vase and cached Conehead retain their native drawing offsets. The centered original80 by65 Bonus portrait fits the vase within47 by56 and the separate brain within20 by18 pixels with a3pixel gap. No generated illustration or reused Survival thumbnail.",
+      "interface": "Name-only seventeenth Bonus card in the second column of the native fourth row. Original vase highlight and hammer cursor, cardboard defenders, brains, Menu, speed, pause, brain meter and stage footer. No seed bank, shovel, persistent challenge tips or added HUD."
+    }
+  ],
+  "canvas": {
+    "width": 80,
+    "height": 65,
+    "heroCenterX": 40,
+    "heroCenterY": 32.5,
+    "maxHeroWidth": 68,
+    "maxHeroHeight": 57
+  },
+  "historicalArt": "Chill.4 assembled-part proportions were rejected. The approved Chill.5 whole-character geometry is retained byte-for-byte in all alpha masks; Chill.6 refines surface painting only. Cards still compose actual game sprites; no standalone generated challenge illustration is used.",
+  "standaloneChallengeIllustrations": false,
+  "animation": {
+    "idlePeriodSeconds": 2.2,
+    "idleScaleX": [
+      1,
+      1.045
+    ],
+    "idleScaleY": [
+      0.935,
+      1
+    ],
+    "idleCapCompressionPixels": [
+      0,
+      1.6
+    ],
+    "windupTicks": 40,
+    "recoilTicks": 30,
+    "frostEffectTicks": 100,
+    "frostTravelTicks": 55,
+    "targetRadiusPixels": 150,
+    "nativeFrostAssets": [
+      {
+        "resource": "IMAGE_SNOWPEA_PUFF",
+        "originalPath": "particles/SnowPea_puff.png",
+        "sha256": "26e4fd3e388ddc1dfe5a1f7eddfdfc1fbd98850fc50716b57c7ceffce306d308"
+      },
+      {
+        "resource": "IMAGE_SNOWFLAKES",
+        "originalPath": "particles/SnowFlakes.png",
+        "sha256": "864e8dddb14dd8fcff235d22f5c0d5a9c925aa5cf856f5c855b9a8dbe23a1f03"
+      }
+    ],
+    "newGeneratedArtwork": false,
+    "mechanics": "Release-time radial slow, no damage or delayed projectile hit; native puffs are the visual plume.",
+    "idleBodyAngleRadians": [
+      -0.07,
+      0.07
+    ]
+  },
+  "checkpointCompatibility": "State-zero existing bonus checkpoints keep their previous fixed-bank twenty-wave rules. Chill.8 arcade checkpoints retain saved boards/belts/waves and gain new mechanics on later events; New Game starts the revised opening/roster. Existing completion rewards remain valid. Garden Shuffle uses new mode76 and unused profile record75 with unchanged native object layouts; moves preserve the original plant instance. Seed Swap appends mode77 and unused profile record76; native Coin, Cursor, Plant and Challenge serialized members retain packet drops and replacement gardens. Intensive Lawn Care appends mode78 and unused profile record77; native cursor, plant, conveyor and challenge fields preserve wounded crew, moves, fatigue, supply and recovery without serialized layout changes. Rally Point appends mode80 and unused profile record79; Rally Zombie appends type33. Existing Board, Challenge, Zombie and profile saved layouts are unchanged; its existing native summon counter preserves the call cadence. Rally Raid appends mode81 and uses reserved profile record80. Packet77 remains outside original plant/cache/chooser ranges. Existing serialized challenge stage, state, timer, sun, actors and brain counters preserve each of five boards without new saved fields.",
+  "supportPlant": {
+    "displayName": "Mender-bloom",
+    "spriteOverride": "mender-bloom/provenance.json",
+    "unlock": {
+      "winMode": 77,
+      "profileRecord": 76,
+      "originalSeedId": 76,
+      "runtimeChooserSlot": 50
+    },
+    "almanac": "Native compact catalog packet, formatted statistics, brown italic character biography and animated portrait; unlocks after Seed Swap including an existing valid win.",
+    "gameplay": "125 sun, 15-second recharge; heals each eligible living persistent plant in the eight adjacent squares by 10 HP every three simulation seconds, capped at maximum health. No self healing or damage.",
+    "artwork": "Distinct coral cupped-blossom head with a face on the front petal, generated using original-game style references. Original native stem and leaves remain byte-identical; the shared idle, blink and healing rig is retained.",
+    "animation": {
+      "idlePeriodSeconds": 2.8,
+      "stemAngleRadians": [
+        -0.055,
+        0.055
+      ],
+      "nativeStemLeaves": true
+    },
+    "generatedHead": true
+  },
+  "chooserPresentation": {
+    "customPacketSize": [
+      34,
+      46
+    ],
+    "customPackets": "Inside the left panel footer; original plants, buttons and Imitater keep their native layout."
+  }
+}

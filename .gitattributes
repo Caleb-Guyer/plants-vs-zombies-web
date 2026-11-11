@@ -18,3 +18,8 @@ dist/** -text
 # Raw browser evidence keeps its original recorder bytes on every platform.
 tests/fixtures/performance/captures/*.json -text whitespace=cr-at-eol
 tests/fixtures/performance/diagnostics/*.json -text whitespace=cr-at-eol
+tests/fixtures/performance/historical/** -text whitespace=cr-at-eol
+tests/fixtures/torchbearer-browser/** -text
+tests/fixtures/torch1-parent-reference.json -text
+tests/fixtures/ambush1-native-bonus-art.json -text
+tests/fixtures/ambush1-focused-reference.json -text

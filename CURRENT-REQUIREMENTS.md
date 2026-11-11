@@ -1,5 +1,21 @@
 # Current requirements
 
+## Torchbearer accepted behavior
+
+Torchbearer Zombie carries one torch. A short attack windup burns one edible plant, then the torch stays spent. Snow Peas, Winter Melons, Ice-shroom and Chill-shroom extinguish it early through the original chill system; a cheap sacrificial plant can absorb the single burn. Spent Torchbearers use ordinary zombie movement and biting. The original normal body health and combat statistics are retained; the holding inner arm survives ordinary outer-arm loss.
+
+Fire Drill is Bonus card 18, mode 90 and reserved profile record 89. Its six authored day-lawn formations introduce exposed torches, screen-door escorts, pairs and mixed original attackers using a fixed original seed bank. Clearing it unlocks Torchbearers in Pool Panic Endless from the tenth flag: at most two in one formation and four per flag, only on land, replacing eligible ordinary walkers. An unlocked run receives a Snow Pea as the first available delivery of each new flag from the ninth onward, within the existing packet quota and capacity. The published six-flag opening remains intact. Original Adventure and earlier Bonus wave rosters remain unchanged.
+
+The closed carrying hand, arm and shaft come from original Flag Zombie resources; the flame uses original Torchwood animation. The torch follows the animated grip through walking, eating and the attack windup. The native Almanac gains a clipped portrait, formatted statistics and a short character biography. Fire Drill uses a distinct original-resource card, with no added tips or HUD.
+
+The frozen 868-source/142-object release passes **26 native suites, 60,535,431 baseline checks and zero failures**, plus 29,323,421 separately counted Endless late checks (89,858,852 combined). The combined new driver covers 60 scenarios at both speeds and two seeds, with Fire Drill battles, save/Continue and replay, isolated enemy/art controls and earned-unlock integration. Synthetic controls and checkpoints are identified separately and do not count as earned wins. Paired earned-chain runs align the original Dancing Zombie clock through native Bonus-menu updates before starting Endless; battle clocks are never assigned. All 25 retained native suites execute freshly against current source, with complete-engine suites linked to current production objects; all 58,831 prior focused assertions remain, with one additional catalog iteration (58,832 focused checks). Native tests disable audio output.
+
+The corresponding source authenticates all 868 current files and reconstructs every complete published Ambush.1, Scrap.1 and Endless.3 parent source byte. All 166 published Ambush test inputs remain independently pinned. The lossless native artifact pack restores 26 current JS/WASM test files and two separately identified historical comparator files. Native saved object layouts remain unchanged.
+
+## Earlier release records
+
+The following sections retain their earlier capture-time scope.
+
 ## Vase Ambush accepted behavior
 
 - Append Bonus card 17 using original artwork and native controls.

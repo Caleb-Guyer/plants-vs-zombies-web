@@ -29,6 +29,8 @@ SOURCE_DOWNLOADS = DIST / "source" / "source-downloads.json"
 # https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-large-files-on-github
 MAX_STATIC_ASSET_BYTES = 100 * 1024 * 1024
 AMBUSH_PARENT_REFERENCE_SHA256 = "6771fc13bae02cb70dd8de12192f1f18e50302904a7ef1c784a790e6ccb51dd3"
+TORCH_PARENT_REFERENCE_SHA256 = "14dc78f0593db13b4e17e559061f84996be9c64f23663bd9ef7556b669fc96f6"
+AMBUSH_FOCUSED_REFERENCE_SHA256 = "9463bdd7c262c1749c57b00d25d45257951f8b8b2c8d4511cff630f9c606e9c8"
 REQUIRED_ROOT = (
     ".gitattributes", "README.md", "CURRENT-REQUIREMENTS.md", "PARITY-QA.md", "package.json", "server.mjs",
     "verify-port.mjs", "prepare-port.mjs",
@@ -85,6 +87,9 @@ def parent_source_input(engine):
             or any(character not in "0123456789abcdef" for character in expected)):
         raise ValueError("Invalid immediate-parent source SHA-256")
     path = DIST / "game" / reference
+    if engine.get("id") == "0.2.6-web-torch.1" and not path.exists():
+        authenticate_torch_parent(engine)
+        return None
     if engine.get("id") == "0.2.6-web-ambush.1" and not path.exists():
         authenticate_ambush_parent(engine)
         return None
@@ -137,7 +142,7 @@ def authenticate_scrap_parent(engine, current_sources=None):
     return reference
 
 
-def authenticate_ambush_parent(engine):
+def authenticate_ambush_parent(engine, current_sources=None):
     """Authenticate complete Scrap and Endless.3 sources without duplicate ZIPs."""
     raw = (ROOT / "tests/fixtures/ambush1-parent-reference.json").read_bytes()
     if hashlib.sha256(raw).hexdigest() != AMBUSH_PARENT_REFERENCE_SHA256:
@@ -152,13 +157,16 @@ def authenticate_ambush_parent(engine):
             engine["parent"]["artifacts"]["sourceSha256"] != reference["parent"]["archiveSha256"] or
             len(reference["files"]) != 856):
         raise ValueError("Vase Ambush parent identity differs from the projection")
-    current = DIST / "game" / engine["artifacts"]["source"]
-    if hashlib.sha256(current.read_bytes()).hexdigest() != engine["artifacts"]["sourceSha256"]:
-        raise ValueError("Vase Ambush source differs from provenance")
+    if current_sources is None:
+        current = DIST / "game" / engine["artifacts"]["source"]
+        if hashlib.sha256(current.read_bytes()).hexdigest() != engine["artifacts"]["sourceSha256"]:
+            raise ValueError("Vase Ambush source differs from provenance")
+        with zipfile.ZipFile(current) as archive:
+            current_sources = {name: archive.read("ambush1-candidate/source/" + name) for name in reference["files"]}
     restored = {}
-    with zipfile.ZipFile(current) as archive:
+    if current_sources is not None:
         for name, pin in reference["files"].items():
-            data = archive.read("ambush1-candidate/source/" + name)
+            data = current_sources[name]
             delta = reference["reverseEdits"].get(name)
             if delta:
                 if len(data) != delta["currentBytes"] or hashlib.sha256(data).hexdigest() != delta["currentSha256"]:
@@ -181,6 +189,53 @@ def authenticate_ambush_parent(engine):
     return restored
 
 
+def authenticate_torch_parent(engine):
+    """Recover every complete parent source without nesting redundant archives."""
+    raw = (ROOT / "tests/fixtures/torch1-parent-reference.json").read_bytes()
+    if hashlib.sha256(raw).hexdigest() != TORCH_PARENT_REFERENCE_SHA256:
+        raise ValueError("Torch parent projection differs from its independent fixture")
+    focused = (ROOT / "tests/fixtures/ambush1-focused-reference.json").read_bytes()
+    if hashlib.sha256(focused).hexdigest() != AMBUSH_FOCUSED_REFERENCE_SHA256:
+        raise ValueError("Offline Ambush focused evidence differs from its independent fixture")
+    reference = json.loads(raw)
+    if (engine["id"] != "0.2.6-web-torch.1" or reference["schemaVersion"] != 1 or
+            reference["current"] != {"id": engine["id"], "sourceCount": 868} or
+            reference["parent"]["id"] != "0.2.6-web-ambush.1" or
+            reference["parent"]["archivePrefix"] != "ambush1-candidate/source/" or
+            engine["parent"]["id"] != reference["parent"]["id"] or
+            reference["parent"]["archiveSha256"] != "6da0b6e19d56b3b345a684d379453abecff055a6d788cc17bd161f412bf3e7c9" or
+            engine["parent"]["artifacts"]["sourceSha256"] != reference["parent"]["archiveSha256"] or
+            len(reference["files"]) != 860):
+        raise ValueError("Torch parent identity differs from the independent projection")
+    current = DIST / "game" / engine["artifacts"]["source"]
+    if hashlib.sha256(current.read_bytes()).hexdigest() != engine["artifacts"]["sourceSha256"]:
+        raise ValueError("Torch corresponding source differs from provenance")
+    restored = {}
+    with zipfile.ZipFile(current) as archive:
+        for name, pin in reference["files"].items():
+            data = archive.read("torch1-candidate/source/" + name)
+            delta = reference["reverseEdits"].get(name)
+            if delta:
+                if len(data) != delta["currentBytes"] or hashlib.sha256(data).hexdigest() != delta["currentSha256"]:
+                    raise ValueError("Changed Torch projection input: " + name)
+                previous = len(data) + 1
+                for edit in reversed(delta["edits"]):
+                    offset = edit["offset"]
+                    before = base64.b64decode(edit["beforeBase64"], validate=True)
+                    after = base64.b64decode(edit["afterBase64"], validate=True)
+                    if (not isinstance(offset, int) or offset < 0 or offset >= previous or
+                            offset + len(before) > previous or offset + len(before) > len(data) or
+                            data[offset:offset + len(before)] != before):
+                        raise ValueError("Invalid Torch parent reverse edit: " + name)
+                    data = data[:offset] + after + data[offset + len(before):]
+                    previous = offset
+            if len(data) != pin["bytes"] or hashlib.sha256(data).hexdigest() != pin["sha256"]:
+                raise ValueError("Complete Ambush parent source failed: " + name)
+            restored[name] = data
+    authenticate_ambush_parent(engine["parent"], restored)
+    return restored
+
+
 def nested_source_inputs(engine, paths, baseline):
     """Include current, parent and upstream; exact UI references ship as fixtures."""
     parent = parent_source_input(engine)
@@ -192,8 +247,10 @@ def nested_source_inputs(engine, paths, baseline):
             or hashlib.sha256(native_ui.read_bytes()).hexdigest()
             != "d9861034849eca9d637197aa78a1bae4c90b5656db91ca102d8c903100031edd"):
         raise ValueError("Authenticated native I, Zombie UI fixture is missing or changed")
-    if engine.get("id") in {"0.2.6-web-scrap.1", "0.2.6-web-ambush.1"}:
-        if engine["id"] == "0.2.6-web-ambush.1":
+    if engine.get("id") in {"0.2.6-web-scrap.1", "0.2.6-web-ambush.1", "0.2.6-web-torch.1"}:
+        if engine["id"] == "0.2.6-web-torch.1":
+            authenticate_torch_parent(engine)
+        elif engine["id"] == "0.2.6-web-ambush.1":
             authenticate_ambush_parent(engine)
         else:
             authenticate_scrap_parent(engine)
@@ -298,7 +355,7 @@ def regenerate_source_downloads():
         "schema_version": 1,
         "current_engine": engine["id"],
         "upstream_tag": engine["upstream"]["tag"],
-        "layout": "Site-source nests current corresponding source, the upstream baseline, the historical Endless.2 comparator, independently pinned complete Scrap.1 and Endless.3 source projections, the native I, Zombie UI reference and the current full patch. Each archives[].url is its download location: current and upstream source stay on Pages; historical source archives use immutable GitHub repository URLs and remain in the full runtime distribution. Resolve historical relative source references in retained provenance through this inventory. Linked native test artifacts are losslessly packed; the included decoder restores their exact pinned bytes.",
+        "layout": "Site-source nests current corresponding source, the upstream baseline, the historical Endless.2 comparator, independently pinned complete Ambush.1, Scrap.1 and Endless.3 source projections, the native I, Zombie UI reference and the current full patch. Each archives[].url is its download location: current and upstream source stay on Pages; historical source archives use immutable GitHub repository URLs and remain in the full runtime distribution. Resolve historical relative source references in retained provenance through this inventory. Linked native test artifacts are losslessly packed; the included decoder restores their exact pinned bytes.",
         "nested_sources": [path.name for path in nested],
         "nested_patches": [paths["patch"].name],
         "archives": archives,

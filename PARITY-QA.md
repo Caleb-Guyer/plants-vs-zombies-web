@@ -1,5 +1,25 @@
 # Browser parity and QA record
 
+## Torchbearer native verification
+
+The frozen 868-source/142-object release passes **26 native suites, 60,535,431 baseline checks and zero failures**, plus 29,323,421 separately counted Endless late checks (89,858,852 combined). The combined new driver covers 60 scenarios at both speeds and two seeds, with Fire Drill battles, save/Continue and replay, isolated enemy/art controls and earned-unlock integration. Synthetic controls and checkpoints are identified separately and do not count as earned wins. Paired earned-chain runs align the original Dancing Zombie clock through native Bonus-menu updates before starting Endless; battle clocks are never assigned. All 25 retained native suites execute freshly against current source, with complete-engine suites linked to current production objects; all 58,831 prior focused assertions remain, with one additional catalog iteration (58,832 focused checks). Native tests disable audio output.
+
+The corresponding source authenticates all 868 current files and reconstructs every complete published Ambush.1, Scrap.1 and Endless.3 parent source byte. All 166 published Ambush test inputs remain independently pinned. The lossless native artifact pack restores 26 current JS/WASM test files and two separately identified historical comparator files. Native saved object layouts remain unchanged.
+
+Earlier development findings were retained separately: a transparent-margin shaft anchor, missing day-lawn routing and an overflowing new biography were corrected before final acceptance. The browser pass also caught the Snow Pea head missing from Fire Drill’s card; drawing the original head layer restores the complete plant, and a native pixel oracle rejects the actual old headless card. An immediately captured empty Almanac portrait was a driver initialization omission; matching native dialog updates are required before portrait comparison. These checks establish their documented scope, not exhaustive game parity or universal balance/performance.
+
+### Torchbearer browser verification
+
+Muted inspection confirmed file-free startup, all 18 native Bonus cards including Fire Drill's complete Snow Pea portrait, and the held torch, flame and fitted biography in the original Almanac layout. Reload and native Continue restored a Fire Drill save from the preceding unpublished art-review build, including the placed Snow Pea, spent Torchbearer and 200 sun. This is a browser compatibility observation; current native tests separately cover same-build save round trips. Browser play used a synthetic profile and earned no full challenge wins. [Browser evidence](tests/fixtures/torchbearer-browser/proof.json) binds the four screenshots to the final engine.
+
+Four active 15-second windows on the unchanged synthetic Flag 20/40 checkpoints and paired paused controls meet the existing CPU, scheduling, save-capture and long-task budgets. Native callback p95 values are 1.1/1.6 ms at Flag 20 (1x/2x) and 2.4/3.2 ms at Flag 40; corresponding save maxima are 4.1/5.7/5.7/7.7 ms. Quiet native/clock scheduling p95 differs by less than 1 ms. No game code or budget changed for these measurements.
+
+Earlier records remain excluded and preserved: three observations encountered host scheduling at approximately 1 Hz; one 20/2x attempt ended in a defeat pan; and the first active 40/2x attempt exceeded the 8 ms save p95 budget with 8.7/7.4/9.8 ms captures. One fresh repeat under the same conditions met the unchanged bound. The passing repeat does not erase the failure or establish universal smoothness. These short observations measure CPU and scheduling, not GPU completion or delivered-frame FPS. The owned preview tabs were closed and temporary viewport/visibility settings restored.
+
+## Earlier release records
+
+The following sections retain their earlier capture-time scope.
+
 ## Vase Ambush native verification
 
 Vase Ambush is the seventeenth Bonus minigame: five authored reverse Vasebreaker gardens. Break the original windowed vases to release a finite zombie army, then choose the order and timing to eat all five brains. Later gardens combine original armor, frost, Chompers, Potato Mines, Magnet-shrooms and cross-lane fire. Original plant and zombie combat statistics remain intact.

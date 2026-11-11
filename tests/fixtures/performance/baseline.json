@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "purpose": "Retained actual-browser CPU and scheduling observations, not GPU presentation or earned progression.",
   "engine": {
-    "id": "0.2.6-web-ambush.1",
-    "jsSha256": "4222ab8ec9b6cc49176fc55fae1aa08174487544a34cee3176907b92b08994d6",
-    "wasmSha256": "a6e1f8b5ed4293513f1919ff840d74f81b7420112bba08302b03969f82a06a46"
+    "id": "0.2.6-web-torch.1",
+    "jsSha256": "da8757962f625d0805bb4cd9db15a1b6ee8cfc6ab7d88c952c462f629ee455b0",
+    "wasmSha256": "7fa8c0a42b32f3398fea94dee62ad9180a5921e8f9978a536e79e287d5a0f68a"
   },
   "probe": {
     "path": "tests/performance/probe.js",
@@ -18,8 +18,8 @@
   },
   "expectedManifest": {
     "path": "tests/fixtures/performance/capture-manifest.json",
-    "bytes": 5914,
-    "sha256": "10149792f7710f4d6c8bbf6efbad8f17f43bedd93c4ba8dbfa3bcb8bb85a4c79"
+    "bytes": 5913,
+    "sha256": "b9de8a27f4e91baa6b1a8c6124f624c70529b8028f9b0b8c9d9bb0cf1c6a55ed"
   },
   "checkpoints": {
     "path": "tests/fixtures/performance/checkpoints.json",
@@ -64,11 +64,11 @@
   },
   "cases": [
     {
-      "label": "v2-ambush1-final-release-active20-early-1x-native",
+      "label": "v2-torch1-visible-active20-1x-native",
       "report": {
-        "path": "tests/fixtures/performance/captures/v2-ambush1-final-release-active20-early-1x-native.json",
-        "bytes": 357257,
-        "sha256": "7196faa22c50eb20006dba73d0d28f26be97c4598df96fa75864aea0d1494cca"
+        "path": "tests/fixtures/performance/captures/v2-torch1-visible-active20-1x-native.json",
+        "bytes": 353928,
+        "sha256": "b400314ebf6d8ad9a159882dc8e5f59da517f88fb8c40c0821bfcbd35919ab15"
       },
       "scenario": {
         "phase": "active",
@@ -78,24 +78,24 @@
       "checkpointKey": "20-early-active33",
       "screenshots": {
         "start": {
-          "path": "tests/fixtures/performance/screenshots/v2-ambush1-final-release-active20-early-1x-start.jpg",
-          "bytes": 191593,
-          "sha256": "903662bcffdbaeea3c0856779a33f5147742e1c6777bc4e5ffa09cedffa3b82a"
+          "path": "tests/fixtures/performance/screenshots/v2-torch1-visible-active20-1x-native-start.jpg",
+          "bytes": 194182,
+          "sha256": "6ca7524a7d6e65240db940347139abdeba555ce2854fb1c1f435176d9da581d9"
         },
         "end": {
-          "path": "tests/fixtures/performance/screenshots/v2-ambush1-final-release-active20-early-1x-end.jpg",
-          "bytes": 205669,
-          "sha256": "c8f37379ea6796031d5a484b3d02e4b7ac1e7c3f06d09c5c2c6c9a9b059294d5"
+          "path": "tests/fixtures/performance/screenshots/v2-torch1-visible-active20-1x-native-end.jpg",
+          "bytes": 180157,
+          "sha256": "790d37760ba9d1a296884c2a0619b502512158dd1db237add5ea885e5ed575aa"
         }
       },
       "activeThroughout": true
     },
     {
-      "label": "v2-ambush1-final-release-active20-early-2x-native",
+      "label": "v2-torch1-visible-active20-2x-fresh-native",
       "report": {
-        "path": "tests/fixtures/performance/captures/v2-ambush1-final-release-active20-early-2x-native.json",
-        "bytes": 353214,
-        "sha256": "091e7744db56bb772fb18a8846acbc1d7659ada8e4bf91b21e125b1db4a65bd6"
+        "path": "tests/fixtures/performance/captures/v2-torch1-visible-active20-2x-fresh-native.json",
+        "bytes": 354948,
+        "sha256": "c41c83c388f36b8b5c4af62c64750e1e85630fda9d6de13006d919b6ef3a9cb5"
       },
       "scenario": {
         "phase": "active",
@@ -105,24 +105,24 @@
       "checkpointKey": "20-early-active33",
       "screenshots": {
         "start": {
-          "path": "tests/fixtures/performance/screenshots/v2-ambush1-final-release-active20-early-2x-start.jpg",
-          "bytes": 192327,
-          "sha256": "e09b6708f9fba7d6f6400c8c68b98503b352ea5b563bcaf8a4f6d341f3629511"
+          "path": "tests/fixtures/performance/screenshots/v2-torch1-visible-active20-2x-fresh-native-start.jpg",
+          "bytes": 192015,
+          "sha256": "39c778b075caf21fd60371f3fe4ed33820e4302840d6d549125fb4c57ac4a383"
         },
         "end": {
-          "path": "tests/fixtures/performance/screenshots/v2-ambush1-final-release-active20-early-2x-end.jpg",
-          "bytes": 189601,
-          "sha256": "ef6dcaf1b0228dd0dfc6f18b95efeee33af72473213bf612cb9a907c3f03d665"
+          "path": "tests/fixtures/performance/screenshots/v2-torch1-visible-active20-2x-fresh-native-end.jpg",
+          "bytes": 195882,
+          "sha256": "f4d0e39e66aa1c9c4406793396cec1cea830f44ad6396a5b4aa786379bd6870e"
         }
       },
       "activeThroughout": true
     },
     {
-      "label": "v2-ambush1-final-release-active40-1x-native",
+      "label": "v2-torch1-visible-active40-1x-native",
       "report": {
-        "path": "tests/fixtures/performance/captures/v2-ambush1-final-release-active40-1x-native.json",
-        "bytes": 353399,
-        "sha256": "99f243404bb15f4499688fe1641a047287dd0aaf2d237fb25efc356e16753df4"
+        "path": "tests/fixtures/performance/captures/v2-torch1-visible-active40-1x-native.json",
+        "bytes": 354033,
+        "sha256": "c8600e5d98c0e24fd53a0a29ccf5a15e46789b9ce985edef1688dd9176fab316"
       },
       "scenario": {
         "phase": "active",
@@ -132,24 +132,24 @@
       "checkpointKey": "40-active74",
       "screenshots": {
         "start": {
-          "path": "tests/fixtures/performance/screenshots/v2-ambush1-final-release-active40-1x-start.jpg",
-          "bytes": 194105,
-          "sha256": "29cac0daebab90f274a2674ebf0c7151fb06cdc797e3bf1641a032ee201eefef"
+          "path": "tests/fixtures/performance/screenshots/v2-torch1-visible-active40-1x-native-start.jpg",
+          "bytes": 194117,
+          "sha256": "050c8201b7b9aafafd5406de6ddeb4683b7fc080cd1d761f38d3fe5cb2b8e68f"
         },
         "end": {
-          "path": "tests/fixtures/performance/screenshots/v2-ambush1-final-release-active40-1x-end.jpg",
-          "bytes": 196434,
-          "sha256": "963d80407ca7ec3941a4c6facb07ad56f2a5e2fd605dbd15ca435550cb5e5902"
+          "path": "tests/fixtures/performance/screenshots/v2-torch1-visible-active40-1x-native-end.jpg",
+          "bytes": 190618,
+          "sha256": "8a3c5b8d20af67d88436eea51234e8414c85a3287d9b544127e9bca58e2150d9"
         }
       },
       "activeThroughout": true
     },
     {
-      "label": "v2-ambush1-final-release-active40-2x-native",
+      "label": "v2-torch1-visible-active40-2x-repeat-native",
       "report": {
-        "path": "tests/fixtures/performance/captures/v2-ambush1-final-release-active40-2x-native.json",
-        "bytes": 353885,
-        "sha256": "19b6de85d311a3204a84d0b9b33d66a1cac5dab9b4c57dd00c7c497d63d1e5ac"
+        "path": "tests/fixtures/performance/captures/v2-torch1-visible-active40-2x-repeat-native.json",
+        "bytes": 353744,
+        "sha256": "76583aaad70fd70c03b9610b9c02b82b0d67adad90c93ff82e7bb3879150078f"
       },
       "scenario": {
         "phase": "active",
@@ -159,14 +159,14 @@
       "checkpointKey": "40-active74",
       "screenshots": {
         "start": {
-          "path": "tests/fixtures/performance/screenshots/v2-ambush1-final-release-active40-2x-start.jpg",
-          "bytes": 200525,
-          "sha256": "77f5ff8915f675198436ce9afa9cf2b407f30de9e0199e70ddd274e7c22fb2d9"
+          "path": "tests/fixtures/performance/screenshots/v2-torch1-visible-active40-2x-repeat-native-start.jpg",
+          "bytes": 195572,
+          "sha256": "028bfee9eeb11b9089deb91d4960f870d6607428bc67fb160310553415bdb5f1"
         },
         "end": {
-          "path": "tests/fixtures/performance/screenshots/v2-ambush1-final-release-active40-2x-end.jpg",
-          "bytes": 179571,
-          "sha256": "380e4a466bf708b1d617fc834b8ae3c2d801fe3210a5f5d86056f815ea3d23ba"
+          "path": "tests/fixtures/performance/screenshots/v2-torch1-visible-active40-2x-repeat-native-end.jpg",
+          "bytes": 189033,
+          "sha256": "ac8061ba6febbab5c5b4396c083e5ce41c35bfeac1a99bca936294be959a7dfe"
         }
       },
       "activeThroughout": true
@@ -174,11 +174,11 @@
   ],
   "controls": [
     {
-      "label": "v2-ambush1-final-release-paused20-1x-native-quiet",
+      "label": "v2-torch1-visible-paused20-1x-native-quiet",
       "report": {
-        "path": "tests/fixtures/performance/captures/v2-ambush1-final-release-paused20-1x-native-quiet.json",
-        "bytes": 262579,
-        "sha256": "438ff6c0bfe365f499f96f6e697060db0708a54db800d77d5a8df0025b2ebdd1"
+        "path": "tests/fixtures/performance/captures/v2-torch1-visible-paused20-1x-native-quiet.json",
+        "bytes": 355846,
+        "sha256": "ad0ece90ba1532ef089771919a4a66748183c18585adcc3a53f5b29fdd3c1803"
       },
       "scenario": {
         "phase": "paused",
@@ -189,11 +189,11 @@
       "mode": "native-raf"
     },
     {
-      "label": "v2-ambush1-final-release-paused20-1x-clock-quiet",
+      "label": "v2-torch1-visible-paused20-1x-clock-quiet",
       "report": {
-        "path": "tests/fixtures/performance/captures/v2-ambush1-final-release-paused20-1x-clock-quiet.json",
-        "bytes": 70914,
-        "sha256": "9922796f2c0c1a5ca48cafa12e2403dbe46168230075522a5ea87f76b6969d27"
+        "path": "tests/fixtures/performance/captures/v2-torch1-visible-paused20-1x-clock-quiet.json",
+        "bytes": 84461,
+        "sha256": "ae7c26aa2b8c73b31418f0e164954e1691a58969277ac4424e0c04432294d379"
       },
       "scenario": {
         "phase": "paused",
@@ -204,38 +204,53 @@
       "mode": "raf-only"
     }
   ],
-  "diagnostics": [
-    {
-      "label": "v2-ambush1-final-release-paused20-1x-native",
-      "report": {
-        "path": "tests/fixtures/performance/captures/v2-ambush1-final-release-paused20-1x-native.json",
-        "bytes": 259530,
-        "sha256": "fab4e98c71c814d51d6583cfebe1d857c3a46ed399b42bb966a3ee6e822e4eb8"
-      },
-      "scenario": {
-        "phase": "paused",
-        "speed": 1,
-        "crowd": 20
-      },
-      "checkpointKey": "20-crowded-render75",
-      "expectedBudgetFailure": "rafGaps.max",
-      "includedInPassingBudgetSet": false,
-      "cause": "Unattributed scheduling gap; no proven game-code cause."
-    }
-  ],
+  "diagnostics": [],
   "checkpointCompatibility": {
     "sourceEngine": "0.2.6-web-endless.3",
-    "loadedByEngine": "0.2.6-web-ambush.1",
+    "loadedByEngine": "0.2.6-web-torch.1",
     "originalBytesPreserved": true
   },
   "operatorObservations": [
-    "Each active final window starts and ends in the playing lawn; Remember Speed was disabled through native Options to initialize1x; after resuming and observing native play, the original stone speed button selected2x before the corresponding paused setup.",
-    "All final windows used the visible IAB host preview and document-visible pages, with no visibility/resize/audio changes. The other test tools were idle during each timed interval. Start/end screenshots bracket every active window.",
-    "All captures use muted testing,1280x720 viewport,DPR1.0000000298023224 and native800x600 canvas.",
-    "Parent-produced checkpoint bytes were preserved and loaded through the current engine UI.",
-    "No served engine or shell bytes changed during these measurements.",
-    "The first paused native diagnostic recorded one346.7ms rAF gap, with zero long tasks and native callback/save maxima2.3/4.7ms. The cause was not established; its complete raw record is retained as a failed diagnostic, not passing performance evidence.",
-    "The separate quiet paired controls made no screenshots during or immediately after arming their timed intervals. They stayed on the same paused lawn and unchanged engine; their passing results do not erase the earlier scheduling outlier."
+    "The user foregrounded the Codex preview after earlier 1 Hz host scheduling. A separate menu clock diagnostic then observed approximately 240 Hz. All selected windows used the visible native preview panel at 1280x720 with sound muted.",
+    "Each active window began from an original byte-identical imported synthetic checkpoint. The 20 and 40 labels identify starting flags, not zombie counts. No earned progress is claimed from these profiles.",
+    "All four selected start and end screenshots show native active gameplay, without a pause dialog, seed chooser, flag intermission or defeat pan. No game input occurred during the timed intervals.",
+    "The 1x windows used the native default with Remember Speed unchecked. The 2x windows sent the native F shortcut only after Continue had closed and the active canvas was focused. The 40/2x first end screenshot directly displayed the native 2x label; the same control sequence was used for the fresh selected 20/2x and repeated 40/2x windows.",
+    "Recorder configuration was completed while paused. For fresh 20/2x, 40/1x and repeated 40/2x, arm to active start screenshot took 987, 819 and 1058 ms respectively, inside the recorder two-second delay. The first 20/1x used a fresh restored checkpoint and resume within 300 ms of arming.",
+    "The separate crowded 20-flag checkpoint was used only for paused native-versus-clock controls. The original Menu remained open through both intervals.",
+    "Excluded three pre-foreground 1 Hz records as scheduling-budget failures. Excluded the earlier 20/2x record because its end showed the native defeat pan and active-throughout eligibility was unproven.",
+    "The first active 40/2x record met frame/native CPU limits but its three save captures took 8.7, 7.4 and 9.8 ms, exceeding the unchanged 8 ms save p95 budget. It remains failed historical evidence. One fresh repeat with the same code, fixture, settings and budgets remained active and met the bound (save p95/max 7.7 ms). This variability prevents a universal smoothness claim.",
+    "No native builds, packaging or other heavy test jobs ran during the timed windows. No screenshot was taken inside a recording interval; screenshots bracket the timed windows."
   ],
-  "limits": "Host preview conditions are caller-observed, not inferred from page visibility. Earlier failed diagnostic captures are retained separately; these short windows do not establish universal or GPU/presentation performance. Single-device short windows and caller-declared scenarios with screenshots. Scheduling is not delivered FPS; native callback CPU is not GPU completion timing. Future engine/shell changes require matching fresh observations."
+  "limits": "Host preview conditions are caller-observed, not inferred from page visibility. Earlier failed diagnostic captures are retained separately; these short windows do not establish universal or GPU/presentation performance. Single-device short windows and caller-declared scenarios with screenshots. Scheduling is not delivered FPS; native callback CPU is not GPU completion timing. Future engine/shell changes require matching fresh observations.",
+  "historicalEvidence": {
+    "engineId": "0.2.6-web-ambush.1",
+    "baseline": {
+      "path": "tests/fixtures/performance/historical/ambush1-baseline.json",
+      "bytes": 9396,
+      "sha256": "f6746a4ea52473385170b8840f1c3acb2e9eb4c8c41480238c0cab5bb2c07d60"
+    },
+    "expectedManifest": {
+      "path": "tests/fixtures/performance/historical/ambush1-capture-manifest.json",
+      "bytes": 5914,
+      "sha256": "10149792f7710f4d6c8bbf6efbad8f17f43bedd93c4ba8dbfa3bcb8bb85a4c79"
+    },
+    "originalManifestPath": "tests/fixtures/performance/capture-manifest.json",
+    "otherEvidenceAtOriginalPaths": true,
+    "scope": "Exact original Ambush baseline and manifest bytes; old raw captures, screenshots, failed diagnostic and checkpoint archives remain historical at their original paths."
+  },
+  "historicalFailedObservations": {
+    "path": "tests/fixtures/performance/historical/torch1-nonforeground/failed-observations.json",
+    "bytes": 3164,
+    "sha256": "277a4ef2c0e52ad671954c9b6a2650b95887c677742cb8442cda9604d39e0412"
+  },
+  "historicalInvalidScenarios": {
+    "path": "tests/fixtures/performance/historical/torch1-invalid-active-scenario/invalid-scenario.json",
+    "bytes": 1192,
+    "sha256": "db020a0acd92a52624b05e39f81712927baff0369b2a2e6561dd0bae698e64eb"
+  },
+  "historicalSaveBudgetFailures": {
+    "path": "tests/fixtures/performance/historical/torch1-save-cpu-budget-failure/failed-save-budget.json",
+    "bytes": 1584,
+    "sha256": "359fc8ba7d534d8206fd949bd23c19f00b953da34b44fe03548b42f78c7a5e51"
+  }
 }

@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "engine": {
+    "id": "0.2.6-web-torch.1",
+    "jsSha256": "da8757962f625d0805bb4cd9db15a1b6ee8cfc6ab7d88c952c462f629ee455b0",
+    "wasmSha256": "7fa8c0a42b32f3398fea94dee62ad9180a5921e8f9978a536e79e287d5a0f68a"
+  },
+  "mutedIndicatorThroughout": true,
+  "performanceHUDAbsent": true,
+  "syntheticProfile": true,
+  "earnedFullBrowserWins": 0,
+  "ownedTabClosed": true,
+  "ownedTabsClosed": 2,
+  "temporaryViewportRestored": true,
+  "originalVisibilityRestored": true,
+  "screenshots": [
+    {
+      "kind": "catalog",
+      "path": "tests/fixtures/torchbearer-browser/torchbearer-catalog.jpg",
+      "bytes": 123513,
+      "sha256": "3b88d0f3c0754bb97e387296b8051a4999b2bcbbadb2e82a129e19f78b82c2d3"
+    },
+    {
+      "kind": "almanac",
+      "path": "tests/fixtures/torchbearer-browser/torchbearer-almanac.jpg",
+      "bytes": 120241,
+      "sha256": "9ca54ea12a0f82267d06e13db5b18313e2e9d6c90c745abba3a4395fae193962"
+    },
+    {
+      "kind": "gameplay",
+      "path": "tests/fixtures/torchbearer-browser/torchbearer-gameplay.jpg",
+      "bytes": 135061,
+      "sha256": "a3b5d10ccd7070edbd7d7d7a72cf39233425db664e3977299f62a598d6d8f66a"
+    },
+    {
+      "kind": "continue",
+      "path": "tests/fixtures/torchbearer-browser/torchbearer-continue.jpg",
+      "bytes": 136690,
+      "sha256": "32ae2f39466a5c7cac419ac29ca61835c7ceefc99142649cc5e995aab5a44e64"
+    }
+  ],
+  "observations": [
+    "Final normal7 build started without a game-file import. The testing query kept browser audio muted; native music and SFX remained available for players.",
+    "The original Bonus catalog displayed 18 cards; Fire Drill included the complete original Snow Pea head and nozzle. No new tips or HUD were present.",
+    "The native Torchbearer Almanac portrait held the shaft in its closed hand, displayed its native flame, and fit title, statistics and biography inside the original layout.",
+    "Reloaded the page and used the native Continue dialog. Fire Drill restored the placed Snow Pea, spent Torchbearer and 200 sun.",
+    "The continued save was produced during the preceding unpublished normal6 art review (WASM 9224abe324696e048ebf873e9333af3e79958339bb618691ef21cd62aa97efcc), then loaded by final normal7. The production difference is the Bonus card head rendering. This is a compatibility observation, not a claim of a same-binary browser round trip.",
+    "Owned virtual tab 1 and native panel tab 2 were closed. The temporary viewport was reset and original hidden visibility was confirmed after cleanup."
+  ],
+  "limits": "Scoped visual and save-compatibility observations on a synthetic test profile; browser play earned no full challenge wins. Current native automated tests cover gameplay and save round trips."
+}

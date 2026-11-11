@@ -1,5 +1,29 @@
 # GitHub Pages release: Caleb-Guyer/plants-vs-zombies-web
 
+## Torchbearer artifacts
+
+Current engine: `0.2.6-web-torch.1`, parent `0.2.6-web-ambush.1`, with 868 production files and 142 non-main native objects.
+
+The frozen 868-source/142-object release passes **26 native suites, 60,535,431 baseline checks and zero failures**, plus 29,323,421 separately counted Endless late checks (89,858,852 combined). The combined new driver covers 60 scenarios at both speeds and two seeds, with Fire Drill battles, save/Continue and replay, isolated enemy/art controls and earned-unlock integration. Synthetic controls and checkpoints are identified separately and do not count as earned wins. Paired earned-chain runs align the original Dancing Zombie clock through native Bonus-menu updates before starting Endless; battle clocks are never assigned. All 25 retained native suites execute freshly against current source, with complete-engine suites linked to current production objects; all 58,831 prior focused assertions remain, with one additional catalog iteration (58,832 focused checks). Native tests disable audio output.
+
+| Validated artifact | Bytes | SHA-256 |
+| --- | ---: | --- |
+| [pvz-portable.js](dist/game/pvz-portable.js) | 210,108 | `da8757962f625d0805bb4cd9db15a1b6ee8cfc6ab7d88c952c462f629ee455b0` |
+| [pvz-portable.wasm](dist/game/pvz-portable.wasm) | 7,828,964 | `7fa8c0a42b32f3398fea94dee62ad9180a5921e8f9978a536e79e287d5a0f68a` |
+| [pvz-portable-0.2.6-web-torch.1-source.zip](dist/source/pvz-portable-0.2.6-web-torch.1-source.zip) | 31,527,598 | `f0c4ec0f485878514831dc31df28316211b417608e03cb39855ecb109b8c4f1e` |
+| [web-torch.1.patch](dist/source/web-torch.1.patch) | 14,771,913 | `7f93bf7bf234098d6393f8be2f8c82913c039775af47962f6359dfc1198d2d6f` |
+| [ambush1-to-torch1.patch](dist/source/ambush1-to-torch1.patch) | 66,447 | `ac3702a927dfab3d2203a46929d7cf29fdbf0ec87842ebbf75eb890a5760081a` |
+
+The corresponding source authenticates all 868 current files and reconstructs every complete published Ambush.1, Scrap.1 and Endless.3 parent source byte. All 166 published Ambush test inputs remain independently pinned. The lossless native artifact pack restores 26 current JS/WASM test files and two separately identified historical comparator files. Native saved object layouts remain unchanged.
+
+Publish through the existing manual GitHub Pages workflow after current browser/source checks and native checks pass. The upload stager keeps the game, current/upstream/site source, all patches and licenses, while historical native ZIPs use immutable GitHub URLs in the source inventory. The padded tar bound must stay below 1,000,000,000 bytes and each static file below 100 MiB. A successful workflow and matching hosted file hashes are separate publication evidence.
+
+Final-engine muted browser inspection confirmed the complete Fire Drill card, original Almanac layout and native Continue compatibility. [Browser evidence](tests/fixtures/torchbearer-browser/proof.json) records four screenshots and cleanup. Four selected active 15-second performance windows and paired paused controls meet the unchanged budgets. Raw earlier host-throttled observations, one invalid active scenario and a 40/2x save-p95 failure remain separately preserved; one unchanged fresh repeat met the save bound. See [QA scope](PARITY-QA.md) and [timing evidence](tests/fixtures/performance/baseline.json). These are scoped checks, not a universal performance guarantee.
+
+## Earlier release records
+
+The following sections retain their earlier capture-time scope.
+
 ## Vase Ambush artifacts
 
 Current engine: `0.2.6-web-ambush.1`, with 860 production files and 138 non-main native objects. Mode 89 appends Bonus card 17 and uses reserved record 88. No serialized structure was enlarged. Its independently pinned parent is the published Scrap.1 source archive, SHA-256 `6ccb876d55621aa8c31b405c2495b97203fec344905a0920440607557c291a63`.

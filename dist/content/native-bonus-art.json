@@ -180,6 +180,16 @@
       "gameplay": "Five authored I, Zombie gardens are cleared with a fixed army contained in native zombie vases. Choose the release order and timing to protect fragile support, counter frost, bait Chompers and mines, and coordinate lanes against shared fire. Original combat statistics, brains, hammer, shatter and stage transitions remain active.",
       "artwork": "The original transparent gray zombie vase and cached Conehead retain their native drawing offsets. The centered original80 by65 Bonus portrait fits the vase within47 by56 and the separate brain within20 by18 pixels with a3pixel gap. No generated illustration or reused Survival thumbnail.",
       "interface": "Name-only seventeenth Bonus card in the second column of the native fourth row. Original vase highlight and hammer cursor, cardboard defenders, brains, Menu, speed, pause, brain meter and stage footer. No seed bank, shovel, persistent challenge tips or added HUD."
+    },
+    {
+      "mode": 90,
+      "name": "Fire Drill",
+      "hero": "Original REANIM_ZOMBIE carrier with original Zombie_flaghand, Zombie_innerarm_screendoor and Zombie_flagpole artwork, original REANIM_TORCHWOOD flame tracks, and original REANIM_SNOWPEA",
+      "background": "IMAGE_BACKGROUND1",
+      "generatedArtworkUsed": false,
+      "gameplay": "A six-formation daylight defense introduces Torchbearer Zombie. His native torch burns one edible plant after a visible windup and then goes out; original frost attacks extinguish it permanently. Use the fixed Sunflower, Peashooter, Snow Pea, Wall-nut, Potato Mine, Cherry Bomb and Squash bank to counter exposed torches and armored escorts. Completing Fire Drill unlocks Torchbearers in later Pool Panic Endless formations.",
+      "artwork": "The original zombie carrying arm and closed flag hand hold the original brown flagpole shaft beneath the original animated Torchwood flame. Native fingers remain in front of the shaft, and the torch follows the same hand transform through walking and attack poses. The complete carrier stands beside an original Snow Pea, fitted with their native proportions onto the original day lawn inside an80 by65 Bonus picture. No generated illustration or reused Survival thumbnail.",
+      "interface": "Name-only eighteenth Bonus card in the third slot of the bottom native row (row4, column2). Original fixed seed bank, sun counter, shovel, Menu, speed and pause controls, wave meter and native footer. No additional HUD or instructional panels."
     }
   ],
   "canvas": {

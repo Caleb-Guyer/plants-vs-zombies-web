@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "includedInPassingBudgetSet": false,
+  "label": "v2-torch1-visible-active20-2x-native",
+  "classification": "continuous active-play eligibility unproven",
+  "report": {
+    "path": "tests/fixtures/performance/historical/torch1-invalid-active-scenario/v2-torch1-visible-active20-2x-native.json",
+    "bytes": 359954,
+    "sha256": "d43e8ea851bcf37eb0e9d3853ef4837a327c5bdd26e22821e96a6934a609a176"
+  },
+  "screenshots": {
+    "start": {
+      "path": "tests/fixtures/performance/historical/torch1-invalid-active-scenario/v2-torch1-visible-active20-2x-native-start.jpg",
+      "bytes": 198286,
+      "sha256": "8cff8fc9ffecb8eb401aecbefb85f8b2c8612bedb4d54d5fe2eef0e58b8256fb"
+    },
+    "end": {
+      "path": "tests/fixtures/performance/historical/torch1-invalid-active-scenario/v2-torch1-visible-active20-2x-native-end.jpg",
+      "bytes": 185826,
+      "sha256": "658f8bfd4f4df06a79663ddc706ff92d394a6a0a7cf6c4da21c6648f724f18c7"
+    }
+  },
+  "operatorContext": "Caller observed the native loss/defeat pan at the end. Good timing numbers do not establish an active-throughout gameplay window.",
+  "replacementLabel": "v2-torch1-visible-active20-2x-fresh-native"
+}

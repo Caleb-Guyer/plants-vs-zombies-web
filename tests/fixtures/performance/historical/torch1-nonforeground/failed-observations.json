@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "includedInPassingBudgetSet": false,
+  "records": [
+    {
+      "label": "v2-torch1-final-active20-1x-native",
+      "report": {
+        "path": "tests/fixtures/performance/historical/torch1-nonforeground/v2-torch1-final-active20-1x-native.json",
+        "bytes": 30090,
+        "sha256": "7fea211e3287f732eeef7149e3541035ffeba415ccf6fdcbb383d64d361b693d"
+      },
+      "includedInPassingBudgetSet": false,
+      "classification": "failed scheduling diagnostic",
+      "recordedStatus": "PASS measurement preconditions; not a performance-budget verdict",
+      "mode": "native-raf",
+      "scenario": {
+        "phase": "active",
+        "speed": 1,
+        "crowd": 20
+      },
+      "observedMaxRafGapMs": 1004.2000000000116,
+      "unchangedRafGapBudgetMs": 50
+    },
+    {
+      "label": "v2-torch1-native-panel-clock-check",
+      "report": {
+        "path": "tests/fixtures/performance/historical/torch1-nonforeground/v2-torch1-native-panel-clock-check.json",
+        "bytes": 28242,
+        "sha256": "98ae798fadf1bacdf2d3773f158a6b867f824630fb26cddb0466beff8dd1e090"
+      },
+      "includedInPassingBudgetSet": false,
+      "classification": "failed scheduling diagnostic",
+      "recordedStatus": "PASS measurement preconditions; not a performance-budget verdict",
+      "mode": "raf-only",
+      "scenario": {
+        "phase": "menu",
+        "speed": 1,
+        "crowd": 20
+      },
+      "observedMaxRafGapMs": 1004.1999999999971,
+      "unchangedRafGapBudgetMs": 50
+    },
+    {
+      "label": "v2-torch1-native-panel-foreground-clock-check",
+      "report": {
+        "path": "tests/fixtures/performance/historical/torch1-nonforeground/v2-torch1-native-panel-foreground-clock-check.json",
+        "bytes": 28293,
+        "sha256": "49ce0e0a662b32345b39d1f2e9cdb4ac00b3219cd3c1e290b79828c2d2ab89de"
+      },
+      "includedInPassingBudgetSet": false,
+      "classification": "failed scheduling diagnostic",
+      "recordedStatus": "PASS measurement preconditions; not a performance-budget verdict",
+      "mode": "raf-only",
+      "scenario": {
+        "phase": "menu",
+        "speed": 1,
+        "crowd": 20
+      },
+      "observedMaxRafGapMs": 1004.2999999999884,
+      "unchangedRafGapBudgetMs": 50
+    }
+  ],
+  "unacceptedFirstWindowScreenshots": {
+    "start": {
+      "path": "tests/fixtures/performance/historical/torch1-nonforeground/v2-torch1-final-active20-1x-native-start.jpg",
+      "bytes": 191778,
+      "sha256": "8ca53f5313b32f941b85d31678df220a2b3bfd268205d97ef8ee5836b6ced230"
+    },
+    "end": {
+      "path": "tests/fixtures/performance/historical/torch1-nonforeground/v2-torch1-final-active20-1x-native-end.jpg",
+      "bytes": 194294,
+      "sha256": "13a2c97fa0e826d9e989839400778332d849151758927477be50e83d86828b84"
+    }
+  },
+  "operatorContext": "Caller reported these preceded foregrounding the host preview. The raw records demonstrate scheduling-budget failures; they do not establish a game-code cause.",
+  "limits": "PASS measurement preconditions in a raw recorder is not a passing performance verdict. No failed observation is promoted into the current active cases or quiet controls."
+}

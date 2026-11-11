@@ -44,4 +44,4 @@ window.moduleReadyPromise=new Promise(function(n,e){window._resolveModuleReady=n
     installed=Object.getOwnPropertyDescriptor(canvas,'getContext');
   }catch{ /* Leave protected canvases and native context creation unchanged. */ }
 })(Module.canvas);
-Module.locateFile=function(name,prefix){return (prefix||"./game/")+name+"?v=a6e1f8b5ed42";};
+Module.locateFile=function(name,prefix){return (prefix||"./game/")+name+"?v=7fa8c0a42b32";};
