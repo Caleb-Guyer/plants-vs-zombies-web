@@ -9,6 +9,8 @@ import {createHash} from 'node:crypto';
 import {createRequire} from 'node:module';
 import {analyzeCapture, statistics} from './performance/metrics.mjs';
 import {historicalEngine} from './native-release-context.mjs';
+import {continuitySnapshotRoot, continuityArchivePath, continuityPatchPath, verifySourceMetadataContinuity} from './performance/source-metadata-continuity.mjs';
+import {verifyContinuityNegativeControls} from './performance/source-metadata-continuity-controls.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
@@ -24,7 +26,8 @@ function pinned(pin) {
   const bytes = read(pin.path); assert.equal(bytes.length, pin.bytes, pin.path); assert.equal(sha(bytes), pin.sha256, pin.path);
   return bytes;
 }
-const baseline = json(read('tests/fixtures/performance/baseline.json'));
+const baselineBytes = read('tests/fixtures/performance/baseline.json');
+const baseline = json(baselineBytes);
 assert.equal(baseline.schemaVersion, 1);
 assert.equal(baseline.minObservationMs, 15000); assert.equal(baseline.minSaveCaptures, 2);
 assert.equal(baseline.maxControlP95DeltaMs, 1);
@@ -34,12 +37,25 @@ const engine = json(read('dist/game/engine-provenance.json'));
 assert.deepEqual(baseline.engine, {id: engine.id, jsSha256: engine.artifacts.jsSha256, wasmSha256: engine.artifacts.wasmSha256});
 assert.equal(sha(read('dist/game/pvz-portable.js')), baseline.engine.jsSha256);
 assert.equal(sha(read('dist/game/pvz-portable.wasm')), baseline.engine.wasmSha256);
-assert.equal(baseline.probe.path, 'tests/performance/probe.js'); pinned(baseline.probe);
-assert.equal(baseline.recorder.path, 'tests/performance/preview.py'); pinned(baseline.recorder);
-const manifest = json(pinned(baseline.expectedManifest));
+assert.equal(baseline.probe.path, 'tests/performance/probe.js'); const probeBytes = pinned(baseline.probe);
+assert.equal(baseline.recorder.path, 'tests/performance/preview.py'); const recorderBytes = pinned(baseline.recorder);
+const captureManifestBytes = pinned(baseline.expectedManifest);
+const manifest = json(captureManifestBytes);
 assert.equal(manifest.engineId, baseline.engine.id); assert.equal(manifest.engineWasmSha256, baseline.engine.wasmSha256);
 assert.equal(manifest.probeSha256, baseline.probe.sha256); assert.equal(manifest.serverSha256, baseline.recorder.sha256);
+const continuityInput = {
+  observedEngineBytes: read(continuitySnapshotRoot + 'observed-engine-provenance.json'),
+  observedSourceManifestBytes: read(continuitySnapshotRoot + 'observed-source-manifest.json'),
+  observedReceiptBytes: read(continuitySnapshotRoot + 'observed-normal-build-result.json'),
+  baselineBytes, captureManifestBytes, probeBytes, recorderBytes,
+  runtimeFiles: new Map(Object.keys(manifest.files).map(name => [name, read('dist/' + safe(name))])),
+  sourceArchiveBytes: read(continuityArchivePath), patchBytes: read(continuityPatchPath), zipDecoderBytes: read('dist/vendor/jszip.min.js'),
+};
+const continuity = await verifySourceMetadataContinuity(continuityInput);
+const continuityControls = await verifyContinuityNegativeControls(continuityInput);
+assert.equal(continuityControls.negativeControls, 13);
 for (const [name, pin] of Object.entries(manifest.files)) {
+  if (name === 'game/engine-provenance.json' && continuity.kind === 'source-metadata-only-successor') continue;
   const bytes = read('dist/' + safe(name)); assert.equal(bytes.length, pin.baseBytes); assert.equal(sha(bytes), pin.baseSha256, name);
 }
 
@@ -146,3 +162,4 @@ for (const row of baseline.diagnostics ?? []) {
     'Retained failed diagnostic must genuinely fail the unchanged scheduling budget');
 }
 console.log('PASS retained browser CPU/scheduling baseline:4 active15s windows, paired paused controls, raw traces, retained failed diagnostics and fixture/screenshot pins; not fresh execution or GPU/FPS proof.');
+console.log(`PASS strict performance continuity: ${continuity.kind};868 exact production source files,18 exact other runtime files,original patch/receipt and13 rejected in-memory negative controls;no fresh timing execution.`);

@@ -8,11 +8,11 @@
   },
   "sourceArchive": {
     "path": "pvz-portable-0.2.6-web-torch.1-source.zip",
-    "bytes": 31527598,
-    "sha256": "f0c4ec0f485878514831dc31df28316211b417608e03cb39855ecb109b8c4f1e",
-    "crc32": "065a3531",
-    "entries": 2459,
-    "uncompressedBytes": 83237272
+    "bytes": 31579254,
+    "sha256": "2e7f7d49093a1aa93d350558b568d2b81b615632b33613631f630a484872b3ba",
+    "crc32": "3f703014",
+    "entries": 2473,
+    "uncompressedBytes": 83351423
   },
   "artifacts": [
     {
@@ -294,8 +294,8 @@
         {
           "path": "tests/native-layout-results.json",
           "bytes": 25687,
-          "sha256": "3d1001f621f99988e91843fcb03e3d1615376c1ae65bc73875d3a18726f8165b",
-          "crc32": "63a0c2c8",
+          "sha256": "34393b45a04e02611f7a742d7bc5214d8cc7f3a6e2c757affb947687e2de846a",
+          "crc32": "6fcf3e8e",
           "checks": 27157
         },
         {

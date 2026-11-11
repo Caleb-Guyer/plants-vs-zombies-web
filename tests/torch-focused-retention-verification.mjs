@@ -17,10 +17,10 @@ const NEW_SOURCES = ['TorchbearerZombie.h','TorchbearerZombie.cpp',
 const REVIEWED_PINS = /* REVIEWED_TORCH_FOCUSED_PINS_BEGIN */ {
   "pendingFinalFreeze": false,
   "parentReportPinsSha256": "2b8975a164b343d1e0e2fa215e80cfd0aedf56c84128cff371d54d885ba98190",
-  "compatibilityPatchesSha256": "d20e7c30bf765be5f607905d2cfd0c4cee3a582032d8acf4acf77d234c8df43a",
+  "compatibilityPatchesSha256": "5c8c9d885ca80e3301c8ff854cc331a489c724e5c9d48a4bba47f73aa00a761e",
   "normalBuildReceiptSha256": "983236d83833fc9e176cc808a44a44ed836e3e6b43e5ddea9254b5f619089c9f",
   "adapterSha256": "e211f7dc072b8f7e295d9bf8c765981774b8b30ecd8c3a25e3cb7eedd90e4db3",
-  "adaptationsSha256": "dd8437f1b8f77be39e64bcb0a5574d1739c21c18cfd75202660cb6ca8787766d",
+  "adaptationsSha256": "83fba134dd9550040cd8ba16a3adbe5a32bb946c2707af56f51a2b7c9e7c7294",
   "runSha256": "b62b414af34ca10de508d6807853745f1ed40a05b641be303133a16cdbdb4268",
   "runners": {
     "game-speed": {
@@ -79,9 +79,9 @@ const REVIEWED_PINS = /* REVIEWED_TORCH_FOCUSED_PINS_BEGIN */ {
       "harnessSha256": "49061c2837c2332dbee1621915e9cba6ceff21cc7855381da7ca3eb01c21f7c8"
     },
     "native-layout": {
-      "runnerSha256": "baa359b1d00686137c4ad0a123a23e5ee9378e028eb4e67440f061713fe34279",
-      "reportSha256": "3d1001f621f99988e91843fcb03e3d1615376c1ae65bc73875d3a18726f8165b",
-      "harnessSha256": "e2fbe914452836c6c91f936672ac23bb13ab3983dd81b3a6fe98e340368f2628"
+      "runnerSha256": "6ae19903c87119c2cbbfd2ececf2965784e17ca531155eba8e8079d771af25e4",
+      "reportSha256": "34393b45a04e02611f7a742d7bc5214d8cc7f3a6e2c757affb947687e2de846a",
+      "harnessSha256": "65dee1bfa588b387b9f8cb97af288d1da9c65b7daf916432594ab9b64ffe6289"
     },
     "care-fatigue": {
       "runnerSha256": "643a5c0b0ab336c4768acb7ec5a52f787a8510ca2996ce25e0a89207b52296bf",
@@ -90,8 +90,8 @@ const REVIEWED_PINS = /* REVIEWED_TORCH_FOCUSED_PINS_BEGIN */ {
     }
   },
   "blocks": {},
-  "summaryPath": "focused-card-final/summary.json",
-  "summarySha256": "77ecf27f3e0777bfbe82afc545ead08bbb0bd2b8ebc3308f9f0f19c2f7996fe4"
+  "summaryPath": "focused-hostscale-final/summary.json",
+  "summarySha256": "0aed100367d0dc8be251926449a73122c5548816a0bedf26608db01c1b3ec447"
 } /* REVIEWED_TORCH_FOCUSED_PINS_END */;
 
 function once(text, before, after) {
@@ -125,6 +125,21 @@ function compatibleRunner(original,name) {
     text=once(text,'assert len(raid_card_positions)==17 and','assert len(raid_card_positions)==18 and');
     const token="assert ambush_card_position==('4','1')";
     text=once(text,token,token+"\nassert raid_card_positions[17]==('4','2')");
+    text=once(text,
+      'Rect scaled(Rect r,int w,int h){double s=std::min(w/800.0,h/600.0);double ox=(w-800*s)/2,oy=(h-600*s)/2;int l=static_cast<int>(std::floor(ox+r.mX*s)),t=static_cast<int>(std::floor(oy+r.mY*s));return {l,t,static_cast<int>(std::ceil(ox+(r.mX+r.mWidth)*s))-l,static_cast<int>(std::ceil(oy+(r.mY+r.mHeight)*s))-t};}',
+      `Rect scaled(Rect r,int w,int h){
+ // Exact aspect-fit projection: native integer bounds and rational scale must
+ // not acquire a negative top pixel from host FMA cancellation at 1.28/1.8.
+ const long long n=static_cast<long long>(w)*600<=static_cast<long long>(h)*800?w:h;
+ const long long d=static_cast<long long>(w)*600<=static_cast<long long>(h)*800?800:600;
+ const long long divisor=2*d,ox=static_cast<long long>(w)*d-800*n,oy=static_cast<long long>(h)*d-600*n;
+ auto floorDiv=[&](long long value){return value/divisor-(value%divisor<0);};
+ auto ceilDiv=[&](long long value){return value/divisor+(value%divisor>0);};
+ const int l=static_cast<int>(floorDiv(ox+2*static_cast<long long>(r.mX)*n));
+ const int t=static_cast<int>(floorDiv(oy+2*static_cast<long long>(r.mY)*n));
+ return {l,t,static_cast<int>(ceilDiv(ox+2*(static_cast<long long>(r.mX)+r.mWidth)*n))-l,
+  static_cast<int>(ceilDiv(oy+2*(static_cast<long long>(r.mY)+r.mHeight)*n))-t};
+}`);
   }
   if(name==='bonus-completion') {
     text=once(text,'ambushRetainedChecks==1303','ambushRetainedChecks==1304');

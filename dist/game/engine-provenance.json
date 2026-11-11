@@ -10,7 +10,7 @@
     "jsSha256": "da8757962f625d0805bb4cd9db15a1b6ee8cfc6ab7d88c952c462f629ee455b0",
     "wasmSha256": "7fa8c0a42b32f3398fea94dee62ad9180a5921e8f9978a536e79e287d5a0f68a",
     "source": "../source/pvz-portable-0.2.6-web-torch.1-source.zip",
-    "sourceSha256": "f0c4ec0f485878514831dc31df28316211b417608e03cb39855ecb109b8c4f1e",
+    "sourceSha256": "2e7f7d49093a1aa93d350558b568d2b81b615632b33613631f630a484872b3ba",
     "patch": "../source/web-torch.1.patch",
     "patchSha256": "7f93bf7bf234098d6393f8be2f8c82913c039775af47962f6359dfc1198d2d6f"
   },

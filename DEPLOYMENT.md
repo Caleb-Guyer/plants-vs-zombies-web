@@ -10,7 +10,7 @@ The frozen 868-source/142-object release passes **26 native suites, 60,535,431 b
 | --- | ---: | --- |
 | [pvz-portable.js](dist/game/pvz-portable.js) | 210,108 | `da8757962f625d0805bb4cd9db15a1b6ee8cfc6ab7d88c952c462f629ee455b0` |
 | [pvz-portable.wasm](dist/game/pvz-portable.wasm) | 7,828,964 | `7fa8c0a42b32f3398fea94dee62ad9180a5921e8f9978a536e79e287d5a0f68a` |
-| [pvz-portable-0.2.6-web-torch.1-source.zip](dist/source/pvz-portable-0.2.6-web-torch.1-source.zip) | 31,527,598 | `f0c4ec0f485878514831dc31df28316211b417608e03cb39855ecb109b8c4f1e` |
+| [pvz-portable-0.2.6-web-torch.1-source.zip](dist/source/pvz-portable-0.2.6-web-torch.1-source.zip) | 31,579,254 | `2e7f7d49093a1aa93d350558b568d2b81b615632b33613631f630a484872b3ba` |
 | [web-torch.1.patch](dist/source/web-torch.1.patch) | 14,771,913 | `7f93bf7bf234098d6393f8be2f8c82913c039775af47962f6359dfc1198d2d6f` |
 | [ambush1-to-torch1.patch](dist/source/ambush1-to-torch1.patch) | 66,447 | `ac3702a927dfab3d2203a46929d7cf29fdbf0ec87842ebbf75eb890a5760081a` |
 
