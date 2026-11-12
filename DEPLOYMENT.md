@@ -1,5 +1,13 @@
 # GitHub Pages release: Caleb-Guyer/plants-vs-zombies-web
 
+## Source-download deduplication
+
+The website-source ZIP transports the exact historical Endless.2 archive through `source-transports/endless2.json` and `source-transports/endless2.literals`. It reuses 927 compressed data streams already present in the included current native source ZIP, sharing 13,617,091 bytes. The remaining bytes include every original local header, directory record, and unique compressed stream. Reconstruction retains the complete original 40,424,282-byte archive with SHA-256 `b9095c65547c3d013917ae4188e284f18eabb71a98020ca3d53f71f7365f9566`; all existing reference assertions run against that exact file.
+
+The normal check command, direct native-content command, and packager restore this reference automatically when needed. Restoration verifies the donor, segment coverage, individual byte ranges and final archive digest before an atomic installation that refuses to replace an existing file. Existing valid archives are verified without rewriting them. No network or additional dependency is required. The download inventory distinguishes physically nested archives from automatically restored references; original historical download URLs and the complete runtime distribution remain available.
+
+Publication requires all 18 existing offline integration suites and the new archive-transport suite, plus the existing 26 native suites in GitHub CI. Fresh-download verification must begin without the historical ZIP, restore it through the normal check command, compare all 1,076 entries with the original, and exercise direct native-content bootstrap separately. The 100 MiB file limit and 1 GB staged-site limit remain enforced. This packaging update leaves every game, asset, native-source and build-provenance byte unchanged.
+
 ## Torchbearer artifacts
 
 Current engine: `0.2.6-web-torch.1`, parent `0.2.6-web-ambush.1`, with 868 production files and 142 non-main native objects.

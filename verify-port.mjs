@@ -5,7 +5,9 @@ import {createHash,webcrypto} from 'node:crypto';
 import {spawnSync} from 'node:child_process';
 import assert from 'node:assert/strict';
 import vm from 'node:vm';
+import {ensureSourceArchive} from './tests/source-bundle.mjs';
 const root=fileURLToPath(new URL('./',import.meta.url));
+ensureSourceArchive(root);
 const dist=join(root,'dist');
 const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
 function walk(folder){return readdirSync(folder).flatMap(name=>{const path=join(folder,name);return statSync(path).isDirectory()?walk(path):[path];});}
@@ -59,6 +61,10 @@ const assetManifest=JSON.parse(readFileSync(join(dist,'game-assets/manifest.json
 environment.PVZAssetBundle.validateManifest(assetManifest,'https://test.example/game-assets/manifest.json');
 assert.equal(assetManifest.id,provenance.assetBundleId);
 console.log('PASS actual shipping asset manifest validation and matching bundle identity.');
+const sourceBundle=spawnSync(process.platform==='win32'?'python':'python3',[join(root,'tests/source-bundle.py')],{encoding:'utf8'});
+if(sourceBundle.stdout)process.stdout.write(sourceBundle.stdout);
+assert.equal(sourceBundle.status,0,sourceBundle.error?.message||sourceBundle.stderr);
+if(sourceBundle.stderr)process.stdout.write(sourceBundle.stderr);
 const pagesStaging=spawnSync(process.platform==='win32'?'python':'python3',[join(root,'tests/pages-staging.py')],{encoding:'utf8'});
 if(pagesStaging.stdout)process.stdout.write(pagesStaging.stdout);
 assert.equal(pagesStaging.status,0,pagesStaging.stderr);

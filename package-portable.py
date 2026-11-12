@@ -3,6 +3,7 @@
 
 No downloads, dependency installation, engine build or installed-game access occurs.
 The source archive contains current engine code, its baseline and asset metadata.
+Shared historical ZIP bytes are restored exactly before offline source checks.
 Game asset payloads remain separate served files and in the full runtime archive.
 Private QA data and original native executables are never distribution inputs.
 """
@@ -31,14 +32,35 @@ MAX_STATIC_ASSET_BYTES = 100 * 1024 * 1024
 AMBUSH_PARENT_REFERENCE_SHA256 = "6771fc13bae02cb70dd8de12192f1f18e50302904a7ef1c784a790e6ccb51dd3"
 TORCH_PARENT_REFERENCE_SHA256 = "14dc78f0593db13b4e17e559061f84996be9c64f23663bd9ef7556b669fc96f6"
 AMBUSH_FOCUSED_REFERENCE_SHA256 = "9463bdd7c262c1749c57b00d25d45257951f8b8b2c8d4511cff630f9c606e9c8"
+LEGACY_SOURCE_NAME = "pvz-portable-0.2.6-web-endless.2-source.zip"
+TRANSPORT_MANIFEST = "source-transports/endless2.json"
+TRANSPORT_LITERALS = "source-transports/endless2.literals"
 REQUIRED_ROOT = (
     ".gitattributes", "README.md", "CURRENT-REQUIREMENTS.md", "PARITY-QA.md", "package.json", "server.mjs",
     "verify-port.mjs", "prepare-port.mjs",
-    "package-portable.py", "tests/audio-controls.mjs", "tests/shell-keyboard.mjs", "tests/steam-compat.mjs",
+    "package-portable.py", "source-bundle.py", "tests/audio-controls.mjs", "tests/shell-keyboard.mjs", "tests/steam-compat.mjs",
     "tests/test-profile-merge.mjs", "tests/save-storage.mjs", "tests/save-sync.mjs", "tests/save-transfer.mjs", "tests/zombatar-export.mjs",
 )
 FORBIDDEN_SUFFIXES = {".pak", ".exe", ".dll"}
 FORBIDDEN_NAMES = {"qa-resources.zip", "qa-upstream-compat.xml"}
+_source_bundle_helpers = None
+
+
+def source_bundle_helpers():
+    """Use the same authenticated archive restore in checks and packaging."""
+    global _source_bundle_helpers
+    if _source_bundle_helpers is None:
+        specification = importlib.util.spec_from_file_location("pvz_source_bundle_packager", ROOT / "source-bundle.py")
+        module = importlib.util.module_from_spec(specification)
+        sys.modules[specification.name] = module
+        old_bytecode = sys.dont_write_bytecode
+        try:
+            sys.dont_write_bytecode = True
+            specification.loader.exec_module(module)
+        finally:
+            sys.dont_write_bytecode = old_bytecode
+        _source_bundle_helpers = module
+    return _source_bundle_helpers
 
 
 def forbidden(name):
@@ -254,10 +276,13 @@ def nested_source_inputs(engine, paths, baseline):
             authenticate_ambush_parent(engine)
         else:
             authenticate_scrap_parent(engine)
-        comparator = DIST / "source/pvz-portable-0.2.6-web-endless.2-source.zip"
+        source_bundle_helpers().ensure_source_archive(ROOT)
+        comparator = DIST / "source" / LEGACY_SOURCE_NAME
         if hashlib.sha256(comparator.read_bytes()).hexdigest() != "b9095c65547c3d013917ae4188e284f18eabb71a98020ca3d53f71f7365f9566":
             raise ValueError("Historical Endless.2 comparator archive differs")
-        return [baseline, comparator, paths["source"]]
+        # The exact comparator is restored from shared compressed streams. Its
+        # original ZIP bytes remain in the full repository/runtime distribution.
+        return [baseline, paths["source"]]
     return list(dict.fromkeys([baseline, *([parent] if parent else []), paths["source"]]))
 
 
@@ -308,10 +333,13 @@ def validate_game_assets():
         raise ValueError("Engine distribution metadata does not identify the bundled assets")
 
 
-def regenerate_source_downloads():
+def regenerate_source_downloads(transport_entries=None):
     """Deterministic inventory from existing archive bytes; no inferred URL or hash."""
     engine, paths, baseline = engine_inputs()
     nested = nested_source_inputs(engine, paths, baseline)
+    transport_entries = transport_entries if transport_entries is not None else source_bundle_helpers().make_source_transport(ROOT)
+    if set(transport_entries) != {TRANSPORT_MANIFEST, TRANSPORT_LITERALS}:
+        raise ValueError("Unexpected source-archive transport entries")
     previous = {}
     if SOURCE_DOWNLOADS.is_file():
         previous = {item["name"]: item for item in json.loads(SOURCE_DOWNLOADS.read_text("utf-8"))["archives"]}
@@ -355,8 +383,19 @@ def regenerate_source_downloads():
         "schema_version": 1,
         "current_engine": engine["id"],
         "upstream_tag": engine["upstream"]["tag"],
-        "layout": "Site-source nests current corresponding source, the upstream baseline, the historical Endless.2 comparator, independently pinned complete Ambush.1, Scrap.1 and Endless.3 source projections, the native I, Zombie UI reference and the current full patch. Each archives[].url is its download location: current and upstream source stay on Pages; historical source archives use immutable GitHub repository URLs and remain in the full runtime distribution. Resolve historical relative source references in retained provenance through this inventory. Linked native test artifacts are losslessly packed; the included decoder restores their exact pinned bytes.",
+        "layout": "Site-source nests current corresponding source, the upstream baseline, independently pinned complete Ambush.1, Scrap.1 and Endless.3 source projections, the native I, Zombie UI reference and the current full patch. The historical Endless.2 comparator ZIP is restored byte-for-byte before offline checks from compressed byte ranges shared with the current native ZIP and a literal payload. Every original comparator file and archive checksum is preserved. Each archives[].url is its original download location: current and upstream source stay on Pages; historical source archives use immutable GitHub repository URLs and remain in the full runtime distribution. Linked native test artifacts are losslessly packed; the included decoder restores their exact pinned bytes.",
         "nested_sources": [path.name for path in nested],
+        "restored_sources": [{
+            "name": LEGACY_SOURCE_NAME,
+            "path": "dist/source/" + LEGACY_SOURCE_NAME,
+            "bytes": 40424282,
+            "sha256": "b9095c65547c3d013917ae4188e284f18eabb71a98020ca3d53f71f7365f9566",
+            "automatic_before_checks": True,
+            "manifest": {"path": TRANSPORT_MANIFEST, "bytes": len(transport_entries[TRANSPORT_MANIFEST]),
+                         "sha256": hashlib.sha256(transport_entries[TRANSPORT_MANIFEST]).hexdigest()},
+            "literal_payload": {"path": TRANSPORT_LITERALS, "bytes": len(transport_entries[TRANSPORT_LITERALS]),
+                                "sha256": hashlib.sha256(transport_entries[TRANSPORT_LITERALS]).hexdigest()},
+        }],
         "nested_patches": [paths["patch"].name],
         "archives": archives,
     }
@@ -436,19 +475,36 @@ def root_sources():
     return sorted(files)
 
 
-def write_archive(destination, inputs):
+def write_archive(destination, inputs, virtual_entries=None):
     destination.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.NamedTemporaryFile(dir=destination.parent, suffix=".tmp", delete=False) as file:
         temporary = Path(file.name)
     try:
         with zipfile.ZipFile(temporary, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
+            names = set()
             for path in inputs:
                 if path.is_symlink():
                     raise ValueError(f"Refusing symbolic-link input: {path}")
                 relative = path.relative_to(ROOT).as_posix()
                 if forbidden(relative):
                     raise ValueError(f"Prohibited input: {relative}")
+                if relative in names:
+                    raise ValueError(f"Duplicate source input: {relative}")
+                names.add(relative)
                 archive.write(path, relative)
+            for relative, data in sorted((virtual_entries or {}).items()):
+                if not isinstance(relative, str):
+                    raise ValueError("Virtual source input names must be strings")
+                name = PurePosixPath(relative)
+                if (not relative or "\\" in relative or ":" in relative
+                        or name.is_absolute() or any(part in {"", ".", ".."} for part in relative.split("/"))
+                        or relative in names or forbidden(relative) or not isinstance(data, bytes)):
+                    raise ValueError(f"Invalid virtual source input: {relative}")
+                names.add(relative)
+                info = zipfile.ZipInfo(relative, date_time=(1980, 1, 1, 0, 0, 0))
+                info.compress_type = zipfile.ZIP_DEFLATED
+                info.external_attr = 0o100644 << 16
+                archive.writestr(info, data, compresslevel=9)
         inspect_zip(temporary.read_bytes(), destination.name)
         if destination.resolve().is_relative_to(DIST.resolve()):
             assert_static_asset_limit(temporary, destination)
@@ -486,9 +542,10 @@ def main():
         if not path.is_file():
             raise ValueError(f"Required distribution input is missing: {path}")
     collect_dist()  # Validate every served input before updating generated metadata.
-    regenerate_source_downloads()
+    transport_entries = source_bundle_helpers().make_source_transport(ROOT)
+    regenerate_source_downloads(transport_entries)
     dist_sources = collect_dist(source_bundle=True)
-    write_archive(SITE_SOURCE, sources + dist_sources)
+    write_archive(SITE_SOURCE, sources + dist_sources, transport_entries)
 
     output.mkdir(parents=True, exist_ok=True)
     source_output = output / "pvz-classic-browser-source.zip"

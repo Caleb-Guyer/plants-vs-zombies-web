@@ -1,5 +1,11 @@
 # Browser parity and QA record
 
+## Source-download transport verification
+
+This packaging change retains the exact original Endless.2 ZIP rather than changing its logical archive format or dropping historical binaries. Two deterministic transport builds match; reconstruction produces the published `b9095c65…` digest, all 1,076 member CRCs, and every one of the 852 historical source pins. An independent audit checked all 927 shared compressed-stream ranges and the 928 literal ranges. Reversing only the new bootstrap calls and added transport-suite invocation restores the previous verifier files exactly, preserving their existing assertions.
+
+The new suite tests full restoration, repeated restoration without rewriting, the direct Node bootstrap, malformed schemas, damaged or forged inputs, offset and coverage failures, unsafe paths, existing invalid files, concurrent publication and failed-install cleanup. The first Windows attempt exposed a denied hard-link operation; the corrected installation uses Windows' atomic rename that refuses an existing destination, and an atomic no-clobber link on POSIX. The local Windows run passes 19 methods and 29 malformed-schema subcases; four symlink controls require privileges unavailable locally and are exercised by Linux CI. Fresh-download/offline checks and public publication have separate release receipts.
+
 ## Torchbearer native verification
 
 The frozen 868-source/142-object release passes **26 native suites, 60,535,431 baseline checks and zero failures**, plus 29,323,421 separately counted Endless late checks (89,858,852 combined). The combined new driver covers 60 scenarios at both speeds and two seeds, with Fire Drill battles, save/Continue and replay, isolated enemy/art controls and earned-unlock integration. Synthetic controls and checkpoints are identified separately and do not count as earned wins. Paired earned-chain runs align the original Dancing Zombie clock through native Bonus-menu updates before starting Endless; battle clocks are never assigned. All 25 retained native suites execute freshly against current source, with complete-engine suites linked to current production objects; all 58,831 prior focused assertions remain, with one additional catalog iteration (58,832 focused checks). Native tests disable audio output.

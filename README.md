@@ -14,6 +14,12 @@ The frozen 868-source/142-object release passes **26 native suites, 60,535,431 b
 
 See [QA scope](PARITY-QA.md#torchbearer-native-verification) and [release artifacts](DEPLOYMENT.md#torchbearer-artifacts). Normal game audio remains available; testing stays muted.
 
+## Source download
+
+The source download stores compressed ZIP data shared by the current engine and its historical Endless.2 reference only once. Before checks, the included offline decoder automatically restores the exact original reference ZIP, including all 1,076 entries and its published SHA-256. No source, test, or generated reference engine is discarded. The full repository and runtime distribution also retain the original standalone archive.
+
+Run `npm run check` after extracting the source download. It restores the reference locally and runs all 18 retained integration suites plus the new archive-transport suite. `python source-bundle.py` can also perform the restoration explicitly; it uses only included files and never overwrites an invalid existing archive. The native game, its source archive, and save formats retain the published Torch.1 bytes.
+
 ## Earlier release records
 
 The following sections retain their earlier capture-time scope.

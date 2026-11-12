@@ -26,9 +26,11 @@ import {verifyVaseAmbush} from './vase-ambush-verification.mjs';
 import {verifyTorchbearer} from './torchbearer-verification.mjs';
 import {verifyAmbushFocusedRetention} from './ambush-focused-retention-verification.mjs';
 import {verifyTorchFocusedRetention,TORCH_FOCUSED_CHECK_EXTENSIONS} from './torch-focused-retention-verification.mjs';
+import {ensureSourceArchive} from './source-bundle.mjs';
 
 const require = createRequire(import.meta.url);
 const dist = new URL('../dist/', import.meta.url);
+ensureSourceArchive(new URL('../', import.meta.url));
 const vendor = {exports: {}};
 new Function('module', 'exports', 'require', fs.readFileSync(new URL('vendor/jszip.min.js', dist), 'utf8'))(vendor, vendor.exports, require);
 const JSZip = vendor.exports;
