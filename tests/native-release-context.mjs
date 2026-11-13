@@ -1,10 +1,20 @@
 // SPDX-License-Identifier: MIT
 // Current executable provenance and separately authenticated historical inputs.
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 
-export const CURRENT_ENGINE_ID = '0.2.6-web-torch.1';
-export const CURRENT_SOURCE_COUNT = 868;
-export const CURRENT_OBJECT_COUNT = 142;
+export const CURRENT_ENGINE_ID = '0.2.6-web-double.1';
+export const CURRENT_SOURCE_COUNT = 872;
+export const CURRENT_OBJECT_COUNT = 144;
+export const TORCH_ENGINE_ID = '0.2.6-web-torch.1';
+export const TORCH_ARCHIVE_SHA256 = '2e7f7d49093a1aa93d350558b568d2b81b615632b33613631f630a484872b3ba';
+// Final source/evidence pins are deliberately closed until the actual source
+// freeze and the complete current native matrices have been reviewed.
+export const DOUBLE_PARENT_REFERENCE_SHA256 = 'a22e68371f7ad0f794b7e1f9221ed8bb45e7220df3501b8281435dcaf244a160';
+export const TORCH_FOCUSED_REFERENCE_SHA256 = 'a3c65dcd0e476898ea7c28756a6406f7b9b1e2a594162642bd207b8ec98baba6';
+export const DOUBLE_PARENT_TEST_INPUTS_SHA256 = '89fae9ba9689f6b74a44282a51219871d73badee97a4de758b817f972ca2c69b';
+export const DOUBLE_SOURCE_ADDITIONS = ['DoubleAgent', 'DoubleAgentPresentation']
+  .flatMap(name => ['src/Lawn/System/' + name + '.cpp', 'src/Lawn/System/' + name + '.h']);
 export const AMBUSH_ENGINE_ID = '0.2.6-web-ambush.1';
 export const AMBUSH_ARCHIVE_SHA256 = '6da0b6e19d56b3b345a684d379453abecff055a6d788cc17bd161f412bf3e7c9';
 export const AMBUSH_FOCUSED_REFERENCE_SHA256 = '9463bdd7c262c1749c57b00d25d45257951f8b8b2c8d4511cff630f9c606e9c8';
@@ -19,14 +29,21 @@ export const AMBUSH_ENDLESS_RETENTION_SHA256 = 'f9259b88c6c901a10c52a4a794f0bd8a
 export const AMBUSH_SCRAP_RETENTION_SHA256 = 'f01720b1bb81629eac86f9165012c95e46c1dbb04406e3e07f8396422f5a1504';
 // These current envelopes were reviewed against their completed native matrices;
 // each historical gameplay contract and its original assertions remain pinned.
-const reviewedTorchRetentionPins = Object.freeze({
+export const TORCH_RETENTION_PINS = Object.freeze({
   endless: '21e08344ad6e58baf78c309d1fe461ec621c2ea7ebe9b0531843bef51fd1188d',
   scrap: '4fbd9e4c8176bbff29c28bace6ec1acbb12a3aac0cd82ff8a705eb086f65ed09',
   vase: '55131a41464c2e319581a656fece9737172cca687a4a3ae01cc83942c6a332db',
 });
-export const CURRENT_ENDLESS_RETENTION_SHA256 = reviewedTorchRetentionPins.endless;
-export const CURRENT_SCRAP_RETENTION_SHA256 = reviewedTorchRetentionPins.scrap;
-export const CURRENT_VASE_RETENTION_SHA256 = reviewedTorchRetentionPins.vase;
+const reviewedDoubleRetentionPins = Object.freeze({
+  endless:'c7b42b90c046abba841153b761d63689b30f0f8962c66912ee74f932ee7b7631',
+  scrap:'39f6c0f3a9fc3406039d6f2aae06804e9c8d39940204f32ac95157c7fde9ccff',
+  vase:'05025af9fa6976e55aa6d158d875733fac80dde9739449f7c6341468785e71b3',
+  torch:'ddfbb060d29ff59dc04770b7c068f4b1f1973a1f14b1d94adde02cb44f0461b7',
+});
+export const CURRENT_ENDLESS_RETENTION_SHA256 = reviewedDoubleRetentionPins.endless;
+export const CURRENT_SCRAP_RETENTION_SHA256 = reviewedDoubleRetentionPins.scrap;
+export const CURRENT_VASE_RETENTION_SHA256 = reviewedDoubleRetentionPins.vase;
+export const CURRENT_TORCH_RETENTION_SHA256 = reviewedDoubleRetentionPins.torch;
 export const PARENT_TEST_INPUTS_SHA256 = '7d6c2749a2d9d1ae462e964447e017f4fcd0e3146909de210ddacaab06be8c82';
 export const AMBUSH_SOURCE_ADDITIONS = ['src/Lawn/System/VaseAmbush.cpp', 'src/Lawn/System/VaseAmbush.h',
   'src/Lawn/System/VaseAmbushPresentation.cpp', 'src/Lawn/System/VaseAmbushPresentation.h'];
@@ -102,7 +119,8 @@ export function historicalEngine(engine, id) {
 export async function reconstructAmbushFocusedEvidence({referenceBytes,read,sha,engine,sourceFiles}) {
   assert.equal(sha(referenceBytes),AMBUSH_FOCUSED_REFERENCE_SHA256,
     'Exact published focused evidence is independently pinned, not inferred from current test outcomes');
-  assert.equal(engine.id,CURRENT_ENGINE_ID);assert.equal(engine.parent.id,AMBUSH_ENGINE_ID);
+  engine=historicalEngine(engine,TORCH_ENGINE_ID);
+  assert.equal(engine.id,TORCH_ENGINE_ID);assert.equal(engine.parent.id,AMBUSH_ENGINE_ID);
   assert.equal(engine.parent.artifacts.sourceSha256,AMBUSH_ARCHIVE_SHA256);
   const reference=JSON.parse(referenceBytes);
   assert.equal(reference.schemaVersion,1);assert.equal(reference.parentEngineId,AMBUSH_ENGINE_ID);
@@ -211,15 +229,20 @@ export async function verifyTorchRetainedParentInputs({read, sha}) {
 }
 
 export async function reconstructAmbushSources({referenceBytes, read, sha, engine}) {
+  if (engine.id === CURRENT_ENGINE_ID) {
+    const projected = await torchSourceReader({read,sha,engine});
+    read = projected.read;
+    engine = projected.engine;
+  }
   assert.equal(sha(referenceBytes), TORCH_PARENT_REFERENCE_SHA256, 'Reviewed complete Ambush parent projection');
   const reference = JSON.parse(referenceBytes);
   assert.equal(reference.schemaVersion, 1);
-  assert.equal(engine.id, CURRENT_ENGINE_ID);
+  assert.equal(engine.id, TORCH_ENGINE_ID);
   assert.equal(engine.parent.id, AMBUSH_ENGINE_ID);
   assert.equal(engine.parent.artifacts.sourceSha256, AMBUSH_ARCHIVE_SHA256);
   assert.deepEqual(reference.parent, {id: AMBUSH_ENGINE_ID, archiveSha256: AMBUSH_ARCHIVE_SHA256,
     archivePrefix: 'ambush1-candidate/source/'});
-  assert.deepEqual(reference.current, {id: CURRENT_ENGINE_ID, sourceCount: CURRENT_SOURCE_COUNT});
+  assert.deepEqual(reference.current, {id: TORCH_ENGINE_ID, sourceCount: 868});
   assert.equal(Object.keys(reference.files).length, 860);
   assert.deepEqual(Object.keys(reference.reverseEdits).sort(), ['CMake/ProjectVersion.cmake', 'src/ConstEnums.h',
     'src/Lawn/Board.cpp', 'src/Lawn/Challenge.cpp', 'src/Lawn/Challenge.h', 'src/Lawn/System/BonusChallenge.h',
@@ -253,4 +276,138 @@ export async function reconstructAmbushSources({referenceBytes, read, sha, engin
     files.set(name, bytes);
   }
   return {files, manifest: {version: AMBUSH_ENGINE_ID, files: reference.files}};
+}
+
+export async function reconstructTorchSources({referenceBytes,read,sha,engine}) {
+  assert(DOUBLE_PARENT_REFERENCE_SHA256,'The Double Agent source projection has not been frozen');
+  assert.equal(sha(referenceBytes),DOUBLE_PARENT_REFERENCE_SHA256,'Reviewed complete Torch parent projection');
+  assert.equal(engine.id,CURRENT_ENGINE_ID);
+  assert.equal(engine.parent.id,TORCH_ENGINE_ID);
+  assert.equal(engine.parent.artifacts.sourceSha256,TORCH_ARCHIVE_SHA256);
+  const reference=JSON.parse(referenceBytes);
+  assert.equal(reference.schemaVersion,1);
+  assert.deepEqual(reference.parent,{id:TORCH_ENGINE_ID,archiveSha256:TORCH_ARCHIVE_SHA256,
+    archivePrefix:'torch1-candidate/source/'});
+  assert.deepEqual(reference.current,{id:CURRENT_ENGINE_ID,sourceCount:CURRENT_SOURCE_COUNT});
+  assert.equal(Object.keys(reference.files).length,868);
+  // This exact reviewed changed-path inventory is pinned in the complete
+  // fixture; no source path can be inserted, dropped or silently repinned.
+  assert(Array.isArray(reference.changedPaths));
+  assert.deepEqual(Object.keys(reference.reverseEdits).sort(),[...reference.changedPaths].sort());
+  for(const name of DOUBLE_SOURCE_ADDITIONS)assert(!Object.hasOwn(reference.files,name));
+  const files=new Map();
+  for(const [name,pin]of Object.entries(reference.files)){
+    safeName(name);digest(pin.sha256);digest(pin.normalizedSha256);
+    let bytes=Buffer.from(await read('source/'+name));
+    const delta=reference.reverseEdits[name];
+    if(delta){
+      assert.equal(bytes.length,delta.currentBytes);digest(delta.currentSha256);
+      assert.equal(sha(bytes),delta.currentSha256,'Exact Double Agent source projection input: '+name);
+      assert(Array.isArray(delta.edits)&&delta.edits.length>0);
+      let previous=bytes.length+1;
+      for(const edit of [...delta.edits].reverse()){
+        const before=Buffer.from(edit.beforeBase64,'base64'),after=Buffer.from(edit.afterBase64,'base64');
+        assert(Number.isSafeInteger(edit.offset)&&edit.offset>=0&&edit.offset<previous);
+        assert(edit.offset+before.length<=previous&&edit.offset+before.length<=bytes.length);
+        assert.deepEqual(bytes.subarray(edit.offset,edit.offset+before.length),before);
+        bytes=Buffer.concat([bytes.subarray(0,edit.offset),after,bytes.subarray(edit.offset+before.length)]);
+        previous=edit.offset;
+      }
+    }
+    assert.equal(bytes.length,pin.bytes);
+    assert.equal(sha(bytes),pin.sha256,'Every complete published Torch source retains its independent pin: '+name);
+    assert.equal(sha(Buffer.from(bytes.toString('latin1').replace(/\r\n?/g,'\n'),'latin1')),pin.normalizedSha256);
+    files.set(name,bytes);
+  }
+  return {files,manifest:{version:TORCH_ENGINE_ID,files:reference.files}};
+}
+
+export async function torchSourceReader({read,sha,engine,referenceBytes}) {
+  if(engine.id===TORCH_ENGINE_ID)return {read,engine};
+  assert.equal(engine.id,CURRENT_ENGINE_ID);
+  referenceBytes ??= fs.readFileSync(new URL('./fixtures/double1-parent-reference.json',import.meta.url));
+  const projected=await reconstructTorchSources({referenceBytes,read,sha,engine});
+  return {engine:engine.parent,files:projected.files,
+    read:async name=>{
+      if(!name.startsWith('source/'))return read(name);
+      safeName(name);const bytes=projected.files.get(name.slice(7));
+      assert(bytes,'Unreviewed historical Torch source path: '+name);return bytes;
+    }};
+}
+
+export async function verifyDoubleRetainedParentInputs({read,sha}) {
+  const bytes=await read('tests/double1-retained-parent/manifest.json');
+  assert.equal(sha(bytes),DOUBLE_PARENT_TEST_INPUTS_SHA256,'Independently authenticated published Torch test inputs');
+  const manifest=JSON.parse(bytes);
+  assert.equal(manifest.schemaVersion,1);assert.equal(manifest.parentEngineId,TORCH_ENGINE_ID);
+  assert.equal(manifest.parentArchiveSha256,TORCH_ARCHIVE_SHA256);
+  assert.equal(manifest.parentArchivePrefix,'torch1-candidate/');assert.equal(manifest.currentEngineId,CURRENT_ENGINE_ID);
+  assert.equal(Object.keys(manifest.files).length,44);
+  for(const [name,pin]of Object.entries(manifest.files)){
+    safeName(name);assert(name.startsWith('tests/'));safeName(pin.snapshot);assert(!pin.snapshot.includes('/'));
+    digest(pin.sha256);assert(Number.isSafeInteger(pin.bytes)&&pin.bytes>0);
+    const original=Buffer.from(await read('tests/double1-retained-parent/'+pin.snapshot));
+    assert.equal(original.length,pin.bytes);assert.equal(sha(original),pin.sha256,'Exact published Torch test input: '+name);
+  }
+  return manifest;
+}
+
+export async function verifyPublishedTorchAdapter({read,sha,adapter,family}) {
+  assert(Object.hasOwn(TORCH_RETENTION_PINS,family));
+  const original=await read('tests/torch1-'+family+'-retention.json');
+  const pin=TORCH_RETENTION_PINS[family];assert.equal(sha(original),pin);
+  assert.equal(adapter.publishedTorchAdapterSha256,pin,'The current execution envelope retains the exact published Torch adapter');
+  const retained=await verifyDoubleRetainedParentInputs({read,sha});
+  assert.equal(retained.files['tests/torch1-'+family+'-retention.json'].sha256,pin);
+  const old=JSON.parse(original);assert.equal(old.engineId,TORCH_ENGINE_ID);
+  if(family==='endless'){
+    assert(!Object.hasOwn(old,'parentArchiveSha256'));
+    assert.equal(old.publishedAmbushAdapterSha256,AMBUSH_ENDLESS_RETENTION_SHA256);
+  }else{
+    assert.equal(old.parentEngineId,AMBUSH_ENGINE_ID);
+    assert.equal(old.parentArchiveSha256,AMBUSH_ARCHIVE_SHA256);
+  }
+  assert.equal(old.productionObjectCount,142);
+  assert.equal(old[family==='endless'?'productionSourceFiles':'sourceCount'],868);
+  assert.equal(old.historicalContractSha256,adapter.historicalContractSha256);
+  return old;
+}
+
+export async function reconstructTorchFocusedEvidence({referenceBytes,read,sha,engine,sourceFiles}) {
+  assert.equal(sha(referenceBytes),TORCH_FOCUSED_REFERENCE_SHA256,'Every old Torch focused input retains its published bytes');
+  const parent=historicalEngine(engine,TORCH_ENGINE_ID);assert.equal(parent.artifacts.sourceSha256,TORCH_ARCHIVE_SHA256);
+  const reference=JSON.parse(referenceBytes);
+  assert.equal(reference.schemaVersion,1);assert.equal(reference.parentEngineId,TORCH_ENGINE_ID);
+  assert.equal(reference.parentArchiveSha256,TORCH_ARCHIVE_SHA256);assert.equal(reference.parentArchiveBytes,31579254);
+  assert.equal(reference.sourceProjection,'double1-parent-reference.json');assert.equal(reference.sourceCount,868);
+  assert.equal(sourceFiles.size,868);
+  const reports=['game-speed','qol-controls','decks-cooldowns','bonus-challenge','bonus-completion','night-shift',
+    'lantern-shroom','garden-shuffle','seed-swap','mender-bloom','intensive-care','native-layout','care-fatigue'];
+  assert.deepEqual(reference.reportNames,reports);
+  assert.equal(Object.keys(reference.sourcePins).length,113);assert.equal(Object.keys(reference.files).length,88);
+  const files=new Map();let inline=0;
+  for(const [name,pin]of Object.entries(reference.sourcePins)){
+    safeName(name);assert(name.startsWith('source/'));digest(pin);
+    const bytes=sourceFiles.get(name.slice(7));assert(bytes,name);assert.equal(sha(bytes),pin,name);files.set(name,bytes);
+  }
+  for(const [name,pin]of Object.entries(reference.files)){
+    safeName(name);digest(pin.sha256);assert(Number.isSafeInteger(pin.bytes)&&pin.bytes>0);
+    const stored=Object.hasOwn(pin,'currentPath');
+    assert.deepEqual(Object.keys(pin).sort(),['bytes','sha256',stored?'currentPath':'base64'].sort());
+    let bytes;
+    if(stored){
+      safeName(pin.currentPath);assert(/^tests\/(?:torch1-|scrap1-|ambush1-|double1-retained-parent\/)/.test(pin.currentPath));
+      bytes=Buffer.from(await read(pin.currentPath));
+    }else{
+      assert(['logs/build-result.json','logs/source-before.json','logs/source-after.json'].includes(name)||
+        reports.some(report=>['tests/'+report+'-results.json','tests/'+report+'-harness.cpp'].includes(name)),
+        'Only exact old reports, harnesses and normal-build observations require inline bytes');
+      bytes=Buffer.from(pin.base64,'base64');assert.equal(bytes.toString('base64'),pin.base64);inline++;
+    }
+    assert.equal(bytes.length,pin.bytes,name);assert.equal(sha(bytes),pin.sha256,name);files.set(name,bytes);
+  }
+  assert.equal(inline,29);assert.equal(files.size,201);
+  const historicalRead=async name=>{safeName(name);const bytes=files.get(name);assert(bytes,'Unreviewed historical Torch input: '+name);return bytes;};
+  historicalRead.has=name=>{safeName(name);return files.has(name);};
+  return historicalRead;
 }

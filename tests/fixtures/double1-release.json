@@ -1,0 +1,10 @@
+{
+  "id": "0.2.6-web-double.1",
+  "jsSha256": "3c8fc69ad6a388826cb3a3be3cf3ec07910b7ad4c5a6dcce42a27bd91df278cf",
+  "wasmSha256": "0e9ad8846b33ec2a1823f7637674aa26956619318f2a44c42b8b3f9b28af66e6",
+  "sourceSha256": "35b635770bbb040dd3b2c41c4c86ed49f351cbd29926b8efa286394ff89ad5b3",
+  "patchSha256": "3368e2afaff5f3255e566408e15f8f80575e4bad78edbe1b059b6f08389ca4a0",
+  "normalReceiptSha256": "8ff0dbe3d087ce07f4e861afe5e999d55490684f306d6dcd609a1323aeb1fd62",
+  "sourceFiles": 872,
+  "productionObjects": 144
+}

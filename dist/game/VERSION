@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-torch.1
-Adds Torchbearer Zombie, an original-art one-use fire attacker, the finite Fire Drill introduction and earned Pool Panic Endless torch formations. Native combat, prior modes, original artwork and saved layouts remain preserved outside the reviewed additions.
-Engine JavaScript SHA-256: da8757962f625d0805bb4cd9db15a1b6ee8cfc6ab7d88c952c462f629ee455b0
-Engine WASM SHA-256: 7fa8c0a42b32f3398fea94dee62ad9180a5921e8f9978a536e79e287d5a0f68a
+PvZ-Portable 0.2.6-web-double.1
+Adds Double Agent: defend your own garden, switch sides, and breach the same layout with a finite I, Zombie army.
+Engine JavaScript SHA-256: 3c8fc69ad6a388826cb3a3be3cf3ec07910b7ad4c5a6dcce42a27bd91df278cf
+Engine WASM SHA-256: 0e9ad8846b33ec2a1823f7637674aa26956619318f2a44c42b8b3f9b28af66e6
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.

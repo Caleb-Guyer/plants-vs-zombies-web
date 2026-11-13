@@ -1,5 +1,21 @@
 # Current requirements
 
+## Double Agent accepted behavior
+
+Double Agent is Bonus card 19. Build a garden in the left five columns with 1500 sun and seven original plants, then press Let's Rock. Survive two assaults, then switch sides: your original garden returns at full health as I, Zombie cardboard. Spend 1000 sun on six original zombie types and eat all five brains. The challenge has no mowers, free sun, combat loot or planting during the assault.
+
+The original seed bank, day lawn, brains, Menu, pause/speed controls and trophy carry the interface. Its distinct thumbnail uses complete original plant/zombie artwork, with no card tips or extra HUD. Save/Continue preserves preparation, combat and the side switch; Retry restarts the complete two-phase puzzle. Original saved object layouts remain unchanged.
+
+The frozen build of 872 source files and 144 production objects passes **27 current native suites, 71,379,926 primary assertions and zero failures**, plus 29,323,427 separately counted Endless late checks. The new driver executes 52 cases at 1×/2× using two seeds: two winning garden policies, real phase checkpoints, natural losses, Retry and Replay, with explicit zero-credit synthetic controls. All 26 retained suites run against current source; the 14 complete-engine drivers bind the same current production objects. All 58,832 earlier focused assertions remain, with one additional catalog iteration (58,833). Audio output is disabled during automated testing.
+
+Actual native raster frames were inspected for the catalog, preparation and both combat roles. **Muted browser checks passed for functionality:** file-free startup and the Bonus card, a Peashooter purchase (1500 to 1400 sun) followed by Save/reload/Continue, and a Normal Zombie purchase at 2× (1000 to 950 sun) followed by the same browser round trip. Offense restored the deployed zombie, the same ten cardboard plants, 950 sun and five uneaten brains. These checks used a synthetic unlocked profile and an offense checkpoint earned by native testing; they credited **zero browser wins**. Browser controls recovered after the initial missing-kernel-assets failures, which remain recorded as historical evidence.
+
+**Fresh browser performance was not measured, and no performance probe was loaded.** The original Torch.1 raw timing baseline remains byte-identical historical evidence; it is not relabeled as a timing result for this changed game binary. Native tests and functional browser checks do not replace browser performance measurements. Normal game audio remains available.
+
+## Prior release records
+
+The sections below retain their earlier release-time scope; prior accepted gameplay behavior remains required.
+
 ## Torchbearer accepted behavior
 
 Torchbearer Zombie carries one torch. A short attack windup burns one edible plant, then the torch stays spent. Snow Peas, Winter Melons, Ice-shroom and Chill-shroom extinguish it early through the original chill system; a cheap sacrificial plant can absorb the single burn. Spent Torchbearers use ordinary zombie movement and biting. The original normal body health and combat statistics are retained; the holding inner arm survives ordinary outer-arm loss.

@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "engine": {
+    "id": "0.2.6-web-double.1",
+    "jsSha256": "3c8fc69ad6a388826cb3a3be3cf3ec07910b7ad4c5a6dcce42a27bd91df278cf",
+    "wasmSha256": "0e9ad8846b33ec2a1823f7637674aa26956619318f2a44c42b8b3f9b28af66e6"
+  },
+  "status": "functional-only",
+  "freshBrowserPerformancePassed": false,
+  "nativeTestsReplaceBrowserPerformance": false,
+  "browserControlRecovered": true,
+  "historicalUnavailability": {
+    "path": "tests/fixtures/performance/historical/double1-initial-unavailability.json",
+    "bytes": 1331,
+    "sha256": "e31796eaffff47d04f617e343ae2aa38dd51e0cd32f4f8fe5344925345aabccb"
+  },
+  "proof": {
+    "path": "tests/fixtures/double-agent-browser/proof.json",
+    "bytes": 6496,
+    "sha256": "f7e30bf846a7c29a01eebde10ad4d9af3ae383abf495515a404f23444bb54a64"
+  }
+}

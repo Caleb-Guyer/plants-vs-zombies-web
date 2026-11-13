@@ -9,8 +9,7 @@ import {createHash} from 'node:crypto';
 import {createRequire} from 'node:module';
 import {analyzeCapture, statistics} from './performance/metrics.mjs';
 import {historicalEngine} from './native-release-context.mjs';
-import {continuitySnapshotRoot, continuityArchivePath, continuityPatchPath, verifySourceMetadataContinuity} from './performance/source-metadata-continuity.mjs';
-import {verifyContinuityNegativeControls} from './performance/source-metadata-continuity-controls.mjs';
+import {verifyDoubleBrowserEvidence} from './double-agent-browser-verification.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
@@ -26,36 +25,31 @@ function pinned(pin) {
   const bytes = read(pin.path); assert.equal(bytes.length, pin.bytes, pin.path); assert.equal(sha(bytes), pin.sha256, pin.path);
   return bytes;
 }
-const baselineBytes = read('tests/fixtures/performance/baseline.json');
+async function verifyRecordedBaseline(baselinePath, current) {
+const baselineBytes = read(baselinePath);
 const baseline = json(baselineBytes);
 assert.equal(baseline.schemaVersion, 1);
 assert.equal(baseline.minObservationMs, 15000); assert.equal(baseline.minSaveCaptures, 2);
 assert.equal(baseline.maxControlP95DeltaMs, 1);
 assert.deepEqual(baseline.budgets, {nativeCallbacks: {p95: 8, max: 33.5}, rafGaps: {p95: 25, max: 50},
   saveCaptures: {p95: 8, max: 16.7}, longTasks: {count: 0, max: 50}});
-const engine = json(read('dist/game/engine-provenance.json'));
+const deployedEngine = json(read('dist/game/engine-provenance.json'));
+const engine = current ? deployedEngine : historicalEngine(deployedEngine, baseline.engine.id);
 assert.deepEqual(baseline.engine, {id: engine.id, jsSha256: engine.artifacts.jsSha256, wasmSha256: engine.artifacts.wasmSha256});
-assert.equal(sha(read('dist/game/pvz-portable.js')), baseline.engine.jsSha256);
-assert.equal(sha(read('dist/game/pvz-portable.wasm')), baseline.engine.wasmSha256);
+if(current) {
+  assert.equal(sha(read('dist/game/pvz-portable.js')), baseline.engine.jsSha256);
+  assert.equal(sha(read('dist/game/pvz-portable.wasm')), baseline.engine.wasmSha256);
+}
 assert.equal(baseline.probe.path, 'tests/performance/probe.js'); const probeBytes = pinned(baseline.probe);
 assert.equal(baseline.recorder.path, 'tests/performance/preview.py'); const recorderBytes = pinned(baseline.recorder);
 const captureManifestBytes = pinned(baseline.expectedManifest);
 const manifest = json(captureManifestBytes);
 assert.equal(manifest.engineId, baseline.engine.id); assert.equal(manifest.engineWasmSha256, baseline.engine.wasmSha256);
 assert.equal(manifest.probeSha256, baseline.probe.sha256); assert.equal(manifest.serverSha256, baseline.recorder.sha256);
-const continuityInput = {
-  observedEngineBytes: read(continuitySnapshotRoot + 'observed-engine-provenance.json'),
-  observedSourceManifestBytes: read(continuitySnapshotRoot + 'observed-source-manifest.json'),
-  observedReceiptBytes: read(continuitySnapshotRoot + 'observed-normal-build-result.json'),
-  baselineBytes, captureManifestBytes, probeBytes, recorderBytes,
-  runtimeFiles: new Map(Object.keys(manifest.files).map(name => [name, read('dist/' + safe(name))])),
-  sourceArchiveBytes: read(continuityArchivePath), patchBytes: read(continuityPatchPath), zipDecoderBytes: read('dist/vendor/jszip.min.js'),
-};
-const continuity = await verifySourceMetadataContinuity(continuityInput);
-const continuityControls = await verifyContinuityNegativeControls(continuityInput);
-assert.equal(continuityControls.negativeControls, 13);
-for (const [name, pin] of Object.entries(manifest.files)) {
-  if (name === 'game/engine-provenance.json' && continuity.kind === 'source-metadata-only-successor') continue;
+// Current captures require exact current runtime bytes. Historical captures
+// authenticate their recorded manifest and released ancestry without claiming
+// the current executable produced those older samples.
+if(current) for (const [name, pin] of Object.entries(manifest.files)) {
   const bytes = read('dist/' + safe(name)); assert.equal(bytes.length, pin.baseBytes); assert.equal(sha(bytes), pin.baseSha256, name);
 }
 
@@ -161,5 +155,30 @@ for (const row of baseline.diagnostics ?? []) {
   assert.throws(() => analyze(row), /rafGaps\.max budget exceeded/,
     'Retained failed diagnostic must genuinely fail the unchanged scheduling budget');
 }
-console.log('PASS retained browser CPU/scheduling baseline:4 active15s windows, paired paused controls, raw traces, retained failed diagnostics and fixture/screenshot pins; not fresh execution or GPU/FPS proof.');
-console.log(`PASS strict performance continuity: ${continuity.kind};868 exact production source files,18 exact other runtime files,original patch/receipt and13 rejected in-memory negative controls;no fresh timing execution.`);
+console.log(`PASS ${current ? 'current' : 'historical '+engine.id} recorded browser baseline:4 active15s windows, paired paused controls, unchanged budgets, raw traces and screenshot pins; not a fresh CI benchmark or GPU/FPS proof.`);
+}
+assert.equal(sha(read('tests/fixtures/performance/baseline.json')),'43312dcdce1130b7ea1cb0d0cb1e11c19ad5ef6a7e4d22724257d959ca64770f','Published Torch baseline remains immutable');
+await verifyRecordedBaseline('tests/fixtures/performance/baseline.json', false);
+const availability = json(read('tests/fixtures/performance/double1-browser-validation.json'));
+const currentEngine = json(read('dist/game/engine-provenance.json'));
+assert.deepEqual(availability.engine, {id:currentEngine.id,
+  jsSha256:currentEngine.artifacts.jsSha256,wasmSha256:currentEngine.artifacts.wasmSha256});
+assert.equal(sha(read('dist/game/pvz-portable.js')), availability.engine.jsSha256);
+assert.equal(sha(read('dist/game/pvz-portable.wasm')), availability.engine.wasmSha256);
+if(availability.status === 'measured') {
+  await verifyRecordedBaseline('tests/fixtures/performance/double1-baseline.json', true);
+} else if(availability.status === 'functional-only') {
+  const require=createRequire(import.meta.url),vendor={exports:{}};
+  new Function('module','exports','require',read('dist/vendor/jszip.min.js').toString())(vendor,vendor.exports,require);
+  await verifyDoubleBrowserEvidence({availability,currentEngine,read,sha,Zip:vendor.exports});
+  console.log('PASS scoped current-browser functional observations and save/Continue round trips; screenshots and actual imported saves are pinned. No fresh timing benchmark or browser-performance verdict.');
+} else {
+  assert.equal(availability.status,'unavailable');
+  assert.equal(availability.freshBrowserPerformancePassed,false);
+  assert.equal(availability.nativeTestsReplaceBrowserPerformance,false);
+  assert.deepEqual(availability.attempts.map(row=>row.tool),['cua_repl','cua_repl_after_reset','node_repl']);
+  for(const row of availability.attempts) assert.equal(row.error,
+    'failed to write kernel assets: The system cannot find the path specified. (os error 3)');
+  assert(availability.validationScope.includes('native'));
+  console.log('UNAVAILABLE fresh current-browser performance: both browser and desktop automation kernels failed to initialize. Historical timings remain historical; native tests do not certify browser performance.');
+}

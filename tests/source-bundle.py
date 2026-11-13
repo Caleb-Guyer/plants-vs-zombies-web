@@ -18,11 +18,12 @@ SPEC = importlib.util.spec_from_file_location('source_bundle_codec', ROOT / 'sou
 codec = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(codec)
 OLD = 'dist/source/pvz-portable-0.2.6-web-endless.2-source.zip'
-BASE = 'dist/source/pvz-portable-0.2.6-web-torch.1-source.zip'
+ENGINE = json.loads((ROOT / 'dist/game/engine-provenance.json').read_text('utf-8'))
+BASE = 'dist/source/' + Path(ENGINE['artifacts']['source']).name
 INDEX = 'source-transports/endless2.json'
 LITERALS = 'source-transports/endless2.literals'
 OLD_SHA = 'b9095c65547c3d013917ae4188e284f18eabb71a98020ca3d53f71f7365f9566'
-BASE_SHA = '2e7f7d49093a1aa93d350558b568d2b81b615632b33613631f630a484872b3ba'
+BASE_SHA = ENGINE['artifacts']['sourceSha256']
 sha = lambda data: hashlib.sha256(data).hexdigest()
 
 

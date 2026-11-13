@@ -1,5 +1,19 @@
 # Plants vs. Zombies — browser playtest
 
+## Double Agent
+
+Double Agent is Bonus card 19. Build a garden in the left five columns with 1500 sun and seven original plants, then press Let's Rock. Survive two assaults, then switch sides: your original garden returns at full health as I, Zombie cardboard. Spend 1000 sun on six original zombie types and eat all five brains. The challenge has no mowers, free sun, combat loot or planting during the assault.
+
+The original seed bank, day lawn, brains, Menu, pause/speed controls and trophy carry the interface. Its distinct thumbnail uses complete original plant/zombie artwork, with no card tips or extra HUD. Save/Continue preserves preparation, combat and the side switch; Retry restarts the complete two-phase puzzle. Original saved object layouts remain unchanged.
+
+Tests cover both roles, Save/Continue, losses, Retry and Replay at 1×/2× with sound off. Muted browser checks also confirmed file-free startup, manual plant/zombie placement, 2× and Save/reload/Continue in planning and offense. Those browser checks credited no wins. Fresh browser performance remains unmeasured; earlier timing results stay historical.
+
+[Play the game](https://caleb-guyer.github.io/plants-vs-zombies-web/).
+
+## Prior release records
+
+The sections below retain their earlier release-time scope; prior accepted gameplay behavior remains required.
+
 ## Torchbearer Zombie and Fire Drill
 
 [Play the game](https://caleb-guyer.github.io/plants-vs-zombies-web/).
@@ -18,7 +32,7 @@ See [QA scope](PARITY-QA.md#torchbearer-native-verification) and [release artifa
 
 The source download stores compressed ZIP data shared by the current engine and its historical Endless.2 reference only once. Before checks, the included offline decoder automatically restores the exact original reference ZIP, including all 1,076 entries and its published SHA-256. No source, test, or generated reference engine is discarded. The full repository and runtime distribution also retain the original standalone archive.
 
-Run `npm run check` after extracting the source download. It restores the reference locally and runs all 18 retained integration suites plus the new archive-transport suite. `python source-bundle.py` can also perform the restoration explicitly; it uses only included files and never overwrites an invalid existing archive. The native game, its source archive, and save formats retain the published Torch.1 bytes.
+Run `npm run check` after extracting the source download. It restores the reference locally and runs all 18 retained integration suites plus the new archive-transport suite. `python source-bundle.py` can also perform the restoration explicitly; it uses only included files and never overwrites an invalid existing archive. The download selects the matching current native source archive; the historical reference ZIP and its checksums remain unchanged.
 
 ## Earlier release records
 

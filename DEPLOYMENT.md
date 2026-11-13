@@ -1,5 +1,17 @@
 # GitHub Pages release: Caleb-Guyer/plants-vs-zombies-web
 
+## Double Agent artifacts
+
+Engine: `0.2.6-web-double.1`. JavaScript SHA-256: `3c8fc69ad6a388826cb3a3be3cf3ec07910b7ad4c5a6dcce42a27bd91df278cf`. WebAssembly SHA-256: `0e9ad8846b33ec2a1823f7637674aa26956619318f2a44c42b8b3f9b28af66e6`.
+
+Current native source: `pvz-portable-0.2.6-web-double.1-source.zip`, SHA-256 `35b635770bbb040dd3b2c41c4c86ed49f351cbd29926b8efa286394ff89ad5b3`. Full patch: `web-double.1.patch`; incremental parent patch: `torch1-to-double1.patch`. The lossless test pack restores 28 current executable files and two separately identified historical comparator files. The source bundle retains all 868 exact Torch parent source files through a bounded independently pinned projection, and all 44 selected original parent test inputs through an exact snapshot.
+
+Use the existing manual GitHub Pages workflow. It runs the 19 offline integration suites and all 27 native suites with audio disabled, then stages the game within the 100 MiB per-file and 1 GB total limits before deploying. Publishing and public-byte verification have separate receipts. Current browser evidence covers muted startup, native inputs, 2× and same-build planning/offense Save/reload/Continue. The initial automation failures remain historical; no browser win or new browser timing verdict is claimed.
+
+## Prior release records
+
+The sections below retain their earlier release-time scope; prior accepted gameplay behavior remains required.
+
 ## Source-download deduplication
 
 The website-source ZIP transports the exact historical Endless.2 archive through `source-transports/endless2.json` and `source-transports/endless2.literals`. It reuses 927 compressed data streams already present in the included current native source ZIP, sharing 13,617,091 bytes. The remaining bytes include every original local header, directory record, and unique compressed stream. Reconstruction retains the complete original 40,424,282-byte archive with SHA-256 `b9095c65547c3d013917ae4188e284f18eabb71a98020ca3d53f71f7365f9566`; all existing reference assertions run against that exact file.

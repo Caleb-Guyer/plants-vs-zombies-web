@@ -1,0 +1,179 @@
+{
+  "schemaVersion": 1,
+  "engine": {
+    "id": "0.2.6-web-double.1",
+    "jsSha256": "3c8fc69ad6a388826cb3a3be3cf3ec07910b7ad4c5a6dcce42a27bd91df278cf",
+    "wasmSha256": "0e9ad8846b33ec2a1823f7637674aa26956619318f2a44c42b8b3f9b28af66e6"
+  },
+  "normalBuildReceiptSha256": "8ff0dbe3d087ce07f4e861afe5e999d55490684f306d6dcd609a1323aeb1fd62",
+  "audioMutedThroughout": true,
+  "query": "?testing=1",
+  "browserControlRecovered": true,
+  "syntheticProfile": true,
+  "browserEarnedWins": 0,
+  "freshBrowserPerformanceMeasured": false,
+  "performanceProbeLoaded": false,
+  "sameBuildBrowserPlanningRoundTrip": true,
+  "sameBuildBrowserOffenseRoundTrip": true,
+  "planning": {
+    "sunBefore": 1500,
+    "sunAfter": 1400,
+    "manualPeashooterPlaced": true
+  },
+  "offense": {
+    "sunBefore": 1000,
+    "sunAfter": 950,
+    "ordinaryNormalZombiePlaced": true,
+    "speedLabel": "2x",
+    "restoredSpeedLabel": "1x",
+    "restoredBrainsEaten": 0
+  },
+  "viewport": {
+    "width": 785,
+    "height": 871,
+    "deviceScaleFactor": 1.5
+  },
+  "canvas": {
+    "width": 800,
+    "height": 600,
+    "cssWidth": 785,
+    "cssHeight": 588
+  },
+  "operatorObservations": [
+    "Fresh startup reached native title without a file.",
+    "Imported synthetic unlocked profile using visible import controls.",
+    "Native Bonus catalog showed Double Agent with original composed artwork and no card tips.",
+    "Placed one Peashooter using ordinary mouse input; sun decreased from 1500 to 1400.",
+    "Native Save, reload and Continue restored planning with that Peashooter and 1400 sun.",
+    "Imported an offense checkpoint earned by the native test, not by browser play.",
+    "Placed a Normal Zombie using ordinary mouse input at 2x; sun decreased from 1000 to 950.",
+    "Native Save, reload and Continue restored offense with the deployed zombie, same ten cardboard plants, 950 sun and five uneaten brains.",
+    "Mute remained pressed throughout. No browser win or new performance measurement was credited."
+  ],
+  "screenshots": {
+    "catalog": {
+      "path": "tests/fixtures/double-agent-browser/catalog.jpg",
+      "bytes": 98914,
+      "sha256": "e02f6b09cd8f4dcc01d8342a34d46351d8627e85e9cee28e1dbfee2c015f3ac0"
+    },
+    "planning": {
+      "path": "tests/fixtures/double-agent-browser/planning.jpg",
+      "bytes": 95313,
+      "sha256": "0cdbb3dc90beed3711a8b467a5222a8cb8bb898d80a133dc171d95a1b323d4dc"
+    },
+    "continue-planning": {
+      "path": "tests/fixtures/double-agent-browser/continue-planning.jpg",
+      "bytes": 95938,
+      "sha256": "5118e03fcee935cab01495f3b5aa91c4b75cd7631afc1f0ded197fe095daaff1"
+    },
+    "offense": {
+      "path": "tests/fixtures/double-agent-browser/offense.jpg",
+      "bytes": 105512,
+      "sha256": "ec43ba1e855eb127a1b0e94a8c35956ae7402d3b66d1d0a66adbbc1ede4801e4"
+    },
+    "continue-offense": {
+      "path": "tests/fixtures/double-agent-browser/continue-offense.jpg",
+      "bytes": 105554,
+      "sha256": "69a05f024992d1c3b717b868a42ac4b846c7b36c6e4c93294ac60b2c178214d5"
+    }
+  },
+  "inputs": {
+    "profileOnly": {
+      "path": "tests/fixtures/double-agent-browser/double-agent-unlocked-profile-only.zip",
+      "bytes": 304,
+      "sha256": "d1960fd06a3b483982d575e7510e60c7d6233b1446e4cc39f5069dafd14ab90e"
+    },
+    "earnedOffense": {
+      "path": "tests/fixtures/double-agent-browser/double-agent-earned-offense-save.zip",
+      "bytes": 7713,
+      "sha256": "69b7804d3f227f384d9a987671bbf4d39aa1ffc40779bb26e933835190548b81"
+    }
+  },
+  "observedEngineMetadata": {
+    "path": "tests/fixtures/double-agent-browser/observed-engine-provenance.json",
+    "bytes": 177994,
+    "sha256": "7d05306eefac4f0fa5bd9a9bbf52ed1e1072d53ac64db64259ae7c8559ecb633"
+  },
+  "runtimeFiles": {
+    "audio-controls.js": {
+      "bytes": 12216,
+      "sha256": "95e6a1b3e7ccae54ee797e8ed3b63668b672ee51f55978dc4d29231ec225a343"
+    },
+    "bundled-assets.js": {
+      "bytes": 8188,
+      "sha256": "07449dfe0aca7efb7888c62d598b54dc0be5cdfaadab6961e5f9977f87db6e8c"
+    },
+    "game-assets/manifest.json": {
+      "bytes": 3176,
+      "sha256": "5488eb8cf5d38d2d999e29a5b3aca45ecff02f8ee49356ccb327de8676111dc4"
+    },
+    "game/pvz-portable.js": {
+      "bytes": 210369,
+      "sha256": "3c8fc69ad6a388826cb3a3be3cf3ec07910b7ad4c5a6dcce42a27bd91df278cf"
+    },
+    "game/pvz-portable.wasm": {
+      "bytes": 7845352,
+      "sha256": "0e9ad8846b33ec2a1823f7637674aa26956619318f2a44c42b8b3f9b28af66e6"
+    },
+    "index-port.html": {
+      "bytes": 6423,
+      "sha256": "bc680d6927fe0d8d6603381c3b57618a2b171bf574b9c7aa5885c81451bbca24"
+    },
+    "index.html": {
+      "bytes": 6423,
+      "sha256": "bc680d6927fe0d8d6603381c3b57618a2b171bf574b9c7aa5885c81451bbca24"
+    },
+    "launcher.js": {
+      "bytes": 10755,
+      "sha256": "9e41170068f913e8f966d650953972a311f57e7efb6241340fa6c5a349d3cfdd"
+    },
+    "loader.js": {
+      "bytes": 10670,
+      "sha256": "a183ed4e17810de2431989f3ebc263d2f511d1514c53e73c8933b8486bced73a"
+    },
+    "original-ui.js": {
+      "bytes": 2774,
+      "sha256": "a8f0aab63956a0280f03520671b712c2709da353c287be430592c64ba91ffe5b"
+    },
+    "port.css": {
+      "bytes": 11410,
+      "sha256": "6020b3fb0e1517aa9c9c1bab93873cf5c5c9f2204e3c0d9f3335853789e6b821"
+    },
+    "runtime.js": {
+      "bytes": 2931,
+      "sha256": "328c9ce8aa6489f14d51c9f8f6779f6f8b0eded710bbfdfa6390531fabf8d453"
+    },
+    "save-recovery.js": {
+      "bytes": 4921,
+      "sha256": "eff0eb9325e0bdc18c1f76582e9f260a07ffbf680b3ada25763f1972204e84bf"
+    },
+    "save-storage-core.js": {
+      "bytes": 13211,
+      "sha256": "5473e221a0b86818835a9ed5a1b473d718ae14da9838c7e37d99bdef48203bee"
+    },
+    "save-storage-worker.js": {
+      "bytes": 1864,
+      "sha256": "4951c5dd05dcc2c79dd99f4ddeba19935ffd23a69dd6726e4b4e1b819772a246"
+    },
+    "save-storage.js": {
+      "bytes": 9518,
+      "sha256": "e46cef9257f3608f0edbd1af4c0424e09665aa919aed5e5e16d234045ef1c49c"
+    },
+    "save-transfer.js": {
+      "bytes": 16375,
+      "sha256": "de0c5b67863c8f307906d4d1c739b05ef0d32d5f854a8d77581750a37dd6f314"
+    },
+    "steam-compat.js": {
+      "bytes": 5185,
+      "sha256": "ace261bed202e3f99a242ac6b6dc2f532c1967d1b803a0e91a38461db44311eb"
+    },
+    "test-profiles.js": {
+      "bytes": 10112,
+      "sha256": "b93318eb4738b199d39dbf10ad6313e11fd2350dc4526c64216b2a13c27e1ce0"
+    },
+    "vendor/jszip.min.js": {
+      "bytes": 97630,
+      "sha256": "acc7e41455a80765b5fd9c7ee1b8078a6d160bbbca455aeae854de65c947d59e"
+    }
+  }
+}

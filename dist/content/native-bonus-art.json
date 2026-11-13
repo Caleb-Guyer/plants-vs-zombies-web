@@ -190,6 +190,16 @@
       "gameplay": "A six-formation daylight defense introduces Torchbearer Zombie. His native torch burns one edible plant after a visible windup and then goes out; original frost attacks extinguish it permanently. Use the fixed Sunflower, Peashooter, Snow Pea, Wall-nut, Potato Mine, Cherry Bomb and Squash bank to counter exposed torches and armored escorts. Completing Fire Drill unlocks Torchbearers in later Pool Panic Endless formations.",
       "artwork": "The original zombie carrying arm and closed flag hand hold the original brown flagpole shaft beneath the original animated Torchwood flame. Native fingers remain in front of the shaft, and the torch follows the same hand transform through walking and attack poses. The complete carrier stands beside an original Snow Pea, fitted with their native proportions onto the original day lawn inside an80 by65 Bonus picture. No generated illustration or reused Survival thumbnail.",
       "interface": "Name-only eighteenth Bonus card in the third slot of the bottom native row (row4, column2). Original fixed seed bank, sun counter, shovel, Menu, speed and pause controls, wave meter and native footer. No additional HUD or instructional panels."
+    },
+    {
+      "mode": 91,
+      "name": "Double Agent",
+      "hero": "Original complete native cached Peashooter and normal zombie, original REANIM_SUN and IMAGE_BRAIN",
+      "background": "IMAGE_BACKGROUND1",
+      "generatedArtworkUsed": false,
+      "gameplay": "Build a garden with a finite plant bank and survive a short original-zombie assault. Then switch to the original I, Zombie army bank and breach the same planned layout, restored as native cardboard defenders. Original plant and zombie combat, prices and brains remain active; the two phases use the existing saved board and challenge fields.",
+      "artwork": "The native complete Peashooter cache includes both original idle body and head layers. The complete stock zombie stands opposite it on the original day lawn, with separate original sun and brain role cues. All four original silhouettes retain their proportions inside the native80 by65 picture. No generated illustration or reused Survival thumbnail.",
+      "interface": "Name-only nineteenth Bonus card in the fourth slot of the native bottom row (row4, column3). Original plant and I, Zombie seed banks, sun counter, Menu, speed and pause controls, native wave/brain meter and phase footer. Original Let's Rock button starts defense. No additional HUD, card tips or persistent instructional panels."
     }
   ],
   "canvas": {

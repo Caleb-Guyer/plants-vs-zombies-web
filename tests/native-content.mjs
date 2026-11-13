@@ -12,6 +12,9 @@ import {spawnSync} from 'node:child_process';
 import {inflateSync} from 'node:zlib';
 import {fileURLToPath} from 'node:url';
 import {CURRENT_ENGINE_ID, CURRENT_SOURCE_COUNT, CURRENT_OBJECT_COUNT, SCRAP_SOURCE_ADDITIONS, SCRAP_PARENT_REFERENCE_SHA256, AMBUSH_PARENT_REFERENCE_SHA256, AMBUSH_SOURCE_ADDITIONS, TORCH_SOURCE_ADDITIONS, TORCH_PARENT_REFERENCE_SHA256, reconstructAmbushSources, reconstructAmbushFocusedEvidence, reconstructScrapSources, reconstructEndless3Sources, verifyTorchRetainedParentInputs} from './native-release-context.mjs';
+import {DOUBLE_SOURCE_ADDITIONS,DOUBLE_PARENT_REFERENCE_SHA256,reconstructTorchSources,reconstructTorchFocusedEvidence} from './native-release-context.mjs';
+import {verifyDoubleAgent} from './double-agent-verification.mjs';
+import {verifyDoubleFocusedRetention,DOUBLE_FOCUSED_CHECK_EXTENSIONS} from './double-focused-retention-verification.mjs';
 import {restoreNativeArtifactPack} from './native-artifact-pack.mjs';
 import {verifyRallyRaid} from './rally-raid-verification.mjs';
 import {verifyLightsOut} from './lights-out-verification.mjs';
@@ -37,7 +40,9 @@ const JSZip = vendor.exports;
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
 const engine = JSON.parse(fs.readFileSync(new URL('game/engine-provenance.json', dist)));
 assert.equal(engine.id, CURRENT_ENGINE_ID);
-const ambushEngine = engine.parent;
+const torchEngine = engine.parent;
+assert.equal(torchEngine.id,'0.2.6-web-torch.1');
+const ambushEngine = torchEngine.parent;
 assert.equal(ambushEngine.id, '0.2.6-web-ambush.1');
 const scrapEngine = ambushEngine.parent;
 assert.equal(scrapEngine.id, '0.2.6-web-scrap.1');
@@ -46,7 +51,7 @@ assert.equal(historyEngine.id, '0.2.6-web-endless.3');
 const currentSourceBytes = fs.readFileSync(new URL(engine.artifacts.source, new URL('game/engine-provenance.json', dist)));
 assert.equal(sha(currentSourceBytes), engine.artifacts.sourceSha256, 'Current source archive matches the engine provenance pin');
 const current = await JSZip.loadAsync(currentSourceBytes, {checkCRC32: true});
-const prefix = 'torch1-candidate/';
+const prefix = 'double1-candidate/';
 await restoreNativeArtifactPack(current, prefix);
 const publishedEndless2Bytes = fs.readFileSync(new URL('source/pvz-portable-0.2.6-web-endless.2-source.zip', dist));
 assert.equal(sha(publishedEndless2Bytes), 'b9095c65547c3d013917ae4188e284f18eabb71a98020ca3d53f71f7365f9566');
@@ -191,17 +196,39 @@ for(const [name,pin] of Object.entries(nativeUiInputPins)) {
   nativeUiInputs.set(name,bytes);
 }
 const nativeUiBytes=async name=>{const input=nativeUiInputs.get('rally3-candidate/source/'+name);assert(input,'Missing authenticated native UI input: '+name);return input;};
-const read = async name => {
+const readCurrent = async name => {
   const entry = current.file(prefix + name);
   assert(entry, 'Missing current production source/test: ' + name);
   return Buffer.from(await entry.async('uint8array'));
 };
+const torchReferenceBytes=fs.readFileSync(new URL('./fixtures/double1-parent-reference.json',import.meta.url));
+assert.equal(sha(torchReferenceBytes),DOUBLE_PARENT_REFERENCE_SHA256);
+const torchSource=await reconstructTorchSources({referenceBytes:torchReferenceBytes,read:readCurrent,sha,engine});
+// Every old static/source assertion below receives the exact published Torch
+// source. Current build/report hash checks always use readCurrent explicitly.
+const read=async name=>{
+ if(!name.startsWith('source/'))return readCurrent(name);
+ const bytes=torchSource.files.get(name.slice(7));assert(bytes,'Missing historical Torch source: '+name);return bytes;
+};
+const publishedTorchRead=await reconstructTorchFocusedEvidence({
+ referenceBytes:fs.readFileSync(new URL('./fixtures/torch1-focused-reference.json',import.meta.url)),
+ read:readCurrent,sha,engine,sourceFiles:torchSource.files});
 const ambushReferenceBytes = fs.readFileSync(new URL('./fixtures/torch1-parent-reference.json', import.meta.url));
 assert.equal(sha(ambushReferenceBytes), TORCH_PARENT_REFERENCE_SHA256);
-const ambushSource = await reconstructAmbushSources({referenceBytes:ambushReferenceBytes,read,sha,engine});
+const ambushSource = await reconstructAmbushSources({referenceBytes:ambushReferenceBytes,read,sha,engine:torchEngine});
+// Ambush borrowed a few complete harnesses from its Torch successor. Those
+// names now refer to Double mock adaptations in the current archive, so use
+// the authenticated Torch bytes first. Only unchanged historical namespaces
+// may fall back to their separately pinned copies in the current archive.
+const readTorchOrHistorical=async name=>{
+  if(publishedTorchRead.has(name))return publishedTorchRead(name);
+  assert(/^tests\/(?:ambush1-(?:focused-retention|retained-parent)\/|torch1-retained-parent\/)/.test(name),
+    'Unreviewed borrowed historical evidence path: '+name);
+  return readCurrent(name);
+};
 const publishedAmbushRead=await reconstructAmbushFocusedEvidence({
   referenceBytes:fs.readFileSync(new URL('./fixtures/ambush1-focused-reference.json',import.meta.url)),
-  read,sha,engine,sourceFiles:ambushSource.files});
+  read:readTorchOrHistorical,sha,engine:torchEngine,sourceFiles:ambushSource.files});
 const ambushSourceRead = async name => {
   assert(name.startsWith('source/'), 'Parent projection supplies only production source');
   const bytes = ambushSource.files.get(name.slice(7)); assert(bytes, 'Missing complete Ambush source: ' + name); return bytes;
@@ -231,8 +258,8 @@ const vaseFocusedCheckExtensions = {'bonus-challenge':7, 'bonus-completion':77, 
 const focusedCheckExtensions = {'bonus-challenge':7, 'bonus-completion':96, 'native-layout':1019};
 const retainedSuites = [...Object.keys(retainedChecks), 'care-fatigue', 'care-full-run', 'chain-reaction', 'rally-zombie', 'rally-raid', 'lights-out', 'garlic-run', 'bungee-business', 'cob-cannon-command', 'pool-panic', 'pool-panic-endless'];
 assert.equal(retainedSuites.length, 23);
-const suites = [...retainedSuites, 'scrap-yard', 'vase-ambush', 'torchbearer'];
-assert.equal(suites.length, 26);
+const suites = [...retainedSuites, 'scrap-yard', 'vase-ambush', 'torchbearer', 'double-agent'];
+assert.equal(suites.length, 27);
 const reports = new Map();
 let checks = 0;
 for (const name of suites) {
@@ -244,13 +271,13 @@ for (const name of suites) {
   assert.equal(sha(await read('tests/' + name + '-harness.cpp')), result.generatedHarnessSha256);
   assert(Object.keys(result.sourceSha256).length > 0);
   for (const [source, expected] of Object.entries(result.sourceSha256)) {
-    assert.equal(sha(await read(source)), expected, 'Focused result must match current production source');
+    assert.equal(sha(await readCurrent(source)), expected, 'Focused result must match current production source');
   }
   checks += result.checks;
   reports.set(name, result);
 }
 for (const [name, count] of Object.entries(retainedChecks))
-  assert.equal(reports.get(name).checks, count + (focusedCheckExtensions[name] || 0)+(TORCH_FOCUSED_CHECK_EXTENSIONS[name]||0),
+  assert.equal(reports.get(name).checks, count + (focusedCheckExtensions[name] || 0)+(TORCH_FOCUSED_CHECK_EXTENSIONS[name]||0)+(DOUBLE_FOCUSED_CHECK_EXTENSIONS[name]||0),
     'Every retained suite keeps its old assertions and reviewed appended coverage: ' + name);
 // Preserve all retained assertions. Raid adds one challenge-definition
 // iteration and 2,732 native footer/card/packet/layer checks; Raid.2
@@ -259,7 +286,7 @@ assert.equal(Object.values(retainedChecks).reduce((sum, count) => sum + count, 0
 assert.equal(Object.values(scrapFocusedCheckExtensions).reduce((sum, count) => sum + count, 0), 352);
 assert.equal(Object.values(vaseFocusedCheckExtensions).reduce((sum, count) => sum + count, 0), 770);
 assert.equal(Object.values(focusedCheckExtensions).reduce((sum, count) => sum + count, 0), 1122);
-assert.equal(reports.get('care-fatigue').checks, 25042+(TORCH_FOCUSED_CHECK_EXTENSIONS['care-fatigue']||0),
+assert.equal(reports.get('care-fatigue').checks, 25042+(TORCH_FOCUSED_CHECK_EXTENSIONS['care-fatigue']||0)+(DOUBLE_FOCUSED_CHECK_EXTENSIONS['care-fatigue']||0),
   'Fatigue rig coverage retains every crew pose, scoped state and restoration check');
 const focusedRetentionBytes = await read('tests/scrap1-focused-retention/adaptations.json');
 assert.equal(sha(focusedRetentionBytes), 'd8398969b25626a3449c645d4c3400b6905c14635132ffffebf95cb91d02d0c1');
@@ -280,13 +307,17 @@ for(const [name,record] of Object.entries(focusedRetention.runners)) {
   assert.equal(sha(await read('tests/ambush1-retained-parent/'+record.runner)),record.runnerSha256,'Published Scrap focused runner remains the reviewed compatibility adaptation: '+name);
   assert.equal(record.baselineChecks,name==='care-fatigue'?25042:retainedChecks[name]);
   assert.equal(record.appendedChecks,scrapFocusedCheckExtensions[name]||0);
-  assert.equal(reports.get(name).checks,record.baselineChecks+record.appendedChecks+(vaseFocusedCheckExtensions[name]||0)+(TORCH_FOCUSED_CHECK_EXTENSIONS[name]||0));
+  assert.equal(reports.get(name).checks,record.baselineChecks+record.appendedChecks+(vaseFocusedCheckExtensions[name]||0)+(TORCH_FOCUSED_CHECK_EXTENSIONS[name]||0)+(DOUBLE_FOCUSED_CHECK_EXTENSIONS[name]||0));
 }
 const publishedAmbushFocusedReports=new Map();
 for(const name of [...Object.keys(retainedChecks),'care-fatigue'])
   publishedAmbushFocusedReports.set(name,JSON.parse(await publishedAmbushRead('tests/'+name+'-results.json')));
 await verifyAmbushFocusedRetention({read:publishedAmbushRead,sha,engine:ambushEngine,reports:publishedAmbushFocusedReports});
-await verifyTorchFocusedRetention({read,sha,engine,reports});
+const publishedTorchFocusedReports=new Map();
+for(const name of [...Object.keys(retainedChecks),'care-fatigue'])
+ publishedTorchFocusedReports.set(name,JSON.parse(await publishedTorchRead('tests/'+name+'-results.json')));
+await verifyTorchFocusedRetention({read:publishedTorchRead,sha,engine:torchEngine,reports:publishedTorchFocusedReports});
+await verifyDoubleFocusedRetention({read:readCurrent,sha,engine,reports});
 const fullRunReport = reports.get('care-full-run');
 assert.equal(fullRunReport.checks, Object.keys(fullRunReport.sourceSha256).length + 152, 'Complete-engine provenance and required native scenario checks are retained');
 assert.equal(fullRunReport.execution, 'complete-production-engine',
@@ -543,27 +574,31 @@ expectedLightsFogInputs.sourceInputs['images/fog_.jpg']={bytes:40068,sha256:'303
 const currentLightsFogInputs=JSON.parse(await read('tests/lights-native-art-inputs.json'));
 assert.deepEqual(currentLightsFogInputs,expectedLightsFogInputs,'All twelve prior artwork pins and metadata remain exact; only the two authenticated original graded-fog JPEGs are appended');
 assert.equal(Object.keys(currentLightsFogInputs.sourceInputs).length,14);
-await verifyLightsOut({report:reports.get('lights-out'),read,sha,engine,fullRunReport,productionBuildBytes:fullRunProductionBuildBytes});
+await verifyLightsOut({report:reports.get('lights-out'),read:readCurrent,sha,engine,fullRunReport,productionBuildBytes:fullRunProductionBuildBytes});
 assert.deepEqual(await read('tests/lights-native-art-inputs.json'), Buffer.from(await parent.file('endless1-candidate/tests/lights-native-art-inputs.json').async('uint8array')), 'All fourteen original fog artwork inputs remain byte-identical to Lights.2');
-await verifyGarlicRun({report:reports.get('garlic-run'),read,sha,engine,fullRunReport,productionBuildBytes:fullRunProductionBuildBytes});
-await verifyBungeeBusiness({report:reports.get('bungee-business'),read,sha,engine,fullRunReport,productionBuildBytes:fullRunProductionBuildBytes});
-await verifyCobCannonCommand({report:reports.get('cob-cannon-command'),read,sha,engine,fullRunReport,productionBuildBytes:fullRunProductionBuildBytes});
-await verifyPoolPanic({report:reports.get('pool-panic'),read,sha,engine,fullRunReport,productionBuildBytes:fullRunProductionBuildBytes});
-await verifyPoolPanicEndless({report:reports.get('pool-panic-endless'),read,sha,engine,fullRunReport,productionBuildBytes:fullRunProductionBuildBytes,immediateParentBytes});
-await verifyPoolPanicEndlessProgression({report:reports.get('pool-panic-endless'),read,sha,engine,fullRunReport,
+await verifyGarlicRun({report:reports.get('garlic-run'),read:readCurrent,sha,engine,fullRunReport,productionBuildBytes:fullRunProductionBuildBytes});
+await verifyBungeeBusiness({report:reports.get('bungee-business'),read:readCurrent,sha,engine,fullRunReport,productionBuildBytes:fullRunProductionBuildBytes});
+await verifyCobCannonCommand({report:reports.get('cob-cannon-command'),read:readCurrent,sha,engine,fullRunReport,productionBuildBytes:fullRunProductionBuildBytes});
+await verifyPoolPanic({report:reports.get('pool-panic'),read:readCurrent,sha,engine,fullRunReport,productionBuildBytes:fullRunProductionBuildBytes});
+await verifyPoolPanicEndless({report:reports.get('pool-panic-endless'),read:readCurrent,sha,engine,fullRunReport,productionBuildBytes:fullRunProductionBuildBytes,immediateParentBytes});
+await verifyPoolPanicEndlessProgression({report:reports.get('pool-panic-endless'),read:readCurrent,sha,engine,fullRunReport,
   productionBuildBytes:fullRunProductionBuildBytes,parentRead:publishedEndless2Read,parentProductionBuildBytes});
-await verifyScrapYard({report:reports.get('scrap-yard'),read,sha,engine,fullRunReport,
+await verifyScrapYard({report:reports.get('scrap-yard'),read:readCurrent,sha,engine,fullRunReport,
   productionBuildBytes:fullRunProductionBuildBytes,
   currentArtBytes:fs.readFileSync(new URL('content/native-bonus-art.json',dist)),
   previousArtBytes:fs.readFileSync(new URL('./fixtures/endless3-native-bonus-art.json',import.meta.url))});
-await verifyVaseAmbush({report:reports.get('vase-ambush'),read,sha,engine,fullRunReport,
+await verifyVaseAmbush({report:reports.get('vase-ambush'),read:readCurrent,sha,engine,fullRunReport,
   productionBuildBytes:fullRunProductionBuildBytes,
   currentArtBytes:fs.readFileSync(new URL('content/native-bonus-art.json',dist)),
   previousArtBytes:fs.readFileSync(new URL('./fixtures/scrap1-native-bonus-art.json',import.meta.url))});
-await verifyTorchbearer({report:reports.get('torchbearer'),read,sha,engine,fullRunReport,
+await verifyTorchbearer({report:reports.get('torchbearer'),read:readCurrent,sha,engine,fullRunReport,
   productionBuildBytes:fullRunProductionBuildBytes,
   currentArtBytes:fs.readFileSync(new URL('content/native-bonus-art.json',dist)),
   previousArtBytes:fs.readFileSync(new URL('./fixtures/ambush1-native-bonus-art.json',import.meta.url))});
+await verifyDoubleAgent({report:reports.get('double-agent'),read:readCurrent,sha,engine,fullRunReport,
+ productionBuildBytes:fullRunProductionBuildBytes,
+ currentArtBytes:fs.readFileSync(new URL('content/native-bonus-art.json',dist)),
+ previousArtBytes:fs.readFileSync(new URL('./fixtures/torch1-native-bonus-art.json',import.meta.url))});
 const careBalance = reports.get('intensive-care').balanceModel;
 assert.equal(careBalance.kind, 'native healing/fatigue capacity bound; not a battle clear');
 assert(careBalance.allBedsHealHpPerSecond > careBalance.maximumCrewFatigueHpPerSecond);
@@ -1055,7 +1090,12 @@ assert.match(newDefinitions[85], /\.mCol = 3/);
 assert.match(newDefinitions[86], /\.mCol = 4/);
 console.log('PASS native I,Zombie presentation restoration preserves every prior mode/seed ID, saved layout, plant and all fourteen prior Bonus challenge identities.');
 
-const artRecordBytes=fs.readFileSync(new URL('content/native-bonus-art.json', dist));
+const actualArtRecordBytes=fs.readFileSync(new URL('content/native-bonus-art.json',dist));
+const artRecordBytes=fs.readFileSync(new URL('./fixtures/torch1-native-bonus-art.json',import.meta.url));
+assert.equal(sha(artRecordBytes),'723db18c923402cee80e0ea5299c04c4e61efebc42ade83e2ebfd0557722720c');
+const actualArtRecord=JSON.parse(actualArtRecordBytes);assert.equal(actualArtRecord.cards.length,19);
+assert.deepEqual({...actualArtRecord,cards:actualArtRecord.cards.slice(0,18)},JSON.parse(artRecordBytes),
+ 'Every prior eighteen-card record and all other metadata remain exact');
 const publishedArtBytes = fs.readFileSync(new URL('./fixtures/endless3-native-bonus-art.json', import.meta.url));
 assert.equal(sha(publishedArtBytes),'538175fc8c54e8efb241a129263f2c99ee8e4193fb09ace213a67e9430f7483b','Independent reviewed fifteen-card native Bonus metadata');
 const publishedArt = JSON.parse(publishedArtBytes);
@@ -1410,8 +1450,8 @@ assert.deepEqual(fs.readFileSync(new URL('generation.json', artworkUrl)), genera
 const sourceManifest = JSON.parse(await read('source-manifest.json'));
 assert.equal(sourceManifest.version, engine.id);
 assert.deepEqual(Object.keys(sourceManifest.files).sort(),
-  [...Object.keys(historySource.manifest.files), ...SCRAP_SOURCE_ADDITIONS, ...AMBUSH_SOURCE_ADDITIONS, ...TORCH_SOURCE_ADDITIONS].sort(),
-  'Torchbearer retains every860 published Ambush source path and appends only eight implementation/presentation files');
+  [...Object.keys(historySource.manifest.files), ...SCRAP_SOURCE_ADDITIONS, ...AMBUSH_SOURCE_ADDITIONS, ...TORCH_SOURCE_ADDITIONS, ...DOUBLE_SOURCE_ADDITIONS].sort(),
+  'Double Agent retains every868 published Torch source path and appends only four implementation/presentation files');
 const completeProductionSources = Object.fromEntries(Object.entries(sourceManifest.files)
   .map(([name, pin]) => ['source/' + name, pin.sha256]));
 assert.deepEqual(fullRunReport.sourceSha256, completeProductionSources,
@@ -2109,7 +2149,7 @@ if (process.argv.includes('--run-native')) {
     }
     for (const name of suites) {
       const args = [path.join(temporary, 'tests/test-' + name + '.py'), '--native'];
-      if (['care-full-run','chain-reaction','rally-zombie','rally-raid','lights-out','garlic-run','bungee-business','cob-cannon-command','pool-panic','pool-panic-endless','scrap-yard','vase-ambush','torchbearer'].includes(name)) args.push('--asset-root', fileURLToPath(new URL('game-assets/', dist)));
+      if (['care-full-run','chain-reaction','rally-zombie','rally-raid','lights-out','garlic-run','bungee-business','cob-cannon-command','pool-panic','pool-panic-endless','scrap-yard','vase-ambush','torchbearer','double-agent'].includes(name)) args.push('--asset-root', fileURLToPath(new URL('game-assets/', dist)));
       const run = spawnSync('python', args, {encoding: 'utf8'});
       assert.equal(run.status, 0, (run.error?.message || '') + run.stdout + run.stderr);
       const actual = JSON.parse(fs.readFileSync(path.join(temporary, 'tests/' + name + '-results.json')));
@@ -2118,7 +2158,7 @@ if (process.argv.includes('--run-native')) {
       assert.equal(actual.exitCode, 0);
       assert.match(actual.status, /^PASS/);
       assert.deepEqual(actual.sourceSha256, reports.get(name).sourceSha256);
-      if(['care-full-run','chain-reaction','rally-zombie','rally-raid','lights-out','garlic-run','bungee-business','cob-cannon-command','pool-panic','pool-panic-endless','scrap-yard','vase-ambush','torchbearer'].includes(name)) {
+      if(['care-full-run','chain-reaction','rally-zombie','rally-raid','lights-out','garlic-run','bungee-business','cob-cannon-command','pool-panic','pool-panic-endless','scrap-yard','vase-ambush','torchbearer','double-agent'].includes(name)) {
         assert.equal(actual.productionObjectCount,CURRENT_OBJECT_COUNT);
         assert.deepEqual(actual.productionObjectSha256,fullRunReport.productionObjectSha256);
         assert.equal(actual.productionBuildReceiptSha256,sha(fullRunProductionBuildBytes));
@@ -2162,8 +2202,13 @@ if (process.argv.includes('--run-native')) {
         productionBuildBytes:fullRunProductionBuildBytes,
         currentArtBytes:fs.readFileSync(new URL('content/native-bonus-art.json',dist)),
         previousArtBytes:fs.readFileSync(new URL('./fixtures/ambush1-native-bonus-art.json',import.meta.url))});
+      if(name==='double-agent') await verifyDoubleAgent({report:actual,
+        read:async input=>fs.readFileSync(path.join(temporary,input)),sha,engine,fullRunReport,
+        productionBuildBytes:fullRunProductionBuildBytes,
+        currentArtBytes:fs.readFileSync(new URL('content/native-bonus-art.json',dist)),
+        previousArtBytes:fs.readFileSync(new URL('./fixtures/torch1-native-bonus-art.json',import.meta.url))});
     }
-    console.log(`PASS all ${checks} assertions across 26 native suites, including complete headless Care, Chain, Rally, Raid, Lights Out, Garlic Run, Bungee Business, Cob Cannon Command, Pool Panic, Pool Panic Endless, Scrap Yard, Vase Ambush and Torchbearer scenarios on CI.`);
+    console.log(`PASS all ${checks} assertions across 27 native suites, including complete headless Care, Chain, Rally, Raid, Lights Out, Garlic Run, Bungee Business, Cob Cannon Command, Pool Panic, Pool Panic Endless, Scrap Yard, Vase Ambush and Torchbearer scenarios on CI.`);
   } finally {
     const resolved = fs.realpathSync(temporary);
     assert.equal(path.dirname(resolved), temporaryRoot);

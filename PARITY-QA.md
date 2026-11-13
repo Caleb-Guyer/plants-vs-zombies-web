@@ -1,5 +1,19 @@
 # Browser parity and QA record
 
+## Double Agent verification
+
+The frozen build of 872 source files and 144 production objects passes **27 current native suites, 71,379,926 primary assertions and zero failures**, plus 29,323,427 separately counted Endless late checks. The new driver executes 52 cases at 1×/2× using two seeds: two winning garden policies, real phase checkpoints, natural losses, Retry and Replay, with explicit zero-credit synthetic controls. All 26 retained suites run against current source; the 14 complete-engine drivers bind the same current production objects. All 58,832 earlier focused assertions remain, with one additional catalog iteration (58,833). Audio output is disabled during automated testing.
+
+Actual native raster frames were inspected for the catalog, preparation and both combat roles. **Muted browser checks passed for functionality:** file-free startup and the Bonus card, a Peashooter purchase (1500 to 1400 sun) followed by Save/reload/Continue, and a Normal Zombie purchase at 2× (1000 to 950 sun) followed by the same browser round trip. Offense restored the deployed zombie, the same ten cardboard plants, 950 sun and five uneaten brains. These checks used a synthetic unlocked profile and an offense checkpoint earned by native testing; they credited **zero browser wins**. Browser controls recovered after the initial missing-kernel-assets failures, which remain recorded as historical evidence.
+
+**Fresh browser performance was not measured, and no performance probe was loaded.** The original Torch.1 raw timing baseline remains byte-identical historical evidence; it is not relabeled as a timing result for this changed game binary. Native tests and functional browser checks do not replace browser performance measurements. Normal game audio remains available.
+
+The first native compile exposed a missing graphics include; it was corrected before any gameplay. A mode-boundary audit also removed the hidden seventh preparation packet before creating the six-packet army. The focused adapters preserve old assertion bodies and account explicitly for the appended enum/catalog counts. Failed diagnostic logs and original parent runners remain separate evidence. These are scoped checks, not exhaustive original-game parity or a guarantee that every garden strategy wins.
+
+## Prior release records
+
+The sections below retain their earlier release-time scope; prior accepted gameplay behavior remains required.
+
 ## Source-download transport verification
 
 This packaging change retains the exact original Endless.2 ZIP rather than changing its logical archive format or dropping historical binaries. Two deterministic transport builds match; reconstruction produces the published `b9095c65…` digest, all 1,076 member CRCs, and every one of the 852 historical source pins. An independent audit checked all 927 shared compressed-stream ranges and the 928 literal ranges. Reversing only the new bootstrap calls and added transport-suite invocation restores the previous verifier files exactly, preserving their existing assertions.

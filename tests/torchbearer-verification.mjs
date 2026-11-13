@@ -2,7 +2,9 @@
 // Independent checks of the actual current native enemy and Fire Drill matrix.
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {CURRENT_ENGINE_ID,CURRENT_SOURCE_COUNT,CURRENT_OBJECT_COUNT,AMBUSH_ARCHIVE_SHA256,reconstructAmbushSources}
+import {CURRENT_ENGINE_ID,CURRENT_SOURCE_COUNT,CURRENT_OBJECT_COUNT,AMBUSH_ARCHIVE_SHA256,reconstructAmbushSources,
+ TORCH_ENGINE_ID,TORCH_ARCHIVE_SHA256,CURRENT_TORCH_RETENTION_SHA256,DOUBLE_PARENT_TEST_INPUTS_SHA256,
+ verifyDoubleRetainedParentInputs,torchSourceReader,reconstructTorchFocusedEvidence}
  from './native-release-context.mjs';
 
 // The complete seventh-build matrix includes the corrected native card and
@@ -42,6 +44,11 @@ function once(source,before,after='') {
 }
 
 export async function verifyTorchSourceBounds({read,sha,engine}) {
+ if(engine.id===CURRENT_ENGINE_ID){
+  const projected=await torchSourceReader({read,sha,engine});
+  return verifyTorchSourceBounds({read:projected.read,sha,engine:projected.engine});
+ }
+ assert.equal(engine.id,TORCH_ENGINE_ID);
  const referenceBytes=fs.readFileSync(new URL('./fixtures/torch1-parent-reference.json',import.meta.url));
  const parent=await reconstructAmbushSources({referenceBytes,read,sha,engine});
  for(const path of ['src/Lawn/Plant.cpp','src/Lawn/Plant.h','src/Lawn/Zombie.h','src/Lawn/Board.h',
@@ -321,8 +328,23 @@ export async function verifyTorchbearer({report,read,sha,engine,fullRunReport,pr
  assert(acceptedContractPins.has(sha(contractBytes)),
   'The complete current O2 Torchbearer/Fire Drill/earned-Endless matrix has not been accepted');
  const contract=JSON.parse(contractBytes);
- fields(contract,{schemaVersion:1,engineId:CURRENT_ENGINE_ID,mode:90,profileIndex:89,sourceCount:CURRENT_SOURCE_COUNT,
-  productionObjectCount:CURRENT_OBJECT_COUNT,enemyType:34,parentArchiveSha256:AMBUSH_ARCHIVE_SHA256,
+ const adapterBytes=await read('tests/double1-torch-retention.json');
+ assert.equal(sha(adapterBytes),CURRENT_TORCH_RETENTION_SHA256);
+ assert.equal(report.retentionAdapterSha256,CURRENT_TORCH_RETENTION_SHA256);
+ const adapter=JSON.parse(adapterBytes);
+ fields(adapter,{schemaVersion:1,parentEngineId:TORCH_ENGINE_ID,parentArchiveSha256:TORCH_ARCHIVE_SHA256,
+  engineId:CURRENT_ENGINE_ID,historicalContractSha256:sha(contractBytes),sourceCount:CURRENT_SOURCE_COUNT,
+  productionObjectCount:CURRENT_OBJECT_COUNT,all60CasesFresh:true,parentSnapshotManifestSha256:DOUBLE_PARENT_TEST_INPUTS_SHA256});
+ assert.deepEqual(Object.keys(adapter.fixtureOverrides),['tests/test-torchbearer.py']);
+ const retained=await verifyDoubleRetainedParentInputs({read,sha});
+ assert.equal(retained.files['tests/test-torchbearer.py'].sha256,contract.fixtureSha256['tests/test-torchbearer.py']);
+ const projected=await torchSourceReader({read,sha,engine});
+ const historicalRead=await reconstructTorchFocusedEvidence({
+  referenceBytes:fs.readFileSync(new URL('./fixtures/torch1-focused-reference.json',import.meta.url)),
+  read,sha,engine,sourceFiles:projected.files});
+ const historicalProductionBuildBytes=await historicalRead('logs/build-result.json');
+ fields(contract,{schemaVersion:1,engineId:TORCH_ENGINE_ID,mode:90,profileIndex:89,sourceCount:868,
+  productionObjectCount:142,enemyType:34,parentArchiveSha256:AMBUSH_ARCHIVE_SHA256,
   observerNativeTicks:2,policyIntervalTicks:100,nativeBurnWindupActions:35,authoredFormations:6,
   authoredEnemyCount:40,authoredTorchCount:22,originalBodyHealth:270,originalHelmetHealth:0,originalShieldHealth:0,
   stage:'final-preregistered',authoredStartingSun:425,nativeFinishedAwardState:137,
@@ -364,7 +386,9 @@ export async function verifyTorchbearer({report,read,sha,engine,fullRunReport,pr
   'torch1-development-history.json'].map(name=>'tests/'+name);
  for(const name of live)assert(Object.hasOwn(contract.fixtureSha256,name),'Every actual native input is independently pinned: '+name);
  for(const [name,pin]of Object.entries(contract.fixtureSha256)){
-  safeName(name);assert(name.startsWith('tests/'));digest(pin);assert.equal(sha(await read(name)),pin,name);
+  safeName(name);assert(name.startsWith('tests/'));digest(pin);
+  const actualPin=Object.hasOwn(adapter.fixtureOverrides,name)?adapter.fixtureOverrides[name]:pin;
+  digest(actualPin);assert.equal(sha(await read(name)),actualPin,name);
  }
  const history=JSON.parse(await read('tests/torch1-development-history.json'));
  fields(history,{schemaVersion:1,status:'Historical real failures retained; no final acceptance from development probes'});
@@ -382,15 +406,17 @@ export async function verifyTorchbearer({report,read,sha,engine,fullRunReport,pr
  fields(cardWitness,{schemaVersion:1,historicalNormal6ReceiptSha256:'0bc8dc6334743302f0371afbac296ef81dc15ec19de3e41afe2774352dd156a1',
   historicalNativeTorchContractSha256:'bfc9d9c293be6923c46f9c72fc8a764b02e5a387ca80aab6de414d5bf616f503',
   historicalNativeTorchReportSha256:'9e467c4b5d51800ad7f669c41b49994ffcdbabd8a28f1caf4c7cb42a25d3ce94',
-  currentNormal7ReceiptSha256:sha(productionBuildBytes),sourceFiles:868,productionObjectCount:142});
+  currentNormal7ReceiptSha256:sha(historicalProductionBuildBytes),sourceFiles:868,productionObjectCount:142});
  assert.deepEqual(cardWitness.changedProductionFiles,{'src/Lawn/System/FireDrillPresentation.cpp':{before:sha(cardBefore),after:sha(cardNow)}});
- const currentMapBytes=await read('logs/source-before.json');
- assert.deepEqual(Buffer.from(currentMapBytes),Buffer.from(await read('logs/source-after.json')));
+ const currentMapBytes=await historicalRead('logs/source-before.json');
+ assert.deepEqual(Buffer.from(currentMapBytes),Buffer.from(await historicalRead('logs/source-after.json')));
  assert.equal(sha(currentMapBytes),cardWitness.currentNormal7SourceMapSha256);
  const oldMapBytes=Buffer.from(once(Buffer.from(currentMapBytes).toString(),sha(cardNow),sha(cardBefore)));
  assert.equal(sha(oldMapBytes),cardWitness.historicalNormal6SourceMapSha256,
   'The exact complete normal6 source-map bytes reconstruct by reversing this one new-card file hash');
- assert.deepEqual(Object.fromEntries(Object.entries(JSON.parse(currentMapBytes)).map(([name,pin])=>['source/'+name,pin])),report.sourceSha256);
+ assert.deepEqual(Object.fromEntries(Object.entries(JSON.parse(currentMapBytes)).map(([name,pin])=>['source/'+name,pin])),
+  Object.fromEntries([...projected.files].map(([name,bytes])=>['source/'+name,sha(bytes)])),
+  'The historical card witness still binds every exact published Torch source; current build bindings are checked separately');
  const oldCard=Buffer.from(await read('tests/torch-fire-drill-headless-card-parent.bmp'));
  assert.equal(oldCard.length,15654);assert.equal(sha(oldCard),'b37e088856f3b36a1e4c4bca5f5d59ba581d4240ad80427ddda4eccbea096675');
  assert.deepEqual(cardWitness.headlessNegative,{path:'tests/torch-fire-drill-headless-card-parent.bmp',bytes:15654,sha256:sha(oldCard)});
@@ -461,8 +487,8 @@ export async function verifyTorchbearer({report,read,sha,engine,fullRunReport,pr
  }
  assert.deepEqual(Object.keys(contract.fixtureSha256).sort(),completeFixtures.sort(),'No missing or unreviewed test-input fixture');
  await verifyTorchBuildBindings({report,read,sha,engine,fullRunReport,productionBuildBytes});
- assert.equal(contract.productionBuildReceiptSha256,sha(productionBuildBytes));
- const normal=JSON.parse(productionBuildBytes);
+ assert.equal(contract.productionBuildReceiptSha256,sha(historicalProductionBuildBytes));
+ const normal=JSON.parse(historicalProductionBuildBytes);
  assert.deepEqual(contract.normalArtifactSha256,Object.fromEntries(Object.entries(normal.outputs).map(([name,pin])=>[name,pin.sha256])));
  await verifyTorchSourceBounds({read,sha,engine});
  fields(report,{status:'PASS',assetBundleId:engine.assetBundleId,nativeArtInputs:942});
@@ -527,7 +553,7 @@ export async function verifyTorchbearer({report,read,sha,engine,fullRunReport,pr
  }
  assert.equal(sha(previousArtBytes),'e4b04a29302b31268b9aed1563c7a03bccd174fdb55f36bb7bda75a832df74e4');
  const previous=JSON.parse(previousArtBytes),current=JSON.parse(currentArtBytes);
- assert.equal(previous.cards.length,17);assert.equal(current.cards.length,18);
+ assert.equal(previous.cards.length,17);assert.equal(current.cards.length,19);
  assert.deepEqual({...current,cards:current.cards.slice(0,17)},previous);
  fields(current.cards[17],{mode:90,name:'Fire Drill',generatedArtworkUsed:false,background:'IMAGE_BACKGROUND1'});
  for(const field of ['tip','tips','descriptionBelowCard'])assert(!Object.hasOwn(current.cards[17],field));
