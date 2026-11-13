@@ -10,6 +10,8 @@ Actual native raster frames were inspected for the catalog, preparation and both
 
 The first native compile exposed a missing graphics include; it was corrected before any gameplay. A mode-boundary audit also removed the hidden seventh preparation packet before creating the six-packet army. The focused adapters preserve old assertion bodies and account explicitly for the appended enum/catalog counts. Failed diagnostic logs and original parent runners remain separate evidence. These are scoped checks, not exhaustive original-game parity or a guarantee that every garden strategy wins.
 
+The first hosted run completed native execution but rejected the new report because its whole-file identity included fresh diagnostic-log hashes. Loading and compilation timings vary between runs. The verifier now retains the original sealed report and accepts fresh reports only when all content is identical after excluding each scenario's direct log digest; every actual raw log is still authenticated and matched to its native result. Persistent regression tests cover this distinction and reject changed gameplay results, incomplete matrices and malformed digests. The game executable is unchanged by this verification correction.
+
 ## Prior release records
 
 The sections below retain their earlier release-time scope; prior accepted gameplay behavior remains required.

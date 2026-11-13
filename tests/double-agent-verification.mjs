@@ -10,6 +10,10 @@ import {CURRENT_ENGINE_ID,CURRENT_SOURCE_COUNT,CURRENT_OBJECT_COUNT,reconstructT
 // the final briefing build. Earlier probes remain historical fixtures only.
 const acceptedContractPins=new Set(['2897a2f15387c4f8b244d92dc587c2437ea370daa02f1e556e6d8ccab24d4ac4']);
 const acceptedReportPins=new Set(['185ddbaae03ac20287552b9276064a800b1447d4a8d6cefdd58c9cc3a7e2d55c']);
+// Derived only from the sealed report above. Native diagnostics include
+// environment-dependent loading/compile timings, so raw log digests differ.
+// Every other report field, array order and value must remain exactly reviewed.
+const acceptedReportContentPins=new Set(['2cdc322bf037d57a4ede402a509a77a6fe53a66d68264ca7a00ea3979d74c08b']);
 const names=['normal','cold','save-planning','save-defense','save-transition','save-offense',
  'retry-defense','retry-offense','replay','empty-defense','waste-offense','controls','presentation'];
 const matrix=[1729,7331].flatMap(seed=>names.flatMap(name=>[1,2].map(speed=>[name,speed,seed])));
@@ -24,6 +28,25 @@ const safeName=value=>{
  assert(value.split('/').every(part=>part&&part!=='.'&&part!=='..'));return value;
 };
 const ledger=[0,2].map(type=>[0,1,2,3,4].map(row=>[type,row,1]));
+const canonical=value=>Array.isArray(value)?value.map(canonical):
+ value!==null&&typeof value==='object'?Object.fromEntries(Object.keys(value).sort().map(name=>[name,canonical(value[name])])):value;
+
+export function verifyDoubleAgentReportIdentity({reportBytes,sha}){
+ const report=json(reportBytes);
+ assert(Array.isArray(report.scenarios)&&report.scenarios.length===52,'The complete reviewed report has 52 native results');
+ const scenarios=report.scenarios.map(row=>{
+  assert(row!==null&&typeof row==='object'&&!Array.isArray(row));
+  digest(row.logSha256);
+  const {logSha256,...observations}=row;
+  return observations;
+ });
+ const contentPin=sha(Buffer.from(JSON.stringify(canonical({...report,scenarios}))));
+ assert(acceptedReportContentPins.has(contentPin),
+  'Only the independently reviewed complete actual matrix is accepted; fresh log digests alone may differ');
+ // The published evidence retains its exact byte pin; a fresh run is accepted
+ // only with identical reviewed content and the raw-log checks below.
+ return {report,sealedReport:acceptedReportPins.has(sha(reportBytes))};
+}
 const expectedSnapshot=cold=>Array.from({length:54},(_,i)=>{
  const row=Math.floor(i/9),col=i%9;
  return row<5?(col===1?(cold?6:1):col===3?4:0):0;
@@ -116,7 +139,8 @@ export async function verifyDoubleAgentCaseLog(row,{read,sha}){
  assert(!/Too many (?:particle|emitters)|DataArray.*(?:full|exhaust|capacity)|(?:particle|reanimation).*capacity|memory access out of bounds|RuntimeError|double-agent:FAIL/i.test(diagnostics),
   'A native exception or exhausted resource cannot be hidden in a passing result');
  const actual=JSON.parse(records[0].slice('DOUBLE_AGENT_RESULT '.length));
- for(const [field,value]of Object.entries(actual))assert.deepEqual(row[field],value,'Actual native raw observation: '+field);
+ const {logSha256,resourceCapacityWarnings,...observations}=row;
+ assert.deepEqual(actual,observations,'The complete native raw observation equals the report; only runner-added log metadata is excluded');
  fields(row,{resourceCapacityWarnings:0});return actual;
 }
 
@@ -311,8 +335,8 @@ export async function verifyDoubleAgentHistory({contract,read,sha,report}){
 
 export async function verifyDoubleAgent({report,read,sha,engine,fullRunReport,productionBuildBytes,currentArtBytes,previousArtBytes}){
  const actualReportBytes=await read('tests/double-agent-results.json');
- assert(acceptedReportPins.has(sha(actualReportBytes)),'Only the independently reviewed complete actual matrix is accepted');
- assert.deepEqual(report,json(actualReportBytes),'The caller supplies the actual authenticated complete native report');
+ const authenticated=verifyDoubleAgentReportIdentity({reportBytes:actualReportBytes,sha});
+ assert.deepEqual(report,authenticated.report,'The caller supplies the actual authenticated complete native report');
  const contractBytes=await read('tests/double-agent-verification-contract.json');
  assert(acceptedContractPins.has(sha(contractBytes)),'No complete actual Double Agent matrix has been accepted for this contract');
  const contract=json(contractBytes);

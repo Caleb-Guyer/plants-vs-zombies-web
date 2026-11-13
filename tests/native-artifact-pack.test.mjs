@@ -6,6 +6,7 @@ import {createRequire} from 'node:module';
 import {spawnSync} from 'node:child_process';
 import {test} from 'node:test';
 import {restoreNativeArtifactPack} from './native-artifact-pack.mjs';
+import {verifyDoubleAgentReportIdentity,verifyDoubleAgentCaseLog} from './double-agent-verification.mjs';
 
 const require = createRequire(import.meta.url), vendor = {exports: {}};
 new Function('module', 'exports', 'require', fs.readFileSync(new URL('../dist/vendor/jszip.min.js', import.meta.url), 'utf8'))
@@ -122,4 +123,79 @@ test('rejects an index without its compressed pack', async () => {
   const zip = makeZip();
   zip.remove(folder + 'native-artifacts.xz');
   await assert.rejects(restoreNativeArtifactPack(zip, prefix), {code: 'ERR_ASSERTION'});
+});
+
+// Actual CI regression: temporary resource paths change raw log bytes while
+// the complete reviewed native observations stay identical. No game executes.
+let sealedDouble;
+function sealedDoubleEvidence() {
+  sealedDouble ??= (async () => {
+    const engineUrl = new URL('../dist/game/engine-provenance.json', import.meta.url);
+    const engine = JSON.parse(fs.readFileSync(engineUrl, 'utf8'));
+    assert.equal(engine.id, '0.2.6-web-double.1');
+    assert.equal(engine.artifacts.source, '../source/pvz-portable-0.2.6-web-double.1-source.zip');
+    const archiveBytes = fs.readFileSync(new URL(engine.artifacts.source, engineUrl));
+    assert.equal(sha(archiveBytes), engine.artifacts.sourceSha256);
+    const zip = await JSZip.loadAsync(archiveBytes);
+    const entry = zip.file('double1-candidate/tests/double-agent-results.json');
+    assert(entry);
+    const bytes = Buffer.from(await entry.async('uint8array'));
+    assert.equal(sha(bytes), '185ddbaae03ac20287552b9276064a800b1447d4a8d6cefdd58c9cc3a7e2d55c');
+    return {bytes, report: JSON.parse(bytes), zip};
+  })();
+  return sealedDouble;
+}
+
+test('actual sealed Double matrix retains its exact published report identity', async () => {
+  const {bytes, report} = await sealedDoubleEvidence();
+  assert.equal(report.scenarios.length, 52);
+  const verified = verifyDoubleAgentReportIdentity({reportBytes: bytes, sha});
+  assert.equal(verified.sealedReport, true);
+  assert.deepEqual(verified.report, report);
+});
+
+test('fresh Double evidence permits only valid direct scenario log digests to differ', async () => {
+  const {report} = await sealedDoubleEvidence();
+  const fresh = structuredClone(report);
+  fresh.scenarios.forEach((row, index) => { row.logSha256 = sha(Buffer.from('synthetic fresh resource path/' + index)); });
+  const verified = verifyDoubleAgentReportIdentity({reportBytes: Buffer.from(JSON.stringify(fresh)), sha});
+  assert.equal(verified.sealedReport, false);
+  assert.deepEqual(verified.report, fresh);
+});
+
+const alteredDoubleReports = [
+  ['gameplay observation', report => { report.scenarios[0].profileCredits++; }],
+  ['native check count', report => { report.scenarios[0].checks++; }],
+  ['missing matrix case', report => { report.scenarios.pop(); }],
+  ['reordered matrix cases', report => { [report.scenarios[0], report.scenarios[1]] = [report.scenarios[1], report.scenarios[0]]; }],
+  ['nested log digest', report => { report.scenarios[0].checkpoint.logSha256 = '0'.repeat(64); }],
+  ['unreviewed environment field', report => { report.environmentAllowance = '/tmp/new-source'; }],
+  ['malformed log digest', report => { report.scenarios[0].logSha256 = 'not-a-sha256'; }],
+  ['missing log digest', report => { delete report.scenarios[0].logSha256; }],
+];
+for (const [name, mutate] of alteredDoubleReports) {
+  test('rejects changed Double report ' + name, async () => {
+    const {report} = await sealedDoubleEvidence();
+    const changed = structuredClone(report);
+    mutate(changed);
+    assert.throws(() => verifyDoubleAgentReportIdentity({reportBytes: Buffer.from(JSON.stringify(changed)), sha}), {code: 'ERR_ASSERTION'});
+  });
+}
+
+test('fresh log hash cannot hide an omitted actual native result field', async () => {
+  const {report, zip} = await sealedDoubleEvidence();
+  const row = report.scenarios[0];
+  const name = `tests/double-agent-logs/${row.name}-${row.speed}x-${row.seed}.log`;
+  const bytes = Buffer.from(await zip.file('double1-candidate/' + name).async('uint8array'));
+  await verifyDoubleAgentCaseLog(row, {read: async path => { assert.equal(path, name); return bytes; }, sha});
+  const marker = 'DOUBLE_AGENT_RESULT ';
+  const raw = bytes.toString('utf8');
+  const records = raw.split(/\r?\n/).filter(line => line.startsWith(marker));
+  assert.equal(records.length, 1);
+  const observation = JSON.parse(records[0].slice(marker.length));
+  assert(Object.hasOwn(observation, 'profileCredits'));
+  delete observation.profileCredits;
+  const damaged = Buffer.from(raw.replace(records[0], marker + JSON.stringify(observation)));
+  await assert.rejects(verifyDoubleAgentCaseLog({...row, logSha256: sha(damaged)},
+    {read: async path => { assert.equal(path, name); return damaged; }, sha}), {code: 'ERR_ASSERTION'});
 });
