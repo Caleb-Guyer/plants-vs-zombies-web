@@ -3,11 +3,13 @@
 // of its combat. A final contract is accepted only after its full actual run.
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {CURRENT_ENGINE_ID,CURRENT_SOURCE_COUNT,CURRENT_OBJECT_COUNT,reconstructTorchSources}
+import {CURRENT_ENGINE_ID,CURRENT_SOURCE_COUNT,CURRENT_OBJECT_COUNT,reconstructTorchSources,reconstructDoubleSources,historicalEngine}
  from './native-release-context.mjs';
 
 // Reviewed after all52 actual O2 cases and26 native speed pairs completed on
 // the final briefing build. Earlier probes remain historical fixtures only.
+const gustProjection=Symbol('authenticated current production before historical Double observation checks');
+const GUST_DOUBLE_RETENTION_SHA256='e057c9ba7cdec9cffdf157c59d3873293624723180a3a4bbef8db76e84e4c211';
 const acceptedContractPins=new Set(['2897a2f15387c4f8b244d92dc587c2437ea370daa02f1e556e6d8ccab24d4ac4']);
 const acceptedReportPins=new Set(['185ddbaae03ac20287552b9276064a800b1447d4a8d6cefdd58c9cc3a7e2d55c']);
 // Derived only from the sealed report above. Native diagnostics include
@@ -97,11 +99,14 @@ export async function verifyDoubleAgentSourceBounds({read,sha,engine}){
 }
 
 export async function verifyDoubleAgentBuildBindings({report,read,sha,engine,fullRunReport,productionBuildBytes}){
- fields(report,{execution:'complete-production-engine',optimization:'O2',engineId:CURRENT_ENGINE_ID,
-  mode:91,profileIndex:90,productionObjectCount:CURRENT_OBJECT_COUNT,failures:0,exitCode:0});
- assert.equal(CURRENT_SOURCE_COUNT,872);assert.equal(CURRENT_OBJECT_COUNT,144);
- assert.equal(Object.keys(report.sourceSha256).length,872);
- assert.equal(Object.keys(report.productionObjectSha256).length,144);
+ const current=engine.id==='0.2.6-web-gust.1';
+ const sourceCount=current?878:872,objectCount=current?147:144;
+ assert(current||engine.id==='0.2.6-web-double.1');
+ if(current){assert.equal(CURRENT_SOURCE_COUNT,878);assert.equal(CURRENT_OBJECT_COUNT,147);}
+ fields(report,{execution:'complete-production-engine',optimization:'O2',engineId:engine.id,
+  mode:91,profileIndex:90,productionObjectCount:objectCount,failures:0,exitCode:0});
+ assert.equal(Object.keys(report.sourceSha256).length,sourceCount);
+ assert.equal(Object.keys(report.productionObjectSha256).length,objectCount);
  assert.deepEqual(report.sourceSha256,fullRunReport.sourceSha256);
  assert.deepEqual(report.productionObjectSha256,fullRunReport.productionObjectSha256);
  for(const [path,pin]of Object.entries(report.sourceSha256)){
@@ -109,7 +114,7 @@ export async function verifyDoubleAgentBuildBindings({report,read,sha,engine,ful
  }
  for(const [path,pin]of Object.entries(report.productionObjectSha256)){safeName(path);digest(pin);assert(path.endsWith('.o'));}
  const normal=json(productionBuildBytes);
- fields(normal,{status:'PASS',exitCode:0,sourceUnchangedDuringBuild:true,sourceFiles:872});
+ fields(normal,{status:'PASS',exitCode:0,sourceUnchangedDuringBuild:true,sourceFiles:sourceCount});
  assert.equal(report.productionBuildReceiptSha256,sha(productionBuildBytes));
  for(const suffix of ['js','wasm'])assert.equal(normal.outputs['build/pvz-portable.'+suffix].sha256,engine.artifacts[suffix+'Sha256']);
  const build=json(await read('tests/double-agent-build.json'));
@@ -333,14 +338,17 @@ export async function verifyDoubleAgentHistory({contract,read,sha,report}){
  return history;
 }
 
-export async function verifyDoubleAgent({report,read,sha,engine,fullRunReport,productionBuildBytes,currentArtBytes,previousArtBytes}){
+export async function verifyDoubleAgent(options){
+ const {report,read,sha,engine,fullRunReport,productionBuildBytes,currentArtBytes,previousArtBytes}=options;
+ const projected=options[gustProjection]===gustProjection;
+ if(engine.id==='0.2.6-web-gust.1')return verifyGustRetainedDouble(options);
  const actualReportBytes=await read('tests/double-agent-results.json');
  const authenticated=verifyDoubleAgentReportIdentity({reportBytes:actualReportBytes,sha});
  assert.deepEqual(report,authenticated.report,'The caller supplies the actual authenticated complete native report');
  const contractBytes=await read('tests/double-agent-verification-contract.json');
  assert(acceptedContractPins.has(sha(contractBytes)),'No complete actual Double Agent matrix has been accepted for this contract');
  const contract=json(contractBytes);
- fields(contract,{schemaVersion:1,stage:'final-preregistered',engineId:CURRENT_ENGINE_ID,mode:91,profileIndex:90,sourceCount:872,productionObjectCount:144,rulesVersion:1});
+ fields(contract,{schemaVersion:1,stage:'final-preregistered',engineId:engine.id,mode:91,profileIndex:90,sourceCount:872,productionObjectCount:144,rulesVersion:1});
  assert.deepEqual(contract.matrix,matrix);
  fields(contract.planning,{sun:1500,allowedColumns:[0,1,2,3,4],seeds:[0,5,7,3,6,4,21],noSkySun:true,noMowers:true});
  fields(contract.planning,{nativeLastStandPreparationCooldownRule:true,normalCombatCooldowns:true});
@@ -366,7 +374,7 @@ export async function verifyDoubleAgent({report,read,sha,engine,fullRunReport,pr
  assert.deepEqual(Object.keys(contract.fixtureSha256).sort(),[
   ...mandatory.map(path=>'tests/'+path),'tests/double-agent-development-history.json',...Object.keys(history.filesSha256)
  ].sort(),'The final contract contains exactly the reviewed live inputs and preserved earlier evidence');
- await verifyDoubleAgentBuildBindings({report,read,sha,engine,fullRunReport,productionBuildBytes});
+ if(!projected)await verifyDoubleAgentBuildBindings({report,read,sha,engine,fullRunReport,productionBuildBytes});
  await verifyDoubleAgentSourceBounds({read,sha,engine});
  fields(report,{status:'PASS',assetBundleId:engine.assetBundleId,nativeArtInputs:942});
  const assetsBytes=await read('tests/double-agent-assets.json'),assets=json(assetsBytes);
@@ -380,7 +388,7 @@ export async function verifyDoubleAgent({report,read,sha,engine,fullRunReport,pr
  for(const [path,pin]of Object.entries(nativeArt.sourceInputs)){safeName(path);integer(pin.bytes,1);digest(pin.sha256);}
  assert.equal(report.scenarios.length,52);
  assert.deepEqual(report.scenarios.map(key).sort(),matrix.map(([name,speed,seed])=>key({name,speed,seed})).sort());
- for(const row of report.scenarios){verifyDoubleAgentScenario(row);await verifyDoubleAgentCaseLog(row,{read,sha});}
+ for(const row of report.scenarios){verifyDoubleAgentScenario(row);if(!projected)await verifyDoubleAgentCaseLog(row,{read,sha});}
  assert.equal(report.checks,872+report.scenarios.reduce((sum,row)=>sum+row.checks,0));
  const battles=report.scenarios.filter(row=>row.family==='double-agent');
  assert.equal(battles.length,44);assert.equal(report.scenarios.filter(row=>row.family==='synthetic-controls').length,8);
@@ -411,4 +419,99 @@ export async function verifyDoubleAgent({report,read,sha,engine,fullRunReport,pr
  fields(art.cards[18],{mode:91,name:'Double Agent',generatedArtworkUsed:false,background:'IMAGE_BACKGROUND1'});
  for(const field of ['tip','tips','descriptionBelowCard'])assert(!Object.hasOwn(art.cards[18],field));
  return {cases:report.scenarios.length};
+}
+
+
+// The current game and every raw observation are authenticated first. Only then
+// are production metadata and the explicitly added twentieth catalog iteration
+// projected back to the separately sealed Double rules for its unchanged oracle.
+async function verifyGustRetainedDouble(options){
+ const {report,read,sha,engine,fullRunReport,productionBuildBytes,currentArtBytes,previousArtBytes}=options;
+ const bytes=await read('tests/double-agent-results.json');assert.deepEqual(report,json(bytes));
+ const adapterBytes=await read('tests/gust1-double-retention.json');
+ assert.equal(sha(adapterBytes),GUST_DOUBLE_RETENTION_SHA256);
+ const adapter=json(adapterBytes);
+ fields(adapter,{schemaVersion:1,parentEngineId:'0.2.6-web-double.1',
+  parentArchiveSha256:'35b635770bbb040dd3b2c41c4c86ed49f351cbd29926b8efa286394ff89ad5b3',
+  engineId:'0.2.6-web-gust.1',sourceCount:878,productionObjectCount:147,
+  historicalContractSha256:'2897a2f15387c4f8b244d92dc587c2437ea370daa02f1e556e6d8ccab24d4ac4',
+  originalReportSha256:'185ddbaae03ac20287552b9276064a800b1447d4a8d6cefdd58c9cc3a7e2d55c',
+  originalRunnerSha256:'ae09ff50b44df063cf511c34c13c293f543a913ca1bc63845dcf5417da86df07',
+  parentSnapshotManifestSha256:'afae585b66dfaef7effed2fcdf4e352bb3d273a2e77b4ad50a093a177e0aea67',
+  all52CasesFresh:true});
+ fields(adapter.catalogExtension,{parentCards:19,currentCards:20,checksAddedPerPresentation:21,
+  presentationCases:4,aggregateNativeChecksAdded:84,allNineteenOriginalCardChecksPreserved:true});
+ assert.equal(report.retentionAdapterSha256,sha(adapterBytes));
+ const snapshotBytes=await read('tests/gust1-retained-parent/manifest.json');
+ assert.equal(sha(snapshotBytes),adapter.parentSnapshotManifestSha256);
+ const snapshot=json(snapshotBytes);
+ fields(snapshot,{schemaVersion:1,parentEngineId:adapter.parentEngineId,parentArchiveSha256:adapter.parentArchiveSha256});
+ assert.equal(Object.keys(snapshot.files).length,131);
+ const originalRead=async name=>{
+  safeName(name);assert(name.startsWith('tests/'));
+  const relative=name.slice(6),pin=snapshot.files[relative];assert(pin,'Exact published Double input: '+name);
+  const value=Buffer.from(await read('tests/gust1-retained-parent/'+relative));
+  assert.equal(value.length,pin.bytes);assert.equal(sha(value),pin.sha256);return value;
+ };
+ const originalBytes=await originalRead('tests/double-agent-results.json');
+ assert.equal(sha(originalBytes),adapter.originalReportSha256);
+ const original=verifyDoubleAgentReportIdentity({reportBytes:originalBytes,sha}).report;
+ const contractBytes=await read('tests/double-agent-verification-contract.json');
+ assert.equal(sha(contractBytes),adapter.historicalContractSha256);
+ const contract=json(contractBytes);
+ const overrides=['tests/build-double-agent.py','tests/test-double-agent.py','tests/double-agent-presentation-controls.h'].sort();
+ assert.deepEqual(Object.keys(adapter.fixtureOverrides).sort(),overrides);
+ assert.deepEqual(Object.keys(adapter.originalFixtureSha256).sort(),overrides);
+ for(const name of overrides){
+  assert.equal(sha(await originalRead(name)),adapter.originalFixtureSha256[name]);
+  assert.equal(adapter.originalFixtureSha256[name],contract.fixtureSha256[name]);
+  assert.equal(sha(await read(name)),adapter.fixtureOverrides[name]);
+ }
+ assert.equal(adapter.builderOverrideSha256,adapter.fixtureOverrides['tests/build-double-agent.py']);
+ // Production normalization cannot hide a missing or changed driver input.
+ assert.deepEqual(Object.keys(report.testInputSha256).sort(),Object.keys(original.testInputSha256).sort());
+ for(const [name,pin]of Object.entries(original.testInputSha256))
+  assert.equal(report.testInputSha256[name],adapter.fixtureOverrides['tests/'+name]||pin,
+   'Every exact historical input remains pinned, except the three bounded successor edits: '+name);
+ // These are the actual current147 objects and878 sources, not the historical
+ // maps substituted only for comparing the original reviewed observations.
+ await verifyDoubleAgentBuildBindings({report,read,sha,engine,fullRunReport,productionBuildBytes});
+ assert.equal(report.scenarios.length,52);
+ const baseline=new Map(original.scenarios.map(row=>[key(row),row]));
+ const normalized=structuredClone(report);
+ let addedChecks=0;
+ for(let index=0;index<report.scenarios.length;index++){
+  const row=report.scenarios[index],before=baseline.get(key(row));assert(before);
+  await verifyDoubleAgentCaseLog(row,{read,sha});
+  const addition=row.name==='presentation'?21:0;
+  assert.equal(row.checks,before.checks+addition);
+  if(addition){assert.equal(row.nativeCatalogCards,20);normalized.scenarios[index].nativeCatalogCards=19;}
+  normalized.scenarios[index].checks-=addition;addedChecks+=addition;
+ }
+ assert.equal(addedChecks,84);
+ assert.equal(report.checks,878+report.scenarios.reduce((sum,row)=>sum+row.checks,0));
+ assert.equal(report.checks,original.checks+90);
+ normalized.checks-=90;
+ const metadata=['engineId','productionObjectCount','productionBuildReceiptSha256','sourceSha256',
+  'productionObjectSha256','builderSha256','runnerSha256','testArtifactSha256','testInputSha256'];
+ for(const name of metadata){assert(Object.hasOwn(original,name)&&Object.hasOwn(report,name));normalized[name]=structuredClone(original[name]);}
+ delete normalized.retentionAdapterSha256;
+ const normalizedBytes=Buffer.from(JSON.stringify(normalized));
+ verifyDoubleAgentReportIdentity({reportBytes:normalizedBytes,sha});
+ const referenceBytes=fs.readFileSync(new URL('./fixtures/gust1-parent-reference.json',import.meta.url));
+ const parent=await reconstructDoubleSources({referenceBytes,read,sha,engine});
+ const historicalRead=async name=>{
+  if(name==='tests/double-agent-results.json')return normalizedBytes;
+  if(name.startsWith('source/')){const value=parent.files.get(name.slice(7));assert(value,name);return value;}
+  if(name.startsWith('tests/')&&Object.hasOwn(snapshot.files,name.slice(6)))return originalRead(name);
+  return read(name);
+ };
+ const oldArtBytes=fs.readFileSync(new URL('./fixtures/double1-native-bonus-art.json',import.meta.url));
+ assert.equal(sha(oldArtBytes),'70fe4cb3279ab896f114046533cc50bfbc21667a5660f7c3a44eac5219180190');
+ const currentArt=json(currentArtBytes),oldArt=json(oldArtBytes);
+ assert.equal(currentArt.cards.length,20);assert.deepEqual({...currentArt,cards:currentArt.cards.slice(0,19)},oldArt);
+ const result=await verifyDoubleAgent({...options,report:normalized,read:historicalRead,
+  engine:historicalEngine(engine,'0.2.6-web-double.1'),currentArtBytes:oldArtBytes,previousArtBytes,
+  [gustProjection]:gustProjection});
+ return {...result,currentProductionObjects:147,retainedCases:52,additionalCatalogChecks:84};
 }

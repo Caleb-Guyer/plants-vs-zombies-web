@@ -132,12 +132,12 @@ function sealedDoubleEvidence() {
   sealedDouble ??= (async () => {
     const engineUrl = new URL('../dist/game/engine-provenance.json', import.meta.url);
     const engine = JSON.parse(fs.readFileSync(engineUrl, 'utf8'));
-    assert.equal(engine.id, '0.2.6-web-double.1');
-    assert.equal(engine.artifacts.source, '../source/pvz-portable-0.2.6-web-double.1-source.zip');
+    assert(['0.2.6-web-double.1','0.2.6-web-gust.1'].includes(engine.id));
+    assert.equal(engine.artifacts.source, '../source/pvz-portable-'+engine.id+'-source.zip');
     const archiveBytes = fs.readFileSync(new URL(engine.artifacts.source, engineUrl));
     assert.equal(sha(archiveBytes), engine.artifacts.sourceSha256);
     const zip = await JSZip.loadAsync(archiveBytes);
-    const entry = zip.file('double1-candidate/tests/double-agent-results.json');
+    const entry = zip.file(engine.id==='0.2.6-web-double.1'?'double1-candidate/tests/double-agent-results.json':'gust1-candidate/tests/gust1-retained-parent/double-agent-results.json');
     assert(entry);
     const bytes = Buffer.from(await entry.async('uint8array'));
     assert.equal(sha(bytes), '185ddbaae03ac20287552b9276064a800b1447d4a8d6cefdd58c9cc3a7e2d55c');
@@ -186,7 +186,7 @@ test('fresh log hash cannot hide an omitted actual native result field', async (
   const {report, zip} = await sealedDoubleEvidence();
   const row = report.scenarios[0];
   const name = `tests/double-agent-logs/${row.name}-${row.speed}x-${row.seed}.log`;
-  const bytes = Buffer.from(await zip.file('double1-candidate/' + name).async('uint8array'));
+  const bytes = fs.readFileSync(new URL('./fixtures/double1-native-case.log',import.meta.url));
   await verifyDoubleAgentCaseLog(row, {read: async path => { assert.equal(path, name); return bytes; }, sha});
   const marker = 'DOUBLE_AGENT_RESULT ';
   const raw = bytes.toString('utf8');

@@ -1,0 +1,10 @@
+{
+  "id": "0.2.6-web-gust.1",
+  "jsSha256": "dc3163631f5a1beb45580cf0d00c04ee8c1a417fa1856f257cf1f44c40b98c68",
+  "wasmSha256": "f1d6be2fb180a17dd616929e47fff7e51a74e0b7d04ae2531483f7b64e8b529a",
+  "sourceSha256": "10acb269866b175ed4836c2c64c6a79dc86a11241de9e48c7be54f8f89808be8",
+  "patchSha256": "37624e95fff26d9e95c7eb4b87b80ac3d405b7d9d0292fe63666105f6d4954ec",
+  "normalReceiptSha256": "7cf4b25ac5aed0a7247e7807748a31b73eac46e99e38b505efd51fafe18b9d05",
+  "sourceFiles": 878,
+  "productionObjects": 147
+}

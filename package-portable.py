@@ -30,6 +30,7 @@ SOURCE_DOWNLOADS = DIST / "source" / "source-downloads.json"
 # https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-large-files-on-github
 MAX_STATIC_ASSET_BYTES = 100 * 1024 * 1024
 AMBUSH_PARENT_REFERENCE_SHA256 = "6771fc13bae02cb70dd8de12192f1f18e50302904a7ef1c784a790e6ccb51dd3"
+GUST_PARENT_REFERENCE_SHA256 = "14b5ef8f794cbfb5cb687f24cf05d23fa63620339945f139d2c5d947e9827476"
 DOUBLE_PARENT_REFERENCE_SHA256 = "a22e68371f7ad0f794b7e1f9221ed8bb45e7220df3501b8281435dcaf244a160"
 TORCH_PARENT_REFERENCE_SHA256 = "14dc78f0593db13b4e17e559061f84996be9c64f23663bd9ef7556b669fc96f6"
 AMBUSH_FOCUSED_REFERENCE_SHA256 = "9463bdd7c262c1749c57b00d25d45257951f8b8b2c8d4511cff630f9c606e9c8"
@@ -110,6 +111,9 @@ def parent_source_input(engine):
             or any(character not in "0123456789abcdef" for character in expected)):
         raise ValueError("Invalid immediate-parent source SHA-256")
     path = DIST / "game" / reference
+    if engine.get("id") == "0.2.6-web-gust.1":
+        authenticate_gust_parent(engine)
+        return None
     if engine.get("id") == "0.2.6-web-double.1":
         authenticate_double_parent(engine)
         return None
@@ -265,7 +269,7 @@ def authenticate_torch_parent(engine, current_sources=None):
     return restored
 
 
-def authenticate_double_parent(engine):
+def authenticate_double_parent(engine, current_sources=None):
     """Authenticate all868 exact Torch source files without a second native ZIP."""
     raw = (ROOT / "tests/fixtures/double1-parent-reference.json").read_bytes()
     if hashlib.sha256(raw).hexdigest() != DOUBLE_PARENT_REFERENCE_SHA256:
@@ -289,35 +293,97 @@ def authenticate_double_parent(engine):
             engine["parent"]["artifacts"]["sourceSha256"] != reference["parent"]["archiveSha256"] or
             len(reference["files"]) != 868):
         raise ValueError("Double Agent parent identity differs from its reviewed projection")
+    if current_sources is None:
+        current = DIST / "game" / engine["artifacts"]["source"]
+        if hashlib.sha256(current.read_bytes()).hexdigest() != engine["artifacts"]["sourceSha256"]:
+            raise ValueError("Double Agent source archive differs from provenance")
+        with zipfile.ZipFile(current) as archive:
+            current_sources = {name: archive.read("double1-candidate/source/" + name) for name in reference["files"]}
+    restored = {}
+    for name, pin in reference["files"].items():
+        if (not name or name.startswith('/') or any(part in ('','.','..') for part in name.split('/'))
+                or "\\" in name or ':' in name):
+            raise ValueError("Unsafe Double Agent projection input")
+        data = current_sources[name]
+        delta = reference["reverseEdits"].get(name)
+        if delta:
+            if len(data) != delta["currentBytes"] or hashlib.sha256(data).hexdigest() != delta["currentSha256"]:
+                raise ValueError("Changed Double Agent projection input: " + name)
+            previous = len(data) + 1
+            for edit in reversed(delta["edits"]):
+                offset = edit["offset"]
+                before = base64.b64decode(edit["beforeBase64"], validate=True)
+                after = base64.b64decode(edit["afterBase64"], validate=True)
+                if (not isinstance(offset,int) or offset < 0 or offset >= previous or
+                        offset + len(before) > previous or offset + len(before) > len(data) or
+                        data[offset:offset+len(before)] != before):
+                    raise ValueError("Invalid Double Agent parent reverse edit: " + name)
+                data = data[:offset] + after + data[offset+len(before):]
+                previous = offset
+        if len(data) != pin["bytes"] or hashlib.sha256(data).hexdigest() != pin["sha256"]:
+            raise ValueError("Complete Torch parent source failed: " + name)
+        restored[name] = data
+    authenticate_torch_parent(engine["parent"], restored)
+    return restored
+
+
+
+def authenticate_gust_parent(engine):
+    """Restore all872 Double sources, then each earlier authenticated source."""
+    raw = (ROOT / "tests/fixtures/gust1-parent-reference.json").read_bytes()
+    if hashlib.sha256(raw).hexdigest() != GUST_PARENT_REFERENCE_SHA256:
+        raise ValueError("Gust-bloom parent projection differs from the reviewed fixture")
+    reference = json.loads(raw)
+    expected_changed = {
+        "CMake/ProjectVersion.cmake", "src/ConstEnums.h", "src/Lawn/Board.cpp", "src/Lawn/Challenge.cpp",
+        "src/Lawn/Plant.cpp", "src/Lawn/SeedPacket.cpp", "src/Lawn/System/BonusChallenge.h",
+        "src/Lawn/System/DeckPresets.h", "src/Lawn/System/MenderBloom.h", "src/Lawn/System/ReanimationLawn.cpp",
+        "src/Lawn/Widget/AlmanacDialog.cpp", "src/Lawn/Widget/AlmanacDialog.h", "src/Lawn/Widget/ChallengeScreen.cpp",
+        "src/Lawn/Widget/LawnDialog.cpp", "src/Lawn/Widget/SeedChooserScreen.cpp", "src/Lawn/Widget/SeedChooserScreen.h",
+        "src/Lawn/Zombie.cpp", "src/LawnApp.cpp",
+    }
+    if (set(reference.get("changedPaths", [])) != expected_changed or set(reference.get("reverseEdits", {})) != expected_changed):
+        raise ValueError("Gust-bloom changes exceed the reviewed integration paths")
+    if (engine["id"] != "0.2.6-web-gust.1" or reference["schemaVersion"] != 1 or
+            reference["current"] != {"id": engine["id"], "sourceCount": 878} or
+            reference["parent"]["id"] != "0.2.6-web-double.1" or
+            reference["parent"]["archivePrefix"] != "double1-candidate/source/" or
+            reference["parent"]["archiveSha256"] != "35b635770bbb040dd3b2c41c4c86ed49f351cbd29926b8efa286394ff89ad5b3" or
+            engine["parent"]["id"] != reference["parent"]["id"] or
+            engine["parent"]["artifacts"]["sourceSha256"] != reference["parent"]["archiveSha256"] or len(reference["files"]) != 872):
+        raise ValueError("Gust-bloom parent identity differs from its reviewed projection")
     current = DIST / "game" / engine["artifacts"]["source"]
     if hashlib.sha256(current.read_bytes()).hexdigest() != engine["artifacts"]["sourceSha256"]:
-        raise ValueError("Double Agent source archive differs from provenance")
+        raise ValueError("Gust-bloom source archive differs from provenance")
     restored = {}
     with zipfile.ZipFile(current) as archive:
+        prefix = "gust1-candidate/source/"
+        source_names = {name[len(prefix):] for name in archive.namelist() if name.startswith(prefix) and not name.endswith('/')}
+        added = {"src/Lawn/System/" + stem + suffix for stem in ("GustBloom", "GustChallenge", "GustBloomArt") for suffix in (".cpp", ".h")}
+        if len(source_names) != 878 or source_names != set(reference["files"]) | added:
+            raise ValueError("Gust-bloom source graph differs from the six reviewed additions")
         for name, pin in reference["files"].items():
-            if (not name or name.startswith('/') or any(part in ('','.','..') for part in name.split('/'))
-                    or "\\" in name or ':' in name):
-                raise ValueError("Unsafe Double Agent projection input")
-            data = archive.read("double1-candidate/source/" + name)
+            if (not name or name.startswith('/') or any(part in ('','.','..') for part in name.split('/')) or "\\" in name or ':' in name):
+                raise ValueError("Unsafe Gust-bloom projection input")
+            data = archive.read(prefix + name)
             delta = reference["reverseEdits"].get(name)
             if delta:
                 if len(data) != delta["currentBytes"] or hashlib.sha256(data).hexdigest() != delta["currentSha256"]:
-                    raise ValueError("Changed Double Agent projection input: " + name)
+                    raise ValueError("Changed Gust-bloom projection input: " + name)
                 previous = len(data) + 1
                 for edit in reversed(delta["edits"]):
                     offset = edit["offset"]
                     before = base64.b64decode(edit["beforeBase64"], validate=True)
                     after = base64.b64decode(edit["afterBase64"], validate=True)
-                    if (not isinstance(offset,int) or offset < 0 or offset >= previous or
-                            offset + len(before) > previous or offset + len(before) > len(data) or
-                            data[offset:offset+len(before)] != before):
-                        raise ValueError("Invalid Double Agent parent reverse edit: " + name)
+                    if (not isinstance(offset,int) or offset < 0 or offset >= previous or offset + len(before) > previous or
+                            offset + len(before) > len(data) or data[offset:offset+len(before)] != before):
+                        raise ValueError("Invalid Gust-bloom parent reverse edit: " + name)
                     data = data[:offset] + after + data[offset+len(before):]
                     previous = offset
             if len(data) != pin["bytes"] or hashlib.sha256(data).hexdigest() != pin["sha256"]:
-                raise ValueError("Complete Torch parent source failed: " + name)
+                raise ValueError("Complete Double parent source failed: " + name)
             restored[name] = data
-    authenticate_torch_parent(engine["parent"], restored)
+    authenticate_double_parent(engine["parent"], restored)
     return restored
 
 
@@ -332,8 +398,10 @@ def nested_source_inputs(engine, paths, baseline):
             or hashlib.sha256(native_ui.read_bytes()).hexdigest()
             != "d9861034849eca9d637197aa78a1bae4c90b5656db91ca102d8c903100031edd"):
         raise ValueError("Authenticated native I, Zombie UI fixture is missing or changed")
-    if engine.get("id") in {"0.2.6-web-scrap.1", "0.2.6-web-ambush.1", "0.2.6-web-torch.1", "0.2.6-web-double.1"}:
-        if engine["id"] == "0.2.6-web-double.1":
+    if engine.get("id") in {"0.2.6-web-scrap.1", "0.2.6-web-ambush.1", "0.2.6-web-torch.1", "0.2.6-web-double.1", "0.2.6-web-gust.1"}:
+        if engine["id"] == "0.2.6-web-gust.1":
+            authenticate_gust_parent(engine)
+        elif engine["id"] == "0.2.6-web-double.1":
             authenticate_double_parent(engine)
         elif engine["id"] == "0.2.6-web-torch.1":
             authenticate_torch_parent(engine)
@@ -448,7 +516,7 @@ def regenerate_source_downloads(transport_entries=None):
         "schema_version": 1,
         "current_engine": engine["id"],
         "upstream_tag": engine["upstream"]["tag"],
-        "layout": "Site-source nests current corresponding source, the upstream baseline, independently pinned complete Torch.1, Ambush.1, Scrap.1 and Endless.3 source projections, the native I, Zombie UI reference and the current full patch. The historical Endless.2 comparator ZIP is restored byte-for-byte before offline checks from compressed byte ranges shared with the current native ZIP and a literal payload. Every original comparator file and archive checksum is preserved. Each archives[].url is its original download location: current and upstream source stay on Pages; historical source archives use immutable GitHub repository URLs and remain in the full runtime distribution. Linked native test artifacts are losslessly packed; the included decoder restores their exact pinned bytes.",
+        "layout": "Site-source nests current corresponding source, the upstream baseline, independently pinned complete Double.1, Torch.1, Ambush.1, Scrap.1 and Endless.3 source projections, the native I, Zombie UI reference and the current full patch. The historical Endless.2 comparator ZIP is restored byte-for-byte before offline checks from compressed byte ranges shared with the current native ZIP and a literal payload. Every original comparator file and archive checksum is preserved. Each archives[].url is its original download location: current and upstream source stay on Pages; historical source archives use immutable GitHub repository URLs and remain in the full runtime distribution. Linked native test artifacts are losslessly packed; the included decoder restores their exact pinned bytes.",
         "nested_sources": [path.name for path in nested],
         "restored_sources": [{
             "name": LEGACY_SOURCE_NAME,

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Exact published Torch assertions plus narrowly reviewed Double collaborators.
 import assert from 'node:assert/strict';
-import {CURRENT_ENGINE_ID,CURRENT_SOURCE_COUNT,DOUBLE_SOURCE_ADDITIONS,TORCH_ENGINE_ID,
+import {DOUBLE_ENGINE_ID as CURRENT_ENGINE_ID,DOUBLE_SOURCE_COUNT as CURRENT_SOURCE_COUNT,DOUBLE_SOURCE_ADDITIONS,TORCH_ENGINE_ID,
  TORCH_ARCHIVE_SHA256,DOUBLE_PARENT_TEST_INPUTS_SHA256,verifyDoubleRetainedParentInputs}
  from './native-release-context.mjs';
 

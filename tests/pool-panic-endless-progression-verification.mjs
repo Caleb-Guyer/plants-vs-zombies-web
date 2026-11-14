@@ -6,7 +6,7 @@ import {CURRENT_ENGINE_ID, CURRENT_SOURCE_COUNT, CURRENT_OBJECT_COUNT, ENDLESS3_
  SCRAP_ENGINE_ID, CURRENT_ENDLESS_RETENTION_SHA256, SCRAP_ENDLESS_RETENTION_SHA256,
  AMBUSH_ENGINE_ID,AMBUSH_ENDLESS_RETENTION_SHA256,
  historicalEngine, verifyRetainedParentInputs,verifyTorchRetainedParentInputs,
- TORCH_ENGINE_ID,TORCH_ARCHIVE_SHA256,verifyPublishedTorchAdapter} from './native-release-context.mjs';
+ DOUBLE_ENGINE_ID,DOUBLE_ARCHIVE_SHA256,verifyPublishedDoubleAdapter} from './native-release-context.mjs';
 
 const seeds = [1729, 7331];
 const milestones = [8, 12, 20, 40];
@@ -656,13 +656,13 @@ export async function verifyPublishedParentReference({read, parentRead, sha, eng
 }
 
 export async function verifyEndlessRetentionAdapter({report, read, sha}) {
-  const bytes = await read('tests/double1-endless-retention.json');
+  const bytes = await read('tests/gust1-endless-retention.json');
   assert.equal(sha(bytes), CURRENT_ENDLESS_RETENTION_SHA256, 'Independently pinned current execution-envelope adapter');
   const adapter = jsonOf(bytes);
   fields(adapter, {schemaVersion: 1, engineId: CURRENT_ENGINE_ID, historicalContractSha256: finalContractPin,
     productionSourceFiles: CURRENT_SOURCE_COUNT, productionObjectCount: CURRENT_OBJECT_COUNT, freshAllCasesRequired: true,
-    parentEngineId:TORCH_ENGINE_ID,parentArchiveSha256:TORCH_ARCHIVE_SHA256});
-  await verifyPublishedTorchAdapter({read,sha,adapter,family:'endless'});
+    parentEngineId:DOUBLE_ENGINE_ID,parentArchiveSha256:DOUBLE_ARCHIVE_SHA256});
+  await verifyPublishedDoubleAdapter({read,sha,adapter,family:'endless'});
   assert.equal(report.retentionAdapterSha256, CURRENT_ENDLESS_RETENTION_SHA256);
   assert.equal(report.lateGame.retentionAdapterSha256, CURRENT_ENDLESS_RETENTION_SHA256);
   assert(!Object.hasOwn(report, 'basePrefixReuse'), 'Every current opening and late native case must execute freshly');

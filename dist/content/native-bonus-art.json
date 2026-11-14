@@ -200,6 +200,16 @@
       "gameplay": "Build a garden with a finite plant bank and survive a short original-zombie assault. Then switch to the original I, Zombie army bank and breach the same planned layout, restored as native cardboard defenders. Original plant and zombie combat, prices and brains remain active; the two phases use the existing saved board and challenge fields.",
       "artwork": "The native complete Peashooter cache includes both original idle body and head layers. The complete stock zombie stands opposite it on the original day lawn, with separate original sun and brain role cues. All four original silhouettes retain their proportions inside the native80 by65 picture. No generated illustration or reused Survival thumbnail.",
       "interface": "Name-only nineteenth Bonus card in the fourth slot of the native bottom row (row4, column3). Original plant and I, Zombie seed banks, sun counter, Menu, speed and pause controls, native wave/brain meter and phase footer. Original Let's Rock button starts defense. No additional HUD, card tips or persistent instructional panels."
+    },
+    {
+      "mode": 92,
+      "name": "Headwind",
+      "hero": "Native Gust-bloom composed from the original Blover face and blowing expression, folded Cabbage-pult hood, joined Peashooter stem and leaves, with a complete original Conehead zombie",
+      "background": "IMAGE_BACKGROUND1",
+      "generatedArtworkUsed": false,
+      "gameplay": "A finite daylight conveyor supplies Gust-bloom and stock defenders to push ground crowds back over a fixed Spikeweed course. Six formations introduce original armored zombies, Football zombies and a Gargantuar. Heavy zombies resist; giants and vehicles cannot be pushed. Completing Headwind unlocks Gust-bloom in the normal plant chooser with150sun cost,300health and native1500tick recharge.",
+      "artwork": "The complete registered Gust-bloom uses the original painted Blover face, folded Cabbage-pult leaf hood and joined Peashooter stalk and root leaves. Its original blowing face and neutral puff cells face a complete original cached Conehead on the original day lawn. Both silhouettes retain their proportions inside the native80 by65 picture.",
+      "interface": "Name-only twentieth Bonus card in the fifth slot of the native bottom row (row4, column4). Original finite conveyor, fitted native shovel, Menu, speed and pause controls. The original wave meter tracks progress beside the single Headwind footer title."
     }
   ],
   "canvas": {

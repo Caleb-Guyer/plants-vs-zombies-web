@@ -32,3 +32,10 @@ tests/fixtures/torch1-focused-reference.json -text
 tests/fixtures/performance/double1-browser-validation.json -text
 tests/fixtures/double1-release.json -text
 tests/fixtures/double-agent-browser/** -text
+tests/fixtures/double1-focused-reference.json -text
+tests/fixtures/double1-native-case.log -text
+tests/fixtures/double1-native-bonus-art.json -text
+tests/fixtures/gust1-parent-reference.json -text
+tests/fixtures/gust1-release.json -text
+tests/fixtures/performance/gust1-browser-validation.json -text
+tests/fixtures/gust-bloom-browser/** -text

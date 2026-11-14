@@ -1,0 +1,204 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-11-14T05:52:19.821641+00:00",
+  "engine": {
+    "id": "0.2.6-web-gust.1",
+    "jsSha256": "dc3163631f5a1beb45580cf0d00c04ee8c1a417fa1856f257cf1f44c40b98c68",
+    "wasmSha256": "f1d6be2fb180a17dd616929e47fff7e51a74e0b7d04ae2531483f7b64e8b529a"
+  },
+  "automationMethod": "isolated headless Chrome, dedicated local profile, native CDP mouse/key input and DOM file import",
+  "query": "?testing=1",
+  "audioMutedThroughout": true,
+  "browserLaunchAudioFlag": "--mute-audio",
+  "fileFreeStartup": true,
+  "earnedHeadwindProfileImported": true,
+  "normalChooserSelection": true,
+  "regularPlantPlaced": true,
+  "sameBrowserSaveContinue": true,
+  "speedLabel": "2x",
+  "almanacEntryObserved": true,
+  "catalogCardObserved": true,
+  "browserEarnedWins": 0,
+  "performanceProbeLoaded": false,
+  "freshBrowserPerformanceMeasured": false,
+  "normalBuildReceiptSha256": "7cf4b25ac5aed0a7247e7807748a31b73eac46e99e38b505efd51fafe18b9d05",
+  "planting": {
+    "seed": 78,
+    "sunBefore": 150,
+    "sunAfter": 0,
+    "survivalDay": true,
+    "naturalSkySunCollected": true,
+    "nativeCell": [
+      1,
+      3
+    ]
+  },
+  "nativeProfileOrigin": {
+    "engineId": "0.2.6-web-gust.1",
+    "mode": 92,
+    "profileIndex": 91,
+    "earnedHeadwindCredits": 1,
+    "normalBuildReceiptSha256": "7cf4b25ac5aed0a7247e7807748a31b73eac46e99e38b505efd51fafe18b9d05",
+    "newPlantUnlockAssigned": false,
+    "standardCampaignUnlocks": "native test setup",
+    "result": {
+      "path": "tests/fixtures/gust-bloom-browser/native-earned-origin.json",
+      "bytes": 9102,
+      "sha256": "aa94f508c9c66dbaea59f2df16e7b4d5af656809e8d3af97361c5195587a045c"
+    },
+    "rawLog": {
+      "path": "tests/fixtures/gust-bloom-browser/native-earned-origin.log",
+      "bytes": 29091,
+      "sha256": "59d5fa38ac519e2f0123bd9d410f81a1225bcb7225b1c75f9ffd449391447a6e"
+    }
+  },
+  "observedEngineMetadata": {
+    "path": "tests/fixtures/gust-bloom-browser/observed-engine-provenance.json",
+    "bytes": 182669,
+    "sha256": "9ded6d8e9e5d74a570d5eba1c5b514d86d08273552ccf234f9431708de395f8a"
+  },
+  "screenshots": {
+    "catalog": {
+      "path": "tests/fixtures/gust-bloom-browser/catalog.png",
+      "bytes": 736899,
+      "sha256": "04900fa49786d7ccfaa996ef8f804c72c1a05c57f23c1523601aadff11ae78ff"
+    },
+    "almanac": {
+      "path": "tests/fixtures/gust-bloom-browser/almanac.png",
+      "bytes": 661272,
+      "sha256": "e0a0c9c28909830ce1596352424773e00757545e293d3cb0248ecb82746cd801"
+    },
+    "chooser": {
+      "path": "tests/fixtures/gust-bloom-browser/chooser.png",
+      "bytes": 947956,
+      "sha256": "f6acee1931da4d73bea686af469b740513801bc745a04740234012e7064ceb6c"
+    },
+    "regular": {
+      "path": "tests/fixtures/gust-bloom-browser/regular.png",
+      "bytes": 1292911,
+      "sha256": "c051048b05a39eaad188574ba47bf53fd1c577f93a3e8158468cc3a91855750b"
+    },
+    "continue-regular": {
+      "path": "tests/fixtures/gust-bloom-browser/continue-regular.png",
+      "bytes": 1294390,
+      "sha256": "22fb9703957e54866d14052a276cf9905b6e120c4abb5c67c46aa05031f9eac7"
+    }
+  },
+  "runtimeFiles": {
+    "audio-controls.js": {
+      "bytes": 12216,
+      "sha256": "95e6a1b3e7ccae54ee797e8ed3b63668b672ee51f55978dc4d29231ec225a343"
+    },
+    "bundled-assets.js": {
+      "bytes": 8188,
+      "sha256": "07449dfe0aca7efb7888c62d598b54dc0be5cdfaadab6961e5f9977f87db6e8c"
+    },
+    "game-assets/manifest.json": {
+      "bytes": 3176,
+      "sha256": "5488eb8cf5d38d2d999e29a5b3aca45ecff02f8ee49356ccb327de8676111dc4"
+    },
+    "game/pvz-portable.js": {
+      "bytes": 210369,
+      "sha256": "dc3163631f5a1beb45580cf0d00c04ee8c1a417fa1856f257cf1f44c40b98c68"
+    },
+    "game/pvz-portable.wasm": {
+      "bytes": 7879692,
+      "sha256": "f1d6be2fb180a17dd616929e47fff7e51a74e0b7d04ae2531483f7b64e8b529a"
+    },
+    "index-port.html": {
+      "bytes": 6413,
+      "sha256": "c92168bcc3f85bebe6e015c6448dc0401c1d3c183889ead948800146f4c2c402"
+    },
+    "index.html": {
+      "bytes": 6413,
+      "sha256": "c92168bcc3f85bebe6e015c6448dc0401c1d3c183889ead948800146f4c2c402"
+    },
+    "launcher.js": {
+      "bytes": 10755,
+      "sha256": "9e41170068f913e8f966d650953972a311f57e7efb6241340fa6c5a349d3cfdd"
+    },
+    "loader.js": {
+      "bytes": 10670,
+      "sha256": "a183ed4e17810de2431989f3ebc263d2f511d1514c53e73c8933b8486bced73a"
+    },
+    "original-ui.js": {
+      "bytes": 2774,
+      "sha256": "a8f0aab63956a0280f03520671b712c2709da353c287be430592c64ba91ffe5b"
+    },
+    "port.css": {
+      "bytes": 11410,
+      "sha256": "6020b3fb0e1517aa9c9c1bab93873cf5c5c9f2204e3c0d9f3335853789e6b821"
+    },
+    "runtime.js": {
+      "bytes": 2931,
+      "sha256": "e6099f650f35c80ab0081c135016e215138cb760f8b84c12e9c36d91f6427bae"
+    },
+    "save-recovery.js": {
+      "bytes": 4921,
+      "sha256": "eff0eb9325e0bdc18c1f76582e9f260a07ffbf680b3ada25763f1972204e84bf"
+    },
+    "save-storage-core.js": {
+      "bytes": 13211,
+      "sha256": "5473e221a0b86818835a9ed5a1b473d718ae14da9838c7e37d99bdef48203bee"
+    },
+    "save-storage-worker.js": {
+      "bytes": 1864,
+      "sha256": "4951c5dd05dcc2c79dd99f4ddeba19935ffd23a69dd6726e4b4e1b819772a246"
+    },
+    "save-storage.js": {
+      "bytes": 9518,
+      "sha256": "e46cef9257f3608f0edbd1af4c0424e09665aa919aed5e5e16d234045ef1c49c"
+    },
+    "save-transfer.js": {
+      "bytes": 16375,
+      "sha256": "de0c5b67863c8f307906d4d1c739b05ef0d32d5f854a8d77581750a37dd6f314"
+    },
+    "steam-compat.js": {
+      "bytes": 5185,
+      "sha256": "ace261bed202e3f99a242ac6b6dc2f532c1967d1b803a0e91a38461db44311eb"
+    },
+    "test-profiles.js": {
+      "bytes": 10112,
+      "sha256": "b93318eb4738b199d39dbf10ad6313e11fd2350dc4526c64216b2a13c27e1ce0"
+    },
+    "vendor/jszip.min.js": {
+      "bytes": 97630,
+      "sha256": "acc7e41455a80765b5fd9c7ee1b8078a6d160bbbca455aeae854de65c947d59e"
+    }
+  },
+  "inputs": {
+    "earnedProfile": {
+      "path": "tests/fixtures/gust-bloom-browser/earned-headwind-profile.zip",
+      "bytes": 305,
+      "sha256": "6ab13ce61e1a744ce7efcec27a0c2f0c5f2ad944944f1846bba28fb20cc1dd69"
+    }
+  },
+  "actionTranscript": {
+    "path": "tests/fixtures/gust-bloom-browser/actions.jsonl",
+    "bytes": 44486,
+    "sha256": "b0aecc1080c2d69b52c24e9b97bbfea50477cdd470dea30fec72f57055baac49"
+  },
+  "canvas": {
+    "width": 800,
+    "height": 600,
+    "cssWidth": 1100,
+    "cssHeight": 825
+  },
+  "viewport": {
+    "width": 1100,
+    "height": 850,
+    "deviceScaleFactor": 1
+  },
+  "operatorObservations": [
+    "File-free startup reached the original title screen before any save import; mute button stayed pressed true throughout all DOM inspections.",
+    "Imported two exact profile files from an actual native-earned Headwind win; only standard campaign availability came from the native test setup.",
+    "Headwind appears as Bonus card20 with its earned trophy and distinct original-pixel thumbnail; the Gust-bloom Almanac portrait and full biography fit.",
+    "Selected Gust-bloom with five original plants through the normal Survival Day chooser; six packets appeared correctly in the native bank.",
+    "Collected natural sky sun and purchased Gust-bloom for150sun, leaving0; native2x speed remained visible.",
+    "Used native Leave Game save, waited for browser persistence, reloaded the same isolated browser origin, and chose Survival Day Continue; Gust-bloom returned in the same cell with0sun and2x.",
+    "No browser wins, hidden game state edits, performance instrumentation or fresh timing measurements are claimed."
+  ],
+  "historicalToolFailures": [
+    "CUA and node_repl failed to write kernel assets; first headless navigation timed out while server was sandboxed, then succeeded using the host loopback server."
+  ]
+}

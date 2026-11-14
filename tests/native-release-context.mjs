@@ -3,9 +3,18 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 
-export const CURRENT_ENGINE_ID = '0.2.6-web-double.1';
-export const CURRENT_SOURCE_COUNT = 872;
-export const CURRENT_OBJECT_COUNT = 144;
+export const CURRENT_ENGINE_ID = '0.2.6-web-gust.1';
+export const CURRENT_SOURCE_COUNT = 878;
+export const CURRENT_OBJECT_COUNT = 147;
+export const DOUBLE_ENGINE_ID = '0.2.6-web-double.1';
+export const DOUBLE_SOURCE_COUNT = 872;
+export const DOUBLE_OBJECT_COUNT = 144;
+export const DOUBLE_ARCHIVE_SHA256 = '35b635770bbb040dd3b2c41c4c86ed49f351cbd29926b8efa286394ff89ad5b3';
+export const GUST_PARENT_REFERENCE_SHA256 = '14b5ef8f794cbfb5cb687f24cf05d23fa63620339945f139d2c5d947e9827476';
+export const DOUBLE_FOCUSED_REFERENCE_SHA256 = '965a041ea2b3afc736cb756ebf80750aa5cf9478e36dd91426a1f12311e9a2b2';
+export const GUST_PARENT_TEST_INPUTS_SHA256 = 'afae585b66dfaef7effed2fcdf4e352bb3d273a2e77b4ad50a093a177e0aea67';
+export const GUST_SOURCE_ADDITIONS = ['GustBloom','GustChallenge','GustBloomArt']
+ .flatMap(name=>['src/Lawn/System/'+name+'.cpp','src/Lawn/System/'+name+'.h']);
 export const TORCH_ENGINE_ID = '0.2.6-web-torch.1';
 export const TORCH_ARCHIVE_SHA256 = '2e7f7d49093a1aa93d350558b568d2b81b615632b33613631f630a484872b3ba';
 // Final source/evidence pins are deliberately closed until the actual source
@@ -40,10 +49,10 @@ const reviewedDoubleRetentionPins = Object.freeze({
   vase:'05025af9fa6976e55aa6d158d875733fac80dde9739449f7c6341468785e71b3',
   torch:'ddfbb060d29ff59dc04770b7c068f4b1f1973a1f14b1d94adde02cb44f0461b7',
 });
-export const CURRENT_ENDLESS_RETENTION_SHA256 = reviewedDoubleRetentionPins.endless;
-export const CURRENT_SCRAP_RETENTION_SHA256 = reviewedDoubleRetentionPins.scrap;
-export const CURRENT_VASE_RETENTION_SHA256 = reviewedDoubleRetentionPins.vase;
-export const CURRENT_TORCH_RETENTION_SHA256 = reviewedDoubleRetentionPins.torch;
+export const CURRENT_ENDLESS_RETENTION_SHA256 = '4f873bfe77ddaf4a37491bb7626f07cc7c8728f9b0d91172f5b9987f434e5ac6';
+export const CURRENT_SCRAP_RETENTION_SHA256 = 'fdd57dd1ebf5d8c02e31994f1e36b9e972d49020109b57f67ce988813821c35c';
+export const CURRENT_VASE_RETENTION_SHA256 = '9ecd77d0b25479b6bb17b1674ec7a5a5f0ea5085958487802b7e97e6c262de28';
+export const CURRENT_TORCH_RETENTION_SHA256 = 'f1b1045cec77507fb85efa8c526789ade7c112787dfe2e6d9bf4fe76b58fc65a';
 export const PARENT_TEST_INPUTS_SHA256 = '7d6c2749a2d9d1ae462e964447e017f4fcd0e3146909de210ddacaab06be8c82';
 export const AMBUSH_SOURCE_ADDITIONS = ['src/Lawn/System/VaseAmbush.cpp', 'src/Lawn/System/VaseAmbush.h',
   'src/Lawn/System/VaseAmbushPresentation.cpp', 'src/Lawn/System/VaseAmbushPresentation.h'];
@@ -229,7 +238,7 @@ export async function verifyTorchRetainedParentInputs({read, sha}) {
 }
 
 export async function reconstructAmbushSources({referenceBytes, read, sha, engine}) {
-  if (engine.id === CURRENT_ENGINE_ID) {
+  if (engine.id === CURRENT_ENGINE_ID || engine.id === DOUBLE_ENGINE_ID) {
     const projected = await torchSourceReader({read,sha,engine});
     read = projected.read;
     engine = projected.engine;
@@ -281,14 +290,14 @@ export async function reconstructAmbushSources({referenceBytes, read, sha, engin
 export async function reconstructTorchSources({referenceBytes,read,sha,engine}) {
   assert(DOUBLE_PARENT_REFERENCE_SHA256,'The Double Agent source projection has not been frozen');
   assert.equal(sha(referenceBytes),DOUBLE_PARENT_REFERENCE_SHA256,'Reviewed complete Torch parent projection');
-  assert.equal(engine.id,CURRENT_ENGINE_ID);
+  assert.equal(engine.id,DOUBLE_ENGINE_ID);
   assert.equal(engine.parent.id,TORCH_ENGINE_ID);
   assert.equal(engine.parent.artifacts.sourceSha256,TORCH_ARCHIVE_SHA256);
   const reference=JSON.parse(referenceBytes);
   assert.equal(reference.schemaVersion,1);
   assert.deepEqual(reference.parent,{id:TORCH_ENGINE_ID,archiveSha256:TORCH_ARCHIVE_SHA256,
     archivePrefix:'torch1-candidate/source/'});
-  assert.deepEqual(reference.current,{id:CURRENT_ENGINE_ID,sourceCount:CURRENT_SOURCE_COUNT});
+  assert.deepEqual(reference.current,{id:DOUBLE_ENGINE_ID,sourceCount:DOUBLE_SOURCE_COUNT});
   assert.equal(Object.keys(reference.files).length,868);
   // This exact reviewed changed-path inventory is pinned in the complete
   // fixture; no source path can be inserted, dropped or silently repinned.
@@ -324,7 +333,10 @@ export async function reconstructTorchSources({referenceBytes,read,sha,engine}) 
 
 export async function torchSourceReader({read,sha,engine,referenceBytes}) {
   if(engine.id===TORCH_ENGINE_ID)return {read,engine};
-  assert.equal(engine.id,CURRENT_ENGINE_ID);
+  if(engine.id===CURRENT_ENGINE_ID){
+    const double=await doubleSourceReader({read,sha,engine});read=double.read;engine=double.engine;
+  }
+  assert.equal(engine.id,DOUBLE_ENGINE_ID);
   referenceBytes ??= fs.readFileSync(new URL('./fixtures/double1-parent-reference.json',import.meta.url));
   const projected=await reconstructTorchSources({referenceBytes,read,sha,engine});
   return {engine:engine.parent,files:projected.files,
@@ -341,7 +353,7 @@ export async function verifyDoubleRetainedParentInputs({read,sha}) {
   const manifest=JSON.parse(bytes);
   assert.equal(manifest.schemaVersion,1);assert.equal(manifest.parentEngineId,TORCH_ENGINE_ID);
   assert.equal(manifest.parentArchiveSha256,TORCH_ARCHIVE_SHA256);
-  assert.equal(manifest.parentArchivePrefix,'torch1-candidate/');assert.equal(manifest.currentEngineId,CURRENT_ENGINE_ID);
+  assert.equal(manifest.parentArchivePrefix,'torch1-candidate/');assert.equal(manifest.currentEngineId,DOUBLE_ENGINE_ID);
   assert.equal(Object.keys(manifest.files).length,44);
   for(const [name,pin]of Object.entries(manifest.files)){
     safeName(name);assert(name.startsWith('tests/'));safeName(pin.snapshot);assert(!pin.snapshot.includes('/'));
@@ -408,6 +420,123 @@ export async function reconstructTorchFocusedEvidence({referenceBytes,read,sha,e
   }
   assert.equal(inline,29);assert.equal(files.size,201);
   const historicalRead=async name=>{safeName(name);const bytes=files.get(name);assert(bytes,'Unreviewed historical Torch input: '+name);return bytes;};
+  historicalRead.has=name=>{safeName(name);return files.has(name);};
+  return historicalRead;
+}
+
+export async function reconstructDoubleSources({referenceBytes,read,sha,engine}) {
+  assert(GUST_PARENT_REFERENCE_SHA256,'The complete Gust-to-Double source projection has not been frozen');
+  assert.equal(sha(referenceBytes),GUST_PARENT_REFERENCE_SHA256,'Reviewed complete Double parent projection');
+  assert.equal(engine.id,CURRENT_ENGINE_ID);assert.equal(engine.parent.id,DOUBLE_ENGINE_ID);
+  assert.equal(engine.parent.artifacts.sourceSha256,DOUBLE_ARCHIVE_SHA256);
+  const reference=JSON.parse(referenceBytes);
+  assert.equal(reference.schemaVersion,1);
+  assert.deepEqual(reference.parent,{id:DOUBLE_ENGINE_ID,archiveSha256:DOUBLE_ARCHIVE_SHA256,
+    archivePrefix:'double1-candidate/source/'});
+  assert.deepEqual(reference.current,{id:CURRENT_ENGINE_ID,sourceCount:CURRENT_SOURCE_COUNT});
+  assert.equal(Object.keys(reference.files).length,DOUBLE_SOURCE_COUNT);
+  assert(Array.isArray(reference.changedPaths)&&reference.changedPaths.length>0);
+  assert.deepEqual(Object.keys(reference.reverseEdits).sort(),[...reference.changedPaths].sort());
+  for(const name of GUST_SOURCE_ADDITIONS)assert(!Object.hasOwn(reference.files,name));
+  const files=new Map();
+  for(const [name,pin]of Object.entries(reference.files)){
+    safeName(name);digest(pin.sha256);digest(pin.normalizedSha256);
+    let bytes=Buffer.from(await read('source/'+name));const delta=reference.reverseEdits[name];
+    if(delta){
+      assert.equal(bytes.length,delta.currentBytes);digest(delta.currentSha256);
+      assert.equal(sha(bytes),delta.currentSha256,'Exact Gust source projection input: '+name);
+      assert(Array.isArray(delta.edits)&&delta.edits.length>0);let previous=bytes.length+1;
+      for(const edit of [...delta.edits].reverse()){
+        const before=Buffer.from(edit.beforeBase64,'base64'),after=Buffer.from(edit.afterBase64,'base64');
+        assert.equal(before.toString('base64'),edit.beforeBase64);assert.equal(after.toString('base64'),edit.afterBase64);
+        assert(Number.isSafeInteger(edit.offset)&&edit.offset>=0&&edit.offset<previous);
+        assert(edit.offset+before.length<=previous&&edit.offset+before.length<=bytes.length);
+        assert.deepEqual(bytes.subarray(edit.offset,edit.offset+before.length),before);
+        bytes=Buffer.concat([bytes.subarray(0,edit.offset),after,bytes.subarray(edit.offset+before.length)]);previous=edit.offset;
+      }
+    }
+    assert.equal(bytes.length,pin.bytes);
+    assert.equal(sha(bytes),pin.sha256,'Every complete published Double source retains its independent pin: '+name);
+    assert.equal(sha(Buffer.from(bytes.toString('latin1').replace(/\r\n?/g,'\n'),'latin1')),pin.normalizedSha256);
+    files.set(name,bytes);
+  }
+  return {files,manifest:{version:DOUBLE_ENGINE_ID,files:reference.files}};
+}
+
+export async function doubleSourceReader({read,sha,engine,referenceBytes}) {
+  if(engine.id===DOUBLE_ENGINE_ID)return {read,engine};
+  assert.equal(engine.id,CURRENT_ENGINE_ID);
+  referenceBytes??=fs.readFileSync(new URL('./fixtures/gust1-parent-reference.json',import.meta.url));
+  const projected=await reconstructDoubleSources({referenceBytes,read,sha,engine});
+  return {engine:engine.parent,files:projected.files,read:async name=>{
+    if(!name.startsWith('source/'))return read(name);
+    safeName(name);const bytes=projected.files.get(name.slice(7));assert(bytes,'Unreviewed historical Double source: '+name);return bytes;
+  }};
+}
+
+export async function verifyGustRetainedParentInputs({read,sha}) {
+  const bytes=await read('tests/gust1-retained-parent/manifest.json');
+  assert.equal(sha(bytes),GUST_PARENT_TEST_INPUTS_SHA256,'Exact published Double test-input inventory');
+  const manifest=JSON.parse(bytes);
+  assert.equal(manifest.schemaVersion,1);assert.equal(manifest.parentEngineId,DOUBLE_ENGINE_ID);
+  assert.equal(manifest.parentArchiveSha256,DOUBLE_ARCHIVE_SHA256);assert.equal(Object.keys(manifest.files).length,131);
+  for(const [name,pin]of Object.entries(manifest.files)){
+    safeName(name);assert(!name.includes('/'));digest(pin.sha256);assert(Number.isSafeInteger(pin.bytes)&&pin.bytes>0);
+    const original=Buffer.from(await read('tests/gust1-retained-parent/'+name));
+    assert.equal(original.length,pin.bytes);assert.equal(sha(original),pin.sha256,'Exact published Double input: '+name);
+  }
+  return manifest;
+}
+
+export async function verifyPublishedDoubleAdapter({read,sha,adapter,family}) {
+  assert(Object.hasOwn(reviewedDoubleRetentionPins,family));
+  const original=await read('tests/double1-'+family+'-retention.json'),pin=reviewedDoubleRetentionPins[family];
+  assert.equal(sha(original),pin);assert.equal(adapter.publishedDoubleAdapterSha256,pin);
+  assert.equal(adapter.parentEngineId,DOUBLE_ENGINE_ID);assert.equal(adapter.parentArchiveSha256,DOUBLE_ARCHIVE_SHA256);
+  assert.equal(adapter.parentSnapshotManifestSha256,GUST_PARENT_TEST_INPUTS_SHA256);
+  const retained=await verifyGustRetainedParentInputs({read,sha});
+  assert.equal(retained.files['double1-'+family+'-retention.json'].sha256,pin);
+  const old=JSON.parse(original);assert.equal(old.engineId,DOUBLE_ENGINE_ID);
+  assert.equal(old.productionObjectCount,DOUBLE_OBJECT_COUNT);
+  assert.equal(old[family==='endless'?'productionSourceFiles':'sourceCount'],DOUBLE_SOURCE_COUNT);
+  assert.equal(old.historicalContractSha256,adapter.historicalContractSha256);
+  if(family!=='torch')await verifyPublishedTorchAdapter({read,sha,adapter:old,family});
+  return old;
+}
+
+export async function reconstructDoubleFocusedEvidence({referenceBytes,read,sha,engine,sourceFiles}) {
+  assert.equal(sha(referenceBytes),DOUBLE_FOCUSED_REFERENCE_SHA256,'Exact published Double focused evidence');
+  const parent=historicalEngine(engine,DOUBLE_ENGINE_ID);assert.equal(parent.artifacts.sourceSha256,DOUBLE_ARCHIVE_SHA256);
+  const reference=JSON.parse(referenceBytes);
+  assert.equal(reference.schemaVersion,1);assert.equal(reference.parentEngineId,DOUBLE_ENGINE_ID);
+  assert.equal(reference.parentArchiveSha256,DOUBLE_ARCHIVE_SHA256);assert.equal(reference.parentArchiveBytes,33335884);
+  assert.equal(reference.sourceProjection,'gust1-parent-reference.json');assert.equal(reference.sourceCount,DOUBLE_SOURCE_COUNT);
+  assert.equal(sourceFiles.size,DOUBLE_SOURCE_COUNT);
+  const reports=['game-speed','qol-controls','decks-cooldowns','bonus-challenge','bonus-completion','night-shift',
+    'lantern-shroom','garden-shuffle','seed-swap','mender-bloom','intensive-care','native-layout','care-fatigue'];
+  assert.deepEqual(reference.reportNames,reports);
+  assert.equal(Object.keys(reference.sourcePins).length,117);assert.equal(Object.keys(reference.files).length,119);
+  const files=new Map();let inline=0;
+  for(const [name,pin]of Object.entries(reference.sourcePins)){
+    safeName(name);assert(name.startsWith('source/'));digest(pin);
+    const bytes=sourceFiles.get(name.slice(7));assert(bytes,name);assert.equal(sha(bytes),pin,name);files.set(name,bytes);
+  }
+  for(const [name,pin]of Object.entries(reference.files)){
+    safeName(name);digest(pin.sha256);assert(Number.isSafeInteger(pin.bytes)&&pin.bytes>0);
+    const stored=Object.hasOwn(pin,'currentPath');
+    assert.deepEqual(Object.keys(pin).sort(),['bytes','sha256',stored?'currentPath':'base64'].sort());
+    let bytes;
+    if(stored){
+      safeName(pin.currentPath);assert(/^tests\/(?:double1-(?:focused-retention|retained-parent)\/|gust1-retained-parent\/)/.test(pin.currentPath));
+      bytes=Buffer.from(await read(pin.currentPath));
+    }else{
+      assert(['logs/build-result.json','logs/source-before.json','logs/source-after.json'].includes(name));
+      bytes=Buffer.from(pin.base64,'base64');assert.equal(bytes.toString('base64'),pin.base64);inline++;
+    }
+    assert.equal(bytes.length,pin.bytes,name);assert.equal(sha(bytes),pin.sha256,name);files.set(name,bytes);
+  }
+  assert.equal(inline,3);assert.equal(files.size,236);
+  const historicalRead=async name=>{safeName(name);const bytes=files.get(name);assert(bytes,'Unreviewed historical Double input: '+name);return bytes;};
   historicalRead.has=name=>{safeName(name);return files.has(name);};
   return historicalRead;
 }

@@ -4,7 +4,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {CURRENT_ENGINE_ID,CURRENT_SOURCE_COUNT,CURRENT_OBJECT_COUNT,AMBUSH_ARCHIVE_SHA256,reconstructAmbushSources,
  TORCH_ENGINE_ID,TORCH_ARCHIVE_SHA256,CURRENT_TORCH_RETENTION_SHA256,DOUBLE_PARENT_TEST_INPUTS_SHA256,
- verifyDoubleRetainedParentInputs,torchSourceReader,reconstructTorchFocusedEvidence}
+ verifyDoubleRetainedParentInputs,torchSourceReader,reconstructTorchFocusedEvidence,
+ DOUBLE_ENGINE_ID,DOUBLE_ARCHIVE_SHA256,GUST_PARENT_TEST_INPUTS_SHA256,verifyPublishedDoubleAdapter}
  from './native-release-context.mjs';
 
 // The complete seventh-build matrix includes the corrected native card and
@@ -328,13 +329,14 @@ export async function verifyTorchbearer({report,read,sha,engine,fullRunReport,pr
  assert(acceptedContractPins.has(sha(contractBytes)),
   'The complete current O2 Torchbearer/Fire Drill/earned-Endless matrix has not been accepted');
  const contract=JSON.parse(contractBytes);
- const adapterBytes=await read('tests/double1-torch-retention.json');
+ const adapterBytes=await read('tests/gust1-torch-retention.json');
  assert.equal(sha(adapterBytes),CURRENT_TORCH_RETENTION_SHA256);
  assert.equal(report.retentionAdapterSha256,CURRENT_TORCH_RETENTION_SHA256);
  const adapter=JSON.parse(adapterBytes);
- fields(adapter,{schemaVersion:1,parentEngineId:TORCH_ENGINE_ID,parentArchiveSha256:TORCH_ARCHIVE_SHA256,
+ fields(adapter,{schemaVersion:1,parentEngineId:DOUBLE_ENGINE_ID,parentArchiveSha256:DOUBLE_ARCHIVE_SHA256,
   engineId:CURRENT_ENGINE_ID,historicalContractSha256:sha(contractBytes),sourceCount:CURRENT_SOURCE_COUNT,
-  productionObjectCount:CURRENT_OBJECT_COUNT,all60CasesFresh:true,parentSnapshotManifestSha256:DOUBLE_PARENT_TEST_INPUTS_SHA256});
+  productionObjectCount:CURRENT_OBJECT_COUNT,all60CasesFresh:true,parentSnapshotManifestSha256:GUST_PARENT_TEST_INPUTS_SHA256});
+ await verifyPublishedDoubleAdapter({read,sha,adapter,family:'torch'});
  assert.deepEqual(Object.keys(adapter.fixtureOverrides),['tests/test-torchbearer.py']);
  const retained=await verifyDoubleRetainedParentInputs({read,sha});
  assert.equal(retained.files['tests/test-torchbearer.py'].sha256,contract.fixtureSha256['tests/test-torchbearer.py']);
@@ -553,7 +555,7 @@ export async function verifyTorchbearer({report,read,sha,engine,fullRunReport,pr
  }
  assert.equal(sha(previousArtBytes),'e4b04a29302b31268b9aed1563c7a03bccd174fdb55f36bb7bda75a832df74e4');
  const previous=JSON.parse(previousArtBytes),current=JSON.parse(currentArtBytes);
- assert.equal(previous.cards.length,17);assert.equal(current.cards.length,19);
+ assert.equal(previous.cards.length,17);assert.equal(current.cards.length,20);
  assert.deepEqual({...current,cards:current.cards.slice(0,17)},previous);
  fields(current.cards[17],{mode:90,name:'Fire Drill',generatedArtworkUsed:false,background:'IMAGE_BACKGROUND1'});
  for(const field of ['tip','tips','descriptionBelowCard'])assert(!Object.hasOwn(current.cards[17],field));

@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "status": "functional-only",
+  "engine": {
+    "id": "0.2.6-web-gust.1",
+    "jsSha256": "dc3163631f5a1beb45580cf0d00c04ee8c1a417fa1856f257cf1f44c40b98c68",
+    "wasmSha256": "f1d6be2fb180a17dd616929e47fff7e51a74e0b7d04ae2531483f7b64e8b529a"
+  },
+  "audioMutedThroughout": true,
+  "freshBrowserPerformancePassed": false,
+  "nativeTestsReplaceBrowserPerformance": false,
+  "proof": {
+    "path": "tests/fixtures/gust-bloom-browser/proof.json",
+    "bytes": 7763,
+    "sha256": "95cec1f3c8c04dafc6c0f7013957a6035ecd6e2d1f9a47b680f20efa26b3fdbe"
+  }
+}

@@ -1,5 +1,21 @@
 # Browser parity and QA record
 
+## Gust-bloom verification
+
+The frozen build of 878 source files and 147 production objects passes **28 current native suites, 83,162,731 primary assertions and zero failures**, plus 29,323,436 separately counted Endless late checks. All 27 earlier suites run against current source; the 15 complete-engine drivers bind the same current production objects. All 58,833 earlier focused assertions remain, with one additional catalog iteration (58,834). Automated testing opens no audio device; normal game audio remains available.
+
+The new driver executes 48 cases at 1×/2× using two seeds: 32 real Headwind battle cases and 16 explicitly synthetic controls. It covers normal and staggered play, saves during windup/push/recovery, natural loss, Retry and Replay, the earned regular-game unlock, native 150-sun placement, recharge and Save/Continue. Independent controls check live heavy equipment, immunity, immobilization, sustained forward progress under chill, original-art composition, attack-only I, Zombie cardboard motion, native glyphs and packet/header separation. Actual native comparison, catalog, chooser, Almanac and attack frames were reviewed.
+
+**Muted browser checks passed for functionality:** file-free startup; the Headwind catalog card; the Gust-bloom Almanac entry; selection through the normal chooser using a profile earned by native Headwind play; a Gust-bloom purchase (150 to 0 sun); 2×; and same-browser Save/reload/Continue. These checks credited **zero browser wins**. The actual automation method and observations are recorded with the five browser screenshots and the imported native-earned profile.
+
+**Fresh browser performance was not measured, and no performance probe was loaded.** The original Torch.1 raw timing baseline and earlier Double.1 browser observations remain historical evidence. They are not relabeled as results for this changed game binary. Native tests and functional browser checks do not replace browser performance measurements.
+
+Development failures remain separate evidence. Actual testing exposed a live-equipment predicate, backward pinning under chill with the earlier recovery interval, and an off-by-one footer counter; these were corrected before the final matrix. The title-only Headwind footer uses the original progress meter. Isolated transparent-raster and backdrop-reference failures were corrected in test fixtures without relaxing pixel or motion thresholds. These are scoped checks, not an exhaustive original-game parity claim.
+
+## Prior release records
+
+The sections below retain their earlier release-time scope; prior accepted gameplay behavior remains required.
+
 ## Double Agent verification
 
 The frozen build of 872 source files and 144 production objects passes **27 current native suites, 71,379,926 primary assertions and zero failures**, plus 29,323,427 separately counted Endless late checks. The new driver executes 52 cases at 1×/2× using two seeds: two winning garden policies, real phase checkpoints, natural losses, Retry and Replay, with explicit zero-credit synthetic controls. All 26 retained suites run against current source; the 14 complete-engine drivers bind the same current production objects. All 58,832 earlier focused assertions remain, with one additional catalog iteration (58,833). Audio output is disabled during automated testing.

@@ -45,7 +45,7 @@ function jpegSize(data){
  assert.fail('Missing JPEG frame dimensions');
 }
 
-export async function verifyDoubleBrowserEvidence({availability,currentEngine,read,sha,Zip}){
+export async function verifyDoubleBrowserEvidence({availability,currentEngine,read,sha,Zip,historical=false,historicalNormalBytes}){
  assert(ACCEPTED_BROWSER_PROOF_SHA256,'Actual Double Agent browser observations have not been reviewed');
  fields(availability,{schemaVersion:1,status:'functional-only',freshBrowserPerformancePassed:false,
   nativeTestsReplaceBrowserPerformance:false,browserControlRecovered:true});
@@ -62,12 +62,12 @@ export async function verifyDoubleBrowserEvidence({availability,currentEngine,re
  assert.equal(availability.historicalUnavailability.path,'tests/fixtures/performance/historical/double1-initial-unavailability.json');
  assert.equal(availability.historicalUnavailability.bytes,1331);
  assert.equal(availability.historicalUnavailability.sha256,UNAVAILABLE);
- const historical=json(pin(availability.historicalUnavailability));
- assert.deepEqual(historical.engine,expectedEngine);
- fields(historical,{schemaVersion:1,status:'unavailable',freshBrowserPerformancePassed:false,nativeTestsReplaceBrowserPerformance:false,
+ const unavailableRecord=json(pin(availability.historicalUnavailability));
+ assert.deepEqual(unavailableRecord.engine,expectedEngine);
+ fields(unavailableRecord,{schemaVersion:1,status:'unavailable',freshBrowserPerformancePassed:false,nativeTestsReplaceBrowserPerformance:false,
   historicalBaselineSha256:BASELINE});
- assert.deepEqual(historical.attempts.map(row=>row.tool),['cua_repl','cua_repl_after_reset','node_repl']);
- for(const row of historical.attempts)assert.equal(row.error,
+ assert.deepEqual(unavailableRecord.attempts.map(row=>row.tool),['cua_repl','cua_repl_after_reset','node_repl']);
+ for(const row of unavailableRecord.attempts)assert.equal(row.error,
   'failed to write kernel assets: The system cannot find the path specified. (os error 3)');
  assert.equal(availability.proof.path,FOLDER+'proof.json');
  assert.equal(availability.proof.sha256,ACCEPTED_BROWSER_PROOF_SHA256);
@@ -116,7 +116,13 @@ export async function verifyDoubleBrowserEvidence({availability,currentEngine,re
  for(const [name,record]of Object.entries(proof.runtimeFiles)){
   safe(name);assert(!name.includes('probe')&&!name.includes('performance'));
   assert.deepEqual(Object.keys(record).sort(),['bytes','sha256']);
-  const data=pin({...record,path:'dist/'+name});
+  if(historical&&['game/pvz-portable.js','game/pvz-portable.wasm'].includes(name)){
+   // Historical executable identities are checked against the exact original
+   // normal receipt below; these are not claimed as current payload checks.
+   assert.equal(record.sha256,name.endsWith('.js')?JS:WASM);continue;
+  }
+  const saved=historical&&['index.html','index-port.html','runtime.js'].includes(name);
+  const data=pin({...record,path:saved?'tests/fixtures/performance/historical/double1-published/'+name:'dist/'+name});
   if(name==='game/pvz-portable.js')assert.equal(sha(data),JS);
   if(name==='game/pvz-portable.wasm')assert.equal(sha(data),WASM);
  }
@@ -128,15 +134,25 @@ export async function verifyDoubleBrowserEvidence({availability,currentEngine,re
  // The browser saw the exact production executable. A later corresponding-
  // source recipe repack may change its metadata source hash, so authenticate
  // the current archive independently instead of rewriting the observed record.
- assert(/^\.\.\/source\/[A-Za-z0-9._-]+\.zip$/.test(currentEngine.artifacts.source));
- const sourceBytes=Buffer.from(read('dist/'+safe(currentEngine.artifacts.source.slice(3))));
- assert.equal(sha(sourceBytes),currentEngine.artifacts.sourceSha256);
- const source=await Zip.loadAsync(sourceBytes);
- const receipt=source.file('double1-candidate/logs/build-result.json');assert(receipt);
- const receiptBytes=Buffer.from(await receipt.async('uint8array'));assert.equal(sha(receiptBytes),NORMAL);
+ let receiptBytes;
+ if(historical){
+  assert(historicalNormalBytes,'Exact historical normal receipt required');
+  receiptBytes=Buffer.from(historicalNormalBytes);
+  assert.equal(currentEngine.artifacts.sourceSha256,'35b635770bbb040dd3b2c41c4c86ed49f351cbd29926b8efa286394ff89ad5b3');
+ }else{
+  assert(/^\.\.\/source\/[A-Za-z0-9._-]+\.zip$/.test(currentEngine.artifacts.source));
+  const sourceBytes=Buffer.from(read('dist/'+safe(currentEngine.artifacts.source.slice(3))));
+  assert.equal(sha(sourceBytes),currentEngine.artifacts.sourceSha256);
+  const source=await Zip.loadAsync(sourceBytes);
+  const receipt=source.file('double1-candidate/logs/build-result.json');assert(receipt);
+  receiptBytes=Buffer.from(await receipt.async('uint8array'));
+ }
+ assert.equal(sha(receiptBytes),NORMAL);
  const normal=json(receiptBytes);fields(normal,{status:'PASS',exitCode:0,sourceFiles:872,sourceUnchangedDuringBuild:true});
+ for(const [name,output]of Object.entries({'game/pvz-portable.js':'build/pvz-portable.js','game/pvz-portable.wasm':'build/pvz-portable.wasm'}))
+  assert.deepEqual(proof.runtimeFiles[name],normal.outputs[output]);
  assert.equal(normal.outputs['build/pvz-portable.js'].sha256,JS);assert.equal(normal.outputs['build/pvz-portable.wasm'].sha256,WASM);
- return {status:'PASS functional-only browser evidence',screenshots:SCREENSHOTS.length,inputs:inputEntries,
+ return {status:historical?'PASS historical Double browser records':'PASS functional-only browser evidence',historical,executablePayloadsChecked:historical?0:2,executableIdentitiesCrossChecked:2,screenshots:SCREENSHOTS.length,inputs:inputEntries,
   imageSizes,runtimeFiles:RUNTIME.length,normalBuildReceiptSha256:NORMAL,
   freshBrowserPerformancePassed:false,browserEarnedWins:0};
 }

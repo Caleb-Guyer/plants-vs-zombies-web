@@ -10,6 +10,7 @@ import {createRequire} from 'node:module';
 import {analyzeCapture, statistics} from './performance/metrics.mjs';
 import {historicalEngine} from './native-release-context.mjs';
 import {verifyDoubleBrowserEvidence} from './double-agent-browser-verification.mjs';
+import {verifyGustBrowserEvidence} from './gust-bloom-browser-verification.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
@@ -159,26 +160,25 @@ console.log(`PASS ${current ? 'current' : 'historical '+engine.id} recorded brow
 }
 assert.equal(sha(read('tests/fixtures/performance/baseline.json')),'43312dcdce1130b7ea1cb0d0cb1e11c19ad5ef6a7e4d22724257d959ca64770f','Published Torch baseline remains immutable');
 await verifyRecordedBaseline('tests/fixtures/performance/baseline.json', false);
-const availability = json(read('tests/fixtures/performance/double1-browser-validation.json'));
-const currentEngine = json(read('dist/game/engine-provenance.json'));
-assert.deepEqual(availability.engine, {id:currentEngine.id,
-  jsSha256:currentEngine.artifacts.jsSha256,wasmSha256:currentEngine.artifacts.wasmSha256});
-assert.equal(sha(read('dist/game/pvz-portable.js')), availability.engine.jsSha256);
-assert.equal(sha(read('dist/game/pvz-portable.wasm')), availability.engine.wasmSha256);
-if(availability.status === 'measured') {
-  await verifyRecordedBaseline('tests/fixtures/performance/double1-baseline.json', true);
-} else if(availability.status === 'functional-only') {
-  const require=createRequire(import.meta.url),vendor={exports:{}};
-  new Function('module','exports','require',read('dist/vendor/jszip.min.js').toString())(vendor,vendor.exports,require);
-  await verifyDoubleBrowserEvidence({availability,currentEngine,read,sha,Zip:vendor.exports});
-  console.log('PASS scoped current-browser functional observations and save/Continue round trips; screenshots and actual imported saves are pinned. No fresh timing benchmark or browser-performance verdict.');
-} else {
-  assert.equal(availability.status,'unavailable');
-  assert.equal(availability.freshBrowserPerformancePassed,false);
-  assert.equal(availability.nativeTestsReplaceBrowserPerformance,false);
-  assert.deepEqual(availability.attempts.map(row=>row.tool),['cua_repl','cua_repl_after_reset','node_repl']);
-  for(const row of availability.attempts) assert.equal(row.error,
-    'failed to write kernel assets: The system cannot find the path specified. (os error 3)');
-  assert(availability.validationScope.includes('native'));
-  console.log('UNAVAILABLE fresh current-browser performance: both browser and desktop automation kernels failed to initialize. Historical timings remain historical; native tests do not certify browser performance.');
-}
+const currentEngine=json(read('dist/game/engine-provenance.json'));
+const require=createRequire(import.meta.url),vendor={exports:{}};
+new Function('module','exports','require',read('dist/vendor/jszip.min.js').toString())(vendor,vendor.exports,require);
+// These are separately scoped Double observations. Their two executable
+// identities are authenticated by the original receipt, not relabeled current.
+const doubleFocused=read('tests/fixtures/double1-focused-reference.json');
+assert.equal(sha(doubleFocused),'965a041ea2b3afc736cb756ebf80750aa5cf9478e36dd91426a1f12311e9a2b2');
+const historicalNormalBytes=Buffer.from(json(doubleFocused).files['logs/build-result.json'].base64,'base64');
+await verifyDoubleBrowserEvidence({
+ availability:json(read('tests/fixtures/performance/double1-browser-validation.json')),
+ currentEngine:historicalEngine(currentEngine,'0.2.6-web-double.1'),read,sha,Zip:vendor.exports,
+ historical:true,historicalNormalBytes});
+console.log('PASS preserved historical Double browser functionality; no current Gust timing verdict is inferred.');
+if(currentEngine.id==='0.2.6-web-gust.1'){
+ const availability=json(read('tests/fixtures/performance/gust1-browser-validation.json'));
+ assert.deepEqual(availability.engine,{id:currentEngine.id,jsSha256:currentEngine.artifacts.jsSha256,wasmSha256:currentEngine.artifacts.wasmSha256});
+ assert.equal(sha(read('dist/game/pvz-portable.js')),availability.engine.jsSha256);
+ assert.equal(sha(read('dist/game/pvz-portable.wasm')),availability.engine.wasmSha256);
+ assert.equal(availability.status,'functional-only','Actual current muted browser observations are required');
+ await verifyGustBrowserEvidence({availability,currentEngine,read,sha,Zip:vendor.exports});
+ console.log('PASS current muted Gust chooser/Almanac/planting/2x/SaveContinue; browser wins0, fresh FPS unmeasured.');
+}else assert.equal(currentEngine.id,'0.2.6-web-double.1','Unreviewed current browser epoch');

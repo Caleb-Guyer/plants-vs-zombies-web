@@ -1,5 +1,19 @@
 # Plants vs. Zombies — browser playtest
 
+## Gust-bloom and Headwind
+
+Gust-bloom is a new 150-sun plant. He winds up, then blows a visible gust down his row to push nearby ordinary ground zombies back. Heavy equipment reduces the push; giants and vehicles shrug it off. Each zombie needs time to recover before another push, limiting repeated knockback.
+
+Beat Headwind, Bonus card 20, to unlock Gust-bloom in the normal Adventure and Survival seed chooser. This finite day-lawn conveyor challenge supplies 32 packets against six mixed formations, ending with a Gargantuar. Its original-style plant and thumbnail use original raster components, with a joined stem, breathing idle, attack anticipation and flowing air. The Almanac includes a portrait, stats and character description. The interface retains the native seed bank, Menu, pause, speed and progress meter, with no card tips or extra HUD. Original saved object layouts remain unchanged.
+
+Tests cover the unlock, windup, push, resistance, recharge, Save/Continue, loss, Retry and Replay at 1×/2× with sound off. Muted browser checks also confirmed normal selection and planting, 2× and Save/reload/Continue using a native-earned profile. Fresh browser performance remains unmeasured; earlier timing records stay historical.
+
+[Play the game](https://caleb-guyer.github.io/plants-vs-zombies-web/).
+
+## Prior release records
+
+The sections below retain their earlier release-time scope; prior accepted gameplay behavior remains required.
+
 ## Double Agent
 
 Double Agent is Bonus card 19. Build a garden in the left five columns with 1500 sun and seven original plants, then press Let's Rock. Survive two assaults, then switch sides: your original garden returns at full health as I, Zombie cardboard. Spend 1000 sun on six original zombie types and eat all five brains. The challenge has no mowers, free sun, combat loot or planting during the assault.

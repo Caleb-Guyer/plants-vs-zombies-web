@@ -1,5 +1,17 @@
 # GitHub Pages release: Caleb-Guyer/plants-vs-zombies-web
 
+## Gust-bloom artifacts
+
+Engine: `0.2.6-web-gust.1`. JavaScript SHA-256: `dc3163631f5a1beb45580cf0d00c04ee8c1a417fa1856f257cf1f44c40b98c68`. WebAssembly SHA-256: `f1d6be2fb180a17dd616929e47fff7e51a74e0b7d04ae2531483f7b64e8b529a`.
+
+Current native source: `pvz-portable-0.2.6-web-gust.1-source.zip`, SHA-256 `10acb269866b175ed4836c2c64c6a79dc86a11241de9e48c7be54f8f89808be8`. Full patch: `web-gust.1.patch`; incremental parent patch: `double1-to-gust1.patch`. The lossless test pack restores 30 current executable files and two separately identified historical comparator files. The source bundle retains all 872 exact Double parent source files through a bounded independently pinned projection, and all 131 selected original parent test inputs through an exact snapshot.
+
+Use the existing manual GitHub Pages workflow. It runs the 19 offline integration suites and all 28 native suites with audio disabled, then stages the game within the 100 MiB per-file and 1 GB total limits before deploying. Publishing and public-byte verification have separate receipts. Current browser evidence covers muted native selection, planting, 2× and same-browser Save/reload/Continue using a native-earned Headwind profile. No browser win or new browser timing verdict is claimed.
+
+## Prior release records
+
+The sections below retain their earlier release-time scope; prior accepted gameplay behavior remains required.
+
 ## Double Agent artifacts
 
 Engine: `0.2.6-web-double.1`. JavaScript SHA-256: `3c8fc69ad6a388826cb3a3be3cf3ec07910b7ad4c5a6dcce42a27bd91df278cf`. WebAssembly SHA-256: `0e9ad8846b33ec2a1823f7637674aa26956619318f2a44c42b8b3f9b28af66e6`.

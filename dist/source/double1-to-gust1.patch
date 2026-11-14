@@ -1,0 +1,1587 @@
+diff --git a/CMake/ProjectVersion.cmake b/CMake/ProjectVersion.cmake
+index 4e96e2880364c944c61a03a1451f5bee72219edc..20ed3e2b53cd478dc7a87e33f74e8bd3b04cf76a 100644
+--- a/CMake/ProjectVersion.cmake
++++ b/CMake/ProjectVersion.cmake
+@@ -66,6 +66,6 @@ if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
+ endif()
+ 
+ # Browser release identity; keep binary and corresponding-source manifests aligned.
+-set(PVZP_VERSION "0.2.6-web-double.1")
++set(PVZP_VERSION "0.2.6-web-gust.1")
+ set(PVZP_VERSION_PLAIN "0.2.6")
+ configure_file("${PROJECT_SOURCE_DIR}/CMake/ProjectVersion.h.in" "${PROJECT_BINARY_DIR}/ProjectVersion.h" @ONLY)
+diff --git a/src/ConstEnums.h b/src/ConstEnums.h
+index afb4318182fe85cd081205afe9c716462237f7c8..d47d95b1aec6333208d1af730a90fa2b3eb0cade 100644
+--- a/src/ConstEnums.h
++++ b/src/ConstEnums.h
+@@ -471,7 +471,8 @@ enum GameMode : int32_t
+ 	GAMEMODE_CHALLENGE_VASE_AMBUSH = 89,
+ 	GAMEMODE_CHALLENGE_FIRE_DRILL = 90,
+ 	GAMEMODE_CHALLENGE_DOUBLE_AGENT = 91,
+-	NUM_GAME_MODES = 92
++	GAMEMODE_CHALLENGE_HEADWIND = 92,
++	NUM_GAME_MODES = 93
+ };
+ enum GameObjectType : int32_t
+ {
+@@ -1133,6 +1134,7 @@ enum SeedType : int32_t
+ 	SEED_LANTERNSHROOM = 75,
+ 	SEED_MENDERBLOOM = 76,
+ 	SEED_ZOMBIE_RALLY = 77,
++	SEED_GUSTBLOOM = 78,
+ 	NUM_SEEDS_IN_CHOOSER = 49,
+ 	SEED_NONE = -1
+ };
+diff --git a/src/Lawn/Board.cpp b/src/Lawn/Board.cpp
+index a06a217213fb19a6d6b206db71fa775f3036bb6c..b57f8da1118801ced1e614646875574410cf9788 100644
+--- a/src/Lawn/Board.cpp
++++ b/src/Lawn/Board.cpp
+@@ -33,7 +33,9 @@
+ #include "System/BonusChallenge.h"
+ #include "System/RallyRaidPresentation.h"
+ #include "System/VaseAmbushPresentation.h"
+-#include "System/DoubleAgentPresentation.h"
++#include "System/DoubleAgentPresentation.h"
++#include "System/GustChallenge.h"
++#include "System/GustBloomArt.h"
+ #include "Widget/LawnDialog.h"
+ #include "System/PlayerInfo.h"
+ #include "System/PoolEffect.h"
+@@ -378,6 +380,7 @@ bool Board::LoadGame(const std::string& theFileName)
+ 	if (!LawnLoadGame(this, theFileName))
+ 		return false;
+ 
++    if (GustChallenge::IsMode(mApp->mGameMode) && !GustChallenge::Validate(*this)) return false;
+     if (DoubleAgent::IsMode(mApp->mGameMode))
+     {
+         if (!DoubleAgent::Validate(*this)) return false;
+@@ -922,6 +925,7 @@ void Board::PickBackground()
+ 	case GameMode::GAMEMODE_CHALLENGE_RALLY_RAID:
+ 	case GameMode::GAMEMODE_CHALLENGE_VASE_AMBUSH:
+ 	case GameMode::GAMEMODE_CHALLENGE_FIRE_DRILL:
++	case GameMode::GAMEMODE_CHALLENGE_HEADWIND:
+ 	case GameMode::GAMEMODE_SURVIVAL_HARD_STAGE_1:
+ 	case GameMode::GAMEMODE_SURVIVAL_ENDLESS_STAGE_1:
+ 	case GameMode::GAMEMODE_CHALLENGE_WAR_AND_PEAS:
+@@ -1331,7 +1335,7 @@ void Board::InitSurvivalStage()
+ 
+ Rect Board::GetShovelButtonRect()
+ {
+-    if (PoolPanicEndless::IsMode(mApp->mGameMode)) return Rect(600 + (mSeedBank ? mSeedBank->mX : SEED_BANK_OFFSET_X_END), 0, Sexy::IMAGE_SHOVELBANK->GetWidth(), Sexy::IMAGE_SHOVELBANK->GetHeight());
++    if (GustChallenge::IsMode(mApp->mGameMode) || PoolPanicEndless::IsMode(mApp->mGameMode)) return Rect(600 + (mSeedBank ? mSeedBank->mX : SEED_BANK_OFFSET_X_END), 0, Sexy::IMAGE_SHOVELBANK->GetWidth(), Sexy::IMAGE_SHOVELBANK->GetHeight());
+     if (LightsOut::IsMode(mApp->mGameMode) || GarlicRun::IsMode(mApp->mGameMode)) return Rect(456, 0, Sexy::IMAGE_SHOVELBANK->GetWidth(), Sexy::IMAGE_SHOVELBANK->GetHeight());
+ 	const bool aCareTool = IntensiveCare::IsMode(mApp->mGameMode);
+ 	Rect aRect(aCareTool ? 0 : GetSeedBankExtraWidth() + 456, 0,
+@@ -1403,7 +1407,7 @@ void Board::InitLevel()
+     // A fresh game opts into the new mechanics. Loaded revision-1 checkpoints
+     // never pass through InitLevel and keep their original state and rules.
+     if (BonusChallenge::IsMode(aGameMode))
+-        mChallenge->mChallengeState = DoubleAgent::IsMode(aGameMode) ? DoubleAgent::kPlanning : FireDrill::IsMode(aGameMode) ? FireDrill::kActive : VaseAmbush::IsMode(aGameMode) ? VaseAmbush::kActive : ScrapYard::IsMode(aGameMode) ? ScrapYard::kState : PoolPanicEndless::IsMode(aGameMode) ? PoolPanicEndless::kActive : PoolPanic::IsMode(aGameMode) ? PoolPanic::kActive : CobCannonCommand::IsMode(aGameMode) ? CobCannonCommand::kActive : BungeeBusiness::IsMode(aGameMode) ? BungeeBusiness::kActive : GarlicRun::IsMode(aGameMode) ? GarlicRun::kPlanning : LightsOut::IsMode(aGameMode) ? LightsOut::kState : RallyRaid::IsMode(aGameMode) ? RallyRaid::kActive :
++        mChallenge->mChallengeState = GustChallenge::IsMode(aGameMode) ? GustChallenge::kActive : DoubleAgent::IsMode(aGameMode) ? DoubleAgent::kPlanning : FireDrill::IsMode(aGameMode) ? FireDrill::kActive : VaseAmbush::IsMode(aGameMode) ? VaseAmbush::kActive : ScrapYard::IsMode(aGameMode) ? ScrapYard::kState : PoolPanicEndless::IsMode(aGameMode) ? PoolPanicEndless::kActive : PoolPanic::IsMode(aGameMode) ? PoolPanic::kActive : CobCannonCommand::IsMode(aGameMode) ? CobCannonCommand::kActive : BungeeBusiness::IsMode(aGameMode) ? BungeeBusiness::kActive : GarlicRun::IsMode(aGameMode) ? GarlicRun::kPlanning : LightsOut::IsMode(aGameMode) ? LightsOut::kState : RallyRaid::IsMode(aGameMode) ? RallyRaid::kActive :
+             RallyZombie::IsMode(aGameMode) ? RallyZombie::kState :
+             ChainReaction::IsMode(aGameMode) ? ChainReaction::kPlanning :
+             IntensiveCare::IsMode(aGameMode) ? IntensiveCare::kState :
+@@ -1611,6 +1615,7 @@ void Board::InitLevel()
+ 		mFogOffset = 1065 - LeftFogColumn() * 80;
+ 	}
+     if (VaseAmbush::IsMode(mApp->mGameMode)) VaseAmbush::PreloadResources();
++    if (GustChallenge::IsMode(mApp->mGameMode)) GustChallenge::PreloadResources();
+     if (FireDrill::IsMode(mApp->mGameMode)) FireDrill::PreloadResources();
+     if (DoubleAgent::IsMode(mApp->mGameMode)) DoubleAgent::PreloadResources();
+     if (ScrapYard::IsMode(mApp->mGameMode)) ScrapYard::PreloadResources();
+@@ -1631,6 +1636,7 @@ void Board::PlaceRake()
+ {
+     if (DoubleAgent::IsMode(mApp->mGameMode)) return;
+     if (VaseAmbush::IsMode(mApp->mGameMode)) return;
++    if (GustChallenge::IsMode(mApp->mGameMode)) return;
+     if (FireDrill::IsMode(mApp->mGameMode)) return;
+     if (ScrapYard::IsMode(mApp->mGameMode)) return;
+     if (PoolPanicEndless::IsMode(mApp->mGameMode) || PoolPanic::IsMode(mApp->mGameMode) || CobCannonCommand::IsMode(mApp->mGameMode) || BungeeBusiness::IsMode(mApp->mGameMode) || ChainReaction::IsMode(mApp->mGameMode) || GarlicRun::IsMode(mApp->mGameMode)) return;
+@@ -1688,7 +1694,7 @@ void Board::PlaceRake()
+ void Board::InitLawnMowers()
+ {
+ 	GameMode aGameMode = mApp->mGameMode;
+-    if (DoubleAgent::IsMode(aGameMode) || ChainReaction::IsMode(aGameMode) || GarlicRun::IsMode(aGameMode)) return;
++    if (GustChallenge::IsMode(aGameMode) || DoubleAgent::IsMode(aGameMode) || ChainReaction::IsMode(aGameMode) || GarlicRun::IsMode(aGameMode)) return;
+ 	// levels that never have lawn mowers
+ 	if (aGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED || aGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED_TWIST ||
+ 		aGameMode == GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN || aGameMode == GameMode::GAMEMODE_TREE_OF_WISDOM ||
+@@ -7360,7 +7366,11 @@ void Board::DrawLevel(Graphics* g)
+ 	else
+ 	{
+ 		aLevelStr = mApp->GetCurrentChallengeDef().mChallengeName;
+-        if (DoubleAgent::IsMode(mApp->mGameMode))
++        if (GustChallenge::IsMode(mApp->mGameMode))
++        {
++            aLevelStr = GustBloomArt::LevelLabel(mChallenge->mSurvivalStage);
++        }
++        else if (DoubleAgent::IsMode(mApp->mGameMode))
+         {
+             aLevelStr = DoubleAgentPresentation::LevelLabel(static_cast<int>(mChallenge->mChallengeState));
+         }
+@@ -7411,7 +7421,7 @@ void Board::DrawLevel(Graphics* g)
+ 
+ 	int aPosX = 780;
+ 	int aPosY = 595;
+-    if (DoubleAgent::IsMode(mApp->mGameMode) || FireDrill::IsMode(mApp->mGameMode) || VaseAmbush::IsMode(mApp->mGameMode) || ScrapYard::IsMode(mApp->mGameMode) || PoolPanicEndless::IsMode(mApp->mGameMode) || PoolPanic::IsMode(mApp->mGameMode) || CobCannonCommand::IsMode(mApp->mGameMode) || BungeeBusiness::IsMode(mApp->mGameMode) || RallyRaid::IsMode(mApp->mGameMode)) aPosY = 592;
++    if (GustChallenge::IsMode(mApp->mGameMode) || DoubleAgent::IsMode(mApp->mGameMode) || FireDrill::IsMode(mApp->mGameMode) || VaseAmbush::IsMode(mApp->mGameMode) || ScrapYard::IsMode(mApp->mGameMode) || PoolPanicEndless::IsMode(mApp->mGameMode) || PoolPanic::IsMode(mApp->mGameMode) || CobCannonCommand::IsMode(mApp->mGameMode) || BungeeBusiness::IsMode(mApp->mGameMode) || RallyRaid::IsMode(mApp->mGameMode)) aPosY = 592;
+ 	if (HasProgressMeter())
+ 	{
+ 		aPosX = 593;
+@@ -7601,7 +7611,7 @@ void Board::DrawZenButtons(Graphics* g)
+ void Board::DrawShovel(Graphics* g)
+ {
+     if (PoolPanic::IsMode(mApp->mGameMode)) return;
+-    if (PoolPanicEndless::IsMode(mApp->mGameMode))
++    if (GustChallenge::IsMode(mApp->mGameMode) || PoolPanicEndless::IsMode(mApp->mGameMode))
+     {
+         if (!mShowShovel) return;
+         const Rect frame = GetShovelButtonRect();
+@@ -9479,6 +9489,7 @@ bool Board::StageIsNight()
+ bool Board::StageHasGraveStones()
+ {
+     if (DoubleAgent::IsMode(mApp->mGameMode)) return false;
++    if (GustChallenge::IsMode(mApp->mGameMode)) return false;
+     if (FireDrill::IsMode(mApp->mGameMode)) return false;
+     if (ScrapYard::IsMode(mApp->mGameMode)) return false;
+     if (LightsOut::IsMode(mApp->mGameMode)) return false;
+@@ -10007,6 +10018,7 @@ bool Board::CanDropLoot()
+ {
+     if (DoubleAgent::IsMode(mApp->mGameMode)) return false;
+     if (VaseAmbush::IsMode(mApp->mGameMode)) return false;
++    if (GustChallenge::IsMode(mApp->mGameMode)) return false;
+     if (FireDrill::IsMode(mApp->mGameMode)) return false;
+     if (ScrapYard::IsMode(mApp->mGameMode)) return false;
+ 	if (PoolPanicEndless::IsMode(mApp->mGameMode) || PoolPanic::IsMode(mApp->mGameMode) || CobCannonCommand::IsMode(mApp->mGameMode) || BungeeBusiness::IsMode(mApp->mGameMode) || ChainReaction::IsMode(mApp->mGameMode) || RallyRaid::IsMode(mApp->mGameMode) || GarlicRun::IsMode(mApp->mGameMode)) return false;
+diff --git a/src/Lawn/Challenge.cpp b/src/Lawn/Challenge.cpp
+index 4cf7635afcbf1a310e311b42e0ceaf419daf613b..ae776be7b5e5c5baad2eee1c7cd9c4810f0b0490 100644
+--- a/src/Lawn/Challenge.cpp
++++ b/src/Lawn/Challenge.cpp
+@@ -40,6 +40,8 @@
+ #include "../GameConstants.h"
+ #include "System/PlayerInfo.h"
+ #include "System/BonusChallenge.h"
++#include "System/GustChallenge.h"
++#include "System/GustBloomArt.h"
+ #include "System/RallyRaidPresentation.h"
+ #include "Widget/GameButton.h"
+ #include "Widget/StoreScreen.h"
+@@ -120,6 +122,11 @@ void Challenge::LoadBeghouledBoardState(BeghouledBoardState* theBoardState)
+ 
+ void Challenge::InitLevel()
+ {
++    if (GustChallenge::IsMode(mApp->mGameMode))
++    {
++        GustChallenge::Populate(*mBoard);
++        return;
++    }
+     if (DoubleAgent::IsMode(mApp->mGameMode))
+     {
+         DoubleAgent::Populate(*mBoard);
+@@ -2156,6 +2163,11 @@ void Challenge::Update()
+ 	if (mApp->mGameScene != SCENE_PLAYING && mApp->mGameMode != GAMEMODE_TREE_OF_WISDOM)
+ 		return;
+ 
++    if (GustChallenge::IsMode(mApp->mGameMode))
++    {
++        GustChallenge::Update(*mBoard);
++        return;
++    }
+     if (DoubleAgent::IsMode(mApp->mGameMode))
+     {
+         DoubleAgent::Update(*mBoard);
+@@ -2991,6 +3003,7 @@ void Challenge::WhackAZombieSpawning()
+ 
+ bool Challenge::UpdateZombieSpawning()
+ {
++    if (GustChallenge::IsMode(mApp->mGameMode)) return true;
+     if (DoubleAgent::IsMode(mApp->mGameMode)) return true;
+     if (FireDrill::IsMode(mApp->mGameMode)) return true;
+     if (ScrapYard::IsMode(mApp->mGameMode)) return true;
+@@ -4885,6 +4898,7 @@ void Challenge::IZombieSetPlantFilterEffect(Plant* thePlant, FilterEffect theFil
+ 
+ void Challenge::IZombieDrawPlant(Graphics* g, Plant* thePlant)
+ {
++    if (thePlant->mSeedType == SEED_GUSTBLOOM && GustBloomArt::DrawCardboardPlant(g, *thePlant)) return;
+     if (RallyRaid::IsMode(mApp->mGameMode) && RallyRaidPresentation::DrawCustomPlant(g, *thePlant)) return;
+ 	Reanimation* aReanim = mApp->ReanimationTryToGet(thePlant->mBodyReanimID);
+ 	if (aReanim)
+diff --git a/src/Lawn/Plant.cpp b/src/Lawn/Plant.cpp
+index 53d10c4ba058879e3e37069cab913d41ecb64dcd..21439db482d0d6b66a2171fa3066e34d5bf63ec5 100644
+--- a/src/Lawn/Plant.cpp
++++ b/src/Lawn/Plant.cpp
+@@ -35,6 +35,8 @@
+ #include "System/PlayerInfo.h"
+ #include "System/LanternShroom.h"
+ #include "System/MenderBloom.h"
++#include "System/GustBloom.h"
++#include "System/GustBloomArt.h"
+ #include "System/RallyRaid.h"
+ #include "System/LightsOut.h"
+ #include "System/IntensiveCare.h"
+@@ -196,6 +198,7 @@ void Plant::PlantInitialize(int theGridX, int theGridY, SeedType theSeedType, Se
+ 
+ 	if (mSeedType == SEED_LANTERNSHROOM) LanternShroom::EnsurePlantReanimation(*this);
+ 	if (mSeedType == SEED_MENDERBLOOM) MenderBloom::EnsurePlantReanimation(*this);
++	if (mSeedType == SEED_GUSTBLOOM) GustBloomArt::EnsurePlantReanimation(*this);
+ 
+ 	if (IsNocturnal(mSeedType) && mBoard && !mBoard->StageIsNight())
+ 		SetSleeping(true);
+@@ -209,6 +212,7 @@ void Plant::PlantInitialize(int theGridX, int theGridY, SeedType theSeedType, Se
+ 	}
+ 	else
+ 		mLaunchCounter = 0;
++	if (mSeedType == SEED_GUSTBLOOM) GustBloom::Initialize(*this);
+ 
+ 	switch (theSeedType)
+ 	{
+@@ -2617,6 +2621,11 @@ void Plant::UpdateAbilities()
+ 		MenderBloom::Update(*this);
+ 		return;
+ 	}
++	if (mSeedType == SEED_GUSTBLOOM)
++	{
++		GustBloom::Update(*this);
++		return;
++	}
+ 
+     // Recovery and exhaustion pause the native attack clocks. A patient moved
+     // during its wind-up cannot release a shot from the protected flower pot.
+@@ -2821,6 +2830,7 @@ void Plant::UpdateReanim()
+ {
+ 	if (mSeedType == SEED_LANTERNSHROOM) LanternShroom::EnsurePlantReanimation(*this);
+ 	if (mSeedType == SEED_MENDERBLOOM) MenderBloom::EnsurePlantReanimation(*this);
++	if (mSeedType == SEED_GUSTBLOOM) GustBloomArt::EnsurePlantReanimation(*this);
+ 	Reanimation* aBodyReanim = mApp->ReanimationTryToGet(mBodyReanimID);
+ 	if (aBodyReanim == nullptr)
+ 		return;
+@@ -3897,6 +3907,7 @@ Image* Plant::GetImage(SeedType theSeedType)
+ {
+ 	if (theSeedType == SEED_LANTERNSHROOM) return LanternShroom::GetImage();
+ 	if (theSeedType == SEED_MENDERBLOOM) return MenderBloom::GetImage();
++	if (theSeedType == SEED_GUSTBLOOM) return GustBloomArt::GetImage();
+ 	Image** aImages = GetPlantDefinition(theSeedType).mPlantImage;
+ 	return aImages ? aImages[0] : nullptr;
+ }
+@@ -4112,6 +4123,7 @@ void Plant::Draw(Graphics* g)
+ {
+ 	if (mSeedType == SEED_LANTERNSHROOM) LanternShroom::EnsurePlantReanimation(*this);
+ 	if (mSeedType == SEED_MENDERBLOOM) MenderBloom::EnsurePlantReanimation(*this);
++	if (mSeedType == SEED_GUSTBLOOM) GustBloomArt::EnsurePlantReanimation(*this);
+ 	float aOffsetX = 0.0f;
+ 	float aOffsetY = PlantDrawHeightOffset(mBoard, this, mSeedType, mPlantCol, mRow);
+ 	if (mSeedType == SEED_LANTERNSHROOM) LanternShroom::DrawAttackPulse(g, *this, aOffsetY);
+@@ -4216,7 +4228,9 @@ void Plant::Draw(Graphics* g)
+ 				}
+ 				else
+ 				{
+-					if (mSeedType == SEED_MENDERBLOOM)
++					if (mSeedType == SEED_GUSTBLOOM)
++						GustBloomArt::DrawPlantRig(g, *this, *aBodyReanim);
++					else if (mSeedType == SEED_MENDERBLOOM)
+ 						MenderBloom::DrawPlantRig(g, *this, *aBodyReanim);
+ 					else
+ 					{
+@@ -4281,6 +4295,12 @@ void Plant::Draw(Graphics* g)
+ 
+ void Plant::DrawSeedType(Graphics* g, SeedType theSeedType, SeedType theImitaterType, DrawVariation theDrawVariation, float thePosX, float thePosY)
+ {
++    if (theSeedType == SEED_GUSTBLOOM || (theSeedType == SEED_IMITATER && theImitaterType == SEED_GUSTBLOOM))
++    {
++        Graphics gustGraphics(*g);
++        GustBloomArt::DrawSprite(&gustGraphics, thePosX, thePosY, g->mScaleX, g->mScaleY);
++        return;
++    }
+     if (theSeedType == SEED_MENDERBLOOM || (theSeedType == SEED_IMITATER && theImitaterType == SEED_MENDERBLOOM))
+     {
+         Graphics menderGraphics(*g);
+@@ -5164,6 +5184,15 @@ void Plant::Die()
+ 
+ const PlantDefinition& GetPlantDefinition(SeedType theSeedType)
+ {
++    if (theSeedType == SEED_GUSTBLOOM)
++    {
++        static const PlantDefinition definition = {
++            .mSeedType = SEED_GUSTBLOOM, .mPlantImage = nullptr, .mReanimationType = REANIM_BLOVER,
++            .mPacketIndex = 0, .mSeedCost = GustBloom::kCost, .mRefreshTime = GustBloom::kRecharge,
++            .mSubClass = SUBCLASS_NORMAL, .mLaunchRate = 0, .mPlantName = "GUST_BLOOM"
++        };
++        return definition;
++    }
+     if (theSeedType == SEED_MENDERBLOOM)
+     {
+         static const PlantDefinition definition = {
+@@ -5255,6 +5284,8 @@ int Plant::GetCost(SeedType theSeedType, SeedType theImitaterType)
+ 
+ std::string Plant::GetNameString(SeedType theSeedType, SeedType theImitaterType)
+ {
++    if (theSeedType == SEED_GUSTBLOOM) return "Gust-bloom";
++    if (theSeedType == SEED_IMITATER && theImitaterType == SEED_GUSTBLOOM) return "Imitater Gust-bloom";
+     if (theSeedType == SEED_ZOMBIE_RALLY) return "Rally Zombie";
+     if (theSeedType == SEED_MENDERBLOOM) return "Mender-bloom";
+     if (theSeedType == SEED_IMITATER && theImitaterType == SEED_MENDERBLOOM) return "Imitater Mender-bloom";
+@@ -5278,6 +5309,7 @@ std::string Plant::GetNameString(SeedType theSeedType, SeedType theImitaterType)
+ 
+ std::string Plant::GetToolTip(SeedType theSeedType)
+ {
++    if (theSeedType == SEED_GUSTBLOOM) return "Blows nearby zombies back. Heavy zombies resist the gust.";
+     if (theSeedType == SEED_ZOMBIE_RALLY) return "Calls nearby walkers into a faster shuffle.";
+     if (theSeedType == SEED_MENDERBLOOM) return "Slowly heals damaged plants in the eight neighboring squares.";
+     if (theSeedType == SEED_LANTERNSHROOM) return "Cold pulses briefly slow nearby zombies.";
+@@ -5428,7 +5460,13 @@ void Plant::PreloadPlantResources(SeedType theSeedType)
+ 		ReanimatorEnsureDefinitionLoaded(aPlantDef.mReanimationType, true);
+ 	}
+ 
+-	if (theSeedType == SeedType::SEED_CHERRYBOMB)
++	if (theSeedType == SEED_GUSTBLOOM)
++	{
++		ReanimatorEnsureDefinitionLoaded(REANIM_PEASHOOTER, true);
++		ReanimatorEnsureDefinitionLoaded(REANIM_CABBAGEPULT, true);
++		GustBloomArt::GetImage();
++	}
++	else if (theSeedType == SeedType::SEED_CHERRYBOMB)
+ 	{
+ 		ReanimatorEnsureDefinitionLoaded(ReanimationType::REANIM_ZOMBIE_CHARRED, true);
+ 	}
+diff --git a/src/Lawn/SeedPacket.cpp b/src/Lawn/SeedPacket.cpp
+index 1f0e669e5cd6950044e123157626d0abafc840ac..e777a580ea20067f38eebdb8e434938835515b5f 100644
+--- a/src/Lawn/SeedPacket.cpp
++++ b/src/Lawn/SeedPacket.cpp
+@@ -686,7 +686,7 @@ void SeedPacket::Draw(Graphics* g)
+ 		DrawSeedPacket(g, mOffsetX, 0.0f, mPacketType, mImitaterType, aPercentDark, aGrayness, aDrawCost, true);
+         if (mApp->GetQoLSettings().mShowCooldownNumbers && mApp->mGameScene == SCENE_PLAYING &&
+             !mBoard->HasConveyorBeltSeedBank() && !mApp->IsSlotMachineLevel() &&
+-            ((mPacketType >= SEED_PEASHOOTER && mPacketType < NUM_SEEDS_IN_CHOOSER) || mPacketType == SEED_LANTERNSHROOM || mPacketType == SEED_MENDERBLOOM))
++            ((mPacketType >= SEED_PEASHOOTER && mPacketType < NUM_SEEDS_IN_CHOOSER) || mPacketType == SEED_LANTERNSHROOM || mPacketType == SEED_MENDERBLOOM || mPacketType == SEED_GUSTBLOOM))
+         {
+             const int seconds = SeedPacketCooldownSeconds(mRefreshing, mActive, mRefreshTime, mRefreshCounter);
+             if (seconds > 0)
+diff --git a/src/Lawn/System/BonusChallenge.h b/src/Lawn/System/BonusChallenge.h
+index 465c4246c897dfd8fbf8ce487751802e3a6a140e..2e2a9a01c20373d2cd4431897638a1ffa0126666 100644
+--- a/src/Lawn/System/BonusChallenge.h
++++ b/src/Lawn/System/BonusChallenge.h
+@@ -19,7 +19,8 @@
+ #include "ScrapYard.h"
+ #include "VaseAmbush.h"
+ #include "FireDrill.h"
+-#include "DoubleAgent.h"
++#include "DoubleAgent.h"
++#include "GustChallenge.h"
+ #include <array>
+ #include <cstddef>
+ #include <string_view>
+@@ -61,7 +62,7 @@ inline constexpr std::array<Wave, kWaveCount> kWaves = {{
+     {2, 6, 0, 2}, {2, 5, 2, 2}, {2, 6, 0, 3}, {3, 7, 2, 3}
+ }};
+ 
+-constexpr bool IsMode(GameMode mode) { return DoubleAgent::IsMode(mode) || FireDrill::IsMode(mode) || VaseAmbush::IsMode(mode) || ScrapYard::IsMode(mode) || PoolPanicEndless::IsMode(mode) || PoolPanic::IsMode(mode) || CobCannonCommand::IsMode(mode) || BungeeBusiness::IsMode(mode) || GarlicRun::IsMode(mode) || LightsOut::IsMode(mode) || mode == kMode || NightShift::IsMode(mode) || LanternGlow::IsMode(mode) || GardenShuffle::IsMode(mode) || SeedSwap::IsMode(mode) || IntensiveCare::IsMode(mode) || ChainReaction::IsMode(mode) || RallyZombie::IsMode(mode) || RallyRaid::IsMode(mode); }
++constexpr bool IsMode(GameMode mode) { return GustChallenge::IsMode(mode) || DoubleAgent::IsMode(mode) || FireDrill::IsMode(mode) || VaseAmbush::IsMode(mode) || ScrapYard::IsMode(mode) || PoolPanicEndless::IsMode(mode) || PoolPanic::IsMode(mode) || CobCannonCommand::IsMode(mode) || BungeeBusiness::IsMode(mode) || GarlicRun::IsMode(mode) || LightsOut::IsMode(mode) || mode == kMode || NightShift::IsMode(mode) || LanternGlow::IsMode(mode) || GardenShuffle::IsMode(mode) || SeedSwap::IsMode(mode) || IntensiveCare::IsMode(mode) || ChainReaction::IsMode(mode) || RallyZombie::IsMode(mode) || RallyRaid::IsMode(mode); }
+ constexpr bool IsFlagWave(int wave) { return wave >= 0 && wave < kWaveCount && (wave + 1) % 10 == 0; }
+ constexpr int ZombieCount(int wave)
+ {
+@@ -111,12 +112,13 @@ void FillSeedBank(Bank& bank)
+ }
+ 
+ // Shared routing keeps the original Cone Zone data and helpers unchanged.
+-constexpr int StartingSun(GameMode mode) { return DoubleAgent::IsMode(mode) ? DoubleAgent::kStartingSun : FireDrill::IsMode(mode) ? FireDrill::kStartingSun : VaseAmbush::IsMode(mode) ? 0 : ScrapYard::IsMode(mode) ? ScrapYard::kStartingSun : PoolPanicEndless::IsMode(mode) ? 0 : PoolPanic::IsMode(mode) ? 0 : CobCannonCommand::IsMode(mode) ? 0 : BungeeBusiness::IsMode(mode) ? BungeeBusiness::kBoards[0].mSun : GarlicRun::IsMode(mode) ? 0 : LightsOut::IsMode(mode) ? 0 : RallyRaid::IsMode(mode) ? RallyRaid::kBoards[0].mSun : RallyZombie::IsMode(mode) ? RallyZombie::kStartingSun : ChainReaction::IsMode(mode) ? 0 : IntensiveCare::IsMode(mode) ? 0 : SeedSwap::IsMode(mode) ? 0 : GardenShuffle::IsMode(mode) ? 0 : LanternGlow::IsMode(mode) ? LanternGlow::kStartingSun : NightShift::IsMode(mode) ? NightShift::kStartingSun : kStartingSun; }
+-constexpr int SeedCount(GameMode mode) { return DoubleAgent::IsMode(mode) ? static_cast<int>(DoubleAgent::kSeeds.size()) : FireDrill::IsMode(mode) ? static_cast<int>(FireDrill::kSeeds.size()) : VaseAmbush::IsMode(mode) ? 0 : ScrapYard::IsMode(mode) ? static_cast<int>(ScrapYard::kSeeds.size()) : PoolPanicEndless::IsMode(mode) ? PoolPanicEndless::kBankSize : PoolPanic::IsMode(mode) ? PoolPanic::kBankSize : CobCannonCommand::IsMode(mode) ? 0 : BungeeBusiness::IsMode(mode) ? BungeeBusiness::kSeedCount : GarlicRun::IsMode(mode) ? 0 : LightsOut::IsMode(mode) ? 0 : RallyRaid::IsMode(mode) ? RallyRaid::kSeedCount : RallyZombie::IsMode(mode) ? static_cast<int>(RallyZombie::kSeeds.size()) : ChainReaction::IsMode(mode) ? ChainReaction::kSeedCount : IntensiveCare::IsMode(mode) ? IntensiveCare::kSeedCount : SeedSwap::IsMode(mode) ? 0 : GardenShuffle::IsMode(mode) ? 0 : static_cast<int>(LanternGlow::IsMode(mode) ? LanternGlow::kSeeds.size() : NightShift::IsMode(mode) ? NightShift::kSeeds.size() : kSeeds.size()); }
++constexpr int StartingSun(GameMode mode) { return GustChallenge::IsMode(mode) ? GustChallenge::kStartingSun : DoubleAgent::IsMode(mode) ? DoubleAgent::kStartingSun : FireDrill::IsMode(mode) ? FireDrill::kStartingSun : VaseAmbush::IsMode(mode) ? 0 : ScrapYard::IsMode(mode) ? ScrapYard::kStartingSun : PoolPanicEndless::IsMode(mode) ? 0 : PoolPanic::IsMode(mode) ? 0 : CobCannonCommand::IsMode(mode) ? 0 : BungeeBusiness::IsMode(mode) ? BungeeBusiness::kBoards[0].mSun : GarlicRun::IsMode(mode) ? 0 : LightsOut::IsMode(mode) ? 0 : RallyRaid::IsMode(mode) ? RallyRaid::kBoards[0].mSun : RallyZombie::IsMode(mode) ? RallyZombie::kStartingSun : ChainReaction::IsMode(mode) ? 0 : IntensiveCare::IsMode(mode) ? 0 : SeedSwap::IsMode(mode) ? 0 : GardenShuffle::IsMode(mode) ? 0 : LanternGlow::IsMode(mode) ? LanternGlow::kStartingSun : NightShift::IsMode(mode) ? NightShift::kStartingSun : kStartingSun; }
++constexpr int SeedCount(GameMode mode) { return GustChallenge::IsMode(mode) ? GustChallenge::kBankSize : DoubleAgent::IsMode(mode) ? static_cast<int>(DoubleAgent::kSeeds.size()) : FireDrill::IsMode(mode) ? static_cast<int>(FireDrill::kSeeds.size()) : VaseAmbush::IsMode(mode) ? 0 : ScrapYard::IsMode(mode) ? static_cast<int>(ScrapYard::kSeeds.size()) : PoolPanicEndless::IsMode(mode) ? PoolPanicEndless::kBankSize : PoolPanic::IsMode(mode) ? PoolPanic::kBankSize : CobCannonCommand::IsMode(mode) ? 0 : BungeeBusiness::IsMode(mode) ? BungeeBusiness::kSeedCount : GarlicRun::IsMode(mode) ? 0 : LightsOut::IsMode(mode) ? 0 : RallyRaid::IsMode(mode) ? RallyRaid::kSeedCount : RallyZombie::IsMode(mode) ? static_cast<int>(RallyZombie::kSeeds.size()) : ChainReaction::IsMode(mode) ? ChainReaction::kSeedCount : IntensiveCare::IsMode(mode) ? IntensiveCare::kSeedCount : SeedSwap::IsMode(mode) ? 0 : GardenShuffle::IsMode(mode) ? 0 : static_cast<int>(LanternGlow::IsMode(mode) ? LanternGlow::kSeeds.size() : NightShift::IsMode(mode) ? NightShift::kSeeds.size() : kSeeds.size()); }
+ 
+ template<std::size_t Waves, std::size_t Slots>
+ int PopulateWaves(GameMode mode, ZombieType (&output)[Waves][Slots])
+ {
++    if (GustChallenge::IsMode(mode)) return GustChallenge::PopulateWaves(output);
+     if (VaseAmbush::IsMode(mode)) return VaseAmbush::PopulateWaves(output);
+     if (DoubleAgent::IsMode(mode)) return DoubleAgent::PopulateWaves(output);
+     if (FireDrill::IsMode(mode)) return FireDrill::PopulateWaves(output);
+@@ -139,7 +141,8 @@ int PopulateWaves(GameMode mode, ZombieType (&output)[Waves][Slots])
+ template<std::size_t Count>
+ void PopulateAllowedZombies(GameMode mode, bool (&output)[Count])
+ {
+-    if (VaseAmbush::IsMode(mode)) VaseAmbush::PopulateAllowedZombies(output);
++    if (GustChallenge::IsMode(mode)) GustChallenge::PopulateAllowedZombies(output);
++    else if (VaseAmbush::IsMode(mode)) VaseAmbush::PopulateAllowedZombies(output);
+     else if (DoubleAgent::IsMode(mode)) DoubleAgent::PopulateAllowedZombies(output);
+     else if (FireDrill::IsMode(mode)) FireDrill::PopulateAllowedZombies(output);
+     else if (ScrapYard::IsMode(mode)) ScrapYard::PopulateAllowedZombies(output);
+@@ -163,7 +166,8 @@ void PopulateAllowedZombies(GameMode mode, bool (&output)[Count])
+ template<class Bank>
+ void FillSeedBank(GameMode mode, Bank& bank)
+ {
+-    if (VaseAmbush::IsMode(mode)) bank.mNumPackets = 0;
++    if (GustChallenge::IsMode(mode)) GustChallenge::FillSeedBank(bank);
++    else if (VaseAmbush::IsMode(mode)) bank.mNumPackets = 0;
+     else if (DoubleAgent::IsMode(mode)) DoubleAgent::FillSeedBank(bank);
+     else if (FireDrill::IsMode(mode)) FireDrill::FillSeedBank(bank);
+     else if (ScrapYard::IsMode(mode)) ScrapYard::FillSeedBank(bank);
+@@ -192,6 +196,7 @@ inline constexpr ChallengeState kColdSetupState = static_cast<ChallengeState>(10
+ inline constexpr ChallengeState kColdDefendState = static_cast<ChallengeState>(102);
+ constexpr bool IsCurrentRules(GameMode mode, ChallengeState state)
+ {
++    if (GustChallenge::IsMode(mode)) return GustChallenge::IsCurrentRules(mode, state);
+     if (VaseAmbush::IsMode(mode)) return VaseAmbush::IsCurrentRules(mode, state);
+     if (DoubleAgent::IsMode(mode)) return DoubleAgent::IsCurrentRules(mode, state);
+     if (FireDrill::IsMode(mode)) return FireDrill::IsCurrentRules(mode, state);
+@@ -213,7 +218,7 @@ constexpr bool IsCurrentRules(GameMode mode, ChallengeState state)
+ }
+ constexpr bool IsConveyor(GameMode mode, ChallengeState state)
+ {
+-    return PoolPanicEndless::IsCurrentRules(mode, state) || PoolPanic::IsCurrentRules(mode, state) || ChainReaction::IsCurrentRules(mode, state) || IntensiveCare::IsCurrentRules(mode, state) ||
++    return GustChallenge::IsCurrentRules(mode, state) || PoolPanicEndless::IsCurrentRules(mode, state) || PoolPanic::IsCurrentRules(mode, state) || ChainReaction::IsCurrentRules(mode, state) || IntensiveCare::IsCurrentRules(mode, state) ||
+         ((mode == kMode || NightShift::IsMode(mode)) && state == kArcadeState);
+ }
+ constexpr bool IsBowling(GameMode mode, ChallengeState state) { return mode == kMode && state == kArcadeState; }
+@@ -221,6 +226,7 @@ constexpr bool IsSetup(GameMode mode, ChallengeState state) { return LanternGlow
+ constexpr bool IsDefending(GameMode mode, ChallengeState state) { return LanternGlow::IsMode(mode) && state == kColdDefendState; }
+ constexpr int WaveCount(GameMode mode, ChallengeState state)
+ {
++    if (GustChallenge::IsMode(mode)) return GustChallenge::kWaveCount;
+     if (VaseAmbush::IsMode(mode)) return VaseAmbush::kBoardCount;
+     if (DoubleAgent::IsMode(mode)) return DoubleAgent::kWaveCount;
+     if (FireDrill::IsMode(mode)) return FireDrill::kWaveCount;
+@@ -241,6 +247,7 @@ constexpr int WaveCount(GameMode mode, ChallengeState state)
+ }
+ constexpr int StartingSun(GameMode mode, ChallengeState state)
+ {
++    if (GustChallenge::IsMode(mode)) return GustChallenge::kStartingSun;
+     if (VaseAmbush::IsMode(mode)) return 0;
+     if (DoubleAgent::IsMode(mode)) return DoubleAgent::kStartingSun;
+     if (FireDrill::IsMode(mode)) return FireDrill::kStartingSun;
+@@ -332,6 +339,7 @@ int PopulateMiniWaves(ZombieType (&output)[Waves][Slots])
+ template<std::size_t Waves, std::size_t Slots>
+ int PopulateWaves(GameMode mode, ChallengeState state, ZombieType (&output)[Waves][Slots])
+ {
++    if (GustChallenge::IsMode(mode)) return GustChallenge::PopulateWaves(output);
+     if (VaseAmbush::IsMode(mode)) return VaseAmbush::PopulateWaves(output);
+     if (DoubleAgent::IsMode(mode)) return DoubleAgent::PopulateWaves(output);
+     if (FireDrill::IsMode(mode)) return FireDrill::PopulateWaves(output);
+@@ -364,6 +372,7 @@ void PopulateAllowedZombies(GameMode mode, ChallengeState state, bool (&output)[
+ template<class Bank>
+ void FillSeedBank(GameMode mode, ChallengeState state, Bank& bank)
+ {
++    if (GustChallenge::IsMode(mode)) { GustChallenge::FillSeedBank(bank); return; }
+     if (VaseAmbush::IsMode(mode)) { bank.mNumPackets = 0; return; }
+     if (DoubleAgent::IsMode(mode)) { DoubleAgent::FillSeedBank(bank); return; }
+     if (FireDrill::IsMode(mode)) { FireDrill::FillSeedBank(bank); return; }
+diff --git a/src/Lawn/System/DeckPresets.h b/src/Lawn/System/DeckPresets.h
+index d038b99f47447a2afff893da7b1baf1e42395785..1253b60f0a67c00f687178d2d86a6859b93b5cf9 100644
+--- a/src/Lawn/System/DeckPresets.h
++++ b/src/Lawn/System/DeckPresets.h
+@@ -78,18 +78,18 @@ public:
+ 
+     static bool ValidSeed(const DeckPresetSeed& seed)
+     {
+-        return ((seed.mSeed >= 0 && seed.mSeed < 49) || seed.mSeed == 75 || seed.mSeed == 76) &&
++        return ((seed.mSeed >= 0 && seed.mSeed < 49) || seed.mSeed == 75 || seed.mSeed == 76 || seed.mSeed == 78) &&
+             (seed.mSeed == 48 ? seed.mImitater >= 0 && seed.mImitater < 40 : seed.mImitater == -1);
+     }
+ 
+     static bool ValidSeeds(const std::vector<DeckPresetSeed>& seeds)
+     {
+         if (seeds.size() > 10) return false;
+-        std::array<bool, 51> used{};
++        std::array<bool, 52> used{};
+         for (const auto& seed : seeds)
+         {
+             if (!ValidSeed(seed)) return false;
+-            const int index = seed.mSeed == 75 ? 49 : seed.mSeed == 76 ? 50 : seed.mSeed;
++            const int index = seed.mSeed == 75 ? 49 : seed.mSeed == 76 ? 50 : seed.mSeed == 78 ? 51 : seed.mSeed;
+             if (used[index]) return false;
+             used[index] = true;
+         }
+diff --git a/src/Lawn/System/GustBloom.cpp b/src/Lawn/System/GustBloom.cpp
+new file mode 100644
+index 0000000000000000000000000000000000000000..62ca5602eabe386ce2f9b5e837fcb55b4773502a
+--- /dev/null
++++ b/src/Lawn/System/GustBloom.cpp
+@@ -0,0 +1,143 @@
++// SPDX-License-Identifier: LGPL-3.0-or-later
++#include "GustBloom.h"
++#include "GustChallenge.h"
++#include "PlayerInfo.h"
++#include "../Board.h"
++#include "../Plant.h"
++#include "../Zombie.h"
++#include "../../LawnApp.h"
++#include "../../Resources.h"
++#include <algorithm>
++
++namespace GustBloom
++{
++bool IsUnlocked(const LawnApp* app)
++{ return app && app->mPlayerInfo && app->mPlayerInfo->mChallengeRecords[GustChallenge::kProfileIndex] > 0; }
++
++bool IsRecovering(const Zombie& zombie)
++{ return zombie.mZombieType != ZOMBIE_BOSS && zombie.mBossHeadCounter > 0; }
++
++int PushPixels(const Zombie& zombie)
++{
++    switch (zombie.mZombieType)
++    {
++    case ZOMBIE_NORMAL: case ZOMBIE_FLAG: case ZOMBIE_TRAFFIC_CONE:
++    case ZOMBIE_NEWSPAPER: case ZOMBIE_DANCER: case ZOMBIE_BACKUP_DANCER:
++    case ZOMBIE_IMP: case ZOMBIE_YETI: case ZOMBIE_RALLY: case ZOMBIE_TORCHBEARER:
++        return kLightPushPixels;
++    case ZOMBIE_PAIL:
++        return zombie.mHelmType != HELMTYPE_NONE && zombie.mHelmHealth > 0 ? kHeavyPushPixels : kLightPushPixels;
++    case ZOMBIE_DOOR:
++        return zombie.mShieldType == SHIELDTYPE_DOOR && zombie.mShieldHealth > 0 ? kHeavyPushPixels : kLightPushPixels;
++    case ZOMBIE_LADDER:
++        return zombie.mShieldType == SHIELDTYPE_LADDER && zombie.mShieldHealth > 0 ? kHeavyPushPixels : kLightPushPixels;
++    case ZOMBIE_FOOTBALL:
++        return kHeavyPushPixels;
++    default:
++        // Vehicles, giants, airborne and specialist movement retain their
++        // native physics; wind cannot interrupt a vault, dig or bungee landing.
++        return 0;
++    }
++}
++
++namespace
++{
++bool IsMovable(Zombie& zombie)
++{
++    const bool grounded = zombie.mInPool ? zombie.mAltitude <= 0.0f :
++        zombie.mAltitude == (zombie.mOnHighGround ? static_cast<float>(HIGH_GROUND_HEIGHT) : 0.0f);
++    return PushPixels(zombie) > 0 && zombie.IsOnBoard() && !zombie.IsDeadOrDying() &&
++        !zombie.mMindControlled && zombie.mHasHead && !zombie.IsFlying() &&
++        !zombie.mBlowingAway && zombie.mZombieHeight == HEIGHT_ZOMBIE_NORMAL &&
++        grounded;
++}
++}
++
++bool CanTarget(const Plant& plant, Zombie& zombie)
++{
++    if (!IsMovable(zombie) || zombie.IsImmobilizied() || IsRecovering(zombie) ||
++        zombie.mRow != plant.mRow || zombie.mPosX >= kRightCap) return false;
++    const Rect bounds = zombie.GetZombieRect();
++    const float distance = bounds.mX + bounds.mWidth * 0.5f - (plant.mX + 40.0f);
++    return distance >= 0.0f && distance <= kRange;
++}
++
++void Initialize(Plant& plant)
++{
++    plant.mLaunchCounter = 0;
++    plant.mStateCountdown = 0;
++    plant.mDoSpecialCountdown = 0;
++}
++
++void Update(Plant& plant)
++{
++    if (!plant.mBoard || !plant.mApp || !plant.IsInPlay() || plant.mDead ||
++        plant.mPlantHealth <= 0 || plant.mIsAsleep || plant.mSquished ||
++        plant.mOnBungeeState != NOT_ON_BUNGEE || plant.mApp->mGameScene != SCENE_PLAYING ||
++        plant.mBoard->mPaused || plant.mBoard->mTimeStopCounter > 0) return;
++    if (plant.mDoSpecialCountdown > 0) --plant.mDoSpecialCountdown;
++    if (plant.mStateCountdown > 0) --plant.mStateCountdown;
++    if (plant.mLaunchCounter == 0 && plant.mStateCountdown > 0) return;
++
++    bool hasTarget = false;
++    for (Zombie* zombie : plant.mBoard->mZombies)
++        if (CanTarget(plant, *zombie)) { hasTarget = true; break; }
++    if (!hasTarget)
++    {
++        // A stolen, dead or out-of-range target cannot trigger a phantom blast.
++        plant.mLaunchCounter = 0;
++        return;
++    }
++    if (plant.mLaunchCounter == 0)
++    {
++        plant.mLaunchCounter = kWindupTicks;
++        return;
++    }
++    if (--plant.mLaunchCounter != 0) return;
++    bool released = false;
++    for (Zombie* zombie : plant.mBoard->mZombies)
++    {
++        if (!CanTarget(plant, *zombie)) continue;
++        zombie->mBossStompCounter = kPushTicks;
++        zombie->mBossHeadCounter = kRecoveryTicks;
++        released = true;
++    }
++    if (released)
++    {
++        plant.mDoSpecialCountdown = kGustFrames;
++        plant.mStateCountdown = kPlantCooldown;
++        plant.mApp->PlaySample(SOUND_BLOVER);
++    }
++}
++
++void UpdateZombie(Zombie& zombie)
++{
++    // These fields initialize to -1 for all non-boss actors. Original boss
++    // update code is the only other reader, and this guard excludes it fully.
++    if (zombie.mZombieType == ZOMBIE_BOSS ||
++        (zombie.mBossStompCounter <= 0 && zombie.mBossHeadCounter <= 0)) return;
++    if (!IsMovable(zombie))
++    {
++        zombie.mBossStompCounter = zombie.mBossHeadCounter = 0;
++        return;
++    }
++    if (!zombie.mApp || !zombie.mBoard || zombie.mApp->mGameScene != SCENE_PLAYING ||
++        zombie.mBoard->mPaused || zombie.mBoard->mTimeStopCounter > 0) return;
++    if (zombie.IsImmobilizied())
++    {
++        // Butter or a full freeze ends the impulse. Do not resume an old gust
++        // after its visible plume has faded; recovery counts mobile time only.
++        zombie.mBossStompCounter = 0;
++        return;
++    }
++    if (zombie.mBossHeadCounter > 0) --zombie.mBossHeadCounter;
++    if (zombie.mBossStompCounter <= 0) return;
++    const int remaining = std::clamp(zombie.mBossStompCounter, 1, kPushTicks);
++    const float before = (kPushTicks - remaining) / static_cast<float>(kPushTicks);
++    const float after = (kPushTicks - remaining + 1) / static_cast<float>(kPushTicks);
++    const float movement = PushPixels(zombie) * (PushEase(after) - PushEase(before));
++    zombie.mPosX = std::max(zombie.mPosX, std::min(static_cast<float>(kRightCap), zombie.mPosX + movement));
++    zombie.mBossStompCounter = remaining - 1;
++    if (zombie.mIsEating) zombie.StopEating();
++}
++}
+diff --git a/src/Lawn/System/GustBloom.h b/src/Lawn/System/GustBloom.h
+new file mode 100644
+index 0000000000000000000000000000000000000000..363b417e9b193befcf83ebccc8c4d0099319446d
+--- /dev/null
++++ b/src/Lawn/System/GustBloom.h
+@@ -0,0 +1,38 @@
++// SPDX-License-Identifier: LGPL-3.0-or-later
++#pragma once
++#include "../../ConstEnums.h"
++
++class Plant;
++class Zombie;
++class LawnApp;
++
++// All ability clocks use existing saved Plant fields. Non-boss zombies reserve
++// their otherwise unused boss stomp/head counters for the push/recovery clocks.
++// Bosses are never eligible and retain their original use of those counters.
++namespace GustBloom
++{
++inline constexpr SeedType kSeed = SEED_GUSTBLOOM;
++inline constexpr int kCost = 150;
++inline constexpr int kHealth = 300;
++inline constexpr int kRecharge = 1500;
++inline constexpr int kRange = 240;
++inline constexpr int kWindupTicks = 35;
++inline constexpr int kGustFrames = 60;
++inline constexpr int kPlantCooldown = 450;
++inline constexpr int kPushTicks = 24;
++inline constexpr int kLightPushPixels = 64;
++inline constexpr int kHeavyPushPixels = 16;
++inline constexpr int kRecoveryTicks = 2000;
++inline constexpr int kRightCap = 760;
++
++constexpr float PushEase(float progress)
++{ return progress * progress * (3.0f - 2.0f * progress); }
++bool IsUnlocked(const LawnApp* app);
++bool IsRecovering(const Zombie& zombie);
++int PushPixels(const Zombie& zombie);
++bool CanTarget(const Plant& plant, Zombie& zombie);
++void Initialize(Plant& plant);
++void Update(Plant& plant);
++void UpdateZombie(Zombie& zombie);
++static_assert(static_cast<int>(kSeed) == 78);
++}
+diff --git a/src/Lawn/System/GustBloomArt.cpp b/src/Lawn/System/GustBloomArt.cpp
+new file mode 100644
+index 0000000000000000000000000000000000000000..160db6d9f0fc88e5235f6c231a2cccf114b250e6
+--- /dev/null
++++ b/src/Lawn/System/GustBloomArt.cpp
+@@ -0,0 +1,299 @@
++// SPDX-License-Identifier: LGPL-3.0-or-later
++#include "GustBloomArt.h"
++#include "GustBloom.h"
++#include "ReanimationLawn.h"
++#include "../Plant.h"
++#include "../Board.h"
++#include "../../LawnApp.h"
++#include "../../Resources.h"
++#include "../../PvzpLib/FilterEffect.h"
++#include "../../PvzpLib/PvzpCommon.h"
++#include "../../PvzpLib/Reanimator.h"
++#include "graphics/Graphics.h"
++#include "graphics/MemoryImage.h"
++#include "graphics/SharedImage.h"
++#include <algorithm>
++#include <array>
++#include <cmath>
++#include <memory>
++#include <vector>
++
++namespace GustBloomArt
++{
++namespace
++{
++constexpr float kPi = 3.14159265359f;
++constexpr int kLayers = 11;
++struct Images
++{
++    std::array<std::unique_ptr<Sexy::MemoryImage>, kLayers> layers;
++    std::array<std::array<std::unique_ptr<Sexy::MemoryImage>, NUM_FILTER_EFFECTS>, kLayers> filtered;
++    std::unique_ptr<Sexy::MemoryImage> plant;
++    std::unique_ptr<Sexy::MemoryImage> card;
++};
++Images& Cache() { static Images images; return images; }
++
++std::unique_ptr<Sexy::MemoryImage> Blank(int width, int height)
++{
++    std::vector<uint32_t> pixels(width * height, 0);
++    auto image = std::make_unique<Sexy::MemoryImage>();
++    image->SetBits(pixels.data(), width, height);
++    return image;
++}
++
++std::unique_ptr<Sexy::MemoryImage> Original(const char* path)
++{
++    if (!gLawnApp) return nullptr;
++    Sexy::SharedImageRef shared = gLawnApp->GetSharedImage(path);
++    auto* image = static_cast<Sexy::MemoryImage*>(shared);
++    if (!image) return nullptr;
++    auto copy = Blank(image->GetWidth(), image->GetHeight());
++    std::copy_n(image->GetBits(), image->GetWidth() * image->GetHeight(), copy->GetBits());
++    copy->BitsChanged();
++    return copy;
++}
++
++bool PaintOriginal(Sexy::Graphics& graphics, const char* path, int x, int y, int width, int height)
++{
++    auto source = Original(path);
++    if (!source) return false;
++    graphics.DrawImage(source.get(), Sexy::Rect(x, y, width, height),
++        Sexy::Rect(0, 0, source->GetWidth(), source->GetHeight()));
++    return true;
++}
++
++bool EnsureImages()
++{
++    Images& cache = Cache();
++    if (cache.plant) return true;
++    for (int i = 0; i < 4; ++i) cache.layers[i] = Blank(80, 80);
++    Sexy::Graphics root(cache.layers[0].get()), stem(cache.layers[1].get());
++    Sexy::Graphics face(cache.layers[2].get()), blowing(cache.layers[3].get());
++    root.SetLinearBlend(true); stem.SetLinearBlend(true);
++    face.SetLinearBlend(true); blowing.SetLinearBlend(true);
++    bool okay = PaintOriginal(root, "reanim/PeaShooter_frontleaf", 12, 56, 57, 23) &&
++        PaintOriginal(stem, "reanim/PeaShooter_stalk_bottom", 34, 49, 17, 23) &&
++        PaintOriginal(stem, "reanim/PeaShooter_stalk_top", 34, 39, 16, 20);
++    // The original folded leaf hood gives a distinct tall silhouette. Both
++    // original cabbage eyes lie fully beneath the complete Blover face.
++    for (Sexy::Graphics* head : {&face, &blowing})
++        okay = PaintOriginal(*head, "reanim/Cabbagepult_head", 9, 3, 59, 47) && okay;
++    okay = PaintOriginal(face, "reanim/Blover_head", 27, 23, 42, 36) && okay;
++    okay = PaintOriginal(blowing, "reanim/Blover_head2", 27, 23, 42, 36) && okay;
++    const char* puffs[] = {"reanim/puff_1", "reanim/puff_2", "reanim/puff_3",
++        "reanim/puff_4", "reanim/puff_5", "reanim/puff_6", "reanim/puff_7"};
++    for (int i = 0; i < 7; ++i)
++    {
++        cache.layers[4 + i] = Original(puffs[i]);
++        okay = cache.layers[4 + i] && okay;
++    }
++    if (!okay) { cache = Images(); return false; }
++    for (int layer = 0; layer < kLayers; ++layer)
++        for (int filter = 0; filter < NUM_FILTER_EFFECTS; ++filter)
++            cache.filtered[layer][filter].reset(FilterEffectCreateImage(cache.layers[layer].get(), static_cast<FilterEffect>(filter)));
++    cache.plant = Blank(80, 80);
++    Sexy::Graphics composite(cache.plant.get());
++    composite.SetLinearBlend(true);
++    composite.DrawImage(cache.layers[0].get(), 0, 0);
++    composite.DrawImage(cache.layers[1].get(), 0, 0);
++    composite.DrawImage(cache.layers[2].get(), 0, 0);
++    return true;
++}
++
++Sexy::Image* Layer(int layer, FilterEffect filter)
++{
++    if (filter >= 0 && filter < NUM_FILTER_EFFECTS && Cache().filtered[layer][filter])
++        return Cache().filtered[layer][filter].get();
++    return Cache().layers[layer].get();
++}
++
++void DrawLayer(Sexy::Graphics* graphics, Reanimation& carrier, int layer,
++    float x, float y, float angle = 0, float scaleX = 1, float scaleY = 1, int alpha = 255)
++{
++    Sexy::Image* image = Layer(layer, carrier.mFilterEffect);
++    if (!image) return;
++    SexyMatrix3 local;
++    PvzpScaleRotateTransformMatrix(local, x, y, angle, scaleX, scaleY);
++    SexyMatrix3 matrix;
++    SexyMatrix3Multiply(matrix, carrier.mOverlayMatrix, local);
++    SexyMatrix3Translation(matrix, graphics->mTransX, graphics->mTransY);
++    Sexy::Color color = carrier.mColorOverride;
++    if (graphics->GetColorizeImages()) color = ColorsMultiply(color, graphics->GetColor());
++    color.mAlpha = ColorComponentMultiply(color.mAlpha, alpha);
++    if (color.mAlpha <= 0) return;
++    const Sexy::Rect source(0, 0, image->GetWidth(), image->GetHeight());
++    carrier.ReanimBltMatrix(graphics, image, matrix, graphics->mClipRect, color, graphics->GetDrawMode(), source);
++    if (carrier.mEnableExtraAdditiveDraw)
++    {
++        Sexy::Color additive = carrier.mExtraAdditiveColor;
++        additive.mAlpha = ColorComponentMultiply(additive.mAlpha, color.mAlpha);
++        carrier.ReanimBltMatrix(graphics, image, matrix, graphics->mClipRect,
++            additive, Sexy::Graphics::DRAWMODE_ADDITIVE, source);
++    }
++    if (carrier.mEnableExtraOverlayDraw)
++    {
++        Sexy::Color overlay = carrier.mExtraOverlayColor;
++        overlay.mAlpha = ColorComponentMultiply(overlay.mAlpha, color.mAlpha);
++        carrier.ReanimBltMatrix(graphics, Layer(layer, FILTER_EFFECT_WHITE), matrix,
++            graphics->mClipRect, overlay, Sexy::Graphics::DRAWMODE_NORMAL, source);
++    }
++}
++
++void DrawAir(Sexy::Graphics* graphics, const Plant& plant, Reanimation& carrier)
++{
++    if (plant.mDoSpecialCountdown <= 0 || plant.mDoSpecialCountdown > GustBloom::kGustFrames) return;
++    const float elapsed = static_cast<float>(GustBloom::kGustFrames - plant.mDoSpecialCountdown);
++    const float envelope = std::min(1.0f, (elapsed + 1.0f) / 5.0f) *
++        std::min(1.0f, plant.mDoSpecialCountdown / 18.0f);
++    // A full-range plume accompanies the already committed push. Original
++    // neutral puff cells flow through it and dissolve rather than teleporting.
++    for (int i = 0; i < 9; ++i)
++    {
++        const float travel = std::fmod(i * 27.0f + elapsed * 4.0f, 235.0f);
++        const float y = 39.0f + std::sin(i * 2.1f + elapsed * .12f) * (5.0f + travel * .025f);
++        const float fade = std::sin((travel + 5.0f) / 245.0f * kPi);
++        DrawLayer(graphics, carrier, 4 + (i + static_cast<int>(elapsed / 5)) % 7,
++            65.0f + travel, y, .08f * std::sin(i + elapsed * .1f),
++            1.1f + travel * .009f, .65f + travel * .002f,
++            static_cast<int>(145 * envelope * fade));
++    }
++}
++
++void DrawBody(Sexy::Graphics* graphics, const Plant& plant, Reanimation& carrier, bool cardboard)
++{
++    const bool active = !plant.mIsAsleep && !plant.mSquished && plant.mOnBungeeState == NOT_ON_BUNGEE;
++    const float phase = active && !cardboard ? carrier.mAnimTime * 2 * kPi : 0;
++    const float windup = active && plant.mLaunchCounter > 0 ?
++        1.0f - std::clamp(plant.mLaunchCounter, 0, GustBloom::kWindupTicks) / static_cast<float>(GustBloom::kWindupTicks) : 0;
++    const float release = active && plant.mDoSpecialCountdown > 0 ?
++        std::exp(-(GustBloom::kGustFrames - plant.mDoSpecialCountdown) / 13.0f) : 0;
++    const float lean = .085f * std::sin(phase) - .19f * windup + .20f * release;
++    const float neckX = 42.0f - 20.0f * std::sin(lean);
++    const float neckY = 70.0f - 20.0f * std::cos(lean);
++    const float stemX = 42.0f - 30.0f * std::sin(lean) - 2.0f * std::cos(lean);
++    const float stemY = 70.0f - 30.0f * std::cos(lean) + 2.0f * std::sin(lean);
++    DrawLayer(graphics, carrier, 0, 40, 40, .018f * std::sin(phase + .8f));
++    DrawLayer(graphics, carrier, 1, stemX, stemY, lean);
++    const float headAngle = lean + .035f * std::sin(phase * 2);
++    const float swell = .018f * (1 - std::cos(phase)) + .075f * windup;
++    const float sx = 1.0f + swell + .045f * release;
++    const float sy = 1.0f + swell - .025f * release;
++    // Registered neck (42,50) is shared by both moving layers.
++    const float headX = neckX - (2 * std::cos(headAngle) - 10 * std::sin(headAngle)) * sx;
++    const float headY = neckY - (2 * std::sin(headAngle) + 10 * std::cos(headAngle)) * sy;
++    DrawLayer(graphics, carrier, (windup > .55f || plant.mDoSpecialCountdown > 35) ? 3 : 2,
++        headX, headY, headAngle, sx, sy);
++}
++
++Sexy::Rect VisibleBounds(Sexy::MemoryImage& image)
++{
++    int left = image.GetWidth(), top = image.GetHeight(), right = -1, bottom = -1;
++    for (int y = 0; y < image.GetHeight(); ++y)
++        for (int x = 0; x < image.GetWidth(); ++x)
++            if ((image.GetBits()[y * image.GetWidth() + x] >> 24) > 8)
++            { left = std::min(left, x); top = std::min(top, y); right = std::max(right, x); bottom = std::max(bottom, y); }
++    return right < left ? Sexy::Rect() : Sexy::Rect(left, top, right - left + 1, bottom - top + 1);
++}
++void Fit(Sexy::Graphics& graphics, Sexy::MemoryImage& image, float centerX, float baseline, float width, float height)
++{
++    const Sexy::Rect bounds = VisibleBounds(image);
++    if (bounds.mWidth <= 0 || bounds.mHeight <= 0) return;
++    const float scale = std::min(width / bounds.mWidth, height / bounds.mHeight);
++    PvzpDrawImageScaledF(&graphics, &image, centerX - (bounds.mX + bounds.mWidth * .5f) * scale,
++        baseline - (bounds.mY + bounds.mHeight) * scale, scale, scale);
++}
++}
++
++void EnsurePlantReanimation(Plant& plant)
++{
++    if (plant.mSeedType != GustBloom::kSeed || !plant.mApp || plant.mDead || plant.mSquished || plant.mPlantHealth <= 0) return;
++    Reanimation* body = plant.mApp->ReanimationTryToGet(plant.mBodyReanimID);
++    if (body && body->mReanimationType != REANIM_BLOVER)
++    {
++        plant.EndBlink();
++        plant.mApp->RemoveReanimation(plant.mBodyReanimID);
++        plant.mBodyReanimID = REANIMATIONID_NULL;
++        body = nullptr;
++    }
++    if (!body)
++    {
++        const float offset = PlantDrawHeightOffset(plant.mBoard, &plant, GustBloom::kSeed, plant.mPlantCol, plant.mRow);
++        body = plant.mApp->AddReanimation(0, offset, plant.mRenderOrder + 1, REANIM_BLOVER);
++        body->SetFramesForLayer("anim_idle");
++        body->mLoopType = REANIM_LOOP;
++        body->mIsAttachment = true;
++        plant.mBodyReanimID = plant.mApp->ReanimationGetID(body);
++    }
++    body->mAnimRate = std::max(1, body->mFrameCount) / 2.6f;
++    body->AssignRenderGroupToPrefix("", RENDER_GROUP_HIDDEN);
++    if (Reanimation* blink = plant.mApp->ReanimationTryToGet(plant.mBlinkReanimID))
++        blink->AssignRenderGroupToPrefix("", RENDER_GROUP_HIDDEN);
++}
++
++void DrawPlantRig(Sexy::Graphics* graphics, const Plant& plant, Reanimation& carrier)
++{
++    if (plant.mSeedType != GustBloom::kSeed || carrier.mDead || plant.mDead || plant.mPlantHealth <= 0 || !EnsureImages()) return;
++    DrawAir(graphics, plant, carrier);
++    DrawBody(graphics, plant, carrier, false);
++}
++
++bool DrawCardboardPlant(Sexy::Graphics* graphics, Plant& plant)
++{
++    if (plant.mSeedType != GustBloom::kSeed) return false;
++    if (!plant.mApp || !EnsureImages()) return true;
++    Reanimation* body = plant.mApp->ReanimationTryToGet(plant.mBodyReanimID);
++    if (!body) return true;
++    const FilterEffect previous = body->mFilterEffect;
++    const Sexy::Color colors[] = {Sexy::Color(122,86,58), Sexy::Color(171,135,107),
++        Sexy::Color(171,135,107), Sexy::Color(255,201,160)};
++    const int offsets[] = {4,2,-2,0};
++    for (int i = 0; i < 4; ++i)
++    {
++        Sexy::Graphics pass(*graphics);
++        pass.mTransX += offsets[i]; pass.mTransY += offsets[i];
++        pass.SetColorizeImages(true); pass.SetColor(colors[i]);
++        body->mFilterEffect = i < 3 ? FILTER_EFFECT_WHITE : FILTER_EFFECT_NONE;
++        DrawBody(&pass, plant, *body, true);
++    }
++    body->mFilterEffect = previous;
++    DrawAir(graphics, plant, *body);
++    return true;
++}
++
++Sexy::Image* GetImage() { return EnsureImages() ? Cache().plant.get() : nullptr; }
++void DrawSprite(Sexy::Graphics* graphics, float x, float y, float scaleX, float scaleY)
++{
++    if (Sexy::Image* image = GetImage()) PvzpDrawImageScaledF(graphics, image, x, y, scaleX, scaleY);
++}
++std::string LevelLabel(int) { return "Headwind"; }
++
++Sexy::Image* GetHeadwindImage()
++{
++    Images& cache = Cache();
++    if (cache.card) return cache.card.get();
++    if (!EnsureImages() || !gLawnApp || !gLawnApp->mReanimatorCache ||
++        !PvzpLoadResources("DelayLoad_Background1") || !Sexy::IMAGE_BACKGROUND1) return nullptr;
++    auto zombie = gLawnApp->mReanimatorCache->MakeCachedZombieFrame(ZOMBIE_TRAFFIC_CONE);
++    if (!zombie) return nullptr;
++    auto card = Blank(80, 65);
++    Sexy::Graphics picture(card.get());
++    picture.SetLinearBlend(true); picture.ClipRect(0, 0, 80, 65);
++    picture.DrawImage(Sexy::IMAGE_BACKGROUND1, Sexy::Rect(0, 0, 80, 65), Sexy::Rect(400, 140, 480, 390));
++    Fit(picture, *zombie, 62, 63, 31, 59);
++    for (int i = 0; i < 4; ++i)
++    {
++        picture.SetColorizeImages(true); picture.SetColor(Sexy::Color(255,255,255,155));
++        PvzpDrawImageScaledF(&picture, cache.layers[5 + i].get(), 29.0f + i * 10, 26.0f + (i % 2) * 8, 1.4f, .65f);
++    }
++    picture.SetColorizeImages(false);
++    // This complete registered plant has its original head, joined stem and
++    // root leaves. The blowing face is used only for this action thumbnail.
++    auto blowing = Blank(80, 80);
++    Sexy::Graphics composite(blowing.get()); composite.SetLinearBlend(true);
++    for (int layer : {0,1,3}) composite.DrawImage(cache.layers[layer].get(), 0, 0);
++    Fit(picture, *blowing, 22, 62, 40, 46);
++    cache.card = std::move(card);
++    return cache.card.get();
++}
++void DisposeImages() { Cache() = Images(); }
++}
+diff --git a/src/Lawn/System/GustBloomArt.h b/src/Lawn/System/GustBloomArt.h
+new file mode 100644
+index 0000000000000000000000000000000000000000..4a9ce5b13208b40c93cef3b1eeb3a70a2d70497b
+--- /dev/null
++++ b/src/Lawn/System/GustBloomArt.h
+@@ -0,0 +1,21 @@
++// SPDX-License-Identifier: LGPL-3.0-or-later
++#pragma once
++#include <string>
++
++namespace Sexy { class Graphics; class Image; }
++class Plant;
++class Reanimation;
++
++// All painted components come from the original resource bundle. The native
++// saved Blover rig supplies the clock and appearance, never Blover's ability.
++namespace GustBloomArt
++{
++void EnsurePlantReanimation(Plant& plant);
++void DrawPlantRig(Sexy::Graphics* graphics, const Plant& plant, Reanimation& carrier);
++bool DrawCardboardPlant(Sexy::Graphics* graphics, Plant& plant);
++Sexy::Image* GetImage();
++void DrawSprite(Sexy::Graphics* graphics, float x, float y, float scaleX, float scaleY);
++Sexy::Image* GetHeadwindImage();
++std::string LevelLabel(int wave);
++void DisposeImages();
++}
+diff --git a/src/Lawn/System/GustChallenge.cpp b/src/Lawn/System/GustChallenge.cpp
+new file mode 100644
+index 0000000000000000000000000000000000000000..5005433f01b13f90f786b681ea8d97ed24654723
+--- /dev/null
++++ b/src/Lawn/System/GustChallenge.cpp
+@@ -0,0 +1,109 @@
++// SPDX-License-Identifier: LGPL-3.0-or-later
++#include "GustChallenge.h"
++#include "../Board.h"
++#include "../Challenge.h"
++#include "../Plant.h"
++#include "../SeedPacket.h"
++#include "../Zombie.h"
++#include "../../LawnApp.h"
++#include <algorithm>
++
++namespace GustChallenge
++{
++bool Validate(const Board& board)
++{
++    if (!board.mApp || !board.mChallenge || !board.mSeedBank || !IsMode(board.mApp->mGameMode)) return false;
++    const Challenge& challenge = *board.mChallenge;
++    if (!IsCurrentRules(board.mApp->mGameMode,challenge.mChallengeState) || challenge.mChallengeGridY != kRulesVersion ||
++        challenge.mSurvivalStage < 0 || challenge.mSurvivalStage > kWaveCount || challenge.mChallengeScore < kOpeningPackets ||
++        challenge.mChallengeScore > kPacketCount || challenge.mChallengeStateCounter < 0 ||
++        challenge.mChallengeStateCounter > kFormationInterval || challenge.mConveyorBeltCounter < 0 ||
++        challenge.mConveyorBeltCounter > kSupplyInterval || board.mSeedBank->mNumPackets != kBankSize || board.mSunMoney != 0) return false;
++    for (const SeedPacket& packet : board.mSeedBank->mSeedPackets)
++    {
++        if (packet.mPacketType == SEED_NONE) continue;
++        if (std::find(kSeeds.begin(),kSeeds.end(),packet.mPacketType) == kSeeds.end()) return false;
++    }
++    return true;
++}
++void PreloadResources()
++{
++    for (SeedType seed : kSeeds) Plant::PreloadPlantResources(seed);
++    Plant::PreloadPlantResources(SEED_SPIKEWEED);
++    for (const Formation& wave : kFormations) for (const Spawn& spawn : wave)
++        if (spawn.mType != ZOMBIE_INVALID) Zombie::PreloadZombieResources(spawn.mType);
++}
++void Populate(Board& board)
++{
++    Challenge& challenge = *board.mChallenge;
++    challenge.mChallengeState = kActive;
++    challenge.mChallengeStateCounter = kOpeningDelay;
++    challenge.mChallengeScore = challenge.mSurvivalStage = 0;
++    challenge.mChallengeGridY = kRulesVersion;
++    challenge.mConveyorBeltCounter = kSupplyInterval;
++    board.mCurrentWave = board.mTotalSpawnedWaves = 0;
++    board.mZombieCountDown = board.mZombieCountDownStart = kOpeningDelay;
++    board.mZombieHealthToNextWave = -1;
++    board.mSunMoney = 0;
++    board.mShowShovel = true;
++    board.mBonusLawnMowersRemaining = 0;
++    board.ClearCursor();
++    FillSeedBank(*board.mSeedBank);
++    for (SeedPacket& packet : board.mSeedBank->mSeedPackets) packet.mPacketType = SEED_NONE;
++    for (int i = 0; i < kOpeningPackets; ++i)
++    {
++        const SeedType seed = SeedForSupply(challenge.mChallengeScore++);
++        board.mSeedBank->AddSeed(seed,true);
++        challenge.mLastConveyorSeedType = seed;
++    }
++    for (const StartingPlant& plant : kStartingPlants) board.AddPlant(plant.mCol,plant.mRow,plant.mSeed,SEED_NONE);
++}
++void Update(Board& board)
++{
++    Challenge& challenge = *board.mChallenge;
++    if (challenge.mChallengeState != kActive || board.mApp->mGameScene != SCENE_PLAYING || board.mPaused ||
++        board.mTimeStopCounter > 0 || board.mLevelComplete || board.HasLevelAwardDropped()) return;
++    board.mShowShovel = true;
++    board.mSeedBank->UpdateConveyorBelt();
++    if (challenge.mChallengeScore < kPacketCount &&
++        board.mSeedBank->GetNumSeedsOnConveyorBelt() < board.mSeedBank->mNumPackets)
++    {
++        if (challenge.mConveyorBeltCounter > 0) --challenge.mConveyorBeltCounter;
++        if (challenge.mConveyorBeltCounter == 0)
++        {
++            const SeedType seed = SeedForSupply(challenge.mChallengeScore++);
++            board.mSeedBank->AddSeed(seed);
++            challenge.mLastConveyorSeedType = seed;
++            challenge.mConveyorBeltCounter = kSupplyInterval;
++        }
++    }
++    const int next = std::clamp(challenge.mSurvivalStage,0,kWaveCount);
++    if (next < kWaveCount)
++    {
++        if (challenge.mChallengeStateCounter > 0) --challenge.mChallengeStateCounter;
++        board.mZombieCountDown = challenge.mChallengeStateCounter;
++        if (challenge.mChallengeStateCounter != 0) return;
++        board.NextWaveComing();
++        for (const Spawn& spawn : kFormations[next])
++        {
++            if (spawn.mType == ZOMBIE_INVALID) continue;
++            Zombie* zombie = board.AddZombieInRow(spawn.mType,spawn.mRow,next);
++            zombie->mPosX = static_cast<float>(spawn.mX);
++            zombie->mX = spawn.mX;
++            zombie->UpdateReanim();
++        }
++        challenge.mSurvivalStage = next + 1;
++        board.mCurrentWave = board.mTotalSpawnedWaves = next + 1;
++        board.mZombieHealthWaveStart = board.TotalZombiesHealthInWave(next);
++        board.mZombieHealthToNextWave = -1;
++        challenge.mChallengeStateCounter = kFormationInterval;
++        board.mZombieCountDown = board.mZombieCountDownStart = kFormationInterval;
++        return;
++    }
++    if (board.AreEnemyZombiesOnScreen()) return;
++    board.ClearCursor();
++    board.ClearAdviceImmediately();
++    challenge.mChallengeState = kFinished;
++    challenge.SpawnLevelAward(4,2);
++}
++}
+diff --git a/src/Lawn/System/GustChallenge.h b/src/Lawn/System/GustChallenge.h
+new file mode 100644
+index 0000000000000000000000000000000000000000..6d8be3045d08f8e04d215a29934f56bf8b57a73c
+--- /dev/null
++++ b/src/Lawn/System/GustChallenge.h
+@@ -0,0 +1,80 @@
++// SPDX-License-Identifier: LGPL-3.0-or-later
++#pragma once
++#include "../../ConstEnums.h"
++#include <array>
++#include <cstddef>
++
++class Board;
++
++// Headwind uses a fixed native Spikeweed course and a finite conveyor.
++// Short gusts recycle light crowds over spikes; stock heavy counters matter.
++namespace GustChallenge
++{
++inline constexpr GameMode kMode = GAMEMODE_CHALLENGE_HEADWIND;
++inline constexpr ChallengeState kActive = static_cast<ChallengeState>(144);
++inline constexpr ChallengeState kFinished = static_cast<ChallengeState>(145);
++inline constexpr int kProfileIndex = 91;
++inline constexpr int kRulesVersion = 1;
++inline constexpr int kStartingSun = 0;
++inline constexpr int kWaveCount = 6;
++inline constexpr int kLargestFormation = 8;
++inline constexpr int kOpeningDelay = 700;
++inline constexpr int kFormationInterval = 1800;
++inline constexpr int kBankSize = 10;
++inline constexpr int kOpeningPackets = 4;
++inline constexpr int kPacketCount = 32;
++inline constexpr int kSupplyInterval = 200;
++constexpr bool IsMode(GameMode mode) { return mode == kMode; }
++constexpr bool IsCurrentRules(GameMode mode, ChallengeState state)
++{ return IsMode(mode) && (state == kActive || state == kFinished); }
++inline constexpr std::array<SeedType,6> kSeeds = {SEED_GUSTBLOOM,SEED_PEASHOOTER,
++    SEED_REPEATER,SEED_WALLNUT,SEED_CHERRYBOMB,SEED_SQUASH};
++inline constexpr std::array<SeedType,8> kSupplyCycle = {SEED_GUSTBLOOM,SEED_PEASHOOTER,
++    SEED_GUSTBLOOM,SEED_REPEATER,SEED_WALLNUT,SEED_GUSTBLOOM,SEED_CHERRYBOMB,SEED_SQUASH};
++constexpr SeedType SeedForSupply(int ordinal)
++{ return ordinal >= 0 && ordinal < kPacketCount ? kSupplyCycle[ordinal % kSupplyCycle.size()] : SEED_NONE; }
++struct StartingPlant { SeedType mSeed; int mCol; int mRow; };
++inline constexpr std::array<StartingPlant,15> kStartingPlants = {{{SEED_PEASHOOTER,0,0},
++    {SEED_PEASHOOTER,0,1},{SEED_PEASHOOTER,0,2},{SEED_PEASHOOTER,0,3},{SEED_PEASHOOTER,0,4},
++    {SEED_SPIKEWEED,5,0},{SEED_SPIKEWEED,5,1},{SEED_SPIKEWEED,5,2},{SEED_SPIKEWEED,5,3},{SEED_SPIKEWEED,5,4},
++    {SEED_SPIKEWEED,6,0},{SEED_SPIKEWEED,6,1},{SEED_SPIKEWEED,6,2},{SEED_SPIKEWEED,6,3},{SEED_SPIKEWEED,6,4}}};
++struct Spawn { ZombieType mType = ZOMBIE_INVALID; int mRow = 0; int mX = 0; };
++using Formation = std::array<Spawn,kLargestFormation>;
++inline constexpr std::array<Formation,kWaveCount> kFormations = {{
++    {{{ZOMBIE_NORMAL,1,760},{ZOMBIE_NORMAL,3,760}}},
++    {{{ZOMBIE_TRAFFIC_CONE,0,800},{ZOMBIE_TRAFFIC_CONE,2,800},{ZOMBIE_TRAFFIC_CONE,4,800}}},
++    {{{ZOMBIE_NORMAL,0,800},{ZOMBIE_DOOR,1,800},{ZOMBIE_NORMAL,2,840},{ZOMBIE_DOOR,3,800},{ZOMBIE_NORMAL,4,800}}},
++    {{{ZOMBIE_FOOTBALL,0,800},{ZOMBIE_PAIL,1,800},{ZOMBIE_TRAFFIC_CONE,2,800},{ZOMBIE_PAIL,3,800},{ZOMBIE_FOOTBALL,4,800}}},
++    {{{ZOMBIE_NORMAL,0,800},{ZOMBIE_NORMAL,1,800},{ZOMBIE_NORMAL,2,800},{ZOMBIE_NORMAL,3,800},{ZOMBIE_NORMAL,4,800},
++      {ZOMBIE_TRAFFIC_CONE,1,860},{ZOMBIE_TRAFFIC_CONE,3,860}}},
++    {{{ZOMBIE_PAIL,0,800},{ZOMBIE_FOOTBALL,1,800},{ZOMBIE_GARGANTUAR,2,850},{ZOMBIE_FOOTBALL,3,800},
++      {ZOMBIE_PAIL,4,800},{ZOMBIE_NORMAL,0,880},{ZOMBIE_NORMAL,4,880}}}
++}};
++constexpr int ZombieCount(int wave)
++{
++    if (wave < 0 || wave >= kWaveCount) return 0;
++    int count = 0; for (const Spawn& spawn : kFormations[wave]) count += spawn.mType != ZOMBIE_INVALID;
++    return count;
++}
++template<std::size_t Waves,std::size_t Slots> int PopulateWaves(ZombieType (&output)[Waves][Slots])
++{
++    static_assert(Waves >= kWaveCount && Slots > kLargestFormation);
++    for (auto& wave : output) for (auto& zombie : wave) zombie = ZOMBIE_INVALID;
++    for (int wave = 0; wave < kWaveCount; ++wave)
++        for (int i = 0; i < ZombieCount(wave); ++i) output[wave][i] = kFormations[wave][i].mType;
++    return kWaveCount;
++}
++template<std::size_t Count> void PopulateAllowedZombies(bool (&output)[Count])
++{
++    for (auto& allowed : output) allowed = false;
++    for (const Formation& wave : kFormations) for (const Spawn& spawn : wave)
++        if (spawn.mType != ZOMBIE_INVALID) output[spawn.mType] = true;
++}
++template<class Bank> void FillSeedBank(Bank& bank) { bank.mNumPackets = kBankSize; }
++bool Validate(const Board& board);
++void PreloadResources();
++void Populate(Board& board);
++void Update(Board& board);
++static_assert(static_cast<int>(kMode) == 92 && ZombieCount(0)+ZombieCount(1)+ZombieCount(2)+
++    ZombieCount(3)+ZombieCount(4)+ZombieCount(5) == 29);
++}
+diff --git a/src/Lawn/System/MenderBloom.h b/src/Lawn/System/MenderBloom.h
+index 20344aad51aa97c6e9e41de0aa9e3bb8b9f17016..9a457ce511870a8ef7365f45a071007e42ca13fb 100644
+--- a/src/Lawn/System/MenderBloom.h
++++ b/src/Lawn/System/MenderBloom.h
+@@ -36,7 +36,7 @@ constexpr int BoundedHeal(int health, int maximum)
+ 
+ constexpr bool IsPersistentTargetSeed(SeedType seed)
+ {
+-    if (seed == kSeed || seed == SEED_LANTERNSHROOM) return true;
++    if (seed == kSeed || seed == SEED_LANTERNSHROOM || seed == SEED_GUSTBLOOM) return true;
+     if (seed < SEED_PEASHOOTER || seed >= NUM_SEED_TYPES) return false;
+     switch (seed)
+     {
+diff --git a/src/Lawn/System/ReanimationLawn.cpp b/src/Lawn/System/ReanimationLawn.cpp
+index 6423ca7aa69b37747fe89c67a1d53c6303a21e35..50626e13003043351b6d8bd4eb9138d16762e96b 100644
+--- a/src/Lawn/System/ReanimationLawn.cpp
++++ b/src/Lawn/System/ReanimationLawn.cpp
+@@ -25,6 +25,7 @@
+ #include "ReanimationLawn.h"
+ #include "RallyPresentation.h"
+ #include "TorchbearerPresentation.h"
++#include "GustBloomArt.h"
+ #include "../../PvzpLib/PvzpDebug.h"
+ #include "graphics/Color.h"
+ #include "../../PvzpLib/Reanimator.h"
+@@ -131,6 +132,12 @@ std::unique_ptr<MemoryImage> ReanimatorCache::MakeBlankMemoryImage(int theWidth,
+ 
+ void ReanimatorCache::GetPlantImageSize(SeedType theSeedType, int& theOffsetX, int& theOffsetY, int& theWidth, int& theHeight)
+ {
++	if (theSeedType == SEED_GUSTBLOOM)
++	{
++		theOffsetX = theOffsetY = 0;
++		theWidth = theHeight = 80;
++		return;
++	}
+ 	theOffsetX = -20;
+ 	theOffsetY = -20;
+ 	theWidth = 120;
+@@ -208,6 +215,14 @@ std::unique_ptr<MemoryImage> ReanimatorCache::MakeCachedMowerFrame(LawnMowerType
+ 
+ std::unique_ptr<MemoryImage> ReanimatorCache::MakeCachedPlantFrame(SeedType theSeedType, DrawVariation theDrawVariation)
+ {
++	if (theSeedType == SEED_GUSTBLOOM)
++	{
++		auto image = MakeBlankMemoryImage(80, 80);
++		Graphics graphics(image.get());
++		graphics.SetLinearBlend(true);
++		GustBloomArt::DrawSprite(&graphics, 0, 0, 1, 1);
++		return image;
++	}
+ 	int aOffsetX, aOffsetY, aWidth, aHeight;
+ 	GetPlantImageSize(theSeedType, aOffsetX, aOffsetY, aWidth, aHeight);
+ 	auto aMemoryImage = MakeBlankMemoryImage(aWidth, aHeight);
+@@ -361,6 +376,11 @@ void ReanimatorCache::ReanimatorCacheDispose()
+ 
+ void ReanimatorCache::DrawCachedPlant(Graphics* g, float thePosX, float thePosY, SeedType theSeedType, DrawVariation theDrawVariation)
+ {
++	if (theSeedType == SEED_GUSTBLOOM)
++	{
++		GustBloomArt::DrawSprite(g, thePosX, thePosY, 1, 1);
++		return;
++	}
+ 	PVZP_ASSERT(theSeedType >= 0 && theSeedType < SeedType::NUM_SEED_TYPES);
+ 
+ 	MemoryImage* aImage = nullptr;
+diff --git a/src/Lawn/Widget/AlmanacDialog.cpp b/src/Lawn/Widget/AlmanacDialog.cpp
+index aab69aae9549f29e81137e627d540d0131599aac..8ab9b926a98f6f4a1cab23a8143b30e9b8be3368 100644
+--- a/src/Lawn/Widget/AlmanacDialog.cpp
++++ b/src/Lawn/Widget/AlmanacDialog.cpp
+@@ -295,6 +295,14 @@ const char* AlmanacDialog::GetAddonAlmanacDescription(SeedType theSeedType)
+ 			"{SHORTLINE}\n"
+ 			"{FLAVOR}Mender-bloom keeps a roll of bandages for Wall-nut. He keeps eating them. "
+ 			"\"Fiber,\" he explains. She has learned to check his pockets before every appointment.";
++	if (theSeedType == SEED_GUSTBLOOM)
++		return "{NORMAL}Gust-blooms blow approaching zombies back down their row.\n"
++			"{SHORTLINE}\n"
++			"{KEYWORD}Damage:{STAT} none\n"
++			"{KEYWORD}Range:{STAT} short, forward\n"
++			"{KEYWORD}Special:{STAT} heavy zombies resist\n"
++			"{SHORTLINE}\n"
++			"{FLAVOR}Gust-bloom calls it a gentle breeze. His neighbors have tied down the lawn furniture.";
+ 	return nullptr;
+ }
+ 
+@@ -320,7 +328,7 @@ void AlmanacDialog::DrawPlants(Graphics* g)
+ 			else
+ 			{
+ 				Graphics aPacketGraphics(*g);
+-				if (aSeedType == SEED_LANTERNSHROOM || aSeedType == SEED_MENDERBLOOM)
++				if (aSeedType == SEED_LANTERNSHROOM || aSeedType == SEED_MENDERBLOOM || aSeedType == SEED_GUSTBLOOM)
+ 					// Match the native Imitater thumbnail instead of covering the header
+ 					// with another full-height row of seed packets.
+ 					aPacketGraphics.SetScale(34.0f / SEED_PACKET_WIDTH, 46.0f / SEED_PACKET_HEIGHT, aPosX, aPosY);
+@@ -379,7 +387,7 @@ void AlmanacDialog::DrawPlants(Graphics* g)
+ 		std::string aRechargeStr = PvzpReplaceString(
+ 			"{KEYWORD}{WAIT_TIME}: {STAT}{WAIT_TIME_LENGTH}",
+ 			"{WAIT_TIME_LENGTH}",
+-			aPlantDef.mRefreshTime == 750 || mSelectedSeed == SEED_MENDERBLOOM ? "[WAIT_TIME_SHORT]" : aPlantDef.mRefreshTime == 3000 ? "[WAIT_TIME_LONG]" : "[WAIT_TIME_VERY_LONG]"
++			aPlantDef.mRefreshTime == 750 || mSelectedSeed == SEED_MENDERBLOOM || mSelectedSeed == SEED_GUSTBLOOM ? "[WAIT_TIME_SHORT]" : aPlantDef.mRefreshTime == 3000 ? "[WAIT_TIME_LONG]" : "[WAIT_TIME_VERY_LONG]"
+ 		);
+ 		aRechargeStr = PvzpReplaceString(aRechargeStr, "{WAIT_TIME}", "[WAIT_TIME]");
+ 		PvzpDrawStringWrapped(g, aRechargeStr, Rect(600, 520, 139, 50), Sexy::FONT_BRIANNETOD12, Color(40, 50, 90), DS_ALIGN_RIGHT);
+@@ -578,6 +586,8 @@ void AlmanacDialog::GetSeedPosition(SeedType theSeedType, int& x, int& y)
+ 		x = 78, y = 23;
+ 	else if (theSeedType == SEED_MENDERBLOOM)
+ 		x = 122, y = 23;
++	else if (theSeedType == SEED_GUSTBLOOM)
++		x = 166, y = 23;
+ 	else if (theSeedType == SeedType::SEED_IMITATER)
+ 		x = 20, y = 23;
+ 	else
+@@ -598,7 +608,7 @@ SeedType AlmanacDialog::SeedHitTest(int x, int y)
+ 			{
+ 				int aSeedX, aSeedY;
+ 				GetSeedPosition(aSeedType, aSeedX, aSeedY);
+-				const bool aCompact = aSeedType == SEED_IMITATER || aSeedType == SEED_LANTERNSHROOM || aSeedType == SEED_MENDERBLOOM;
++				const bool aCompact = aSeedType == SEED_IMITATER || aSeedType == SEED_LANTERNSHROOM || aSeedType == SEED_MENDERBLOOM || aSeedType == SEED_GUSTBLOOM;
+ 				Rect aSeedRect = aCompact ? Rect(aSeedX, aSeedY, 34, 46) : Rect(aSeedX, aSeedY, SEED_PACKET_WIDTH, SEED_PACKET_HEIGHT);
+ 				if (aSeedRect.Contains(x, y)) return aSeedType;
+ 			}
+diff --git a/src/Lawn/Widget/AlmanacDialog.h b/src/Lawn/Widget/AlmanacDialog.h
+index 3de7a3d1c65c1f19e5f2f78611cc3e73c3382f70..d54b0da7f37fbe9cf2b48136b20af4740f3ef813 100644
+--- a/src/Lawn/Widget/AlmanacDialog.h
++++ b/src/Lawn/Widget/AlmanacDialog.h
+@@ -72,11 +72,12 @@ public:
+ public:
+ 	// Original entries retain all IDs and positions; addon thumbnails match the
+ 	// native Imitater's compact footprint in the unused space beside it.
+-	static constexpr int AlmanacSeedCount() { return NUM_ALMANAC_SEEDS + 2; }
++	static constexpr int AlmanacSeedCount() { return NUM_ALMANAC_SEEDS + 3; }
+ 	static constexpr SeedType AlmanacSeedType(int index)
+ 	{
+ 		return index == NUM_ALMANAC_SEEDS ? SEED_LANTERNSHROOM :
+-			index == NUM_ALMANAC_SEEDS + 1 ? SEED_MENDERBLOOM : static_cast<SeedType>(index);
++			index == NUM_ALMANAC_SEEDS + 1 ? SEED_MENDERBLOOM :
++			index == NUM_ALMANAC_SEEDS + 2 ? SEED_GUSTBLOOM : static_cast<SeedType>(index);
+ 	}
+ 	static const char* GetAddonAlmanacDescription(SeedType theSeedType);
+ 
+diff --git a/src/Lawn/Widget/ChallengeScreen.cpp b/src/Lawn/Widget/ChallengeScreen.cpp
+index 82c1a3c8e3bb78d95a0f2b79a95fdd41268d9323..731052427f71e36e10e3c7a7fd65484881610098 100644
+--- a/src/Lawn/Widget/ChallengeScreen.cpp
++++ b/src/Lawn/Widget/ChallengeScreen.cpp
+@@ -38,7 +38,8 @@
+ #include "../System/ScrapYardPresentation.h"
+ #include "../System/VaseAmbushPresentation.h"
+ #include "../System/FireDrillPresentation.h"
+-#include "../System/DoubleAgentPresentation.h"
++#include "../System/DoubleAgentPresentation.h"
++#include "../System/GustBloomArt.h"
+ #include "../../PvzpLib/PvzpDebug.h"
+ #include "../../PvzpLib/PvzpFoley.h"
+ #include "../../PvzpLib/PvzpCommon.h"
+@@ -140,7 +141,8 @@ constinit const ChallengeDefinition gChallengeDefs[NUM_CHALLENGE_MODES] = {
+ 	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_SCRAP_YARD, .mChallengeIconIndex = 0, .mPage = ChallengePage::CHALLENGE_PAGE_BONUS, .mRow = 4, .mCol = 0, .mChallengeName = "Scrap Yard" },
+ 	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_VASE_AMBUSH, .mChallengeIconIndex = 0, .mPage = ChallengePage::CHALLENGE_PAGE_BONUS, .mRow = 4, .mCol = 1, .mChallengeName = "Vase Ambush" },
+ 	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_FIRE_DRILL, .mChallengeIconIndex = 0, .mPage = ChallengePage::CHALLENGE_PAGE_BONUS, .mRow = 4, .mCol = 2, .mChallengeName = "Fire Drill" },
+-	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_DOUBLE_AGENT, .mChallengeIconIndex = 0, .mPage = ChallengePage::CHALLENGE_PAGE_BONUS, .mRow = 4, .mCol = 3, .mChallengeName = "Double Agent" }
++	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_DOUBLE_AGENT, .mChallengeIconIndex = 0, .mPage = ChallengePage::CHALLENGE_PAGE_BONUS, .mRow = 4, .mCol = 3, .mChallengeName = "Double Agent" },
++	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_HEADWIND, .mChallengeIconIndex = 0, .mPage = ChallengePage::CHALLENGE_PAGE_BONUS, .mRow = 4, .mCol = 4, .mChallengeName = "Headwind" }
+ };
+ 
+ ChallengeScreen::ChallengeScreen(LawnApp* theApp, ChallengePage thePage)
+@@ -443,7 +445,8 @@ int ChallengeScreen::AccomplishmentsNeeded(int theChallengeIndex)
+ // Native portraits retain the original 80x65 minigame window and frame.
+ void DrawBonusIcon(Graphics* g, GameMode mode, int x, int y)
+ {
+-    if (Image* image = mode == GAMEMODE_CHALLENGE_DOUBLE_AGENT ? DoubleAgentPresentation::GetBonusImage() :
++    if (Image* image = mode == GAMEMODE_CHALLENGE_HEADWIND ? GustBloomArt::GetHeadwindImage() :
++        mode == GAMEMODE_CHALLENGE_DOUBLE_AGENT ? DoubleAgentPresentation::GetBonusImage() :
+         mode == GAMEMODE_CHALLENGE_FIRE_DRILL ? FireDrillPresentation::GetBonusImage() :
+         mode == GAMEMODE_CHALLENGE_VASE_AMBUSH ? VaseAmbushPresentation::GetBonusImage() :
+         mode == GAMEMODE_CHALLENGE_SCRAP_YARD ? ScrapYardPresentation::GetBonusImage() :
+diff --git a/src/Lawn/Widget/LawnDialog.cpp b/src/Lawn/Widget/LawnDialog.cpp
+index 6da03b577ad35fc4fcf27f50d40d47033c9c4f58..231e2c2c399e67b0efd7d462b732722a17f2d3cc 100644
+--- a/src/Lawn/Widget/LawnDialog.cpp
++++ b/src/Lawn/Widget/LawnDialog.cpp
+@@ -31,6 +31,7 @@
+ #include "../System/PoolPanicEndless.h"
+ #include "../System/VaseAmbush.h"
+ #include "../System/DoubleAgent.h"
++#include "../System/GustChallenge.h"
+ #include "../../PvzpLib/PvzpDebug.h"
+ #include "../../PvzpLib/Reanimator.h"
+ #include "../../PvzpLib/EffectSystem.h"
+@@ -509,7 +510,7 @@ void GameOverDialog::ButtonDepress(int theId)
+ 		{
+ 			mApp->ShowGameSelector();
+ 		}
+-		else if (DoubleAgent::IsMode(mApp->mGameMode) || PoolPanicEndless::IsMode(mApp->mGameMode) || ChainReaction::IsMode(mApp->mGameMode) || RallyRaid::IsMode(mApp->mGameMode) || VaseAmbush::IsMode(mApp->mGameMode))
++		else if (GustChallenge::IsMode(mApp->mGameMode) || DoubleAgent::IsMode(mApp->mGameMode) || PoolPanicEndless::IsMode(mApp->mGameMode) || ChainReaction::IsMode(mApp->mGameMode) || RallyRaid::IsMode(mApp->mGameMode) || VaseAmbush::IsMode(mApp->mGameMode))
+ 		{
+ 			mApp->ShowChallengeScreen(ChallengePage::CHALLENGE_PAGE_BONUS);
+ 		}
+diff --git a/src/Lawn/Widget/SeedChooserScreen.cpp b/src/Lawn/Widget/SeedChooserScreen.cpp
+index ae1880564c21159c795a0f021217d13a4fd56162..dabd47c50271017c118fbfaf1644211d492dc7b4 100644
+--- a/src/Lawn/Widget/SeedChooserScreen.cpp
++++ b/src/Lawn/Widget/SeedChooserScreen.cpp
+@@ -90,7 +90,7 @@ SeedChooserScreen::SeedChooserScreen()
+ 	mRandomButton->SetLabelColor(Color(255, 240, 0));
+ 	mRandomButton->SetLabelHiliteColor(Color(200, 200, 255));
+ 	mRandomButton->Resize(332, 546, 100, 30);
+-	if (mApp->HasSeedType(SEED_LANTERNSHROOM) || mApp->HasSeedType(SEED_MENDERBLOOM))
++	if (mApp->HasSeedType(SEED_LANTERNSHROOM) || mApp->HasSeedType(SEED_MENDERBLOOM) || mApp->HasSeedType(SEED_GUSTBLOOM))
+ 		mRandomButton->Resize(560, 540, 100, 30);
+ 	if (!mApp->mCheatKeys)
+ 	{
+@@ -292,7 +292,12 @@ bool SeedChooserScreen::Has7Rows()
+ 
+ void SeedChooserScreen::GetSeedPositionInChooser(int theIndex, int& x, int& y)
+ {
+-	if (theIndex == SEED_MENDERBLOOM)
++	if (theIndex == SEED_GUSTBLOOM)
++	{
++		x = 420;
++		y = 545;
++	}
++	else if (theIndex == SEED_MENDERBLOOM)
+ 	{
+ 		x = 376;
+ 		y = 545;
+@@ -326,7 +331,7 @@ void SeedChooserScreen::GetSeedPositionInChooser(int theIndex, int& x, int& y)
+ 
+ float SeedChooserScreen::GetSeedPacketScaleProgress(const ChosenSeed& theChosenSeed)
+ {
+-	if (theChosenSeed.mSeedType != SEED_LANTERNSHROOM && theChosenSeed.mSeedType != SEED_MENDERBLOOM)
++	if (theChosenSeed.mSeedType != SEED_LANTERNSHROOM && theChosenSeed.mSeedType != SEED_MENDERBLOOM && theChosenSeed.mSeedType != SEED_GUSTBLOOM)
+ 		return 1.0f;
+ 	if (theChosenSeed.mSeedState == SEED_IN_CHOOSER)
+ 		return 0.0f;
+@@ -385,7 +390,7 @@ void SeedChooserScreen::Draw(Graphics* g)
+ 	const auto aDrawPacket = [&](int x, int y, SeedType seed, SeedType imitater, int grayness, float progress)
+ 	{
+ 		Graphics aPacketGraphics(*g);
+-		if (seed == SEED_LANTERNSHROOM || seed == SEED_MENDERBLOOM)
++		if (seed == SEED_LANTERNSHROOM || seed == SEED_MENDERBLOOM || seed == SEED_GUSTBLOOM)
+ 		{
+ 			const float aWidth = 34.0f + (SEED_PACKET_WIDTH - 34.0f) * progress;
+ 			const float aHeight = 46.0f + (SEED_PACKET_HEIGHT - 46.0f) * progress;
+@@ -398,7 +403,7 @@ void SeedChooserScreen::Draw(Graphics* g)
+ 	{
+ 		g->DrawImage(Sexy::IMAGE_SEEDCHOOSER_IMITATERADDON, 459, 503);
+ 	}
+-	for (const SeedType aSeedType : { SEED_LANTERNSHROOM, SEED_MENDERBLOOM })
++	for (const SeedType aSeedType : { SEED_LANTERNSHROOM, SEED_MENDERBLOOM, SEED_GUSTBLOOM })
+ 	{
+ 		if (mApp->HasSeedType(aSeedType) && mChosenSeeds[ChosenSeedIndex(aSeedType)].mSeedState != SEED_IN_CHOOSER)
+ 		{
+@@ -851,7 +856,7 @@ SeedType SeedChooserScreen::SeedHitTest(int x, int y)
+ 			const SeedType aSeedType = ChooserSeedType(aChooserIndex);
+ 			ChosenSeed& aChosenSeed = mChosenSeeds[ChosenSeedIndex(aSeedType)];
+ 			if (!mApp->HasSeedType(aSeedType) || aChosenSeed.mSeedState == SEED_PACKET_HIDDEN) continue;
+-			const bool aCompact = (aSeedType == SEED_LANTERNSHROOM || aSeedType == SEED_MENDERBLOOM) && aChosenSeed.mSeedState == SEED_IN_CHOOSER;
++			const bool aCompact = (aSeedType == SEED_LANTERNSHROOM || aSeedType == SEED_MENDERBLOOM || aSeedType == SEED_GUSTBLOOM) && aChosenSeed.mSeedState == SEED_IN_CHOOSER;
+ 			const int aWidth = aCompact ? 34 : SEED_PACKET_WIDTH;
+ 			const int aHeight = aCompact ? 46 : SEED_PACKET_HEIGHT;
+ 			if (Rect(aChosenSeed.mX, aChosenSeed.mY, aWidth, aHeight).Contains(x, y)) return aSeedType;
+@@ -1014,7 +1019,7 @@ void SeedChooserScreen::ShowToolTip()
+ 
+ 				mToolTip->mX = std::clamp((SEED_PACKET_WIDTH - mToolTip->mWidth) / 2 + aSeedX, 0, BOARD_WIDTH - mToolTip->mWidth);
+ 				mToolTip->mY = aSeedY + 70;
+-				if ((aSeedType == SEED_LANTERNSHROOM || aSeedType == SEED_MENDERBLOOM) && aChosenSeed.mSeedState == SEED_IN_CHOOSER)
++				if ((aSeedType == SEED_LANTERNSHROOM || aSeedType == SEED_MENDERBLOOM || aSeedType == SEED_GUSTBLOOM) && aChosenSeed.mSeedState == SEED_IN_CHOOSER)
+ 				{
+ 					mToolTip->mX = std::clamp((34 - mToolTip->mWidth) / 2 + aSeedX, 0, std::max(0, 459 - mToolTip->mWidth));
+ 					mToolTip->mY = std::max(87, aSeedY - mToolTip->mHeight);
+diff --git a/src/Lawn/Widget/SeedChooserScreen.h b/src/Lawn/Widget/SeedChooserScreen.h
+index 119b3fd73e63fbe5913d16dc8071ceb2dccb4b1f..6e9460cfe9d73bf93ef27bf34affdb9cc64eb6c1 100644
+--- a/src/Lawn/Widget/SeedChooserScreen.h
++++ b/src/Lawn/Widget/SeedChooserScreen.h
+@@ -100,24 +100,26 @@ public:
+ 	SeedChooserScreen();
+ 	~SeedChooserScreen() override;
+ 
+-	// Appended seeds keep IDs 75/76; unused runtime chooser slots store them.
++	// Appended seeds keep IDs 75/76/78; unused runtime chooser slots store them.
+ 	// Original enum sentinels, the 53-entry array and all serialized data stay fixed.
+-	static constexpr int ChooserSeedCount() { return NUM_SEEDS_IN_CHOOSER + 2; }
++	static constexpr int ChooserSeedCount() { return NUM_SEEDS_IN_CHOOSER + 3; }
+ 	static constexpr SeedType ChooserSeedType(int index)
+ 	{
+ 		return index == NUM_SEEDS_IN_CHOOSER ? SEED_LANTERNSHROOM :
+-			index == NUM_SEEDS_IN_CHOOSER + 1 ? SEED_MENDERBLOOM : static_cast<SeedType>(index);
++			index == NUM_SEEDS_IN_CHOOSER + 1 ? SEED_MENDERBLOOM :
++			index == NUM_SEEDS_IN_CHOOSER + 2 ? SEED_GUSTBLOOM : static_cast<SeedType>(index);
+ 	}
+ 	static constexpr bool IsChooserSeed(int type)
+ 	{
+-		return (type >= SEED_PEASHOOTER && type < NUM_SEEDS_IN_CHOOSER) || type == SEED_LANTERNSHROOM || type == SEED_MENDERBLOOM;
++		return (type >= SEED_PEASHOOTER && type < NUM_SEEDS_IN_CHOOSER) || type == SEED_LANTERNSHROOM || type == SEED_MENDERBLOOM || type == SEED_GUSTBLOOM;
+ 	}
+ 	static constexpr int ChosenSeedIndex(int type)
+ 	{
+ 		return type == SEED_LANTERNSHROOM ? NUM_SEEDS_IN_CHOOSER :
+-			type == SEED_MENDERBLOOM ? NUM_SEEDS_IN_CHOOSER + 1 : type;
++			type == SEED_MENDERBLOOM ? NUM_SEEDS_IN_CHOOSER + 1 :
++			type == SEED_GUSTBLOOM ? NUM_SEEDS_IN_CHOOSER + 2 : type;
+ 	}
+-	static_assert(NUM_SEEDS_IN_CHOOSER + 2 <= NUM_SEED_TYPES);
++	static_assert(NUM_SEEDS_IN_CHOOSER + 3 <= NUM_SEED_TYPES);
+ 
+ 	static int   PickFromWeightedArrayUsingSpecialRandSeed(PvzpWeightedArray* theArray, int theCount, MTRand& theLevelRNG);
+ 	void                    CrazyDavePickSeeds();
+diff --git a/src/Lawn/Zombie.cpp b/src/Lawn/Zombie.cpp
+index 96f2b6e1682c2d2a31cd6580c5e33ef18bc36867..28ac7cdedb8b83a2561e328314629c3e7240c950 100644
+--- a/src/Lawn/Zombie.cpp
++++ b/src/Lawn/Zombie.cpp
+@@ -29,6 +29,8 @@
+ #include "System/BonusChallenge.h"
+ #include "System/RallyPresentation.h"
+ #include "System/TorchbearerZombie.h"
++#include "System/GustBloom.h"
++#include "System/GustChallenge.h"
+ #include "System/TorchbearerPresentation.h"
+ #include "Cutscene.h"
+ #include "GridItem.h"
+@@ -4487,6 +4489,7 @@ void Zombie::Update()
+ 			}
+ 		}
+ 
++        GustBloom::UpdateZombie(*this);
+ 		mX = static_cast<int>(mPosX);
+ 		mY = static_cast<int>(mPosY);
+ 
+@@ -7277,6 +7280,7 @@ void Zombie::EatZombie(Zombie* theZombie)
+ 
+ bool Zombie::TrySpawnLevelAward()
+ {
++    if (GustChallenge::IsMode(mApp->mGameMode)) return false;
+     if (DoubleAgent::IsMode(mApp->mGameMode)) return false;
+     if (VaseAmbush::IsMode(mApp->mGameMode)) return false;
+     if (FireDrill::IsMode(mApp->mGameMode)) return false;
+diff --git a/src/LawnApp.cpp b/src/LawnApp.cpp
+index be48e502282f54d22054879aad7013ba17a4b545..b76e9fd59d580fe9637d4fc4fbe1c4348babd24c 100644
+--- a/src/LawnApp.cpp
++++ b/src/LawnApp.cpp
+@@ -48,10 +48,12 @@
+ #include "Lawn/System/ScrapYardPresentation.h"
+ #include "Lawn/System/VaseAmbushPresentation.h"
+ #include "Lawn/System/FireDrillPresentation.h"
+-#include "Lawn/System/DoubleAgentPresentation.h"
++#include "Lawn/System/DoubleAgentPresentation.h"
++#include "Lawn/System/GustBloomArt.h"
+ #include "Lawn/System/TorchbearerPresentation.h"
+ #include "Lawn/System/LanternShroom.h"
+ #include "Lawn/System/MenderBloom.h"
++#include "Lawn/System/GustBloom.h"
+ #include "Lawn/System/SaveGame.h"
+ #include "PvzpLib/PvzpDebug.h"
+ #include "PvzpLib/PvzpFoley.h"
+@@ -236,7 +238,8 @@ LawnApp::~LawnApp()
+     ScrapYardPresentation::DisposeImage();
+     VaseAmbushPresentation::DisposeImage();
+     FireDrillPresentation::DisposeImage();
+-    DoubleAgentPresentation::DisposeImage();
++    DoubleAgentPresentation::DisposeImage();
++    GustBloomArt::DisposeImages();
+     TorchbearerPresentation::DisposeImage();
+     PoolPanicEndlessPresentation::DisposeImage();
+ #ifdef __EMSCRIPTEN__
+@@ -2644,6 +2647,8 @@ bool LawnApp::HasSeedType(SeedType theSeedType)
+ 
+ 	switch (theSeedType)
+ 	{
++	case SeedType::SEED_GUSTBLOOM:
++		return GustBloom::IsUnlocked(this);
+ 	case SeedType::SEED_MENDERBLOOM:
+ 		// Existing valid Seed Swap wins unlock it without rewriting progress.
+ 		return HasBeatenChallenge(GAMEMODE_CHALLENGE_SEED_SWAP);

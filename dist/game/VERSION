@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-double.1
-Adds Double Agent: defend your own garden, switch sides, and breach the same layout with a finite I, Zombie army.
-Engine JavaScript SHA-256: 3c8fc69ad6a388826cb3a3be3cf3ec07910b7ad4c5a6dcce42a27bd91df278cf
-Engine WASM SHA-256: 0e9ad8846b33ec2a1823f7637674aa26956619318f2a44c42b8b3f9b28af66e6
+PvZ-Portable 0.2.6-web-gust.1
+Adds Gust-bloom, its Almanac and regular seed unlock, and the Headwind conveyor challenge.
+Engine JavaScript SHA-256: dc3163631f5a1beb45580cf0d00c04ee8c1a417fa1856f257cf1f44c40b98c68
+Engine WASM SHA-256: f1d6be2fb180a17dd616929e47fff7e51a74e0b7d04ae2531483f7b64e8b529a
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.

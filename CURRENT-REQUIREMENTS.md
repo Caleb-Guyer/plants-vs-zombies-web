@@ -1,5 +1,23 @@
 # Current requirements
 
+## Gust-bloom accepted behavior
+
+Gust-bloom is a new 150-sun plant. He winds up, then blows a visible gust down his row to push nearby ordinary ground zombies back. Heavy equipment reduces the push; giants and vehicles shrug it off. Each zombie needs time to recover before another push, limiting repeated knockback.
+
+Beat Headwind, Bonus card 20, to unlock Gust-bloom in the normal Adventure and Survival seed chooser. This finite day-lawn conveyor challenge supplies 32 packets against six mixed formations, ending with a Gargantuar. Its original-style plant and thumbnail use original raster components, with a joined stem, breathing idle, attack anticipation and flowing air. The Almanac includes a portrait, stats and character description. The interface retains the native seed bank, Menu, pause, speed and progress meter, with no card tips or extra HUD. Original saved object layouts remain unchanged.
+
+The frozen build of 878 source files and 147 production objects passes **28 current native suites, 83,162,731 primary assertions and zero failures**, plus 29,323,436 separately counted Endless late checks. All 27 earlier suites run against current source; the 15 complete-engine drivers bind the same current production objects. All 58,833 earlier focused assertions remain, with one additional catalog iteration (58,834). Automated testing opens no audio device; normal game audio remains available.
+
+The new driver executes 48 cases at 1×/2× using two seeds: 32 real Headwind battle cases and 16 explicitly synthetic controls. It covers normal and staggered play, saves during windup/push/recovery, natural loss, Retry and Replay, the earned regular-game unlock, native 150-sun placement, recharge and Save/Continue. Independent controls check live heavy equipment, immunity, immobilization, sustained forward progress under chill, original-art composition, attack-only I, Zombie cardboard motion, native glyphs and packet/header separation. Actual native comparison, catalog, chooser, Almanac and attack frames were reviewed.
+
+**Muted browser checks passed for functionality:** file-free startup; the Headwind catalog card; the Gust-bloom Almanac entry; selection through the normal chooser using a profile earned by native Headwind play; a Gust-bloom purchase (150 to 0 sun); 2×; and same-browser Save/reload/Continue. These checks credited **zero browser wins**. The actual automation method and observations are recorded with the five browser screenshots and the imported native-earned profile.
+
+**Fresh browser performance was not measured, and no performance probe was loaded.** The original Torch.1 raw timing baseline and earlier Double.1 browser observations remain historical evidence. They are not relabeled as results for this changed game binary. Native tests and functional browser checks do not replace browser performance measurements.
+
+## Prior release records
+
+The sections below retain their earlier release-time scope; prior accepted gameplay behavior remains required.
+
 ## Double Agent accepted behavior
 
 Double Agent is Bonus card 19. Build a garden in the left five columns with 1500 sun and seven original plants, then press Let's Rock. Survive two assaults, then switch sides: your original garden returns at full health as I, Zombie cardboard. Spend 1000 sun on six original zombie types and eat all five brains. The challenge has no mowers, free sun, combat loot or planting during the assault.

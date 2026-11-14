@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "current_engine": "0.2.6-web-double.1",
+  "current_engine": "0.2.6-web-gust.1",
   "upstream_tag": "0.2.6",
-  "layout": "Site-source nests current corresponding source, the upstream baseline, independently pinned complete Torch.1, Ambush.1, Scrap.1 and Endless.3 source projections, the native I, Zombie UI reference and the current full patch. The historical Endless.2 comparator ZIP is restored byte-for-byte before offline checks from compressed byte ranges shared with the current native ZIP and a literal payload. Every original comparator file and archive checksum is preserved. Each archives[].url is its original download location: current and upstream source stay on Pages; historical source archives use immutable GitHub repository URLs and remain in the full runtime distribution. Linked native test artifacts are losslessly packed; the included decoder restores their exact pinned bytes.",
+  "layout": "Site-source nests current corresponding source, the upstream baseline, independently pinned complete Double.1, Torch.1, Ambush.1, Scrap.1 and Endless.3 source projections, the native I, Zombie UI reference and the current full patch. The historical Endless.2 comparator ZIP is restored byte-for-byte before offline checks from compressed byte ranges shared with the current native ZIP and a literal payload. Every original comparator file and archive checksum is preserved. Each archives[].url is its original download location: current and upstream source stay on Pages; historical source archives use immutable GitHub repository URLs and remain in the full runtime distribution. Linked native test artifacts are losslessly packed; the included decoder restores their exact pinned bytes.",
   "nested_sources": [
     "pvz-portable-0.2.6-source.zip",
-    "pvz-portable-0.2.6-web-double.1-source.zip"
+    "pvz-portable-0.2.6-web-gust.1-source.zip"
   ],
   "restored_sources": [
     {
@@ -16,18 +16,18 @@
       "automatic_before_checks": true,
       "manifest": {
         "path": "source-transports/endless2.json",
-        "bytes": 284227,
-        "sha256": "3383d542ecbc5b84af50976d30ae313b4bc69c64c5d65137475c02e0f3fd81ef"
+        "bytes": 283008,
+        "sha256": "6f6ddf44edf11e346146e4aaaf33f8ad8d386cb6e36ed3905a6d10cf0d7a9b24"
       },
       "literal_payload": {
         "path": "source-transports/endless2.literals",
-        "bytes": 26814463,
-        "sha256": "8ef9336117eff9733ebf2c79b5995df6a51f54a164dc4e547aa34015f2db4da6"
+        "bytes": 26829340,
+        "sha256": "904dfe27388eaaf103c1750ddf7c960b4731c3a238117077efcc2759afbec997"
       }
     }
   ],
   "nested_patches": [
-    "web-double.1.patch"
+    "web-gust.1.patch"
   ],
   "archives": [
     {
@@ -178,9 +178,9 @@
       "name": "pvz-portable-0.2.6-web-double.1-source.zip",
       "bytes": 33335884,
       "sha256": "35b635770bbb040dd3b2c41c4c86ed49f351cbd29926b8efa286394ff89ad5b3",
-      "current": true,
+      "current": false,
       "upstream": false,
-      "url": "./pvz-portable-0.2.6-web-double.1-source.zip"
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/7e66a42e18e68bd844a1583999e46082fc01dc62/dist/source/pvz-portable-0.2.6-web-double.1-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-endless.1-source.zip",
@@ -221,6 +221,14 @@
       "current": false,
       "upstream": false,
       "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/54c1d3bb8ac99c72ebb0cdac7084d41d0582df71/dist/source/pvz-portable-0.2.6-web-garlic.1-source.zip"
+    },
+    {
+      "name": "pvz-portable-0.2.6-web-gust.1-source.zip",
+      "bytes": 36838618,
+      "sha256": "10acb269866b175ed4836c2c64c6a79dc86a11241de9e48c7be54f8f89808be8",
+      "current": true,
+      "upstream": false,
+      "url": "./pvz-portable-0.2.6-web-gust.1-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-lantern.1-source.zip",
