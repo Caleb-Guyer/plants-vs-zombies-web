@@ -1,0 +1,19 @@
+{
+  "at": "2026-11-14T23:13:35.131114+00:00",
+  "reason": "Native SDL intercepted char-key default for DOM label before any measurement",
+  "oldController": {
+    "path": "outputs\\pvz-zombotany3-followup\\performance-browser\\headless-driver.mjs",
+    "sha256": "f47aa817015b3e4a2dff0cdcf5f6fb97865a53896b4cc1282b7ac416c8dc15a6"
+  },
+  "newController": {
+    "path": "outputs\\pvz-zombotany3-followup\\performance-browser\\headless-driver-ime.mjs",
+    "sha256": "9cca18a9c608569606f26d6a877123bdf30c07391b79a87b10a3655e1445f8ba"
+  },
+  "debugger": "http://127.0.0.1:9227",
+  "targetId": "1D61868FC9A7843E54065282EAF92750",
+  "url": "http://127.0.0.1:4248/?testing=1",
+  "existingTranscriptPreserved": true,
+  "measurementFilesBefore": 0,
+  "productionAndProbeChanged": false,
+  "gamePaused": true
+}

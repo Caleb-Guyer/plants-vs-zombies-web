@@ -1,5 +1,19 @@
 # Plants vs. Zombies — browser playtest
 
+## Zombotany 3.2 fixes
+
+Puff-shroom and Fume-shroom zombie hits now remove a plant as soon as its health reaches zero. Older Zombotany 3 saves containing a zero-health plant are cleaned up before those plants can act again. The original ZomBotany 2 card also keeps its native unlock tooltip when viewed through the Zombotany family page.
+
+The twenty-wave night challenge, original artwork, plant and zombie statistics, twenty Bonus cards and existing save layouts remain unchanged. No card tips or extra HUD were added. Normal game audio remains available; testing stays muted.
+
+Muted automated and browser checks cover the fixes and save continuation.
+
+[Play the game](https://caleb-guyer.github.io/plants-vs-zombies-web/).
+
+## Prior release records (.1 and earlier)
+
+These records keep their earlier release-time scope and original evidence.
+
 ## Zombotany 3
 
 Zombotany 3 brings mushroom-headed zombies to a twenty-wave night lawn. Puff-shroom heads fire short-range spores, Fume-shroom heads blow through nearby defenders in their row, and rare Ice-shroom heads wind up for one brief freeze before returning to ordinary biting. Pick a normal seed bank and build a night garden with the original planting, sun, recharge, graves and five mowers.

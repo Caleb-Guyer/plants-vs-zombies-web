@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "engineId": "0.2.6-web-zombotany3.1",
+  "releaseCommit": "1e50a64a05668e983f469ff34fba50ee711f3975",
+  "sourceArchiveBytes": 39772249,
+  "sourceArchiveSha256": "71d73740aaab996a7cdba2565ecf7aa60841e70184386ede3ab967f33766cdf9",
+  "proofSha256": "b15056e436760872206dfc1731a3ea877c02e9007e7d6e73fb971383992df2b4",
+  "scope": "Exact published .1 inputs for historical functional evidence only; no current executable execution or browser timing claim.",
+  "files": {
+    "tests/fixtures/performance/historical/zombotany3-1-published/audio-controls.js": {
+      "bytes": 12216,
+      "sha256": "95e6a1b3e7ccae54ee797e8ed3b63668b672ee51f55978dc4d29231ec225a343"
+    },
+    "tests/fixtures/performance/historical/zombotany3-1-published/bundled-assets.js": {
+      "bytes": 8188,
+      "sha256": "07449dfe0aca7efb7888c62d598b54dc0be5cdfaadab6961e5f9977f87db6e8c"
+    },
+    "tests/fixtures/performance/historical/zombotany3-1-published/game-assets/manifest.json": {
+      "bytes": 3176,
+      "sha256": "5488eb8cf5d38d2d999e29a5b3aca45ecff02f8ee49356ccb327de8676111dc4"
+    },
+    "tests/fixtures/performance/historical/zombotany3-1-published/index-port.html": {
+      "bytes": 6436,
+      "sha256": "ae8909471b47e78d8a94cd9566d8f7e3dcf36cab850d09114f7608320594a759"
+    },
+    "tests/fixtures/performance/historical/zombotany3-1-published/index.html": {
+      "bytes": 6436,
+      "sha256": "ae8909471b47e78d8a94cd9566d8f7e3dcf36cab850d09114f7608320594a759"
+    },
+    "tests/fixtures/performance/historical/zombotany3-1-published/launcher.js": {
+      "bytes": 10755,
+      "sha256": "9e41170068f913e8f966d650953972a311f57e7efb6241340fa6c5a349d3cfdd"
+    },
+    "tests/fixtures/performance/historical/zombotany3-1-published/loader.js": {
+      "bytes": 10670,
+      "sha256": "a183ed4e17810de2431989f3ebc263d2f511d1514c53e73c8933b8486bced73a"
+    },
+    "tests/fixtures/performance/historical/zombotany3-1-published/original-ui.js": {
+      "bytes": 2774,
+      "sha256": "a8f0aab63956a0280f03520671b712c2709da353c287be430592c64ba91ffe5b"
+    },
+    "tests/fixtures/performance/historical/zombotany3-1-published/port.css": {
+      "bytes": 11410,
+      "sha256": "6020b3fb0e1517aa9c9c1bab93873cf5c5c9f2204e3c0d9f3335853789e6b821"
+    },
+    "tests/fixtures/performance/historical/zombotany3-1-published/runtime.js": {
+      "bytes": 2931,
+      "sha256": "c8a9987e1094085b2a5368dd866b79687a000bf5ba630cfe16a937e5b25fb018"
+    },
+    "tests/fixtures/performance/historical/zombotany3-1-published/save-recovery.js": {
+      "bytes": 4921,
+      "sha256": "eff0eb9325e0bdc18c1f76582e9f260a07ffbf680b3ada25763f1972204e84bf"
+    },
+    "tests/fixtures/performance/historical/zombotany3-1-published/save-storage-core.js": {
+      "bytes": 13211,
+      "sha256": "5473e221a0b86818835a9ed5a1b473d718ae14da9838c7e37d99bdef48203bee"
+    },
+    "tests/fixtures/performance/historical/zombotany3-1-published/save-storage-worker.js": {
+      "bytes": 1864,
+      "sha256": "4951c5dd05dcc2c79dd99f4ddeba19935ffd23a69dd6726e4b4e1b819772a246"
+    },
+    "tests/fixtures/performance/historical/zombotany3-1-published/save-storage.js": {
+      "bytes": 9518,
+      "sha256": "e46cef9257f3608f0edbd1af4c0424e09665aa919aed5e5e16d234045ef1c49c"
+    },
+    "tests/fixtures/performance/historical/zombotany3-1-published/save-transfer.js": {
+      "bytes": 16375,
+      "sha256": "de0c5b67863c8f307906d4d1c739b05ef0d32d5f854a8d77581750a37dd6f314"
+    },
+    "tests/fixtures/performance/historical/zombotany3-1-published/steam-compat.js": {
+      "bytes": 5185,
+      "sha256": "ace261bed202e3f99a242ac6b6dc2f532c1967d1b803a0e91a38461db44311eb"
+    },
+    "tests/fixtures/performance/historical/zombotany3-1-published/test-profiles.js": {
+      "bytes": 10112,
+      "sha256": "b93318eb4738b199d39dbf10ad6313e11fd2350dc4526c64216b2a13c27e1ce0"
+    },
+    "tests/fixtures/performance/historical/zombotany3-1-published/vendor/jszip.min.js": {
+      "bytes": 97630,
+      "sha256": "acc7e41455a80765b5fd9c7ee1b8078a6d160bbbca455aeae854de65c947d59e"
+    },
+    "tests/fixtures/zombotany3-1-native-build-reference.json": {
+      "bytes": 144616,
+      "sha256": "b859930d7663869d3f8b1873311bc8b1f55e064e864df9cc2571b070c529367f"
+    },
+    "tests/fixtures/zombotany3-1-normal-build-reference.json": {
+      "bytes": 580,
+      "sha256": "4c74070ff45da66e21bbf2c227b4f8532c9a940672963a46bbbf951240458653"
+    },
+    "tests/fixtures/zombotany3-1-release.json": {
+      "bytes": 517,
+      "sha256": "eabeff70ba313f315fd0b65cc5fd352d0a0a5a1c7f49434fe9dd9a736325d5b8"
+    }
+  }
+}

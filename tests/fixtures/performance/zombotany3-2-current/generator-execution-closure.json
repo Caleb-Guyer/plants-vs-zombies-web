@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "productionBuildReceiptSha256": "805528006b1ce40dbca55cf1bb2b836855e93ba50f72b77c41fddd9ef57a54b4",
+  "sourceCount": 882,
+  "objectCount": 149,
+  "buildReceiptSha256": "d3104a19d1b7a096c743d8ae82b27f2ebf293f86eadfd2fae516b62b2d712ac1",
+  "summarySha256": "469666c4e10b7b70cc1d65ac4d575be70319786842de962e7ae6c0beb81df38e",
+  "assetAdapterSha256": "1f43e8747437d085f541b45c2cb01fabd599aae1121166b2a7e9acf8efc85619",
+  "approvedAssetFixtureSha256": "4eafa8c8106f6adfe82390e8b3e08de3851c534883bcbd5e4cc55ff116898562",
+  "runtimeScriptSha256": "182325f1d6214d31229e871cea856250c05fff256335b273f4469e5a69cef801",
+  "recipeSha256": "9a32bb38e15e6b2125d14463335044ce7ea235d3884243c45c3fdad1bb14f204",
+  "driverSha256": "b1665f764f01c98f00d612c5d9c89244cf50c4ce8c5259744c020b44ed0ecd46",
+  "fixtures": [
+    {
+      "startingCrowd": 20,
+      "manifestSha256": "26d38e754628a92e179ecbfc226e54eaa5fb0664b272d456137336b49f69859a"
+    },
+    {
+      "startingCrowd": 40,
+      "manifestSha256": "34b1fcadd533d45024d2923397f4c8f4c13e5954350691558cce7f456b2b5639"
+    }
+  ]
+}

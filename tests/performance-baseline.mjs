@@ -181,7 +181,7 @@ if(currentEngine.id==='0.2.6-web-gust.1'){
  assert.equal(availability.status,'functional-only','Actual current muted browser observations are required');
  await verifyGustBrowserEvidence({availability,currentEngine,read,sha,Zip:vendor.exports});
  console.log('PASS current muted Gust chooser/Almanac/planting/2x/SaveContinue; browser wins0, fresh FPS unmeasured.');
-}else if(currentEngine.id==='0.2.6-web-zombotany3.1'){
+}else if(['0.2.6-web-zombotany3.1','0.2.6-web-zombotany3.2'].includes(currentEngine.id)){
  const gustFocused=read('tests/fixtures/gust1-focused-reference.json');
  assert.equal(sha(gustFocused),'5f213369ad0e86e5e15c2f75e3eb267243350ac7f310df1efc55dddbc0a4e793');
  const oldNormal=Buffer.from(json(gustFocused).files['logs/build-result.json'].base64,'base64');
@@ -192,8 +192,26 @@ if(currentEngine.id==='0.2.6-web-gust.1'){
   historical:true,historicalNormalBytes:oldNormal,historicalBuildBytes:oldBuild});
  console.log('PASS preserved historical Gust browser functionality; no current executable or timing claim.');
  const {verifyZombotany3BrowserEvidence}=await import('./zombotany3-browser-verification.mjs');
- await verifyZombotany3BrowserEvidence({
-  availability:json(read('tests/fixtures/performance/zombotany3-browser-validation.json')),
-  currentEngine,read,sha,Zip:vendor.exports});
+ if(currentEngine.id==='0.2.6-web-zombotany3.1'){
+  await verifyZombotany3BrowserEvidence({
+   availability:json(read('tests/fixtures/performance/zombotany3-browser-validation.json')),
+   currentEngine,read,sha,Zip:vendor.exports});
+ }else{
+  await verifyZombotany3BrowserEvidence({
+   availability:json(read('tests/fixtures/performance/zombotany3-browser-validation.json')),
+   // The .2 descriptor retains the authenticated Gust test lineage. The exact
+   // .1 metadata was captured with its immutable historical browser proof.
+   currentEngine:json(read('tests/fixtures/zombotany3-browser/observed-engine-provenance.json')),read,sha,Zip:vendor.exports,historical:true,
+   historicalNormalBytes:read('tests/fixtures/zombotany3-1-normal-build-reference.json'),
+   historicalBuildBytes:read('tests/fixtures/zombotany3-1-native-build-reference.json')});
+  console.log('PASS preserved historical Zombotany 3.1 browser functionality; no current executable or timing claim.');
+  const {verifyZombotany3BrowserEvidence:verifyCurrent}=await import('./zombotany3-2-browser-verification.mjs');
+  const path='tests/fixtures/performance/zombotany3-2-browser-validation.json';
+  await verifyCurrent({availability:fs.existsSync(path)?json(read(path)):null,currentEngine,read,sha,Zip:vendor.exports});
+  const {verifyZombotany3PerformanceEvidence}=await import('./zombotany3-2-performance-verification.mjs');
+  const performancePath='tests/fixtures/performance/zombotany3-2-current-validation.json';
+  await verifyZombotany3PerformanceEvidence({availability:fs.existsSync(performancePath)?json(read(performancePath)):null,currentEngine,read,sha});
+  console.log('PASS current muted Zombotany 3.2 native callback/save CPU and rAF scheduling; presented FPS and GPU timing unmeasured.');
+ }
  console.log('PASS current muted Zombotany 3 family/chooser/night planting/2x/SaveContinue; browser wins0, fresh FPS unmeasured.');
 }else assert.equal(currentEngine.id,'0.2.6-web-double.1','Unreviewed current browser epoch');

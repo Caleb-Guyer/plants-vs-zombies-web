@@ -1,5 +1,23 @@
 # Current requirements
 
+## Zombotany 3.2 accepted fixes
+
+Puff-shroom and Fume-shroom zombie hits now remove a plant as soon as its health reaches zero. Older Zombotany 3 saves containing a zero-health plant are cleaned up before those plants can act again. The original ZomBotany 2 card also keeps its native unlock tooltip when viewed through the Zombotany family page.
+
+The twenty-wave night challenge, original artwork, plant and zombie statistics, twenty Bonus cards and existing save layouts remain unchanged. No card tips or extra HUD were added. Normal game audio remains available; testing stays muted.
+
+The frozen .2 build passes **29 current native suites, 88,127,823 primary assertions and zero failures**, plus 29,323,442 separately counted Endless late checks. All 16 complete-engine drivers use the same 882-source/149-object production build. The retained focused block keeps all 58,834 earlier assertions and its one existing catalog iteration (58,835).
+
+The 36-case matrix still contains 24 ordinary winning night battles, four genuine no-input losses and eight explicitly synthetic controls at both speeds and two seeds. New controls cover exact-lethal Puff/Fume damage, cleanup of a real loaded zero-health save, and original-card/family-alias hover parity with native font bounds and complete profile restoration. Synthetic controls earn no wins. Automated native testing opens no audio device.
+
+Fresh muted browser checks cover file-free startup, the family page and chooser, normal Sun-shroom/Puff-shroom planting, 2x, same-browser Save/reload/Continue and the actual new .2 freeze checkpoint. Browser checks earn zero wins.
+
+A separate current .2 timing gate accepts the fresh browser CPU/scheduling records. Its evidence is separate from the functional captures and does not establish GPU completion, delivered-frame FPS or universal smoothness.
+
+## Prior release records (.1 and earlier)
+
+These records keep their earlier release-time scope and original evidence.
+
 ## Zombotany 3 accepted behavior
 
 Zombotany 3 brings mushroom-headed zombies to a twenty-wave night lawn. Puff-shroom heads fire short-range spores, Fume-shroom heads blow through nearby defenders in their row, and rare Ice-shroom heads wind up for one brief freeze before returning to ordinary biting. Pick a normal seed bank and build a night garden with the original planting, sun, recharge, graves and five mowers.

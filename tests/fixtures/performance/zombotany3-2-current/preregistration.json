@@ -1,0 +1,300 @@
+{
+  "schemaVersion": 1,
+  "id": "zombotany3-2-current-performance",
+  "stage": "preregistered-before-current-browser-timing",
+  "engine": {
+    "id": "0.2.6-web-zombotany3.2",
+    "jsSha256": "0ffe49ac17d6c0c73c120c30781b14c49816f12d0743cd740ab13070f73df250",
+    "wasmSha256": "8921eb268458f039a48d59cb071fb4c206dc059ca556aba0ab49340e2191f2d5"
+  },
+  "normalBuildReceipt": {
+    "path": "tests/fixtures/performance/zombotany3-2-current/normal-build.json",
+    "bytes": 581,
+    "sha256": "805528006b1ce40dbca55cf1bb2b836855e93ba50f72b77c41fddd9ef57a54b4"
+  },
+  "sourceCount": 882,
+  "productionObjectCount": 149,
+  "fixtureGeneration": {
+    "buildReceipt": {
+      "path": "tests/fixtures/performance/zombotany3-2-current/generator-build.json",
+      "bytes": 142769,
+      "sha256": "d3104a19d1b7a096c743d8ae82b27f2ebf293f86eadfd2fae516b62b2d712ac1"
+    },
+    "executionClosure": {
+      "path": "tests/fixtures/performance/zombotany3-2-current/generator-execution-closure.json",
+      "bytes": 1110,
+      "sha256": "cf26faf6c33f728ec07231dd94495922466ff0b75f2e2181d704f9c2d5948686"
+    },
+    "recipe": {
+      "path": "tests/fixtures/performance/zombotany3-2-current/generator.py",
+      "bytes": 8122,
+      "sha256": "9a32bb38e15e6b2125d14463335044ce7ea235d3884243c45c3fdad1bb14f204"
+    },
+    "driver": {
+      "path": "tests/fixtures/performance/zombotany3-2-current/fixture.cpp",
+      "bytes": 3989,
+      "sha256": "b1665f764f01c98f00d612c5d9c89244cf50c4ce8c5259744c020b44ed0ecd46"
+    },
+    "summary": {
+      "path": "tests/fixtures/performance/zombotany3-2-current/fixture-summary.json",
+      "bytes": 21302,
+      "sha256": "469666c4e10b7b70cc1d65ac4d575be70319786842de962e7ae6c0beb81df38e"
+    },
+    "inputSnapshot": {
+      "path": "tests/fixtures/performance/zombotany3-2-current/generator-input-snapshot.json",
+      "bytes": 489,
+      "sha256": "382fc86fe3400db72fa245afb9e945c2959bb873f907454cc8ef9a14923ef912"
+    },
+    "snapshots": {
+      "zombotany3-battles.h": {
+        "path": "tests/fixtures/performance/zombotany3-2-current/recipe-inputs/zombotany3-battles.h",
+        "bytes": 15794,
+        "sha256": "ee854f4d7656e4a599ca5d5868c27576e2fde7030c6a34b5df9ada0c0235427f"
+      },
+      "zombotany3-controls.h": {
+        "path": "tests/fixtures/performance/zombotany3-2-current/recipe-inputs/zombotany3-controls.h",
+        "bytes": 18531,
+        "sha256": "2e7c05f95bcdd4bc7ca623b82fbeccac7a7c169d9ba3c652c7e9405ff2bc32ab"
+      },
+      "zombotany3-harness.cpp": {
+        "path": "tests/fixtures/performance/zombotany3-2-current/recipe-inputs/zombotany3-harness.cpp",
+        "bytes": 22422,
+        "sha256": "ec8a5d2f36e22557909cb7b7d0f4537c778e8b0aeb740e1202d5f8850a601c88"
+      },
+      "zombotany3-policy.h": {
+        "path": "tests/fixtures/performance/zombotany3-2-current/recipe-inputs/zombotany3-policy.h",
+        "bytes": 3290,
+        "sha256": "5e7288d4013b7c3474366565a2758a4876619a44ad921a06cb1e0462267d0d4c"
+      },
+      "zombotany3-presentation-controls.h": {
+        "path": "tests/fixtures/performance/zombotany3-2-current/recipe-inputs/zombotany3-presentation-controls.h",
+        "bytes": 19355,
+        "sha256": "36b65ceea14fdff061d86d6c3095af297a72c5a20058d3a391a5df0a492f30df"
+      }
+    }
+  },
+  "nativeFixtures": {
+    "20": {
+      "kind": "zero-credit-synthetic-native-starting-save",
+      "startingActors": 20,
+      "puffHeads": 10,
+      "fumeHeads": 8,
+      "iceHeads": 2,
+      "manifest": {
+        "path": "tests/fixtures/performance/zombotany3-2-current/starting-20/manifest.json",
+        "bytes": 6673,
+        "sha256": "26d38e754628a92e179ecbfc226e54eaa5fb0664b272d456137336b49f69859a"
+      },
+      "nativeLog": {
+        "path": "tests/fixtures/performance/zombotany3-2-current/starting-20/native.log",
+        "bytes": 25247,
+        "sha256": "f7b92dafa8dfbf49476eb724f780bdd13eea517ddb9b53a52a113740f2d1b2cc"
+      },
+      "files": {
+        "userdata/game1_93.v4": {
+          "path": "tests/fixtures/performance/zombotany3-2-current/starting-20/userdata/game1_93.v4",
+          "bytes": 252324,
+          "sha256": "97ef0529da7661ac89c6a4ad5a33ba89769bbe30f19de5470b08219e590d38ca"
+        },
+        "userdata/user1.dat": {
+          "path": "tests/fixtures/performance/zombotany3-2-current/starting-20/userdata/user1.dat",
+          "bytes": 886,
+          "sha256": "86aa42ea66702a533af355141ed9d471eb32c0f68c1c2f3670973769e4308c59"
+        },
+        "userdata/users.dat": {
+          "path": "tests/fixtures/performance/zombotany3-2-current/starting-20/userdata/users.dat",
+          "bytes": 41,
+          "sha256": "23f294a550cedf91761eaaf333926e4a26a3eef567f7676bc8e14fb661f66888"
+        }
+      }
+    },
+    "40": {
+      "kind": "zero-credit-synthetic-native-starting-save",
+      "startingActors": 40,
+      "puffHeads": 20,
+      "fumeHeads": 16,
+      "iceHeads": 4,
+      "manifest": {
+        "path": "tests/fixtures/performance/zombotany3-2-current/starting-40/manifest.json",
+        "bytes": 11267,
+        "sha256": "34b1fcadd533d45024d2923397f4c8f4c13e5954350691558cce7f456b2b5639"
+      },
+      "nativeLog": {
+        "path": "tests/fixtures/performance/zombotany3-2-current/starting-40/native.log",
+        "bytes": 27876,
+        "sha256": "bbb3e971bdd4744c77289b2c1d69140e8d298dc1a4b4533ec8b2b4a13c8b9b92"
+      },
+      "files": {
+        "userdata/game1_93.v4": {
+          "path": "tests/fixtures/performance/zombotany3-2-current/starting-40/userdata/game1_93.v4",
+          "bytes": 365708,
+          "sha256": "3ff125b74266f13bba13cfde67adc7e0fa70004bf340cf497398ace24833bf5c"
+        },
+        "userdata/user1.dat": {
+          "path": "tests/fixtures/performance/zombotany3-2-current/starting-40/userdata/user1.dat",
+          "bytes": 886,
+          "sha256": "86aa42ea66702a533af355141ed9d471eb32c0f68c1c2f3670973769e4308c59"
+        },
+        "userdata/users.dat": {
+          "path": "tests/fixtures/performance/zombotany3-2-current/starting-40/userdata/users.dat",
+          "bytes": 41,
+          "sha256": "23f294a550cedf91761eaaf333926e4a26a3eef567f7676bc8e14fb661f66888"
+        }
+      }
+    }
+  },
+  "probe": {
+    "path": "tests/performance/probe.js",
+    "bytes": 10060,
+    "sha256": "f5f9309cc585fd6ea6aad44f84c5c2552b682b21fd4769578693f321154ba99b"
+  },
+  "recorder": {
+    "path": "tests/performance/preview.py",
+    "bytes": 9024,
+    "sha256": "12998a23837b556ba40914e8baed2f46bcb789e980a6e280c4f1061c7c33100a"
+  },
+  "metrics": {
+    "path": "tests/performance/metrics.mjs",
+    "bytes": 8998,
+    "sha256": "7ca3e9f3674e3f7bd291365a3fd56b7fe90323e6e6068efce3838f87f42e2263"
+  },
+  "runtimeFiles": [
+    "audio-controls.js",
+    "bundled-assets.js",
+    "game-assets/manifest.json",
+    "game/pvz-portable.js",
+    "game/pvz-portable.wasm",
+    "index-port.html",
+    "index.html",
+    "launcher.js",
+    "loader.js",
+    "original-ui.js",
+    "port.css",
+    "runtime.js",
+    "save-recovery.js",
+    "save-storage-core.js",
+    "save-storage-worker.js",
+    "save-storage.js",
+    "save-transfer.js",
+    "steam-compat.js",
+    "test-profiles.js",
+    "vendor/jszip.min.js"
+  ],
+  "previewManifestFiles": [
+    "audio-controls.js",
+    "bundled-assets.js",
+    "game-assets/manifest.json",
+    "game/engine-provenance.json",
+    "game/pvz-portable.js",
+    "game/pvz-portable.wasm",
+    "index.html",
+    "launcher.js",
+    "loader.js",
+    "original-ui.js",
+    "port.css",
+    "runtime.js",
+    "save-recovery.js",
+    "save-storage-core.js",
+    "save-storage-worker.js",
+    "save-storage.js",
+    "save-transfer.js",
+    "steam-compat.js",
+    "test-profiles.js"
+  ],
+  "minObservationMs": 15000,
+  "minSaveCaptures": 2,
+  "maxControlP95DeltaMs": 1,
+  "budgets": {
+    "nativeCallbacks": {
+      "p95": 8,
+      "max": 33.5
+    },
+    "rafGaps": {
+      "p95": 25,
+      "max": 50
+    },
+    "saveCaptures": {
+      "p95": 8,
+      "max": 16.7
+    },
+    "longTasks": {
+      "count": 0,
+      "max": 50
+    }
+  },
+  "cases": [
+    {
+      "key": "20-active-1x",
+      "scenario": {
+        "phase": "active",
+        "speed": 1,
+        "crowd": 20
+      }
+    },
+    {
+      "key": "20-active-2x",
+      "scenario": {
+        "phase": "active",
+        "speed": 2,
+        "crowd": 20
+      }
+    },
+    {
+      "key": "40-active-1x",
+      "scenario": {
+        "phase": "active",
+        "speed": 1,
+        "crowd": 40
+      }
+    },
+    {
+      "key": "40-active-2x",
+      "scenario": {
+        "phase": "active",
+        "speed": 2,
+        "crowd": 40
+      }
+    }
+  ],
+  "controls": [
+    {
+      "key": "20-paused-native-1x",
+      "mode": "native-raf",
+      "scenario": {
+        "phase": "paused",
+        "speed": 1,
+        "crowd": 20
+      }
+    },
+    {
+      "key": "20-paused-raf-only-1x",
+      "mode": "raf-only",
+      "scenario": {
+        "phase": "paused",
+        "speed": 1,
+        "crowd": 20
+      }
+    }
+  ],
+  "requirements": {
+    "freshEngineInstallBeforeCapture": true,
+    "current20RuntimeFilesPinned": true,
+    "mutedThroughout": true,
+    "visibleThroughout": true,
+    "stableViewportAndCanvas": true,
+    "nativeCanvas": {
+      "width": 800,
+      "height": 600
+    },
+    "actualStartAndEndScreenshotsForEveryWindow": true,
+    "noInputsDuringCapture": true,
+    "noPostImportTimerHPPositionOrRNGWrites": true,
+    "browserEarnedWins": 0,
+    "startingCountsAreNotEndlessFlags": true,
+    "populationsMayEvolve": true,
+    "gpuTimingMeasured": false,
+    "presentedFrameFPSMeasured": false,
+    "failedRequiredWindowsRemainUnaccepted": true
+  },
+  "scope": "Raw native callback CPU durations, full save-capture CPU and rAF scheduling of synthetic native starting crowds20/40 in mode93. Native populations may evolve. No earned-win, stable-population, GPU or presented-frame FPS claim. Historical baselines remain unchanged."
+}

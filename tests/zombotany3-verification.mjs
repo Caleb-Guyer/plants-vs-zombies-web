@@ -6,13 +6,13 @@ import fs from 'node:fs';
 import {CURRENT_ENGINE_ID,CURRENT_SOURCE_COUNT,CURRENT_OBJECT_COUNT,reconstructGustSources}
  from './native-release-context.mjs';
 
-// Reviewed actual O2 execution: 36 cases, 18 speed pairs and 4,968,136 checks
-// against unchanged normal production receipt 4c74070f... . Every raw native
-// observation and reached checkpoint is independently bound below. Only the
-// runner's raw-log hashes are omitted from the canonical observation identity.
-const acceptedContractPins=new Set(['17096347d658f476aed42a06e43a59ef962cd5b4b3d276342cd4370988d9252f']);
-const acceptedReportPins=new Set(['88a5d338e10777deeee47dd5d8d0a069f72452ae6c21723607e2554d16bdcf97']);
-const acceptedReportContentPins=new Set(['8935eded92fcc6fd6a8024ead18f34c18657509cf780d0e6c3e6f21ee32afb3a']);
+// Independently reviewed actual .2 O2 execution: 36 cases, 18 speed pairs and
+// 4,965,031 checks against unchanged normal production receipt 80552800... .
+// The .1 archive and observations remain immutable history. Only runner raw-log
+// hashes are omitted from canonical observation identity.
+const acceptedContractPins=new Set(['14d93a4728b87d132bb038788b31f5b3751911b0c3f7c59b5d6b9f8f0eae1efb']);
+const acceptedReportPins=new Set(['3d91e643a6d325ac59c22e62858441c4f7d01697e7d4193f5fbe3a74117fcd5a']);
+const acceptedReportContentPins=new Set(['42ba719c433a592dd80c06aadc549e3d9267cf2ee947056cd8261ee6e3cf2f7b']);
 const names=['normal','hesitation','save-windup','save-freeze','retry','replay','no-action','mechanics','presentation'];
 const battleNames=names.slice(0,7);
 export const ZOMBOTANY3_MATRIX=[1729,7331].flatMap(seed=>names.flatMap(name=>[1,2].map(speed=>[name,speed,seed])));
@@ -40,7 +40,15 @@ const savedPaths=['src/Lawn/Plant.h','src/Lawn/Zombie.h','src/Lawn/Board.h','src
  'src/Lawn/System/SaveGame.cpp','src/Lawn/System/PlayerInfo.cpp','src/Lawn/System/PlayerInfo.h'];
 const expectedInputs=['zombotany3-harness.cpp','zombotany3-policy.h','zombotany3-verification-contract.json',
  'zombotany3-controls.h','zombotany3-battles.h','test-zombotany3.py','zombotany3-native-art-inputs.json',
- 'zombotany3-assets.json','test-pool-panic.py','zombotany3-presentation-controls.h'];
+ 'zombotany3-assets.json','test-pool-panic.py','zombotany3-presentation-controls.h',
+ 'zombotany3-followup-plan.json','zombotany3-v1-zero-health-fixture.json',
+ 'zombotany3-v1-zero-health/userdata/game1_93.v4','zombotany3-v1-zero-health/userdata/user1.dat',
+ 'zombotany3-v1-zero-health/userdata/users.dat'];
+const legacySavePins={
+ 'zombotany3-v1-zero-health/userdata/game1_93.v4':{bytes:43035,sha256:'b5e1fe320075c35443a6e0a27c4d6f8b5a5cd5456bd31bf80b5142f9d9d229db'},
+ 'zombotany3-v1-zero-health/userdata/user1.dat':{bytes:886,sha256:'86aa42ea66702a533af355141ed9d471eb32c0f68c1c2f3670973769e4308c59'},
+ 'zombotany3-v1-zero-health/userdata/users.dat':{bytes:41,sha256:'23f294a550cedf91761eaaf333926e4a26a3eef567f7676bc8e14fb661f66888'}
+};
 
 export function verifyZombotany3ReportIdentity({reportBytes,sha}){
  const report=json(reportBytes);assert(Array.isArray(report.scenarios)&&report.scenarios.length===36);
@@ -51,7 +59,7 @@ export function verifyZombotany3ReportIdentity({reportBytes,sha}){
 }
 
 export async function verifyZombotany3SourceBounds({read,sha,engine}){
- assert.equal(CURRENT_ENGINE_ID,'0.2.6-web-zombotany3.1');assert.equal(CURRENT_SOURCE_COUNT,882);assert.equal(CURRENT_OBJECT_COUNT,149);
+ assert.equal(CURRENT_ENGINE_ID,'0.2.6-web-zombotany3.2');assert.equal(CURRENT_SOURCE_COUNT,882);assert.equal(CURRENT_OBJECT_COUNT,149);
  const parent=await reconstructGustSources({referenceBytes:fs.readFileSync(new URL('./fixtures/zombotany3-parent-reference.json',import.meta.url)),read,sha,engine});
  assert.equal(parent.files.size,878);
  for(const path of savedPaths)assert.deepEqual(Buffer.from(await read('source/'+path)),parent.files.get(path),'Exact existing saved class/serializer: '+path);
@@ -79,6 +87,10 @@ export async function verifyZombotany3SourceBounds({read,sha,engine}){
   'target->mRow!=source.mRow || !target->EffectedByDamage(9)','target->TakeDamage(kFumeDamage,2);',
   'body->PropogateColorToAttachments();',
   'projectile.mProjectileAge>=kPuffLifetime','projectile.mDamageRangeFlags==kHostilePuffMarker'])assert(challenge.includes(exact),exact);
+ assert.equal(challenge.split('if(plant->mPlantHealth<=0)plant->Die();').length,3,
+  'Both new hostile ranged hits resolve exact-lethal damage through native plant death');
+ assert(challenge.includes('plant.mApp->mGameScene==SCENE_PLAYING && plant.mIsOnBoard && !plant.mDead && plant.mPlantHealth<=0'),
+  'Legacy zero-health cleanup runs before abilities only on live, on-board plants during play');
  assert(!challenge.includes('EffectedByDamage(2)'),'Native range flags are distinct from native piercing damage flags');
  assert(!/\.(?:mBodyHealth|mBodyMaxHealth|mHelmHealth|mShieldHealth|mVelX)\s*[+*/-]?=/.test(challenge),
   'The new heads do not rewrite native carrier health, gear or gait');
@@ -95,6 +107,9 @@ export async function verifyZombotany3SourceBounds({read,sha,engine}){
  assert(screen.includes('aDef.mChallengeMode == GAMEMODE_CHALLENGE_WAR_AND_PEAS ? 0 :'));
  assert(screen.includes('aDef.mChallengeMode == GAMEMODE_CHALLENGE_WAR_AND_PEAS_2 ? 1 :'));
  assert(screen.includes('aDef.mChallengeMode == GAMEMODE_CHALLENGE_ZOMBOTANY_3 ? 2 : -1;'));
+ assert(screen.includes('const ChallengePage aAccessPage = mPageIndex == CHALLENGE_PAGE_ZOMBOTANY ? aDef.mPage : mPageIndex;'));
+ for(const page of ['PUZZLE','SURVIVAL','CHALLENGE'])assert(screen.includes('aAccessPage == CHALLENGE_PAGE_'+page),
+  'Family aliases retain the original access-page tooltip branch: '+page);
  return parent;
 }
 
@@ -123,7 +138,18 @@ export async function verifyZombotany3BuildBindings({report,read,sha,engine,full
   runnerSha256:'test-zombotany3.py',policySha256:'zombotany3-policy.h',controlSha256:'zombotany3-controls.h',
   verificationContractSha256:'zombotany3-verification-contract.json'}))assert.equal(report[field],sha(await read('tests/'+name)),name);
  assert.deepEqual(Object.keys(build.testInputSha256).sort(),[...expectedInputs].sort());
- for(const [name,pin]of Object.entries(build.testInputSha256)){safeName(name);assert(!name.includes('/'));digest(pin);assert.equal(sha(await read('tests/'+name)),pin,name);}
+ for(const [name,pin]of Object.entries(build.testInputSha256)){
+  safeName(name);assert(!name.includes('/')||Object.hasOwn(legacySavePins,name));digest(pin);assert.equal(sha(await read('tests/'+name)),pin,name);
+ }
+ const legacyBytes=await read('tests/zombotany3-v1-zero-health-fixture.json');
+ assert.equal(sha(legacyBytes),'60c578aa36a3f711f8b7c463220f135a1c6022e104876f02da920ccf30acb4e4');
+ const legacy=json(legacyBytes);fields(legacy,{schemaVersion:1,originEngineId:'0.2.6-web-zombotany3.1',
+  originArchiveSha256:'71d73740aaab996a7cdba2565ecf7aa60841e70184386ede3ab967f33766cdf9',
+  nativeBuildReceiptSha256:'4c74070ff45da66e21bbf2c227b4f8532c9a940672963a46bbbf951240458653',
+  syntheticFixture:true,binaryPatched:false,profileCredits:0,
+  expectedBeforeContinue:{mode:93,row:2,column:4,seed:9,health:0,alive:true,freezeLease:0}});
+ assert.deepEqual(legacy.files,Object.fromEntries(Object.entries(legacySavePins).map(([name,pin])=>['tests/'+name,pin])));
+ for(const [name,pin]of Object.entries(legacySavePins)){const bytes=await read('tests/'+name);assert.equal(bytes.length,pin.bytes);assert.equal(sha(bytes),pin.sha256);}
  assert.deepEqual(Object.keys(report.testArtifactSha256).sort(),['zombotany3-engine.js','zombotany3-engine.wasm']);
  for(const suffix of ['js','wasm'])assert.equal(sha(await read('tests/zombotany3-engine.'+suffix)),report.testArtifactSha256['zombotany3-engine.'+suffix]);
  assert(WebAssembly.validate(await read('tests/zombotany3-engine.wasm')));return build;
@@ -179,12 +205,23 @@ export function verifyZombotany3Scenario(row){
     nativeFrostTintBodyAndAttachedHead:true,nativeFrostTintClearedAfterThaw:true,
     nativeThawResumed:true,nativeIceOneUse:true,nativeIceInterruptKinds:4,
     nativeNewHeadsGustQueries:3,nativeCounterHeadSaveGraphExact:true,directProductionAbilityUpdates:true,nativeSingleTickControlMeasurement:true});
+   fields(row,{nativeLethalInitialHealth:[1,20,21,40],nativePuffLethalHealthAfter:[-19,0,1,20],
+    nativeFumeLethalHealthAfter:[-19,0,1,20],nativePuffLethalDead:[1,1,0,0],nativeFumeLethalDead:[1,1,0,0],
+    nativeLethalDamageChecks:8,nativeLethalAbilityClocksUnadvanced:true,nativeLegacyZeroHealthImported:true,
+    nativeLegacyZeroHealthRemovedBeforeAbilities:true,nativeLegacyZeroHealthProfilePreserved:true,
+    nativeLegacyZeroHealthOriginalModeUnchanged:true});
    integer(row.nativePuffMaximumObservedAge,3,59);integer(row.nativePuffMuzzleErrorMilliPixels,0,7999);
   }else{
    fields(row,{nativeAttachedMushroomHeads:3,nativeMouthNormalHypnoQueries:6,nativeIndependentPuffSpoutPoseQueries:8,
     nativeOriginalHeadTransformsExact:true,nativeUniqueNightCardExact:true,nativeBonusCardsPreserved:20,
     nativeFamilyRecordIndices:[15,31,92],nativeFamilyActualFooterInput:true,nativeFamilyOriginalRecordsPreserved:true,
     nativeFamilyCardFooterNoOverlap:true,native800x600Canvas:true});
+   fields(row,{nativeAliasTooltipSyntheticProfile:true,nativeAliasTooltipOriginalVisible:true,
+    nativeAliasTooltipFamilyVisible:true,nativeAliasTooltipLabelMatchesOriginal:true,
+    nativeAliasTooltipDimensionsMatchOriginal:true,nativeAliasTooltipCanvasAndNeighborsClear:true,
+    nativeAliasTooltipProfileRestored:true,nativeAliasTooltipHoverInputs:2,
+    nativeAliasTooltipOriginalTrophiesNeeded:1,nativeAliasTooltipFamilyTrophiesNeeded:1,
+    nativeAliasTooltipWidth:159,nativeAliasTooltipHeight:28,nativeAliasTooltipFamilyRect:[321,93,159,28]});
    for(const [name,maximum]of [['nativeVisiblePuffCenterMouthErrorMilliPixels',7999],['nativeVisiblePuffCenterOpaqueEdgeErrorMilliPixels',9999]]){
     assert.equal(row[name].length,8);row[name].forEach(value=>integer(value,0,maximum));
    }

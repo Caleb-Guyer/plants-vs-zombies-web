@@ -1,0 +1,106 @@
+{
+  "engineId": "0.2.6-web-zombotany3.2",
+  "observedAt": "2026-11-14T23:23:16.885783+00:00",
+  "audioMutedThroughout": true,
+  "allActionsSucceeded": true,
+  "actions": 218,
+  "inspections": 25,
+  "browserEarnedWins": 0,
+  "noPostImportTimerHPPositionOrRNGWrites": true,
+  "syntheticStartingFixtures": true,
+  "startingCountsAreNotEndlessFlags": true,
+  "populationsMayEvolve": true,
+  "gpuTimingMeasured": false,
+  "presentedFrameFPSMeasured": false,
+  "cases": [
+    {
+      "key": "20-active-1x",
+      "label": "v2-z3-20-active-1x",
+      "report": "measurements/v2-z3-20-active-1x.json",
+      "actualNativeFixtureImported": true,
+      "noInputDuringCapture": true,
+      "nativeUiBeforeAndAfterReviewed": true,
+      "activeThroughout": true,
+      "screenshots": {
+        "start": "screenshots/20-active-1x-start.jpg",
+        "end": "screenshots/20-active-1x-end.jpg"
+      }
+    },
+    {
+      "key": "20-active-2x",
+      "label": "v2-z3-20-active-2x",
+      "report": "measurements/v2-z3-20-active-2x.json",
+      "actualNativeFixtureImported": true,
+      "noInputDuringCapture": true,
+      "nativeUiBeforeAndAfterReviewed": true,
+      "activeThroughout": true,
+      "screenshots": {
+        "start": "screenshots/20-active-2x-start.jpg",
+        "end": "screenshots/20-active-2x-end.jpg"
+      }
+    },
+    {
+      "key": "40-active-1x",
+      "label": "v2-z3-40-active-1x",
+      "report": "measurements/v2-z3-40-active-1x.json",
+      "actualNativeFixtureImported": true,
+      "noInputDuringCapture": true,
+      "nativeUiBeforeAndAfterReviewed": true,
+      "activeThroughout": true,
+      "screenshots": {
+        "start": "screenshots/40-active-1x-start.jpg",
+        "end": "screenshots/40-active-1x-end.jpg"
+      }
+    },
+    {
+      "key": "40-active-2x",
+      "label": "v2-z3-40-active-2x",
+      "report": "measurements/v2-z3-40-active-2x.json",
+      "actualNativeFixtureImported": true,
+      "noInputDuringCapture": true,
+      "nativeUiBeforeAndAfterReviewed": true,
+      "activeThroughout": true,
+      "screenshots": {
+        "start": "screenshots/40-active-2x-start.jpg",
+        "end": "screenshots/40-active-2x-end.jpg"
+      }
+    },
+    {
+      "key": "20-paused-native-1x",
+      "label": "v2-z3-20-paused-native-1x",
+      "report": "measurements/v2-z3-20-paused-native-1x.json",
+      "actualNativeFixtureImported": true,
+      "noInputDuringCapture": true,
+      "nativeUiBeforeAndAfterReviewed": true,
+      "pausedThroughout": true,
+      "screenshots": {
+        "start": "screenshots/20-paused-native-1x-start.jpg",
+        "end": "screenshots/20-paused-native-1x-end.jpg"
+      }
+    },
+    {
+      "key": "20-paused-raf-only-1x",
+      "label": "v2-z3-20-paused-raf-only-1x",
+      "report": "measurements/v2-z3-20-paused-raf-only-1x.json",
+      "actualNativeFixtureImported": true,
+      "noInputDuringCapture": true,
+      "nativeUiBeforeAndAfterReviewed": true,
+      "pausedThroughout": true,
+      "screenshots": {
+        "start": "screenshots/20-paused-raf-only-1x-start.jpg",
+        "end": "screenshots/20-paused-raf-only-1x-end.jpg"
+      }
+    }
+  ],
+  "operatorObservations": [
+    "A separate dedicated headless Chrome profile was launched with --mute-audio and used only the owned localhost4248 testing page. Every DOM inspection reported muted sound and a stable1100x850 viewport with800x600 native canvas.",
+    "Actual current native starting20 and40 saves were imported through the reload controls. The ZIP members were byte-checked against their separately generated native fixture manifests before import.",
+    "Each active window freshly imported its starting fixture; native Continue and speed-button inputs established the scene, and the native Menu paused gameplay while the local form was prepared.",
+    "Native DOM form selection declared the exact crowd,speed,phase,probe mode and15second interval before every arm. Inside the2second arm delay, active windows resumed through Back To Game and captured their start image; no input was sent throughout the measurement.",
+    "All four start/end active images show an active night lawn at the declared native1x or2x speed. Populations and plants evolved naturally; none of the windows earned a browser win. Top-row Fume heads visibly overlap seed packets as they reach the left, recorded as a presentation observation rather than a bounds-pass assertion.",
+    "The paused native and raf-only windows share the same freshly imported20starting save and stayed in the native Menu throughout. No native game input was sent between the paired controls; their start screenshots are byte-identical.",
+    "All six raw reports passed recorder preconditions on their first measurement. Raw reports and12actual JPEGs are preserved, with no outlier deletion, threshold change,or measurement retry.",
+    "Before any measurement,the original char-key controller could not edit the DOM label because native SDL intercepted typing. Its source and transcript were preserved; root approved a restricted native IME text helper and triple-click for only the visible performance-label field. The exact same owned paused page was reconnected,with transition source hashes recorded.",
+    "The last recorded action successfully closed the page. This evidence measures native callback CPU,full synchronous save capture CPU and requestAnimationFrame scheduling; it makes no GPU timing or presented-frame FPS claim."
+  ]
+}

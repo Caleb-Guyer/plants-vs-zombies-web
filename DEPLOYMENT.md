@@ -1,5 +1,17 @@
 # GitHub Pages release: Caleb-Guyer/plants-vs-zombies-web
 
+## Zombotany 3.2 artifacts
+
+Engine: `0.2.6-web-zombotany3.2`; fixes release: `0.2.6-web-zombotany3.1`. The authenticated Gust source and test lineage is retained. JavaScript SHA-256: `0ffe49ac17d6c0c73c120c30781b14c49816f12d0743cd740ab13070f73df250`. WebAssembly SHA-256: `8921eb268458f039a48d59cb071fb4c206dc059ca556aba0ab49340e2191f2d5`.
+
+Native source: `pvz-portable-0.2.6-web-zombotany3.2-source.zip`, SHA-256 `9e4186372f80a9b59d119f8bf9cb0217e17a072d5fa178ea9f96cd120a4b5efb`. Full patch: `web-zombotany3.2.patch`; incremental patch: `gust1-to-zombotany3.patch`. Against the actual published .1 archive, only the version file, Zombotany 3 implementation and challenge-screen tooltip logic change; all eight saved-class/serializer files stay byte-exact.
+
+The unchanged native-art metadata and existing source history remain available. The outer source bundle restores the exact current ZIP before restoring the historical Endless.2 comparator. The existing Pages workflow requires all 19 offline integration suites and 29 native suites. Publication and public-byte checks remain separate receipts.
+
+## Prior release records (.1 and earlier)
+
+These records keep their earlier release-time scope and original evidence.
+
 ## Zombotany 3 artifacts
 
 Engine: `0.2.6-web-zombotany3.1`; immediate parent: `0.2.6-web-gust.1`. JavaScript SHA-256: `0ffe49ac17d6c0c73c120c30781b14c49816f12d0743cd740ab13070f73df250`. WebAssembly SHA-256: `06e06401578f42c4367be03159ddc0065cfe2a6ae3abef8067d503d762c91256`.

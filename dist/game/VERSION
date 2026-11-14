@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-zombotany3.1
-Adds nighttime Zombotany3, three original mushroom-headed zombies and the Zombotany family page.
+PvZ-Portable 0.2.6-web-zombotany3.2
+Fixes Zombotany3 lethal hits, affected older saves and original unlock hints on family aliases.
 Engine JavaScript SHA-256: 0ffe49ac17d6c0c73c120c30781b14c49816f12d0743cd740ab13070f73df250
-Engine WASM SHA-256: 06e06401578f42c4367be03159ddc0065cfe2a6ae3abef8067d503d762c91256
+Engine WASM SHA-256: 8921eb268458f039a48d59cb071fb4c206dc059ca556aba0ab49340e2191f2d5
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.

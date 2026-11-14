@@ -45,3 +45,9 @@ tests/fixtures/zombotany3-parent-reference.json -text
 tests/fixtures/zombotany3-release.json -text
 tests/fixtures/performance/zombotany3-browser-validation.json -text
 tests/fixtures/zombotany3-browser/** -text
+# Preserve the recorded .2 evidence and exact .1 history bytes across checkouts.
+tests/fixtures/zombotany3-1-*.json -text whitespace=cr-at-eol
+tests/fixtures/zombotany3-2-browser/** -text whitespace=cr-at-eol
+tests/fixtures/performance/zombotany3-2-browser-validation.json -text
+tests/fixtures/performance/zombotany3-2-current-validation.json -text
+tests/fixtures/performance/zombotany3-2-current/** -text whitespace=cr-at-eol

@@ -3,14 +3,14 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 
-export const CURRENT_ENGINE_ID = '0.2.6-web-zombotany3.1';
+export const CURRENT_ENGINE_ID = '0.2.6-web-zombotany3.2';
 export const CURRENT_SOURCE_COUNT = 882;
 export const CURRENT_OBJECT_COUNT = 149;
 export const GUST_ENGINE_ID = '0.2.6-web-gust.1';
 export const GUST_SOURCE_COUNT = 878;
 export const GUST_OBJECT_COUNT = 147;
 export const GUST_ARCHIVE_SHA256 = '10acb269866b175ed4836c2c64c6a79dc86a11241de9e48c7be54f8f89808be8';
-export const ZOMBOTANY3_PARENT_REFERENCE_SHA256 = '82676d6180b80f15bbda731bd8eb7887f089cabd66856789ffa396be09a87b0f';
+export const ZOMBOTANY3_PARENT_REFERENCE_SHA256 = '5e7b3859aede4d32eba82ea23c5379646fc38a74198caf09be742b64af77151e';
 export const GUST_FOCUSED_REFERENCE_SHA256 = '5f213369ad0e86e5e15c2f75e3eb267243350ac7f310df1efc55dddbc0a4e793';
 export const ZOMBOTANY3_PARENT_TEST_INPUTS_SHA256 = '8f6a5558869df5e204496ac89ed5467534fa55b7ce96cb05e1d0eb457a11d52c';
 export const ZOMBOTANY3_SOURCE_ADDITIONS = ['Zombotany3','Zombotany3Art']
@@ -58,10 +58,10 @@ const reviewedDoubleRetentionPins = Object.freeze({
   vase:'05025af9fa6976e55aa6d158d875733fac80dde9739449f7c6341468785e71b3',
   torch:'ddfbb060d29ff59dc04770b7c068f4b1f1973a1f14b1d94adde02cb44f0461b7',
 });
-export const CURRENT_ENDLESS_RETENTION_SHA256 = 'b394ab3946c5d207e58b1ad6d329f38c3e065230170405acd57751538aa3f3e6';
-export const CURRENT_SCRAP_RETENTION_SHA256 = '86a10adf9bc5b7e392a7ac3733e62fc963f1158963f8fc5bf15a2a2f493d1108';
-export const CURRENT_VASE_RETENTION_SHA256 = '15f2a586cce5bd39a26c7ea544680e8eb6e8bedfe61b733430de8b8a9092b017';
-export const CURRENT_TORCH_RETENTION_SHA256 = 'e2a7843f2ee4fff210b079e27abc6abbb8bbf28feaa287653c5a262ea28a2350';
+export const CURRENT_ENDLESS_RETENTION_SHA256 = '231859a2fde971d422c1a5ddb9a62a2a4c7b838f7b890413a37c7b848e5e35e4';
+export const CURRENT_SCRAP_RETENTION_SHA256 = '7956c1497ad94fff670609493fa9514211033ca4a8d6ac79cef68846b7101b65';
+export const CURRENT_VASE_RETENTION_SHA256 = 'c953746b5cd50858ab1a411f1d7bb5d74fd9523eda882b92356e68a75472b05b';
+export const CURRENT_TORCH_RETENTION_SHA256 = '2c96c5d0cb3fcad5776ddf18fdcce7f678e2f672359410632dac981cab76dfae';
 export const PARENT_TEST_INPUTS_SHA256 = '7d6c2749a2d9d1ae462e964447e017f4fcd0e3146909de210ddacaab06be8c82';
 export const AMBUSH_SOURCE_ADDITIONS = ['src/Lawn/System/VaseAmbush.cpp', 'src/Lawn/System/VaseAmbush.h',
   'src/Lawn/System/VaseAmbushPresentation.cpp', 'src/Lawn/System/VaseAmbushPresentation.h'];

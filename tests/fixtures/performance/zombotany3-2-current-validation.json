@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "status": "measured-current",
+  "engine": {
+    "id": "0.2.6-web-zombotany3.2",
+    "jsSha256": "0ffe49ac17d6c0c73c120c30781b14c49816f12d0743cd740ab13070f73df250",
+    "wasmSha256": "8921eb268458f039a48d59cb071fb4c206dc059ca556aba0ab49340e2191f2d5"
+  },
+  "preregistration": {
+    "path": "tests/fixtures/performance/zombotany3-2-current/preregistration.json",
+    "bytes": 9837,
+    "sha256": "5fba086f1853aa8a1dd5032bd4f5aed0b7ebf74f9d10cfe73860d6a7f2a53378"
+  },
+  "freshBrowserPerformanceMeasured": true,
+  "freshBrowserPerformancePassed": true,
+  "browserEarnedWins": 0,
+  "proof": {
+    "path": "tests/fixtures/performance/zombotany3-2-current/proof.json",
+    "bytes": 16750,
+    "sha256": "8fbd59115a2ad8f9572a2c4e1a2683195c6ac34d3811173a24c088a31ee39dfb"
+  },
+  "scope": "Raw native callback CPU durations, full save-capture CPU and rAF scheduling of synthetic native starting crowds20/40 in mode93. Native populations may evolve. No earned-win, stable-population, GPU or presented-frame FPS claim. Historical baselines remain unchanged."
+}

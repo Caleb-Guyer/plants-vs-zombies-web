@@ -1,0 +1,21 @@
+﻿{
+    "muted":  true,
+    "debugger":  "http://127.0.0.1:9227",
+    "profile":  "C:\\Users\\caleb\\Documents\\Codex\\2026-10-25\\co\\outputs\\pvz-zombotany3-followup\\performance-browser\\chrome-performance-profile",
+    "pid":  30868,
+    "arguments":  [
+                      "--headless=new",
+                      "--mute-audio",
+                      "--no-first-run",
+                      "--no-default-browser-check",
+                      "--disable-extensions",
+                      "--disable-background-timer-throttling",
+                      "--disable-backgrounding-occluded-windows",
+                      "--disable-renderer-backgrounding",
+                      "--disable-features=CalculateNativeWinOcclusion",
+                      "--remote-debugging-address=127.0.0.1",
+                      "--remote-debugging-port=9227",
+                      "--user-data-dir=\"C:\\Users\\caleb\\Documents\\Codex\\2026-10-25\\co\\outputs\\pvz-zombotany3-followup\\performance-browser\\chrome-performance-profile\"",
+                      "about:blank"
+                  ]
+}

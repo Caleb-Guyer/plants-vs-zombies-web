@@ -1,5 +1,21 @@
 # Browser parity and QA record
 
+## Zombotany 3.2 verification
+
+The frozen .2 build passes **29 current native suites, 88,127,823 primary assertions and zero failures**, plus 29,323,442 separately counted Endless late checks. All 16 complete-engine drivers use the same 882-source/149-object production build. The retained focused block keeps all 58,834 earlier assertions and its one existing catalog iteration (58,835).
+
+The 36-case matrix still contains 24 ordinary winning night battles, four genuine no-input losses and eight explicitly synthetic controls at both speeds and two seeds. New controls cover exact-lethal Puff/Fume damage, cleanup of a real loaded zero-health save, and original-card/family-alias hover parity with native font bounds and complete profile restoration. Synthetic controls earn no wins. Automated native testing opens no audio device.
+
+Fresh muted browser checks cover file-free startup, the family page and chooser, normal Sun-shroom/Puff-shroom planting, 2x, same-browser Save/reload/Continue and the actual new .2 freeze checkpoint. Browser checks earn zero wins.
+
+A separate current .2 timing gate accepts the fresh browser CPU/scheduling records. Its evidence is separate from the functional captures and does not establish GPU completion, delivered-frame FPS or universal smoothness.
+
+The earlier exact-lethal and alias-tooltip failures remain separate evidence. The .1 browser proof, five captures and receipt/runtime snapshots remain byte-exact historical evidence; they are not presented as .2 checks.
+
+## Prior release records (.1 and earlier)
+
+These records keep their earlier release-time scope and original evidence.
+
 ## Zombotany 3 verification
 
 The frozen build of 882 source files and 149 production objects passes **29 current native suites, 88,130,928 primary assertions and zero failures**, plus 29,323,442 separately counted Endless late checks. All 28 earlier suites run against current source; the 16 complete-engine drivers bind the same current production objects. All 58,834 earlier focused assertions remain, with one new catalog iteration (58,835). Automated native testing opens no audio device.

@@ -1,0 +1,273 @@
+{
+  "schemaVersion": 1,
+  "kind": "zero-credit-synthetic-native-starting-save",
+  "engineId": "0.2.6-web-zombotany3.2",
+  "productionBuildReceiptSha256": "805528006b1ce40dbca55cf1bb2b836855e93ba50f72b77c41fddd9ef57a54b4",
+  "sourceCount": 882,
+  "productionObjectCount": 149,
+  "buildReceiptSha256": "d3104a19d1b7a096c743d8ae82b27f2ebf293f86eadfd2fae516b62b2d712ac1",
+  "recipeSha256": "9a32bb38e15e6b2125d14463335044ce7ea235d3884243c45c3fdad1bb14f204",
+  "driverSha256": "b1665f764f01c98f00d612c5d9c89244cf50c4ce8c5259744c020b44ed0ecd46",
+  "assetBundleId": "sha256:b468b22439430ca4a36035b886a74bd831a86b2a1a36c39d3203396f5b75d093",
+  "files": {
+    "userdata/game1_93.v4": {
+      "bytes": 252324,
+      "sha256": "97ef0529da7661ac89c6a4ad5a33ba89769bbe30f19de5470b08219e590d38ca"
+    },
+    "userdata/user1.dat": {
+      "bytes": 886,
+      "sha256": "86aa42ea66702a533af355141ed9d471eb32c0f68c1c2f3670973769e4308c59"
+    },
+    "userdata/users.dat": {
+      "bytes": 41,
+      "sha256": "23f294a550cedf91761eaaf333926e4a26a3eef567f7676bc8e14fb661f66888"
+    }
+  },
+  "observation": {
+    "kind": "synthetic-starting-crowd",
+    "engineId": "0.2.6-web-zombotany3.2",
+    "mode": 93,
+    "profileIndex": 92,
+    "startingCrowd": 20,
+    "puffHeads": 10,
+    "fumeHeads": 8,
+    "iceHeads": 2,
+    "nativeOpeningCountDown": 1799,
+    "nativeOpeningCountDownStart": 1800,
+    "nativeMainCounter": 1,
+    "nativeWave": 0,
+    "nativeSun": 50,
+    "nativeBankSize": 6,
+    "profileCredits": 0,
+    "countedEarnedWins": 0,
+    "savedGraphPreserved": true,
+    "syntheticInitialActorsAndPlants": true,
+    "initialActorPositionAssignmentOnly": true,
+    "postSaveTimerHPOrPositionWrites": false,
+    "audioDeviceOpened": false,
+    "actors": [
+      {
+        "type": 35,
+        "row": 0,
+        "x": 440,
+        "y": 50,
+        "health": 270,
+        "maxHealth": 270,
+        "gait": 0.251371,
+        "abilityCountdown": 115,
+        "attackVisualClock": 0
+      },
+      {
+        "type": 35,
+        "row": 1,
+        "x": 440,
+        "y": 150,
+        "health": 270,
+        "maxHealth": 270,
+        "gait": 0.233858,
+        "abilityCountdown": 115,
+        "attackVisualClock": 0
+      },
+      {
+        "type": 35,
+        "row": 2,
+        "x": 440,
+        "y": 250,
+        "health": 270,
+        "maxHealth": 270,
+        "gait": 0.322017,
+        "abilityCountdown": 115,
+        "attackVisualClock": 0
+      },
+      {
+        "type": 35,
+        "row": 3,
+        "x": 440,
+        "y": 350,
+        "health": 270,
+        "maxHealth": 270,
+        "gait": 0.233288,
+        "abilityCountdown": 115,
+        "attackVisualClock": 0
+      },
+      {
+        "type": 35,
+        "row": 4,
+        "x": 440,
+        "y": 450,
+        "health": 270,
+        "maxHealth": 270,
+        "gait": 0.315031,
+        "abilityCountdown": 115,
+        "attackVisualClock": 0
+      },
+      {
+        "type": 35,
+        "row": 0,
+        "x": 510,
+        "y": 50,
+        "health": 270,
+        "maxHealth": 270,
+        "gait": 0.316135,
+        "abilityCountdown": 115,
+        "attackVisualClock": 0
+      },
+      {
+        "type": 35,
+        "row": 1,
+        "x": 510,
+        "y": 150,
+        "health": 270,
+        "maxHealth": 270,
+        "gait": 0.277013,
+        "abilityCountdown": 115,
+        "attackVisualClock": 0
+      },
+      {
+        "type": 35,
+        "row": 2,
+        "x": 510,
+        "y": 250,
+        "health": 270,
+        "maxHealth": 270,
+        "gait": 0.269316,
+        "abilityCountdown": 115,
+        "attackVisualClock": 0
+      },
+      {
+        "type": 35,
+        "row": 3,
+        "x": 510,
+        "y": 350,
+        "health": 270,
+        "maxHealth": 270,
+        "gait": 0.291665,
+        "abilityCountdown": 115,
+        "attackVisualClock": 0
+      },
+      {
+        "type": 35,
+        "row": 4,
+        "x": 510,
+        "y": 450,
+        "health": 270,
+        "maxHealth": 270,
+        "gait": 0.35612,
+        "abilityCountdown": 115,
+        "attackVisualClock": 0
+      },
+      {
+        "type": 36,
+        "row": 0,
+        "x": 580,
+        "y": 50,
+        "health": 270,
+        "maxHealth": 270,
+        "gait": 0.286543,
+        "abilityCountdown": 150,
+        "attackVisualClock": 0
+      },
+      {
+        "type": 36,
+        "row": 1,
+        "x": 580,
+        "y": 150,
+        "health": 270,
+        "maxHealth": 270,
+        "gait": 0.318798,
+        "abilityCountdown": 150,
+        "attackVisualClock": 0
+      },
+      {
+        "type": 36,
+        "row": 2,
+        "x": 580,
+        "y": 250,
+        "health": 270,
+        "maxHealth": 270,
+        "gait": 0.315551,
+        "abilityCountdown": 150,
+        "attackVisualClock": 0
+      },
+      {
+        "type": 36,
+        "row": 3,
+        "x": 580,
+        "y": 350,
+        "health": 270,
+        "maxHealth": 270,
+        "gait": 0.351443,
+        "abilityCountdown": 150,
+        "attackVisualClock": 0
+      },
+      {
+        "type": 36,
+        "row": 4,
+        "x": 580,
+        "y": 450,
+        "health": 270,
+        "maxHealth": 270,
+        "gait": 0.264155,
+        "abilityCountdown": 150,
+        "attackVisualClock": 0
+      },
+      {
+        "type": 36,
+        "row": 0,
+        "x": 650,
+        "y": 50,
+        "health": 270,
+        "maxHealth": 270,
+        "gait": 0.263273,
+        "abilityCountdown": 150,
+        "attackVisualClock": 0
+      },
+      {
+        "type": 36,
+        "row": 1,
+        "x": 650,
+        "y": 150,
+        "health": 270,
+        "maxHealth": 270,
+        "gait": 0.247264,
+        "abilityCountdown": 150,
+        "attackVisualClock": 0
+      },
+      {
+        "type": 36,
+        "row": 2,
+        "x": 650,
+        "y": 250,
+        "health": 270,
+        "maxHealth": 270,
+        "gait": 0.341672,
+        "abilityCountdown": 150,
+        "attackVisualClock": 0
+      },
+      {
+        "type": 37,
+        "row": 3,
+        "x": 650,
+        "y": 350,
+        "health": 270,
+        "maxHealth": 270,
+        "gait": 0.247303,
+        "abilityCountdown": 75,
+        "attackVisualClock": 0
+      },
+      {
+        "type": 37,
+        "row": 4,
+        "x": 650,
+        "y": 450,
+        "health": 270,
+        "maxHealth": 270,
+        "gait": 0.282262,
+        "abilityCountdown": 75,
+        "attackVisualClock": 0
+      }
+    ]
+  },
+  "nativeLogSha256": "f7b92dafa8dfbf49476eb724f780bdd13eea517ddb9b53a52a113740f2d1b2cc",
+  "scope": "Initial synthetic actors and plants only. Native HP, gait, attack clocks,20 authored waves, opening countdown and normal bank remain unchanged. Runtime crowds may change; this is not an earned win or a stable-count FPS claim."
+}

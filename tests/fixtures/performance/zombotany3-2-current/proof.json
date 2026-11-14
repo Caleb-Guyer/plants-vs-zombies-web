@@ -1,0 +1,402 @@
+{
+  "schemaVersion": 1,
+  "engine": {
+    "id": "0.2.6-web-zombotany3.2",
+    "jsSha256": "0ffe49ac17d6c0c73c120c30781b14c49816f12d0743cd740ab13070f73df250",
+    "wasmSha256": "8921eb268458f039a48d59cb071fb4c206dc059ca556aba0ab49340e2191f2d5"
+  },
+  "query": "?testing=1",
+  "preregistrationSha256": "5fba086f1853aa8a1dd5032bd4f5aed0b7ebf74f9d10cfe73860d6a7f2a53378",
+  "normalBuildReceiptSha256": "805528006b1ce40dbca55cf1bb2b836855e93ba50f72b77c41fddd9ef57a54b4",
+  "freshBrowserPerformanceMeasured": true,
+  "freshBrowserPerformancePassed": true,
+  "audioMutedThroughout": true,
+  "browserEarnedWins": 0,
+  "syntheticStartingFixtures": true,
+  "startingCountsAreNotEndlessFlags": true,
+  "populationsMayEvolve": true,
+  "gpuTimingMeasured": false,
+  "presentedFrameFPSMeasured": false,
+  "noPostImportTimerHPPositionOrRNGWrites": true,
+  "browserLaunchAudioFlag": "--mute-audio",
+  "automationMethod": "isolated headless Chrome, native mouse/key and bounded visible DOM form input; fixed read-only DOM inspection; no generic browser JavaScript evaluation",
+  "probe": {
+    "path": "tests/performance/probe.js",
+    "bytes": 10060,
+    "sha256": "f5f9309cc585fd6ea6aad44f84c5c2552b682b21fd4769578693f321154ba99b"
+  },
+  "recorder": {
+    "path": "tests/performance/preview.py",
+    "bytes": 9024,
+    "sha256": "12998a23837b556ba40914e8baed2f46bcb789e980a6e280c4f1061c7c33100a"
+  },
+  "metrics": {
+    "path": "tests/performance/metrics.mjs",
+    "bytes": 8998,
+    "sha256": "7ca3e9f3674e3f7bd291365a3fd56b7fe90323e6e6068efce3838f87f42e2263"
+  },
+  "expectedManifest": {
+    "path": "tests/fixtures/performance/zombotany3-2-current/expected-manifest.json",
+    "bytes": 5918,
+    "sha256": "0a295e0783afaa1bbf70fd82a36c4b1f2bb8f930b42d9bfbe858f8256dbd92dc"
+  },
+  "runtimeFiles": {
+    "audio-controls.js": {
+      "bytes": 12216,
+      "sha256": "95e6a1b3e7ccae54ee797e8ed3b63668b672ee51f55978dc4d29231ec225a343"
+    },
+    "bundled-assets.js": {
+      "bytes": 8188,
+      "sha256": "07449dfe0aca7efb7888c62d598b54dc0be5cdfaadab6961e5f9977f87db6e8c"
+    },
+    "game-assets/manifest.json": {
+      "bytes": 3176,
+      "sha256": "5488eb8cf5d38d2d999e29a5b3aca45ecff02f8ee49356ccb327de8676111dc4"
+    },
+    "game/pvz-portable.js": {
+      "bytes": 210620,
+      "sha256": "0ffe49ac17d6c0c73c120c30781b14c49816f12d0743cd740ab13070f73df250"
+    },
+    "game/pvz-portable.wasm": {
+      "bytes": 7896211,
+      "sha256": "8921eb268458f039a48d59cb071fb4c206dc059ca556aba0ab49340e2191f2d5"
+    },
+    "index-port.html": {
+      "bytes": 6440,
+      "sha256": "d81d33ec8e2780d114e4b2b2d86c2ea52251309b863bd581d961289cd0231c60"
+    },
+    "index.html": {
+      "bytes": 6440,
+      "sha256": "d81d33ec8e2780d114e4b2b2d86c2ea52251309b863bd581d961289cd0231c60"
+    },
+    "launcher.js": {
+      "bytes": 10755,
+      "sha256": "9e41170068f913e8f966d650953972a311f57e7efb6241340fa6c5a349d3cfdd"
+    },
+    "loader.js": {
+      "bytes": 10670,
+      "sha256": "a183ed4e17810de2431989f3ebc263d2f511d1514c53e73c8933b8486bced73a"
+    },
+    "original-ui.js": {
+      "bytes": 2774,
+      "sha256": "a8f0aab63956a0280f03520671b712c2709da353c287be430592c64ba91ffe5b"
+    },
+    "port.css": {
+      "bytes": 11410,
+      "sha256": "6020b3fb0e1517aa9c9c1bab93873cf5c5c9f2204e3c0d9f3335853789e6b821"
+    },
+    "runtime.js": {
+      "bytes": 2931,
+      "sha256": "25aea488d867b6027612d3c615d5468f993990a19c0559b73960f14ebf633013"
+    },
+    "save-recovery.js": {
+      "bytes": 4921,
+      "sha256": "eff0eb9325e0bdc18c1f76582e9f260a07ffbf680b3ada25763f1972204e84bf"
+    },
+    "save-storage-core.js": {
+      "bytes": 13211,
+      "sha256": "5473e221a0b86818835a9ed5a1b473d718ae14da9838c7e37d99bdef48203bee"
+    },
+    "save-storage-worker.js": {
+      "bytes": 1864,
+      "sha256": "4951c5dd05dcc2c79dd99f4ddeba19935ffd23a69dd6726e4b4e1b819772a246"
+    },
+    "save-storage.js": {
+      "bytes": 9518,
+      "sha256": "e46cef9257f3608f0edbd1af4c0424e09665aa919aed5e5e16d234045ef1c49c"
+    },
+    "save-transfer.js": {
+      "bytes": 16375,
+      "sha256": "de0c5b67863c8f307906d4d1c739b05ef0d32d5f854a8d77581750a37dd6f314"
+    },
+    "steam-compat.js": {
+      "bytes": 5185,
+      "sha256": "ace261bed202e3f99a242ac6b6dc2f532c1967d1b803a0e91a38461db44311eb"
+    },
+    "test-profiles.js": {
+      "bytes": 10112,
+      "sha256": "b93318eb4738b199d39dbf10ad6313e11fd2350dc4526c64216b2a13c27e1ce0"
+    },
+    "vendor/jszip.min.js": {
+      "bytes": 97630,
+      "sha256": "acc7e41455a80765b5fd9c7ee1b8078a6d160bbbca455aeae854de65c947d59e"
+    }
+  },
+  "observedContext": {
+    "visibility": "visible",
+    "audioMuted": true,
+    "viewport": {
+      "width": 1100,
+      "height": 850,
+      "dpr": 1
+    },
+    "canvas": {
+      "width": 800,
+      "height": 600,
+      "cssWidth": 1100,
+      "cssHeight": 825
+    }
+  },
+  "cases": [
+    {
+      "key": "20-active-1x",
+      "scenario": {
+        "phase": "active",
+        "speed": 1,
+        "crowd": 20
+      },
+      "mode": "native-raf",
+      "label": "v2-z3-20-active-1x",
+      "startingFixture": "20",
+      "fixtureManifestSha256": "26d38e754628a92e179ecbfc226e54eaa5fb0664b272d456137336b49f69859a",
+      "actualNativeFixtureImported": true,
+      "noInputDuringCapture": true,
+      "nativeUiBeforeAndAfterReviewed": true,
+      "activeThroughout": true,
+      "report": {
+        "path": "tests/fixtures/performance/zombotany3-2-current/raw/20-active-1x.json",
+        "bytes": 266243,
+        "sha256": "103687e09192d26038f6c68180692244a70004dbbfcf6efd9fca40901182ee66"
+      },
+      "screenshots": {
+        "start": {
+          "path": "tests/fixtures/performance/zombotany3-2-current/screenshots/20-active-1x-start.jpg",
+          "bytes": 234558,
+          "sha256": "01043b72ccf4e9ecd21b79f76e73f2e24740b45c6a107cd35e690e941d9ce3b8"
+        },
+        "end": {
+          "path": "tests/fixtures/performance/zombotany3-2-current/screenshots/20-active-1x-end.jpg",
+          "bytes": 241071,
+          "sha256": "daedbe6c6c68cc34acebe062facccd34d27b3aba918348d0955bac05f1565f05"
+        }
+      }
+    },
+    {
+      "key": "20-active-2x",
+      "scenario": {
+        "phase": "active",
+        "speed": 2,
+        "crowd": 20
+      },
+      "mode": "native-raf",
+      "label": "v2-z3-20-active-2x",
+      "startingFixture": "20",
+      "fixtureManifestSha256": "26d38e754628a92e179ecbfc226e54eaa5fb0664b272d456137336b49f69859a",
+      "actualNativeFixtureImported": true,
+      "noInputDuringCapture": true,
+      "nativeUiBeforeAndAfterReviewed": true,
+      "activeThroughout": true,
+      "report": {
+        "path": "tests/fixtures/performance/zombotany3-2-current/raw/20-active-2x.json",
+        "bytes": 263603,
+        "sha256": "a5dd7656a907fb81c30da48d6ca65f04d61da1b6fe10a923ae87e59a65af5022"
+      },
+      "screenshots": {
+        "start": {
+          "path": "tests/fixtures/performance/zombotany3-2-current/screenshots/20-active-2x-start.jpg",
+          "bytes": 228997,
+          "sha256": "6e44f1f199c2b09dd7316c56088d80b3122dc9cb18b0285ee51149bc68367541"
+        },
+        "end": {
+          "path": "tests/fixtures/performance/zombotany3-2-current/screenshots/20-active-2x-end.jpg",
+          "bytes": 214685,
+          "sha256": "a8071704eb1b0f00473b607dcaa410e329b8a7305b9577a836fc18c9c07c689d"
+        }
+      }
+    },
+    {
+      "key": "40-active-1x",
+      "scenario": {
+        "phase": "active",
+        "speed": 1,
+        "crowd": 40
+      },
+      "mode": "native-raf",
+      "label": "v2-z3-40-active-1x",
+      "startingFixture": "40",
+      "fixtureManifestSha256": "34b1fcadd533d45024d2923397f4c8f4c13e5954350691558cce7f456b2b5639",
+      "actualNativeFixtureImported": true,
+      "noInputDuringCapture": true,
+      "nativeUiBeforeAndAfterReviewed": true,
+      "activeThroughout": true,
+      "report": {
+        "path": "tests/fixtures/performance/zombotany3-2-current/raw/40-active-1x.json",
+        "bytes": 264910,
+        "sha256": "13e0bb2a2a23b51b6f9c1a820ec5eccaa8df76a2ac31f5190fd5c5721b2fdfd8"
+      },
+      "screenshots": {
+        "start": {
+          "path": "tests/fixtures/performance/zombotany3-2-current/screenshots/40-active-1x-start.jpg",
+          "bytes": 258708,
+          "sha256": "4db1f10c5c879be0c9b5497806b75aa3692c17993c2e959cec14901c6731e745"
+        },
+        "end": {
+          "path": "tests/fixtures/performance/zombotany3-2-current/screenshots/40-active-1x-end.jpg",
+          "bytes": 249647,
+          "sha256": "570a0d0b79648c3c1e6de713dd2f610159a139e1a4a34f3def2961c6406291d8"
+        }
+      }
+    },
+    {
+      "key": "40-active-2x",
+      "scenario": {
+        "phase": "active",
+        "speed": 2,
+        "crowd": 40
+      },
+      "mode": "native-raf",
+      "label": "v2-z3-40-active-2x",
+      "startingFixture": "40",
+      "fixtureManifestSha256": "34b1fcadd533d45024d2923397f4c8f4c13e5954350691558cce7f456b2b5639",
+      "actualNativeFixtureImported": true,
+      "noInputDuringCapture": true,
+      "nativeUiBeforeAndAfterReviewed": true,
+      "activeThroughout": true,
+      "report": {
+        "path": "tests/fixtures/performance/zombotany3-2-current/raw/40-active-2x.json",
+        "bytes": 264945,
+        "sha256": "b68d1034201fdc6670425338be0ccec03c1f750bcab0f67343753389e63078af"
+      },
+      "screenshots": {
+        "start": {
+          "path": "tests/fixtures/performance/zombotany3-2-current/screenshots/40-active-2x-start.jpg",
+          "bytes": 251702,
+          "sha256": "b64326a039593ff7de605252b358d317a96b263af5aea7c4be9f91c7e27861dc"
+        },
+        "end": {
+          "path": "tests/fixtures/performance/zombotany3-2-current/screenshots/40-active-2x-end.jpg",
+          "bytes": 223059,
+          "sha256": "18e3bbf3b9747c6ea2273ec1e67153c6422834983701d55d5979c8b50aa4f8ce"
+        }
+      }
+    }
+  ],
+  "controls": [
+    {
+      "key": "20-paused-native-1x",
+      "mode": "native-raf",
+      "scenario": {
+        "phase": "paused",
+        "speed": 1,
+        "crowd": 20
+      },
+      "label": "v2-z3-20-paused-native-1x",
+      "startingFixture": "20",
+      "fixtureManifestSha256": "26d38e754628a92e179ecbfc226e54eaa5fb0664b272d456137336b49f69859a",
+      "actualNativeFixtureImported": true,
+      "noInputDuringCapture": true,
+      "nativeUiBeforeAndAfterReviewed": true,
+      "pausedThroughout": true,
+      "report": {
+        "path": "tests/fixtures/performance/zombotany3-2-current/raw/20-paused-native-1x.json",
+        "bytes": 273986,
+        "sha256": "95967732d58a6d9f7e2fda9c5ec62cbd3e19dc8a673e57b97d4781f2de746547"
+      },
+      "screenshots": {
+        "start": {
+          "path": "tests/fixtures/performance/zombotany3-2-current/screenshots/20-paused-native-1x-start.jpg",
+          "bytes": 229623,
+          "sha256": "04bc393459283343f5c6a3a6b4c754f8ccdd0d96b35e124f756e4cfa2499c3a1"
+        },
+        "end": {
+          "path": "tests/fixtures/performance/zombotany3-2-current/screenshots/20-paused-native-1x-end.jpg",
+          "bytes": 244634,
+          "sha256": "1d2335755753b137f99c7ef595e42b65b840d9760e3026ae487f6852ad9ab3d4"
+        }
+      }
+    },
+    {
+      "key": "20-paused-raf-only-1x",
+      "mode": "raf-only",
+      "scenario": {
+        "phase": "paused",
+        "speed": 1,
+        "crowd": 20
+      },
+      "label": "v2-z3-20-paused-raf-only-1x",
+      "startingFixture": "20",
+      "fixtureManifestSha256": "26d38e754628a92e179ecbfc226e54eaa5fb0664b272d456137336b49f69859a",
+      "actualNativeFixtureImported": true,
+      "noInputDuringCapture": true,
+      "nativeUiBeforeAndAfterReviewed": true,
+      "pausedThroughout": true,
+      "report": {
+        "path": "tests/fixtures/performance/zombotany3-2-current/raw/20-paused-raf-only-1x.json",
+        "bytes": 71749,
+        "sha256": "69cd630d6775fd091ad63bd24fab12ec6d56f21f8a45b5e9bd5ad8269746c47b"
+      },
+      "screenshots": {
+        "start": {
+          "path": "tests/fixtures/performance/zombotany3-2-current/screenshots/20-paused-raf-only-1x-start.jpg",
+          "bytes": 229623,
+          "sha256": "04bc393459283343f5c6a3a6b4c754f8ccdd0d96b35e124f756e4cfa2499c3a1"
+        },
+        "end": {
+          "path": "tests/fixtures/performance/zombotany3-2-current/screenshots/20-paused-raf-only-1x-end.jpg",
+          "bytes": 236732,
+          "sha256": "2c85b0299b1cddf52810d3ada0d9562ff6730b45a2021f2171a57cf33bcfb920"
+        }
+      }
+    }
+  ],
+  "operatorObservations": [
+    "A separate dedicated headless Chrome profile was launched with --mute-audio and used only the owned localhost4248 testing page. Every DOM inspection reported muted sound and a stable1100x850 viewport with800x600 native canvas.",
+    "Actual current native starting20 and40 saves were imported through the reload controls. The ZIP members were byte-checked against their separately generated native fixture manifests before import.",
+    "Each active window freshly imported its starting fixture; native Continue and speed-button inputs established the scene, and the native Menu paused gameplay while the local form was prepared.",
+    "Native DOM form selection declared the exact crowd,speed,phase,probe mode and15second interval before every arm. Inside the2second arm delay, active windows resumed through Back To Game and captured their start image; no input was sent throughout the measurement.",
+    "All four start/end active images show an active night lawn at the declared native1x or2x speed. Populations and plants evolved naturally; none of the windows earned a browser win. Top-row Fume heads visibly overlap seed packets as they reach the left, recorded as a presentation observation rather than a bounds-pass assertion.",
+    "The paused native and raf-only windows share the same freshly imported20starting save and stayed in the native Menu throughout. No native game input was sent between the paired controls; their start screenshots are byte-identical.",
+    "All six raw reports passed recorder preconditions on their first measurement. Raw reports and12actual JPEGs are preserved, with no outlier deletion, threshold change,or measurement retry.",
+    "Before any measurement,the original char-key controller could not edit the DOM label because native SDL intercepted typing. Its source and transcript were preserved; root approved a restricted native IME text helper and triple-click for only the visible performance-label field. The exact same owned paused page was reconnected,with transition source hashes recorded.",
+    "The last recorded action successfully closed the page. This evidence measures native callback CPU,full synchronous save capture CPU and requestAnimationFrame scheduling; it makes no GPU timing or presented-frame FPS claim."
+  ],
+  "captureProvenance": {
+    "operatorObservation": {
+      "path": "tests/fixtures/performance/zombotany3-2-current/operator-observations.json",
+      "bytes": 5432,
+      "sha256": "83df65ee895a452b646682d2d3d4ec8568970026dbd170b16c3a9dc56e93c64b"
+    },
+    "chromeLaunch": {
+      "path": "tests/fixtures/performance/zombotany3-2-current/chrome-launch.json",
+      "bytes": 1108,
+      "sha256": "3d20be428318b626400556de6d34ec0fdb61136767158e7b19066bbaa0ea543d"
+    },
+    "controllerTransition": {
+      "path": "tests/fixtures/performance/zombotany3-2-current/controller-transition.json",
+      "bytes": 801,
+      "sha256": "1f5d97ca5e67b0e1072cfed8d26330318e2772ff0e565fd2f1724aaba492a122"
+    },
+    "originalController": {
+      "path": "tests/fixtures/performance/zombotany3-2-current/headless-driver.mjs",
+      "bytes": 12899,
+      "sha256": "f47aa817015b3e4a2dff0cdcf5f6fb97865a53896b4cc1282b7ac416c8dc15a6"
+    },
+    "currentController": {
+      "path": "tests/fixtures/performance/zombotany3-2-current/headless-driver-ime.mjs",
+      "bytes": 13563,
+      "sha256": "9cca18a9c608569606f26d6a877123bdf30c07391b79a87b10a3655e1445f8ba"
+    },
+    "chromeLauncher": {
+      "path": "tests/fixtures/performance/zombotany3-2-current/launch-headless.ps1",
+      "bytes": 1283,
+      "sha256": "9b09f85b4d704b58e4f226c8ede61dd87db7d73d2c0ac70e03bc9744c0cf40b8"
+    },
+    "actualImportedSaveArchives": {
+      "20": {
+        "path": "tests/fixtures/performance/zombotany3-2-current/imported-starting-20.zip",
+        "bytes": 21810,
+        "sha256": "fb3370ceb9f3d8bb25596fe090d57389f6977d71a2d68b02c2ae672a93f2ee5e"
+      },
+      "40": {
+        "path": "tests/fixtures/performance/zombotany3-2-current/imported-starting-40.zip",
+        "bytes": 23948,
+        "sha256": "1060b8b1ac47cb932743180832105d8943ca7d6559159edc126ca91dedce5ad8"
+      }
+    }
+  },
+  "actionTranscript": {
+    "path": "tests/fixtures/performance/zombotany3-2-current/actions.jsonl",
+    "bytes": 163431,
+    "sha256": "1e28f92a64c5b02c109a017a7e5b1257f9ceaf35cc6ed9ed2e8cf29a104a5fbb"
+  }
+}

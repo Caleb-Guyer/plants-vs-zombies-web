@@ -1,5 +1,5 @@
 diff --git a/CMake/ProjectVersion.cmake b/CMake/ProjectVersion.cmake
-index 20ed3e2b53cd478dc7a87e33f74e8bd3b04cf76a..b7a443c9a55227b6ff0deeed8a573c6846e2c8f1 100644
+index 20ed3e2b53cd478dc7a87e33f74e8bd3b04cf76a..b46b77737c05d6d4aadf283c29c8ab56517c1f43 100644
 --- a/CMake/ProjectVersion.cmake
 +++ b/CMake/ProjectVersion.cmake
 @@ -66,6 +66,6 @@ if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
@@ -7,7 +7,7 @@ index 20ed3e2b53cd478dc7a87e33f74e8bd3b04cf76a..b7a443c9a55227b6ff0deeed8a573c68
  
  # Browser release identity; keep binary and corresponding-source manifests aligned.
 -set(PVZP_VERSION "0.2.6-web-gust.1")
-+set(PVZP_VERSION "0.2.6-web-zombotany3.1")
++set(PVZP_VERSION "0.2.6-web-zombotany3.2")
  set(PVZP_VERSION_PLAIN "0.2.6")
  configure_file("${PROJECT_SOURCE_DIR}/CMake/ProjectVersion.h.in" "${PROJECT_BINARY_DIR}/ProjectVersion.h" @ONLY)
 diff --git a/src/ConstEnums.h b/src/ConstEnums.h
@@ -21683,10 +21683,10 @@ index 50626e13003043351b6d8bd4eb9138d16762e96b..b4ccd6422d2435cd003b033c3a518693
  	{
 diff --git a/src/Lawn/System/Zombotany3.cpp b/src/Lawn/System/Zombotany3.cpp
 new file mode 100644
-index 0000000000000000000000000000000000000000..a88caea98dd6d4945151076d3f90a5b5e9db7c0c
+index 0000000000000000000000000000000000000000..c919fbc62418a565d8425605ba4ed210d96a9f48
 --- /dev/null
 +++ b/src/Lawn/System/Zombotany3.cpp
-@@ -0,0 +1,244 @@
+@@ -0,0 +1,252 @@
 +// SPDX-License-Identifier: LGPL-3.0-or-later
 +#include "Zombotany3.h"
 +#include "Zombotany3Art.h"
@@ -21772,6 +21772,7 @@ index 0000000000000000000000000000000000000000..a88caea98dd6d4945151076d3f90a5b5
 +            if(distance<0 || distance>kFumeRange)continue;
 +            plant->mPlantHealth-=kFumeDamage;
 +            plant->mEatenFlashCountdown=std::max(plant->mEatenFlashCountdown,25);
++            if(plant->mPlantHealth<=0)plant->Die();
 +        }
 +    }
 +    zombie.mApp->PlayFoley(FOLEY_FUME);
@@ -21898,8 +21899,14 @@ index 0000000000000000000000000000000000000000..a88caea98dd6d4945151076d3f90a5b5
 +}
 +bool UpdateFrozenPlant(Plant& plant)
 +{
++    // Earlier saves can contain a live plant at exactly zero health.
++    if(plant.mBoard && plant.mApp && IsMode(plant.mApp->mGameMode) &&
++        plant.mApp->mGameScene==SCENE_PLAYING && plant.mIsOnBoard && !plant.mDead && plant.mPlantHealth<=0)
++    {
++        plant.Die();
++        return true;
++    }
 +    if(!IsFrozen(plant))return false;
-+    if(plant.mPlantHealth<=0)plant.Die();
 +    if(Reanimation* body=plant.mApp->ReanimationTryToGet(plant.mBodyReanimID))
 +    {
 +        body->mColorOverride=Sexy::Color(120,180,255);
@@ -21924,6 +21931,7 @@ index 0000000000000000000000000000000000000000..a88caea98dd6d4945151076d3f90a5b5
 +        if(!plant || !Eligible(*plant))continue;
 +        plant->mPlantHealth-=kPuffDamage;
 +        plant->mEatenFlashCountdown=std::max(plant->mEatenFlashCountdown,25);
++        if(plant->mPlantHealth<=0)plant->Die();
 +        projectile.mApp->PlayFoley(FOLEY_SPLAT);
 +        projectile.mApp->AddPvzpParticle(projectile.mPosX,projectile.mPosY,projectile.mRenderOrder+1,PARTICLE_PUFF_SPLAT);
 +        projectile.Die();break;
@@ -22322,10 +22330,10 @@ index 0000000000000000000000000000000000000000..1ca9cf446a231c46ccb7e16db98b6e32
 +void DisposeImages();
 +}
 diff --git a/src/Lawn/Widget/ChallengeScreen.cpp b/src/Lawn/Widget/ChallengeScreen.cpp
-index 731052427f71e36e10e3c7a7fd65484881610098..3e3791706fd7236b73f86b0b6333105faf1aedc1 100644
+index 731052427f71e36e10e3c7a7fd65484881610098..aaa6cc3b862dc5b1bedbe329117c9317f4fffba5 100644
 --- a/src/Lawn/Widget/ChallengeScreen.cpp
 +++ b/src/Lawn/Widget/ChallengeScreen.cpp
-@@ -1,865 +1,912 @@
+@@ -1,865 +1,913 @@
 -/*
 - * Copyright (C) 2026 Zhou Qiankang <wszqkzqk@qq.com>
 - *
@@ -24016,6 +24024,7 @@ index 731052427f71e36e10e3c7a7fd65484881610098..3e3791706fd7236b73f86b0b6333105f
 +	for (int aChallengeMode = 0; aChallengeMode < NUM_CHALLENGE_MODES; aChallengeMode++)
 +	{
 +		const ChallengeDefinition& aDef = GetChallengeDefinition(aChallengeMode);
++		const ChallengePage aAccessPage = mPageIndex == CHALLENGE_PAGE_ZOMBOTANY ? aDef.mPage : mPageIndex;
 +		ButtonWidget* aChallengeButton = mChallengeButtons[aChallengeMode].get();
 +		if (aChallengeButton->mVisible && aChallengeButton->mDisabled &&
 +			aChallengeButton->Contains(mApp->mWidgetManager->mLastMouseX, mApp->mWidgetManager->mLastMouseY) &&
@@ -24026,7 +24035,7 @@ index 731052427f71e36e10e3c7a7fd65484881610098..3e3791706fd7236b73f86b0b6333105f
 +			if (MoreTrophiesNeeded(aChallengeMode) > 0)
 +			{
 +				std::string aLabel;
-+				if (mPageIndex == CHALLENGE_PAGE_PUZZLE)
++				if (aAccessPage == CHALLENGE_PAGE_PUZZLE)
 +				{
 +					if (IsScaryPotterLevel(aDef.mChallengeMode))
 +					{
@@ -24059,11 +24068,11 @@ index 731052427f71e36e10e3c7a7fd65484881610098..3e3791706fd7236b73f86b0b6333105f
 +				{
 +					aLabel = "[10_SURVIVAL_TOOLTIP]";
 +				}
-+				else if (mPageIndex == CHALLENGE_PAGE_SURVIVAL)
++				else if (aAccessPage == CHALLENGE_PAGE_SURVIVAL)
 +				{
 +					aLabel = "[ONE_MORE_SURVIVAL_TOOLTIP]";
 +				}
-+				else if (mPageIndex == CHALLENGE_PAGE_CHALLENGE)
++				else if (aAccessPage == CHALLENGE_PAGE_CHALLENGE)
 +				{
 +					aLabel = "[ONE_MORE_CHALLENGE_TOOLTIP]";
 +				}
