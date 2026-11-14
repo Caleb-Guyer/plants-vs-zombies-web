@@ -5,10 +5,13 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {CURRENT_ENGINE_ID,CURRENT_SOURCE_COUNT,CURRENT_OBJECT_COUNT,reconstructTorchSources,reconstructDoubleSources,historicalEngine}
  from './native-release-context.mjs';
+import {authenticateZombotany3RetainedFamily}from'./zombotany3-retained-native.mjs';
 
 // Reviewed after all52 actual O2 cases and26 native speed pairs completed on
 // the final briefing build. Earlier probes remain historical fixtures only.
 const gustProjection=Symbol('authenticated current production before historical Double observation checks');
+const z3Projection=Symbol('authenticated Zombotany3 production before historical Gust envelope');
+const Z3_DOUBLE_RETENTION_SHA256='9c94e4b9d3f864a448291b146bfe3ec51dd2beb82f47aef6a6bde8f1c672b4ff';
 const GUST_DOUBLE_RETENTION_SHA256='e057c9ba7cdec9cffdf157c59d3873293624723180a3a4bbef8db76e84e4c211';
 const acceptedContractPins=new Set(['2897a2f15387c4f8b244d92dc587c2437ea370daa02f1e556e6d8ccab24d4ac4']);
 const acceptedReportPins=new Set(['185ddbaae03ac20287552b9276064a800b1447d4a8d6cefdd58c9cc3a7e2d55c']);
@@ -99,10 +102,11 @@ export async function verifyDoubleAgentSourceBounds({read,sha,engine}){
 }
 
 export async function verifyDoubleAgentBuildBindings({report,read,sha,engine,fullRunReport,productionBuildBytes}){
- const current=engine.id==='0.2.6-web-gust.1';
- const sourceCount=current?878:872,objectCount=current?147:144;
+ const z3=engine.id==='0.2.6-web-zombotany3.1';
+ const current=engine.id==='0.2.6-web-gust.1'||z3;
+ const sourceCount=z3?882:current?878:872,objectCount=z3?149:current?147:144;
  assert(current||engine.id==='0.2.6-web-double.1');
- if(current){assert.equal(CURRENT_SOURCE_COUNT,878);assert.equal(CURRENT_OBJECT_COUNT,147);}
+ if(z3){assert.equal(CURRENT_SOURCE_COUNT,882);assert.equal(CURRENT_OBJECT_COUNT,149);}
  fields(report,{execution:'complete-production-engine',optimization:'O2',engineId:engine.id,
   mode:91,profileIndex:90,productionObjectCount:objectCount,failures:0,exitCode:0});
  assert.equal(Object.keys(report.sourceSha256).length,sourceCount);
@@ -341,6 +345,12 @@ export async function verifyDoubleAgentHistory({contract,read,sha,report}){
 export async function verifyDoubleAgent(options){
  const {report,read,sha,engine,fullRunReport,productionBuildBytes,currentArtBytes,previousArtBytes}=options;
  const projected=options[gustProjection]===gustProjection;
+ if(engine.id==='0.2.6-web-zombotany3.1'){
+  const historic=await authenticateZombotany3RetainedFamily({...options,family:'double-agent',adapterSha256:Z3_DOUBLE_RETENTION_SHA256,
+   verifyBuild:verifyDoubleAgentBuildBindings,verifyCase:verifyDoubleAgentCaseLog});
+  const result=await verifyDoubleAgent({...options,...historic,[z3Projection]:z3Projection});
+  return {...result,currentProductionObjects:149,retainedCases:52};
+ }
  if(engine.id==='0.2.6-web-gust.1')return verifyGustRetainedDouble(options);
  const actualReportBytes=await read('tests/double-agent-results.json');
  const authenticated=verifyDoubleAgentReportIdentity({reportBytes:actualReportBytes,sha});
@@ -475,14 +485,14 @@ async function verifyGustRetainedDouble(options){
    'Every exact historical input remains pinned, except the three bounded successor edits: '+name);
  // These are the actual current147 objects and878 sources, not the historical
  // maps substituted only for comparing the original reviewed observations.
- await verifyDoubleAgentBuildBindings({report,read,sha,engine,fullRunReport,productionBuildBytes});
+ if(options[z3Projection]!==z3Projection)await verifyDoubleAgentBuildBindings({report,read,sha,engine,fullRunReport,productionBuildBytes});
  assert.equal(report.scenarios.length,52);
  const baseline=new Map(original.scenarios.map(row=>[key(row),row]));
  const normalized=structuredClone(report);
  let addedChecks=0;
  for(let index=0;index<report.scenarios.length;index++){
   const row=report.scenarios[index],before=baseline.get(key(row));assert(before);
-  await verifyDoubleAgentCaseLog(row,{read,sha});
+  if(options[z3Projection]!==z3Projection)await verifyDoubleAgentCaseLog(row,{read,sha});
   const addition=row.name==='presentation'?21:0;
   assert.equal(row.checks,before.checks+addition);
   if(addition){assert.equal(row.nativeCatalogCards,20);normalized.scenarios[index].nativeCatalogCards=19;}

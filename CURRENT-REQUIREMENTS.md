@@ -1,5 +1,23 @@
 # Current requirements
 
+## Zombotany 3 accepted behavior
+
+Zombotany 3 brings mushroom-headed zombies to a twenty-wave night lawn. Puff-shroom heads fire short-range spores, Fume-shroom heads blow through nearby defenders in their row, and rare Ice-shroom heads wind up for one brief freeze before returning to ordinary biting. Pick a normal seed bank and build a night garden with the original planting, sun, recharge, graves and five mowers.
+
+The native Zombotany page groups the original ZomBotany and ZomBotany 2 with the new night challenge. The original two games retain their Mini-Games cards, unlock rules and completion records. The existing twenty Bonus cards remain unchanged. The new heads use complete original mushroom artwork attached to animated original zombie bodies, with a distinct night thumbnail, native category button and no card tips or extra HUD. Normal game audio remains available; testing stays muted.
+
+The frozen build of 882 source files and 149 production objects passes **29 current native suites, 88,130,928 primary assertions and zero failures**, plus 29,323,442 separately counted Endless late checks. All 28 earlier suites run against current source; the 16 complete-engine drivers bind the same current production objects. All 58,834 earlier focused assertions remain, with one new catalog iteration (58,835). Automated native testing opens no audio device.
+
+The new driver executes 36 cases at 1×/2× with two seeds: 24 ordinary night-battle cases and eight explicitly synthetic mechanics/presentation controls, plus four genuine no-input losses. It covers normal and staggered play, actual windup/freeze Save/Continue checkpoints, natural defeat, Retry and Replay. Controls observe traveling Puff collision/lifetime and actual sprite-to-spout alignment, Hypno targeting, Fume row damage, all 150 frozen ability/body/attached-head updates and thaw, native artwork, family records and nonoverlapping footer/card bounds. These controls do not earn wins.
+
+**Muted browser functionality passed:** file-free startup, the Zombotany family page, normal seed selection, a 25-sun Sun-shroom purchase and free Puff-shroom placement on the night lawn, 2× and same-browser Save/reload/Continue. A real native freeze checkpoint was manually imported for visual inspection. Browser checks credited zero wins.
+
+**Fresh browser performance was not measured and no performance probe was loaded.** The original Torch timing baseline and earlier Double/Gust browser observations remain historical. Native tests and functional browser observations do not replace a browser timing measurement.
+
+## Prior release records
+
+The sections below retain their earlier release-time scope; prior accepted gameplay behavior remains required.
+
 ## Gust-bloom accepted behavior
 
 Gust-bloom is a new 150-sun plant. He winds up, then blows a visible gust down his row to push nearby ordinary ground zombies back. Heavy equipment reduces the push; giants and vehicles shrug it off. Each zombie needs time to recover before another push, limiting repeated knockback.

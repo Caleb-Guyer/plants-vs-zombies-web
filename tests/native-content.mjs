@@ -13,8 +13,11 @@ import {inflateSync} from 'node:zlib';
 import {fileURLToPath} from 'node:url';
 import {CURRENT_ENGINE_ID, CURRENT_SOURCE_COUNT, CURRENT_OBJECT_COUNT, SCRAP_SOURCE_ADDITIONS, SCRAP_PARENT_REFERENCE_SHA256, AMBUSH_PARENT_REFERENCE_SHA256, AMBUSH_SOURCE_ADDITIONS, TORCH_SOURCE_ADDITIONS, TORCH_PARENT_REFERENCE_SHA256, reconstructAmbushSources, reconstructAmbushFocusedEvidence, reconstructScrapSources, reconstructEndless3Sources, verifyTorchRetainedParentInputs} from './native-release-context.mjs';
 import {DOUBLE_SOURCE_ADDITIONS,DOUBLE_PARENT_REFERENCE_SHA256,reconstructTorchSources,reconstructTorchFocusedEvidence,
- GUST_SOURCE_ADDITIONS,GUST_PARENT_REFERENCE_SHA256,reconstructDoubleSources,reconstructDoubleFocusedEvidence} from './native-release-context.mjs';
+ GUST_SOURCE_ADDITIONS,GUST_PARENT_REFERENCE_SHA256,reconstructDoubleSources,reconstructDoubleFocusedEvidence,
+ ZOMBOTANY3_SOURCE_ADDITIONS,ZOMBOTANY3_PARENT_REFERENCE_SHA256,reconstructGustSources,reconstructGustFocusedEvidence} from './native-release-context.mjs';
 import {verifyGustFocusedRetention,GUST_FOCUSED_CHECK_EXTENSIONS} from './gust-focused-retention-verification.mjs';
+import {verifyZombotany3FocusedRetention,ZOMBOTANY3_FOCUSED_CHECK_EXTENSIONS} from './zombotany3-focused-retention-verification.mjs';
+import {verifyZombotany3} from './zombotany3-verification.mjs';
 import {verifyGustBloom} from './gust-bloom-verification.mjs';
 import {verifyDoubleAgent} from './double-agent-verification.mjs';
 import {verifyDoubleFocusedRetention,DOUBLE_FOCUSED_CHECK_EXTENSIONS} from './double-focused-retention-verification.mjs';
@@ -43,7 +46,9 @@ const JSZip = vendor.exports;
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
 const engine = JSON.parse(fs.readFileSync(new URL('game/engine-provenance.json', dist)));
 assert.equal(engine.id, CURRENT_ENGINE_ID);
-const doubleEngine = engine.parent;
+const gustEngine = engine.parent;
+assert.equal(gustEngine.id,'0.2.6-web-gust.1');
+const doubleEngine = gustEngine.parent;
 assert.equal(doubleEngine.id,'0.2.6-web-double.1');
 const torchEngine = doubleEngine.parent;
 assert.equal(torchEngine.id,'0.2.6-web-torch.1');
@@ -56,7 +61,7 @@ assert.equal(historyEngine.id, '0.2.6-web-endless.3');
 const currentSourceBytes = fs.readFileSync(new URL(engine.artifacts.source, new URL('game/engine-provenance.json', dist)));
 assert.equal(sha(currentSourceBytes), engine.artifacts.sourceSha256, 'Current source archive matches the engine provenance pin');
 const current = await JSZip.loadAsync(currentSourceBytes, {checkCRC32: true});
-const prefix = 'gust1-candidate/';
+const prefix = 'zombotany3-candidate/';
 await restoreNativeArtifactPack(current, prefix);
 const publishedEndless2Bytes = fs.readFileSync(new URL('source/pvz-portable-0.2.6-web-endless.2-source.zip', dist));
 assert.equal(sha(publishedEndless2Bytes), 'b9095c65547c3d013917ae4188e284f18eabb71a98020ca3d53f71f7365f9566');
@@ -206,9 +211,19 @@ const readCurrent = async name => {
   assert(entry, 'Missing current production source/test: ' + name);
   return Buffer.from(await entry.async('uint8array'));
 };
+const gustReferenceBytes=fs.readFileSync(new URL('./fixtures/zombotany3-parent-reference.json',import.meta.url));
+assert.equal(sha(gustReferenceBytes),ZOMBOTANY3_PARENT_REFERENCE_SHA256);
+const gustSource=await reconstructGustSources({referenceBytes:gustReferenceBytes,read:readCurrent,sha,engine});
+const readGustSource=async name=>{
+ if(!name.startsWith('source/'))return readCurrent(name);
+ const bytes=gustSource.files.get(name.slice(7));assert(bytes,'Missing historical Gust source: '+name);return bytes;
+};
+const publishedGustRead=await reconstructGustFocusedEvidence({
+ referenceBytes:fs.readFileSync(new URL('./fixtures/gust1-focused-reference.json',import.meta.url)),
+ read:readCurrent,sha,engine,sourceFiles:gustSource.files});
 const doubleReferenceBytes=fs.readFileSync(new URL('./fixtures/gust1-parent-reference.json',import.meta.url));
 assert.equal(sha(doubleReferenceBytes),GUST_PARENT_REFERENCE_SHA256);
-const doubleSource=await reconstructDoubleSources({referenceBytes:doubleReferenceBytes,read:readCurrent,sha,engine});
+const doubleSource=await reconstructDoubleSources({referenceBytes:doubleReferenceBytes,read:readGustSource,sha,engine:gustEngine});
 const readDoubleSource=async name=>{
  if(!name.startsWith('source/'))return readCurrent(name);
  const bytes=doubleSource.files.get(name.slice(7));assert(bytes,'Missing historical Double source: '+name);return bytes;
@@ -273,8 +288,8 @@ const vaseFocusedCheckExtensions = {'bonus-challenge':7, 'bonus-completion':77, 
 const focusedCheckExtensions = {'bonus-challenge':7, 'bonus-completion':96, 'native-layout':1019};
 const retainedSuites = [...Object.keys(retainedChecks), 'care-fatigue', 'care-full-run', 'chain-reaction', 'rally-zombie', 'rally-raid', 'lights-out', 'garlic-run', 'bungee-business', 'cob-cannon-command', 'pool-panic', 'pool-panic-endless'];
 assert.equal(retainedSuites.length, 23);
-const suites = [...retainedSuites, 'scrap-yard', 'vase-ambush', 'torchbearer', 'double-agent', 'gust-bloom'];
-assert.equal(suites.length, 28);
+const suites = [...retainedSuites, 'scrap-yard', 'vase-ambush', 'torchbearer', 'double-agent', 'gust-bloom', 'zombotany3'];
+assert.equal(suites.length, 29);
 const reports = new Map();
 let checks = 0;
 for (const name of suites) {
@@ -292,7 +307,7 @@ for (const name of suites) {
   reports.set(name, result);
 }
 for (const [name, count] of Object.entries(retainedChecks))
-  assert.equal(reports.get(name).checks, count + (focusedCheckExtensions[name] || 0)+(TORCH_FOCUSED_CHECK_EXTENSIONS[name]||0)+(DOUBLE_FOCUSED_CHECK_EXTENSIONS[name]||0)+(GUST_FOCUSED_CHECK_EXTENSIONS[name]||0),
+  assert.equal(reports.get(name).checks, count + (focusedCheckExtensions[name] || 0)+(TORCH_FOCUSED_CHECK_EXTENSIONS[name]||0)+(DOUBLE_FOCUSED_CHECK_EXTENSIONS[name]||0)+(GUST_FOCUSED_CHECK_EXTENSIONS[name]||0)+(ZOMBOTANY3_FOCUSED_CHECK_EXTENSIONS[name]||0),
     'Every retained suite keeps its old assertions and reviewed appended coverage: ' + name);
 // Preserve all retained assertions. Raid adds one challenge-definition
 // iteration and 2,732 native footer/card/packet/layer checks; Raid.2
@@ -301,7 +316,7 @@ assert.equal(Object.values(retainedChecks).reduce((sum, count) => sum + count, 0
 assert.equal(Object.values(scrapFocusedCheckExtensions).reduce((sum, count) => sum + count, 0), 352);
 assert.equal(Object.values(vaseFocusedCheckExtensions).reduce((sum, count) => sum + count, 0), 770);
 assert.equal(Object.values(focusedCheckExtensions).reduce((sum, count) => sum + count, 0), 1122);
-assert.equal(reports.get('care-fatigue').checks, 25042+(TORCH_FOCUSED_CHECK_EXTENSIONS['care-fatigue']||0)+(DOUBLE_FOCUSED_CHECK_EXTENSIONS['care-fatigue']||0)+(GUST_FOCUSED_CHECK_EXTENSIONS['care-fatigue']||0),
+assert.equal(reports.get('care-fatigue').checks, 25042+(TORCH_FOCUSED_CHECK_EXTENSIONS['care-fatigue']||0)+(DOUBLE_FOCUSED_CHECK_EXTENSIONS['care-fatigue']||0)+(GUST_FOCUSED_CHECK_EXTENSIONS['care-fatigue']||0)+(ZOMBOTANY3_FOCUSED_CHECK_EXTENSIONS['care-fatigue']||0),
   'Fatigue rig coverage retains every crew pose, scoped state and restoration check');
 const focusedRetentionBytes = await read('tests/scrap1-focused-retention/adaptations.json');
 assert.equal(sha(focusedRetentionBytes), 'd8398969b25626a3449c645d4c3400b6905c14635132ffffebf95cb91d02d0c1');
@@ -322,7 +337,7 @@ for(const [name,record] of Object.entries(focusedRetention.runners)) {
   assert.equal(sha(await read('tests/ambush1-retained-parent/'+record.runner)),record.runnerSha256,'Published Scrap focused runner remains the reviewed compatibility adaptation: '+name);
   assert.equal(record.baselineChecks,name==='care-fatigue'?25042:retainedChecks[name]);
   assert.equal(record.appendedChecks,scrapFocusedCheckExtensions[name]||0);
-  assert.equal(reports.get(name).checks,record.baselineChecks+record.appendedChecks+(vaseFocusedCheckExtensions[name]||0)+(TORCH_FOCUSED_CHECK_EXTENSIONS[name]||0)+(DOUBLE_FOCUSED_CHECK_EXTENSIONS[name]||0)+(GUST_FOCUSED_CHECK_EXTENSIONS[name]||0));
+  assert.equal(reports.get(name).checks,record.baselineChecks+record.appendedChecks+(vaseFocusedCheckExtensions[name]||0)+(TORCH_FOCUSED_CHECK_EXTENSIONS[name]||0)+(DOUBLE_FOCUSED_CHECK_EXTENSIONS[name]||0)+(GUST_FOCUSED_CHECK_EXTENSIONS[name]||0)+(ZOMBOTANY3_FOCUSED_CHECK_EXTENSIONS[name]||0));
 }
 const publishedAmbushFocusedReports=new Map();
 for(const name of [...Object.keys(retainedChecks),'care-fatigue'])
@@ -336,7 +351,11 @@ const publishedDoubleFocusedReports=new Map();
 for(const name of [...Object.keys(retainedChecks),'care-fatigue'])
  publishedDoubleFocusedReports.set(name,JSON.parse(await publishedDoubleRead('tests/'+name+'-results.json')));
 await verifyDoubleFocusedRetention({read:publishedDoubleRead,sha,engine:doubleEngine,reports:publishedDoubleFocusedReports});
-await verifyGustFocusedRetention({read:readCurrent,sha,engine,reports});
+const publishedGustFocusedReports=new Map();
+for(const name of [...Object.keys(retainedChecks),'care-fatigue'])
+ publishedGustFocusedReports.set(name,JSON.parse(await publishedGustRead('tests/'+name+'-results.json')));
+await verifyGustFocusedRetention({read:publishedGustRead,sha,engine:gustEngine,reports:publishedGustFocusedReports});
+await verifyZombotany3FocusedRetention({read:readCurrent,sha,engine,reports});
 const fullRunReport = reports.get('care-full-run');
 assert.equal(fullRunReport.checks, Object.keys(fullRunReport.sourceSha256).length + 152, 'Complete-engine provenance and required native scenario checks are retained');
 assert.equal(fullRunReport.execution, 'complete-production-engine',
@@ -622,6 +641,9 @@ await verifyGustBloom({report:reports.get('gust-bloom'),read:readCurrent,sha,eng
  productionBuildBytes:fullRunProductionBuildBytes,
  currentArtBytes:fs.readFileSync(new URL('content/native-bonus-art.json',dist)),
  previousArtBytes:fs.readFileSync(new URL('./fixtures/double1-native-bonus-art.json',import.meta.url))});
+await verifyZombotany3({report:reports.get('zombotany3'),read:readCurrent,sha,engine,fullRunReport,
+ productionBuildBytes:fullRunProductionBuildBytes,
+ familyArtBytes:fs.readFileSync(new URL('content/native-zombotany-art.json',dist))});
 const careBalance = reports.get('intensive-care').balanceModel;
 assert.equal(careBalance.kind, 'native healing/fatigue capacity bound; not a battle clear');
 assert(careBalance.allBedsHealHpPerSecond > careBalance.maximumCrewFatigueHpPerSecond);
@@ -1478,8 +1500,8 @@ assert.deepEqual(fs.readFileSync(new URL('generation.json', artworkUrl)), genera
 const sourceManifest = JSON.parse(await read('source-manifest.json'));
 assert.equal(sourceManifest.version, engine.id);
 assert.deepEqual(Object.keys(sourceManifest.files).sort(),
-  [...Object.keys(historySource.manifest.files), ...SCRAP_SOURCE_ADDITIONS, ...AMBUSH_SOURCE_ADDITIONS, ...TORCH_SOURCE_ADDITIONS, ...DOUBLE_SOURCE_ADDITIONS, ...GUST_SOURCE_ADDITIONS].sort(),
-  'Gust-bloom retains every872 published Double source path and appends only six implementation/presentation files');
+  [...Object.keys(historySource.manifest.files), ...SCRAP_SOURCE_ADDITIONS, ...AMBUSH_SOURCE_ADDITIONS, ...TORCH_SOURCE_ADDITIONS, ...DOUBLE_SOURCE_ADDITIONS, ...GUST_SOURCE_ADDITIONS, ...ZOMBOTANY3_SOURCE_ADDITIONS].sort(),
+  'Zombotany3 retains every878 published Gust source path and appends only four implementation/presentation files');
 const completeProductionSources = Object.fromEntries(Object.entries(sourceManifest.files)
   .map(([name, pin]) => ['source/' + name, pin.sha256]));
 assert.deepEqual(fullRunReport.sourceSha256, completeProductionSources,
@@ -2177,7 +2199,7 @@ if (process.argv.includes('--run-native')) {
     }
     for (const name of suites) {
       const args = [path.join(temporary, 'tests/test-' + name + '.py'), '--native'];
-      if (['care-full-run','chain-reaction','rally-zombie','rally-raid','lights-out','garlic-run','bungee-business','cob-cannon-command','pool-panic','pool-panic-endless','scrap-yard','vase-ambush','torchbearer','double-agent','gust-bloom'].includes(name)) args.push('--asset-root', fileURLToPath(new URL('game-assets/', dist)));
+      if (['care-full-run','chain-reaction','rally-zombie','rally-raid','lights-out','garlic-run','bungee-business','cob-cannon-command','pool-panic','pool-panic-endless','scrap-yard','vase-ambush','torchbearer','double-agent','gust-bloom','zombotany3'].includes(name)) args.push('--asset-root', fileURLToPath(new URL('game-assets/', dist)));
       const run = spawnSync('python', args, {encoding: 'utf8'});
       assert.equal(run.status, 0, (run.error?.message || '') + run.stdout + run.stderr);
       const actual = JSON.parse(fs.readFileSync(path.join(temporary, 'tests/' + name + '-results.json')));
@@ -2186,7 +2208,7 @@ if (process.argv.includes('--run-native')) {
       assert.equal(actual.exitCode, 0);
       assert.match(actual.status, /^PASS/);
       assert.deepEqual(actual.sourceSha256, reports.get(name).sourceSha256);
-      if(['care-full-run','chain-reaction','rally-zombie','rally-raid','lights-out','garlic-run','bungee-business','cob-cannon-command','pool-panic','pool-panic-endless','scrap-yard','vase-ambush','torchbearer','double-agent','gust-bloom'].includes(name)) {
+      if(['care-full-run','chain-reaction','rally-zombie','rally-raid','lights-out','garlic-run','bungee-business','cob-cannon-command','pool-panic','pool-panic-endless','scrap-yard','vase-ambush','torchbearer','double-agent','gust-bloom','zombotany3'].includes(name)) {
         assert.equal(actual.productionObjectCount,CURRENT_OBJECT_COUNT);
         assert.deepEqual(actual.productionObjectSha256,fullRunReport.productionObjectSha256);
         assert.equal(actual.productionBuildReceiptSha256,sha(fullRunProductionBuildBytes));
@@ -2240,8 +2262,12 @@ if (process.argv.includes('--run-native')) {
         productionBuildBytes:fullRunProductionBuildBytes,
         currentArtBytes:fs.readFileSync(new URL('content/native-bonus-art.json',dist)),
         previousArtBytes:fs.readFileSync(new URL('./fixtures/double1-native-bonus-art.json',import.meta.url))});
+      if(name==='zombotany3') await verifyZombotany3({report:actual,
+        read:async input=>fs.readFileSync(path.join(temporary,input)),sha,engine,fullRunReport,
+        productionBuildBytes:fullRunProductionBuildBytes,
+        familyArtBytes:fs.readFileSync(new URL('content/native-zombotany-art.json',dist))});
     }
-    console.log(`PASS all ${checks} assertions across 28 native suites, including complete headless Care, Chain, Rally, Raid, Lights Out, Garlic Run, Bungee Business, Cob Cannon Command, Pool Panic, Pool Panic Endless, Scrap Yard, Vase Ambush and Torchbearer scenarios on CI.`);
+    console.log(`PASS all ${checks} assertions across 29 native suites, including complete headless Care, Chain, Rally, Raid, Lights Out, Garlic Run, Bungee Business, Cob Cannon Command, Pool Panic, Pool Panic Endless, Scrap Yard, Vase Ambush and Torchbearer scenarios on CI.`);
   } finally {
     const resolved = fs.realpathSync(temporary);
     assert.equal(path.dirname(resolved), temporaryRoot);

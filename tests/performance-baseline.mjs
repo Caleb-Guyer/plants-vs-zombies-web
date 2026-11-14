@@ -172,7 +172,7 @@ await verifyDoubleBrowserEvidence({
  availability:json(read('tests/fixtures/performance/double1-browser-validation.json')),
  currentEngine:historicalEngine(currentEngine,'0.2.6-web-double.1'),read,sha,Zip:vendor.exports,
  historical:true,historicalNormalBytes});
-console.log('PASS preserved historical Double browser functionality; no current Gust timing verdict is inferred.');
+console.log('PASS preserved historical Double browser functionality; no current timing verdict is inferred.');
 if(currentEngine.id==='0.2.6-web-gust.1'){
  const availability=json(read('tests/fixtures/performance/gust1-browser-validation.json'));
  assert.deepEqual(availability.engine,{id:currentEngine.id,jsSha256:currentEngine.artifacts.jsSha256,wasmSha256:currentEngine.artifacts.wasmSha256});
@@ -181,4 +181,19 @@ if(currentEngine.id==='0.2.6-web-gust.1'){
  assert.equal(availability.status,'functional-only','Actual current muted browser observations are required');
  await verifyGustBrowserEvidence({availability,currentEngine,read,sha,Zip:vendor.exports});
  console.log('PASS current muted Gust chooser/Almanac/planting/2x/SaveContinue; browser wins0, fresh FPS unmeasured.');
+}else if(currentEngine.id==='0.2.6-web-zombotany3.1'){
+ const gustFocused=read('tests/fixtures/gust1-focused-reference.json');
+ assert.equal(sha(gustFocused),'5f213369ad0e86e5e15c2f75e3eb267243350ac7f310df1efc55dddbc0a4e793');
+ const oldNormal=Buffer.from(json(gustFocused).files['logs/build-result.json'].base64,'base64');
+ const oldBuild=read('tests/fixtures/gust1-native-build-reference.json');
+ await verifyGustBrowserEvidence({
+  availability:json(read('tests/fixtures/performance/gust1-browser-validation.json')),
+  currentEngine:historicalEngine(currentEngine,'0.2.6-web-gust.1'),read,sha,Zip:vendor.exports,
+  historical:true,historicalNormalBytes:oldNormal,historicalBuildBytes:oldBuild});
+ console.log('PASS preserved historical Gust browser functionality; no current executable or timing claim.');
+ const {verifyZombotany3BrowserEvidence}=await import('./zombotany3-browser-verification.mjs');
+ await verifyZombotany3BrowserEvidence({
+  availability:json(read('tests/fixtures/performance/zombotany3-browser-validation.json')),
+  currentEngine,read,sha,Zip:vendor.exports});
+ console.log('PASS current muted Zombotany 3 family/chooser/night planting/2x/SaveContinue; browser wins0, fresh FPS unmeasured.');
 }else assert.equal(currentEngine.id,'0.2.6-web-double.1','Unreviewed current browser epoch');

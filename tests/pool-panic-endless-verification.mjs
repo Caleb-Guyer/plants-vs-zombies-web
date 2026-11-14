@@ -157,7 +157,7 @@ export async function verifyPoolPanicEndless({report,read,sha,engine,fullRunRepo
  equalFields(report,{execution:'complete-production-engine',optimization:'O2',failures:0,exitCode:0,nativeArtInputs:643});
  assert.match(report.status,/^PASS/);assert.equal(engine.id,CURRENT_ENGINE_ID);
  assert.equal(report.retentionAdapterSha256,CURRENT_ENDLESS_RETENTION_SHA256);
- const adapterBytes=await read('tests/gust1-endless-retention.json');
+ const adapterBytes=await read('tests/z3-endless-retention.json');
  assert.equal(sha(adapterBytes),CURRENT_ENDLESS_RETENTION_SHA256);
  await verifyPublishedDoubleAdapter({read,sha,adapter:JSON.parse(adapterBytes),family:'endless'});
  // The earlier published execution adapter remains independent historical data.

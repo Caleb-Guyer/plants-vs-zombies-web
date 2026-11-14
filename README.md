@@ -1,5 +1,19 @@
 # Plants vs. Zombies — browser playtest
 
+## Zombotany 3
+
+Zombotany 3 brings mushroom-headed zombies to a twenty-wave night lawn. Puff-shroom heads fire short-range spores, Fume-shroom heads blow through nearby defenders in their row, and rare Ice-shroom heads wind up for one brief freeze before returning to ordinary biting. Pick a normal seed bank and build a night garden with the original planting, sun, recharge, graves and five mowers.
+
+The native Zombotany page groups the original ZomBotany and ZomBotany 2 with the new night challenge. The original two games retain their Mini-Games cards, unlock rules and completion records. The existing twenty Bonus cards remain unchanged. The new heads use complete original mushroom artwork attached to animated original zombie bodies, with a distinct night thumbnail, native category button and no card tips or extra HUD. Normal game audio remains available; testing stays muted.
+
+Tests cover the new enemies, normal night economy, loss, Retry, Replay and Save/Continue at both speeds with sound off. Muted browser checks also confirm planting, 2× and Save/reload/Continue.
+
+[Play the game](https://caleb-guyer.github.io/plants-vs-zombies-web/).
+
+## Prior release records
+
+The sections below retain their earlier release-time scope; prior accepted gameplay behavior remains required.
+
 ## Gust-bloom and Headwind
 
 Gust-bloom is a new 150-sun plant. He winds up, then blows a visible gust down his row to push nearby ordinary ground zombies back. Heavy equipment reduces the push; giants and vehicles shrug it off. Each zombie needs time to recover before another push, limiting repeated knockback.

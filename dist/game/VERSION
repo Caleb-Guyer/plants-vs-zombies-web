@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-gust.1
-Adds Gust-bloom, its Almanac and regular seed unlock, and the Headwind conveyor challenge.
-Engine JavaScript SHA-256: dc3163631f5a1beb45580cf0d00c04ee8c1a417fa1856f257cf1f44c40b98c68
-Engine WASM SHA-256: f1d6be2fb180a17dd616929e47fff7e51a74e0b7d04ae2531483f7b64e8b529a
+PvZ-Portable 0.2.6-web-zombotany3.1
+Adds nighttime Zombotany3, three original mushroom-headed zombies and the Zombotany family page.
+Engine JavaScript SHA-256: 0ffe49ac17d6c0c73c120c30781b14c49816f12d0743cd740ab13070f73df250
+Engine WASM SHA-256: 06e06401578f42c4367be03159ddc0065cfe2a6ae3abef8067d503d762c91256
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.

@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "sourceKind": "original native mushroom reanimation heads attached to original Zombotany zombie bodies",
+  "assetBundleId": "sha256:b468b22439430ca4a36035b886a74bd831a86b2a1a36c39d3203396f5b75d093",
+  "assetManifest": "../game-assets/manifest.json",
+  "family": "Zombotany",
+  "page": 5,
+  "generatedArtworkUsed": false,
+  "nativeWindow": {
+    "width": 80,
+    "height": 65
+  },
+  "cards": [
+    {
+      "mode": 16,
+      "profileIndex": 15,
+      "nativeName": "[WAR_AND_PEAS]",
+      "renderer": "IMAGE_CHALLENGE_THUMBNAILS",
+      "iconIndex": 0,
+      "originalDefinitionUnchanged": true
+    },
+    {
+      "mode": 32,
+      "profileIndex": 31,
+      "nativeName": "[WAR_AND_PEAS_2]",
+      "renderer": "IMAGE_CHALLENGE_THUMBNAILS",
+      "iconIndex": 0,
+      "originalDefinitionUnchanged": true
+    },
+    {
+      "mode": 93,
+      "profileIndex": 92,
+      "nativeName": "Zombotany 3",
+      "renderer": "Zombotany3Art::GetImage",
+      "background": "IMAGE_BACKGROUND2",
+      "heads": [
+        {
+          "zombieType": 35,
+          "reanimation": "REANIM_PUFFSHROOM"
+        },
+        {
+          "zombieType": 36,
+          "reanimation": "REANIM_FUMESHROOM"
+        },
+        {
+          "zombieType": 37,
+          "reanimation": "REANIM_ICESHROOM"
+        }
+      ]
+    }
+  ]
+}

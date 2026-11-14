@@ -6,7 +6,7 @@ import {CURRENT_ENGINE_ID, CURRENT_SOURCE_COUNT, CURRENT_OBJECT_COUNT, ENDLESS3_
  ENDLESS3_ARCHIVE_SHA256, SCRAP_ENGINE_ID, SCRAP_ARCHIVE_SHA256, CURRENT_SCRAP_RETENTION_SHA256,
  AMBUSH_ENGINE_ID,AMBUSH_ARCHIVE_SHA256,AMBUSH_SCRAP_RETENTION_SHA256,
  historicalEngine, verifyRetainedParentInputs,verifyTorchRetainedParentInputs,
- DOUBLE_ENGINE_ID,DOUBLE_ARCHIVE_SHA256,verifyPublishedDoubleAdapter} from './native-release-context.mjs';
+ GUST_ENGINE_ID,GUST_ARCHIVE_SHA256,verifyPublishedDoubleAdapter} from './native-release-context.mjs';
 
 // Preregistered contract authenticated after all18 actual O2 cases passed.
 const finalContractPin = '2ada5367e1e3683d6adf3c373d3a58b304e5f2311c18c89c2de690e48dd8fb1c';
@@ -249,13 +249,13 @@ export async function verifyScrapYard({report, read, sha, engine, fullRunReport,
     preTuningPlanSha256: preTuningPlanPin, nativeArtInputs: 866, nativeArtFixtureSha256: nativeArtPin});
   fields(report, {engineId: CURRENT_ENGINE_ID, mode: 88, profileIndex: 87, rulesVersion: 1, startingSun: 800});
   const retained = await verifyRetainedParentInputs({read, sha});
-  const adapterBytes = await read('tests/gust1-scrap-retention.json');
+  const adapterBytes = await read('tests/z3-scrap-retention.json');
   assert.equal(sha(adapterBytes), CURRENT_SCRAP_RETENTION_SHA256,
     'Independently pinned current execution envelope for the unchanged Scrap cases');
   assert.equal(report.retentionAdapterSha256, CURRENT_SCRAP_RETENTION_SHA256);
   const adapter = JSON.parse(adapterBytes);
-  fields(adapter, {schemaVersion: 1, parentEngineId: DOUBLE_ENGINE_ID, engineId: CURRENT_ENGINE_ID,
-    parentArchiveSha256: DOUBLE_ARCHIVE_SHA256, historicalContractSha256: finalContractPin,
+  fields(adapter, {schemaVersion: 1, parentEngineId: GUST_ENGINE_ID, engineId: CURRENT_ENGINE_ID,
+    parentArchiveSha256: GUST_ARCHIVE_SHA256, historicalContractSha256: finalContractPin,
     sourceCount: CURRENT_SOURCE_COUNT, productionObjectCount: CURRENT_OBJECT_COUNT, all18CasesFresh: true});
   await verifyPublishedDoubleAdapter({read,sha,adapter,family:'scrap'});
   const ambushRetained=await verifyTorchRetainedParentInputs({read,sha});

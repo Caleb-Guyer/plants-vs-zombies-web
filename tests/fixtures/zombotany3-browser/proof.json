@@ -1,0 +1,227 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-11-14T20:56:35.513785+00:00",
+  "engine": {
+    "id": "0.2.6-web-zombotany3.1",
+    "jsSha256": "0ffe49ac17d6c0c73c120c30781b14c49816f12d0743cd740ab13070f73df250",
+    "wasmSha256": "06e06401578f42c4367be03159ddc0065cfe2a6ae3abef8067d503d762c91256"
+  },
+  "automationMethod": "isolated headless Chrome, dedicated local profile, native CDP mouse/key input and DOM file import",
+  "query": "?testing=1",
+  "audioMutedThroughout": true,
+  "browserLaunchAudioFlag": "--mute-audio",
+  "fileFreeStartup": true,
+  "familyPageObserved": true,
+  "normalChooserSelection": true,
+  "nightLawnObserved": true,
+  "regularPlantsPlaced": true,
+  "sameBrowserSaveContinue": true,
+  "speedLabel": "2x",
+  "actualNativeCheckpointImported": true,
+  "planting": {
+    "sunBefore": 50,
+    "sunAfter": 25,
+    "seeds": [
+      9,
+      8
+    ],
+    "nativeCells": [
+      [
+        1,
+        4
+      ],
+      [
+        2,
+        4
+      ]
+    ],
+    "skySunCollected": false
+  },
+  "operatorObservations": [
+    "The fresh dedicated muted browser reached the original main menu and accepted a QA name before any save data was supplied.",
+    "The native Zombotany family showed its original first card, original locked second slot and distinct three-mushroom night card, with centered footer controls and no card tips.",
+    "Six original plants were chosen through the native chooser. Sun-shroom and Puff-shroom were planted in bottom-row cells1,4 and2,4; the bank changed from50 to25 sun and the speed label changed to2x.",
+    "Native Leave Game saved the board. Reload and Continue in the same browser restored the same two bottom-row plants,25 sun and2x, without importing or exporting that board.",
+    "The actual pre-award native save-freeze checkpoint was imported through the reload save controls. Continue immediately restored the visibly frozen night lawn, mushroom-headed zombies and original HUD.",
+    "Every successful DOM inspection showed muted audio. Chrome used --mute-audio throughout, no trophy was collected and no browser win was earned. No browser timing or GPU measurement was made.",
+    "The immediate wait and inspection after the first navigation reported a transient inactive page. The next ordinary DOM inspection recovered before native game inputs; both errors remain in the action transcript."
+  ],
+  "browserEarnedWins": 0,
+  "performanceProbeLoaded": false,
+  "freshBrowserPerformanceMeasured": false,
+  "normalBuildReceiptSha256": "4c74070ff45da66e21bbf2c227b4f8532c9a940672963a46bbbf951240458653",
+  "nativeProfileOrigin": {
+    "engineId": "0.2.6-web-zombotany3.1",
+    "mode": 93,
+    "profileIndex": 92,
+    "profileCreditsAtExport": 0,
+    "syntheticCheckpoint": false,
+    "standardCampaignUnlocks": "native test setup",
+    "exportedFiles": {
+      "userdata/game1_93.v4": {
+        "bytes": 180739,
+        "sha256": "a87aef80ef8f01897533743297f8915efdce320fc65c41f8c0948bd601892da3"
+      },
+      "userdata/user1.dat": {
+        "bytes": 886,
+        "sha256": "86aa42ea66702a533af355141ed9d471eb32c0f68c1c2f3670973769e4308c59"
+      },
+      "userdata/users.dat": {
+        "bytes": 41,
+        "sha256": "23f294a550cedf91761eaaf333926e4a26a3eef567f7676bc8e14fb661f66888"
+      }
+    },
+    "result": {
+      "path": "tests/fixtures/zombotany3-browser/native-freeze-origin.json",
+      "bytes": 22743,
+      "sha256": "9471d33c9df501614606c1860b5d5bb442ca4451e18c7bbe72aad2c71cd1163b"
+    },
+    "rawLog": {
+      "path": "tests/fixtures/zombotany3-browser/native-freeze-origin.log",
+      "bytes": 44445,
+      "sha256": "61966abba5901a7f6fe8f499e7f27587bf1f272496eb3934fd0c48599c84df36"
+    }
+  },
+  "observedEngineMetadata": {
+    "path": "tests/fixtures/zombotany3-browser/observed-engine-provenance.json",
+    "bytes": 187480,
+    "sha256": "04de144856fbc62d00d12911a58c2affda9694417bb0dac41cf2887842bf3206"
+  },
+  "screenshots": {
+    "family": {
+      "path": "tests/fixtures/zombotany3-browser/family.jpg",
+      "bytes": 93809,
+      "sha256": "4e2a21e8d16f672c18fe01bb203b9d931e815e87cd99401a62e16915b8213604"
+    },
+    "chooser": {
+      "path": "tests/fixtures/zombotany3-browser/chooser.jpg",
+      "bytes": 236668,
+      "sha256": "e47215bc4f87b3e844d48515f7138eefc32d411390e6f11ed729ad796c79cb04"
+    },
+    "night": {
+      "path": "tests/fixtures/zombotany3-browser/night.jpg",
+      "bytes": 172604,
+      "sha256": "05ada701431fb3d699ede0a6fddda5cf69e04083f480f9d50468fc0eb05164c4"
+    },
+    "continue-night": {
+      "path": "tests/fixtures/zombotany3-browser/continue-night.jpg",
+      "bytes": 174238,
+      "sha256": "4d28296e28a708ab8428f1ecafa33ffc4969dd6f234d689ad7fa626dfa2c0260"
+    },
+    "native-checkpoint": {
+      "path": "tests/fixtures/zombotany3-browser/native-checkpoint.jpg",
+      "bytes": 202673,
+      "sha256": "6d50efcb2273468aca04c011d97967f0d3ce2c7f7d857f09efcd316428cef3d0"
+    }
+  },
+  "runtimeFiles": {
+    "audio-controls.js": {
+      "bytes": 12216,
+      "sha256": "95e6a1b3e7ccae54ee797e8ed3b63668b672ee51f55978dc4d29231ec225a343"
+    },
+    "bundled-assets.js": {
+      "bytes": 8188,
+      "sha256": "07449dfe0aca7efb7888c62d598b54dc0be5cdfaadab6961e5f9977f87db6e8c"
+    },
+    "game-assets/manifest.json": {
+      "bytes": 3176,
+      "sha256": "5488eb8cf5d38d2d999e29a5b3aca45ecff02f8ee49356ccb327de8676111dc4"
+    },
+    "game/pvz-portable.js": {
+      "bytes": 210620,
+      "sha256": "0ffe49ac17d6c0c73c120c30781b14c49816f12d0743cd740ab13070f73df250"
+    },
+    "game/pvz-portable.wasm": {
+      "bytes": 7896009,
+      "sha256": "06e06401578f42c4367be03159ddc0065cfe2a6ae3abef8067d503d762c91256"
+    },
+    "index.html": {
+      "bytes": 6436,
+      "sha256": "ae8909471b47e78d8a94cd9566d8f7e3dcf36cab850d09114f7608320594a759"
+    },
+    "index-port.html": {
+      "bytes": 6436,
+      "sha256": "ae8909471b47e78d8a94cd9566d8f7e3dcf36cab850d09114f7608320594a759"
+    },
+    "launcher.js": {
+      "bytes": 10755,
+      "sha256": "9e41170068f913e8f966d650953972a311f57e7efb6241340fa6c5a349d3cfdd"
+    },
+    "loader.js": {
+      "bytes": 10670,
+      "sha256": "a183ed4e17810de2431989f3ebc263d2f511d1514c53e73c8933b8486bced73a"
+    },
+    "original-ui.js": {
+      "bytes": 2774,
+      "sha256": "a8f0aab63956a0280f03520671b712c2709da353c287be430592c64ba91ffe5b"
+    },
+    "port.css": {
+      "bytes": 11410,
+      "sha256": "6020b3fb0e1517aa9c9c1bab93873cf5c5c9f2204e3c0d9f3335853789e6b821"
+    },
+    "runtime.js": {
+      "bytes": 2931,
+      "sha256": "c8a9987e1094085b2a5368dd866b79687a000bf5ba630cfe16a937e5b25fb018"
+    },
+    "save-recovery.js": {
+      "bytes": 4921,
+      "sha256": "eff0eb9325e0bdc18c1f76582e9f260a07ffbf680b3ada25763f1972204e84bf"
+    },
+    "save-storage-core.js": {
+      "bytes": 13211,
+      "sha256": "5473e221a0b86818835a9ed5a1b473d718ae14da9838c7e37d99bdef48203bee"
+    },
+    "save-storage-worker.js": {
+      "bytes": 1864,
+      "sha256": "4951c5dd05dcc2c79dd99f4ddeba19935ffd23a69dd6726e4b4e1b819772a246"
+    },
+    "save-storage.js": {
+      "bytes": 9518,
+      "sha256": "e46cef9257f3608f0edbd1af4c0424e09665aa919aed5e5e16d234045ef1c49c"
+    },
+    "save-transfer.js": {
+      "bytes": 16375,
+      "sha256": "de0c5b67863c8f307906d4d1c739b05ef0d32d5f854a8d77581750a37dd6f314"
+    },
+    "steam-compat.js": {
+      "bytes": 5185,
+      "sha256": "ace261bed202e3f99a242ac6b6dc2f532c1967d1b803a0e91a38461db44311eb"
+    },
+    "test-profiles.js": {
+      "bytes": 10112,
+      "sha256": "b93318eb4738b199d39dbf10ad6313e11fd2350dc4526c64216b2a13c27e1ce0"
+    },
+    "vendor/jszip.min.js": {
+      "bytes": 97630,
+      "sha256": "acc7e41455a80765b5fd9c7ee1b8078a6d160bbbca455aeae854de65c947d59e"
+    }
+  },
+  "inputs": {
+    "nativeCheckpoint": {
+      "path": "tests/fixtures/zombotany3-browser/native-checkpoint.zip",
+      "bytes": 26860,
+      "sha256": "f2572a8777ddc0734a76f76269a3363741a7dd7783c6df3910923083ba5f81fb"
+    },
+    "nativeProfile": {
+      "path": "tests/fixtures/zombotany3-browser/native-profile.zip",
+      "bytes": 304,
+      "sha256": "d1960fd06a3b483982d575e7510e60c7d6233b1446e4cc39f5069dafd14ab90e"
+    }
+  },
+  "canvas": {
+    "width": 800,
+    "height": 600,
+    "cssWidth": 1100,
+    "cssHeight": 825
+  },
+  "viewport": {
+    "width": 1100,
+    "height": 850,
+    "deviceScaleFactor": 1
+  },
+  "actionTranscript": {
+    "path": "tests/fixtures/zombotany3-browser/actions.jsonl",
+    "bytes": 40215,
+    "sha256": "57664b195f32e115be2ec18befed3e1aa3bab8727b6ed570d704abdb4a57827e"
+  }
+}

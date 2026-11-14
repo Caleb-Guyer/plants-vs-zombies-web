@@ -5,7 +5,7 @@ import fs from 'node:fs';
 import {CURRENT_ENGINE_ID, CURRENT_SOURCE_COUNT, CURRENT_OBJECT_COUNT,
  AMBUSH_ENGINE_ID, AMBUSH_ARCHIVE_SHA256, CURRENT_VASE_RETENTION_SHA256,
  reconstructAmbushSources, reconstructScrapSources, verifyTorchRetainedParentInputs,
- DOUBLE_ENGINE_ID,DOUBLE_ARCHIVE_SHA256,TORCH_ENGINE_ID,verifyPublishedDoubleAdapter,torchSourceReader} from './native-release-context.mjs';
+ GUST_ENGINE_ID,GUST_ARCHIVE_SHA256,TORCH_ENGINE_ID,verifyPublishedDoubleAdapter,torchSourceReader} from './native-release-context.mjs';
 
 // Accepted only after independent review of the complete actual O2 matrix,
 // all thirty raw results, sixteen fixed inputs and current production graph.
@@ -658,12 +658,12 @@ export async function verifyVaseAmbush({report, read, sha, engine, fullRunReport
  assert.deepEqual(Object.keys(contract.fixtureSha256).sort(), [...requiredFixtures].sort(),
   'The final sixteen actual native inputs are complete and bounded');
  const retained=await verifyTorchRetainedParentInputs({read,sha});
- const adapterBytes=await read('tests/gust1-vase-retention.json');
+ const adapterBytes=await read('tests/z3-vase-retention.json');
  assert(CURRENT_VASE_RETENTION_SHA256,'The current Vase execution envelope has not been accepted');
  assert.equal(sha(adapterBytes),CURRENT_VASE_RETENTION_SHA256);
  assert.equal(report.retentionAdapterSha256,CURRENT_VASE_RETENTION_SHA256);
  const adapter=json(adapterBytes);
- fields(adapter,{schemaVersion:1,parentEngineId:DOUBLE_ENGINE_ID,parentArchiveSha256:DOUBLE_ARCHIVE_SHA256,
+ fields(adapter,{schemaVersion:1,parentEngineId:GUST_ENGINE_ID,parentArchiveSha256:GUST_ARCHIVE_SHA256,
   engineId:CURRENT_ENGINE_ID,historicalContractSha256:contractPin,sourceCount:CURRENT_SOURCE_COUNT,
   productionObjectCount:CURRENT_OBJECT_COUNT,all30CasesFresh:true});
  await verifyPublishedDoubleAdapter({read,sha,adapter,family:'vase'});

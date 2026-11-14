@@ -3,8 +3,11 @@
 // earned regular-play unlock. Development probes never satisfy this gate.
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {CURRENT_ENGINE_ID,CURRENT_SOURCE_COUNT,CURRENT_OBJECT_COUNT,reconstructDoubleSources}
+import {GUST_ENGINE_ID as CURRENT_ENGINE_ID,GUST_SOURCE_COUNT as CURRENT_SOURCE_COUNT,GUST_OBJECT_COUNT as CURRENT_OBJECT_COUNT,reconstructDoubleSources}
  from './native-release-context.mjs';
+import {authenticateZombotany3RetainedFamily}from'./zombotany3-retained-native.mjs';
+const z3Projection=Symbol('authenticated new production before the sealed Gust gameplay oracle');
+const Z3_GUST_RETENTION_SHA256='42db71f0d85bf93645f852893bcc91bc2ea0d15cc901f59460e1b6cb20a56499';
 
 // One reviewed O2 run: 48 actual native cases, 24 speed pairs and 11,782,636
 // checks against the unchanged normal-production receipt 7cf4b25a... . Raw
@@ -101,14 +104,16 @@ export async function verifyGustBloomSourceBounds({read,sha,engine}){
 }
 
 export async function verifyGustBloomBuildBindings({report,read,sha,engine,fullRunReport,productionBuildBytes}){
- fields(report,{execution:'complete-production-engine',optimization:'O2',engineId:CURRENT_ENGINE_ID,mode:92,profileIndex:91,
-  productionObjectCount:CURRENT_OBJECT_COUNT,failures:0,exitCode:0,presentationControlsAvailable:true,developmentNoArt:false});
+ const z3=engine.id==='0.2.6-web-zombotany3.1';assert(z3||engine.id===CURRENT_ENGINE_ID);
+ const sourceCount=z3?882:878,objectCount=z3?149:147;
+ fields(report,{execution:'complete-production-engine',optimization:'O2',engineId:engine.id,mode:92,profileIndex:91,
+  productionObjectCount:objectCount,failures:0,exitCode:0,presentationControlsAvailable:true,developmentNoArt:false});
  assert.equal(CURRENT_SOURCE_COUNT,878);assert.equal(CURRENT_OBJECT_COUNT,147);
- assert.equal(Object.keys(report.sourceSha256).length,878);assert.equal(Object.keys(report.productionObjectSha256).length,147);
+ assert.equal(Object.keys(report.sourceSha256).length,sourceCount);assert.equal(Object.keys(report.productionObjectSha256).length,objectCount);
  assert.deepEqual(report.sourceSha256,fullRunReport.sourceSha256);assert.deepEqual(report.productionObjectSha256,fullRunReport.productionObjectSha256);
  for(const [name,pin]of Object.entries(report.sourceSha256)){safeName(name);assert(name.startsWith('source/'));digest(pin);assert.equal(sha(await read(name)),pin,name);}
  for(const [name,pin]of Object.entries(report.productionObjectSha256)){safeName(name);digest(pin);assert(name.endsWith('.o'));}
- const normal=json(productionBuildBytes);fields(normal,{status:'PASS',exitCode:0,sourceUnchangedDuringBuild:true,sourceFiles:878});
+ const normal=json(productionBuildBytes);fields(normal,{status:'PASS',exitCode:0,sourceUnchangedDuringBuild:true,sourceFiles:sourceCount});
  assert.equal(report.productionBuildReceiptSha256,sha(productionBuildBytes));
  for(const snapshot of ['source-before.json','source-after.json']){
   const values=json(await read('logs/'+snapshot));
@@ -249,7 +254,15 @@ export function verifyGustBloomEarnedCollection(earned){
  for(const name of ['nativeProfileSaveBytes','nativeUsersSaveBytes','nativeRegularBoardSaveBytes'])integer(earned[name],1,16*1024*1024);
 }
 
-export async function verifyGustBloom({report,read,sha,engine,fullRunReport,productionBuildBytes,currentArtBytes,previousArtBytes}){
+export async function verifyGustBloom(options){
+ const {report,read,sha,engine,fullRunReport,productionBuildBytes,currentArtBytes,previousArtBytes}=options;
+ if(engine.id==='0.2.6-web-zombotany3.1'){
+  const historic=await authenticateZombotany3RetainedFamily({...options,family:'gust-bloom',adapterSha256:Z3_GUST_RETENTION_SHA256,
+   verifyBuild:verifyGustBloomBuildBindings,verifyCase:verifyGustBloomCaseLog});
+  const result=await verifyGustBloom({...options,...historic,[z3Projection]:z3Projection});
+  return {...result,currentProductionObjects:149,retainedCases:48};
+ }
+ const projected=options[z3Projection]===z3Projection;
  const bytes=await read('tests/gust-bloom-results.json'),authenticated=verifyGustBloomReportIdentity({reportBytes:bytes,sha});
  assert.deepEqual(report,authenticated.report);
  const contractBytes=await read('tests/gust-bloom-verification-contract.json');
@@ -264,7 +277,7 @@ export async function verifyGustBloom({report,read,sha,engine,fullRunReport,prod
  for(const name of mandatory)assert(Object.hasOwn(contract.fixtureSha256,'tests/'+name),'Every executed input is preregistered: '+name);
  for(const [name,pin]of Object.entries(contract.fixtureSha256)){safeName(name);assert(name.startsWith('tests/'));digest(pin);assert.equal(sha(await read(name)),pin,name);}
  assert.equal(contract.priorAuthoredPlanSha256,sha(await read('tests/gust-bloom-initial-plan.json')));
- await verifyGustBloomBuildBindings({report,read,sha,engine,fullRunReport,productionBuildBytes});
+ if(!projected)await verifyGustBloomBuildBindings({report,read,sha,engine,fullRunReport,productionBuildBytes});
  await verifyGustBloomSourceBounds({read,sha,engine});fields(report,{status:'PASS',assetBundleId:engine.assetBundleId,nativeArtInputs:949});
  const assetBytes=await read('tests/gust-bloom-assets.json'),assets=json(assetBytes);assert.equal(report.assetFixtureSha256,sha(assetBytes));
  fields(assets.files['main.pak'],{bytes:45453180,sha256:'5878326408285cb01f83b4fa4edcc66d65e727f6d6ee88563b5b3b287dd259fc'});
@@ -274,7 +287,7 @@ export async function verifyGustBloom({report,read,sha,engine,fullRunReport,prod
  for(const [name,pin]of Object.entries(json(originalBytes).sourceInputs))assert.deepEqual(inputs.sourceInputs[name],pin);
  for(const [name,pin]of Object.entries(inputs.sourceInputs)){safeName(name);integer(pin.bytes,1);digest(pin.sha256);}
  assert.equal(report.scenarios.length,48);assert.deepEqual(report.scenarios.map(identity).sort(),GUST_BLOOM_MATRIX.map(([name,speed,seed])=>identity({name,speed,seed})).sort());
- for(const row of report.scenarios){verifyGustBloomScenario(row);await verifyGustBloomCaseLog(row,{read,sha});
+ for(const row of report.scenarios){verifyGustBloomScenario(row);if(!projected)await verifyGustBloomCaseLog(row,{read,sha});
   if(row.family==='synthetic-controls'){
    assert(Object.keys(contract.controlExact[row.name]).length>=6);fields(row,contract.controlExact[row.name]);
    for(const [name,min]of Object.entries(contract.controlMinimum?.[row.name]||{}))integer(row[name],min);

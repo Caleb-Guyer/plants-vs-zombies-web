@@ -3,9 +3,18 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 
-export const CURRENT_ENGINE_ID = '0.2.6-web-gust.1';
-export const CURRENT_SOURCE_COUNT = 878;
-export const CURRENT_OBJECT_COUNT = 147;
+export const CURRENT_ENGINE_ID = '0.2.6-web-zombotany3.1';
+export const CURRENT_SOURCE_COUNT = 882;
+export const CURRENT_OBJECT_COUNT = 149;
+export const GUST_ENGINE_ID = '0.2.6-web-gust.1';
+export const GUST_SOURCE_COUNT = 878;
+export const GUST_OBJECT_COUNT = 147;
+export const GUST_ARCHIVE_SHA256 = '10acb269866b175ed4836c2c64c6a79dc86a11241de9e48c7be54f8f89808be8';
+export const ZOMBOTANY3_PARENT_REFERENCE_SHA256 = '82676d6180b80f15bbda731bd8eb7887f089cabd66856789ffa396be09a87b0f';
+export const GUST_FOCUSED_REFERENCE_SHA256 = '5f213369ad0e86e5e15c2f75e3eb267243350ac7f310df1efc55dddbc0a4e793';
+export const ZOMBOTANY3_PARENT_TEST_INPUTS_SHA256 = '8f6a5558869df5e204496ac89ed5467534fa55b7ce96cb05e1d0eb457a11d52c';
+export const ZOMBOTANY3_SOURCE_ADDITIONS = ['Zombotany3','Zombotany3Art']
+ .flatMap(name=>['src/Lawn/System/'+name+'.cpp','src/Lawn/System/'+name+'.h']);
 export const DOUBLE_ENGINE_ID = '0.2.6-web-double.1';
 export const DOUBLE_SOURCE_COUNT = 872;
 export const DOUBLE_OBJECT_COUNT = 144;
@@ -49,10 +58,10 @@ const reviewedDoubleRetentionPins = Object.freeze({
   vase:'05025af9fa6976e55aa6d158d875733fac80dde9739449f7c6341468785e71b3',
   torch:'ddfbb060d29ff59dc04770b7c068f4b1f1973a1f14b1d94adde02cb44f0461b7',
 });
-export const CURRENT_ENDLESS_RETENTION_SHA256 = '4f873bfe77ddaf4a37491bb7626f07cc7c8728f9b0d91172f5b9987f434e5ac6';
-export const CURRENT_SCRAP_RETENTION_SHA256 = 'fdd57dd1ebf5d8c02e31994f1e36b9e972d49020109b57f67ce988813821c35c';
-export const CURRENT_VASE_RETENTION_SHA256 = '9ecd77d0b25479b6bb17b1674ec7a5a5f0ea5085958487802b7e97e6c262de28';
-export const CURRENT_TORCH_RETENTION_SHA256 = 'f1b1045cec77507fb85efa8c526789ade7c112787dfe2e6d9bf4fe76b58fc65a';
+export const CURRENT_ENDLESS_RETENTION_SHA256 = 'b394ab3946c5d207e58b1ad6d329f38c3e065230170405acd57751538aa3f3e6';
+export const CURRENT_SCRAP_RETENTION_SHA256 = '86a10adf9bc5b7e392a7ac3733e62fc963f1158963f8fc5bf15a2a2f493d1108';
+export const CURRENT_VASE_RETENTION_SHA256 = '15f2a586cce5bd39a26c7ea544680e8eb6e8bedfe61b733430de8b8a9092b017';
+export const CURRENT_TORCH_RETENTION_SHA256 = 'e2a7843f2ee4fff210b079e27abc6abbb8bbf28feaa287653c5a262ea28a2350';
 export const PARENT_TEST_INPUTS_SHA256 = '7d6c2749a2d9d1ae462e964447e017f4fcd0e3146909de210ddacaab06be8c82';
 export const AMBUSH_SOURCE_ADDITIONS = ['src/Lawn/System/VaseAmbush.cpp', 'src/Lawn/System/VaseAmbush.h',
   'src/Lawn/System/VaseAmbushPresentation.cpp', 'src/Lawn/System/VaseAmbushPresentation.h'];
@@ -238,7 +247,7 @@ export async function verifyTorchRetainedParentInputs({read, sha}) {
 }
 
 export async function reconstructAmbushSources({referenceBytes, read, sha, engine}) {
-  if (engine.id === CURRENT_ENGINE_ID || engine.id === DOUBLE_ENGINE_ID) {
+  if (engine.id === CURRENT_ENGINE_ID || engine.id === GUST_ENGINE_ID || engine.id === DOUBLE_ENGINE_ID) {
     const projected = await torchSourceReader({read,sha,engine});
     read = projected.read;
     engine = projected.engine;
@@ -333,7 +342,7 @@ export async function reconstructTorchSources({referenceBytes,read,sha,engine}) 
 
 export async function torchSourceReader({read,sha,engine,referenceBytes}) {
   if(engine.id===TORCH_ENGINE_ID)return {read,engine};
-  if(engine.id===CURRENT_ENGINE_ID){
+  if(engine.id===CURRENT_ENGINE_ID||engine.id===GUST_ENGINE_ID){
     const double=await doubleSourceReader({read,sha,engine});read=double.read;engine=double.engine;
   }
   assert.equal(engine.id,DOUBLE_ENGINE_ID);
@@ -425,15 +434,16 @@ export async function reconstructTorchFocusedEvidence({referenceBytes,read,sha,e
 }
 
 export async function reconstructDoubleSources({referenceBytes,read,sha,engine}) {
+  if(engine.id===CURRENT_ENGINE_ID){const gust=await gustSourceReader({read,sha,engine});read=gust.read;engine=gust.engine;}
   assert(GUST_PARENT_REFERENCE_SHA256,'The complete Gust-to-Double source projection has not been frozen');
   assert.equal(sha(referenceBytes),GUST_PARENT_REFERENCE_SHA256,'Reviewed complete Double parent projection');
-  assert.equal(engine.id,CURRENT_ENGINE_ID);assert.equal(engine.parent.id,DOUBLE_ENGINE_ID);
+  assert.equal(engine.id,GUST_ENGINE_ID);assert.equal(engine.parent.id,DOUBLE_ENGINE_ID);
   assert.equal(engine.parent.artifacts.sourceSha256,DOUBLE_ARCHIVE_SHA256);
   const reference=JSON.parse(referenceBytes);
   assert.equal(reference.schemaVersion,1);
   assert.deepEqual(reference.parent,{id:DOUBLE_ENGINE_ID,archiveSha256:DOUBLE_ARCHIVE_SHA256,
     archivePrefix:'double1-candidate/source/'});
-  assert.deepEqual(reference.current,{id:CURRENT_ENGINE_ID,sourceCount:CURRENT_SOURCE_COUNT});
+  assert.deepEqual(reference.current,{id:GUST_ENGINE_ID,sourceCount:GUST_SOURCE_COUNT});
   assert.equal(Object.keys(reference.files).length,DOUBLE_SOURCE_COUNT);
   assert(Array.isArray(reference.changedPaths)&&reference.changedPaths.length>0);
   assert.deepEqual(Object.keys(reference.reverseEdits).sort(),[...reference.changedPaths].sort());
@@ -465,7 +475,8 @@ export async function reconstructDoubleSources({referenceBytes,read,sha,engine})
 
 export async function doubleSourceReader({read,sha,engine,referenceBytes}) {
   if(engine.id===DOUBLE_ENGINE_ID)return {read,engine};
-  assert.equal(engine.id,CURRENT_ENGINE_ID);
+  if(engine.id===CURRENT_ENGINE_ID){const gust=await gustSourceReader({read,sha,engine});read=gust.read;engine=gust.engine;}
+  assert.equal(engine.id,GUST_ENGINE_ID);
   referenceBytes??=fs.readFileSync(new URL('./fixtures/gust1-parent-reference.json',import.meta.url));
   const projected=await reconstructDoubleSources({referenceBytes,read,sha,engine});
   return {engine:engine.parent,files:projected.files,read:async name=>{
@@ -489,6 +500,10 @@ export async function verifyGustRetainedParentInputs({read,sha}) {
 }
 
 export async function verifyPublishedDoubleAdapter({read,sha,adapter,family}) {
+  if(adapter.engineId===CURRENT_ENGINE_ID&&adapter.parentEngineId===GUST_ENGINE_ID){
+    const original=await verifyPublishedGustAdapter({read,sha,adapter,family});
+    return verifyPublishedDoubleAdapter({read,sha,adapter:original,family});
+  }
   assert(Object.hasOwn(reviewedDoubleRetentionPins,family));
   const original=await read('tests/double1-'+family+'-retention.json'),pin=reviewedDoubleRetentionPins[family];
   assert.equal(sha(original),pin);assert.equal(adapter.publishedDoubleAdapterSha256,pin);
@@ -502,6 +517,119 @@ export async function verifyPublishedDoubleAdapter({read,sha,adapter,family}) {
   assert.equal(old.historicalContractSha256,adapter.historicalContractSha256);
   if(family!=='torch')await verifyPublishedTorchAdapter({read,sha,adapter:old,family});
   return old;
+}
+
+export async function reconstructGustSources({referenceBytes,read,sha,engine}) {
+ assert(ZOMBOTANY3_PARENT_REFERENCE_SHA256,'The Zombotany3 source boundary is not frozen');
+ assert.equal(sha(referenceBytes),ZOMBOTANY3_PARENT_REFERENCE_SHA256);
+ assert.equal(engine.id,CURRENT_ENGINE_ID);assert.equal(engine.parent.id,GUST_ENGINE_ID);
+ assert.equal(engine.parent.artifacts.sourceSha256,GUST_ARCHIVE_SHA256);
+ const reference=JSON.parse(referenceBytes);
+ assert.equal(reference.schemaVersion,1);
+ assert.deepEqual(reference.parent,{id:GUST_ENGINE_ID,archiveSha256:GUST_ARCHIVE_SHA256,archivePrefix:'gust1-candidate/source/'});
+ assert.deepEqual(reference.current,{id:CURRENT_ENGINE_ID,sourceCount:CURRENT_SOURCE_COUNT});
+ assert.equal(Object.keys(reference.files).length,GUST_SOURCE_COUNT);
+ assert(reference.changedPaths.length>0);
+ assert.deepEqual(Object.keys(reference.reverseEdits).sort(),[...reference.changedPaths].sort());
+ for(const name of ZOMBOTANY3_SOURCE_ADDITIONS)assert(!Object.hasOwn(reference.files,name));
+ const files=new Map();
+ for(const [name,pin]of Object.entries(reference.files)){
+  safeName(name);digest(pin.sha256);digest(pin.normalizedSha256);
+  let bytes=Buffer.from(await read('source/'+name));const delta=reference.reverseEdits[name];
+  if(delta){
+   assert.equal(bytes.length,delta.currentBytes);digest(delta.currentSha256);assert.equal(sha(bytes),delta.currentSha256,name);
+   assert(Array.isArray(delta.edits)&&delta.edits.length>0);let previous=bytes.length+1;
+   for(const edit of [...delta.edits].reverse()){
+    const before=Buffer.from(edit.beforeBase64,'base64'),after=Buffer.from(edit.afterBase64,'base64');
+    assert.equal(before.toString('base64'),edit.beforeBase64);assert.equal(after.toString('base64'),edit.afterBase64);
+    assert(Number.isSafeInteger(edit.offset)&&edit.offset>=0&&edit.offset<previous);
+    assert(edit.offset+before.length<=previous&&edit.offset+before.length<=bytes.length);
+    assert.deepEqual(bytes.subarray(edit.offset,edit.offset+before.length),before);
+    bytes=Buffer.concat([bytes.subarray(0,edit.offset),after,bytes.subarray(edit.offset+before.length)]);previous=edit.offset;
+   }
+  }
+  assert.equal(bytes.length,pin.bytes);assert.equal(sha(bytes),pin.sha256,name);
+  assert.equal(sha(Buffer.from(bytes.toString('latin1').replace(/\r\n?/g,'\n'),'latin1')),pin.normalizedSha256);
+  files.set(name,bytes);
+ }
+ return {files,manifest:{version:GUST_ENGINE_ID,files:reference.files}};
+}
+
+export async function gustSourceReader({read,sha,engine,referenceBytes}) {
+ if(engine.id===GUST_ENGINE_ID)return {read,engine};
+ assert.equal(engine.id,CURRENT_ENGINE_ID);
+ referenceBytes??=fs.readFileSync(new URL('./fixtures/zombotany3-parent-reference.json',import.meta.url));
+ const projected=await reconstructGustSources({referenceBytes,read,sha,engine});
+ return {engine:engine.parent,files:projected.files,read:async name=>{
+  if(!name.startsWith('source/'))return read(name);
+  safeName(name);const bytes=projected.files.get(name.slice(7));assert(bytes,name);return bytes;
+ }};
+}
+
+export async function verifyZombotany3RetainedParentInputs({read,sha}) {
+ const raw=await read('tests/zombotany3-retained-parent/manifest.json');
+ assert.equal(sha(raw),ZOMBOTANY3_PARENT_TEST_INPUTS_SHA256);
+ const manifest=JSON.parse(raw);
+ assert.equal(manifest.schemaVersion,1);assert.equal(manifest.parentEngineId,GUST_ENGINE_ID);
+ assert.equal(manifest.parentArchiveSha256,GUST_ARCHIVE_SHA256);assert.equal(Object.keys(manifest.files).length,146);
+ for(const [name,pin]of Object.entries(manifest.files)){
+  safeName(name);assert(!name.includes('/'));digest(pin.sha256);
+  const bytes=Buffer.from(await read('tests/zombotany3-retained-parent/'+name));
+  assert.equal(bytes.length,pin.bytes);assert.equal(sha(bytes),pin.sha256,name);
+ }
+ return manifest;
+}
+
+const reviewedGustRetentionPins=Object.freeze({
+ endless:'4f873bfe77ddaf4a37491bb7626f07cc7c8728f9b0d91172f5b9987f434e5ac6',
+ scrap:'fdd57dd1ebf5d8c02e31994f1e36b9e972d49020109b57f67ce988813821c35c',
+ vase:'9ecd77d0b25479b6bb17b1674ec7a5a5f0ea5085958487802b7e97e6c262de28',
+ torch:'f1b1045cec77507fb85efa8c526789ade7c112787dfe2e6d9bf4fe76b58fc65a',
+ double:'e057c9ba7cdec9cffdf157c59d3873293624723180a3a4bbef8db76e84e4c211'
+});
+export async function verifyPublishedGustAdapter({read,sha,adapter,family}) {
+ assert(Object.hasOwn(reviewedGustRetentionPins,family));
+ const pin=reviewedGustRetentionPins[family],raw=await read('tests/gust1-'+family+'-retention.json');
+ assert.equal(sha(raw),pin);assert.equal(adapter.publishedGustAdapterSha256,pin);
+ assert.equal(adapter.parentEngineId,GUST_ENGINE_ID);assert.equal(adapter.parentArchiveSha256,GUST_ARCHIVE_SHA256);
+ assert.equal(adapter.parentSnapshotManifestSha256,ZOMBOTANY3_PARENT_TEST_INPUTS_SHA256);
+ const snapshot=await verifyZombotany3RetainedParentInputs({read,sha});
+ assert.equal(snapshot.files['gust1-'+family+'-retention.json'].sha256,pin);
+ const old=JSON.parse(raw);assert.equal(old.engineId,GUST_ENGINE_ID);
+ assert.equal(old.productionObjectCount,GUST_OBJECT_COUNT);
+ assert.equal(old[family==='endless'?'productionSourceFiles':'sourceCount'],GUST_SOURCE_COUNT);
+ assert.equal(old.historicalContractSha256,adapter.historicalContractSha256);return old;
+}
+
+export async function reconstructGustFocusedEvidence({referenceBytes,read,sha,engine,sourceFiles}) {
+ assert.equal(sha(referenceBytes),GUST_FOCUSED_REFERENCE_SHA256);
+ const parent=historicalEngine(engine,GUST_ENGINE_ID);assert.equal(parent.artifacts.sourceSha256,GUST_ARCHIVE_SHA256);
+ const reference=JSON.parse(referenceBytes);
+ assert.equal(reference.schemaVersion,1);assert.equal(reference.parentEngineId,GUST_ENGINE_ID);
+ assert.equal(reference.parentArchiveSha256,GUST_ARCHIVE_SHA256);assert.equal(reference.parentArchiveBytes,36838618);
+ assert.equal(reference.sourceProjection,'zombotany3-parent-reference.json');assert.equal(reference.sourceCount,GUST_SOURCE_COUNT);
+ assert.equal(sourceFiles.size,GUST_SOURCE_COUNT);
+ assert.equal(Object.keys(reference.sourcePins).length,123);assert.equal(Object.keys(reference.files).length,206);
+ const files=new Map();let inline=0;
+ for(const [name,pin]of Object.entries(reference.sourcePins)){
+  safeName(name);assert(name.startsWith('source/'));digest(pin);const bytes=sourceFiles.get(name.slice(7));
+  assert(bytes,name);assert.equal(sha(bytes),pin,name);files.set(name,bytes);
+ }
+ for(const [name,pin]of Object.entries(reference.files)){
+  safeName(name);digest(pin.sha256);const stored=Object.hasOwn(pin,'currentPath');
+  assert.deepEqual(Object.keys(pin).sort(),['bytes','sha256',stored?'currentPath':'base64'].sort());let bytes;
+  if(stored){
+   safeName(pin.currentPath);assert(/^tests\/(?:zombotany3|gust1|double1|torch1|ambush1|scrap1)-(?:retained-parent|focused-retention)\//.test(pin.currentPath));
+   bytes=Buffer.from(await read(pin.currentPath));
+  }else{
+   assert(['logs/build-result.json','logs/source-before.json','logs/source-after.json'].includes(name));
+   bytes=Buffer.from(pin.base64,'base64');assert.equal(bytes.toString('base64'),pin.base64);inline++;
+  }
+  assert.equal(bytes.length,pin.bytes);assert.equal(sha(bytes),pin.sha256,name);files.set(name,bytes);
+ }
+ assert.equal(inline,3);assert.equal(files.size,329);
+ const historicalRead=async name=>{safeName(name);const bytes=files.get(name);assert(bytes,name);return bytes;};
+ historicalRead.has=name=>{safeName(name);return files.has(name);};return historicalRead;
 }
 
 export async function reconstructDoubleFocusedEvidence({referenceBytes,read,sha,engine,sourceFiles}) {

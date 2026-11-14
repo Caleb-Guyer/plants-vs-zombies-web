@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Restore the exact historical ZIP from current-ZIP spans and literal bytes.
+"""Restore exact native ZIPs from bounded, lossless outer-only transports.
 
 This transports compressed byte streams; it never recompresses or changes an
 archive member. The original complete ZIP digest remains the acceptance gate.
@@ -10,6 +10,7 @@ import argparse
 import hashlib
 import io
 import json
+import lzma
 import os
 from pathlib import Path, PurePosixPath
 import re
@@ -29,6 +30,10 @@ ENGINE_REL = "dist/game/engine-provenance.json"
 MAX_SEGMENTS = 4096
 MAX_MANIFEST_BYTES = 2 * 1024 * 1024
 MAX_DONOR_BYTES = 100 * 1024 * 1024
+CURRENT_FORMAT = "pvz-exact-zip-xz-v1"
+CURRENT_MANIFEST_REL = "source-transports/current.json"
+CURRENT_PAYLOAD_REL = "source-transports/current.xz"
+MAX_CURRENT_MEMORY_BYTES = 64 * 1024 * 1024
 
 
 class SourceBundleError(ValueError):
@@ -153,6 +158,55 @@ def decode_source_transport(manifest_bytes, literals_bytes, base_bytes, *,
     return bytes(output)
 
 
+def _native_archive_path(relative):
+    parts = _relative(relative).split("/")
+    _require(len(parts) == 3 and parts[:2] == ["dist", "source"]
+             and re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*\.zip", parts[2])
+             and relative != TARGET_REL, "Unsafe current native archive path")
+    return relative
+
+
+def decode_current_transport(manifest_bytes, payload_bytes, *, expected_target_path,
+                             expected_target_sha256, expected_target_bytes=None,
+                             decoder_memory_limit=MAX_CURRENT_MEMORY_BYTES):
+    """Decode one XZ stream within its declared output and native memory bounds.
+
+    The caller supplies the independent engine-provenance identity. The stream
+    carries the original complete ZIP bytes, not recompressed ZIP members.
+    """
+    # Bound raw buffers before converting a bytearray/memoryview into a copy.
+    # memoryview.nbytes also handles multi-byte element views correctly.
+    for value, maximum in ((manifest_bytes, MAX_MANIFEST_BYTES), (payload_bytes, MAX_DONOR_BYTES)):
+        _require(isinstance(value, (bytes, bytearray, memoryview)), "Expected byte buffer")
+        size = value.nbytes if isinstance(value, memoryview) else len(value)
+        _require(0 < size <= maximum, "Current transport input exceeds its byte bound")
+    manifest_bytes, payload = map(_bytes, (manifest_bytes, payload_bytes))
+    _native_archive_path(expected_target_path)
+    _digest(expected_target_sha256)
+    _uint(decoder_memory_limit, MAX_CURRENT_MEMORY_BYTES, positive=True)
+    manifest = _json(manifest_bytes)
+    _require(set(manifest) == {"format", "target", "payload"}
+             and manifest["format"] == CURRENT_FORMAT, "Unsupported current transport format")
+    target = _record(manifest["target"], MAX_DONOR_BYTES, path=expected_target_path)
+    _require(target["sha256"] == expected_target_sha256, "Current ZIP differs from engine provenance")
+    if expected_target_bytes is not None:
+        _uint(expected_target_bytes, MAX_DONOR_BYTES, positive=True)
+        _require(target["bytes"] == expected_target_bytes, "Unexpected current ZIP length")
+    encoded = _record(manifest["payload"], MAX_DONOR_BYTES, path=CURRENT_PAYLOAD_REL)
+    _require(len(payload) == encoded["bytes"] and _sha(payload) == encoded["sha256"],
+             "Current XZ payload bytes differ")
+    try:
+        decoder = lzma.LZMADecompressor(format=lzma.FORMAT_XZ, memlimit=decoder_memory_limit)
+        output = decoder.decompress(payload, max_length=target["bytes"] + 1)
+    except (lzma.LZMAError, MemoryError) as exc:
+        raise SourceBundleError("Invalid current XZ stream or decoder memory bound exceeded") from exc
+    _require(len(output) == target["bytes"] and decoder.eof and not decoder.unused_data,
+             "Current XZ stream must contain exactly the bounded original ZIP")
+    _require(decoder.check == lzma.CHECK_CRC64, "Current XZ transport requires CRC64")
+    _require(_sha(output) == expected_target_sha256, "Restored current ZIP digest differs")
+    return output
+
+
 def _root(value):
     value = Path(value)
     info = value.lstat()
@@ -191,7 +245,7 @@ def _read(root, relative, maximum):
     return data
 
 
-def _donor(root):
+def _current_reference(root):
     engine = _json(_read(root, ENGINE_REL, MAX_MANIFEST_BYTES))
     artifacts = engine.get("artifacts")
     _require(isinstance(artifacts, dict), "Engine artifacts are missing")
@@ -202,11 +256,27 @@ def _donor(root):
              and re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*\.zip", parts[2]),
              "Engine source must be a direct native ZIP under dist/source")
     relative = "dist/source/" + parts[2]
-    _require(relative != TARGET_REL, "Historical target cannot be its own donor")
+    _native_archive_path(relative)
+    return {"path": relative, "sha256": _digest(artifacts.get("sourceSha256"))}
+
+
+def _donor(root):
+    reference = _current_reference(root)
+    relative = reference["path"]
     data = _read(root, relative, MAX_DONOR_BYTES)
-    _require(_sha(data) == _digest(artifacts.get("sourceSha256")),
+    _require(_sha(data) == reference["sha256"],
              "Current native source differs from engine provenance")
     return {"path": relative, "bytes": len(data), "sha256": _sha(data)}, data
+
+
+def _current_target(root, reference):
+    path = _path(root, reference["path"], required=False)
+    if not path.exists():
+        return None
+    data = _read(root, reference["path"], MAX_DONOR_BYTES)
+    _require(_sha(data) == reference["sha256"],
+             "Existing current native ZIP is invalid; it will not be overwritten")
+    return data
 
 
 def _target(root):
@@ -225,8 +295,12 @@ def _report(restored):
 
 
 def ensure_source_archive(root):
-    """Verify the original ZIP, or atomically create it without replacing a file."""
+    """Verify/restore current first, then the exact historical donor comparator.
+
+    The historical return report remains compatible with the original helper.
+    """
     root = _root(root)
+    ensure_current_archive(root)
     if _target(root) is not None:
         return _report(False)
     manifest_bytes = _read(root, MANIFEST_REL, MAX_MANIFEST_BYTES)
@@ -236,18 +310,23 @@ def ensure_source_archive(root):
              "Transport donor differs from the actual current engine source")
     literals = _read(root, LITERALS_REL, TARGET_BYTES)
     output = decode_source_transport(manifest_bytes, literals, donor)
-    target = _path(root, TARGET_REL, required=False)
+    return _report(_publish_archive(root, TARGET_REL, output,
+        {"bytes": TARGET_BYTES, "sha256": TARGET_SHA256}, lambda: _target(root), ".endless2-restore-"))
+
+
+def _publish_archive(root, relative, output, record, existing, prefix):
+    target = _path(root, relative, required=False)
     temporary = None
     try:
-        with tempfile.NamedTemporaryFile(dir=target.parent, prefix=".endless2-restore-",
+        with tempfile.NamedTemporaryFile(dir=target.parent, prefix=prefix,
                                          suffix=".tmp", delete=False) as stream:
             temporary = Path(stream.name)
             _require(stream.write(output) == len(output), "Incomplete temporary ZIP write")
             stream.flush()
             os.fsync(stream.fileno())
-        _require(temporary.stat().st_size == TARGET_BYTES
-                 and _sha(temporary.read_bytes()) == TARGET_SHA256, "Temporary ZIP verification failed")
-        _path(root, TARGET_REL, required=False)
+        _require(temporary.stat().st_size == record["bytes"]
+                 and _sha(temporary.read_bytes()) == record["sha256"], "Temporary ZIP verification failed")
+        _path(root, relative, required=False)
         try:
             # Windows rename is atomic and fails when the destination exists;
             # POSIX rename can overwrite, so use an atomic no-clobber link there.
@@ -257,14 +336,33 @@ def ensure_source_archive(root):
             else:
                 os.link(temporary, target)
         except FileExistsError:
-            _require(_target(root) is not None, "Concurrent target disappeared")
-            return _report(False)
+            _require(existing() is not None, "Concurrent target disappeared")
+            return False
         except OSError as exc:
             raise SourceBundleError("Atomic no-clobber restoration is unavailable") from exc
-        return _report(True)
+        return True
     finally:
         if temporary is not None:
             temporary.unlink(missing_ok=True)
+
+
+def ensure_current_archive(root):
+    """Verify or atomically restore the current ZIP without clobbering a file."""
+    root = _root(root)
+    reference = _current_reference(root)
+    present = _current_target(root, reference)
+    if present is not None:
+        return {"status": "already-present", "restored": False,
+                **reference, "bytes": len(present)}
+    manifest_bytes = _read(root, CURRENT_MANIFEST_REL, MAX_MANIFEST_BYTES)
+    manifest = _json(manifest_bytes)
+    payload = _read(root, CURRENT_PAYLOAD_REL, MAX_DONOR_BYTES)
+    output = decode_current_transport(manifest_bytes, payload,
+        expected_target_path=reference["path"], expected_target_sha256=reference["sha256"])
+    restored = _publish_archive(root, reference["path"], output, manifest["target"],
+        lambda: _current_target(root, reference), ".native-current-restore-")
+    return {"status": "restored" if restored else "already-present", "restored": restored,
+            **reference, "bytes": len(output)}
 
 
 def _streams(data):
@@ -330,6 +428,25 @@ def make_source_transport(root):
     _require(decode_source_transport(encoded, literals, donor) == target,
              "Transport builder failed exact original ZIP round trip")
     return {MANIFEST_REL: encoded, LITERALS_REL: literals}
+
+
+def make_current_transport(root):
+    """Return two deterministic outer-only entries; leave the native ZIP exact."""
+    root = _root(root)
+    target, original = _donor(root)
+    payload = lzma.compress(original, format=lzma.FORMAT_XZ, check=lzma.CHECK_CRC64, preset=6)
+    manifest = {"format": CURRENT_FORMAT, "target": target,
+                "payload": {"path": CURRENT_PAYLOAD_REL, "bytes": len(payload), "sha256": _sha(payload)}}
+    encoded = (json.dumps(manifest, sort_keys=True, separators=(",", ":")) + "\n").encode("utf-8")
+    _require(decode_current_transport(encoded, payload, expected_target_path=target["path"],
+        expected_target_sha256=target["sha256"], expected_target_bytes=target["bytes"]) == original,
+        "Current transport builder failed exact native ZIP round trip")
+    return {CURRENT_MANIFEST_REL: encoded, CURRENT_PAYLOAD_REL: payload}
+
+
+def make_bundle_transports(root):
+    """Combine four virtual files while retaining the original two-file API."""
+    return {**make_source_transport(root), **make_current_transport(root)}
 
 
 def main():

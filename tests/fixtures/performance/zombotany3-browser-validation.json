@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "status": "functional-only",
+  "engine": {
+    "id": "0.2.6-web-zombotany3.1",
+    "jsSha256": "0ffe49ac17d6c0c73c120c30781b14c49816f12d0743cd740ab13070f73df250",
+    "wasmSha256": "06e06401578f42c4367be03159ddc0065cfe2a6ae3abef8067d503d762c91256"
+  },
+  "audioMutedThroughout": true,
+  "freshBrowserPerformancePassed": false,
+  "nativeTestsReplaceBrowserPerformance": false,
+  "proof": {
+    "path": "tests/fixtures/zombotany3-browser/proof.json",
+    "bytes": 8494,
+    "sha256": "b15056e436760872206dfc1731a3ea877c02e9007e7d6e73fb971383992df2b4"
+  }
+}

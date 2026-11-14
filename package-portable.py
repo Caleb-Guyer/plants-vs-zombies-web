@@ -31,12 +31,15 @@ SOURCE_DOWNLOADS = DIST / "source" / "source-downloads.json"
 MAX_STATIC_ASSET_BYTES = 100 * 1024 * 1024
 AMBUSH_PARENT_REFERENCE_SHA256 = "6771fc13bae02cb70dd8de12192f1f18e50302904a7ef1c784a790e6ccb51dd3"
 GUST_PARENT_REFERENCE_SHA256 = "14b5ef8f794cbfb5cb687f24cf05d23fa63620339945f139d2c5d947e9827476"
+ZOMBOTANY3_PARENT_REFERENCE_SHA256 = "82676d6180b80f15bbda731bd8eb7887f089cabd66856789ffa396be09a87b0f"
 DOUBLE_PARENT_REFERENCE_SHA256 = "a22e68371f7ad0f794b7e1f9221ed8bb45e7220df3501b8281435dcaf244a160"
 TORCH_PARENT_REFERENCE_SHA256 = "14dc78f0593db13b4e17e559061f84996be9c64f23663bd9ef7556b669fc96f6"
 AMBUSH_FOCUSED_REFERENCE_SHA256 = "9463bdd7c262c1749c57b00d25d45257951f8b8b2c8d4511cff630f9c606e9c8"
 LEGACY_SOURCE_NAME = "pvz-portable-0.2.6-web-endless.2-source.zip"
 TRANSPORT_MANIFEST = "source-transports/endless2.json"
 TRANSPORT_LITERALS = "source-transports/endless2.literals"
+CURRENT_TRANSPORT_MANIFEST = "source-transports/current.json"
+CURRENT_TRANSPORT_PAYLOAD = "source-transports/current.xz"
 REQUIRED_ROOT = (
     ".gitattributes", "README.md", "CURRENT-REQUIREMENTS.md", "PARITY-QA.md", "package.json", "server.mjs",
     "verify-port.mjs", "prepare-port.mjs",
@@ -111,6 +114,9 @@ def parent_source_input(engine):
             or any(character not in "0123456789abcdef" for character in expected)):
         raise ValueError("Invalid immediate-parent source SHA-256")
     path = DIST / "game" / reference
+    if engine.get("id") == "0.2.6-web-zombotany3.1":
+        authenticate_zombotany3_parent(engine)
+        return None
     if engine.get("id") == "0.2.6-web-gust.1":
         authenticate_gust_parent(engine)
         return None
@@ -328,7 +334,7 @@ def authenticate_double_parent(engine, current_sources=None):
 
 
 
-def authenticate_gust_parent(engine):
+def authenticate_gust_parent(engine, current_sources=None):
     """Restore all872 Double sources, then each earlier authenticated source."""
     raw = (ROOT / "tests/fixtures/gust1-parent-reference.json").read_bytes()
     if hashlib.sha256(raw).hexdigest() != GUST_PARENT_REFERENCE_SHA256:
@@ -352,43 +358,105 @@ def authenticate_gust_parent(engine):
             engine["parent"]["id"] != reference["parent"]["id"] or
             engine["parent"]["artifacts"]["sourceSha256"] != reference["parent"]["archiveSha256"] or len(reference["files"]) != 872):
         raise ValueError("Gust-bloom parent identity differs from its reviewed projection")
-    current = DIST / "game" / engine["artifacts"]["source"]
-    if hashlib.sha256(current.read_bytes()).hexdigest() != engine["artifacts"]["sourceSha256"]:
-        raise ValueError("Gust-bloom source archive differs from provenance")
+    if current_sources is None:
+        current = DIST / "game" / engine["artifacts"]["source"]
+        if hashlib.sha256(current.read_bytes()).hexdigest() != engine["artifacts"]["sourceSha256"]:
+            raise ValueError("Gust-bloom source archive differs from provenance")
+        with zipfile.ZipFile(current) as archive:
+            prefix = "gust1-candidate/source/"
+            current_sources = {name[len(prefix):]: archive.read(name) for name in archive.namelist()
+                               if name.startswith(prefix) and not name.endswith('/')}
+    added = {"src/Lawn/System/" + stem + suffix for stem in ("GustBloom", "GustChallenge", "GustBloomArt") for suffix in (".cpp", ".h")}
+    if len(current_sources) != 878 or set(current_sources) != set(reference["files"]) | added:
+        raise ValueError("Gust-bloom source graph differs from the six reviewed additions")
     restored = {}
-    with zipfile.ZipFile(current) as archive:
-        prefix = "gust1-candidate/source/"
-        source_names = {name[len(prefix):] for name in archive.namelist() if name.startswith(prefix) and not name.endswith('/')}
-        added = {"src/Lawn/System/" + stem + suffix for stem in ("GustBloom", "GustChallenge", "GustBloomArt") for suffix in (".cpp", ".h")}
-        if len(source_names) != 878 or source_names != set(reference["files"]) | added:
-            raise ValueError("Gust-bloom source graph differs from the six reviewed additions")
-        for name, pin in reference["files"].items():
-            if (not name or name.startswith('/') or any(part in ('','.','..') for part in name.split('/')) or "\\" in name or ':' in name):
-                raise ValueError("Unsafe Gust-bloom projection input")
-            data = archive.read(prefix + name)
-            delta = reference["reverseEdits"].get(name)
-            if delta:
-                if len(data) != delta["currentBytes"] or hashlib.sha256(data).hexdigest() != delta["currentSha256"]:
-                    raise ValueError("Changed Gust-bloom projection input: " + name)
-                previous = len(data) + 1
-                for edit in reversed(delta["edits"]):
-                    offset = edit["offset"]
-                    before = base64.b64decode(edit["beforeBase64"], validate=True)
-                    after = base64.b64decode(edit["afterBase64"], validate=True)
-                    if (not isinstance(offset,int) or offset < 0 or offset >= previous or offset + len(before) > previous or
-                            offset + len(before) > len(data) or data[offset:offset+len(before)] != before):
-                        raise ValueError("Invalid Gust-bloom parent reverse edit: " + name)
-                    data = data[:offset] + after + data[offset+len(before):]
-                    previous = offset
-            if len(data) != pin["bytes"] or hashlib.sha256(data).hexdigest() != pin["sha256"]:
-                raise ValueError("Complete Double parent source failed: " + name)
-            restored[name] = data
+    for name, pin in reference["files"].items():
+        if (not name or name.startswith('/') or any(part in ('','.','..') for part in name.split('/')) or "\\" in name or ':' in name):
+            raise ValueError("Unsafe Gust-bloom projection input")
+        data = current_sources[name]
+        delta = reference["reverseEdits"].get(name)
+        if delta:
+            if len(data) != delta["currentBytes"] or hashlib.sha256(data).hexdigest() != delta["currentSha256"]:
+                raise ValueError("Changed Gust-bloom projection input: " + name)
+            previous = len(data) + 1
+            for edit in reversed(delta["edits"]):
+                offset = edit["offset"]
+                before = base64.b64decode(edit["beforeBase64"], validate=True)
+                after = base64.b64decode(edit["afterBase64"], validate=True)
+                if (not isinstance(offset,int) or offset < 0 or offset >= previous or offset + len(before) > previous or
+                        offset + len(before) > len(data) or data[offset:offset+len(before)] != before):
+                    raise ValueError("Invalid Gust-bloom parent reverse edit: " + name)
+                data = data[:offset] + after + data[offset+len(before):]
+                previous = offset
+        if len(data) != pin["bytes"] or hashlib.sha256(data).hexdigest() != pin["sha256"]:
+            raise ValueError("Complete Double parent source failed: " + name)
+        restored[name] = data
     authenticate_double_parent(engine["parent"], restored)
     return restored
 
 
+def authenticate_zombotany3_parent(engine, current_sources=None):
+    """Restore all878 Gust sources, then each earlier authenticated source."""
+    raw = (ROOT / "tests/fixtures/zombotany3-parent-reference.json").read_bytes()
+    if hashlib.sha256(raw).hexdigest() != ZOMBOTANY3_PARENT_REFERENCE_SHA256:
+        raise ValueError("Zombotany3 parent projection differs from the reviewed fixture")
+    reference = json.loads(raw)
+    expected_changed = {
+        "CMake/ProjectVersion.cmake", "src/ConstEnums.h", "src/Lawn/Board.cpp", "src/Lawn/Challenge.cpp",
+        "src/Lawn/Plant.cpp", "src/Lawn/Projectile.cpp", "src/Lawn/Zombie.cpp", "src/LawnApp.cpp",
+        "src/Lawn/System/BonusChallenge.h", "src/Lawn/System/GustBloom.cpp", "src/Lawn/System/ReanimationLawn.cpp",
+        "src/Lawn/Widget/ChallengeScreen.cpp", "src/Lawn/Widget/ChallengeScreen.h",
+    }
+    if (set(reference.get("changedPaths", [])) != expected_changed or set(reference.get("reverseEdits", {})) != expected_changed):
+        raise ValueError("Zombotany3 changes exceed the reviewed integration paths")
+    if (engine["id"] != "0.2.6-web-zombotany3.1" or reference["schemaVersion"] != 1 or
+            reference["current"] != {"id": engine["id"], "sourceCount": 882} or
+            reference["parent"]["id"] != "0.2.6-web-gust.1" or
+            reference["parent"]["archivePrefix"] != "gust1-candidate/source/" or
+            reference["parent"]["archiveSha256"] != "10acb269866b175ed4836c2c64c6a79dc86a11241de9e48c7be54f8f89808be8" or
+            engine["parent"]["id"] != reference["parent"]["id"] or
+            engine["parent"]["artifacts"]["sourceSha256"] != reference["parent"]["archiveSha256"] or len(reference["files"]) != 878):
+        raise ValueError("Zombotany3 parent identity differs from its reviewed projection")
+    if current_sources is None:
+        current = DIST / "game" / engine["artifacts"]["source"]
+        if hashlib.sha256(current.read_bytes()).hexdigest() != engine["artifacts"]["sourceSha256"]:
+            raise ValueError("Zombotany3 source archive differs from provenance")
+        with zipfile.ZipFile(current) as archive:
+            prefix = "zombotany3-candidate/source/"
+            current_sources = {name[len(prefix):]: archive.read(name) for name in archive.namelist()
+                               if name.startswith(prefix) and not name.endswith('/')}
+    added = {"src/Lawn/System/" + stem + suffix for stem in ("Zombotany3", "Zombotany3Art") for suffix in (".cpp", ".h")}
+    if len(current_sources) != 882 or set(current_sources) != set(reference["files"]) | added:
+        raise ValueError("Zombotany3 source graph differs from the four reviewed additions")
+    restored = {}
+    for name, pin in reference["files"].items():
+        if (not name or name.startswith('/') or any(part in ('','.','..') for part in name.split('/')) or "\\" in name or ':' in name):
+            raise ValueError("Unsafe Zombotany3 projection input")
+        data = current_sources[name]
+        delta = reference["reverseEdits"].get(name)
+        if delta:
+            if len(data) != delta["currentBytes"] or hashlib.sha256(data).hexdigest() != delta["currentSha256"]:
+                raise ValueError("Changed Zombotany3 projection input: " + name)
+            previous = len(data) + 1
+            for edit in reversed(delta["edits"]):
+                offset = edit["offset"]
+                before = base64.b64decode(edit["beforeBase64"], validate=True)
+                after = base64.b64decode(edit["afterBase64"], validate=True)
+                if (not isinstance(offset,int) or offset < 0 or offset >= previous or offset + len(before) > previous or
+                        offset + len(before) > len(data) or data[offset:offset+len(before)] != before):
+                    raise ValueError("Invalid Zombotany3 parent reverse edit: " + name)
+                data = data[:offset] + after + data[offset+len(before):]
+                previous = offset
+        if len(data) != pin["bytes"] or hashlib.sha256(data).hexdigest() != pin["sha256"]:
+            raise ValueError("Complete Gust parent source failed: " + name)
+        restored[name] = data
+    authenticate_gust_parent(engine["parent"], restored)
+    return restored
+
+
 def nested_source_inputs(engine, paths, baseline):
-    """Include current, parent and upstream; exact UI references ship as fixtures."""
+    """Nest upstream/needed parents; restore the exact current ZIP before checks."""
+    source_bundle_helpers().ensure_source_archive(ROOT)
     parent = parent_source_input(engine)
     # Retain the independently authenticated complete Board/SeedPacket files,
     # without nesting an entire historical engine archive for two references.
@@ -398,8 +466,10 @@ def nested_source_inputs(engine, paths, baseline):
             or hashlib.sha256(native_ui.read_bytes()).hexdigest()
             != "d9861034849eca9d637197aa78a1bae4c90b5656db91ca102d8c903100031edd"):
         raise ValueError("Authenticated native I, Zombie UI fixture is missing or changed")
-    if engine.get("id") in {"0.2.6-web-scrap.1", "0.2.6-web-ambush.1", "0.2.6-web-torch.1", "0.2.6-web-double.1", "0.2.6-web-gust.1"}:
-        if engine["id"] == "0.2.6-web-gust.1":
+    if engine.get("id") in {"0.2.6-web-scrap.1", "0.2.6-web-ambush.1", "0.2.6-web-torch.1", "0.2.6-web-double.1", "0.2.6-web-gust.1", "0.2.6-web-zombotany3.1"}:
+        if engine["id"] == "0.2.6-web-zombotany3.1":
+            authenticate_zombotany3_parent(engine)
+        elif engine["id"] == "0.2.6-web-gust.1":
             authenticate_gust_parent(engine)
         elif engine["id"] == "0.2.6-web-double.1":
             authenticate_double_parent(engine)
@@ -415,11 +485,12 @@ def nested_source_inputs(engine, paths, baseline):
             raise ValueError("Historical Endless.2 comparator archive differs")
         # The exact comparator is restored from shared compressed streams. Its
         # original ZIP bytes remain in the full repository/runtime distribution.
-        return [baseline, paths["source"]]
-    return list(dict.fromkeys([baseline, *([parent] if parent else []), paths["source"]]))
+        return [baseline]
+    return list(dict.fromkeys([baseline, *([parent] if parent else [])]))
 
 
 def validate_engine_inputs():
+    source_bundle_helpers().ensure_source_archive(ROOT)
     engine, paths, baseline = engine_inputs()
     parent_source_input(engine)  # Fail before packaging writes if the parent is missing or changed.
     for path in [*paths.values(), baseline]:
@@ -470,9 +541,18 @@ def regenerate_source_downloads(transport_entries=None):
     """Deterministic inventory from existing archive bytes; no inferred URL or hash."""
     engine, paths, baseline = engine_inputs()
     nested = nested_source_inputs(engine, paths, baseline)
-    transport_entries = transport_entries if transport_entries is not None else source_bundle_helpers().make_source_transport(ROOT)
-    if set(transport_entries) != {TRANSPORT_MANIFEST, TRANSPORT_LITERALS}:
+    transport_entries = transport_entries if transport_entries is not None else source_bundle_helpers().make_bundle_transports(ROOT)
+    if set(transport_entries) != {TRANSPORT_MANIFEST, TRANSPORT_LITERALS,
+                                 CURRENT_TRANSPORT_MANIFEST, CURRENT_TRANSPORT_PAYLOAD}:
         raise ValueError("Unexpected source-archive transport entries")
+    current_zip = source_bundle_helpers().decode_current_transport(
+        transport_entries[CURRENT_TRANSPORT_MANIFEST], transport_entries[CURRENT_TRANSPORT_PAYLOAD],
+        expected_target_path=paths["source"].relative_to(ROOT).as_posix(),
+        expected_target_sha256=engine["artifacts"]["sourceSha256"],
+        expected_target_bytes=paths["source"].stat().st_size)
+    # The outer inspector sees an opaque XZ file, so retain the same complete
+    # native-member/path/private-file/CRC audit before writing any transport.
+    inspect_zip(current_zip, paths["source"].name)
     previous = {}
     if SOURCE_DOWNLOADS.is_file():
         previous = {item["name"]: item for item in json.loads(SOURCE_DOWNLOADS.read_text("utf-8"))["archives"]}
@@ -516,9 +596,22 @@ def regenerate_source_downloads(transport_entries=None):
         "schema_version": 1,
         "current_engine": engine["id"],
         "upstream_tag": engine["upstream"]["tag"],
-        "layout": "Site-source nests current corresponding source, the upstream baseline, independently pinned complete Double.1, Torch.1, Ambush.1, Scrap.1 and Endless.3 source projections, the native I, Zombie UI reference and the current full patch. The historical Endless.2 comparator ZIP is restored byte-for-byte before offline checks from compressed byte ranges shared with the current native ZIP and a literal payload. Every original comparator file and archive checksum is preserved. Each archives[].url is its original download location: current and upstream source stay on Pages; historical source archives use immutable GitHub repository URLs and remain in the full runtime distribution. Linked native test artifacts are losslessly packed; the included decoder restores their exact pinned bytes.",
+        "layout": "Site-source nests the upstream baseline, independently pinned complete Gust.1, Double.1, Torch.1, Ambush.1, Scrap.1 and Endless.3 source projections, the native I, Zombie UI reference and the current full patch. Before offline checks, the exact current native source ZIP is restored from a bounded lossless XZ transport, then the historical Endless.2 comparator ZIP is restored from compressed byte ranges shared with that current ZIP and a literal payload. Every original native archive byte, member and checksum is preserved. Each archives[].url is its original download location: current and upstream source stay on Pages; historical source archives use immutable GitHub repository URLs and remain in the full runtime distribution. Linked native test artifacts are losslessly packed; the included decoder restores their exact pinned bytes.",
         "nested_sources": [path.name for path in nested],
         "restored_sources": [{
+            "name": paths["source"].name,
+            "path": paths["source"].relative_to(ROOT).as_posix(),
+            "bytes": paths["source"].stat().st_size,
+            "sha256": engine["artifacts"]["sourceSha256"],
+            "automatic_before_checks": True,
+            "encoding": "xz",
+            "manifest": {"path": CURRENT_TRANSPORT_MANIFEST,
+                         "bytes": len(transport_entries[CURRENT_TRANSPORT_MANIFEST]),
+                         "sha256": hashlib.sha256(transport_entries[CURRENT_TRANSPORT_MANIFEST]).hexdigest()},
+            "compressed_payload": {"path": CURRENT_TRANSPORT_PAYLOAD,
+                                   "bytes": len(transport_entries[CURRENT_TRANSPORT_PAYLOAD]),
+                                   "sha256": hashlib.sha256(transport_entries[CURRENT_TRANSPORT_PAYLOAD]).hexdigest()},
+        }, {
             "name": LEGACY_SOURCE_NAME,
             "path": "dist/source/" + LEGACY_SOURCE_NAME,
             "bytes": 40424282,
@@ -675,7 +768,7 @@ def main():
         if not path.is_file():
             raise ValueError(f"Required distribution input is missing: {path}")
     collect_dist()  # Validate every served input before updating generated metadata.
-    transport_entries = source_bundle_helpers().make_source_transport(ROOT)
+    transport_entries = source_bundle_helpers().make_bundle_transports(ROOT)
     regenerate_source_downloads(transport_entries)
     dist_sources = collect_dist(source_bundle=True)
     write_archive(SITE_SOURCE, sources + dist_sources, transport_entries)

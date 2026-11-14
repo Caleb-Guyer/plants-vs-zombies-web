@@ -1,11 +1,13 @@
 // SPDX-License-Identifier: MIT
-// Restore only the exact pinned historical ZIP from the offline source transport.
+// Restore/verify the exact current ZIP before its pinned historical comparator.
 import assert from 'node:assert/strict';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {spawnSync} from 'node:child_process';
 
 export function ensureSourceArchive(root = new URL('../', import.meta.url)) {
+  // Always invoke the supported bootstrap: an existing historical comparator
+  // does not imply that the current ZIP has already been restored or verified.
   const directory = path.resolve(root instanceof URL ? fileURLToPath(root) : root);
   const decoder = fileURLToPath(new URL('../source-bundle.py', import.meta.url));
   const code = 'import runpy,sys;from pathlib import Path;runpy.run_path(sys.argv[1])["ensure_source_archive"](Path(sys.argv[2]))';

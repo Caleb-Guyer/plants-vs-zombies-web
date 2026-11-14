@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Exact published Double assertions plus narrowly reviewed Gust collaborators.
 import assert from 'node:assert/strict';
-import {CURRENT_ENGINE_ID,CURRENT_SOURCE_COUNT,GUST_SOURCE_ADDITIONS,DOUBLE_ENGINE_ID,
+import {GUST_ENGINE_ID as CURRENT_ENGINE_ID,GUST_SOURCE_COUNT as CURRENT_SOURCE_COUNT,GUST_SOURCE_ADDITIONS,DOUBLE_ENGINE_ID,
  DOUBLE_ARCHIVE_SHA256,GUST_PARENT_TEST_INPUTS_SHA256,verifyGustRetainedParentInputs}
  from './native-release-context.mjs';
 

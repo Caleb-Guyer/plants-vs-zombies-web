@@ -5,7 +5,7 @@ import fs from 'node:fs';
 import {CURRENT_ENGINE_ID,CURRENT_SOURCE_COUNT,CURRENT_OBJECT_COUNT,AMBUSH_ARCHIVE_SHA256,reconstructAmbushSources,
  TORCH_ENGINE_ID,TORCH_ARCHIVE_SHA256,CURRENT_TORCH_RETENTION_SHA256,DOUBLE_PARENT_TEST_INPUTS_SHA256,
  verifyDoubleRetainedParentInputs,torchSourceReader,reconstructTorchFocusedEvidence,
- DOUBLE_ENGINE_ID,DOUBLE_ARCHIVE_SHA256,GUST_PARENT_TEST_INPUTS_SHA256,verifyPublishedDoubleAdapter}
+ GUST_ENGINE_ID,GUST_ARCHIVE_SHA256,ZOMBOTANY3_PARENT_TEST_INPUTS_SHA256,verifyPublishedDoubleAdapter}
  from './native-release-context.mjs';
 
 // The complete seventh-build matrix includes the corrected native card and
@@ -329,13 +329,13 @@ export async function verifyTorchbearer({report,read,sha,engine,fullRunReport,pr
  assert(acceptedContractPins.has(sha(contractBytes)),
   'The complete current O2 Torchbearer/Fire Drill/earned-Endless matrix has not been accepted');
  const contract=JSON.parse(contractBytes);
- const adapterBytes=await read('tests/gust1-torch-retention.json');
+ const adapterBytes=await read('tests/z3-torch-retention.json');
  assert.equal(sha(adapterBytes),CURRENT_TORCH_RETENTION_SHA256);
  assert.equal(report.retentionAdapterSha256,CURRENT_TORCH_RETENTION_SHA256);
  const adapter=JSON.parse(adapterBytes);
- fields(adapter,{schemaVersion:1,parentEngineId:DOUBLE_ENGINE_ID,parentArchiveSha256:DOUBLE_ARCHIVE_SHA256,
+ fields(adapter,{schemaVersion:1,parentEngineId:GUST_ENGINE_ID,parentArchiveSha256:GUST_ARCHIVE_SHA256,
   engineId:CURRENT_ENGINE_ID,historicalContractSha256:sha(contractBytes),sourceCount:CURRENT_SOURCE_COUNT,
-  productionObjectCount:CURRENT_OBJECT_COUNT,all60CasesFresh:true,parentSnapshotManifestSha256:GUST_PARENT_TEST_INPUTS_SHA256});
+  productionObjectCount:CURRENT_OBJECT_COUNT,all60CasesFresh:true,parentSnapshotManifestSha256:ZOMBOTANY3_PARENT_TEST_INPUTS_SHA256});
  await verifyPublishedDoubleAdapter({read,sha,adapter,family:'torch'});
  assert.deepEqual(Object.keys(adapter.fixtureOverrides),['tests/test-torchbearer.py']);
  const retained=await verifyDoubleRetainedParentInputs({read,sha});

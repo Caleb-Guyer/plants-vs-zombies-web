@@ -7,6 +7,7 @@ import {spawnSync} from 'node:child_process';
 import {test} from 'node:test';
 import {restoreNativeArtifactPack} from './native-artifact-pack.mjs';
 import {verifyDoubleAgentReportIdentity,verifyDoubleAgentCaseLog} from './double-agent-verification.mjs';
+import {ensureSourceArchive} from './source-bundle.mjs';
 
 const require = createRequire(import.meta.url), vendor = {exports: {}};
 new Function('module', 'exports', 'require', fs.readFileSync(new URL('../dist/vendor/jszip.min.js', import.meta.url), 'utf8'))
@@ -132,12 +133,17 @@ function sealedDoubleEvidence() {
   sealedDouble ??= (async () => {
     const engineUrl = new URL('../dist/game/engine-provenance.json', import.meta.url);
     const engine = JSON.parse(fs.readFileSync(engineUrl, 'utf8'));
-    assert(['0.2.6-web-double.1','0.2.6-web-gust.1'].includes(engine.id));
+    assert(['0.2.6-web-double.1','0.2.6-web-gust.1','0.2.6-web-zombotany3.1'].includes(engine.id));
     assert.equal(engine.artifacts.source, '../source/pvz-portable-'+engine.id+'-source.zip');
+    ensureSourceArchive(new URL('../', import.meta.url));
     const archiveBytes = fs.readFileSync(new URL(engine.artifacts.source, engineUrl));
     assert.equal(sha(archiveBytes), engine.artifacts.sourceSha256);
     const zip = await JSZip.loadAsync(archiveBytes);
-    const entry = zip.file(engine.id==='0.2.6-web-double.1'?'double1-candidate/tests/double-agent-results.json':'gust1-candidate/tests/gust1-retained-parent/double-agent-results.json');
+    const prefix=engine.id==='0.2.6-web-double.1'?'double1-candidate/':
+      engine.id==='0.2.6-web-gust.1'?'gust1-candidate/':
+      engine.id==='0.2.6-web-zombotany3.1'?'zombotany3-candidate/':null;
+    assert(prefix,'Reviewed native archive family');
+    const entry = zip.file(prefix+(engine.id==='0.2.6-web-double.1'?'tests/double-agent-results.json':'tests/gust1-retained-parent/double-agent-results.json'));
     assert(entry);
     const bytes = Buffer.from(await entry.async('uint8array'));
     assert.equal(sha(bytes), '185ddbaae03ac20287552b9276064a800b1447d4a8d6cefdd58c9cc3a7e2d55c');

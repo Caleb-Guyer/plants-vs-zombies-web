@@ -13,7 +13,7 @@ const RUNTIME=['audio-controls.js','bundled-assets.js','game-assets/manifest.jso
 const json=bytes=>JSON.parse(Buffer.from(bytes).toString('utf8').replace(/^\uFEFF/,''));
 const safe=name=>{assert(typeof name==='string'&&name&&!name.startsWith('/')&&!/[\\:\x00-\x1f]/.test(name));assert(name.split('/').every(p=>p&&p!=='.'&&p!=='..'));return name;};
 const fields=(object,expected)=>{for(const [key,value]of Object.entries(expected))assert.deepEqual(object[key],value,key);};
-export async function verifyGustBrowserEvidence({availability,currentEngine,read,sha,Zip}){
+export async function verifyGustBrowserEvidence({availability,currentEngine,read,sha,Zip,historical=false,historicalNormalBytes,historicalBuildBytes}){
  assert(ACCEPTED_PROOF_SHA256,'Current Gust-bloom browser observations have not been reviewed');
  const release=json(fs.readFileSync(new URL('./fixtures/gust1-release.json',import.meta.url)));
  assert.equal(release.id,ENGINE);assert.equal(currentEngine.id,ENGINE);
@@ -48,7 +48,11 @@ export async function verifyGustBrowserEvidence({availability,currentEngine,read
  }
  assert.deepEqual(Object.keys(proof.runtimeFiles).sort(),RUNTIME);
  for(const [name,record]of Object.entries(proof.runtimeFiles)){
-  assert.deepEqual(Object.keys(record).sort(),['bytes','sha256']);pin({...record,path:'dist/'+safe(name)});
+  assert.deepEqual(Object.keys(record).sort(),['bytes','sha256']);
+  if(historical&&['game/pvz-portable.js','game/pvz-portable.wasm'].includes(name))continue;
+  const path=historical&&['index.html','index-port.html','runtime.js'].includes(name)?
+   'tests/fixtures/performance/historical/gust1-published/'+name:'dist/'+safe(name);
+  pin({...record,path});
  }
  assert.equal(proof.runtimeFiles['game/pvz-portable.js'].sha256,engine.jsSha256);
  assert.equal(proof.runtimeFiles['game/pvz-portable.wasm'].sha256,engine.wasmSha256);
@@ -63,15 +67,28 @@ export async function verifyGustBrowserEvidence({availability,currentEngine,read
  for(const key of ['width','height','deviceScaleFactor'])assert(Number.isFinite(proof.viewport[key])&&proof.viewport[key]>0);
  assert(proof.canvas.cssWidth>0&&proof.canvas.cssHeight>0&&proof.canvas.cssWidth<=proof.viewport.width&&proof.canvas.cssHeight<=proof.viewport.height);
  assert(Math.abs(proof.canvas.cssWidth*600-proof.canvas.cssHeight*800)<=800);
- const sourceName=currentEngine.artifacts.source;assert(/^\.\.\/source\/[A-Za-z0-9._-]+\.zip$/.test(sourceName));
- const sourceBytes=Buffer.from(read('dist/'+safe(sourceName.slice(3))));assert.equal(sha(sourceBytes),currentEngine.artifacts.sourceSha256);
- const source=await Zip.loadAsync(sourceBytes);const receipt=source.file('gust1-candidate/logs/build-result.json');assert(receipt);
- const normalBytes=Buffer.from(await receipt.async('uint8array'));assert.equal(sha(normalBytes),proof.normalBuildReceiptSha256);
+ let normalBytes,nativeBuild;
+ if(historical){
+  assert.equal(currentEngine.artifacts.sourceSha256,'10acb269866b175ed4836c2c64c6a79dc86a11241de9e48c7be54f8f89808be8');
+  const focused=fs.readFileSync(new URL('./fixtures/gust1-focused-reference.json',import.meta.url));
+  assert.equal(sha(focused),'5f213369ad0e86e5e15c2f75e3eb267243350ac7f310df1efc55dddbc0a4e793');
+  normalBytes=Buffer.from(historicalNormalBytes);
+  assert.deepEqual(normalBytes,Buffer.from(json(focused).files['logs/build-result.json'].base64,'base64'));
+  const buildBytes=Buffer.from(historicalBuildBytes);
+  assert.equal(sha(buildBytes),'bf7c846ad820d8fb785ad199957b7b7a77566b40043e2885023a6e844bc490d3');
+  nativeBuild=json(buildBytes);
+ }else{
+  const sourceName=currentEngine.artifacts.source;assert(/^\.\.\/source\/[A-Za-z0-9._-]+\.zip$/.test(sourceName));
+  const sourceBytes=Buffer.from(read('dist/'+safe(sourceName.slice(3))));assert.equal(sha(sourceBytes),currentEngine.artifacts.sourceSha256);
+  const source=await Zip.loadAsync(sourceBytes);const receipt=source.file('gust1-candidate/logs/build-result.json');assert(receipt);
+  normalBytes=Buffer.from(await receipt.async('uint8array'));
+  const sourceBuild=source.file('gust1-candidate/tests/gust-bloom-build.json');assert(sourceBuild);
+  nativeBuild=json(await sourceBuild.async('uint8array'));
+ }
+ assert.equal(sha(normalBytes),proof.normalBuildReceiptSha256);
  const normal=json(normalBytes);fields(normal,{status:'PASS',exitCode:0,sourceFiles:878,sourceUnchangedDuringBuild:true});
  for(const [kind,name]of [['js','game/pvz-portable.js'],['wasm','game/pvz-portable.wasm']])
   assert.deepEqual(normal.outputs['build/pvz-portable.'+kind],proof.runtimeFiles[name]);
- const sourceBuild=source.file('gust1-candidate/tests/gust-bloom-build.json');assert(sourceBuild);
- const nativeBuild=json(await sourceBuild.async('uint8array'));
  const origin=json(pin(proof.nativeProfileOrigin.result));
  const originLog=pin(proof.nativeProfileOrigin.rawLog);
  fields(proof.nativeProfileOrigin,{newPlantUnlockAssigned:false,standardCampaignUnlocks:'native test setup'});
@@ -101,6 +118,7 @@ export async function verifyGustBrowserEvidence({availability,currentEngine,read
   }
  }
  assert(inspections>=4);assert.equal(actions.at(-1).action,'close');assert.equal(actions.at(-1).status,'ok');
- return {status:'PASS current muted Gust-bloom browser functionality',screenshots:Object.keys(proof.screenshots).length,
-  runtimeFiles:RUNTIME.length,earnedNativeProfileImported:true,browserEarnedWins:0,freshBrowserPerformancePassed:false};
+ return {status:historical?'PASS historical Gust-bloom browser functionality':'PASS current muted Gust-bloom browser functionality',screenshots:Object.keys(proof.screenshots).length,
+  runtimeFiles:RUNTIME.length,executablePayloadsChecked:historical?0:2,executableIdentitiesCrossChecked:2,
+  earnedNativeProfileImported:true,browserEarnedWins:0,freshBrowserPerformancePassed:false};
 }

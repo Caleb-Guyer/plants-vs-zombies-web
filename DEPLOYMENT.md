@@ -1,5 +1,17 @@
 # GitHub Pages release: Caleb-Guyer/plants-vs-zombies-web
 
+## Zombotany 3 artifacts
+
+Engine: `0.2.6-web-zombotany3.1`; immediate parent: `0.2.6-web-gust.1`. JavaScript SHA-256: `0ffe49ac17d6c0c73c120c30781b14c49816f12d0743cd740ab13070f73df250`. WebAssembly SHA-256: `06e06401578f42c4367be03159ddc0065cfe2a6ae3abef8067d503d762c91256`.
+
+Current native source: `pvz-portable-0.2.6-web-zombotany3.1-source.zip`, SHA-256 `71d73740aaab996a7cdba2565ecf7aa60841e70184386ede3ab967f33766cdf9`. Full patch: `web-zombotany3.1.patch`; incremental patch: `gust1-to-zombotany3.patch`. The lossless pack restores 32 current executable files and two immutable historical comparators. The source retains all 878 exact Gust parent files through a bounded independently pinned projection and 146 selected original parent test files through an exact snapshot. Native saved-object layouts remain unchanged.
+
+The separate `native-zombotany-art.json` describes original 1/2 aliases and the new night card; the twenty-card `native-bonus-art.json` remains byte-exact. The site-source download transports the unchanged native ZIP as bounded XZ and restores its exact bytes automatically before restoring the historical Endless.2 comparator. The directly served native source ZIP and all its members keep their original checksums. The existing manual GitHub Pages workflow runs 19 offline integration suites and all 29 native suites with audio disabled before staging and deployment. Publication and public-byte verification have separate receipts. No browser win or new timing verdict is claimed.
+
+## Prior release records
+
+The sections below retain their earlier release-time scope; prior accepted gameplay behavior remains required.
+
 ## Gust-bloom artifacts
 
 Engine: `0.2.6-web-gust.1`. JavaScript SHA-256: `dc3163631f5a1beb45580cf0d00c04ee8c1a417fa1856f257cf1f44c40b98c68`. WebAssembly SHA-256: `f1d6be2fb180a17dd616929e47fff7e51a74e0b7d04ae2531483f7b64e8b529a`.
