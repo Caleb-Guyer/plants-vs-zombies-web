@@ -7,7 +7,7 @@ import {GUST_ENGINE_ID as CURRENT_ENGINE_ID,GUST_SOURCE_COUNT as CURRENT_SOURCE_
  from './native-release-context.mjs';
 import {authenticateZombotany3RetainedFamily}from'./zombotany3-retained-native.mjs';
 const z3Projection=Symbol('authenticated new production before the sealed Gust gameplay oracle');
-const Z3_GUST_RETENTION_SHA256='7ee382ad23dd56eb534766bcedc3d69bf9491c4f7554f9c5e8e9311472d8a677';
+const Z3_GUST_RETENTION_SHA256='bd43cf32ba2584281c3cc0420126739bdf76538a4039e7a4d0d65b804ad9f298';
 
 // One reviewed O2 run: 48 actual native cases, 24 speed pairs and 11,782,636
 // checks against the unchanged normal-production receipt 7cf4b25a... . Raw
@@ -104,8 +104,8 @@ export async function verifyGustBloomSourceBounds({read,sha,engine}){
 }
 
 export async function verifyGustBloomBuildBindings({report,read,sha,engine,fullRunReport,productionBuildBytes}){
- const z3=engine.id==='0.2.6-web-zombotany3.2';assert(z3||engine.id===CURRENT_ENGINE_ID);
- const sourceCount=z3?882:878,objectCount=z3?149:147;
+ const z3=engine.id==='0.2.6-web-zombotany45.1';assert(z3||engine.id===CURRENT_ENGINE_ID);
+ const sourceCount=z3?886:878,objectCount=z3?151:147;
  fields(report,{execution:'complete-production-engine',optimization:'O2',engineId:engine.id,mode:92,profileIndex:91,
   productionObjectCount:objectCount,failures:0,exitCode:0,presentationControlsAvailable:true,developmentNoArt:false});
  assert.equal(CURRENT_SOURCE_COUNT,878);assert.equal(CURRENT_OBJECT_COUNT,147);
@@ -256,11 +256,11 @@ export function verifyGustBloomEarnedCollection(earned){
 
 export async function verifyGustBloom(options){
  const {report,read,sha,engine,fullRunReport,productionBuildBytes,currentArtBytes,previousArtBytes}=options;
- if(engine.id==='0.2.6-web-zombotany3.2'){
+ if(engine.id==='0.2.6-web-zombotany45.1'){
   const historic=await authenticateZombotany3RetainedFamily({...options,family:'gust-bloom',adapterSha256:Z3_GUST_RETENTION_SHA256,
    verifyBuild:verifyGustBloomBuildBindings,verifyCase:verifyGustBloomCaseLog});
   const result=await verifyGustBloom({...options,...historic,[z3Projection]:z3Projection});
-  return {...result,currentProductionObjects:149,retainedCases:48};
+  return {...result,currentProductionObjects:151,retainedCases:48};
  }
  const projected=options[z3Projection]===z3Projection;
  const bytes=await read('tests/gust-bloom-results.json'),authenticated=verifyGustBloomReportIdentity({reportBytes:bytes,sha});

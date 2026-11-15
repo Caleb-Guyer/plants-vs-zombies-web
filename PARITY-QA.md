@@ -1,5 +1,21 @@
 # Browser parity and QA record
 
+## Zombotany 4 and 5
+
+The frozen build passes **30 current native suites, 97,909,535 primary assertions and zero failures**, plus 29,323,448 separately counted Endless late checks. All 17 complete-engine drivers bind the same 886-source/151-object normal Release build. The 13 retained focused suites contribute 58,837 checks.
+
+The new 56-case matrix covers fog and roof at 1x/2x and two seeds: forty ordinary winning cases, eight genuine no-input loss cases and eight explicitly synthetic controls. Retry, replay and native trophy credits are checked separately. Both modes test native Save/Continue during active combat in the final wave, after all authored zombies have spawned, with the saved state graph preserved and no victory credit at the checkpoint. These saves do not establish preservation of future spawn randomness. Synthetic controls earn no wins. The prior 36-case Zombotany 3 matrix and all fifteen earlier gameplay matrices also execute against this build. Original Zombotany 3 code/art and all eight saved-class/serializer files remain byte-exact to the published 3.2 release.
+
+Current nine-capture browser functionality check: **NOT RUN**. The official browser tool could not establish its required browser URL/policy precondition. No current browser interaction, capture, save-continuation pass or earned browser win is claimed; the pinned blocking record remains separate from actual native test and raster evidence.
+
+No fresh browser performance verdict is claimed for this release. Earlier Torch and Zombotany 3.2 timing/browser records retain their original capture-time scope; native tests and native offscreen rasters do not establish compositor FPS, GPU completion or universal smoothness.
+
+Earlier failed strategy attempts, the corrected head/collar gap and the roof-pot preregistration correction remain separate evidence. They are not counted as passing final cases.
+
+## Prior release records (Zombotany 3.2 and earlier)
+
+These records retain their earlier release-time scope and original evidence.
+
 ## Zombotany 3.2 verification
 
 The frozen .2 build passes **29 current native suites, 88,127,823 primary assertions and zero failures**, plus 29,323,442 separately counted Endless late checks. All 16 complete-engine drivers use the same 882-source/149-object production build. The retained focused block keeps all 58,834 earlier assertions and its one existing catalog iteration (58,835).

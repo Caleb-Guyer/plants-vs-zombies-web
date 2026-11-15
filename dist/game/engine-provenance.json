@@ -1,5 +1,5 @@
 {
-  "id": "0.2.6-web-zombotany3.2",
+  "id": "0.2.6-web-zombotany45.1",
   "upstream": {
     "tag": "0.2.6",
     "commit": "396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
@@ -7,16 +7,16 @@
     "officialJsSha256": "0f2d7425190e49c762f6700b68b080086e3dcb8f2dc5e9724de42ce9fb508573"
   },
   "artifacts": {
-    "jsSha256": "0ffe49ac17d6c0c73c120c30781b14c49816f12d0743cd740ab13070f73df250",
-    "wasmSha256": "8921eb268458f039a48d59cb071fb4c206dc059ca556aba0ab49340e2191f2d5",
-    "source": "../source/pvz-portable-0.2.6-web-zombotany3.2-source.zip",
-    "sourceSha256": "9e4186372f80a9b59d119f8bf9cb0217e17a072d5fa178ea9f96cd120a4b5efb",
-    "patch": "../source/web-zombotany3.2.patch",
-    "patchSha256": "f747385eaa964b0243d7b20adc9037e52fc038a2359640f6613429c4f4787ab2"
+    "jsSha256": "836dd1600e3c8fe4e120f3ab452b1eebf7c119f9c0b4694c680828a00f3ec89c",
+    "wasmSha256": "ac1a59cbc8acb71911923c7f670fd837f3b5e752512e3c2c9118c276f1e731f6",
+    "source": "../source/pvz-portable-0.2.6-web-zombotany45.1-source.zip",
+    "sourceSha256": "3961bb9b472f27e3661d645bf9ab89865f9fd9ffa795a5462f31b959175151e5",
+    "patch": "../source/web-zombotany45.1.patch",
+    "patchSha256": "0dfa173278a807a8dbc5eb9d57acb6f2f841a100815937e3ce9fa4d1864b879c"
   },
   "buildRecord": "../source/build-provenance.json",
-  "change": "Fixes Zombotany3 lethal hits, affected older saves and original unlock hints on family aliases.",
-  "caption": "with Zombotany 3.",
+  "change": "Adds Zombotany4 fog and Zombotany5 roof to the original family page.",
+  "caption": "with Zombotany 3, 4 and 5.",
   "gameAssetsIncluded": true,
   "assetManifest": "../game-assets/manifest.json",
   "assetBundleId": "sha256:b468b22439430ca4a36035b886a74bd831a86b2a1a36c39d3203396f5b75d093",
@@ -1556,7 +1556,7 @@
   },
   "parentScope": "Historical Gust.1 metadata; all current results are recorded separately.",
   "limits": [
-    "Fixes exact-lethal Puff/Fume damage, removes affected zero-health plants when old Zombotany3 saves continue, and restores original unlock hints on family aliases. No saved object layouts change.",
+    "Adds Zombotany4 fog/pool and Zombotany5 roof with native seed selection, authored waves, original reanimation art and original counters. Existing gameplay and saved object layouts are retained.",
     "All retained native cases run against the current production objects. Synthetic controls are separately labeled. Browser observations and timing measurements are recorded separately; native tests do not certify browser/compositor performance. Historical Torch observations remain historical."
   ]
 }

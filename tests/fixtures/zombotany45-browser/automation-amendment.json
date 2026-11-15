@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "id": "zombotany45-browser-automation-amendment",
+  "stage": "preregistered-before-first-zombotany45-browser-interaction",
+  "engineId": "0.2.6-web-zombotany45.1",
+  "originalPreregistration": {
+    "path": "tests/fixtures/zombotany45-browser/preregistration.json",
+    "bytes": 3367,
+    "sha256": "9c866e49f3e6f3697db26467c84558c3e45e4482f6ecf71f89baa441e041ef75"
+  },
+  "reason": "The developer removed the direct CUA tool namespace before new45 browser interactions. The official Computer Use Node @oai/sky provider is available and will supply actual native browser input, UI Automation observations and screenshots.",
+  "automationProvider": "sky",
+  "transportOnlyChanges": {
+    "input": "Official Computer Use sky native mouse/keyboard and native file dialogs",
+    "inspection": "Actual browser address/window and UI Automation mute toggle, backed by native screenshots; no DOM JavaScript or game-global inspection",
+    "screenshotFormats": [
+      "png",
+      "jpeg"
+    ],
+    "screenshotSource": "Unmodified bytes from the official Screenshot.url data URL",
+    "nativeCanvasSizeSource": "Pinned original800x600 runtime; actual displayed game bounds recorded from native screenshot/UI Automation"
+  },
+  "unchangedRequirements": {
+    "captureKeys": [
+      "family",
+      "fog-chooser",
+      "fog-play",
+      "fog-continue",
+      "roof-chooser",
+      "roof-play",
+      "roof-continue",
+      "fog-attack",
+      "roof-attack"
+    ],
+    "fogSun": [
+      50,
+      0
+    ],
+    "roofSun": [
+      50,
+      0
+    ],
+    "fogSpeed": "2x",
+    "roofSpeed": "1x",
+    "bothModesAutomaticSaveContinue": true,
+    "bothActualNativeAttackCheckpointsImported": true,
+    "browserEarnedWins": 0,
+    "audioMutedThroughout": true,
+    "performanceProbeLoaded": false,
+    "freshBrowserPerformanceMeasured": false,
+    "runtimeFilesPinned": 20,
+    "nativeOriginCreditAtCurrentModeExport": 0,
+    "genericJavaScriptOrGameStateInjection": false
+  },
+  "profilePrerequisiteClarification": "Zombotany4 completion must be genuinely earned by the ordinary native fog run; its exact post-award profile is the browser setup and the roof native run input. Existing3 credit is also from the pinned real completed .2 profile. No challenge completion credits are assigned for this browser proof.",
+  "reviewRequiredBeforeAcceptance": true
+}

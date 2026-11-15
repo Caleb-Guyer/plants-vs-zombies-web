@@ -3,17 +3,17 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 
-export const CURRENT_ENGINE_ID = '0.2.6-web-zombotany3.2';
-export const CURRENT_SOURCE_COUNT = 882;
-export const CURRENT_OBJECT_COUNT = 149;
+export const CURRENT_ENGINE_ID = '0.2.6-web-zombotany45.1';
+export const CURRENT_SOURCE_COUNT = 886;
+export const CURRENT_OBJECT_COUNT = 151;
 export const GUST_ENGINE_ID = '0.2.6-web-gust.1';
 export const GUST_SOURCE_COUNT = 878;
 export const GUST_OBJECT_COUNT = 147;
 export const GUST_ARCHIVE_SHA256 = '10acb269866b175ed4836c2c64c6a79dc86a11241de9e48c7be54f8f89808be8';
-export const ZOMBOTANY3_PARENT_REFERENCE_SHA256 = '5e7b3859aede4d32eba82ea23c5379646fc38a74198caf09be742b64af77151e';
+export const ZOMBOTANY3_PARENT_REFERENCE_SHA256 = '6e7a79762d0bc992210cd4a185ee6295aaf63f478eb35d1e9b98dd1315631678';
 export const GUST_FOCUSED_REFERENCE_SHA256 = '5f213369ad0e86e5e15c2f75e3eb267243350ac7f310df1efc55dddbc0a4e793';
 export const ZOMBOTANY3_PARENT_TEST_INPUTS_SHA256 = '8f6a5558869df5e204496ac89ed5467534fa55b7ce96cb05e1d0eb457a11d52c';
-export const ZOMBOTANY3_SOURCE_ADDITIONS = ['Zombotany3','Zombotany3Art']
+export const ZOMBOTANY3_SOURCE_ADDITIONS = ['Zombotany3','Zombotany3Art','Zombotany45','Zombotany45Art']
  .flatMap(name=>['src/Lawn/System/'+name+'.cpp','src/Lawn/System/'+name+'.h']);
 export const DOUBLE_ENGINE_ID = '0.2.6-web-double.1';
 export const DOUBLE_SOURCE_COUNT = 872;
@@ -58,10 +58,10 @@ const reviewedDoubleRetentionPins = Object.freeze({
   vase:'05025af9fa6976e55aa6d158d875733fac80dde9739449f7c6341468785e71b3',
   torch:'ddfbb060d29ff59dc04770b7c068f4b1f1973a1f14b1d94adde02cb44f0461b7',
 });
-export const CURRENT_ENDLESS_RETENTION_SHA256 = '231859a2fde971d422c1a5ddb9a62a2a4c7b838f7b890413a37c7b848e5e35e4';
-export const CURRENT_SCRAP_RETENTION_SHA256 = '7956c1497ad94fff670609493fa9514211033ca4a8d6ac79cef68846b7101b65';
-export const CURRENT_VASE_RETENTION_SHA256 = 'c953746b5cd50858ab1a411f1d7bb5d74fd9523eda882b92356e68a75472b05b';
-export const CURRENT_TORCH_RETENTION_SHA256 = '2c96c5d0cb3fcad5776ddf18fdcce7f678e2f672359410632dac981cab76dfae';
+export const CURRENT_ENDLESS_RETENTION_SHA256 = 'c13a37d86bcdd6b6ef6cd35110bbb38a99587a470f4ce0503a2c2b823ac46df8';
+export const CURRENT_SCRAP_RETENTION_SHA256 = '7c93b361c85de9884737bcfac686eba37fde88e86286d09ad58293567b1d8390';
+export const CURRENT_VASE_RETENTION_SHA256 = '2b72d7682c985f6cc75ddc1be76f60cc2bcf1b68a41cf0e9490aba158b0d4c6f';
+export const CURRENT_TORCH_RETENTION_SHA256 = '08c1054367fc0fe4b2be5a5d121a7f2a93e1a326c05f7f6ac94403fb9270df43';
 export const PARENT_TEST_INPUTS_SHA256 = '7d6c2749a2d9d1ae462e964447e017f4fcd0e3146909de210ddacaab06be8c82';
 export const AMBUSH_SOURCE_ADDITIONS = ['src/Lawn/System/VaseAmbush.cpp', 'src/Lawn/System/VaseAmbush.h',
   'src/Lawn/System/VaseAmbushPresentation.cpp', 'src/Lawn/System/VaseAmbushPresentation.h'];

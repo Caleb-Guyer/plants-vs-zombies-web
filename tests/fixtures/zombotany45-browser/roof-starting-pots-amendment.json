@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "id": "zombotany45-browser-native-roof-pots-correction",
+  "stage": "preregistered-before-first-zombotany45-browser-interaction",
+  "engineId": "0.2.6-web-zombotany45.1",
+  "originalPreregistration": {
+    "path": "tests/fixtures/zombotany45-browser/preregistration.json",
+    "bytes": 3367,
+    "sha256": "9c866e49f3e6f3697db26467c84558c3e45e4482f6ecf71f89baa441e041ef75"
+  },
+  "automationAmendment": {
+    "path": "tests/fixtures/zombotany45-browser/automation-amendment.json",
+    "bytes": 2368,
+    "sha256": "a4e22a2c01bcc268c7596219eb7865b0aed5e284e6f5629ea4c76f50b6eff5de"
+  },
+  "reason": "The original browser plan assumed five starting roof pots. The actual complete native intro places the original three columns of five pots. Preserve that native behavior and correct the test assumption; do not alter the native intro to fit the mistaken expectation.",
+  "changedAssumption": {
+    "path": "modes.roof.startingPots",
+    "before": 5,
+    "after": 15
+  },
+  "nativeOpening": {
+    "mode": 95,
+    "seedType": 33,
+    "count": 15,
+    "columns": [
+      0,
+      1,
+      2
+    ],
+    "rows": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "liveZombies": 0,
+    "wave": 0,
+    "tick": 1
+  },
+  "observedBeforeSourceCorrection": {
+    "path": "tests/fixtures/zombotany45-browser/native-roof-opening-observation.log",
+    "bytes": 24023,
+    "sha256": "66dc6e83e8d3d3c3c811f732131414b5396a0851d0beba03cf4092bf61730aab"
+  },
+  "originalPassingProductionBuildReceiptSha256": "687bd83bdb2579998c62551385f78a420b2cc0cab683d2ecb3cf3ecad9e2c93b",
+  "unchangedRequirements": {
+    "captureKeys": [
+      "family",
+      "fog-chooser",
+      "fog-play",
+      "fog-continue",
+      "roof-chooser",
+      "roof-play",
+      "roof-continue",
+      "fog-attack",
+      "roof-attack"
+    ],
+    "startingSun": 50,
+    "selectedSeeds": [
+      1,
+      33,
+      32,
+      34,
+      3,
+      2
+    ],
+    "planting": {
+      "sunBefore": 50,
+      "sunAfter": 0,
+      "seeds": [
+        1
+      ],
+      "nativeCells": [
+        [
+          0,
+          4
+        ]
+      ],
+      "sunflowerOnStartingPot": true
+    },
+    "roofSpeedLabel": "1x",
+    "fogSpeedLabel": "2x",
+    "bothModesAutomaticSaveContinue": true,
+    "bothActualNativeAttackCheckpointsImported": true,
+    "browserEarnedWins": 0,
+    "audioMutedThroughout": true
+  },
+  "reviewRequiredBeforeAcceptance": true
+}

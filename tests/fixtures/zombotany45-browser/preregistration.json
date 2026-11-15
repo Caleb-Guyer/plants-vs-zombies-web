@@ -1,0 +1,172 @@
+{
+  "schemaVersion": 1,
+  "id": "zombotany45-current-browser-functionality",
+  "stage": "preregistered-before-new-browser-interactions",
+  "engineId": "0.2.6-web-zombotany45.1",
+  "sourceCount": 886,
+  "productionObjectCount": 151,
+  "modes": {
+    "fog": {
+      "mode": 94,
+      "profileIndex": 93,
+      "background": 4,
+      "rows": 6,
+      "normalChooser": true,
+      "startingSun": 50,
+      "selectedSeeds": [
+        9,
+        8,
+        13,
+        10,
+        16,
+        25
+      ],
+      "planting": {
+        "sunBefore": 50,
+        "sunAfter": 0,
+        "seeds": [
+          9,
+          16,
+          8
+        ],
+        "nativeCells": [
+          [
+            1,
+            5
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            2
+          ]
+        ],
+        "puffOnLilyPad": true,
+        "skySunCollected": false
+      },
+      "speedLabel": "2x"
+    },
+    "roof": {
+      "mode": 95,
+      "profileIndex": 94,
+      "background": 5,
+      "rows": 5,
+      "normalChooser": true,
+      "startingSun": 50,
+      "startingPots": 5,
+      "selectedSeeds": [
+        1,
+        33,
+        32,
+        34,
+        3,
+        2
+      ],
+      "planting": {
+        "sunBefore": 50,
+        "sunAfter": 0,
+        "seeds": [
+          1
+        ],
+        "nativeCells": [
+          [
+            0,
+            4
+          ]
+        ],
+        "sunflowerOnStartingPot": true
+      },
+      "speedLabel": "1x"
+    }
+  },
+  "family": {
+    "page": 5,
+    "modes": [
+      16,
+      32,
+      93,
+      94,
+      95
+    ],
+    "profileIndices": [
+      15,
+      31,
+      92,
+      93,
+      94
+    ],
+    "cardRects": [
+      [
+        38,
+        93,
+        104,
+        115
+      ],
+      [
+        193,
+        93,
+        104,
+        115
+      ],
+      [
+        348,
+        93,
+        104,
+        115
+      ],
+      [
+        503,
+        93,
+        104,
+        115
+      ],
+      [
+        658,
+        93,
+        104,
+        115
+      ]
+    ],
+    "unlock4AfterMode": 93,
+    "unlock5AfterMode": 94,
+    "originalAliasesAndTooltipBehaviorPreserved": true,
+    "tipsBelowCards": false
+  },
+  "captureKeys": [
+    "family",
+    "fog-chooser",
+    "fog-play",
+    "fog-continue",
+    "roof-chooser",
+    "roof-play",
+    "roof-continue",
+    "fog-attack",
+    "roof-attack"
+  ],
+  "requirements": {
+    "audioMutedThroughout": true,
+    "testingQuery": "?testing=1",
+    "freshLocalhostOrigin": true,
+    "fileFreeStartup": true,
+    "actualNativeMouseKeysAndDOMFileChooserOnly": true,
+    "genericJavaScriptOrGameStateInjection": false,
+    "normalSeedChoosers": true,
+    "bothModesAutomaticSaveContinue": true,
+    "bothNativeActualMidAttackExportsImported": true,
+    "nativeExportCurrentModeCreditAtExport": 0,
+    "syntheticAttackCheckpoint": false,
+    "browserEarnedWins": 0,
+    "performanceProbeLoaded": false,
+    "freshBrowserPerformanceMeasured": false,
+    "runtimeFilesPinned": 20,
+    "originalCanvas": [
+      800,
+      600
+    ],
+    "allNineImagesActualCUAJPEG": true,
+    "reviewRequiredBeforeAcceptance": true
+  },
+  "scope": "Current muted functional browser evidence only. Original native tests authenticate attack behavior and exports; no browser win, timing, GPU or delivered-frame FPS claim. Earlier Zombotany3.2 performance remains historical."
+}

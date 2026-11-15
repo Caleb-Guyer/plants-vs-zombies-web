@@ -3,7 +3,7 @@
 // unchanged, separately sealed Gust-era gameplay oracles to retained modes.
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {CURRENT_ENGINE_ID,CURRENT_SOURCE_COUNT,CURRENT_OBJECT_COUNT,GUST_ENGINE_ID,
+import {CURRENT_ENGINE_ID,CURRENT_SOURCE_COUNT,CURRENT_OBJECT_COUNT,GUST_ENGINE_ID,GUST_SOURCE_COUNT,
  GUST_ARCHIVE_SHA256,GUST_FOCUSED_REFERENCE_SHA256,ZOMBOTANY3_PARENT_TEST_INPUTS_SHA256,
  reconstructGustSources,verifyZombotany3RetainedParentInputs}from'./native-release-context.mjs';
 const families=Object.freeze({
@@ -69,8 +69,10 @@ export async function authenticateZombotany3RetainedFamily(options){
  const metadata=['engineId','productionObjectCount','productionBuildReceiptSha256','sourceSha256',
   'productionObjectSha256','generatedHarnessSha256','builderSha256','runnerSha256','testArtifactSha256','testInputSha256'];
  for(const name of metadata){assert(Object.hasOwn(original,name)&&Object.hasOwn(report,name));normalized[name]=structuredClone(original[name]);}
- assert.equal(report.checks,original.checks+4,'Only four added production-source assertions change this retained total');
- normalized.checks-=4;
+ assert.equal(Object.keys(original.sourceSha256).length,GUST_SOURCE_COUNT);
+ const addedSourceAssertions=CURRENT_SOURCE_COUNT-GUST_SOURCE_COUNT;
+ assert.equal(report.checks,original.checks+addedSourceAssertions,'Only the authenticated production-source count delta changes this retained total');
+ normalized.checks-=addedSourceAssertions;
  if(Object.hasOwn(original,'retentionAdapterSha256'))normalized.retentionAdapterSha256=original.retentionAdapterSha256;
  else delete normalized.retentionAdapterSha256;
  sameNative(normalized,original);

@@ -51,3 +51,8 @@ tests/fixtures/zombotany3-2-browser/** -text whitespace=cr-at-eol
 tests/fixtures/performance/zombotany3-2-browser-validation.json -text
 tests/fixtures/performance/zombotany3-2-current-validation.json -text
 tests/fixtures/performance/zombotany3-2-current/** -text whitespace=cr-at-eol
+# Keep historical .2 bytes and new Zombotany 4/5 test receipts exact.
+tests/fixtures/zombotany3-2-history/** -text whitespace=cr-at-eol
+tests/fixtures/zombotany45-release.json -text
+tests/fixtures/zombotany45-browser/** -text whitespace=cr-at-eol
+tests/fixtures/performance/zombotany45-browser-validation.json -text

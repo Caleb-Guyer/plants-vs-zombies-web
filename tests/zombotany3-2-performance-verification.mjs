@@ -45,7 +45,7 @@ function checkClockOnly(record,{manifest,label,scenario,observedContext}){
  return stats;
 }
 
-export async function verifyZombotany3PerformanceEvidence({availability,currentEngine,read,sha}){
+export async function verifyZombotany3PerformanceEvidence({availability,currentEngine,read,sha,historical=false}){
  assert(REVIEWED_PROOF_SHA256,'Current Zombotany 3.2 performance observations have not been reviewed');
  assert.equal(currentEngine.id,ENGINE);
  const pinned=async record=>{
@@ -134,10 +134,14 @@ export async function verifyZombotany3PerformanceEvidence({availability,currentE
  assert.deepEqual(Object.keys(proof.runtimeFiles).sort(),RUNTIME);
  for(const [name,pin]of Object.entries(proof.runtimeFiles)){
   assert.deepEqual(Object.keys(pin).sort(),['bytes','sha256']);integer(pin.bytes,1);digest(pin.sha256);
-  const bytes=Buffer.from(await read('dist/'+safe(name)));assert.equal(bytes.length,pin.bytes);assert.equal(sha(bytes),pin.sha256,name);
+  if(!historical || !['game/pvz-portable.js','game/pvz-portable.wasm'].includes(name)){
+   const bytes=Buffer.from(await read('dist/'+safe(name)));assert.equal(bytes.length,pin.bytes);assert.equal(sha(bytes),pin.sha256,name);
+  }
  }
  for(const [name,pin]of Object.entries(manifest.files)){
-  safe(name);const bytes=Buffer.from(await read('dist/'+name));assert.equal(bytes.length,pin.baseBytes);assert.equal(sha(bytes),pin.baseSha256,name);
+  safe(name);if(!historical || !['game/pvz-portable.js','game/pvz-portable.wasm'].includes(name)){
+   const bytes=Buffer.from(await read('dist/'+name));assert.equal(bytes.length,pin.baseBytes);assert.equal(sha(bytes),pin.baseSha256,name);
+  }
   if(name!=='save-storage.js'){assert.equal(pin.servedBytes,pin.baseBytes);assert.equal(pin.servedSha256,pin.baseSha256);}
  }
  for(const kind of ['js','wasm'])assert.equal(proof.runtimeFiles['game/pvz-portable.'+kind].sha256,engine[kind+'Sha256']);
@@ -182,7 +186,7 @@ export async function verifyZombotany3PerformanceEvidence({availability,currentE
   if(row.action==='inspect'&&row.status==='ok'){inspected++;assert(Array.isArray(row.result.mute)&&row.result.mute.length>0&&row.result.mute.every(m=>m.pressed==='true'));}
  }
  assert(inspected>=6);assert.equal(actions.at(-1).action,'close');assert.equal(actions.at(-1).status,'ok');
- return {status:'PASS current Zombotany 3.2 performance evidence',engine:ENGINE,measured:true,passed:true,
-  freshBrowserPerformanceMeasured:true,freshBrowserPerformancePassed:true,activeWindows:4,pausedControls:2,
+ return {status:historical?'PASS historical Zombotany 3.2 performance evidence':'PASS current Zombotany 3.2 performance evidence',engine:ENGINE,measured:true,passed:true,historical,
+  freshBrowserPerformanceMeasured:!historical,freshBrowserPerformancePassed:!historical,executablePayloadsChecked:historical?0:2,activeWindows:4,pausedControls:2,
   minimumObservationMs:15000,runtimeFiles:20,browserEarnedWins:0,startingActorCounts:[20,40],populationsMayEvolve:true,gpuTimingMeasured:false,presentedFrameFPSMeasured:false};
 }

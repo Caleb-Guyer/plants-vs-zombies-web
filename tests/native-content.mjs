@@ -18,6 +18,7 @@ import {DOUBLE_SOURCE_ADDITIONS,DOUBLE_PARENT_REFERENCE_SHA256,reconstructTorchS
 import {verifyGustFocusedRetention,GUST_FOCUSED_CHECK_EXTENSIONS} from './gust-focused-retention-verification.mjs';
 import {verifyZombotany3FocusedRetention,ZOMBOTANY3_FOCUSED_CHECK_EXTENSIONS} from './zombotany3-focused-retention-verification.mjs';
 import {verifyZombotany3} from './zombotany3-verification.mjs';
+import {verifyZombotany45} from './zombotany45-verification.mjs';
 import {verifyGustBloom} from './gust-bloom-verification.mjs';
 import {verifyDoubleAgent} from './double-agent-verification.mjs';
 import {verifyDoubleFocusedRetention,DOUBLE_FOCUSED_CHECK_EXTENSIONS} from './double-focused-retention-verification.mjs';
@@ -288,8 +289,8 @@ const vaseFocusedCheckExtensions = {'bonus-challenge':7, 'bonus-completion':77, 
 const focusedCheckExtensions = {'bonus-challenge':7, 'bonus-completion':96, 'native-layout':1019};
 const retainedSuites = [...Object.keys(retainedChecks), 'care-fatigue', 'care-full-run', 'chain-reaction', 'rally-zombie', 'rally-raid', 'lights-out', 'garlic-run', 'bungee-business', 'cob-cannon-command', 'pool-panic', 'pool-panic-endless'];
 assert.equal(retainedSuites.length, 23);
-const suites = [...retainedSuites, 'scrap-yard', 'vase-ambush', 'torchbearer', 'double-agent', 'gust-bloom', 'zombotany3'];
-assert.equal(suites.length, 29);
+const suites = [...retainedSuites, 'scrap-yard', 'vase-ambush', 'torchbearer', 'double-agent', 'gust-bloom', 'zombotany3', 'zombotany45'];
+assert.equal(suites.length, 30);
 const reports = new Map();
 let checks = 0;
 for (const name of suites) {
@@ -644,6 +645,8 @@ await verifyGustBloom({report:reports.get('gust-bloom'),read:readCurrent,sha,eng
 await verifyZombotany3({report:reports.get('zombotany3'),read:readCurrent,sha,engine,fullRunReport,
  productionBuildBytes:fullRunProductionBuildBytes,
  familyArtBytes:fs.readFileSync(new URL('content/native-zombotany-art.json',dist))});
+await verifyZombotany45({report:reports.get('zombotany45'),read:readCurrent,sha,engine,fullRunReport,
+ productionBuildBytes:fullRunProductionBuildBytes});
 const careBalance = reports.get('intensive-care').balanceModel;
 assert.equal(careBalance.kind, 'native healing/fatigue capacity bound; not a battle clear');
 assert(careBalance.allBedsHealHpPerSecond > careBalance.maximumCrewFatigueHpPerSecond);
@@ -2199,7 +2202,7 @@ if (process.argv.includes('--run-native')) {
     }
     for (const name of suites) {
       const args = [path.join(temporary, 'tests/test-' + name + '.py'), '--native'];
-      if (['care-full-run','chain-reaction','rally-zombie','rally-raid','lights-out','garlic-run','bungee-business','cob-cannon-command','pool-panic','pool-panic-endless','scrap-yard','vase-ambush','torchbearer','double-agent','gust-bloom','zombotany3'].includes(name)) args.push('--asset-root', fileURLToPath(new URL('game-assets/', dist)));
+      if (['care-full-run','chain-reaction','rally-zombie','rally-raid','lights-out','garlic-run','bungee-business','cob-cannon-command','pool-panic','pool-panic-endless','scrap-yard','vase-ambush','torchbearer','double-agent','gust-bloom','zombotany3','zombotany45'].includes(name)) args.push('--asset-root', fileURLToPath(new URL('game-assets/', dist)));
       const run = spawnSync('python', args, {encoding: 'utf8'});
       assert.equal(run.status, 0, (run.error?.message || '') + run.stdout + run.stderr);
       const actual = JSON.parse(fs.readFileSync(path.join(temporary, 'tests/' + name + '-results.json')));
@@ -2208,7 +2211,7 @@ if (process.argv.includes('--run-native')) {
       assert.equal(actual.exitCode, 0);
       assert.match(actual.status, /^PASS/);
       assert.deepEqual(actual.sourceSha256, reports.get(name).sourceSha256);
-      if(['care-full-run','chain-reaction','rally-zombie','rally-raid','lights-out','garlic-run','bungee-business','cob-cannon-command','pool-panic','pool-panic-endless','scrap-yard','vase-ambush','torchbearer','double-agent','gust-bloom','zombotany3'].includes(name)) {
+      if(['care-full-run','chain-reaction','rally-zombie','rally-raid','lights-out','garlic-run','bungee-business','cob-cannon-command','pool-panic','pool-panic-endless','scrap-yard','vase-ambush','torchbearer','double-agent','gust-bloom','zombotany3','zombotany45'].includes(name)) {
         assert.equal(actual.productionObjectCount,CURRENT_OBJECT_COUNT);
         assert.deepEqual(actual.productionObjectSha256,fullRunReport.productionObjectSha256);
         assert.equal(actual.productionBuildReceiptSha256,sha(fullRunProductionBuildBytes));
@@ -2266,8 +2269,11 @@ if (process.argv.includes('--run-native')) {
         read:async input=>fs.readFileSync(path.join(temporary,input)),sha,engine,fullRunReport,
         productionBuildBytes:fullRunProductionBuildBytes,
         familyArtBytes:fs.readFileSync(new URL('content/native-zombotany-art.json',dist))});
+      if(name==='zombotany45') await verifyZombotany45({report:actual,
+        read:async input=>fs.readFileSync(path.join(temporary,input)),sha,engine,fullRunReport,
+        productionBuildBytes:fullRunProductionBuildBytes});
     }
-    console.log(`PASS all ${checks} assertions across 29 native suites, including complete headless Care, Chain, Rally, Raid, Lights Out, Garlic Run, Bungee Business, Cob Cannon Command, Pool Panic, Pool Panic Endless, Scrap Yard, Vase Ambush and Torchbearer scenarios on CI.`);
+    console.log(`PASS all ${checks} assertions across 30 native suites, including complete headless Zombotany 3, 4 and 5 and retained challenge scenarios on CI.`);
   } finally {
     const resolved = fs.realpathSync(temporary);
     assert.equal(path.dirname(resolved), temporaryRoot);

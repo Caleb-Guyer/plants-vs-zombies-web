@@ -1,5 +1,5 @@
 {
-  "id": "0.2.6-web-zombotany3.2",
+  "id": "0.2.6-web-zombotany45.1",
   "upstream": {
     "tag": "0.2.6",
     "commit": "396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
@@ -7,80 +7,80 @@
     "officialJsSha256": "0f2d7425190e49c762f6700b68b080086e3dcb8f2dc5e9724de42ce9fb508573"
   },
   "sourceArchive": {
-    "path": "pvz-portable-0.2.6-web-zombotany3.2-source.zip",
-    "bytes": 39796910,
-    "sha256": "9e4186372f80a9b59d119f8bf9cb0217e17a072d5fa178ea9f96cd120a4b5efb",
-    "crc32": "44c339da",
-    "entries": 3297,
-    "uncompressedBytes": 113618745
+    "path": "pvz-portable-0.2.6-web-zombotany45.1-source.zip",
+    "bytes": 41089503,
+    "sha256": "3961bb9b472f27e3661d645bf9ab89865f9fd9ffa795a5462f31b959175151e5",
+    "crc32": "ebda3940",
+    "entries": 3411,
+    "uncompressedBytes": 117916473
   },
   "artifacts": [
     {
       "path": "build/pvz-portable.js",
       "bytes": 210620,
-      "sha256": "0ffe49ac17d6c0c73c120c30781b14c49816f12d0743cd740ab13070f73df250",
-      "crc32": "78f40de2"
+      "sha256": "836dd1600e3c8fe4e120f3ab452b1eebf7c119f9c0b4694c680828a00f3ec89c",
+      "crc32": "99bad175"
     },
     {
       "path": "build/pvz-portable.wasm",
-      "bytes": 7896211,
-      "sha256": "8921eb268458f039a48d59cb071fb4c206dc059ca556aba0ab49340e2191f2d5",
-      "crc32": "e3ddd8e6"
+      "bytes": 7917218,
+      "sha256": "ac1a59cbc8acb71911923c7f670fd837f3b5e752512e3c2c9118c276f1e731f6",
+      "crc32": "b66c1fdc"
     },
     {
       "path": "build/ProjectVersion.h",
-      "bytes": 196,
-      "sha256": "b12e1796062a428ab06725ebdf596602376335f12b67d8047ef1c14ada88b393",
-      "crc32": "272b4d85"
+      "bytes": 197,
+      "sha256": "370a0d61fbf750553dd43e9047641a44f94cfb7a11b1e0529424096a46d64760",
+      "crc32": "52417fd7"
     }
   ],
-  "sourceFiles": 882,
-  "sourceBytes": 25945460,
+  "sourceFiles": 886,
+  "sourceBytes": 25984329,
   "sourceDeltaVsGust1": [
     {
       "path": "CMake/ProjectVersion.cmake",
       "beforeSha256": "26008a9cacf3cd0ed0b414b3454c426216f569aaa27acef1f004b35964a748c9",
-      "afterSha256": "ef5d97df547106cec0e8d8d10984c7432b4dd7deb7059e98506201ea246300a5"
+      "afterSha256": "70309dddaf841b1f4724e93b2a2449e3543538f4e3039896df7b06ea138600f0"
     },
     {
       "path": "src/ConstEnums.h",
       "beforeSha256": "438ab3fdcb66517ea5ac0b78b5ec2019aea349710bd306f9cb2d4b8a81116526",
-      "afterSha256": "5a845f32795899196efadd7222dc50bb2d4ca6fbc933b53f3569f1e43c1cd1fb"
+      "afterSha256": "b964f598c832d914d2530172818604d0966c046e98b20786593e7c365f01e1ab"
     },
     {
       "path": "src/Lawn/Board.cpp",
       "beforeSha256": "c6eeee9e25dbb6b7cd80c9130854b3acdb25d3f8aafa7faaba20937b0d752e80",
-      "afterSha256": "8d2013099af79d62145bd37ec5fe969401b9fdb7101107bda260408c7d1a9079"
+      "afterSha256": "61793a42d37470d6b61c6cfa0a66e1cd973b5757696bd66fa0ee825cd8ba6a21"
     },
     {
       "path": "src/Lawn/Challenge.cpp",
       "beforeSha256": "ef939a57921d08ce94fe9f5fa961fc8bd125fb14a480db3f2fd3583f124f30f9",
-      "afterSha256": "72c1b39edae61ead63e3164c857b93591be4bf9e6eee7c7c8e8e14ff1f7bb6fb"
+      "afterSha256": "9da370ca63f7c6b24dbf3dc776adab0da53d8b2b56a2740c823cf37d5b8d4d89"
     },
     {
       "path": "src/Lawn/Plant.cpp",
       "beforeSha256": "3f42e181b424fb63836a5df7a82b04dff8c5d49afa6e2f04913e97305591c7a6",
-      "afterSha256": "7318ca9b096784779ad498928a1fd8e80b944fd2cfcaf3ba399495948cf1a3f5"
+      "afterSha256": "ab780ca3d506f98f2c1119fc14a62eb4e558422c358ee9dda3e8f6b306e404c9"
     },
     {
       "path": "src/Lawn/Projectile.cpp",
       "beforeSha256": "833b74d3c70bdbe5c722736238410693517c9206f91b0f1e5bdcd8c8d0b585f6",
-      "afterSha256": "86267be74326d05295261cf8f49acd452a1491e336cb17e3dc00608f05eac0ad"
+      "afterSha256": "1e0553e5ef513948d62e74f6ffd7705b5405f406005d1b7715e5de5f4a8cac52"
     },
     {
       "path": "src/Lawn/System/BonusChallenge.h",
       "beforeSha256": "e43726b5714e62af9f38742e868399e7eff9fe95d6dd61bc4104685ca33cfb74",
-      "afterSha256": "e75ae176b242d49687527eada56053d4410a259af6f1836cc10a41ba9931357f"
+      "afterSha256": "aa8c95a115d5b30f932ffaceb76c2b9fa94514b0354a2d505c879534325eca13"
     },
     {
       "path": "src/Lawn/System/GustBloom.cpp",
       "beforeSha256": "24022ef150e933d6dba775b971bba849da85524924d5aab28fa75fdc1acd74f3",
-      "afterSha256": "d0ada402a671cbdee87e8b4d0d52fe5ac16bba101ed86aedbe3b46582de25e34"
+      "afterSha256": "9a51fc2ef9c03573d3e51dec00b3c156b5f7705bc1a48c6034e73d463ec56627"
     },
     {
       "path": "src/Lawn/System/ReanimationLawn.cpp",
       "beforeSha256": "52c282fb29390f93f591c9cb5c1c939598db1ce0f1047f405ac63b556b6a1ea4",
-      "afterSha256": "ff5db8af765ef35006d8761d0973aed6fff6917fdd0a60a7d083cbf84d77cf42"
+      "afterSha256": "1e99776c3420a6321a3cad56fc550ee7866536379ce2c797085a6b08c320e502"
     },
     {
       "path": "src/Lawn/System/Zombotany3.cpp",
@@ -103,9 +103,29 @@
       "afterSha256": "da13426bf53399b6c1a266feb773bd8b8ea5706134829688ffeabc517223478d"
     },
     {
+      "path": "src/Lawn/System/Zombotany45.cpp",
+      "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "afterSha256": "ab7b5a96668d537d03e37341d329b46e52cf0c175bb3c49a33702ae3a50baf7b"
+    },
+    {
+      "path": "src/Lawn/System/Zombotany45.h",
+      "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "afterSha256": "39ce61058b473fbc8532b3cf7b7bd126d160182b8200e3b4fa4e869cad6307c8"
+    },
+    {
+      "path": "src/Lawn/System/Zombotany45Art.cpp",
+      "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "afterSha256": "3e37ea4d7a3d3291c37c1bdecf0d493e0c643f6db6755dd2338f2988e67bcdee"
+    },
+    {
+      "path": "src/Lawn/System/Zombotany45Art.h",
+      "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "afterSha256": "6e2d57e8a6320eaade93b0120ab397932927361390b351b443f507294e88ed91"
+    },
+    {
       "path": "src/Lawn/Widget/ChallengeScreen.cpp",
       "beforeSha256": "45d815925688da9555b5ff83d4a8feb8c2fb33d44204bcde2dd540697c378c89",
-      "afterSha256": "14059ce7e8a3f05c933c4a2896a1fcda437363343ed495b7f5ebb1c6939872ad"
+      "afterSha256": "2a873d1551d96078378ee8d439bdaff4aa4fd1f45d6586fc208abda3cfc4764e"
     },
     {
       "path": "src/Lawn/Widget/ChallengeScreen.h",
@@ -115,31 +135,31 @@
     {
       "path": "src/Lawn/Zombie.cpp",
       "beforeSha256": "e877bb973d1c7074b4431cef767d818a133fea8c08a1e775560ff43c42d1bd47",
-      "afterSha256": "af344bc532ac3ae9b3ca5b9922210aae1b6b63ff15df57b52984ba8cda6b4474"
+      "afterSha256": "5d2b8009f9f6b0c95cc36b9eb8e116d12624d951db1637c3b509bc699ce76b5c"
     },
     {
       "path": "src/LawnApp.cpp",
       "beforeSha256": "a5fcc35f5f51f49c71149fb31b73ef41040dec662e7c1219e865cef6c26d828d",
-      "afterSha256": "3648cd5b3432f7f1da4e9be3f5ada64dbddf41a05971b33716e498b6efcbe7eb"
+      "afterSha256": "e63a381e363d15e272ea8f878cc45e59aaa878797642c8a0cfebef3d81b58340"
     }
   ],
-  "compiledVersionHeader": "// Generated from CMake/ProjectVersion.h.in by CMake; do not edit.\n#pragma once\n\n#define PVZP_VERSION \"0.2.6-web-zombotany3.2\"\n#define PVZP_BUILD_NUMBER 1\n#define PVZP_COMMIT_DATE \"unknown\"\n",
+  "compiledVersionHeader": "// Generated from CMake/ProjectVersion.h.in by CMake; do not edit.\n#pragma once\n\n#define PVZP_VERSION \"0.2.6-web-zombotany45.1\"\n#define PVZP_BUILD_NUMBER 1\n#define PVZP_COMMIT_DATE \"unknown\"\n",
   "nativeArtifactPacking": {
     "format": "pvz-native-artifacts-xz-v1",
-    "rawFiles": 34,
-    "currentFiles": 32,
+    "rawFiles": 36,
+    "currentFiles": 34,
     "historicalFiles": 2,
     "metadata": {
       "path": "tests/native-artifacts.json",
-      "bytes": 6632,
-      "sha256": "502ee1f8e206c1910d7582aae3f979e300030ae2279bacba45295d093ea27fd1",
-      "crc32": "4b68d067"
+      "bytes": 7005,
+      "sha256": "a37d71649eb3ed781db3601668b1dbe7728d01b447302ff7d742128480ad72fe",
+      "crc32": "158227b8"
     },
     "archive": {
       "path": "tests/native-artifacts.xz",
-      "bytes": 6666836,
-      "sha256": "1173acf36914f4e599d905a9a7f74ecc429050045e735d48227078a8fe1afa72",
-      "crc32": "911cee60"
+      "bytes": 7004428,
+      "sha256": "fcade67c75ab0284010d0e1cd0d46db13d8b9b1e199dfe69f545015477f2de15",
+      "crc32": "85c6ff4e"
     },
     "decoder": {
       "path": "unpack-native-artifacts.py",
@@ -147,8 +167,8 @@
       "sha256": "91c4c57422ff03e9dd5c9b5adeb66b825d1c23aee2c1e377510a1bafdc622f66",
       "crc32": "7209db03"
     },
-    "rawBytes": 144803574,
-    "rawSha256": "50dd2a005e3d573936f2e30ae7af09fbd99054d3a2151bda735697a811418756"
+    "rawBytes": 153761631,
+    "rawSha256": "c6ef0640c31e5a510a8aa6a693a6ed968910a54497e2e7922730de24b2ac30b4"
   },
   "checks": {
     "fullRelease": {
@@ -162,221 +182,228 @@
       "sourceUnchangedDuringBuild": true,
       "receipt": {
         "path": "logs/build-result.json",
-        "bytes": 581,
-        "sha256": "805528006b1ce40dbca55cf1bb2b836855e93ba50f72b77c41fddd9ef57a54b4",
-        "crc32": "5cfe1c6d"
+        "bytes": 580,
+        "sha256": "721a1d47b75566e042bf7bd69dc3e34dc8c7cd69fe7a00eb4455f662defaef3b",
+        "crc32": "3e337d62"
       }
     },
     "focusedNativeTests": {
-      "status": "PASS29 native suites",
+      "status": "PASS30 native suites",
       "failures": 0,
-      "checks": 88127823,
-      "lateChecks": 29323442,
-      "totalChecksWithLate": 117451265,
-      "scope": "13 focused and16 complete production-engine suites; retained gameplay matrices freshly executed with audio disabled.",
+      "checks": 97909535,
+      "lateChecks": 29323448,
+      "totalChecksWithLate": 127232983,
+      "scope": "13 focused and17 complete production-engine suites; retained gameplay matrices freshly executed with audio disabled.",
       "reports": [
         {
           "path": "tests/game-speed-results.json",
-          "bytes": 6619,
-          "sha256": "7c9b4efcf0b105433ec67a2108e2df2afd7268e73ceb508a92f702bd48f87679",
-          "crc32": "72b7804b",
+          "bytes": 7081,
+          "sha256": "dc4de1af5f95abeebc0e3a4d1c3f1403dd575ef71a0cfae23ca401d87e03439c",
+          "crc32": "da875af7",
           "checks": 81
         },
         {
           "path": "tests/qol-controls-results.json",
-          "bytes": 6695,
-          "sha256": "80e9ff849d259fa0912a31eac3bf93cc7cfadd1092addc70cd9e28c2c49319dc",
-          "crc32": "ac7e53ba",
+          "bytes": 7157,
+          "sha256": "00816dfb033ded03fb9ea00fca27d16a23ae580e213b653e34a810282f4d7075",
+          "crc32": "5050c9d2",
           "checks": 90
         },
         {
           "path": "tests/decks-cooldowns-results.json",
-          "bytes": 6791,
-          "sha256": "f8e5ccf6e1b56a78d601255a3493bf7a27a9415c853301126d21c98299514a1b",
-          "crc32": "da96aa09",
+          "bytes": 7253,
+          "sha256": "c4fecc0a59641b6ebcf5811d3f0777bcce8f4b7778516e10b6c65c73fbf61245",
+          "crc32": "3d209db0",
           "checks": 274
         },
         {
           "path": "tests/bonus-challenge-results.json",
-          "bytes": 7726,
-          "sha256": "d709ff51e9523fd619198b4d565f005f99791981cbd9be1e757720823da250eb",
-          "crc32": "bce13196",
+          "bytes": 8184,
+          "sha256": "77e59779be991287cdf8be93b66c3b571c6e2b5c7e781aa1b34f7be09b54295f",
+          "crc32": "4cfe6a8f",
           "checks": 394
         },
         {
           "path": "tests/bonus-completion-results.json",
-          "bytes": 8459,
-          "sha256": "4ab2c84035f51ad9be8753bb1669a631ee7f2defa1bd5952a608c1b17ba7584b",
-          "crc32": "787542ca",
-          "checks": 1383
+          "bytes": 8917,
+          "sha256": "3d44c872da01dcaae58a64dc43933566ab4eec08d37f55966d406a72ccd60c57",
+          "crc32": "9215fac0",
+          "checks": 1385
         },
         {
           "path": "tests/night-shift-results.json",
-          "bytes": 7293,
-          "sha256": "b002da8314c2b42c6bda64c7d63a599d61225f66c31442ac382ab577b1d05edf",
-          "crc32": "907e1566",
+          "bytes": 7751,
+          "sha256": "3e830edde3279ffa613f09034d2f8a9db1daebeaac6507ef65171bf45fcc714f",
+          "crc32": "a65ea3ec",
           "checks": 231
         },
         {
           "path": "tests/lantern-shroom-results.json",
-          "bytes": 12318,
-          "sha256": "e788aaf945c677a38fa09be6c881f05fa537f45bdd49cc19a447aedceeff5651",
-          "crc32": "7b0cd34b",
+          "bytes": 12776,
+          "sha256": "fc40235d6178e80320b983f3124a03f4616d68443b326fe21a144b233f89cd9b",
+          "crc32": "8a632e77",
           "checks": 1724
         },
         {
           "path": "tests/garden-shuffle-results.json",
-          "bytes": 8000,
-          "sha256": "6d54017dc5a2e9f5091f747569df53d5f0c89921c4a20c901f40333dce5803b2",
-          "crc32": "0ade6102",
+          "bytes": 8458,
+          "sha256": "d9ec056d268236a966fd82a907e53ab218abff50e45e1c8d24fab311c7c3112d",
+          "crc32": "f3579e84",
           "checks": 214
         },
         {
           "path": "tests/seed-swap-results.json",
-          "bytes": 8071,
-          "sha256": "c204d7e3a903961c1c05daa32477efe92dab3c2a3b1c857e8872a780dc1849b3",
-          "crc32": "12f179b3",
+          "bytes": 8529,
+          "sha256": "3119b5a6a86b59b842aa66a689c7a83eba61d88ea7d593552510d12443902f3a",
+          "crc32": "c1cad45a",
           "checks": 587
         },
         {
           "path": "tests/mender-bloom-results.json",
-          "bytes": 7477,
-          "sha256": "8c2658739c0bfd0a3fbb747e124cbdc5d01a178cec8428910c0ccd2dc727fc52",
-          "crc32": "14e82e87",
+          "bytes": 7935,
+          "sha256": "39b69a81949aef42e82cdc161b6e3da85cc47d356846eb2b335a5a89f3c0a23a",
+          "crc32": "161f2f4f",
           "checks": 523
         },
         {
           "path": "tests/intensive-care-results.json",
-          "bytes": 9160,
-          "sha256": "f586999dd55851c7b16f252d40a51723c38a46cf4990dd010057fe71180f9c4a",
-          "crc32": "f022f2d6",
+          "bytes": 9618,
+          "sha256": "c4b54938b4632a6fb878eaaa26d2313110f7f17099fcfcaf86d05adf62cfdaad",
+          "crc32": "5c34e125",
           "checks": 1135
         },
         {
           "path": "tests/native-layout-results.json",
-          "bytes": 27297,
-          "sha256": "1160b061deaa3a332fa15d330f8cf909b6e2db858f62f156a9131c478efc2f47",
-          "crc32": "0a9316de",
+          "bytes": 27755,
+          "sha256": "55ea43fddb193611bb61359ef6212b59cec2cc189d68856a397996588a92344a",
+          "crc32": "f40f2b9b",
           "checks": 27157
         },
         {
           "path": "tests/care-fatigue-results.json",
-          "bytes": 6191,
-          "sha256": "3392dfe53c047c0cc4f7176598583abaf9aceb63570c5d9605018f83c2898f00",
-          "crc32": "9be57080",
+          "bytes": 6649,
+          "sha256": "e0e8199c3ef1a9968f959b736c3244f48d6571c401456518cb5cec59bbec6a50",
+          "crc32": "0488d424",
           "checks": 25042
         },
         {
           "path": "tests/care-full-run-results.json",
-          "bytes": 162861,
-          "sha256": "2c6a6ef6e13401cdd85c8fc56ab87e29a0f00b08dd9c8b16b9612477732f7b14",
-          "crc32": "101820b9",
-          "checks": 1034
+          "bytes": 163602,
+          "sha256": "3ba986581ac9a43c8f35b6fb5dbc7d67603452d45f45d8d8adc0c892a7839a5d",
+          "crc32": "620a93a5",
+          "checks": 1038
         },
         {
           "path": "tests/chain-reaction-results.json",
-          "bytes": 173402,
-          "sha256": "e70bcf4ca6256c75ba8db9ac2bce98c78ffb8b3e2adc32a3f40a163439da4a18",
-          "crc32": "54cf2c07",
-          "checks": 81361
+          "bytes": 174143,
+          "sha256": "69b807e5551472c2a031ea1838471f50d9bf7aec4614e2739f0f6a82b7f18492",
+          "crc32": "ec03a380",
+          "checks": 81365
         },
         {
           "path": "tests/rally-zombie-results.json",
-          "bytes": 171040,
-          "sha256": "cda8c155131a621dc5c94e5b9fdcaa90877f9b58031d1f2ad053af42772eb827",
-          "crc32": "d1d01177",
-          "checks": 327580
+          "bytes": 171781,
+          "sha256": "635a48002a9c7c675a3af06ad7186a8209c479c6848d5bdc1210c0d2291e2d1e",
+          "crc32": "f8e356f3",
+          "checks": 327584
         },
         {
           "path": "tests/rally-raid-results.json",
-          "bytes": 188155,
-          "sha256": "4a0ce9199f9fb27674b12aff844e724d7deb83ba0cc3d97927b3ea9350577b70",
-          "crc32": "c90528af",
-          "checks": 1040616
+          "bytes": 188896,
+          "sha256": "59dcdbe6d5abbb8dd6211609d786ffe12a4d20c654d5ee2ea219df4b67341a12",
+          "crc32": "896092d6",
+          "checks": 1040620
         },
         {
           "path": "tests/lights-out-results.json",
-          "bytes": 174469,
-          "sha256": "757fed66b1dbd3f6d727ff86076951072b7eae3ea3f04aa18e375222e613cdba",
-          "crc32": "44a7de90",
-          "checks": 884047
+          "bytes": 175210,
+          "sha256": "c5ad7bcf2b8f066e5c6547612062d7bdb84035e3a974ffb41ce9af1083ac13c2",
+          "crc32": "67f837c3",
+          "checks": 884051
         },
         {
           "path": "tests/garlic-run-results.json",
-          "bytes": 182033,
-          "sha256": "33d7d3d270e4facc12b306a224bd1e93794c975f1b901120751834672c738c5d",
-          "crc32": "5e426593",
-          "checks": 1042822
+          "bytes": 182774,
+          "sha256": "6c688bf7ad847179f80f72d36d5fbd04bef97b9bb17fed517205fc6d38866aa7",
+          "crc32": "15361f8b",
+          "checks": 1042826
         },
         {
           "path": "tests/bungee-business-results.json",
-          "bytes": 189154,
-          "sha256": "a8318fd7b79f4fa2c89edcd95d8f4b3b1f4ab057e9e9500d45dfc544ea14f634",
-          "crc32": "a37fba3d",
-          "checks": 704918
+          "bytes": 189895,
+          "sha256": "ac01bf3ca6a4ff05631b7a5fcc6103bb55f8cb0d2513c696745b2fc5879369d7",
+          "crc32": "1dd30860",
+          "checks": 704922
         },
         {
           "path": "tests/cob-cannon-command-results.json",
-          "bytes": 194828,
-          "sha256": "12a4b1bfbbc8bd6d0dd2fc7d740557d0e9f5b362cd4779f3dc81135ef285b606",
-          "crc32": "8cb90659",
-          "checks": 868478
+          "bytes": 195569,
+          "sha256": "e348a0a66d67dcc87d307b7ef60a7f4611b826ac47b5a49555d3a826330dab0a",
+          "crc32": "52db3b94",
+          "checks": 868482
         },
         {
           "path": "tests/pool-panic-results.json",
-          "bytes": 219314,
-          "sha256": "27d0ae4cc5c351093666dd618af7eed26a8d538f9fd3d5f9bbb321773e1d03fa",
-          "crc32": "87eed9d4",
-          "checks": 6598698
+          "bytes": 220055,
+          "sha256": "31a4953d5663c47f9339f06a97108b1d8846d8eb3ffbce44dd5e542dc5b31fab",
+          "crc32": "eec5fe01",
+          "checks": 6598702
         },
         {
           "path": "tests/pool-panic-endless-results.json",
-          "bytes": 1912855,
-          "sha256": "d07e970f749e5c28382e3af5acbdaae5dd7c4251651d47ec37bce64b23cd5f6a",
-          "crc32": "ccbd9d48",
-          "checks": 39307123
+          "bytes": 1914349,
+          "sha256": "bbf82e08b60f5a352663617eb26a2b5477197038de66f5e3615759769fbf8a11",
+          "crc32": "0de075d7",
+          "checks": 39307127
         },
         {
           "path": "tests/scrap-yard-results.json",
-          "bytes": 198675,
-          "sha256": "94ce573db43eb5e23f804fa95e9d64aca6491e603bea20dbe453c8171ff3617a",
-          "crc32": "ef9510d0",
-          "checks": 1968473
+          "bytes": 199417,
+          "sha256": "46ca8f07753aa5a923903810db2641904251c29e499131f94fb219e553798530",
+          "crc32": "4b885cca",
+          "checks": 1968477
         },
         {
           "path": "tests/vase-ambush-results.json",
-          "bytes": 298492,
-          "sha256": "8bc89cbd7302ef415cdca6c99ec70e7a90552aa669ff8270666b7db9d154960e",
-          "crc32": "b4df405a",
-          "checks": 4621585
+          "bytes": 299228,
+          "sha256": "c9a25679f8f4946e969175992b300a9a77761f0db533603bc96a6af0ab8e8f7f",
+          "crc32": "6f8c5ba7",
+          "checks": 4621589
         },
         {
           "path": "tests/torchbearer-results.json",
-          "bytes": 572979,
-          "sha256": "3d6ee634ff53000788f459790c3c1a10f672fcba7efc2b73b8b06e6a09321a77",
-          "crc32": "c3e7f7ec",
-          "checks": 3030046
+          "bytes": 573715,
+          "sha256": "8c70095f601efaf7e0ac86f777e8ae94c978dbae491e17242edc8c1209cfc25d",
+          "crc32": "497d2ba5",
+          "checks": 3030050
         },
         {
           "path": "tests/double-agent-results.json",
-          "bytes": 573965,
-          "sha256": "4bc8ed4d4018fe4b6d9943eaa8d123b37d2c4e25e8663b8d0adc4ffac52b2a93",
-          "crc32": "d44f9127",
-          "checks": 10844536
+          "bytes": 574701,
+          "sha256": "3c36df2db14d9aa2e7e5fb142fd655305bd49b23a99abd785bba27d29b057750",
+          "crc32": "3068348e",
+          "checks": 10844540
         },
         {
           "path": "tests/gust-bloom-results.json",
-          "bytes": 537633,
-          "sha256": "86e192c1b15d9b7272157885b672da546be8e97dcb80f97dd0404fd2db5131ca",
-          "crc32": "15ab8aed",
-          "checks": 11782640
+          "bytes": 538369,
+          "sha256": "38e8ab304a41cdd3184a14ed3f292f7260b89bff6f45a9079920bc00788ffd2f",
+          "crc32": "1916ff9b",
+          "checks": 11782644
         },
         {
           "path": "tests/zombotany3-results.json",
-          "bytes": 460282,
-          "sha256": "3d91e643a6d325ac59c22e62858441c4f7d01697e7d4193f5fbe3a74117fcd5a",
-          "crc32": "daa4783f",
-          "checks": 4965031
+          "bytes": 461114,
+          "sha256": "aabf8f56ca39a9a7eea390423e8f0e4673d5268fcd6a3d98ffdf454864e101d8",
+          "crc32": "cf8831d6",
+          "checks": 4965103
+        },
+        {
+          "path": "tests/zombotany45-results.json",
+          "bytes": 859076,
+          "sha256": "acf1d0636ba3a054b21f04178ba5d287dc035f120ae88b339d65f725cd5dd1cc",
+          "crc32": "419a2815",
+          "checks": 9781578
         }
       ]
     },
@@ -385,13 +412,13 @@
         "gitApplyCheck": "PASS",
         "gitApply": "PASS",
         "everySourceByteMatches": true,
-        "sourceFiles": 882
+        "sourceFiles": 886
       },
       "gust1": {
         "gitApplyCheck": "PASS",
         "gitApply": "PASS",
         "everySourceByteMatches": true,
-        "sourceFiles": 882
+        "sourceFiles": 886
       }
     },
     "historicalComparison": {
@@ -441,31 +468,31 @@
     }
   },
   "combinedPatch": {
-    "path": "web-zombotany3.2.patch",
-    "bytes": 14385482,
-    "sha256": "f747385eaa964b0243d7b20adc9037e52fc038a2359640f6613429c4f4787ab2",
-    "crc32": "101f7cdb",
-    "sourcePaths": 174
+    "path": "web-zombotany45.1.patch",
+    "bytes": 14428016,
+    "sha256": "0dfa173278a807a8dbc5eb9d57acb6f2f841a100815937e3ce9fa4d1864b879c",
+    "crc32": "0b9cc47c",
+    "sourcePaths": 178
   },
   "incrementalPatch": {
-    "path": "gust1-to-zombotany3.patch",
-    "bytes": 853930,
-    "sha256": "7969fdb39d55191f4baa8f9de2b48d45a5b9c0ab83cacf60d0b1dec2985163eb",
-    "crc32": "cdd209c3",
-    "sourcePaths": 17
+    "path": "gust1-to-zombotany45.patch",
+    "bytes": 895273,
+    "sha256": "e2f49ba8beb845f3fd8087afe3110e24f42ea4fd9af47b589a4c432f9e8dc827",
+    "crc32": "c0fd3d63",
+    "sourcePaths": 21
   },
   "parent": {
     "id": "0.2.6-web-gust.1",
     "sourceArchiveSha256": "10acb269866b175ed4836c2c64c6a79dc86a11241de9e48c7be54f8f89808be8",
     "releaseManifestSha256": "9ded6d8e9e5d74a570d5eba1c5b514d86d08273552ccf234f9431708de395f8a"
   },
-  "fixesRelease": {
-    "id": "0.2.6-web-zombotany3.1",
-    "commit": "1e50a64a05668e983f469ff34fba50ee711f3975",
-    "sourceArchiveSha256": "71d73740aaab996a7cdba2565ecf7aa60841e70184386ede3ab967f33766cdf9"
+  "supersedesRelease": {
+    "id": "0.2.6-web-zombotany3.2",
+    "commit": "789965e43b59c9a2ecded002267374a7d20e83f1",
+    "sourceArchiveSha256": "9e4186372f80a9b59d119f8bf9cb0217e17a072d5fa178ea9f96cd120a4b5efb"
   },
   "limits": [
-    "Fixes exact-lethal Puff/Fume damage, removes affected zero-health plants when old Zombotany3 saves continue, and restores original unlock hints on family aliases. No saved object layouts change.",
+    "Adds Zombotany4 fog/pool and Zombotany5 roof with native seed selection, authored waves, original reanimation art and original counters. Existing gameplay and saved object layouts are retained.",
     "All retained native cases run against the current production objects. Synthetic controls are separately labeled. Browser observations and timing measurements are recorded separately; native tests do not certify browser/compositor performance. Historical Torch observations remain historical."
   ]
 }

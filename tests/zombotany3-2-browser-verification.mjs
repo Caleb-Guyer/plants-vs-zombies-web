@@ -13,7 +13,7 @@ const RUNTIME=['audio-controls.js','bundled-assets.js','game-assets/manifest.jso
 const json=b=>JSON.parse(Buffer.from(b).toString('utf8').replace(/^\uFEFF/,''));
 const safe=name=>{assert(typeof name==='string'&&name&&!name.startsWith('/')&&!/[\\:\x00-\x1f]/.test(name));assert(name.split('/').every(p=>p&&p!=='.'&&p!=='..'));return name;};
 const fields=(object,expected)=>{for(const [key,value]of Object.entries(expected))assert.deepEqual(object[key],value,key);};
-export async function verifyZombotany3BrowserEvidence({availability,currentEngine,read,sha,Zip}){
+export async function verifyZombotany3BrowserEvidence({availability,currentEngine,read,sha,Zip,historical=false,historicalNormalBytes,historicalBuildBytes}){
  assert(ACCEPTED_PROOF_SHA256,'Current Zombotany 3.2 browser observations have not been reviewed');
  const release=json(fs.readFileSync(new URL('./fixtures/zombotany3-release.json',import.meta.url)));
  assert.equal(release.id,ENGINE);assert.equal(currentEngine.id,ENGINE);
@@ -43,18 +43,25 @@ export async function verifyZombotany3BrowserEvidence({availability,currentEngin
  }
  assert.deepEqual(Object.keys(proof.runtimeFiles).sort(),RUNTIME);
  for(const [name,record]of Object.entries(proof.runtimeFiles)){
-  assert.deepEqual(Object.keys(record).sort(),['bytes','sha256']);pin({...record,path:'dist/'+safe(name)});
+  assert.deepEqual(Object.keys(record).sort(),['bytes','sha256']);
+  if(!historical || !['game/pvz-portable.js','game/pvz-portable.wasm'].includes(name))pin({...record,path:'dist/'+safe(name)});
  }
  assert.equal(proof.runtimeFiles['game/pvz-portable.js'].sha256,engine.jsSha256);
  assert.equal(proof.runtimeFiles['game/pvz-portable.wasm'].sha256,engine.wasmSha256);
- const sourceName=currentEngine.artifacts.source;assert(/^\.\.\/source\/[A-Za-z0-9._-]+\.zip$/.test(sourceName));
- const sourceBytes=Buffer.from(read('dist/'+safe(sourceName.slice(3))));assert.equal(sha(sourceBytes),currentEngine.artifacts.sourceSha256);
- const source=await Zip.loadAsync(sourceBytes),prefix='zombotany3-candidate/';
- const receipt=source.file(prefix+'logs/build-result.json');assert(receipt);
- const normalBytes=Buffer.from(await receipt.async('uint8array'));assert.equal(sha(normalBytes),proof.normalBuildReceiptSha256);
+ let normalBytes,build;
+ if(historical){
+  assert(historicalNormalBytes&&historicalBuildBytes,'Historical observations require authenticated original build receipts');
+  normalBytes=Buffer.from(historicalNormalBytes);build=json(historicalBuildBytes);
+ }else{
+  const sourceName=currentEngine.artifacts.source;assert(/^\.\.\/source\/[A-Za-z0-9._-]+\.zip$/.test(sourceName));
+  const sourceBytes=Buffer.from(read('dist/'+safe(sourceName.slice(3))));assert.equal(sha(sourceBytes),currentEngine.artifacts.sourceSha256);
+  const source=await Zip.loadAsync(sourceBytes),prefix='zombotany3-candidate/';
+  const receipt=source.file(prefix+'logs/build-result.json');assert(receipt);normalBytes=Buffer.from(await receipt.async('uint8array'));
+  const sourceBuild=source.file(prefix+'tests/zombotany3-build.json');assert(sourceBuild);build=json(await sourceBuild.async('uint8array'));
+ }
+ assert.equal(sha(normalBytes),proof.normalBuildReceiptSha256);
  const normal=json(normalBytes);fields(normal,{status:'PASS',exitCode:0,sourceFiles:882,sourceUnchangedDuringBuild:true});
  for(const [kind,name]of [['js','game/pvz-portable.js'],['wasm','game/pvz-portable.wasm']])assert.deepEqual(normal.outputs['build/pvz-portable.'+kind],proof.runtimeFiles[name]);
- const sourceBuild=source.file(prefix+'tests/zombotany3-build.json');assert(sourceBuild);const build=json(await sourceBuild.async('uint8array'));
  const origin=json(pin(proof.nativeProfileOrigin.result)),originLog=pin(proof.nativeProfileOrigin.rawLog);
  fields(proof.nativeProfileOrigin,{engineId:ENGINE,mode:93,profileIndex:92,profileCreditsAtExport:0,syntheticCheckpoint:false});
  fields(origin,{execution:'complete-production-engine',name:'save-freeze',speed:1,seed:1729,
@@ -94,7 +101,7 @@ export async function verifyZombotany3BrowserEvidence({availability,currentEngin
   }
  }
  assert(inspections>=4);assert.equal(actions.at(-1).action,'close');assert.equal(actions.at(-1).status,'ok');
- return {status:'PASS current muted Zombotany 3 browser functionality',engine:ENGINE,screenshots:5,runtimeFiles:RUNTIME.length,
-  executablePayloadsChecked:2,executableIdentitiesCrossChecked:2,
+ return {status:historical?'PASS historical muted Zombotany 3.2 browser functionality':'PASS current muted Zombotany 3 browser functionality',engine:ENGINE,screenshots:5,runtimeFiles:RUNTIME.length,
+  executablePayloadsChecked:historical?0:2,executableIdentitiesCrossChecked:2,historical,
   actualNativeCheckpointImported:true,browserEarnedWins:0,freshBrowserPerformancePassed:false};
 }

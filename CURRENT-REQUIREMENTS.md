@@ -1,5 +1,23 @@
 # Current requirements
 
+## Zombotany 4 and 5
+
+Zombotany 4 brings the original fog-and-pool lawn, swimming Sea-shroom heads and the existing mushroom/Peashooter threats. Zombotany 5 moves to the original roof with Cabbage-pult, Kernel-pult and Melon-pult heads: their native lob artwork and animations include butter, splash damage and the original Umbrella Leaf counter. Both use the normal seed chooser, native sun economy and twenty authored waves. The roof intro supplies its original three columns of fifteen Flower Pots.
+
+The native Zombotany family page now contains the original first two games and Zombotany 3, 4 and 5. Beat 3 to unlock 4, then beat 4 to unlock 5. Card frames, fonts, original assets and normal gameplay controls remain native; no card tips or extra HUD were added. Normal game audio remains available; automated native tests open no audio device.
+
+The frozen build passes **30 current native suites, 97,909,535 primary assertions and zero failures**, plus 29,323,448 separately counted Endless late checks. All 17 complete-engine drivers bind the same 886-source/151-object normal Release build. The 13 retained focused suites contribute 58,837 checks.
+
+The new 56-case matrix covers fog and roof at 1x/2x and two seeds: forty ordinary winning cases, eight genuine no-input loss cases and eight explicitly synthetic controls. Retry, replay and native trophy credits are checked separately. Both modes test native Save/Continue during active combat in the final wave, after all authored zombies have spawned, with the saved state graph preserved and no victory credit at the checkpoint. These saves do not establish preservation of future spawn randomness. Synthetic controls earn no wins. The prior 36-case Zombotany 3 matrix and all fifteen earlier gameplay matrices also execute against this build. Original Zombotany 3 code/art and all eight saved-class/serializer files remain byte-exact to the published 3.2 release.
+
+Current nine-capture browser functionality check: **NOT RUN**. The official browser tool could not establish its required browser URL/policy precondition. No current browser interaction, capture, save-continuation pass or earned browser win is claimed; the pinned blocking record remains separate from actual native test and raster evidence.
+
+No fresh browser performance verdict is claimed for this release. Earlier Torch and Zombotany 3.2 timing/browser records retain their original capture-time scope; native tests and native offscreen rasters do not establish compositor FPS, GPU completion or universal smoothness.
+
+## Prior release records (Zombotany 3.2 and earlier)
+
+These records retain their earlier release-time scope and original evidence.
+
 ## Zombotany 3.2 accepted fixes
 
 Puff-shroom and Fume-shroom zombie hits now remove a plant as soon as its health reaches zero. Older Zombotany 3 saves containing a zero-health plant are cleaned up before those plants can act again. The original ZomBotany 2 card also keeps its native unlock tooltip when viewed through the Zombotany family page.

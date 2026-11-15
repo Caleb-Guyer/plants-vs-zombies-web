@@ -7,7 +7,7 @@ import {CURRENT_ENGINE_ID,CURRENT_SOURCE_COUNT,ZOMBOTANY3_SOURCE_ADDITIONS,GUST_
 
 const FOLDER='tests/zombotany3-focused-retention/';
 const COUNTS={"game-speed":81,"qol-controls":90,"decks-cooldowns":274,"bonus-challenge":394,"bonus-completion":1382,"night-shift":231,"lantern-shroom":1724,"garden-shuffle":214,"seed-swap":587,"mender-bloom":523,"intensive-care":1135,"native-layout":27157,"care-fatigue":25042};
-export const ZOMBOTANY3_FOCUSED_CHECK_EXTENSIONS=Object.freeze({'bonus-completion':1});
+export const ZOMBOTANY3_FOCUSED_CHECK_EXTENSIONS=Object.freeze({'bonus-completion':3});
 const PARENT_REPORT_PINS='a741622b272b9c0c0727fe712d0e9251a2e5a1b237bb8c5f728d88a7b9d15044';
 
 // Independently reviewed literal operations: original case bodies, messages and
@@ -16,242 +16,242 @@ const REVIEWED_OPERATIONS = /* REVIEWED_ZOMBOTANY3_COMPATIBILITY_BEGIN */ {
   "game-speed": [
     {
       "before": "for stem in ('DoubleAgent','DoubleAgentPresentation','GustBloom','GustChallenge','GustBloomArt')",
-      "after": "for stem in ('DoubleAgent','DoubleAgentPresentation','GustBloom','GustChallenge','GustBloomArt','Zombotany3','Zombotany3Art')",
+      "after": "for stem in ('DoubleAgent','DoubleAgentPresentation','GustBloom','GustChallenge','GustBloomArt','Zombotany3','Zombotany3Art','Zombotany45','Zombotany45Art')",
       "count": 1,
-      "reason": "Bind every published Gust production input and exactly four appended Zombotany3 files; remove no original dependency."
+      "reason": "Bind all published Gust production dependencies plus all eight appended Zombotany3/45 source files; remove no original dependency."
     }
   ],
   "qol-controls": [
     {
       "before": "for stem in ('DoubleAgent','DoubleAgentPresentation','GustBloom','GustChallenge','GustBloomArt')",
-      "after": "for stem in ('DoubleAgent','DoubleAgentPresentation','GustBloom','GustChallenge','GustBloomArt','Zombotany3','Zombotany3Art')",
+      "after": "for stem in ('DoubleAgent','DoubleAgentPresentation','GustBloom','GustChallenge','GustBloomArt','Zombotany3','Zombotany3Art','Zombotany45','Zombotany45Art')",
       "count": 1,
-      "reason": "Bind every published Gust production input and exactly four appended Zombotany3 files; remove no original dependency."
+      "reason": "Bind all published Gust production dependencies plus all eight appended Zombotany3/45 source files; remove no original dependency."
     }
   ],
   "decks-cooldowns": [
     {
       "before": "for stem in ('DoubleAgent','DoubleAgentPresentation','GustBloom','GustChallenge','GustBloomArt')",
-      "after": "for stem in ('DoubleAgent','DoubleAgentPresentation','GustBloom','GustChallenge','GustBloomArt','Zombotany3','Zombotany3Art')",
+      "after": "for stem in ('DoubleAgent','DoubleAgentPresentation','GustBloom','GustChallenge','GustBloomArt','Zombotany3','Zombotany3Art','Zombotany45','Zombotany45Art')",
       "count": 1,
-      "reason": "Bind every published Gust production input and exactly four appended Zombotany3 files; remove no original dependency."
+      "reason": "Bind all published Gust production dependencies plus all eight appended Zombotany3/45 source files; remove no original dependency."
     }
   ],
   "bonus-challenge": [
     {
       "before": "for stem in ('DoubleAgent','DoubleAgentPresentation','GustBloom','GustChallenge','GustBloomArt')",
-      "after": "for stem in ('DoubleAgent','DoubleAgentPresentation','GustBloom','GustChallenge','GustBloomArt','Zombotany3','Zombotany3Art')",
+      "after": "for stem in ('DoubleAgent','DoubleAgentPresentation','GustBloom','GustChallenge','GustBloomArt','Zombotany3','Zombotany3Art','Zombotany45','Zombotany45Art')",
       "count": 1,
-      "reason": "Bind every published Gust production input and exactly four appended Zombotany3 files; remove no original dependency."
+      "reason": "Bind all published Gust production dependencies plus all eight appended Zombotany3/45 source files; remove no original dependency."
     },
     {
       "before": "NUM_GAME_MODES==93",
-      "after": "NUM_GAME_MODES==94",
+      "after": "NUM_GAME_MODES==96",
       "count": 2,
-      "reason": "Account only for appended mode93 sentinel; every preceding explicit identity and assertion remains."
+      "reason": "Append only modes93/94/95 to the sentinel; preserve every preceding explicit identity and assertion."
     }
   ],
   "bonus-completion": [
     {
       "before": "for stem in ('DoubleAgent','DoubleAgentPresentation','GustBloom','GustChallenge','GustBloomArt')",
-      "after": "for stem in ('DoubleAgent','DoubleAgentPresentation','GustBloom','GustChallenge','GustBloomArt','Zombotany3','Zombotany3Art')",
+      "after": "for stem in ('DoubleAgent','DoubleAgentPresentation','GustBloom','GustChallenge','GustBloomArt','Zombotany3','Zombotany3Art','Zombotany45','Zombotany45Art')",
       "count": 1,
-      "reason": "Bind every published Gust production input and exactly four appended Zombotany3 files; remove no original dependency."
+      "reason": "Bind all published Gust production dependencies plus all eight appended Zombotany3/45 source files; remove no original dependency."
     },
     {
       "before": "NUM_GAME_MODES==93",
-      "after": "NUM_GAME_MODES==94",
+      "after": "NUM_GAME_MODES==96",
       "count": 1,
-      "reason": "Account only for appended mode93 sentinel; every preceding explicit identity and assertion remains."
+      "reason": "Append only modes93/94/95 to the sentinel; preserve every preceding explicit identity and assertion."
     },
     {
       "before": "NUM_CHALLENGE_MODES==92",
-      "after": "NUM_CHALLENGE_MODES==93",
+      "after": "NUM_CHALLENGE_MODES==95",
       "count": 1,
-      "reason": "One family definition is appended after all92 published definitions; preserve every original mode identity and order."
+      "reason": "Append three definitions after all92 published definitions; preserve every original mode identity and order."
     },
     {
       "before": "ambushRetainedChecks==1306",
-      "after": "ambushRetainedChecks==1307",
+      "after": "ambushRetainedChecks==1309",
       "count": 1,
-      "reason": "Count one additional iteration through the actual native catalog before all unchanged published completion assertions."
+      "reason": "Count three additional actual native catalog iterations separately from all unchanged published completion assertions."
     }
   ],
   "night-shift": [
     {
       "before": "for stem in ('DoubleAgent','DoubleAgentPresentation','GustBloom','GustChallenge','GustBloomArt')",
-      "after": "for stem in ('DoubleAgent','DoubleAgentPresentation','GustBloom','GustChallenge','GustBloomArt','Zombotany3','Zombotany3Art')",
+      "after": "for stem in ('DoubleAgent','DoubleAgentPresentation','GustBloom','GustChallenge','GustBloomArt','Zombotany3','Zombotany3Art','Zombotany45','Zombotany45Art')",
       "count": 1,
-      "reason": "Bind every published Gust production input and exactly four appended Zombotany3 files; remove no original dependency."
+      "reason": "Bind all published Gust production dependencies plus all eight appended Zombotany3/45 source files; remove no original dependency."
     }
   ],
   "lantern-shroom": [
     {
       "before": "for stem in ('DoubleAgent','DoubleAgentPresentation','GustBloom','GustChallenge','GustBloomArt')",
-      "after": "for stem in ('DoubleAgent','DoubleAgentPresentation','GustBloom','GustChallenge','GustBloomArt','Zombotany3','Zombotany3Art')",
+      "after": "for stem in ('DoubleAgent','DoubleAgentPresentation','GustBloom','GustChallenge','GustBloomArt','Zombotany3','Zombotany3Art','Zombotany45','Zombotany45Art')",
       "count": 1,
-      "reason": "Bind every published Gust production input and exactly four appended Zombotany3 files; remove no original dependency."
+      "reason": "Bind all published Gust production dependencies plus all eight appended Zombotany3/45 source files; remove no original dependency."
     },
     {
       "before": "cpp.write_text(head + constants + '\\n' + methods + tail, encoding='utf-8', newline='\\n')",
-      "after": "head += '\\nnamespace Zombotany3 { bool UpdateFrozenPlant(Plant&){return false;} }\\n'\ncpp.write_text(head + constants + '\\n' + methods + tail, encoding='utf-8', newline='\\n')",
+      "after": "head += '\\nnamespace Zombotany3 { bool UpdateFrozenPlant(Plant&){return false;} }\\n'\nhead += '\\nnamespace Zombotany45 { bool UpdateButteredPlant(Plant&){return false;} }\\n'\ncpp.write_text(head + constants + '\\n' + methods + tail, encoding='utf-8', newline='\\n')",
       "count": 1,
-      "reason": "Observed native link failure requires the new out-of-scope frost collaborator to return false in the unchanged old Lantern submodel; preserve every original actor, timer, case and assertion."
+      "reason": "Provide false controlled collaborators for actual added Plant::Update freeze/butter branches in old-mode harness cases; no original case, clock, renderer, or assertion changes."
     }
   ],
   "garden-shuffle": [
     {
       "before": "for stem in ('DoubleAgent','DoubleAgentPresentation','GustBloom','GustChallenge','GustBloomArt')",
-      "after": "for stem in ('DoubleAgent','DoubleAgentPresentation','GustBloom','GustChallenge','GustBloomArt','Zombotany3','Zombotany3Art')",
+      "after": "for stem in ('DoubleAgent','DoubleAgentPresentation','GustBloom','GustChallenge','GustBloomArt','Zombotany3','Zombotany3Art','Zombotany45','Zombotany45Art')",
       "count": 1,
-      "reason": "Bind every published Gust production input and exactly four appended Zombotany3 files; remove no original dependency."
+      "reason": "Bind all published Gust production dependencies plus all eight appended Zombotany3/45 source files; remove no original dependency."
     }
   ],
   "seed-swap": [
     {
       "before": "for stem in ('DoubleAgent','DoubleAgentPresentation','GustBloom','GustChallenge','GustBloomArt')",
-      "after": "for stem in ('DoubleAgent','DoubleAgentPresentation','GustBloom','GustChallenge','GustBloomArt','Zombotany3','Zombotany3Art')",
+      "after": "for stem in ('DoubleAgent','DoubleAgentPresentation','GustBloom','GustChallenge','GustBloomArt','Zombotany3','Zombotany3Art','Zombotany45','Zombotany45Art')",
       "count": 1,
-      "reason": "Bind every published Gust production input and exactly four appended Zombotany3 files; remove no original dependency."
+      "reason": "Bind all published Gust production dependencies plus all eight appended Zombotany3/45 source files; remove no original dependency."
     },
     {
       "before": "NUM_GAME_MODES==93",
-      "after": "NUM_GAME_MODES==94",
+      "after": "NUM_GAME_MODES==96",
       "count": 1,
-      "reason": "Account only for appended mode93 sentinel; every preceding explicit identity and assertion remains."
+      "reason": "Append only modes93/94/95 to the sentinel; preserve every preceding explicit identity and assertion."
     }
   ],
   "mender-bloom": [
     {
       "before": "for stem in ('DoubleAgent','DoubleAgentPresentation','GustBloom','GustChallenge','GustBloomArt')",
-      "after": "for stem in ('DoubleAgent','DoubleAgentPresentation','GustBloom','GustChallenge','GustBloomArt','Zombotany3','Zombotany3Art')",
+      "after": "for stem in ('DoubleAgent','DoubleAgentPresentation','GustBloom','GustChallenge','GustBloomArt','Zombotany3','Zombotany3Art','Zombotany45','Zombotany45Art')",
       "count": 1,
-      "reason": "Bind every published Gust production input and exactly four appended Zombotany3 files; remove no original dependency."
+      "reason": "Bind all published Gust production dependencies plus all eight appended Zombotany3/45 source files; remove no original dependency."
     }
   ],
   "intensive-care": [
     {
       "before": "for stem in ('DoubleAgent','DoubleAgentPresentation','GustBloom','GustChallenge','GustBloomArt')",
-      "after": "for stem in ('DoubleAgent','DoubleAgentPresentation','GustBloom','GustChallenge','GustBloomArt','Zombotany3','Zombotany3Art')",
+      "after": "for stem in ('DoubleAgent','DoubleAgentPresentation','GustBloom','GustChallenge','GustBloomArt','Zombotany3','Zombotany3Art','Zombotany45','Zombotany45Art')",
       "count": 1,
-      "reason": "Bind every published Gust production input and exactly four appended Zombotany3 files; remove no original dependency."
+      "reason": "Bind all published Gust production dependencies plus all eight appended Zombotany3/45 source files; remove no original dependency."
     },
     {
       "before": "NUM_GAME_MODES==93",
-      "after": "NUM_GAME_MODES==94",
+      "after": "NUM_GAME_MODES==96",
       "count": 1,
-      "reason": "Account only for appended mode93 sentinel; every preceding explicit identity and assertion remains."
+      "reason": "Append only modes93/94/95 to the sentinel; preserve every preceding explicit identity and assertion."
     }
   ],
   "native-layout": [
     {
       "before": "for stem in ('DoubleAgent','DoubleAgentPresentation','GustBloom','GustChallenge','GustBloomArt')",
-      "after": "for stem in ('DoubleAgent','DoubleAgentPresentation','GustBloom','GustChallenge','GustBloomArt','Zombotany3','Zombotany3Art')",
+      "after": "for stem in ('DoubleAgent','DoubleAgentPresentation','GustBloom','GustChallenge','GustBloomArt','Zombotany3','Zombotany3Art','Zombotany45','Zombotany45Art')",
       "count": 1,
-      "reason": "Bind every published Gust production input and exactly four appended Zombotany3 files; remove no original dependency."
+      "reason": "Bind all published Gust production dependencies plus all eight appended Zombotany3/45 source files; remove no original dependency."
     },
     {
       "before": "GameMode::NUM_GAME_MODES)==93",
-      "after": "GameMode::NUM_GAME_MODES)==94",
+      "after": "GameMode::NUM_GAME_MODES)==96",
       "count": 2,
-      "reason": "Account only for the appended mode cardinality in the two scoped native identity assertions; preserve explicit Scrap88 and Vase89 identities and all prior assertions."
+      "reason": "Account only for the appended mode cardinality in two scoped identity assertions; preserve Scrap88,Vase89 and all original assertions."
     },
     {
       "before": "current_draw_button=extract(challenge_screen,'void ChallengeScreen::DrawButton(')",
-      "after": "current_draw_button=extract(challenge_screen,'void ChallengeScreen::DrawButton(')\nzombotany_guard='\\t\\t\\tif (aDef.mChallengeMode == GAMEMODE_CHALLENGE_ZOMBOTANY_3)\\n\\t\\t\\t{\\n\\t\\t\\t\\tif (Image* image = Zombotany3Art::GetImage()) g->DrawImage(image, aPosX + 13, aPosY + 4);\\n\\t\\t\\t}\\n\\t\\t\\telse '\nassert current_draw_button.count(zombotany_guard)==1\ncurrent_draw_button=current_draw_button.replace(zombotany_guard,'\\t\\t\\t',1)",
+      "after": "current_draw_button=extract(challenge_screen,'void ChallengeScreen::DrawButton(')\nzombotany_guard='\\t\\t\\tif (aDef.mChallengeMode == GAMEMODE_CHALLENGE_ZOMBOTANY_3)\\n\\t\\t\\t{\\n\\t\\t\\t\\tif (Image* image = Zombotany3Art::GetImage()) g->DrawImage(image, aPosX + 13, aPosY + 4);\\n\\t\\t\\t}\\n\\t\\t\\telse '\nassert current_draw_button.count(zombotany_guard)==1\ncurrent_draw_button=current_draw_button.replace(zombotany_guard,'\\t\\t\\t',1)\nzombotany45_guard='\\t\\t\\tif (aDef.mChallengeMode == GAMEMODE_CHALLENGE_ZOMBOTANY_4 || aDef.mChallengeMode == GAMEMODE_CHALLENGE_ZOMBOTANY_5)\\n\\t\\t\\t{\\n\\t\\t\\t\\tif (Image* image = Zombotany45Art::GetImage(aDef.mChallengeMode)) g->DrawImage(image, aPosX + 13, aPosY + 4);\\n\\t\\t\\t}\\n\\t\\t\\telse '\nassert current_draw_button.count(zombotany45_guard)==1\ncurrent_draw_button=current_draw_button.replace(zombotany45_guard,'\\t\\t\\t',1)",
       "count": 1,
-      "reason": "Authenticate and project only the appended mode93 thumbnail branch before the exact unchanged historical DrawButton restoration assertion; current full-engine family/card pixel controls cover the new branch."
+      "reason": "Authenticate and project only appended93 and94/95 thumbnail dispatches before the exact unchanged historical DrawButton restoration assertion; full-engine presentation controls cover all new cards."
     }
   ],
   "care-fatigue": [
     {
       "before": "for stem in ('DoubleAgent','DoubleAgentPresentation','GustBloom','GustChallenge','GustBloomArt')",
-      "after": "for stem in ('DoubleAgent','DoubleAgentPresentation','GustBloom','GustChallenge','GustBloomArt','Zombotany3','Zombotany3Art')",
+      "after": "for stem in ('DoubleAgent','DoubleAgentPresentation','GustBloom','GustChallenge','GustBloomArt','Zombotany3','Zombotany3Art','Zombotany45','Zombotany45Art')",
       "count": 1,
-      "reason": "Bind every published Gust production input and exactly four appended Zombotany3 files; remove no original dependency."
+      "reason": "Bind all published Gust production dependencies plus all eight appended Zombotany3/45 source files; remove no original dependency."
     }
   ]
 } /* REVIEWED_ZOMBOTANY3_COMPATIBILITY_END */;
 
 const REVIEWED_PINS = /* REVIEWED_ZOMBOTANY3_PINS_BEGIN */ {
   "pendingFinalFreeze": false,
-  "adaptationsSha256": "8e15a8f8745f3cf0c14fa6b5a940917f83c19601302b301ab135549e8f7f4e9a",
-  "compatibilityPatchesSha256": "e83d9d3dd199e220a03cca1b7a690087ce71f4f7131ea5abca7ee5db10272adf",
+  "adaptationsSha256": "8821301282cd8452b857e5f01c9d5d6a08ddf98c20a80a39917eeb5a235741b5",
+  "compatibilityPatchesSha256": "e0d8d1d079a1adf262b429c575c480c54873fb04768f853bc1952172242a6561",
   "parentReportPinsSha256": "a741622b272b9c0c0727fe712d0e9251a2e5a1b237bb8c5f728d88a7b9d15044",
-  "adapterSha256": "07f00e8bd1acab5417a3f4bb6fd3576b1ddb3dac8dc42ad5445cd632ec2775fc",
+  "adapterSha256": "e995ebb2217855769d9ef044fe6417a806d2d0604996dca60f726e90051b9487",
   "runSha256": "b62b414af34ca10de508d6807853745f1ed40a05b641be303133a16cdbdb4268",
-  "normalBuildReceiptSha256": "805528006b1ce40dbca55cf1bb2b836855e93ba50f72b77c41fddd9ef57a54b4",
+  "normalBuildReceiptSha256": "721a1d47b75566e042bf7bd69dc3e34dc8c7cd69fe7a00eb4455f662defaef3b",
   "runners": {
     "game-speed": {
-      "runnerSha256": "1c2644a2815a4e5cc5f257d97c8e192cd14b624c08ff7db50c16155fec58b62e",
-      "reportSha256": "7c9b4efcf0b105433ec67a2108e2df2afd7268e73ceb508a92f702bd48f87679",
+      "runnerSha256": "80a4e876506748e060cf42fdf03ec2db5e0aa1799717643ae719b3b742ffa40c",
+      "reportSha256": "dc4de1af5f95abeebc0e3a4d1c3f1403dd575ef71a0cfae23ca401d87e03439c",
       "harnessSha256": "0299e42113cdd9a96fdc9e4ac14cf68c6144f2c3660cf14f85bb224bb3a96b6b"
     },
     "qol-controls": {
-      "runnerSha256": "9dc189a51063e80e88812e5cf6d0c1539e76a5ac6ea0675446aec9795fa0c422",
-      "reportSha256": "80e9ff849d259fa0912a31eac3bf93cc7cfadd1092addc70cd9e28c2c49319dc",
+      "runnerSha256": "d842e81f22f580dd10da981ac32071d241c45080bcc1be26fe8b0cd2a2ba9279",
+      "reportSha256": "00816dfb033ded03fb9ea00fca27d16a23ae580e213b653e34a810282f4d7075",
       "harnessSha256": "26baff16227c83705bc47cc2a8afd8b8f84effa24589d2ab63024c3495527316"
     },
     "decks-cooldowns": {
-      "runnerSha256": "747673958736174afbe9ded355b10095afa242c10a181c47b0282ef5c8739312",
-      "reportSha256": "f8e5ccf6e1b56a78d601255a3493bf7a27a9415c853301126d21c98299514a1b",
+      "runnerSha256": "3ea68eb683087437b54bae5b8c1b3b02b7c498e65c94e608597874a1e67aa54a",
+      "reportSha256": "c4fecc0a59641b6ebcf5811d3f0777bcce8f4b7778516e10b6c65c73fbf61245",
       "harnessSha256": "42d5ba51b452d466f385fdf07d23d1b7f204b121d8d300d5b192b31f3f5bb376"
     },
     "bonus-challenge": {
-      "runnerSha256": "2d1557c0efcd1f5be125829d9c49bae0358492b4a79f8e9623625125a5619f59",
-      "reportSha256": "d709ff51e9523fd619198b4d565f005f99791981cbd9be1e757720823da250eb",
-      "harnessSha256": "79f02435b53144deb25f3f456a34f8f4381894849a2589460a529f066469eccd"
+      "runnerSha256": "fb46da37141143eda86cb8d7b70e147f285f4321c1518a5b7b1933ffff6e5ccf",
+      "reportSha256": "77e59779be991287cdf8be93b66c3b571c6e2b5c7e781aa1b34f7be09b54295f",
+      "harnessSha256": "6bb09c8e5fc512283f622622a0f0a1274fa8f0148fdbbf7c520ddfc23ab1ef9b"
     },
     "bonus-completion": {
-      "runnerSha256": "8da50da7e2570383676fd8debe9d85b4aee26a08d20141f4a066d8782e067585",
-      "reportSha256": "4ab2c84035f51ad9be8753bb1669a631ee7f2defa1bd5952a608c1b17ba7584b",
-      "harnessSha256": "41eb9392fc62db53d59ebe241a2d845693faadc1a10ba4e77894301ffec7f99b"
+      "runnerSha256": "86f7349051211a9e358cd3be0c0a7e9de5344424e682c372607a47a83e6ad035",
+      "reportSha256": "3d44c872da01dcaae58a64dc43933566ab4eec08d37f55966d406a72ccd60c57",
+      "harnessSha256": "d1182697fb468c2cb85071d337cb9d1d53e71bc1136bacce7441662b91491f24"
     },
     "night-shift": {
-      "runnerSha256": "05bc0f4663301ff61c2d333cfa06740410eb87344a1f6ea7c1a2c338491c1de5",
-      "reportSha256": "b002da8314c2b42c6bda64c7d63a599d61225f66c31442ac382ab577b1d05edf",
-      "harnessSha256": "b3836d59e10366fdcefdd9fa4787a3d7a68304fb316ab2b22cdde53e11a3198a"
+      "runnerSha256": "5fb74a9083af1e0034113a817010b5fb266f285cef080d83d0c88c69d1f7875b",
+      "reportSha256": "3e830edde3279ffa613f09034d2f8a9db1daebeaac6507ef65171bf45fcc714f",
+      "harnessSha256": "2d4d5658d5e4bc85017c411f01416082e969dc03f2ad32dfb0c3c117095af03a"
     },
     "lantern-shroom": {
-      "runnerSha256": "1b066f555757d304634a633dcde2c6568ad69b9af5d96d35b511c44296809d45",
-      "reportSha256": "e788aaf945c677a38fa09be6c881f05fa537f45bdd49cc19a447aedceeff5651",
-      "harnessSha256": "c9b02d418c43f2224fb59395b128c3c67522197297945e56cc3ff37f940b92d7"
+      "runnerSha256": "e8a5bcdc6f9bf94046d06d1694c8ccf77d990af0755477b87919a8b855161d85",
+      "reportSha256": "fc40235d6178e80320b983f3124a03f4616d68443b326fe21a144b233f89cd9b",
+      "harnessSha256": "329f86d97ead12333ea4cb7b2419ea940bbff8cca1b5243686d8ee8a722145f7"
     },
     "garden-shuffle": {
-      "runnerSha256": "8f37dea56f6160758559167aa86ad34565bd5df39677e2e68145b7c8f29d38c8",
-      "reportSha256": "6d54017dc5a2e9f5091f747569df53d5f0c89921c4a20c901f40333dce5803b2",
+      "runnerSha256": "b28e8926a3fbfb70433cffe7f6919f179159196ccb864041115913b65beec597",
+      "reportSha256": "d9ec056d268236a966fd82a907e53ab218abff50e45e1c8d24fab311c7c3112d",
       "harnessSha256": "9e06591927a1d872c72273f2db0bcbf549a16e38ffd5d491246c67d78977508d"
     },
     "seed-swap": {
-      "runnerSha256": "d30276d0e53eba5c59bb9ead3b901e3c0a0dda1ef3da4c4afd6b78fc968d4610",
-      "reportSha256": "c204d7e3a903961c1c05daa32477efe92dab3c2a3b1c857e8872a780dc1849b3",
-      "harnessSha256": "ed8203c007359197f45d8847ce811ac2ef9b78243131b4c78eae2ea4f63c05be"
+      "runnerSha256": "4741a30e2a38f786c0d606c0c8b4707ed8a24f4548ead00a5d307c64579749e5",
+      "reportSha256": "3119b5a6a86b59b842aa66a689c7a83eba61d88ea7d593552510d12443902f3a",
+      "harnessSha256": "84c43cb1d2c5f6e42094775557b1ae4f117bcf683f8ee3d8a89a0cc283149551"
     },
     "mender-bloom": {
-      "runnerSha256": "61c9ee9b0254e24e9dfe319e58fefb9dec85efe5759ff948b1dafb39e825af87",
-      "reportSha256": "8c2658739c0bfd0a3fbb747e124cbdc5d01a178cec8428910c0ccd2dc727fc52",
+      "runnerSha256": "98034510f76582696735b6943d86389fe0670d56858c8e919895e3b202d92615",
+      "reportSha256": "39b69a81949aef42e82cdc161b6e3da85cc47d356846eb2b335a5a89f3c0a23a",
       "harnessSha256": "276c6e8db99cb037fd8cc3f92122a3998d418905d454ec20fbbca0bf198c453c"
     },
     "intensive-care": {
-      "runnerSha256": "3f99ba1f7cf3339b48407a3e0e06a6173f7524633cd64ebf7cb13a42cc2da267",
-      "reportSha256": "f586999dd55851c7b16f252d40a51723c38a46cf4990dd010057fe71180f9c4a",
-      "harnessSha256": "e6aff77f496f322966ec908c3929e8ea785a88b0fad072d65c696555f60803d4"
+      "runnerSha256": "703d6c1597d4558f5469990b497a6bb7ab3fa0ad65fa236da193a6fc64a62a48",
+      "reportSha256": "c4b54938b4632a6fb878eaaa26d2313110f7f17099fcfcaf86d05adf62cfdaad",
+      "harnessSha256": "ffc6bb2cfd92801cd17bb61fa1f884fb6f29ef72efcad30f80e9e343e2ed6457"
     },
     "native-layout": {
-      "runnerSha256": "3def8434b1d20b482428ee64b7d23d83ae935449e8c2a38ec7da3f2cafe5f68b",
-      "reportSha256": "1160b061deaa3a332fa15d330f8cf909b6e2db858f62f156a9131c478efc2f47",
-      "harnessSha256": "6d7c38aa013b0b250d321d5bd6fc3f880e8f37d09f87e8abbd5fb1157ee1d774"
+      "runnerSha256": "c24625ad312b804c3e1d92c915e29586c76e2d02f24f194d6c3c93fab6529df1",
+      "reportSha256": "55ea43fddb193611bb61359ef6212b59cec2cc189d68856a397996588a92344a",
+      "harnessSha256": "567a6c87c7e6ed9506814b11f185414b7a6338838a5bb9957ac58e64a73fdb9a"
     },
     "care-fatigue": {
-      "runnerSha256": "4a211b3423e151fd3e32bbab22683f9607791ab4b54841acf0568a9329c5a2bd",
-      "reportSha256": "3392dfe53c047c0cc4f7176598583abaf9aceb63570c5d9605018f83c2898f00",
+      "runnerSha256": "926ef0357661ceb88b1d68fe4c78cdcfa5d07fabe60e52567518e6e53405f2ea",
+      "reportSha256": "e0e8199c3ef1a9968f959b736c3244f48d6571c401456518cb5cec59bbec6a50",
       "harnessSha256": "60b9b05a2437b088d08bd89ca393dc4ab00d107fc4c382927e2a36068ab92130"
     }
   },
-  "summaryPath": "focused-v2-closure/summary.json",
-  "summarySha256": "989e9d45cc2aae8e9bf0dfda0bda736d09c67e8617b1f5b2011af67f3856ac50",
+  "summaryPath": "focused45-normal2-closure/summary.json",
+  "summarySha256": "3c4d6adc8d56da1824f0c6a20df762bab71e3a88ca684202158f14ee1134b331",
   "originSummaries": {
-    "focused-v2/summary.json": "0a79b3317fbf47852964d5ae1e196e19bfaabeb30b6690fca18d9a763e404981"
+    "focused45-normal2/summary.json": "f432e5888f1a583f9926afea665b6ab7d38cc5b92b448de86201e94c6306d579"
   }
 } /* REVIEWED_ZOMBOTANY3_PINS_END */;
 
@@ -347,13 +347,13 @@ export async function verifyZombotany3FocusedRetention({read,sha,engine,reports}
   const additions=ZOMBOTANY3_SOURCE_ADDITIONS.map(name=>'source/'+name);
   for(const input of additions)assert(Object.hasOwn(result.sourceSha256,input));
   assert.deepEqual(keys(result.sourceSha256),[...keys(retained.originalReports.get(name).sourceSha256),...additions].sort(),
-   'Every old source dependency stays bound, with exactly four new production inputs: '+name);
+   'Every old source dependency stays bound, with exactly eight appended production inputs: '+name);
   for(const [input,pin]of Object.entries(result.sourceSha256)){
    safeName(input);assert(input.startsWith('source/'));digest(pin);assert.equal(sha(await read(input)),pin);
   }
   total+=result.checks;
  }
- assert.equal(total,58835);
+ assert.equal(total,58837);
  const layout=reports.get('native-layout');
  assert.equal(layout.rallyAlmanacChecks,760);assert.equal(layout.rallyAlmanacWindows,27);
  assert.equal(layout.scrapRetainedChecks,26138);assert.equal(layout.scrapLayoutChecks,333);
@@ -386,5 +386,5 @@ export async function verifyZombotany3FocusedRetention({read,sha,engine,reports}
   assert.deepEqual(exactRow,actualInvocations.get(actualExecutionSummary).runners.find(old=>old.name===row.name),
    'Every current passing row retains its exact actual invocation, including unchanged runner/report/log pins');
  }
- console.log('PASS Zombotany3 focused retention:58,834 exact published assertions plus1 catalog iteration; all13 current and silent.');
+ console.log('PASS Zombotany3 focused retention:58,834 exact published assertions plus3 catalog iterations; all13 current and silent.');
 }

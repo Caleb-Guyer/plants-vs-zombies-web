@@ -1,5 +1,21 @@
 # GitHub Pages release: Caleb-Guyer/plants-vs-zombies-web
 
+## Zombotany 4 and 5
+
+Engine: `0.2.6-web-zombotany45.1`; supersedes `0.2.6-web-zombotany3.2` at `789965e43b59c9a2ecded002267374a7d20e83f1`. The authenticated Gust source lineage remains separate. JavaScript SHA-256: `836dd1600e3c8fe4e120f3ab452b1eebf7c119f9c0b4694c680828a00f3ec89c`. WebAssembly SHA-256: `ac1a59cbc8acb71911923c7f670fd837f3b5e752512e3c2c9118c276f1e731f6`.
+
+Native source: `pvz-portable-0.2.6-web-zombotany45.1-source.zip`, SHA-256 `3961bb9b472f27e3661d645bf9ab89865f9fd9ffa795a5462f31b959175151e5`. Full patch: `web-zombotany45.1.patch`; incremental patch: `gust1-to-zombotany45.patch`. Against published 3.2, twelve existing production files change and four new Zombotany 4/5 gameplay/art files are added; saved layouts and the existing Zombotany 3 implementation/art stay unchanged.
+
+The source bundle restores the exact current native archive before restoring the historical Endless.2 comparator. The native artifact codec preserves the exact linked executable bytes. All 19 offline integration suites and 30 current native suites are required by the existing Pages workflow. Publication, fresh source-download/bootstrap checks and public-byte verification use separate receipts.
+
+Current nine-capture browser functionality check: **NOT RUN**. The official browser tool could not establish its required browser URL/policy precondition. No current browser interaction, capture, save-continuation pass or earned browser win is claimed; the pinned blocking record remains separate from actual native test and raster evidence.
+
+No fresh browser performance verdict is claimed for this release. Earlier Torch and Zombotany 3.2 timing/browser records retain their original capture-time scope; native tests and native offscreen rasters do not establish compositor FPS, GPU completion or universal smoothness.
+
+## Prior release records (Zombotany 3.2 and earlier)
+
+These records retain their earlier release-time scope and original evidence.
+
 ## Zombotany 3.2 artifacts
 
 Engine: `0.2.6-web-zombotany3.2`; fixes release: `0.2.6-web-zombotany3.1`. The authenticated Gust source and test lineage is retained. JavaScript SHA-256: `0ffe49ac17d6c0c73c120c30781b14c49816f12d0743cd740ab13070f73df250`. WebAssembly SHA-256: `8921eb268458f039a48d59cb071fb4c206dc059ca556aba0ab49340e2191f2d5`.

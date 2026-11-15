@@ -1,5 +1,19 @@
 # Plants vs. Zombies — browser playtest
 
+## Zombotany 4 and 5
+
+Zombotany 4 brings the original fog-and-pool lawn, swimming Sea-shroom heads and the existing mushroom/Peashooter threats. Zombotany 5 moves to the original roof with Cabbage-pult, Kernel-pult and Melon-pult heads: their native lob artwork and animations include butter, splash damage and the original Umbrella Leaf counter. Both use the normal seed chooser, native sun economy and twenty authored waves. The roof intro supplies its original three columns of fifteen Flower Pots.
+
+The native Zombotany family page now contains the original first two games and Zombotany 3, 4 and 5. Beat 3 to unlock 4, then beat 4 to unlock 5. Card frames, fonts, original assets and normal gameplay controls remain native; no card tips or extra HUD were added. Normal game audio remains available; automated native tests open no audio device.
+
+Current nine-capture browser functionality check: **NOT RUN**. The official browser tool could not establish its required browser URL/policy precondition. No current browser interaction, capture, save-continuation pass or earned browser win is claimed; the pinned blocking record remains separate from actual native test and raster evidence.
+
+[Play the game](https://caleb-guyer.github.io/plants-vs-zombies-web/).
+
+## Prior release records (Zombotany 3.2 and earlier)
+
+These records retain their earlier release-time scope and original evidence.
+
 ## Zombotany 3.2 fixes
 
 Puff-shroom and Fume-shroom zombie hits now remove a plant as soon as its health reaches zero. Older Zombotany 3 saves containing a zero-health plant are cleaned up before those plants can act again. The original ZomBotany 2 card also keeps its native unlock tooltip when viewed through the Zombotany family page.

@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-zombotany3.2
-Fixes Zombotany3 lethal hits, affected older saves and original unlock hints on family aliases.
-Engine JavaScript SHA-256: 0ffe49ac17d6c0c73c120c30781b14c49816f12d0743cd740ab13070f73df250
-Engine WASM SHA-256: 8921eb268458f039a48d59cb071fb4c206dc059ca556aba0ab49340e2191f2d5
+PvZ-Portable 0.2.6-web-zombotany45.1
+Adds Zombotany4 fog and Zombotany5 roof to the original family page.
+Engine JavaScript SHA-256: 836dd1600e3c8fe4e120f3ab452b1eebf7c119f9c0b4694c680828a00f3ec89c
+Engine WASM SHA-256: ac1a59cbc8acb71911923c7f670fd837f3b5e752512e3c2c9118c276f1e731f6
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.

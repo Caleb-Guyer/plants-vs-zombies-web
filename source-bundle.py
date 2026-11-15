@@ -434,7 +434,8 @@ def make_current_transport(root):
     """Return two deterministic outer-only entries; leave the native ZIP exact."""
     root = _root(root)
     target, original = _donor(root)
-    payload = lzma.compress(original, format=lzma.FORMAT_XZ, check=lzma.CHECK_CRC64, preset=6)
+    # Preset8 uses a32MiB dictionary within the existing64MiB decoder bound.
+    payload = lzma.compress(original, format=lzma.FORMAT_XZ, check=lzma.CHECK_CRC64, preset=8)
     manifest = {"format": CURRENT_FORMAT, "target": target,
                 "payload": {"path": CURRENT_PAYLOAD_REL, "bytes": len(payload), "sha256": _sha(payload)}}
     encoded = (json.dumps(manifest, sort_keys=True, separators=(",", ":")) + "\n").encode("utf-8")
