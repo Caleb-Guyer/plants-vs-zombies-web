@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "engineId": "0.2.6-web-zombotany45.1",
+  "scope": "Immutable published renderer and native evidence identity before the45.2 correction. Browser functionality was NOT RUN; no current browser or timing claim.",
+  "nativeSource": {
+    "path": "dist/source/pvz-portable-0.2.6-web-zombotany45.1-source.zip",
+    "bytes": 41089503,
+    "sha256": "3961bb9b472f27e3661d645bf9ab89865f9fd9ffa795a5462f31b959175151e5"
+  },
+  "sourceFiles": 886,
+  "productionObjects": 151,
+  "normalReceiptSha256": "721a1d47b75566e042bf7bd69dc3e34dc8c7cd69fe7a00eb4455f662defaef3b",
+  "native45ReportSha256": "acf1d0636ba3a054b21f04178ba5d287dc035f120ae88b339d65f725cd5dd1cc",
+  "native3ReportSha256": "aabf8f56ca39a9a7eea390423e8f0e4673d5268fcd6a3d98ffdf454864e101d8",
+  "files": {
+    "tests/fixtures/historical/zombotany45-1-published/release.json": {
+      "bytes": 518,
+      "sha256": "3d02891ed6e4faf40019bb77b701d14cac796b7c67852f0b878eff51b092423e"
+    },
+    "tests/fixtures/historical/zombotany45-1-published/browser-availability.json": {
+      "bytes": 1758,
+      "sha256": "bfc170e05b829901a0b65e3dca680fc87247064f99d0a915d08a5ff4a6eb5026"
+    },
+    "tests/fixtures/historical/zombotany45-1-published/engine-provenance.json": {
+      "bytes": 187526,
+      "sha256": "4793985e310b468c9f688b2fa36c5a274ecd363ebc28c6f43d394a3edd16f59a"
+    },
+    "tests/zombotany45-1-browser-verification.mjs": {
+      "bytes": 28554,
+      "sha256": "74add94f921875031f5b83aa94eb7883909d15bc58f8a4cf9d3a2b483f9dae3c"
+    }
+  }
+}

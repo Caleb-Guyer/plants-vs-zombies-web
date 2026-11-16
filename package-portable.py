@@ -31,7 +31,7 @@ SOURCE_DOWNLOADS = DIST / "source" / "source-downloads.json"
 MAX_STATIC_ASSET_BYTES = 100 * 1024 * 1024
 AMBUSH_PARENT_REFERENCE_SHA256 = "6771fc13bae02cb70dd8de12192f1f18e50302904a7ef1c784a790e6ccb51dd3"
 GUST_PARENT_REFERENCE_SHA256 = "14b5ef8f794cbfb5cb687f24cf05d23fa63620339945f139d2c5d947e9827476"
-ZOMBOTANY3_PARENT_REFERENCE_SHA256 = "6e7a79762d0bc992210cd4a185ee6295aaf63f478eb35d1e9b98dd1315631678"
+ZOMBOTANY3_PARENT_REFERENCE_SHA256 = "b7be60f52c989f5167b7582b46a4b75824a0748cefe443881c80888e31397cb9"
 DOUBLE_PARENT_REFERENCE_SHA256 = "a22e68371f7ad0f794b7e1f9221ed8bb45e7220df3501b8281435dcaf244a160"
 TORCH_PARENT_REFERENCE_SHA256 = "14dc78f0593db13b4e17e559061f84996be9c64f23663bd9ef7556b669fc96f6"
 AMBUSH_FOCUSED_REFERENCE_SHA256 = "9463bdd7c262c1749c57b00d25d45257951f8b8b2c8d4511cff630f9c606e9c8"
@@ -114,7 +114,7 @@ def parent_source_input(engine):
             or any(character not in "0123456789abcdef" for character in expected)):
         raise ValueError("Invalid immediate-parent source SHA-256")
     path = DIST / "game" / reference
-    if engine.get("id") == "0.2.6-web-zombotany45.1":
+    if engine.get("id") == "0.2.6-web-zombotany45.2":
         authenticate_zombotany3_parent(engine)
         return None
     if engine.get("id") == "0.2.6-web-gust.1":
@@ -409,7 +409,7 @@ def authenticate_zombotany3_parent(engine, current_sources=None):
     }
     if (set(reference.get("changedPaths", [])) != expected_changed or set(reference.get("reverseEdits", {})) != expected_changed):
         raise ValueError("Zombotany3 changes exceed the reviewed integration paths")
-    if (engine["id"] != "0.2.6-web-zombotany45.1" or reference["schemaVersion"] != 1 or
+    if (engine["id"] != "0.2.6-web-zombotany45.2" or reference["schemaVersion"] != 1 or
             reference["current"] != {"id": engine["id"], "sourceCount": 886} or
             reference["parent"]["id"] != "0.2.6-web-gust.1" or
             reference["parent"]["archivePrefix"] != "gust1-candidate/source/" or
@@ -466,8 +466,8 @@ def nested_source_inputs(engine, paths, baseline):
             or hashlib.sha256(native_ui.read_bytes()).hexdigest()
             != "d9861034849eca9d637197aa78a1bae4c90b5656db91ca102d8c903100031edd"):
         raise ValueError("Authenticated native I, Zombie UI fixture is missing or changed")
-    if engine.get("id") in {"0.2.6-web-scrap.1", "0.2.6-web-ambush.1", "0.2.6-web-torch.1", "0.2.6-web-double.1", "0.2.6-web-gust.1", "0.2.6-web-zombotany45.1"}:
-        if engine["id"] == "0.2.6-web-zombotany45.1":
+    if engine.get("id") in {"0.2.6-web-scrap.1", "0.2.6-web-ambush.1", "0.2.6-web-torch.1", "0.2.6-web-double.1", "0.2.6-web-gust.1", "0.2.6-web-zombotany45.2"}:
+        if engine["id"] == "0.2.6-web-zombotany45.2":
             authenticate_zombotany3_parent(engine)
         elif engine["id"] == "0.2.6-web-gust.1":
             authenticate_gust_parent(engine)

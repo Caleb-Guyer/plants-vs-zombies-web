@@ -1,0 +1,10 @@
+{
+  "id": "0.2.6-web-zombotany45.1",
+  "jsSha256": "836dd1600e3c8fe4e120f3ab452b1eebf7c119f9c0b4694c680828a00f3ec89c",
+  "wasmSha256": "ac1a59cbc8acb71911923c7f670fd837f3b5e752512e3c2c9118c276f1e731f6",
+  "sourceSha256": "3961bb9b472f27e3661d645bf9ab89865f9fd9ffa795a5462f31b959175151e5",
+  "patchSha256": "0dfa173278a807a8dbc5eb9d57acb6f2f841a100815937e3ce9fa4d1864b879c",
+  "normalReceiptSha256": "721a1d47b75566e042bf7bd69dc3e34dc8c7cd69fe7a00eb4455f662defaef3b",
+  "sourceFiles": 886,
+  "productionObjects": 151
+}

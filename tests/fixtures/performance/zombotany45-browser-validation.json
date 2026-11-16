@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "status": "not-run-tool-blocked",
+  "status": "not-run",
   "engine": {
-    "id": "0.2.6-web-zombotany45.1",
-    "jsSha256": "836dd1600e3c8fe4e120f3ab452b1eebf7c119f9c0b4694c680828a00f3ec89c",
-    "wasmSha256": "ac1a59cbc8acb71911923c7f670fd837f3b5e752512e3c2c9118c276f1e731f6"
+    "id": "0.2.6-web-zombotany45.2",
+    "jsSha256": "1a4842f4945ea786677f502a595df64e1cdcb8c78b9cc6a37626f118c62f9857",
+    "wasmSha256": "928a69c9f37d94d0995180ff3afb5aa3a7676e4b9c25f8181ce4a5d42b9188a7"
   },
   "proof": null,
   "currentGameObserved": false,
@@ -12,29 +12,17 @@
   "screenshots": 0,
   "currentBrowserScreenshots": 0,
   "browserEarnedWins": 0,
+  "browserAttemptedForCorrection": false,
+  "blockingEvidence": null,
   "audioMutedThroughout": null,
   "freshBrowserPerformanceMeasured": false,
   "freshBrowserPerformancePassed": false,
   "nativeTestsReplaceBrowserPerformance": false,
-  "preregistration": {
-    "path": "tests/fixtures/zombotany45-browser/preregistration.json",
-    "bytes": 3367,
-    "sha256": "9c866e49f3e6f3697db26467c84558c3e45e4482f6ecf71f89baa441e041ef75"
+  "currentReason": "Native renderer/compatibility regression performed; browser not attempted for this correction",
+  "historicalRelease": {
+    "path": "tests/fixtures/historical/zombotany45-1-published/manifest.json",
+    "bytes": 1559,
+    "sha256": "ffd8a3da72e0c78c8135715c573a459d56b4fe008133e1bd0876d27722036bcf"
   },
-  "automationAmendment": {
-    "path": "tests/fixtures/zombotany45-browser/automation-amendment.json",
-    "bytes": 2368,
-    "sha256": "a4e22a2c01bcc268c7596219eb7865b0aed5e284e6f5629ea4c76f50b6eff5de"
-  },
-  "roofStartingPotsAmendment": {
-    "path": "tests/fixtures/zombotany45-browser/roof-starting-pots-amendment.json",
-    "bytes": 2416,
-    "sha256": "f7a37929684d001c92468be9ce32e0a66e7bf6e721ccac821602d1d1feef148e"
-  },
-  "blockingEvidence": {
-    "path": "tests/fixtures/zombotany45-browser/blocked-control.json",
-    "bytes": 1138,
-    "sha256": "3fb43fa7028994d19ebf39bd9e1c84b24785be41474867f21810f0e97a45f491"
-  },
-  "scope": "Current browser functionality was not run: official Computer Use could not confidently verify the Windows browser URL. No current game observation, screenshot, mute observation, browser win or timing pass is claimed. Native automated suites and historical browser evidence remain separate."
+  "scope": "Current45.2 browser functionality was not attempted. The actual45.1 Computer Use tool block remains historical. Native renderer/compatibility acceptance and historical browser/timing evidence remain separate."
 }

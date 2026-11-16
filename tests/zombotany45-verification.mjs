@@ -3,21 +3,25 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {createRequire} from 'node:module';
-import {CURRENT_ENGINE_ID,CURRENT_SOURCE_COUNT,CURRENT_OBJECT_COUNT} from './native-release-context.mjs';
+import {CURRENT_ENGINE_ID,CURRENT_SOURCE_COUNT,CURRENT_OBJECT_COUNT,CURRENT_NORMAL_RECEIPT_SHA256} from './native-release-context.mjs';
+import {verifyZombotany3PlantHeadRoster} from './zombotany3-verification.mjs';
+import {FAMILY_FIX_INPUTS,verifyZombotanyFamilyFixes} from './zombotany-family-fixes-verification.mjs';
 const vendor={exports:{}};
 new Function('module','exports','require',fs.readFileSync(new URL('../dist/vendor/jszip.min.js',import.meta.url),'utf8'))(vendor,vendor.exports,createRequire(import.meta.url));
 const Zip=vendor.exports;
 
 // ROOT seals these only after reviewing the real final56 execution. A CI rerun
 // may vary raw log hashes; all other canonical native observations stay fixed.
-// ROOT independently reviewed all56 actual cases, their raw native logs,
-// current886/151 bindings,32 rejection controls and the earlier earned profile.
-const acceptedContractPins=new Set(['2d0d7925ce67518e626b011b4ba335ae0a98f4884b7859ef46e3b1d7b29b7603']);
-const acceptedReportPins=new Set(['acf1d0636ba3a054b21f04178ba5d287dc035f120ae88b339d65f725cd5dd1cc']);
-const acceptedReportContentPins=new Set(['7217920350588691e056604490657928f31b0efb50763b418ceff64b231006af']);
+// Published45.1 observations remain historical. The final45.2 current56 run
+// and separate renderer/compatibility proof were independently reviewed.
+const acceptedContractPins=new Set(['ba191d5382c4fdb220f8b902e887400bf345e5ea35350f35a1f21fe10b629a45']);
+const acceptedReportPins=new Set(['2b9af5288094c63e9e6aa9c057c829319183d786a8d8ebb07ff442adf0d06246']);
+const acceptedReportContentPins=new Set(['a0ad1a4a3e41863b14691ab0272115e8cf7a1cccc171264be367d895de2796ac']);
 const acceptedPrerequisitePins=new Set(['80570015aaa34160568aa38a068fd6c7c5a14b6b4df040f0a901206e0e363f8c']);
-const ENGINE='0.2.6-web-zombotany45.1';
-const NORMAL='721a1d47b75566e042bf7bd69dc3e34dc8c7cd69fe7a00eb4455f662defaef3b';
+const ENGINE='0.2.6-web-zombotany45.2';
+const NORMAL=CURRENT_NORMAL_RECEIPT_SHA256;
+const PREREQUISITE_ENGINE='0.2.6-web-zombotany45.1';
+const PREREQUISITE_NORMAL='721a1d47b75566e042bf7bd69dc3e34dc8c7cd69fe7a00eb4455f662defaef3b';
 const names=['normal','hesitation','save-attack','retry','replay','no-action','controls'];
 export const ZOMBOTANY45_MATRIX=[94,95].flatMap(mode=>[1729,7331].flatMap(seed=>names.flatMap(name=>[1,2].map(speed=>[mode,name,speed,seed]))));
 const identity=row=>[row.mode,row.name,row.speed,row.seed].join('/');
@@ -37,9 +41,10 @@ const roofWaves=[[1,0,0,0],[2,0,0,0],[1,1,0,0],[2,1,0,0],[2,1,0,0],
  [2,1,0,0],[3,1,0,0],[3,1,0,0],[3,1,1,0],[3,2,1,0],
  [3,2,1,0],[3,2,1,0],[3,2,1,1],[3,2,1,0],[4,2,1,0],
  [4,2,1,0],[4,2,1,1],[4,3,1,0],[4,3,1,1],[4,3,2,1]];
-const ledger=mode=>(mode===94?fogWaves:roofWaves).map((counts,wave)=>{
+const ledger=(mode,{historical=false}={})=>(mode===94?fogWaves:roofWaves).map((counts,wave)=>{
  const types=mode===94?[35,36,26,38,27]:[39,40,41,31],out=counts.map((n,i)=>[types[i],n]).filter(([,n])=>n);
- if((wave+1)%10===0)out.push([1,1]);return out.sort((a,b)=>a[0]-b[0]);
+ if((wave+1)%10===0){const flag=historical?1:mode===94?35:39,existing=out.find(([type])=>type===flag);if(existing)existing[1]++;else out.push([flag,1]);}
+ return out.sort((a,b)=>a[0]-b[0]);
 });
 const emptyLedger=Array.from({length:20},()=>[]);
 const stats={bodyHealth:270,seaRange:180,seaDamage:20,seaCadence:150,seaWindup:35,seaLifetime:60,
@@ -56,7 +61,7 @@ const expectedInputs=['zombotany45-harness.cpp','zombotany45-policy.h','zombotan
  'zombotany45-earned-z3-fixture.json','zombotany45-earned-z3/userdata/user1.dat','zombotany45-earned-z3/userdata/users.dat',
  'zombotany45-earned-z4-fixture.json','zombotany45-earned-z4/userdata/user1.dat','zombotany45-earned-z4/userdata/users.dat',
  'zombotany45-earned-z4-origin/result.json','zombotany45-earned-z4-origin/save-attack.log',
- 'zombotany45-earned-z4-origin/build.json','zombotany45-earned-z4-origin/inputs.zip'];
+ 'zombotany45-earned-z4-origin/build.json','zombotany45-earned-z4-origin/inputs.zip',...FAMILY_FIX_INPUTS];
 // Byte pins independently extracted from the actual published .2 source ZIP
 // 9e418637...: all eight saved layouts/serializers and the four existing3 files.
 const legacySources={
@@ -68,7 +73,6 @@ const legacySources={
  'src/Lawn/System/SaveGame.cpp':'1deb4fe9a316ddaa1473839c70bc7c0720cc32e2df7a8346be7d5f87901eb261',
  'src/Lawn/System/PlayerInfo.cpp':'b148f5b2b12db9e4fb651d4e9f07192b4434e4744230fe478edc18803d91fe02',
  'src/Lawn/System/PlayerInfo.h':'98e524a2a8ed093bcba54a2b27d5fd39da360408fdaaebe08d130c5f53af13fd',
- 'src/Lawn/System/Zombotany3.h':'d7e142de18d4110101f4509b3e03c66463981412ef6bb13c1c156664f6a0de24',
  'src/Lawn/System/Zombotany3.cpp':'7112b10a8d4ef31f850f61a29653621ea7ad1ce3cb2263bf8054c0f1c3f81c2f',
  'src/Lawn/System/Zombotany3Art.h':'da13426bf53399b6c1a266feb773bd8b8ea5706134829688ffeabc517223478d',
  'src/Lawn/System/Zombotany3Art.cpp':'0059d09d9cb691b86ccbf273d28fd350051553b3dbd3cd0e4241ca75d87146ec'};
@@ -82,9 +86,25 @@ export function verifyZombotany45ReportIdentity({reportBytes,sha}){
  return {report,sealedReport:acceptedReportPins.has(sha(reportBytes))};
 }
 
+const PUBLISHED_POLICY_SHA256='0e84c76fd9ee68bcef7943ee91aacc46c4cc44bc77bad5b3beff929b41613b84';
+const REVIEWED_POLICY_SHA256='1fac33b8fe17feaaa9627f240c317c7a9460e7c3ea0e33c780389ce874ea139e';
+const REVIEWED_POLICY_BEFORE='e.type==ZOMBIE_TALLNUT_HEAD&&e.x<360';
+const REVIEWED_POLICY_AFTER='e.type==ZOMBIE_TALLNUT_HEAD&&e.x<520';
+export function verifyZombotany45PlayerPolicy({policyBytes,sha}){
+ const policy=text(policyBytes);
+ assert.equal(sha(Buffer.from(policy)),REVIEWED_POLICY_SHA256,'Only the independently reviewed Tall-nut response change is accepted');
+ assert.equal(policy.split(REVIEWED_POLICY_AFTER).length,2,'Exactly one visible Tall-nut Cherry predicate changed');
+ assert(!policy.includes(REVIEWED_POLICY_BEFORE));
+ const original=policy.replace(REVIEWED_POLICY_AFTER,REVIEWED_POLICY_BEFORE);
+ assert.equal(sha(Buffer.from(original)),PUBLISHED_POLICY_SHA256,
+  'Reversing the one reviewed predicate must recover every published45.1 player byte, including all Fog choices and costs/cadence');
+ return {policySha256:REVIEWED_POLICY_SHA256,publishedPolicySha256:PUBLISHED_POLICY_SHA256,reviewedReplacements:1};
+}
+
 export async function verifyZombotany45SourceBounds({read,sha}){
  assert.equal(CURRENT_ENGINE_ID,ENGINE);assert.equal(CURRENT_SOURCE_COUNT,886);assert.equal(CURRENT_OBJECT_COUNT,151);
  for(const[path,pin]of Object.entries(legacySources))assert.equal(sha(await read('source/'+path)),pin,'Prior saved ABI/native3 bytes: '+path);
+ verifyZombotany3PlantHeadRoster({header:await read('source/src/Lawn/System/Zombotany3.h'),sha});
  let enums=text(await read('source/src/ConstEnums.h'));
  for(const line of ['\tGAMEMODE_CHALLENGE_ZOMBOTANY_4 = 94,\n','\tGAMEMODE_CHALLENGE_ZOMBOTANY_5 = 95,\n',
   '\tZOMBIE_SEA_HEAD,\n','\tZOMBIE_CABBAGE_HEAD,\n','\tZOMBIE_KERNEL_HEAD,\n','\tZOMBIE_MELON_HEAD,\n']){
@@ -105,6 +125,8 @@ export async function verifyZombotany45SourceBounds({read,sha}){
   assert.deepEqual([...body[1].matchAll(/\{([\d,]+)\}/g)].map(m=>m[1].split(',').map(Number)),expected);
   assert(expected.every(row=>row.length===width));
  }
+ assert(header.includes('if((wave+1)%10==0)output[wave][index++]=IsFog(mode)?ZOMBIE_PUFF_HEAD:ZOMBIE_CABBAGE_HEAD;'));
+ assert(!header.includes('ZOMBIE_FLAG'),'New authored flag waves and allowlists contain plant heads only');
  const implementation=text(await read('source/src/Lawn/System/Zombotany45.cpp'));
  for(const exact of ['Zombotany45Art::GetMouthPosition(zombie','static_cast<int>(x)-13,static_cast<int>(y)-13',
   'zombie.mMindControlled?9:Zombotany3::kHostilePuffMarker','zombie.mBossMode==1?PROJECTILE_BUTTER:PROJECTILE_KERNEL',
@@ -115,6 +137,58 @@ export async function verifyZombotany45SourceBounds({read,sha}){
  assert(!/zombie\.(?:mBodyHealth|mBodyMaxHealth|mHelmHealth|mShieldHealth|mVelX|mBossStompCounter|mBossHeadCounter)\s*(?:[+*/-]=|=(?!=))/.test(implementation),'Native carrier stats and Gust fields must remain separate');
  assert(!implementation.includes('board.AddPlant(0,row,SEED_FLOWERPOT'),'Original native roof intro supplies its own three pot columns');
  const art=text(await read('source/src/Lawn/System/Zombotany45Art.cpp'));
+ for(const exact of ['void PlaceHead(Reanimation& carrier, Reanimation& head, ZombieType type)',
+  'head.mOverlayMatrix = attachment * HeadTransform(type);',
+  'carrier.GetTrackMatrix(carrier.FindTrackIndex("Zombie_neck"), neck);',
+  'head.GetTrackMatrix(head.FindTrackIndex("anim_face"), face);',
+  'neck.m02 + neck.m00 * 3.0f - neck.m01 * 6.5f',
+  'neck.m12 + neck.m10 * 3.0f - neck.m11 * 6.5f',
+  'face.m02 + face.m00 * 1.0f + face.m01 * 11.5f',
+  'face.m12 + face.m10 * 1.0f + face.m11 * 11.5f',
+  'head.mOverlayMatrix.m02 += neckX - faceX;','head.mOverlayMatrix.m12 += neckY - faceY;',
+  'PlaceHead(carrier, head, type);','PlaceHead(*carrier, *head, zombie.mZombieType);'])assert(art.includes(exact),exact);
+ assert(art.indexOf('head.mOverlayMatrix = attachment * HeadTransform(type);')<art.indexOf('head.mOverlayMatrix.m02 += neckX - faceX;'),
+  'The current Sea pose is rebuilt from the native base before correction, avoiding incremental drift');
+ const zombieSource=text(await read('source/src/Lawn/Zombie.cpp'));
+ assert(zombieSource.includes('aBodyReanim->Update();\n    Zombotany45Art::UpdateHeadAnchor(*this);'));
+ const board=text(await read('source/src/Lawn/Board.cpp'));
+ for(const exact of ['Zombotany45::RestorePlantHeadOnly(*this);',
+  'theZombieType = Zombotany45::PlantHeadForSpawn(mApp->mGameMode, theZombieType, theRow);',
+  'theZombieType = Zombotany45::PlantHeadForSpawn(mApp->mGameMode, theZombieType);'])assert(board.includes(exact),exact);
+ const graves=board.match(/void Board::SpawnZombiesFromGraves\(\)\s*\{([^]*?)\n\}/);assert(graves);
+ assert(graves[1].includes('Zombotany3::IsMode(mApp->mGameMode) || Zombotany45::IsMode(mApp->mGameMode)'));
+ const spawning=board.match(/void Board::UpdateZombieSpawning\(\)\s*\{([^]*?)\n\}/);assert(spawning);
+ const completion='if (Zombotany45::IsFamilyMode(mApp->mGameMode) && mApp->mGameScene == SCENE_PLAYING &&\n'+
+  '        !mPaused && mTimeStopCounter <= 0 && !mLevelComplete && mNumWaves > 0 &&\n'+
+  '        mCurrentWave >= mNumWaves && mRiseFromGraveCounter <= 0 && !AreEnemyZombiesOnScreen())\n'+
+  '    {\n        mChallenge->SpawnLevelAward(4, 2);\n        return;\n    }';
+ assert.equal(spawning[1].split(completion).length,2,
+  'Sanitized legacy completion requires an active, unpaused, unstopped, unfinished final wave with no pending grave spawn or enemy');
+ assert(spawning[1].indexOf('if (HasLevelAwardDropped())')<spawning[1].indexOf(completion)&&spawning[1].indexOf('if (HasLevelAwardDropped())')>=0,
+  'The existing native award guard prevents repeated completion awards');
+ for(const exact of ['if(!IsFamilyMode(mode) || type<ZOMBIE_NORMAL || type>=NUM_ZOMBIE_TYPES || Zombie::IsZombotany(type))return type;',
+  'if(IsRoof(mode))return ZOMBIE_CABBAGE_HEAD;',
+  'if(IsFog(mode))return row==2 || row==3?ZOMBIE_SEA_HEAD:ZOMBIE_PUFF_HEAD;',
+  'return Zombotany3::IsMode(mode)?ZOMBIE_PUFF_HEAD:ZOMBIE_PEA_HEAD;',
+  'for(auto& wave:board.mZombiesInWave)for(auto& type:wave)type=PlantHeadForSpawn(mode,type);',
+  'if(zombie->mZombieType==ZOMBIE_SEA_HEAD)Zombotany45Art::UpdateHeadAnchor(*zombie);'])assert(implementation.includes(exact),exact);
+ const restore=implementation.match(/void RestorePlantHeadOnly\(Board& board\)\s*\{([^]*?)\n\}\nvoid Populate\(/);assert(restore);
+ const firstOverlay='if((zombie->mZombieType==ZOMBIE_PEA_HEAD || zombie->mZombieType==ZOMBIE_PUFF_HEAD) &&\n'+
+  '                    gEffectSystem && gEffectSystem->mAttachmentHolder)';
+ assert.equal(restore[1].split(firstOverlay).length,2,'Only newly converted native Pea/Puff heads need their initial attachment overlay seeded');
+ for(const exact of ['auto* track=body->GetTrackInstanceByName("anim_head1");',
+  'gEffectSystem->mAttachmentHolder->mAttachments.DataArrayTryToGet(static_cast<unsigned int>(track->mAttachmentID))',
+  'for(int i=0;i<attachment->mNumEffects;++i)',
+  'const AttachEffect& effect=attachment->mEffectArray[i];',
+  'if(effect.mEffectType!=EffectType::EFFECT_REANIM ||\n'+
+   '                                effect.mEffectID!=static_cast<unsigned int>(zombie->mSpecialHeadReanimID))continue;',
+  'body->GetAttachmentOverlayMatrix(body->FindTrackIndex("anim_head1"),parent);',
+  'head->mOverlayMatrix=parent*effect.mOffset;\n                            break;'])
+  assert(restore[1].includes(exact),'First Continue draw must use the matching native attached head and its actual offset: '+exact);
+ assert(!/(?:head|body)->(?:Update|UpdateReanim)\s*\(|(?:AttachmentUpdate|ReanimationUpdateTransform)\s*\(/.test(restore[1]),
+  'Legacy first-render attachment seeding cannot advance body, head or attachment clocks');
+ assert(!/(?:head|body)->(?:mAnimTime|mLastFrameTime)\s*(?:[+*/-]=|=(?!=)|\+\+|--)/.test(restore[1]),
+  'Legacy first-render attachment seeding cannot rewrite the saved animation clocks');
  const specs=[...art.matchAll(/case ZOMBIE_(SEA|CABBAGE|KERNEL|MELON)_HEAD: return \{(REANIM_\w+), ([\d.]+)f, (-?[\d.]+)f, ([\d.]+)f\};/g)]
   .map(m=>[m[1],m[2],...m.slice(3).map(Number)]);
  assert.deepEqual(specs,[['SEA','REANIM_SEASHROOM',69,-34,1],['CABBAGE','REANIM_CABBAGEPULT',65,-21,.82],
@@ -133,6 +207,8 @@ export async function verifyZombotany45SourceBounds({read,sha}){
   'GAMEMODE_CHALLENGE_ZOMBOTANY_4 ? 3 :','GAMEMODE_CHALLENGE_ZOMBOTANY_5 ? 4 : -1;'])assert(screen.includes(exact),exact);
  const battles=text(await read('tests/zombotany45-battles.h')),view=battles.match(/Z45Player::View View\(Board\*b\)\{([\s\S]*?)\n\}/);assert(view);
  const policy=text(await read('tests/zombotany45-policy.h'));
+ verifyZombotany45PlayerPolicy({policyBytes:Buffer.from(policy),sha});
+ assert(battles.includes('Require(Zombie::IsZombotany(z->mZombieType),"passive45 observer found an unauthorized ordinary zombie");++run.liveHeadChecks;'));
  for(const[name,seeds]of [['FogSeeds',['SUNSHROOM','LILYPAD','PUFFSHROOM','SCAREDYSHROOM','FUMESHROOM','WALLNUT']],
   ['RoofSeeds',['SUNFLOWER','FLOWERPOT','CABBAGEPULT','WALLNUT','UMBRELLA','CHERRYBOMB']]]){
   const deck=policy.match(new RegExp(name+'\\s*=\\s*\\{([^}]+)\\}'));assert(deck);
@@ -163,6 +239,7 @@ export async function verifyZombotany45BuildBindings({report,read,sha,engine,ful
  assert.deepEqual(report.sourceSha256,fullRunReport.sourceSha256);assert.deepEqual(report.productionObjectSha256,fullRunReport.productionObjectSha256);
  for(const[path,pin]of Object.entries(report.sourceSha256)){safe(path);assert(path.startsWith('source/'));digest(pin);assert.equal(sha(await read(path)),pin,path);}
  for(const[path,pin]of Object.entries(report.productionObjectSha256)){safe(path);digest(pin);assert(path.endsWith('.o'));}
+ assert(NORMAL,'Current45.2 normal build has not been independently reviewed');
  assert.equal(sha(productionBuildBytes),NORMAL);assert.equal(report.productionBuildReceiptSha256,NORMAL);
  const normal=json(productionBuildBytes);fields(normal,{status:'PASS',exitCode:0,sourceUnchangedDuringBuild:true,sourceFiles:886});
  for(const suffix of ['js','wasm'])assert.equal(normal.outputs['build/pvz-portable.'+suffix].sha256,engine.artifacts[suffix+'Sha256']);
@@ -267,6 +344,7 @@ export function verifyZombotany45Scenario(row,{scope='final-current'}={}){
   }return;
  }
  const loss=row.name==='no-action',replay=row.name==='replay',retry=row.name==='retry',credits=loss?0:replay?2:1;
+ if(scope==='final-current'){fields(row,{nativeAllLiveZombiesPlantHeadOnly:true});integer(row.nativeLivePlantHeadChecks,1);}
  fields(row,{family:'zombotany45',outcome:loss?'native-loss':'win',profileCredits:credits,
   ordinaryNativeMouseInputsOnly:true,visibleOnlyPolicy:true,noHiddenFogEnemyReads:true,noAssignedUnlockCredits:true,
   postStartActorHealthPositionStageTimeOrRNGEdits:false,nativeOriginalSeedChooser:true,nativeIntroCancelled:false,
@@ -286,7 +364,7 @@ export function verifyZombotany45Scenario(row,{scope='final-current'}={}){
  if(scope==='final-current'&&!row.checkpoint.performed)fields(row.checkpoint,{wave:-1,aliveEnemies:0,authoredObserved:0});
  if(loss){fields(row,{nativeActualAwardCollected:false,nativePlacements:0,nativeSunClicks:0,nativeSunCollected:0,nativeSunSpent:0,
   nativePaidLilies:0,nativePaidPots:0,nativePlanterns:0,winTicks:[],replayWinTicks:[],nativeAwardWave:-1,nativeAwardEnemies:-1,nativeAwardType:-1});return;}
- fields(row,{nativeActualAwardCollected:true,nativeAwardWave:20,nativeAwardEnemies:0,nativeAwardType:8});assert.deepEqual(row.nativeFormationLedger,ledger(row.mode));
+ fields(row,{nativeActualAwardCollected:true,nativeAwardWave:20,nativeAwardEnemies:0,nativeAwardType:8});assert.deepEqual(row.nativeFormationLedger,ledger(row.mode,{historical:scope==='earlier-genuine-prerequisite'}));
  for(const key of ['nativePlacements','nativeSunClicks','nativeSunCollected','nativeSunSpent','nativeWindupsObserved'])integer(row[key],1);
  // nativeSunCollected is the manually intended coin's value, not a complete
  // income ledger: a native hit test may collect a different overlapping sun.
@@ -294,7 +372,7 @@ export function verifyZombotany45Scenario(row,{scope='final-current'}={}){
  if(fog){integer(row.nativePaidLilies,1);integer(row.nativeWaterHeadsObserved,1);integer(row.nativeSwimmingHeadsObserved,1);integer(row.nativePuffsObserved,1);assert.equal(row.nativePaidPots,0);assert.equal(row.nativeRoofLobsObserved,0);}
  else {integer(row.nativePaidPots,1);integer(row.nativeRoofLobsObserved,1);integer(row.nativeRoofArcChangesObserved,1);assert.equal(row.nativePaidLilies,0);assert.equal(row.nativeWaterHeadsObserved,0);assert.equal(row.nativeSwimmingHeadsObserved,0);}
  assert.equal(row.winTicks.length,1);integer(row.winTicks[0],1,319999);
- if(replay){assert.deepEqual(row.replayFormationLedger,ledger(row.mode));assert.equal(row.replayWinTicks.length,1);integer(row.replayWinTicks[0],1,319999);}
+ if(replay){assert.deepEqual(row.replayFormationLedger,ledger(row.mode,{historical:scope==='earlier-genuine-prerequisite'}));assert.equal(row.replayWinTicks.length,1);integer(row.replayWinTicks[0],1,319999);}
  else {assert.deepEqual(row.replayFormationLedger,emptyLedger);assert.deepEqual(row.replayWinTicks,[]);}
  if(retry)integer(row.nativeRetryLossTick,1);else assert.equal(row.nativeRetryLossTick,0);
  if(row.name==='hesitation')integer(row.nativeHesitationWindows,19,20);else assert.equal(row.nativeHesitationWindows,0);
@@ -346,13 +424,17 @@ export async function verifyZombotany45CaseLog(row,{read,sha}){
 }
 
 export async function verifyZombotany45Prerequisite({read,sha,build}){
+ const previousBytes=fs.readFileSync(new URL('./fixtures/zombotany45-1-release.json',import.meta.url));
+ assert.equal(sha(previousBytes),'3d02891ed6e4faf40019bb77b701d14cac796b7c67852f0b878eff51b092423e');
+ fields(json(previousBytes),{id:PREREQUISITE_ENGINE,normalReceiptSha256:PREREQUISITE_NORMAL,sourceFiles:886,productionObjects:151,
+  sourceSha256:'3961bb9b472f27e3661d645bf9ab89865f9fd9ffa795a5462f31b959175151e5'});
  const threeBytes=await read('tests/zombotany45-earned-z3-fixture.json');assert.equal(sha(threeBytes),'d1cc9cfaa16fc60aa4e1be312d4eb2651499270f6293f311ee1ef41ed7c7ea3b');
  const three=json(threeBytes);fields(three,{originEngineId:'0.2.6-web-zombotany3.2',sourceArchiveSha256:'9e4186372f80a9b59d119f8bf9cb0217e17a072d5fa178ea9f96cd120a4b5efb',
   ordinaryMouseInputsOnly:true,postStartStateEdits:false,realNativeTrophyCollected:true,earnedRecordIndex:92,earnedRecordValue:1});
  assert.deepEqual(Object.keys(three.files).sort(),['tests/zombotany45-earned-z3/userdata/user1.dat','tests/zombotany45-earned-z3/userdata/users.dat']);
  for(const[name,pin]of Object.entries(three.files)){const bytes=await read(safe(name));assert.equal(bytes.length,pin.bytes);assert.equal(sha(bytes),pin.sha256);}
  const fixtureBytes=await read('tests/zombotany45-earned-z4-fixture.json');
- const fixture=json(fixtureBytes);fields(fixture,{schemaVersion:1,originEngineId:ENGINE,originNormalBuildReceiptSha256:NORMAL,originCase:[94,'save-attack',1,1729],
+ const fixture=json(fixtureBytes);fields(fixture,{schemaVersion:1,originEngineId:PREREQUISITE_ENGINE,originNormalBuildReceiptSha256:PREREQUISITE_NORMAL,originCase:[94,'save-attack',1,1729],
   ordinaryNativeMouseInputsOnly:true,postStartStateEdits:false,noAssignedUnlockCredits:true,realNativeTrophyCollected:true,earnedRecordIndex:93,earnedRecordValue:1,
   priorActuallyEarned3FixtureSha256:sha(threeBytes)});
  const resultBytes=await read('tests/zombotany45-earned-z4-origin/result.json'),logBytes=await read('tests/zombotany45-earned-z4-origin/save-attack.log'),
@@ -360,11 +442,22 @@ export async function verifyZombotany45Prerequisite({read,sha,build}){
  assert.equal(sha(resultBytes),fixture.originResultSha256);assert.equal(sha(logBytes),fixture.originRawLogSha256);
  assert.equal(sha(buildBytes),fixture.originBuildSha256);assert.equal(sha(snapshotBytes),fixture.originInputSnapshotSha256);
  const origin=json(resultBytes),earlierBuild=json(buildBytes),{logSha256,resourceCapacityWarnings,optimization,productionBuildReceiptSha256,testArtifactSha256,testInputSha256,...native}=origin;
- fields(origin,{optimization:'O2',resourceCapacityWarnings:0,productionBuildReceiptSha256:NORMAL,mode:94,name:'save-attack',speed:1,seed:1729});verifyZombotany45Scenario(native,{scope:'earlier-genuine-prerequisite'});
+ fields(origin,{optimization:'O2',resourceCapacityWarnings:0,productionBuildReceiptSha256:PREREQUISITE_NORMAL,mode:94,name:'save-attack',speed:1,seed:1729});verifyZombotany45Scenario(native,{scope:'earlier-genuine-prerequisite'});
  const rows=text(logBytes).split('\n').filter(line=>line.startsWith('ZOMBOTANY45_RESULT '));assert.equal(rows.length,1);assert.deepEqual(JSON.parse(rows[0].slice('ZOMBOTANY45_RESULT '.length)),native);assert.equal(logSha256,sha(logBytes));
  assert.deepEqual(fixture.nativeChallengeRecords,origin.nativeProfileRecordsAfter);assert.deepEqual(fixture.nativeWinTicks,origin.winTicks);
- fields(earlierBuild,{execution:'complete-production-engine',optimization:'O2',productionObjectCount:151,productionBuildReceiptSha256:NORMAL});
- assert.deepEqual(earlierBuild.sourceSha256,build.sourceSha256);assert.deepEqual(earlierBuild.productionObjectSha256,build.productionObjectSha256);
+ fields(earlierBuild,{execution:'complete-production-engine',optimization:'O2',productionObjectCount:151,productionBuildReceiptSha256:PREREQUISITE_NORMAL});
+ // A genuinely earned profile remains usable across a renderer correction.
+ // Authenticate its distinct old executable, rather than relabelling it as
+ // the current56 driver or requiring an unlock to be re-earned per rebuild.
+ const changed=new Set(['CMake/ProjectVersion.cmake','src/Lawn/Board.cpp','src/Lawn/Challenge.cpp','src/Lawn/Zombie.cpp',
+  'src/Lawn/System/Zombotany3.h','src/Lawn/System/Zombotany45.cpp','src/Lawn/System/Zombotany45.h',
+  'src/Lawn/System/Zombotany45Art.cpp','src/Lawn/System/Zombotany45Art.h'].map(path=>'source/'+path));
+ assert.deepEqual(Object.keys(earlierBuild.sourceSha256).sort(),Object.keys(build.sourceSha256).sort());
+ for(const[path,pin]of Object.entries(earlierBuild.sourceSha256)){
+  if(changed.has(path))assert.notEqual(build.sourceSha256[path],pin,'Every approved45.2 production delta is real: '+path);
+  else assert.equal(build.sourceSha256[path],pin,'Every unrelated production source remains identical to the genuine prerequisite: '+path);
+ }
+ assert.equal(Object.keys(earlierBuild.sourceSha256).length,886);assert.equal(Object.keys(earlierBuild.productionObjectSha256).length,151);
  assert.deepEqual(earlierBuild.testArtifactSha256,fixture.originTestArtifacts);assert.deepEqual(testArtifactSha256,fixture.originTestArtifacts);assert.deepEqual(testInputSha256,earlierBuild.testInputSha256);
  const snapshot=await Zip.loadAsync(snapshotBytes,{checkCRC32:true});
  assert.deepEqual(Buffer.from(await snapshot.file('tests/zombotany45-build.json').async('uint8array')),Buffer.from(buildBytes));
@@ -372,7 +465,8 @@ export async function verifyZombotany45Prerequisite({read,sha,build}){
  assert.equal(sha(Buffer.from(await snapshot.file('tests/build-zombotany45.py').async('uint8array'))),earlierBuild.builderSha256);
  assert.deepEqual(Object.keys(fixture.files).sort(),['user1.dat','users.dat']);
  for(const[name,pin]of Object.entries(fixture.files)){const bytes=await read('tests/zombotany45-earned-z4/userdata/'+name);assert.equal(bytes.length,pin.bytes);assert.equal(sha(bytes),pin.sha256);}
- return {genuineNativePrerequisite:true,currentNormal:NORMAL,scope:'Earlier actual legal Fog4 win; separate from final56 driver'};
+ return {genuineNativePrerequisite:true,originEngine:PREREQUISITE_ENGINE,originNormal:PREREQUISITE_NORMAL,
+  scope:'Historical published45.1 actual legal Fog4 win; separate from the current45.2 normal and final56 driver'};
 }
 
 export async function verifyZombotany45(options){
@@ -397,13 +491,23 @@ export async function verifyZombotany45(options){
  fields(c.bounds,{maximumNativeBattleTicks:320000,maximumSpeedPairDeltaTicks:30,minimumOrdinaryInputCadenceTicks:150,observerNativeTicks:2,
   nativeAttachedHeadDifferencePixels:150,nativeIdleDifferencePixels:50,nativeAttackDifferencePixels:50,nativeMuzzleErrorMilliPixels:[0,17999],
   nativeCardDifferencePixels:1000,nativeCollarGapManhattanPixels:[0,4]});
- fields(c.nativeFogRouting,{seaWaterOnly:true,puffFumeLandOnly:true,originalPeaWallnutFlagNativeMixedEligibility:true,originalMixedPoolMinimumWaveIndex:5});
+ fields(c.nativeFogRouting,{seaWaterOnly:true,puffFumeLandOnly:true,originalPeaWallnutNativeMixedEligibility:true,ordinaryFlagNotAllowed:true,originalMixedPoolMinimumWaveIndex:5});
+ fields(c.plantHeadOnlyCorrection,{priorEngineId:'0.2.6-web-zombotany45.1',sameAuthoredEnemyTotals:true,
+  ordinaryPlayerChoiceBytesUnchanged:false,nativeAllLiveZombiesPlantHeadOnly:true,minimumNativeLivePlantHeadChecks:1,
+  observerAuditsDoNotFeedPolicy:true,flagWavePlantHeads:{fog:35,roof:39}});
+ fields(c.reviewedRoofCherryThresholdCorrection,{scope:'test-player-only',baselineEngineId:'0.2.6-web-zombotany45.1',
+  baselinePolicySha256:PUBLISHED_POLICY_SHA256,currentPolicySha256:REVIEWED_POLICY_SHA256,
+  beforePredicate:REVIEWED_POLICY_BEFORE,afterPredicate:REVIEWED_POLICY_AFTER,exactReplacementCount:1,
+  beforeThresholdX:360,afterThresholdX:520,visibleEnemyType:'ZOMBIE_TALLNUT_HEAD',
+  fogChoicesUnchanged:true,seedBankFormationCostsAndCadenceUnchanged:true,productionSourceAndMechanicsUnchanged:true,
+  playerHiddenStateAndInputBoundsUnchanged:true,publishedPlayerBytesRecoveredByExactReverse:true});
  assert.deepEqual(c.nativeAcceptedHeadSpecs,{'38':[69,-34,1],'39':[65,-21,.82],'40':[64,-25,.78],'41':[65,-19,.78]});
- assert.equal(c.prerequisiteNormalBuildReceiptSha256,NORMAL);
+ assert.equal(c.prerequisiteNormalBuildReceiptSha256,PREREQUISITE_NORMAL);
  for(const name of [...expectedInputs.filter(n=>n!=='zombotany45-verification-contract.json'),'build-zombotany45.py'])assert(Object.hasOwn(c.fixtureSha256,'tests/'+name),name);
  for(const[name,pin]of Object.entries(c.fixtureSha256)){safe(name);assert(name.startsWith('tests/'));digest(pin);assert.equal(sha(await read(name)),pin,name);}
  assert.equal(c.initialEarned3FixtureSha256,sha(await read('tests/zombotany45-earned-z3-fixture.json')));assert.equal(c.earned4FixtureSha256,sha(await read('tests/zombotany45-earned-z4-fixture.json')));
  const build=await verifyZombotany45BuildBindings(options);await verifyZombotany45SourceBounds(options);
+ await verifyZombotanyFamilyFixes({...options,build});
  assert(acceptedPrerequisitePins.has(sha(await read('tests/zombotany45-earned-z4-fixture.json'))),'Current actual genuine4 prerequisite is not reviewed');
  await verifyZombotany45Prerequisite({...options,build});
  fields(report,{assetBundleId:engine.assetBundleId,nativeArtInputs:1027});

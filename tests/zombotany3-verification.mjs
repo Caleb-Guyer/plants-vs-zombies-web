@@ -6,15 +6,12 @@ import fs from 'node:fs';
 import {CURRENT_ENGINE_ID,CURRENT_SOURCE_COUNT,CURRENT_OBJECT_COUNT,reconstructGustSources}
  from './native-release-context.mjs';
 
-// Independently reviewed actual .2 O2 execution: 36 cases, 18 speed pairs and
-// 4,965,031 checks against unchanged normal production receipt 80552800... .
-// The .1 archive and observations remain immutable history. Only runner raw-log
-// hashes are omitted from canonical observation identity.
-// ROOT reviewed all36 actual cases/raw logs and23 rejection controls against
-// the unchanged published native3 behavior and current886/151 production graph.
-const acceptedContractPins=new Set(['75f7538960eaf8be5a2ef90835e2c63f675ce3c1be77f6172935580d7de9df12']);
-const acceptedReportPins=new Set(['aabf8f56ca39a9a7eea390423e8f0e4673d5268fcd6a3d98ffdf454864e101d8']);
-const acceptedReportContentPins=new Set(['470a691fa8be99eb677e46e3b206d0f80e4d8131dbfc3665068a3adc79d42c1b']);
+// Sealed after independent review of the actual final45.2 complete36 rerun.
+// Renderer/compatibility corrections also require their separate native proof.
+// Published45.1 observations remain historical; no result is relabelled.
+const acceptedContractPins=new Set(['fac3cf4840f90103e0ca5c0a3b8fc87a640201b9d44533fbb56d5b00eda550f8']);
+const acceptedReportPins=new Set(['f970d47ba635b79dfe42c09f33bb437ab438f951844d1af571da53e16a43e3a9']);
+const acceptedReportContentPins=new Set(['59a8a7ebffb85261a0599183a70bdc6343094803a82907189b0cd1631548d6ac']);
 const names=['normal','hesitation','save-windup','save-freeze','retry','replay','no-action','mechanics','presentation'];
 const battleNames=names.slice(0,7);
 export const ZOMBOTANY3_MATRIX=[1729,7331].flatMap(seed=>names.flatMap(name=>[1,2].map(speed=>[name,speed,seed])));
@@ -31,12 +28,12 @@ const canonical=value=>Array.isArray(value)?value.map(canonical):value!==null&&t
 const nativeStats={bodyHealth:270,puffRange:180,puffDamage:20,puffCadence:150,puffWindup:35,puffLifetime:60,
  fumeRange:240,fumeDamage:20,fumeCadence:200,fumeWindup:50,iceRange:300,iceWindup:125,freezeTicks:150,hostilePuffMarker:-303};
 const course={nightOnly:true,pool:false,fog:false,roof:false,nativeSeedChooser:true,conveyor:false,startingSun:50,mowers:5,
- waves:20,openingDelay:1800,authoredZombies:99,authoredTypes:{0:1,1:2,35:61,36:33,37:2},nativeGraveEmergencesSeparate:true};
-const waves=[[0,1,0,0],[1,1,0,0],[0,2,0,0],[0,2,0,0],[0,2,1,0],
- [0,2,1,0],[0,3,1,0],[0,3,1,0],[0,3,2,0],[0,3,2,1],
- [0,3,2,0],[0,3,2,0],[0,4,2,0],[0,4,2,0],[0,4,2,0],
- [0,4,3,0],[0,4,3,0],[0,4,3,0],[0,4,3,0],[0,5,3,1]];
-const ledger=waves.map(([normal,puff,fume,ice],index)=>[[0,normal],[1,(index+1)%10===0?1:0],[35,puff],[36,fume],[37,ice]].filter(([,count])=>count));
+ waves:20,openingDelay:1800,authoredZombies:99,authoredTypes:{35:64,36:33,37:2},nativeGraveEmergencesSeparate:false};
+const waves=[[1,0,0],[2,0,0],[2,0,0],[2,0,0],[2,1,0],
+ [2,1,0],[3,1,0],[3,1,0],[3,2,0],[3,2,1],
+ [3,2,0],[3,2,0],[4,2,0],[4,2,0],[4,2,0],
+ [4,3,0],[4,3,0],[4,3,0],[4,3,0],[5,3,1]];
+const ledger=waves.map(([puff,fume,ice],index)=>[[35,puff+((index+1)%10===0?1:0)],[36,fume],[37,ice]].filter(([,count])=>count));
 const emptyLedger=waves.map(()=>[]);
 const savedPaths=['src/Lawn/Plant.h','src/Lawn/Zombie.h','src/Lawn/Board.h','src/Lawn/Challenge.h','src/LawnApp.h',
  'src/Lawn/System/SaveGame.cpp','src/Lawn/System/PlayerInfo.cpp','src/Lawn/System/PlayerInfo.h'];
@@ -60,8 +57,36 @@ export function verifyZombotany3ReportIdentity({reportBytes,sha}){
  return {report,sealedReport:acceptedReportPins.has(sha(reportBytes))};
 }
 
+// Reverse only the explicitly approved roster correction, then authenticate
+// every other header byte against the actual published pre-fix source.
+export function verifyZombotany3PlantHeadRoster({header,sha}){
+ const current=text(header);let prior=current;
+ const before=`    {1,0,0},{2,0,0},{2,0,0},{2,0,0},{2,1,0},
+    {2,1,0},{3,1,0},{3,1,0},{3,2,0},{3,2,1},
+    {3,2,0},{3,2,0},{4,2,0},{4,2,0},{4,2,0},
+    {4,3,0},{4,3,0},{4,3,0},{4,3,0},{5,3,1}`;
+ const after=`    {0,1,0,0},{1,1,0,0},{0,2,0,0},{0,2,0,0},{0,2,1,0},
+    {0,2,1,0},{0,3,1,0},{0,3,1,0},{0,3,2,0},{0,3,2,1},
+    {0,3,2,0},{0,3,2,0},{0,4,2,0},{0,4,2,0},{0,4,2,0},
+    {0,4,3,0},{0,4,3,0},{0,4,3,0},{0,4,3,0},{0,5,3,1}`;
+ for(const[from,to]of [
+  ['struct Wave { int mPuff; int mFume; int mIce; };','struct Wave { int mNormal; int mPuff; int mFume; int mIce; };'],
+  [before,after],
+  ['return entry.mPuff+entry.mFume+entry.mIce+','return entry.mNormal+entry.mPuff+entry.mFume+entry.mIce+'],
+  ['if((wave+1)%10==0)output[wave][index++]=ZOMBIE_PUFF_HEAD;','if((wave+1)%10==0)output[wave][index++]=ZOMBIE_FLAG;'],
+  ['const Wave& entry=kWaves[wave];\n        for(int n=0;n<entry.mPuff;',
+   'const Wave& entry=kWaves[wave];\n        for(int n=0;n<entry.mNormal;++n)output[wave][index++]=ZOMBIE_NORMAL;\n        for(int n=0;n<entry.mPuff;'],
+  ['for(ZombieType type:{ZOMBIE_PUFF_HEAD,ZOMBIE_FUME_HEAD,ZOMBIE_ICE_HEAD})output[type]=true;',
+   'for(ZombieType type:{ZOMBIE_NORMAL,ZOMBIE_FLAG,ZOMBIE_PUFF_HEAD,ZOMBIE_FUME_HEAD,ZOMBIE_ICE_HEAD})output[type]=true;']]){
+  assert.equal(prior.split(from).length,2,'One exact approved plant-head roster delta');prior=prior.replace(from,to);
+ }
+ assert.equal(sha(Buffer.from(prior)),'d7e142de18d4110101f4509b3e03c66463981412ef6bb13c1c156664f6a0de24',
+  'All pre-existing night combat constants/APIs remain exact after reversing only the plant-head roster correction');
+ return {authoredEnemies:99,authoredTypes:{35:64,36:33,37:2}};
+}
+
 export async function verifyZombotany3SourceBounds({read,sha,engine}){
- assert.equal(CURRENT_ENGINE_ID,'0.2.6-web-zombotany45.1');assert.equal(CURRENT_SOURCE_COUNT,886);assert.equal(CURRENT_OBJECT_COUNT,151);
+ assert.equal(CURRENT_ENGINE_ID,'0.2.6-web-zombotany45.2');assert.equal(CURRENT_SOURCE_COUNT,886);assert.equal(CURRENT_OBJECT_COUNT,151);
  const parent=await reconstructGustSources({referenceBytes:fs.readFileSync(new URL('./fixtures/zombotany3-parent-reference.json',import.meta.url)),read,sha,engine});
  assert.equal(parent.files.size,878);
  for(const path of savedPaths)assert.deepEqual(Buffer.from(await read('source/'+path)),parent.files.get(path),'Exact existing saved class/serializer: '+path);
@@ -75,13 +100,14 @@ export async function verifyZombotany3SourceBounds({read,sha,engine}){
  enums=enums.replace('\tNUM_GAME_MODES = 96','\tNUM_GAME_MODES = 93');
  assert.equal(enums,text(parent.files.get('src/ConstEnums.h')),'All prior real mode/seed/zombie IDs remain unchanged');
  const header=text(await read('source/src/Lawn/System/Zombotany3.h'));
+ verifyZombotany3PlantHeadRoster({header,sha});
  for(const [name,value]of Object.entries({kProfileIndex:92,kRulesVersion:1,kWaveCount:20,kStartingSun:50,kOpeningDelay:1800,
   kPuffRange:180,kPuffDamage:20,kPuffCadence:150,kPuffWindup:35,kPuffLifetime:60,kFumeRange:240,kFumeDamage:20,
   kFumeCadence:200,kFumeWindup:50,kIceRange:300,kIceWindup:125,kFreezeTicks:150,kHostilePuffMarker:-303}))
   assert(header.includes(`${name} = ${value};`),'Independently fixed native rule: '+name);
  assert(header.includes('kActive = static_cast<ChallengeState>(146)'));
  const authored=header.match(/kWaves\s*=\s*\{\{([\s\S]*?)\}\};/);assert(authored);
- assert.deepEqual([...authored[1].matchAll(/\{(\d+),(\d+),(\d+),(\d+)\}/g)].map(match=>match.slice(1).map(Number)),waves);
+ assert.deepEqual([...authored[1].matchAll(/\{(\d+),(\d+),(\d+)\}/g)].map(match=>match.slice(1).map(Number)),waves);
  assert.equal(ledger.flat().reduce((sum,[,count])=>sum+count,0),99);
  const challenge=text(await read('source/src/Lawn/System/Zombotany3.cpp'));
  for(const exact of ['zombie.mSummonCounter=Cadence(zombie)-Windup(zombie);','zombie.mBossBungeeCounter=Windup(zombie);',
@@ -118,6 +144,12 @@ export async function verifyZombotany3SourceBounds({read,sha,engine}){
  assert(screen.includes('const ChallengePage aAccessPage = mPageIndex == CHALLENGE_PAGE_ZOMBOTANY ? aDef.mPage : mPageIndex;'));
  for(const page of ['PUZZLE','SURVIVAL','CHALLENGE'])assert(screen.includes('aAccessPage == CHALLENGE_PAGE_'+page),
   'Family aliases retain the original access-page tooltip branch: '+page);
+ const battles=text(await read('tests/zombotany3-battles.h')),policy=text(await read('tests/zombotany3-policy.h'));
+ assert(battles.includes('Require(Zombie::IsZombotany(z->mZombieType),"passive night observer found an unauthorized ordinary zombie");++run.liveHeadChecks;'));
+ assert(battles.includes('Require(run.naturalChildren==0,"Zombotany night must suppress unauthored ordinary grave emergences");'));
+ const decisionStart=policy.indexOf('struct Cell');assert(decisionStart>=0);
+ assert.equal(sha(Buffer.from(policy.slice(decisionStart))),'cdf492e11cb19e85dd5ad0683443c49ab026fbb9bb9fa784d954ec6205925fa8',
+  'Every night player decision remains byte-exact to the actual published45.1 policy after its roster lookup');
  return parent;
 }
 
@@ -242,6 +274,7 @@ export function verifyZombotany3Scenario(row){
   return;
  }
  const loss=row.name==='no-action',replay=row.name==='replay',retry=row.name==='retry',credits=loss?0:replay?2:1;
+ fields(row,{nativeAllLiveZombiesPlantHeadOnly:true,nativeGraveEmergences:0});integer(row.nativeLivePlantHeadChecks,1);
  fields(row,{family:'night-zombotany',outcome:loss?'native-loss':'win',profileCredits:credits,nativeFamilyThirdCardInput:true,
   nativeSixMouseSeedChoices:true,nativeChooserOutroCompleted:true,nativeIntroCancelled:false,ordinaryNativeMouseInputsOnly:true,
   visibleOnlyPolicy:true,postStartActorHealthPositionStageTimeOrRNGEdits:false,observerNativeTicks:2,minimumInputCadenceTicks:150,
@@ -251,7 +284,7 @@ export function verifyZombotany3Scenario(row){
  assert.equal(row.nativeProfileRecordsBefore.length,100);assert.equal(row.nativeProfileRecordsAfter.length,100);
  row.nativeProfileRecordsBefore.forEach(value=>integer(value));assert.equal(row.nativeProfileRecordsBefore[92],0);
  assert.deepEqual(row.nativeProfileRecordsAfter,row.nativeProfileRecordsBefore.map((value,index)=>value+(index===92?credits:0)));
- integer(row.nativeMaximumFreezeLease,0,150);integer(row.nativeGraveEmergences);integer(row.nativeMowersRemaining,0,5);
+ integer(row.nativeMaximumFreezeLease,0,150);assert.equal(row.nativeGraveEmergences,0);integer(row.nativeMowersRemaining,0,5);
  if(loss){fields(row,{nativeActualAwardCollected:false,nativePlacements:0,nativeSunClicks:0,winTicks:[],replayWinTicks:[]});return;}
  fields(row,{nativeActualAwardCollected:true,nativeAwardWave:20,nativeAwardEnemies:0,nativeAwardType:8});
  assert.deepEqual(row.nativeFormationLedger,ledger);
@@ -275,6 +308,9 @@ export async function verifyZombotany3(options){
   mode:93,profileIndex:92,sourceCount:886,productionObjectCount:151,rulesVersion:1,syntheticCasesEarnCredits:false,
   parentArchiveSha256:'10acb269866b175ed4836c2c64c6a79dc86a11241de9e48c7be54f8f89808be8'});assert.deepEqual(contract.matrix,ZOMBOTANY3_MATRIX);
  assert.deepEqual(contract.nativeStats,nativeStats);assert.deepEqual(contract.course,course);assert.deepEqual(contract.waves,waves);
+ fields(contract.plantHeadOnlyCorrection,{priorEngineId:'0.2.6-web-zombotany45.1',sameAuthoredEnemyTotals:true,
+  ordinaryPlayerChoiceBytesUnchanged:true,nativeAllLiveZombiesPlantHeadOnly:true,minimumNativeLivePlantHeadChecks:1,
+  observerAuditsDoNotFeedPolicy:true});
  fields(contract.timing,{nativeObservationQuantum:2,minimumInputCadenceTicks:150,speedPairMaxDeltaTicks:30,
   noPostStartActorHealthPositionStageTimeOrRNGEdits:true,ordinaryNativeMouseInputsOnly:true});
  for(const name of [...expectedInputs.filter(name=>!name.endsWith('verification-contract.json')),'build-zombotany3.py','zombotany3-initial-plan.json'])

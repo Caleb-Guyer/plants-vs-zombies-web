@@ -1,5 +1,5 @@
 {
-  "id": "0.2.6-web-zombotany45.1",
+  "id": "0.2.6-web-zombotany45.2",
   "upstream": {
     "tag": "0.2.6",
     "commit": "396f1c7fcf0507dcd1b79dc1ffad139eea2fb6ca",
@@ -7,15 +7,15 @@
     "officialJsSha256": "0f2d7425190e49c762f6700b68b080086e3dcb8f2dc5e9724de42ce9fb508573"
   },
   "artifacts": {
-    "jsSha256": "836dd1600e3c8fe4e120f3ab452b1eebf7c119f9c0b4694c680828a00f3ec89c",
-    "wasmSha256": "ac1a59cbc8acb71911923c7f670fd837f3b5e752512e3c2c9118c276f1e731f6",
-    "source": "../source/pvz-portable-0.2.6-web-zombotany45.1-source.zip",
-    "sourceSha256": "3961bb9b472f27e3661d645bf9ab89865f9fd9ffa795a5462f31b959175151e5",
-    "patch": "../source/web-zombotany45.1.patch",
-    "patchSha256": "0dfa173278a807a8dbc5eb9d57acb6f2f841a100815937e3ce9fa4d1864b879c"
+    "jsSha256": "1a4842f4945ea786677f502a595df64e1cdcb8c78b9cc6a37626f118c62f9857",
+    "wasmSha256": "928a69c9f37d94d0995180ff3afb5aa3a7676e4b9c25f8181ce4a5d42b9188a7",
+    "source": "../source/pvz-portable-0.2.6-web-zombotany45.2-source.zip",
+    "sourceSha256": "b7bd098307ffeb7a46379951942c3bc767f016e1c342210e2a43af412a03c7ff",
+    "patch": "../source/web-zombotany45.2.patch",
+    "patchSha256": "f5bd86149f79f44fa719c0882658616849bdaebe248cffde17180a5dedcd9b20"
   },
   "buildRecord": "../source/build-provenance.json",
-  "change": "Adds Zombotany4 fog and Zombotany5 roof to the original family page.",
+  "change": "Pins the Sea-shroom head to its animated neck and keeps all Zombotany modes plant-headed, including Continue saves.",
   "caption": "with Zombotany 3, 4 and 5.",
   "gameAssetsIncluded": true,
   "assetManifest": "../game-assets/manifest.json",
@@ -1556,7 +1556,7 @@
   },
   "parentScope": "Historical Gust.1 metadata; all current results are recorded separately.",
   "limits": [
-    "Adds Zombotany4 fog/pool and Zombotany5 roof with native seed selection, authored waves, original reanimation art and original counters. Existing gameplay and saved object layouts are retained.",
+    "Corrects Sea-shroom neck attachment across native animation cycles. All five Zombotany modes enforce plant-headed spawns and normalize old Continue data. Safe ordinary actors retain identity, health and position; unsupported legacy rigs are removed without loot or awards. Saved layouts are unchanged.",
     "All retained native cases run against the current production objects. Synthetic controls are separately labeled. Browser observations and timing measurements are recorded separately; native tests do not certify browser/compositor performance. Historical Torch observations remain historical."
   ]
 }

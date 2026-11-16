@@ -175,83 +175,83 @@ const REVIEWED_OPERATIONS = /* REVIEWED_ZOMBOTANY3_COMPATIBILITY_BEGIN */ {
 
 const REVIEWED_PINS = /* REVIEWED_ZOMBOTANY3_PINS_BEGIN */ {
   "pendingFinalFreeze": false,
-  "adaptationsSha256": "8821301282cd8452b857e5f01c9d5d6a08ddf98c20a80a39917eeb5a235741b5",
+  "adaptationsSha256": "96052627943800ef5a55ed6945c2923e73f902a404ed27c883c10664c006b387",
   "compatibilityPatchesSha256": "e0d8d1d079a1adf262b429c575c480c54873fb04768f853bc1952172242a6561",
   "parentReportPinsSha256": "a741622b272b9c0c0727fe712d0e9251a2e5a1b237bb8c5f728d88a7b9d15044",
-  "adapterSha256": "e995ebb2217855769d9ef044fe6417a806d2d0604996dca60f726e90051b9487",
+  "adapterSha256": "2b92746b80686f5ac3b02f3b5963092ef87647031a0516f21e453d25a327cf68",
   "runSha256": "b62b414af34ca10de508d6807853745f1ed40a05b641be303133a16cdbdb4268",
-  "normalBuildReceiptSha256": "721a1d47b75566e042bf7bd69dc3e34dc8c7cd69fe7a00eb4455f662defaef3b",
+  "normalBuildReceiptSha256": "dbbb911dbb5cc8fdfdbf605422a4eb34bddd2d16565e17e04d3a40a657849f8a",
   "runners": {
     "game-speed": {
       "runnerSha256": "80a4e876506748e060cf42fdf03ec2db5e0aa1799717643ae719b3b742ffa40c",
-      "reportSha256": "dc4de1af5f95abeebc0e3a4d1c3f1403dd575ef71a0cfae23ca401d87e03439c",
+      "reportSha256": "ab4ae81bde1eae04862e2a074f322f8ac03eeecc98fd3e00219edff07c6b5ef2",
       "harnessSha256": "0299e42113cdd9a96fdc9e4ac14cf68c6144f2c3660cf14f85bb224bb3a96b6b"
     },
     "qol-controls": {
       "runnerSha256": "d842e81f22f580dd10da981ac32071d241c45080bcc1be26fe8b0cd2a2ba9279",
-      "reportSha256": "00816dfb033ded03fb9ea00fca27d16a23ae580e213b653e34a810282f4d7075",
+      "reportSha256": "4ae398aa256b73e6b231a8b9ee370fb946543ad9a9c7bdd4475ea00e27e259da",
       "harnessSha256": "26baff16227c83705bc47cc2a8afd8b8f84effa24589d2ab63024c3495527316"
     },
     "decks-cooldowns": {
       "runnerSha256": "3ea68eb683087437b54bae5b8c1b3b02b7c498e65c94e608597874a1e67aa54a",
-      "reportSha256": "c4fecc0a59641b6ebcf5811d3f0777bcce8f4b7778516e10b6c65c73fbf61245",
+      "reportSha256": "b858e17e73277a42d82de9da287927efac00bbe6e459080746251053e4682613",
       "harnessSha256": "42d5ba51b452d466f385fdf07d23d1b7f204b121d8d300d5b192b31f3f5bb376"
     },
     "bonus-challenge": {
       "runnerSha256": "fb46da37141143eda86cb8d7b70e147f285f4321c1518a5b7b1933ffff6e5ccf",
-      "reportSha256": "77e59779be991287cdf8be93b66c3b571c6e2b5c7e781aa1b34f7be09b54295f",
+      "reportSha256": "84ad0fd541ec8e51c473293056d88c64a120709bc662693109b1e96e15e02df1",
       "harnessSha256": "6bb09c8e5fc512283f622622a0f0a1274fa8f0148fdbbf7c520ddfc23ab1ef9b"
     },
     "bonus-completion": {
       "runnerSha256": "86f7349051211a9e358cd3be0c0a7e9de5344424e682c372607a47a83e6ad035",
-      "reportSha256": "3d44c872da01dcaae58a64dc43933566ab4eec08d37f55966d406a72ccd60c57",
+      "reportSha256": "5b7da2ac9a9bb86667aa1272cdfe3df38cdd0704aa2e4403622b6bebe1cf218f",
       "harnessSha256": "d1182697fb468c2cb85071d337cb9d1d53e71bc1136bacce7441662b91491f24"
     },
     "night-shift": {
       "runnerSha256": "5fb74a9083af1e0034113a817010b5fb266f285cef080d83d0c88c69d1f7875b",
-      "reportSha256": "3e830edde3279ffa613f09034d2f8a9db1daebeaac6507ef65171bf45fcc714f",
-      "harnessSha256": "2d4d5658d5e4bc85017c411f01416082e969dc03f2ad32dfb0c3c117095af03a"
+      "reportSha256": "6ec76770955604e1d57cb313ebfdcf48ae210974ce208c132f1b13502b8de220",
+      "harnessSha256": "2a0e6a98d820f923804e9cbf6c21f8f1120e985017fd3b494845d8c42e80cc1e"
     },
     "lantern-shroom": {
       "runnerSha256": "e8a5bcdc6f9bf94046d06d1694c8ccf77d990af0755477b87919a8b855161d85",
-      "reportSha256": "fc40235d6178e80320b983f3124a03f4616d68443b326fe21a144b233f89cd9b",
+      "reportSha256": "2bd6dfa38bcf4cfa7f18d966507732309ce6e9be865b2395860d92e7336a0b51",
       "harnessSha256": "329f86d97ead12333ea4cb7b2419ea940bbff8cca1b5243686d8ee8a722145f7"
     },
     "garden-shuffle": {
       "runnerSha256": "b28e8926a3fbfb70433cffe7f6919f179159196ccb864041115913b65beec597",
-      "reportSha256": "d9ec056d268236a966fd82a907e53ab218abff50e45e1c8d24fab311c7c3112d",
+      "reportSha256": "50a1290ec2cf8637fe17ef0d3b6b49e9bd707bfc1956d3c43754aa1cd4d425d8",
       "harnessSha256": "9e06591927a1d872c72273f2db0bcbf549a16e38ffd5d491246c67d78977508d"
     },
     "seed-swap": {
       "runnerSha256": "4741a30e2a38f786c0d606c0c8b4707ed8a24f4548ead00a5d307c64579749e5",
-      "reportSha256": "3119b5a6a86b59b842aa66a689c7a83eba61d88ea7d593552510d12443902f3a",
+      "reportSha256": "f1068c9dce404158b236816a04381ffd080175bc249522d43d6dc7d7f711c2bd",
       "harnessSha256": "84c43cb1d2c5f6e42094775557b1ae4f117bcf683f8ee3d8a89a0cc283149551"
     },
     "mender-bloom": {
       "runnerSha256": "98034510f76582696735b6943d86389fe0670d56858c8e919895e3b202d92615",
-      "reportSha256": "39b69a81949aef42e82cdc161b6e3da85cc47d356846eb2b335a5a89f3c0a23a",
+      "reportSha256": "af888b4ac95bcfdffcae68b66c6d1502de267ffbd824c34eacd91bcd55ecd3be",
       "harnessSha256": "276c6e8db99cb037fd8cc3f92122a3998d418905d454ec20fbbca0bf198c453c"
     },
     "intensive-care": {
       "runnerSha256": "703d6c1597d4558f5469990b497a6bb7ab3fa0ad65fa236da193a6fc64a62a48",
-      "reportSha256": "c4b54938b4632a6fb878eaaa26d2313110f7f17099fcfcaf86d05adf62cfdaad",
+      "reportSha256": "7b673793fe5c8daaa74a277cd8e282ed9d5cf38a10552ab4e9bc15ea415aa1f3",
       "harnessSha256": "ffc6bb2cfd92801cd17bb61fa1f884fb6f29ef72efcad30f80e9e343e2ed6457"
     },
     "native-layout": {
       "runnerSha256": "c24625ad312b804c3e1d92c915e29586c76e2d02f24f194d6c3c93fab6529df1",
-      "reportSha256": "55ea43fddb193611bb61359ef6212b59cec2cc189d68856a397996588a92344a",
+      "reportSha256": "6154eceba8f3ec8863d3b50a4792ef89fe885482cf0f903909fb0ad251f7f76b",
       "harnessSha256": "567a6c87c7e6ed9506814b11f185414b7a6338838a5bb9957ac58e64a73fdb9a"
     },
     "care-fatigue": {
       "runnerSha256": "926ef0357661ceb88b1d68fe4c78cdcfa5d07fabe60e52567518e6e53405f2ea",
-      "reportSha256": "e0e8199c3ef1a9968f959b736c3244f48d6571c401456518cb5cec59bbec6a50",
+      "reportSha256": "6c7e693d2575890e84afc568453ed9ebfe987d2bd547a9398b90540651408973",
       "harnessSha256": "60b9b05a2437b088d08bd89ca393dc4ab00d107fc4c382927e2a36068ab92130"
     }
   },
-  "summaryPath": "focused45-normal2-closure/summary.json",
-  "summarySha256": "3c4d6adc8d56da1824f0c6a20df762bab71e3a88ca684202158f14ee1134b331",
+  "summaryPath": "focused45-2-final-closure/summary.json",
+  "summarySha256": "037fd06afcc19430e255350b397ed0c358ecf8df89350871675f1723ee4d06a4",
   "originSummaries": {
-    "focused45-normal2/summary.json": "f432e5888f1a583f9926afea665b6ab7d38cc5b92b448de86201e94c6306d579"
+    "focused45-2-settled/summary.json": "48c0cfa6f22e2ebf8dfa94f43d9fcb05ade767fb6c190663126f2dc36d432eb2"
   }
 } /* REVIEWED_ZOMBOTANY3_PINS_END */;
 

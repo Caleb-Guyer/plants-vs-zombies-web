@@ -1,10 +1,10 @@
 {
-  "id": "0.2.6-web-zombotany45.1",
-  "jsSha256": "836dd1600e3c8fe4e120f3ab452b1eebf7c119f9c0b4694c680828a00f3ec89c",
-  "wasmSha256": "ac1a59cbc8acb71911923c7f670fd837f3b5e752512e3c2c9118c276f1e731f6",
-  "sourceSha256": "3961bb9b472f27e3661d645bf9ab89865f9fd9ffa795a5462f31b959175151e5",
-  "patchSha256": "0dfa173278a807a8dbc5eb9d57acb6f2f841a100815937e3ce9fa4d1864b879c",
-  "normalReceiptSha256": "721a1d47b75566e042bf7bd69dc3e34dc8c7cd69fe7a00eb4455f662defaef3b",
+  "id": "0.2.6-web-zombotany45.2",
+  "jsSha256": "1a4842f4945ea786677f502a595df64e1cdcb8c78b9cc6a37626f118c62f9857",
+  "wasmSha256": "928a69c9f37d94d0995180ff3afb5aa3a7676e4b9c25f8181ce4a5d42b9188a7",
+  "sourceSha256": "b7bd098307ffeb7a46379951942c3bc767f016e1c342210e2a43af412a03c7ff",
+  "patchSha256": "f5bd86149f79f44fa719c0882658616849bdaebe248cffde17180a5dedcd9b20",
+  "normalReceiptSha256": "dbbb911dbb5cc8fdfdbf605422a4eb34bddd2d16565e17e04d3a40a657849f8a",
   "sourceFiles": 886,
   "productionObjects": 151
 }

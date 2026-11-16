@@ -1,5 +1,15 @@
 # Plants vs. Zombies — browser playtest
 
+## Zombotany attachment and roster correction
+
+Sea-shroom zombie heads now follow the actual animated neck joint in previews, walking, eating and swimming. Zombotany uses plant-headed zombies throughout: ordinary and flag entries are replaced without changing authored wave counts (99 in Night, 156 in Fog, 109 on Roof), and native wave banners/progress remain. Continue normalizes old future waves and converts healthy ordinary actors while preserving their identity, health, position and status. Unsupported or already dying legacy ordinary rigs are removed without loot or victory credit. The eight saved-class/serializer files remain byte-exact. Normal audio remains available; automated testing opens no audio device.
+
+[Play the game](https://caleb-guyer.github.io/plants-vs-zombies-web/).
+
+## Historical release records (.45.1 and earlier)
+
+The following records describe their original releases.
+
 ## Zombotany 4 and 5
 
 Zombotany 4 brings the original fog-and-pool lawn, swimming Sea-shroom heads and the existing mushroom/Peashooter threats. Zombotany 5 moves to the original roof with Cabbage-pult, Kernel-pult and Melon-pult heads: their native lob artwork and animations include butter, splash damage and the original Umbrella Leaf counter. Both use the normal seed chooser, native sun economy and twenty authored waves. The roof intro supplies its original three columns of fifteen Flower Pots.

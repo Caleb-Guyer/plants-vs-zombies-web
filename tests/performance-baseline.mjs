@@ -181,7 +181,7 @@ if(currentEngine.id==='0.2.6-web-gust.1'){
  assert.equal(availability.status,'functional-only','Actual current muted browser observations are required');
  await verifyGustBrowserEvidence({availability,currentEngine,read,sha,Zip:vendor.exports});
  console.log('PASS current muted Gust chooser/Almanac/planting/2x/SaveContinue; browser wins0, fresh FPS unmeasured.');
-}else if(['0.2.6-web-zombotany3.1','0.2.6-web-zombotany3.2','0.2.6-web-zombotany45.1'].includes(currentEngine.id)){
+}else if(['0.2.6-web-zombotany3.1','0.2.6-web-zombotany3.2','0.2.6-web-zombotany45.1','0.2.6-web-zombotany45.2'].includes(currentEngine.id)){
  const gustFocused=read('tests/fixtures/gust1-focused-reference.json');
  assert.equal(sha(gustFocused),'5f213369ad0e86e5e15c2f75e3eb267243350ac7f310df1efc55dddbc0a4e793');
  const oldNormal=Buffer.from(json(gustFocused).files['logs/build-result.json'].base64,'base64');
@@ -205,15 +205,18 @@ if(currentEngine.id==='0.2.6-web-gust.1'){
    historicalNormalBytes:read('tests/fixtures/zombotany3-1-normal-build-reference.json'),
    historicalBuildBytes:read('tests/fixtures/zombotany3-1-native-build-reference.json')});
   console.log('PASS preserved historical Zombotany 3.1 browser functionality; no current executable or timing claim.');
-  if(currentEngine.id==='0.2.6-web-zombotany45.1'){
+  if(['0.2.6-web-zombotany45.1','0.2.6-web-zombotany45.2'].includes(currentEngine.id)){
    const {verifyZombotany3HistoricalEvidence}=await import('./zombotany3-2-history-verification.mjs');
    await verifyZombotany3HistoricalEvidence({read,sha,Zip:vendor.exports});
    console.log('PASS preserved historical Zombotany 3.2 browser and timing observations; no current timing claim.');
-   const {verifyZombotany45BrowserAvailability}=await import('./zombotany45-browser-verification.mjs');
+   const {verifyZombotany45BrowserAvailability}=await import(currentEngine.id==='0.2.6-web-zombotany45.2'?
+    './zombotany45-browser-verification.mjs':'./zombotany45-1-browser-verification.mjs');
    const currentBrowser=await verifyZombotany45BrowserAvailability({availability:json(read('tests/fixtures/performance/zombotany45-browser-validation.json')),
     currentEngine,read,sha,Zip:vendor.exports});
    console.log(currentBrowser.verdict==='NOT RUN'?
-    'NOT RUN current Zombotany 4/5 browser functionality: official Computer Use could not verify the browser URL. Current browser screenshots0; current timings unmeasured. Native and source checks remain separate.':
+    currentEngine.id==='0.2.6-web-zombotany45.2'?
+    'NOT RUN current Zombotany 4/5 browser functionality: browser not attempted for this correction. Current browser screenshots0; current timings unmeasured. Native and source checks remain separate.':
+    'NOT RUN historical45.1 browser functionality: official Computer Use could not verify the browser URL. Browser screenshots0; timings unmeasured.':
     'PASS current muted Zombotany 4/5 browser functionality; historical timings remain historical.');
   }else{
   const {verifyZombotany3BrowserEvidence:verifyCurrent}=await import('./zombotany3-2-browser-verification.mjs');
@@ -225,5 +228,5 @@ if(currentEngine.id==='0.2.6-web-gust.1'){
   console.log('PASS current muted Zombotany 3.2 native callback/save CPU and rAF scheduling; presented FPS and GPU timing unmeasured.');
   }
  }
- if(currentEngine.id!=='0.2.6-web-zombotany45.1')console.log('PASS current muted Zombotany 3 family/chooser/night planting/2x/SaveContinue; browser wins0, fresh FPS unmeasured.');
+ if(!['0.2.6-web-zombotany45.1','0.2.6-web-zombotany45.2'].includes(currentEngine.id))console.log('PASS current muted Zombotany 3 family/chooser/night planting/2x/SaveContinue; browser wins0, fresh FPS unmeasured.');
 }else assert.equal(currentEngine.id,'0.2.6-web-double.1','Unreviewed current browser epoch');

@@ -1,5 +1,17 @@
 # Current requirements
 
+## Zombotany attachment and roster correction
+
+Sea-shroom zombie heads now follow the actual animated neck joint in previews, walking, eating and swimming. Zombotany uses plant-headed zombies throughout: ordinary and flag entries are replaced without changing authored wave counts (99 in Night, 156 in Fog, 109 on Roof), and native wave banners/progress remain. Continue normalizes old future waves and converts healthy ordinary actors while preserving their identity, health, position and status. Unsupported or already dying legacy ordinary rigs are removed without loot or victory credit. The eight saved-class/serializer files remain byte-exact. Normal audio remains available; automated testing opens no audio device.
+
+The current normal Release build contains 886 source files and 151 production objects. All 30 current native suites pass with 107,464,981 primary assertions and 29,323,448 separate late-game assertions, plus 49,403 required animation, spawn and compatibility assertions in the same current executable. Regression checks use the real neck and Sea-shroom body masks over complete animation cycles, require plant-headed live spawns, and exercise native saves made by the previous published engine. The old collar test used unrelated silhouette pixels and missed the reported gap; its result is retained only as historical evidence. The Roof test player now reacts to visible Tall-nut heads before they breach its front shields; its seed bank, costs and input cadence remain fixed. No browser functionality or fresh performance verdict is claimed for this correction.
+
+[Play the game](https://caleb-guyer.github.io/plants-vs-zombies-web/).
+
+## Historical release records (.45.1 and earlier)
+
+The following records describe their original releases.
+
 ## Zombotany 4 and 5
 
 Zombotany 4 brings the original fog-and-pool lawn, swimming Sea-shroom heads and the existing mushroom/Peashooter threats. Zombotany 5 moves to the original roof with Cabbage-pult, Kernel-pult and Melon-pult heads: their native lob artwork and animations include butter, splash damage and the original Umbrella Leaf counter. Both use the normal seed chooser, native sun economy and twenty authored waves. The roof intro supplies its original three columns of fifteen Flower Pots.

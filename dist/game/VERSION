@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-zombotany45.1
-Adds Zombotany4 fog and Zombotany5 roof to the original family page.
-Engine JavaScript SHA-256: 836dd1600e3c8fe4e120f3ab452b1eebf7c119f9c0b4694c680828a00f3ec89c
-Engine WASM SHA-256: ac1a59cbc8acb71911923c7f670fd837f3b5e752512e3c2c9118c276f1e731f6
+PvZ-Portable 0.2.6-web-zombotany45.2
+Pins the Sea-shroom head to its animated neck and keeps all Zombotany modes plant-headed, including Continue saves.
+Engine JavaScript SHA-256: 1a4842f4945ea786677f502a595df64e1cdcb8c78b9cc6a37626f118c62f9857
+Engine WASM SHA-256: 928a69c9f37d94d0995180ff3afb5aa3a7676e4b9c25f8181ce4a5d42b9188a7
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.

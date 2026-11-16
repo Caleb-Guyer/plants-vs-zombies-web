@@ -1,5 +1,19 @@
 # GitHub Pages release: Caleb-Guyer/plants-vs-zombies-web
 
+## Zombotany attachment and roster correction
+
+Sea-shroom zombie heads now follow the actual animated neck joint in previews, walking, eating and swimming. Zombotany uses plant-headed zombies throughout: ordinary and flag entries are replaced without changing authored wave counts (99 in Night, 156 in Fog, 109 on Roof), and native wave banners/progress remain. Continue normalizes old future waves and converts healthy ordinary actors while preserving their identity, health, position and status. Unsupported or already dying legacy ordinary rigs are removed without loot or victory credit. The eight saved-class/serializer files remain byte-exact. Normal audio remains available; automated testing opens no audio device.
+
+The current normal Release build contains 886 source files and 151 production objects. All 30 current native suites pass with 107,464,981 primary assertions and 29,323,448 separate late-game assertions, plus 49,403 required animation, spawn and compatibility assertions in the same current executable. Regression checks use the real neck and Sea-shroom body masks over complete animation cycles, require plant-headed live spawns, and exercise native saves made by the previous published engine. The old collar test used unrelated silhouette pixels and missed the reported gap; its result is retained only as historical evidence. The Roof test player now reacts to visible Tall-nut heads before they breach its front shields; its seed bank, costs and input cadence remain fixed. No browser functionality or fresh performance verdict is claimed for this correction.
+
+Engine `0.2.6-web-zombotany45.2` supersedes `.45.1` at `8eecf5c6f0742ca28bb0a19d2eb7dd9ea446be11`. JavaScript SHA-256: `1a4842f4945ea786677f502a595df64e1cdcb8c78b9cc6a37626f118c62f9857`. WebAssembly SHA-256: `928a69c9f37d94d0995180ff3afb5aa3a7676e4b9c25f8181ce4a5d42b9188a7`. Native source SHA-256: `b7bd098307ffeb7a46379951942c3bc767f016e1c342210e2a43af412a03c7ff`. Full patch: `web-zombotany45.2.patch`; Gust-lineage delta: `gust1-to-zombotany45.2.patch`. The previous `.45.1` archive and patches remain unchanged. The Pages workflow validates source, native tests and the staged payload before deployment.
+
+[Play the game](https://caleb-guyer.github.io/plants-vs-zombies-web/).
+
+## Historical release records (.45.1 and earlier)
+
+The following records describe their original releases.
+
 ## Zombotany 4 and 5
 
 Engine: `0.2.6-web-zombotany45.1`; supersedes `0.2.6-web-zombotany3.2` at `789965e43b59c9a2ecded002267374a7d20e83f1`. The authenticated Gust source lineage remains separate. JavaScript SHA-256: `836dd1600e3c8fe4e120f3ab452b1eebf7c119f9c0b4694c680828a00f3ec89c`. WebAssembly SHA-256: `ac1a59cbc8acb71911923c7f670fd837f3b5e752512e3c2c9118c276f1e731f6`.
