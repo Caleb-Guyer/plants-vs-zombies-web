@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "status": "not-run",
+  "engine": {
+    "id": "0.2.6-web-zombotany45.2",
+    "jsSha256": "1a4842f4945ea786677f502a595df64e1cdcb8c78b9cc6a37626f118c62f9857",
+    "wasmSha256": "928a69c9f37d94d0995180ff3afb5aa3a7676e4b9c25f8181ce4a5d42b9188a7"
+  },
+  "proof": null,
+  "currentGameObserved": false,
+  "currentBrowserFunctionalPassed": false,
+  "screenshots": 0,
+  "currentBrowserScreenshots": 0,
+  "browserEarnedWins": 0,
+  "browserAttemptedForCorrection": false,
+  "blockingEvidence": null,
+  "audioMutedThroughout": null,
+  "freshBrowserPerformanceMeasured": false,
+  "freshBrowserPerformancePassed": false,
+  "nativeTestsReplaceBrowserPerformance": false,
+  "currentReason": "Native renderer/compatibility regression performed; browser not attempted for this correction",
+  "historicalRelease": {
+    "path": "tests/fixtures/historical/zombotany45-1-published/manifest.json",
+    "bytes": 1559,
+    "sha256": "ffd8a3da72e0c78c8135715c573a459d56b4fe008133e1bd0876d27722036bcf"
+  },
+  "scope": "Current45.2 browser functionality was not attempted. The actual45.1 Computer Use tool block remains historical. Native renderer/compatibility acceptance and historical browser/timing evidence remain separate."
+}

@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "engineId": "0.2.6-web-zombotany45.2",
+  "commit": "fa37aee4a3b6793903cb5e1b4c592e565439560c",
+  "sourceArchiveSha256": "b7bd098307ffeb7a46379951942c3bc767f016e1c342210e2a43af412a03c7ff",
+  "files": {
+    "release.json": {
+      "bytes": 518,
+      "sha256": "89f990fbbb8c3cc5463d1d7afb434d1c29d3f3f5cb28e77a00b5cfc48b395704"
+    },
+    "engine-provenance.json": {
+      "bytes": 187681,
+      "sha256": "2ed377756db528fb9369183483212525b04a1f3ca8462cbc39d488ac5cfb9adb"
+    },
+    "build-provenance.json": {
+      "bytes": 19646,
+      "sha256": "82b8f20209930ce726279b445d147465db8a825060d1510b135209fe23ab6740"
+    },
+    "browser-availability.json": {
+      "bytes": 1230,
+      "sha256": "dda9075b20dc3f2cfb404664bffefa5a3b11600799898700d874912afa4028ce"
+    },
+    "native-release-context.mjs": {
+      "bytes": 45279,
+      "sha256": "974a41b62a15f28f5d83cf606a9b23dffc78b74d3e4ce1d97329bd9be31c01d8"
+    },
+    "zombotany3-verification.mjs": {
+      "bytes": 33994,
+      "sha256": "926de6a4ad424052dc27464ae441c64c8020ed96890969047f4a9026284d7db8"
+    },
+    "zombotany45-verification.mjs": {
+      "bytes": 54237,
+      "sha256": "b2a518b929db9ddde6884e74bb075dc7f2d3e62bb3619e26d6cebd579694eb31"
+    },
+    "zombotany-family-fixes-verification.mjs": {
+      "bytes": 8868,
+      "sha256": "4856e2b8f68a98173ee230fabbaa07f8f6d2894de2f1a55553de536293b25002"
+    },
+    "zombotany3-focused-retention-verification.mjs": {
+      "bytes": 26432,
+      "sha256": "3bdf4802fdf96ccd332292758d7efe2d42747b28dfa829c0f6731baddb687ce3"
+    },
+    "zombotany45-browser-verification.mjs": {
+      "bytes": 8749,
+      "sha256": "b5153a6e4c44940ea06b2d741b593730002bba79a9553113356c2d13afe2d02e"
+    }
+  },
+  "scope": "Exact published parent metadata and accepted native oracles; no observation relabelled as Zombotany Survival."
+}

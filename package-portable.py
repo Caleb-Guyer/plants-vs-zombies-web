@@ -32,6 +32,7 @@ MAX_STATIC_ASSET_BYTES = 100 * 1024 * 1024
 AMBUSH_PARENT_REFERENCE_SHA256 = "6771fc13bae02cb70dd8de12192f1f18e50302904a7ef1c784a790e6ccb51dd3"
 GUST_PARENT_REFERENCE_SHA256 = "14b5ef8f794cbfb5cb687f24cf05d23fa63620339945f139d2c5d947e9827476"
 ZOMBOTANY3_PARENT_REFERENCE_SHA256 = "b7be60f52c989f5167b7582b46a4b75824a0748cefe443881c80888e31397cb9"
+ZSURVIVAL1_PARENT_REFERENCE_SHA256 = "f785a81fa30c9de62f2527d0c24beeb84a0152bfb8336d7e28a06fdf7bd71ef4"
 DOUBLE_PARENT_REFERENCE_SHA256 = "a22e68371f7ad0f794b7e1f9221ed8bb45e7220df3501b8281435dcaf244a160"
 TORCH_PARENT_REFERENCE_SHA256 = "14dc78f0593db13b4e17e559061f84996be9c64f23663bd9ef7556b669fc96f6"
 AMBUSH_FOCUSED_REFERENCE_SHA256 = "9463bdd7c262c1749c57b00d25d45257951f8b8b2c8d4511cff630f9c606e9c8"
@@ -114,6 +115,9 @@ def parent_source_input(engine):
             or any(character not in "0123456789abcdef" for character in expected)):
         raise ValueError("Invalid immediate-parent source SHA-256")
     path = DIST / "game" / reference
+    if engine.get("id") == "0.2.6-web-zsurvival.1":
+        authenticate_zsurvival1_parent(engine)
+        return None
     if engine.get("id") == "0.2.6-web-zombotany45.2":
         authenticate_zombotany3_parent(engine)
         return None
@@ -454,6 +458,65 @@ def authenticate_zombotany3_parent(engine, current_sources=None):
     return restored
 
 
+def authenticate_zsurvival1_parent(engine, current_sources=None):
+    """Restore the exact published45.2 sources without a redundant parent ZIP."""
+    raw = (ROOT / "tests/fixtures/zsurvival1-parent-reference.json").read_bytes()
+    if hashlib.sha256(raw).hexdigest() != ZSURVIVAL1_PARENT_REFERENCE_SHA256:
+        raise ValueError("Zombotany Survival parent projection is not independently sealed")
+    reference = json.loads(raw)
+    changed = {"CMake/ProjectVersion.cmake", "src/ConstEnums.h", "src/Lawn/Board.cpp",
+               "src/Lawn/Challenge.cpp", "src/Lawn/Zombie.cpp", "src/LawnApp.cpp",
+               "src/Lawn/Widget/AwardScreen.cpp", "src/Lawn/Widget/ChallengeScreen.cpp",
+               "src/Lawn/Widget/ChallengeScreen.h", "src/Lawn/Widget/ContinueDialog.cpp",
+               "src/Lawn/Widget/LawnDialog.cpp"}
+    if (engine["id"] != "0.2.6-web-zsurvival.1" or reference["schemaVersion"] != 1 or
+            reference["current"] != {"id": engine["id"], "sourceCount": 888} or
+            reference["parent"]["id"] != "0.2.6-web-zombotany45.2" or
+            reference["parent"]["archivePrefix"] != "zombotany3-candidate/source/" or
+            reference["parent"]["archiveSha256"] != "b7bd098307ffeb7a46379951942c3bc767f016e1c342210e2a43af412a03c7ff" or
+            engine["parent"]["id"] != reference["parent"]["id"] or
+            engine["parent"]["artifacts"]["sourceSha256"] != reference["parent"]["archiveSha256"] or
+            len(reference["files"]) != 886 or set(reference["changedPaths"]) != changed or
+            set(reference["reverseEdits"]) != changed):
+        raise ValueError("Zombotany Survival parent identity or scoped changes differ")
+    if current_sources is None:
+        current = DIST / "game" / engine["artifacts"]["source"]
+        if hashlib.sha256(current.read_bytes()).hexdigest() != engine["artifacts"]["sourceSha256"]:
+            raise ValueError("Zombotany Survival current archive differs from provenance")
+        with zipfile.ZipFile(current) as archive:
+            prefix = "zombotany3-candidate/source/"
+            current_sources = {name[len(prefix):]: archive.read(name) for name in archive.namelist()
+                               if name.startswith(prefix) and not name.endswith('/')}
+    additions = {"src/Lawn/System/ZombotanySurvival" + ext for ext in (".h", ".cpp")}
+    if len(current_sources) != 888 or set(current_sources) != set(reference["files"]) | additions:
+        raise ValueError("Zombotany Survival source graph exceeds its two additions")
+    restored = {}
+    for name, pin in reference["files"].items():
+        if (not name or name.startswith('/') or any(p in ('', '.', '..') for p in name.split('/')) or
+                "\\" in name or ':' in name):
+            raise ValueError("Unsafe Zombotany Survival source path")
+        data = current_sources[name]
+        delta = reference["reverseEdits"].get(name)
+        if delta:
+            if len(data) != delta["currentBytes"] or hashlib.sha256(data).hexdigest() != delta["currentSha256"]:
+                raise ValueError("Changed Zombotany Survival projection input: " + name)
+            previous = len(data) + 1
+            for edit in reversed(delta["edits"]):
+                offset = edit["offset"]
+                before = base64.b64decode(edit["beforeBase64"], validate=True)
+                after = base64.b64decode(edit["afterBase64"], validate=True)
+                if (not isinstance(offset, int) or offset < 0 or offset >= previous or
+                        offset + len(before) > previous or data[offset:offset + len(before)] != before):
+                    raise ValueError("Invalid Zombotany Survival reverse edit: " + name)
+                data = data[:offset] + after + data[offset + len(before):]
+                previous = offset
+        if len(data) != pin["bytes"] or hashlib.sha256(data).hexdigest() != pin["sha256"]:
+            raise ValueError("Published Zombotany45.2 source reconstruction differs: " + name)
+        restored[name] = data
+    authenticate_zombotany3_parent(engine["parent"], restored)
+    return restored
+
+
 def nested_source_inputs(engine, paths, baseline):
     """Nest upstream/needed parents; restore the exact current ZIP before checks."""
     source_bundle_helpers().ensure_source_archive(ROOT)
@@ -466,8 +529,10 @@ def nested_source_inputs(engine, paths, baseline):
             or hashlib.sha256(native_ui.read_bytes()).hexdigest()
             != "d9861034849eca9d637197aa78a1bae4c90b5656db91ca102d8c903100031edd"):
         raise ValueError("Authenticated native I, Zombie UI fixture is missing or changed")
-    if engine.get("id") in {"0.2.6-web-scrap.1", "0.2.6-web-ambush.1", "0.2.6-web-torch.1", "0.2.6-web-double.1", "0.2.6-web-gust.1", "0.2.6-web-zombotany45.2"}:
-        if engine["id"] == "0.2.6-web-zombotany45.2":
+    if engine.get("id") in {"0.2.6-web-scrap.1", "0.2.6-web-ambush.1", "0.2.6-web-torch.1", "0.2.6-web-double.1", "0.2.6-web-gust.1", "0.2.6-web-zombotany45.2", "0.2.6-web-zsurvival.1"}:
+        if engine["id"] == "0.2.6-web-zsurvival.1":
+            authenticate_zsurvival1_parent(engine)
+        elif engine["id"] == "0.2.6-web-zombotany45.2":
             authenticate_zombotany3_parent(engine)
         elif engine["id"] == "0.2.6-web-gust.1":
             authenticate_gust_parent(engine)

@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "zsurvival1-browser-smoke",
+  "stage": "preregistered-before-current-browser-interactions",
+  "engineId": "0.2.6-web-zsurvival.1",
+  "sourceCount": 888,
+  "productionObjectCount": 152,
+  "automationProvider": "sky",
+  "previewOrigin": "http://127.0.0.1:4257",
+  "testingQuery": "testing=1",
+  "captureKeys": ["title", "family", "chooser", "planted-2x", "continue-dialog", "continued"],
+  "requiredFlow": ["file-free-boot", "native-add-test-profiles", "select-QAFullGame", "native-MiniGames", "native-Zombotany-family", "sixth-Survival-Day-card", "native-six-seed-chooser", "plant-Sunflower-and-Cabbage-pult-with-finite-native-sun", "native-2x", "native-Menu-MainMenu-Leave", "browser-reload", "native-same-card-Continue", "same-two-plant-cells-and-sun", "native-speed-resets-to-1x", "native-2x-toggle-after-Continue"],
+  "capturePresentation": "Native Edge fullscreen; no unrelated browser tabs or profile chrome in public screenshots. No cropping or generated modifications.",
+  "testEnvironment": {"osSettingsModified": false, "existingUserProfilesModified": false, "isolatedTestProfileUsed": true, "testSaveCreated": true},
+  "mute": {"testingQueryRequired": true, "nativeMuteControlObserved": true, "mutedAtEveryCapture": true},
+  "privateProfile": {"publishedBundleModified": false, "onlyChangedMember": "userdata/user900001.dat", "actualEarnedProfileSha256": "dca6daa3906aaf8a8d442f796ea86297242d25a97040d4756c3e38a9db29fc01", "source": "Genuinely earned native original Zombotany unlock; no Survival credit"},
+  "browserEarnedWins": 0,
+  "freshPerformanceMeasured": false,
+  "reviewRequiredBeforeAcceptance": true,
+  "scope": "A muted native UI smoke check with six actual screenshots. No five-flag browser win, timing, FPS or GPU claim. If official automation cannot verify its URL, record that actual tool failure separately; it cannot become a functional pass."
+}

@@ -1,5 +1,19 @@
 # Browser parity and QA record
 
+## Zombotany Survival: Day verification
+
+All 31 current native suites pass with 223,543,249 primary checks. Another 29,323,451 late-game checks and 49,403 family animation, spawn and compatibility checks remain separately counted. The current engine contains 888 source files and 152 production objects; all testing is muted.
+
+The new matrix runs 24 cases in twelve 1x/2x pairs: sixteen actual five-flag clears, four natural no-input defeats and four explicitly zero-credit controls. Every clear traverses all five ten-wave rounds and four native seed repicks, preserving the lawn, sun and remaining mowers. The 207 plant-headed enemies follow round totals of 29, 40, 44, 45 and 49. Native Menu/Leave/card/Continue checks preserve the saved game during combat and a round transition. Partial flag records do not grant completion; the final trophy does. The original ZomBotany unlock profile comes from a separately earned native clear. Thumbnail checks require the original plant-head components and reject the earlier ordinary-head image.
+
+Six muted CUA browser captures record the family card, native six-seed selection, 50-sun Sunflower and 100-sun Cabbage-pult planting, 2x, Save/Leave, reload and native Continue. The same planted cells, zero sun and 2x are restored. These observations cover browser functionality and credit no browser full win. No fresh FPS, GPU-completion or browser performance measurement was made.
+
+[Play the game](https://caleb-guyer.github.io/plants-vs-zombies-web/).
+
+## Historical release records (.45.2 and earlier)
+
+The following sections retain their original release-time scope.
+
 ## Zombotany attachment and roster correction
 
 Sea-shroom zombie heads now follow the actual animated neck joint in previews, walking, eating and swimming. Zombotany uses plant-headed zombies throughout: ordinary and flag entries are replaced without changing authored wave counts (99 in Night, 156 in Fog, 109 on Roof), and native wave banners/progress remain. Continue normalizes old future waves and converts healthy ordinary actors while preserving their identity, health, position and status. Unsupported or already dying legacy ordinary rigs are removed without loot or victory credit. The eight saved-class/serializer files remain byte-exact. Normal audio remains available; automated testing opens no audio device.

@@ -2,12 +2,12 @@
 // Exact published Gust assertions plus narrowly reviewed Zombotany3 collaborators.
 import assert from 'node:assert/strict';
 import {CURRENT_ENGINE_ID,CURRENT_SOURCE_COUNT,ZOMBOTANY3_SOURCE_ADDITIONS,GUST_ENGINE_ID,
- GUST_ARCHIVE_SHA256,ZOMBOTANY3_PARENT_TEST_INPUTS_SHA256,verifyZombotany3RetainedParentInputs}
+ GUST_ARCHIVE_SHA256,ZOMBOTANY3_PARENT_TEST_INPUTS_SHA256,verifyZombotany3RetainedParentInputs,historicalEngine}
  from './native-release-context.mjs';
 
 const FOLDER='tests/zombotany3-focused-retention/';
 const COUNTS={"game-speed":81,"qol-controls":90,"decks-cooldowns":274,"bonus-challenge":394,"bonus-completion":1382,"night-shift":231,"lantern-shroom":1724,"garden-shuffle":214,"seed-swap":587,"mender-bloom":523,"intensive-care":1135,"native-layout":27157,"care-fatigue":25042};
-export const ZOMBOTANY3_FOCUSED_CHECK_EXTENSIONS=Object.freeze({'bonus-completion':3});
+export const ZOMBOTANY3_FOCUSED_CHECK_EXTENSIONS=Object.freeze({'bonus-completion':4});
 const PARENT_REPORT_PINS='a741622b272b9c0c0727fe712d0e9251a2e5a1b237bb8c5f728d88a7b9d15044';
 
 // Independently reviewed literal operations: original case bodies, messages and
@@ -49,6 +49,12 @@ const REVIEWED_OPERATIONS = /* REVIEWED_ZOMBOTANY3_COMPATIBILITY_BEGIN */ {
       "after": "NUM_GAME_MODES==96",
       "count": 2,
       "reason": "Append only modes93/94/95 to the sentinel; preserve every preceding explicit identity and assertion."
+    },
+    {
+      "before": "NUM_GAME_MODES==96",
+      "after": "GAMEMODE_CHALLENGE_ZOMBOTANY_5==95&&GAMEMODE_SURVIVAL_ZOMBOTANY_DAY==96&&NUM_GAME_MODES==97",
+      "count": 2,
+      "reason": "Preserve every previous mode ID and bind the newly appended mode96/catalog terminal97."
     }
   ],
   "bonus-completion": [
@@ -75,6 +81,30 @@ const REVIEWED_OPERATIONS = /* REVIEWED_ZOMBOTANY3_COMPATIBILITY_BEGIN */ {
       "after": "ambushRetainedChecks==1309",
       "count": 1,
       "reason": "Count three additional actual native catalog iterations separately from all unchanged published completion assertions."
+    },
+    {
+      "before": "NUM_GAME_MODES==96",
+      "after": "GAMEMODE_CHALLENGE_ZOMBOTANY_5==95&&GAMEMODE_SURVIVAL_ZOMBOTANY_DAY==96&&NUM_GAME_MODES==97",
+      "count": 1,
+      "reason": "Preserve every previous mode ID and bind the newly appended mode96/catalog terminal97."
+    },
+    {
+      "before": "cpp.write_text(head +",
+      "after": "head += '\\nnamespace ZombotanySurvival { constexpr bool IsMode(GameMode mode){return mode==GAMEMODE_SURVIVAL_ZOMBOTANY_DAY;} }\\n'\ncpp.write_text(head +",
+      "count": 1,
+      "reason": "Provide the exact new mode predicate to the isolated legacy collaborator; no original assertion changes."
+    },
+    {
+      "before": "ambushRetainedChecks==1309",
+      "after": "ambushRetainedChecks==1310",
+      "count": 1,
+      "reason": "The unchanged native challenge-definition index loop executes one additional appended mode96; retain all1309 earlier checks and count its extra iteration."
+    },
+    {
+      "before": "NUM_CHALLENGE_MODES==95",
+      "after": "NUM_CHALLENGE_MODES==96&&GAMEMODE_SURVIVAL_ZOMBOTANY_DAY==96",
+      "count": 1,
+      "reason": "Bind the appended challenge-definition terminal96 while retaining Vase mode89/profile88 and all previous identities."
     }
   ],
   "night-shift": [
@@ -83,6 +113,12 @@ const REVIEWED_OPERATIONS = /* REVIEWED_ZOMBOTANY3_COMPATIBILITY_BEGIN */ {
       "after": "for stem in ('DoubleAgent','DoubleAgentPresentation','GustBloom','GustChallenge','GustBloomArt','Zombotany3','Zombotany3Art','Zombotany45','Zombotany45Art')",
       "count": 1,
       "reason": "Bind all published Gust production dependencies plus all eight appended Zombotany3/45 source files; remove no original dependency."
+    },
+    {
+      "before": "cpp.write_text(head +",
+      "after": "head += '\\nnamespace ZombotanySurvival { constexpr bool IsMode(GameMode mode){return mode==GAMEMODE_SURVIVAL_ZOMBOTANY_DAY;} }\\n'\ncpp.write_text(head +",
+      "count": 1,
+      "reason": "Provide the exact new mode predicate to the isolated legacy collaborator; no original assertion changes."
     }
   ],
   "lantern-shroom": [
@@ -97,6 +133,12 @@ const REVIEWED_OPERATIONS = /* REVIEWED_ZOMBOTANY3_COMPATIBILITY_BEGIN */ {
       "after": "head += '\\nnamespace Zombotany3 { bool UpdateFrozenPlant(Plant&){return false;} }\\n'\nhead += '\\nnamespace Zombotany45 { bool UpdateButteredPlant(Plant&){return false;} }\\n'\ncpp.write_text(head + constants + '\\n' + methods + tail, encoding='utf-8', newline='\\n')",
       "count": 1,
       "reason": "Provide false controlled collaborators for actual added Plant::Update freeze/butter branches in old-mode harness cases; no original case, clock, renderer, or assertion changes."
+    },
+    {
+      "before": "cpp.write_text(head +",
+      "after": "head += '\\nnamespace ZombotanySurvival { constexpr bool IsMode(GameMode mode){return mode==GAMEMODE_SURVIVAL_ZOMBOTANY_DAY;} }\\n'\ncpp.write_text(head +",
+      "count": 1,
+      "reason": "Provide the exact new mode predicate to the isolated legacy collaborator; no original assertion changes."
     }
   ],
   "garden-shuffle": [
@@ -119,6 +161,12 @@ const REVIEWED_OPERATIONS = /* REVIEWED_ZOMBOTANY3_COMPATIBILITY_BEGIN */ {
       "after": "NUM_GAME_MODES==96",
       "count": 1,
       "reason": "Append only modes93/94/95 to the sentinel; preserve every preceding explicit identity and assertion."
+    },
+    {
+      "before": "NUM_GAME_MODES==96",
+      "after": "GAMEMODE_CHALLENGE_ZOMBOTANY_5==95&&GAMEMODE_SURVIVAL_ZOMBOTANY_DAY==96&&NUM_GAME_MODES==97",
+      "count": 1,
+      "reason": "Preserve every previous mode ID and bind the newly appended mode96/catalog terminal97."
     }
   ],
   "mender-bloom": [
@@ -141,6 +189,12 @@ const REVIEWED_OPERATIONS = /* REVIEWED_ZOMBOTANY3_COMPATIBILITY_BEGIN */ {
       "after": "NUM_GAME_MODES==96",
       "count": 1,
       "reason": "Append only modes93/94/95 to the sentinel; preserve every preceding explicit identity and assertion."
+    },
+    {
+      "before": "NUM_GAME_MODES==96",
+      "after": "GAMEMODE_CHALLENGE_ZOMBOTANY_5==95&&GAMEMODE_SURVIVAL_ZOMBOTANY_DAY==96&&NUM_GAME_MODES==97",
+      "count": 1,
+      "reason": "Preserve every previous mode ID and bind the newly appended mode96/catalog terminal97."
     }
   ],
   "native-layout": [
@@ -161,6 +215,18 @@ const REVIEWED_OPERATIONS = /* REVIEWED_ZOMBOTANY3_COMPATIBILITY_BEGIN */ {
       "after": "current_draw_button=extract(challenge_screen,'void ChallengeScreen::DrawButton(')\nzombotany_guard='\\t\\t\\tif (aDef.mChallengeMode == GAMEMODE_CHALLENGE_ZOMBOTANY_3)\\n\\t\\t\\t{\\n\\t\\t\\t\\tif (Image* image = Zombotany3Art::GetImage()) g->DrawImage(image, aPosX + 13, aPosY + 4);\\n\\t\\t\\t}\\n\\t\\t\\telse '\nassert current_draw_button.count(zombotany_guard)==1\ncurrent_draw_button=current_draw_button.replace(zombotany_guard,'\\t\\t\\t',1)\nzombotany45_guard='\\t\\t\\tif (aDef.mChallengeMode == GAMEMODE_CHALLENGE_ZOMBOTANY_4 || aDef.mChallengeMode == GAMEMODE_CHALLENGE_ZOMBOTANY_5)\\n\\t\\t\\t{\\n\\t\\t\\t\\tif (Image* image = Zombotany45Art::GetImage(aDef.mChallengeMode)) g->DrawImage(image, aPosX + 13, aPosY + 4);\\n\\t\\t\\t}\\n\\t\\t\\telse '\nassert current_draw_button.count(zombotany45_guard)==1\ncurrent_draw_button=current_draw_button.replace(zombotany45_guard,'\\t\\t\\t',1)",
       "count": 1,
       "reason": "Authenticate and project only appended93 and94/95 thumbnail dispatches before the exact unchanged historical DrawButton restoration assertion; full-engine presentation controls cover all new cards."
+    },
+    {
+      "before": "static_cast<int>(GameMode::NUM_GAME_MODES)==96",
+      "after": "GAMEMODE_CHALLENGE_ZOMBOTANY_5==95&&GAMEMODE_SURVIVAL_ZOMBOTANY_DAY==96&&static_cast<int>(GameMode::NUM_GAME_MODES)==97",
+      "count": 2,
+      "reason": "Preserve previous identities and bind the new appended mode only."
+    },
+    {
+      "before": "current_draw_button=current_draw_button.replace(zombotany45_guard,'\\t\\t\\t',1)\n",
+      "after": "current_draw_button=current_draw_button.replace(zombotany45_guard,'\\t\\t\\t',1)\nzombotany_survival_guard='\\t\\t\\tif (ZombotanySurvival::IsMode(aDef.mChallengeMode))\\n\\t\\t\\t{\\n\\t\\t\\t\\tif (Image* image = GetZombotanySurvivalImage()) g->DrawImage(image, aPosX + 13, aPosY + 4);\\n\\t\\t\\t}\\n\\t\\t\\telse '\nassert current_draw_button.count(zombotany_survival_guard)==1\ncurrent_draw_button=current_draw_button.replace(zombotany_survival_guard,'\\t\\t\\t',1)\n",
+      "count": 1,
+      "reason": "Remove only the new separately tested card renderer before the unchanged exact historical card-method comparison."
     }
   ],
   "care-fatigue": [
@@ -175,83 +241,83 @@ const REVIEWED_OPERATIONS = /* REVIEWED_ZOMBOTANY3_COMPATIBILITY_BEGIN */ {
 
 const REVIEWED_PINS = /* REVIEWED_ZOMBOTANY3_PINS_BEGIN */ {
   "pendingFinalFreeze": false,
-  "adaptationsSha256": "96052627943800ef5a55ed6945c2923e73f902a404ed27c883c10664c006b387",
-  "compatibilityPatchesSha256": "e0d8d1d079a1adf262b429c575c480c54873fb04768f853bc1952172242a6561",
+  "adaptationsSha256": "394951c44b6d58ba9933f157fff163881bc0879242768eee274e2d15fac8df9b",
+  "compatibilityPatchesSha256": "e962c1f77d9ac72d85d0d66e69b042e9e35a776e49fe0a71c709587b399adfc0",
   "parentReportPinsSha256": "a741622b272b9c0c0727fe712d0e9251a2e5a1b237bb8c5f728d88a7b9d15044",
-  "adapterSha256": "2b92746b80686f5ac3b02f3b5963092ef87647031a0516f21e453d25a327cf68",
+  "adapterSha256": "5653af61cd2f94d0ba1964af01068463ee68cad9018362b22dc9cbce2e2bab31",
   "runSha256": "b62b414af34ca10de508d6807853745f1ed40a05b641be303133a16cdbdb4268",
-  "normalBuildReceiptSha256": "dbbb911dbb5cc8fdfdbf605422a4eb34bddd2d16565e17e04d3a40a657849f8a",
+  "normalBuildReceiptSha256": "6ea3a215e5c3e7ac3e4cccd238e9c759173e68ebd248b6cadfbb48e76d033fe8",
   "runners": {
     "game-speed": {
       "runnerSha256": "80a4e876506748e060cf42fdf03ec2db5e0aa1799717643ae719b3b742ffa40c",
-      "reportSha256": "ab4ae81bde1eae04862e2a074f322f8ac03eeecc98fd3e00219edff07c6b5ef2",
+      "reportSha256": "e80ef73b5c22e9c0934e7842ee63c3867b075ac79ecf6f518fffb2a511962b69",
       "harnessSha256": "0299e42113cdd9a96fdc9e4ac14cf68c6144f2c3660cf14f85bb224bb3a96b6b"
     },
     "qol-controls": {
       "runnerSha256": "d842e81f22f580dd10da981ac32071d241c45080bcc1be26fe8b0cd2a2ba9279",
-      "reportSha256": "4ae398aa256b73e6b231a8b9ee370fb946543ad9a9c7bdd4475ea00e27e259da",
+      "reportSha256": "d203529bf2669a77b630df24c5cc2d53db5ff90165fe3a280d7d2f0257e8f179",
       "harnessSha256": "26baff16227c83705bc47cc2a8afd8b8f84effa24589d2ab63024c3495527316"
     },
     "decks-cooldowns": {
       "runnerSha256": "3ea68eb683087437b54bae5b8c1b3b02b7c498e65c94e608597874a1e67aa54a",
-      "reportSha256": "b858e17e73277a42d82de9da287927efac00bbe6e459080746251053e4682613",
+      "reportSha256": "660942aaa99b94fbffb14b87cdd382c8e87ead581fba558ec117a91962174f33",
       "harnessSha256": "42d5ba51b452d466f385fdf07d23d1b7f204b121d8d300d5b192b31f3f5bb376"
     },
     "bonus-challenge": {
-      "runnerSha256": "fb46da37141143eda86cb8d7b70e147f285f4321c1518a5b7b1933ffff6e5ccf",
-      "reportSha256": "84ad0fd541ec8e51c473293056d88c64a120709bc662693109b1e96e15e02df1",
-      "harnessSha256": "6bb09c8e5fc512283f622622a0f0a1274fa8f0148fdbbf7c520ddfc23ab1ef9b"
+      "runnerSha256": "2619929c62fe1e6e49416ee7d1391c4a703d707090124bfe3975e96660a616f4",
+      "reportSha256": "f4bf30de1c890c06070ccdc72bfc986aefc426326a0aeb701229d298f6accdfe",
+      "harnessSha256": "591a338c65a7770d417998c59b0737513c9ca02f13f21e7036f24bc5c960eb6d"
     },
     "bonus-completion": {
-      "runnerSha256": "86f7349051211a9e358cd3be0c0a7e9de5344424e682c372607a47a83e6ad035",
-      "reportSha256": "5b7da2ac9a9bb86667aa1272cdfe3df38cdd0704aa2e4403622b6bebe1cf218f",
-      "harnessSha256": "d1182697fb468c2cb85071d337cb9d1d53e71bc1136bacce7441662b91491f24"
+      "runnerSha256": "37a0d7bf152ad589c9a931c1835abc8848fc8a6eb80a91b25246da9e4bc189d4",
+      "reportSha256": "b6f616f8fba98707111589571d84f1abbf24a4fa91293121025cf9800a59cbc8",
+      "harnessSha256": "3c41df74fa09901bb86e92de2710f94142a8c27851f1b15b1d1af31c6169e34b"
     },
     "night-shift": {
-      "runnerSha256": "5fb74a9083af1e0034113a817010b5fb266f285cef080d83d0c88c69d1f7875b",
-      "reportSha256": "6ec76770955604e1d57cb313ebfdcf48ae210974ce208c132f1b13502b8de220",
-      "harnessSha256": "2a0e6a98d820f923804e9cbf6c21f8f1120e985017fd3b494845d8c42e80cc1e"
+      "runnerSha256": "336780bc0b969149f7b13922d5caa11fc0a5e23d9ba529072b149c9106deb4a2",
+      "reportSha256": "3b8f217fdb2f2eefabcda739a3c0224362792e12e47ef89200bf98a790728355",
+      "harnessSha256": "3014869ba824dfeb88bf08880b0c71507c58d168689963891c4f21f42f5195a3"
     },
     "lantern-shroom": {
-      "runnerSha256": "e8a5bcdc6f9bf94046d06d1694c8ccf77d990af0755477b87919a8b855161d85",
-      "reportSha256": "2bd6dfa38bcf4cfa7f18d966507732309ce6e9be865b2395860d92e7336a0b51",
-      "harnessSha256": "329f86d97ead12333ea4cb7b2419ea940bbff8cca1b5243686d8ee8a722145f7"
+      "runnerSha256": "c7dc42ad7dbae6926490335f7397dab9934008433d4d708d6ff1e951ad229c5c",
+      "reportSha256": "543de6a5ef4638518c95d7da01cee5d1d1e0634c0003f33427e09bdd978e64e5",
+      "harnessSha256": "61bc9d1b49447f7e9d0605ee0d16451256654689220d5c1e21f41e386c29d183"
     },
     "garden-shuffle": {
       "runnerSha256": "b28e8926a3fbfb70433cffe7f6919f179159196ccb864041115913b65beec597",
-      "reportSha256": "50a1290ec2cf8637fe17ef0d3b6b49e9bd707bfc1956d3c43754aa1cd4d425d8",
+      "reportSha256": "7a552a41068d05639f79f79ffb35dc038ec4a7d64a1631258ca0fd9bf8305603",
       "harnessSha256": "9e06591927a1d872c72273f2db0bcbf549a16e38ffd5d491246c67d78977508d"
     },
     "seed-swap": {
-      "runnerSha256": "4741a30e2a38f786c0d606c0c8b4707ed8a24f4548ead00a5d307c64579749e5",
-      "reportSha256": "f1068c9dce404158b236816a04381ffd080175bc249522d43d6dc7d7f711c2bd",
-      "harnessSha256": "84c43cb1d2c5f6e42094775557b1ae4f117bcf683f8ee3d8a89a0cc283149551"
+      "runnerSha256": "9b802d9114b1dc6302f26486e295d99cb0410e9f8e42848cee2c0b24105ad8eb",
+      "reportSha256": "dd2c10c077b0ce735f0e59d51800656cf3bed6d1ba4ee6092d94b6e91f8bdcb2",
+      "harnessSha256": "8ecb5d1e00bc28bdb9f2292ebcd256d5d6fc0ce18daf902905ab29b501b9f949"
     },
     "mender-bloom": {
       "runnerSha256": "98034510f76582696735b6943d86389fe0670d56858c8e919895e3b202d92615",
-      "reportSha256": "af888b4ac95bcfdffcae68b66c6d1502de267ffbd824c34eacd91bcd55ecd3be",
+      "reportSha256": "af4b424cbb8780a19179a3b44bca0b116adcf30e55aecb7dcc7e622e7a718502",
       "harnessSha256": "276c6e8db99cb037fd8cc3f92122a3998d418905d454ec20fbbca0bf198c453c"
     },
     "intensive-care": {
-      "runnerSha256": "703d6c1597d4558f5469990b497a6bb7ab3fa0ad65fa236da193a6fc64a62a48",
-      "reportSha256": "7b673793fe5c8daaa74a277cd8e282ed9d5cf38a10552ab4e9bc15ea415aa1f3",
-      "harnessSha256": "ffc6bb2cfd92801cd17bb61fa1f884fb6f29ef72efcad30f80e9e343e2ed6457"
+      "runnerSha256": "90c0e1b323eb710e5108b3a482187722ec975b31c4b97cddd67910c4999ae083",
+      "reportSha256": "e4c30af879c581885185fad919f1806a0cadf14888339a2e4c6c72cd32ee6a16",
+      "harnessSha256": "ad48418ede0a33455f8006d5a57ca0672f5f378e03c37b3ea45fcce7b6fc6dd3"
     },
     "native-layout": {
-      "runnerSha256": "c24625ad312b804c3e1d92c915e29586c76e2d02f24f194d6c3c93fab6529df1",
-      "reportSha256": "6154eceba8f3ec8863d3b50a4792ef89fe885482cf0f903909fb0ad251f7f76b",
-      "harnessSha256": "567a6c87c7e6ed9506814b11f185414b7a6338838a5bb9957ac58e64a73fdb9a"
+      "runnerSha256": "0b7fd080e65148a86726a217e9f4649a7afd0df05b964f017144753e6ad5a297",
+      "reportSha256": "15dda29dad1023afde933a63a5c6f806923150503f9e263267dba83ed755bbc0",
+      "harnessSha256": "456d4fedf1f734bf96259d831bca4487c7c17c9f249325ba907426f8cfc14be6"
     },
     "care-fatigue": {
       "runnerSha256": "926ef0357661ceb88b1d68fe4c78cdcfa5d07fabe60e52567518e6e53405f2ea",
-      "reportSha256": "6c7e693d2575890e84afc568453ed9ebfe987d2bd547a9398b90540651408973",
+      "reportSha256": "92cb3e496a7d5a40706718cfa6dbbc471335e0e20cf696f7a2fb9ee1d2ef4348",
       "harnessSha256": "60b9b05a2437b088d08bd89ca393dc4ab00d107fc4c382927e2a36068ab92130"
     }
   },
-  "summaryPath": "focused45-2-final-closure/summary.json",
-  "summarySha256": "037fd06afcc19430e255350b397ed0c358ecf8df89350871675f1723ee4d06a4",
+  "summaryPath": "focused-zsurvival-final-closure/summary.json",
+  "summarySha256": "aa8f6014a4d4673d92d8e7ad425bf46c57e6b6d52243d64cb4e8deff502c299b",
   "originSummaries": {
-    "focused45-2-settled/summary.json": "48c0cfa6f22e2ebf8dfa94f43d9fcb05ade767fb6c190663126f2dc36d432eb2"
+    "focused-zsurvival-final-run/summary.json": "2d3d74a210465d2f84217770d1713eabdc9d668539d4b55f5030d5fd183f568a"
   }
 } /* REVIEWED_ZOMBOTANY3_PINS_END */;
 
@@ -277,8 +343,8 @@ function applyEdits(original,edits){
 }
 
 export async function verifyZombotany3FocusedCompatibility({read,sha,engine}){
- assert.equal(engine.id,CURRENT_ENGINE_ID);assert.equal(engine.parent.id,GUST_ENGINE_ID);
- assert.equal(engine.parent.artifacts.sourceSha256,GUST_ARCHIVE_SHA256);
+ assert.equal(engine.id,CURRENT_ENGINE_ID);const oracleParent=historicalEngine(engine,GUST_ENGINE_ID);
+ assert.equal(oracleParent.artifacts.sourceSha256,GUST_ARCHIVE_SHA256);
  const snapshot=await verifyZombotany3RetainedParentInputs({read,sha});
  const parentPinsBytes=await read(FOLDER+'parent-report-pins.json');assert.equal(sha(parentPinsBytes),PARENT_REPORT_PINS);
  const parentPins=JSON.parse(parentPinsBytes);
@@ -353,7 +419,7 @@ export async function verifyZombotany3FocusedRetention({read,sha,engine,reports}
   }
   total+=result.checks;
  }
- assert.equal(total,58837);
+ assert.equal(total,58838);
  const layout=reports.get('native-layout');
  assert.equal(layout.rallyAlmanacChecks,760);assert.equal(layout.rallyAlmanacWindows,27);
  assert.equal(layout.scrapRetainedChecks,26138);assert.equal(layout.scrapLayoutChecks,333);
@@ -386,5 +452,5 @@ export async function verifyZombotany3FocusedRetention({read,sha,engine,reports}
   assert.deepEqual(exactRow,actualInvocations.get(actualExecutionSummary).runners.find(old=>old.name===row.name),
    'Every current passing row retains its exact actual invocation, including unchanged runner/report/log pins');
  }
- console.log('PASS Zombotany3 focused retention:58,834 exact published assertions plus3 catalog iterations; all13 current and silent.');
+ console.log('PASS Zombotany3 focused retention:58,834 exact published assertions plus4 catalog iterations; all13 current and silent.');
 }

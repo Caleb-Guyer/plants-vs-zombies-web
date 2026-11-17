@@ -5,7 +5,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {CURRENT_ENGINE_ID,CURRENT_SOURCE_COUNT,CURRENT_OBJECT_COUNT,GUST_ENGINE_ID,GUST_SOURCE_COUNT,
  GUST_ARCHIVE_SHA256,GUST_FOCUSED_REFERENCE_SHA256,ZOMBOTANY3_PARENT_TEST_INPUTS_SHA256,
- reconstructGustSources,verifyZombotany3RetainedParentInputs}from'./native-release-context.mjs';
+ reconstructGustSources,verifyZombotany3RetainedParentInputs,historicalEngine}from'./native-release-context.mjs';
 const families=Object.freeze({
  'double-agent':{adapter:'double',cases:52,mode:91,profileIndex:90,
   parentReportSha256:'b4759164649ae992c1c6e509c914d18f9163a3ab8557452cac3e06404c72c814',
@@ -24,8 +24,8 @@ const sameNative=(a,b)=>assert.deepEqual(canonical({...a,scenarios:a.scenarios.m
 export async function authenticateZombotany3RetainedFamily(options){
  const {family,report,read,sha,engine,adapterSha256,verifyBuild,verifyCase}=options;
  assert(Object.hasOwn(families,family));const rule=families[family];assert(adapterSha256,'Current retained adapter is not frozen');
- assert.equal(engine.id,CURRENT_ENGINE_ID);assert.equal(engine.parent.id,GUST_ENGINE_ID);
- assert.equal(engine.parent.artifacts.sourceSha256,GUST_ARCHIVE_SHA256);
+ assert.equal(engine.id,CURRENT_ENGINE_ID);const oracleParent=historicalEngine(engine,GUST_ENGINE_ID);
+ assert.equal(oracleParent.artifacts.sourceSha256,GUST_ARCHIVE_SHA256);
  const snapshot=await verifyZombotany3RetainedParentInputs({read,sha});
  const originalRead=async name=>{
   safe(name);assert(name.startsWith('tests/'));const key=name.slice(6),pin=snapshot.files[key];
@@ -86,6 +86,6 @@ export async function authenticateZombotany3RetainedFamily(options){
  };
  const focusedBytes=fs.readFileSync(new URL('./fixtures/gust1-focused-reference.json',import.meta.url));assert.equal(sha(focusedBytes),GUST_FOCUSED_REFERENCE_SHA256);
  const productionBuildBytes=Buffer.from(json(focusedBytes).files['logs/build-result.json'].base64,'base64');
- return {report:normalized,read:historicalRead,engine:engine.parent,productionBuildBytes,
+ return {report:normalized,read:historicalRead,engine:oracleParent,productionBuildBytes,
   actualCases:rule.cases,actualProductionObjects:CURRENT_OBJECT_COUNT};
 }

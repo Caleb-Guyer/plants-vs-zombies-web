@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "zsurvival1-browser-speed-expectation-correction",
+  "stage": "recorded-after-actual-browser-observation",
+  "engineId": "0.2.6-web-zsurvival.1",
+  "preservedPreregistrationSha256": "a603ba1a4eec379f1a5b277168398f9e82e66e5b25c743b5861175c68fec93e7",
+  "preservedProviderAmendmentSha256": "b834a42b938ad89acd69ca61c7583f6b6787593667156de66374888f3af6a529",
+  "expectedBefore": {"nativeSpeedResetOnContinue": true, "nativeDoubleSpeedRetoggledAfterContinue": true},
+  "actualObserved": {"nativeSpeedResetOnContinue": false, "nativeDoubleSpeedRetoggledAfterContinue": false, "nativeRememberedSpeedRestored": true, "continuedNativeDoubleSpeed": 2},
+  "reason": "The preregistration considered only KillBoard resetting the transient mDoubleGameSpeed value. Existing native QoL settings remember speed by default. ToggleGameSpeed saves the preferred speed in the profile's separate userdata/qol-settings-ID.txt file; InitializeGameSpeedButton reads that preference for a new or continued board. The browser save adapter restores the complete /saves tree after reload, including that preference file. Actual Continue and continued screenshots already show2x, and no second speed click was made.",
+  "sourceEvidence": {
+    "source/src/LawnApp.cpp": {"bytes": 100658, "sha256": "9fe3503f71f0557eb42f5333bbe6612754dcd66ca1b9d90cd3eb496ca5c60673", "methods": ["KillBoard", "GetQoLSettings", "SaveQoLSettings", "ToggleGameSpeed", "InitializeGameSpeedButton"]},
+    "source/src/Lawn/System/QoLSettings.h": {"bytes": 923, "sha256": "56ca5ecf024b80ae6fad2d2ffed24f84ec044104b2ca07e974d733e3a16542c9", "fact": "mRememberSpeed defaults to true"},
+    "source/src/Lawn/Board.cpp": {"bytes": 321564, "sha256": "50dfdc2d580c9384ae043ce36e2a1eab1b63789add57468b411e456cf2f35449", "fact": "Board initialization calls InitializeGameSpeedButton"},
+    "dist/loader.js": {"bytes": 10670, "sha256": "a183ed4e17810de2431989f3ebc263d2f511d1514c53e73c8933b8486bced73a", "fact": "Restores browser save filesystem before starting the native game"},
+    "dist/save-storage.js": {"bytes": 9518, "sha256": "e46cef9257f3608f0edbd1af4c0424e09665aa919aed5e5e16d234045ef1c49c", "fact": "Capture and restore include the complete /saves tree"}
+  },
+  "unchanged": {"productionSourceChanged": false, "sealedNativeGatesChanged": false, "oldPreregistrationEdited": false, "actualScreenshotsEdited": false, "additionalBrowserOrGameTestRun": false, "semanticCaptureCount": 6, "browserEarnedWins": 0, "freshPerformanceMeasured": false},
+  "scope": "A transparent correction of an incorrect browser-test expectation. Existing game behavior was confirmed from frozen source and actual screenshots; no gameplay, saved layout or native acceptance criterion changed."
+}

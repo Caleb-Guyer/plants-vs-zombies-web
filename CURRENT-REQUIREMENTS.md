@@ -1,5 +1,19 @@
 # Current requirements
 
+## Zombotany Survival: Day
+
+The sixth Zombotany card unlocks after beating the original ZomBotany. This day-lawn Survival course starts with 50 sun and runs five ten-wave flags. Plants, sun and surviving mowers persist through four native seed repicks. Its 207 enemies use the six original plant-headed zombie types, with round totals of 29, 40, 44, 45 and 49. Partial records of one through four flags remain unfinished; the fifth clear earns the native trophy.
+
+The current 888-source/152-object build passes 31 native suites with 223,543,249 primary checks, plus 29,323,451 separately counted late-game checks and 49,403 separate family animation, spawn and save-compatibility checks. The new 24-case matrix has twelve 1x/2x pairs: sixteen genuine five-flag clears, four natural defeats and four zero-credit controls. Testing stays muted; automated native tests open no audio device.
+
+Six muted CUA browser captures record the native six-seed chooser, a 50-sun Sunflower and 100-sun Cabbage-pult purchase, 2x, and Save/Leave/reload/Continue. Both planted cells and zero remaining sun return, with 2x retained. These are functional observations; they establish no browser full win, fresh FPS, GPU-completion or performance result.
+
+[Play the game](https://caleb-guyer.github.io/plants-vs-zombies-web/).
+
+## Historical release records (.45.2 and earlier)
+
+The following sections retain their original release-time scope.
+
 ## Zombotany attachment and roster correction
 
 Sea-shroom zombie heads now follow the actual animated neck joint in previews, walking, eating and swimming. Zombotany uses plant-headed zombies throughout: ordinary and flag entries are replaced without changing authored wave counts (99 in Night, 156 in Fog, 109 on Roof), and native wave banners/progress remain. Continue normalizes old future waves and converts healthy ordinary actors while preserving their identity, health, position and status. Unsupported or already dying legacy ordinary rigs are removed without loot or victory credit. The eight saved-class/serializer files remain byte-exact. Normal audio remains available; automated testing opens no audio device.

@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-zombotany45.2
-Pins the Sea-shroom head to its animated neck and keeps all Zombotany modes plant-headed, including Continue saves.
-Engine JavaScript SHA-256: 1a4842f4945ea786677f502a595df64e1cdcb8c78b9cc6a37626f118c62f9857
-Engine WASM SHA-256: 928a69c9f37d94d0995180ff3afb5aa3a7676e4b9c25f8181ce4a5d42b9188a7
+PvZ-Portable 0.2.6-web-zsurvival.1
+Adds Zombotany Survival: Day, with a persistent lawn, four seed repicks and five changing plant-headed rounds.
+Engine JavaScript SHA-256: 0091ae18587667ce01b16185f2c463a9de7505d34efdadac48c382201a128a44
+Engine WASM SHA-256: 72115fe5df5c69b2bc59672cefee7d07d25e9f3d31f2b3a225e137bacb208765
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.

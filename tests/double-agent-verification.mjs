@@ -104,9 +104,9 @@ export async function verifyDoubleAgentSourceBounds({read,sha,engine}){
 export async function verifyDoubleAgentBuildBindings({report,read,sha,engine,fullRunReport,productionBuildBytes}){
  const z3=engine.id===CURRENT_ENGINE_ID;
  const current=engine.id==='0.2.6-web-gust.1'||z3;
- const sourceCount=z3?886:current?878:872,objectCount=z3?151:current?147:144;
+ const sourceCount=z3?CURRENT_SOURCE_COUNT:current?878:872,objectCount=z3?CURRENT_OBJECT_COUNT:current?147:144;
  assert(current||engine.id==='0.2.6-web-double.1');
- if(z3){assert.equal(CURRENT_SOURCE_COUNT,886);assert.equal(CURRENT_OBJECT_COUNT,151);}
+ if(z3){assert.equal(CURRENT_SOURCE_COUNT,888);assert.equal(CURRENT_OBJECT_COUNT,152);}
  fields(report,{execution:'complete-production-engine',optimization:'O2',engineId:engine.id,
   mode:91,profileIndex:90,productionObjectCount:objectCount,failures:0,exitCode:0});
  assert.equal(Object.keys(report.sourceSha256).length,sourceCount);
@@ -349,7 +349,7 @@ export async function verifyDoubleAgent(options){
   const historic=await authenticateZombotany3RetainedFamily({...options,family:'double-agent',adapterSha256:Z3_DOUBLE_RETENTION_SHA256,
    verifyBuild:verifyDoubleAgentBuildBindings,verifyCase:verifyDoubleAgentCaseLog});
   const result=await verifyDoubleAgent({...options,...historic,[z3Projection]:z3Projection});
-  return {...result,currentProductionObjects:151,retainedCases:52};
+  return {...result,currentProductionObjects:historic.actualProductionObjects,retainedCases:52};
  }
  if(engine.id==='0.2.6-web-gust.1')return verifyGustRetainedDouble(options);
  const actualReportBytes=await read('tests/double-agent-results.json');

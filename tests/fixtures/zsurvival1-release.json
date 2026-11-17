@@ -1,0 +1,10 @@
+{
+  "id": "0.2.6-web-zsurvival.1",
+  "jsSha256": "0091ae18587667ce01b16185f2c463a9de7505d34efdadac48c382201a128a44",
+  "wasmSha256": "72115fe5df5c69b2bc59672cefee7d07d25e9f3d31f2b3a225e137bacb208765",
+  "sourceSha256": "a3bebe9b89f0816f4e44e00ee4edf3b3a93ec95f1d2e301f26c793252b88d5ba",
+  "patchSha256": "dab1b7b5ac3a58744bcdbba1942249ab8a3483c68dca21d1eb1b8b0fe38141a5",
+  "normalReceiptSha256": "6ea3a215e5c3e7ac3e4cccd238e9c759173e68ebd248b6cadfbb48e76d033fe8",
+  "sourceFiles": 888,
+  "productionObjects": 152
+}

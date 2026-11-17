@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "current_engine": "0.2.6-web-zombotany45.2",
+  "current_engine": "0.2.6-web-zsurvival.1",
   "upstream_tag": "0.2.6",
   "layout": "Site-source nests the upstream baseline, independently pinned complete Gust.1, Double.1, Torch.1, Ambush.1, Scrap.1 and Endless.3 source projections, the native I, Zombie UI reference and the current full patch. Before offline checks, the exact current native source ZIP is restored from a bounded lossless XZ transport, then the historical Endless.2 comparator ZIP is restored from compressed byte ranges shared with that current ZIP and a literal payload. Every original native archive byte, member and checksum is preserved. Each archives[].url is its original download location: current and upstream source stay on Pages; historical source archives use immutable GitHub repository URLs and remain in the full runtime distribution. Linked native test artifacts are losslessly packed; the included decoder restores their exact pinned bytes.",
   "nested_sources": [
@@ -8,21 +8,21 @@
   ],
   "restored_sources": [
     {
-      "name": "pvz-portable-0.2.6-web-zombotany45.2-source.zip",
-      "path": "dist/source/pvz-portable-0.2.6-web-zombotany45.2-source.zip",
-      "bytes": 42055450,
-      "sha256": "b7bd098307ffeb7a46379951942c3bc767f016e1c342210e2a43af412a03c7ff",
+      "name": "pvz-portable-0.2.6-web-zsurvival.1-source.zip",
+      "path": "dist/source/pvz-portable-0.2.6-web-zsurvival.1-source.zip",
+      "bytes": 42204191,
+      "sha256": "a3bebe9b89f0816f4e44e00ee4edf3b3a93ec95f1d2e301f26c793252b88d5ba",
       "automatic_before_checks": true,
       "encoding": "xz",
       "manifest": {
         "path": "source-transports/current.json",
-        "bytes": 349,
-        "sha256": "fd2a0591d55aa8b3e0553c39b277e74e959bf116ff243b50809e3898fadba6a1"
+        "bytes": 347,
+        "sha256": "609a3f654d844a0fed338ad7321d0638b427da9e05a9117dc7565ebff5d7e035"
       },
       "compressed_payload": {
         "path": "source-transports/current.xz",
-        "bytes": 32016968,
-        "sha256": "f1b9935679c7558a39ce68b6010cc365595c8fd607c4121bc11145fbf23944a0"
+        "bytes": 31919260,
+        "sha256": "afaa91d79a178f8c3c5c2259b817785a42e60bbda32c2bca312c85b426c0c267"
       }
     },
     {
@@ -33,18 +33,18 @@
       "automatic_before_checks": true,
       "manifest": {
         "path": "source-transports/endless2.json",
-        "bytes": 282405,
-        "sha256": "2ec476d977239f2a76046299d80370606bd6e8ab9746746ae71a75db78db75c9"
+        "bytes": 281794,
+        "sha256": "8db087abf51da2bf44fc2520152fd65fbe829552dbad513c410a01a91b103338"
       },
       "literal_payload": {
         "path": "source-transports/endless2.literals",
-        "bytes": 26837981,
-        "sha256": "881213d00a2a5c14fad712b415d4b14fda7d18c37acf2089d65f930a2f340224"
+        "bytes": 26845096,
+        "sha256": "fb93b63b546b112c41ad69903c5ef516c92468da44e92fdef7f53f653b298e3c"
       }
     }
   ],
   "nested_patches": [
-    "web-zombotany45.2.patch"
+    "web-zsurvival1.patch"
   ],
   "archives": [
     {
@@ -539,9 +539,17 @@
       "name": "pvz-portable-0.2.6-web-zombotany45.2-source.zip",
       "bytes": 42055450,
       "sha256": "b7bd098307ffeb7a46379951942c3bc767f016e1c342210e2a43af412a03c7ff",
+      "current": false,
+      "upstream": false,
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/fa37aee4a3b6793903cb5e1b4c592e565439560c/dist/source/pvz-portable-0.2.6-web-zombotany45.2-source.zip"
+    },
+    {
+      "name": "pvz-portable-0.2.6-web-zsurvival.1-source.zip",
+      "bytes": 42204191,
+      "sha256": "a3bebe9b89f0816f4e44e00ee4edf3b3a93ec95f1d2e301f26c793252b88d5ba",
       "current": true,
       "upstream": false,
-      "url": "./pvz-portable-0.2.6-web-zombotany45.2-source.zip"
+      "url": "./pvz-portable-0.2.6-web-zsurvival.1-source.zip"
     }
   ]
 }

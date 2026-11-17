@@ -56,3 +56,9 @@ tests/fixtures/zombotany3-2-history/** -text whitespace=cr-at-eol
 tests/fixtures/zombotany45-release.json -text
 tests/fixtures/zombotany45-browser/** -text whitespace=cr-at-eol
 tests/fixtures/performance/zombotany45-browser-validation.json -text
+# Preserve the exact Survival evidence and published parent on every checkout.
+tests/fixtures/historical/zombotany45-2-published/** -text whitespace=cr-at-eol
+tests/fixtures/zsurvival1-browser/** -text whitespace=cr-at-eol
+tests/fixtures/performance/zsurvival1-browser-validation.json -text whitespace=cr-at-eol
+tests/fixtures/zsurvival1-parent-reference.json -text
+tests/fixtures/zsurvival1-release.json -text

@@ -14,11 +14,12 @@ import {fileURLToPath} from 'node:url';
 import {CURRENT_ENGINE_ID, CURRENT_SOURCE_COUNT, CURRENT_OBJECT_COUNT, SCRAP_SOURCE_ADDITIONS, SCRAP_PARENT_REFERENCE_SHA256, AMBUSH_PARENT_REFERENCE_SHA256, AMBUSH_SOURCE_ADDITIONS, TORCH_SOURCE_ADDITIONS, TORCH_PARENT_REFERENCE_SHA256, reconstructAmbushSources, reconstructAmbushFocusedEvidence, reconstructScrapSources, reconstructEndless3Sources, verifyTorchRetainedParentInputs} from './native-release-context.mjs';
 import {DOUBLE_SOURCE_ADDITIONS,DOUBLE_PARENT_REFERENCE_SHA256,reconstructTorchSources,reconstructTorchFocusedEvidence,
  GUST_SOURCE_ADDITIONS,GUST_PARENT_REFERENCE_SHA256,reconstructDoubleSources,reconstructDoubleFocusedEvidence,
- ZOMBOTANY3_SOURCE_ADDITIONS,ZOMBOTANY3_PARENT_REFERENCE_SHA256,reconstructGustSources,reconstructGustFocusedEvidence} from './native-release-context.mjs';
+ ZOMBOTANY3_SOURCE_ADDITIONS,ZSURVIVAL_SOURCE_ADDITIONS,ZOMBOTANY3_PARENT_REFERENCE_SHA256,reconstructGustSources,reconstructGustFocusedEvidence} from './native-release-context.mjs';
 import {verifyGustFocusedRetention,GUST_FOCUSED_CHECK_EXTENSIONS} from './gust-focused-retention-verification.mjs';
 import {verifyZombotany3FocusedRetention,ZOMBOTANY3_FOCUSED_CHECK_EXTENSIONS} from './zombotany3-focused-retention-verification.mjs';
 import {verifyZombotany3} from './zombotany3-verification.mjs';
 import {verifyZombotany45} from './zombotany45-verification.mjs';
+import {verifyZsurvival1} from './zsurvival1-verification.mjs';
 import {verifyGustBloom} from './gust-bloom-verification.mjs';
 import {verifyDoubleAgent} from './double-agent-verification.mjs';
 import {verifyDoubleFocusedRetention,DOUBLE_FOCUSED_CHECK_EXTENSIONS} from './double-focused-retention-verification.mjs';
@@ -47,7 +48,9 @@ const JSZip = vendor.exports;
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
 const engine = JSON.parse(fs.readFileSync(new URL('game/engine-provenance.json', dist)));
 assert.equal(engine.id, CURRENT_ENGINE_ID);
-const gustEngine = engine.parent;
+const publishedZombotanyEngine = engine.parent;
+assert.equal(publishedZombotanyEngine.id,'0.2.6-web-zombotany45.2');
+const gustEngine = publishedZombotanyEngine.parent;
 assert.equal(gustEngine.id,'0.2.6-web-gust.1');
 const doubleEngine = gustEngine.parent;
 assert.equal(doubleEngine.id,'0.2.6-web-double.1');
@@ -289,8 +292,8 @@ const vaseFocusedCheckExtensions = {'bonus-challenge':7, 'bonus-completion':77, 
 const focusedCheckExtensions = {'bonus-challenge':7, 'bonus-completion':96, 'native-layout':1019};
 const retainedSuites = [...Object.keys(retainedChecks), 'care-fatigue', 'care-full-run', 'chain-reaction', 'rally-zombie', 'rally-raid', 'lights-out', 'garlic-run', 'bungee-business', 'cob-cannon-command', 'pool-panic', 'pool-panic-endless'];
 assert.equal(retainedSuites.length, 23);
-const suites = [...retainedSuites, 'scrap-yard', 'vase-ambush', 'torchbearer', 'double-agent', 'gust-bloom', 'zombotany3', 'zombotany45'];
-assert.equal(suites.length, 30);
+const suites = [...retainedSuites, 'scrap-yard', 'vase-ambush', 'torchbearer', 'double-agent', 'gust-bloom', 'zombotany3', 'zombotany45', 'zsurvival1'];
+assert.equal(suites.length, 31);
 const reports = new Map();
 let checks = 0;
 for (const name of suites) {
@@ -646,6 +649,8 @@ await verifyZombotany3({report:reports.get('zombotany3'),read:readCurrent,sha,en
  productionBuildBytes:fullRunProductionBuildBytes,
  familyArtBytes:fs.readFileSync(new URL('content/native-zombotany-art.json',dist))});
 await verifyZombotany45({report:reports.get('zombotany45'),read:readCurrent,sha,engine,fullRunReport,
+ productionBuildBytes:fullRunProductionBuildBytes});
+await verifyZsurvival1({report:reports.get('zsurvival1'),read:readCurrent,sha,engine,fullRunReport,
  productionBuildBytes:fullRunProductionBuildBytes});
 const careBalance = reports.get('intensive-care').balanceModel;
 assert.equal(careBalance.kind, 'native healing/fatigue capacity bound; not a battle clear');
@@ -1503,7 +1508,7 @@ assert.deepEqual(fs.readFileSync(new URL('generation.json', artworkUrl)), genera
 const sourceManifest = JSON.parse(await read('source-manifest.json'));
 assert.equal(sourceManifest.version, engine.id);
 assert.deepEqual(Object.keys(sourceManifest.files).sort(),
-  [...Object.keys(historySource.manifest.files), ...SCRAP_SOURCE_ADDITIONS, ...AMBUSH_SOURCE_ADDITIONS, ...TORCH_SOURCE_ADDITIONS, ...DOUBLE_SOURCE_ADDITIONS, ...GUST_SOURCE_ADDITIONS, ...ZOMBOTANY3_SOURCE_ADDITIONS].sort(),
+  [...Object.keys(historySource.manifest.files), ...SCRAP_SOURCE_ADDITIONS, ...AMBUSH_SOURCE_ADDITIONS, ...TORCH_SOURCE_ADDITIONS, ...DOUBLE_SOURCE_ADDITIONS, ...GUST_SOURCE_ADDITIONS, ...ZOMBOTANY3_SOURCE_ADDITIONS, ...ZSURVIVAL_SOURCE_ADDITIONS].sort(),
   'Zombotany3 retains every878 published Gust source path and appends only four implementation/presentation files');
 const completeProductionSources = Object.fromEntries(Object.entries(sourceManifest.files)
   .map(([name, pin]) => ['source/' + name, pin.sha256]));
@@ -2202,7 +2207,7 @@ if (process.argv.includes('--run-native')) {
     }
     for (const name of suites) {
       const args = [path.join(temporary, 'tests/test-' + name + '.py'), '--native'];
-      if (['care-full-run','chain-reaction','rally-zombie','rally-raid','lights-out','garlic-run','bungee-business','cob-cannon-command','pool-panic','pool-panic-endless','scrap-yard','vase-ambush','torchbearer','double-agent','gust-bloom','zombotany3','zombotany45'].includes(name)) args.push('--asset-root', fileURLToPath(new URL('game-assets/', dist)));
+      if (['care-full-run','chain-reaction','rally-zombie','rally-raid','lights-out','garlic-run','bungee-business','cob-cannon-command','pool-panic','pool-panic-endless','scrap-yard','vase-ambush','torchbearer','double-agent','gust-bloom','zombotany3','zombotany45','zsurvival1'].includes(name)) args.push('--asset-root', fileURLToPath(new URL('game-assets/', dist)));
       const run = spawnSync('python', args, {encoding: 'utf8'});
       assert.equal(run.status, 0, (run.error?.message || '') + run.stdout + run.stderr);
       const actual = JSON.parse(fs.readFileSync(path.join(temporary, 'tests/' + name + '-results.json')));
@@ -2211,7 +2216,7 @@ if (process.argv.includes('--run-native')) {
       assert.equal(actual.exitCode, 0);
       assert.match(actual.status, /^PASS/);
       assert.deepEqual(actual.sourceSha256, reports.get(name).sourceSha256);
-      if(['care-full-run','chain-reaction','rally-zombie','rally-raid','lights-out','garlic-run','bungee-business','cob-cannon-command','pool-panic','pool-panic-endless','scrap-yard','vase-ambush','torchbearer','double-agent','gust-bloom','zombotany3','zombotany45'].includes(name)) {
+      if(['care-full-run','chain-reaction','rally-zombie','rally-raid','lights-out','garlic-run','bungee-business','cob-cannon-command','pool-panic','pool-panic-endless','scrap-yard','vase-ambush','torchbearer','double-agent','gust-bloom','zombotany3','zombotany45','zsurvival1'].includes(name)) {
         assert.equal(actual.productionObjectCount,CURRENT_OBJECT_COUNT);
         assert.deepEqual(actual.productionObjectSha256,fullRunReport.productionObjectSha256);
         assert.equal(actual.productionBuildReceiptSha256,sha(fullRunProductionBuildBytes));
@@ -2272,8 +2277,11 @@ if (process.argv.includes('--run-native')) {
       if(name==='zombotany45') await verifyZombotany45({report:actual,
         read:async input=>fs.readFileSync(path.join(temporary,input)),sha,engine,fullRunReport,
         productionBuildBytes:fullRunProductionBuildBytes});
+      if(name==='zsurvival1') await verifyZsurvival1({report:actual,
+        read:async input=>fs.readFileSync(path.join(temporary,input)),sha,engine,fullRunReport,
+        productionBuildBytes:fullRunProductionBuildBytes});
     }
-    console.log(`PASS all ${checks} assertions across 30 native suites, including complete headless Zombotany 3, 4 and 5 and retained challenge scenarios on CI.`);
+    console.log(`PASS all ${checks} assertions across 31 native suites, including five-flag Zombotany Survival: Day, complete headless Zombotany 3, 4 and 5 and retained challenge scenarios on CI.`);
   } finally {
     const resolved = fs.realpathSync(temporary);
     assert.equal(path.dirname(resolved), temporaryRoot);

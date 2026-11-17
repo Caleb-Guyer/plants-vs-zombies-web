@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "id": "zsurvival1-browser-provider-amendment",
+  "stage": "preregistered-before-current-native-game-input",
+  "engineId": "0.2.6-web-zsurvival.1",
+  "originalPreregistration": {"path": "tests/fixtures/zsurvival1-browser/preregistration-sky.json", "bytes": 1906, "sha256": "84d9802d925a59402f052b0c3e5e1a8cf787d2508302ad0b1f4b4620d8fc229b"},
+  "providerChange": {"before": "sky", "after": "unified-computer-use", "api": "cua_repl"},
+  "reason": "The official unified-computer-use tool became available after the earlier Sky application approval timed out. The local preview server was restarted and an isolated in-app browser tab was created successfully. It showed loading and the muted control; no native game input or accepted gameplay capture had occurred before this amendment.",
+  "preservation": {"earlierSkyPreregistrationByteExact": true, "earlierFailedAttemptsRemainHistorical": true, "noEarlierAttemptRelabelledAsPassing": true},
+  "captureChange": {"before": "Native Edge fullscreen window", "after": "Actual isolated in-app browser viewport", "f11Required": false, "actualBrowserCapture": true, "croppingOrGeneratedModification": false},
+  "unchangedRequirements": {"captureKeys": ["title", "family", "chooser", "planted-2x", "continue-dialog", "continued"], "nativeFiniteSunCosts": [50, 100], "sameTwoPlantCellsAndSunAfterContinue": true, "actualNativeMenuLeaveReloadAndContinue": true, "nativeSpeedResetsTo1xThenRetoggled2x": true, "muteAtEveryCapture": true, "actualEarnedProfileSha256": "dca6daa3906aaf8a8d442f796ea86297242d25a97040d4756c3e38a9db29fc01", "browserEarnedWins": 0, "freshPerformanceMeasured": false},
+  "reviewRequiredBeforeAcceptance": true,
+  "scope": "Only the official automation provider and screenshot surface change. All six semantic captures, finite native economy, save/Continue, speed, genuine unlock and mute requirements are retained. Actual tool failure receipts remain separate from any accepted functional proof."
+}

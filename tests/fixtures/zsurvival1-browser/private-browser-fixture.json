@@ -1,0 +1,12 @@
+{
+  "status": "PASS private local browser fixture prepared",
+  "publishedBundleModified": false,
+  "originalBundleSha256": "26a47b5a62c29427ee19c1609e26b51eb5ca7795107d50cfadd29b839da8e7cc",
+  "privateBundleSha256": "5c6b99ecf38bca4eceec7aa9840c7d0eb773c291dfdf316c143ea28d57154cd4",
+  "overrideURLPath": "/testing/test-profiles.zip",
+  "onlyChangedMember": "userdata/user900001.dat",
+  "detailSha256": "dca6daa3906aaf8a8d442f796ea86297242d25a97040d4756c3e38a9db29fc01",
+  "origin": "Actual native original Zombotany prerequisite on normal7ad; no Survival credit",
+  "browserExecuted": false,
+  "browserEarnedWins": 0
+}

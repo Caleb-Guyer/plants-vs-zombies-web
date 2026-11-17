@@ -1,5 +1,19 @@
 # GitHub Pages release: Caleb-Guyer/plants-vs-zombies-web
 
+## Zombotany Survival: Day release
+
+Engine `0.2.6-web-zsurvival.1` adds the sixth Zombotany card, unlocked by beating the original ZomBotany. Five ten-wave day-lawn flags start with 50 sun and retain plants, sun and surviving mowers through native seed repicks. The changing roster contains 207 zombies using six original plant-headed types. Existing artwork, controls and normal audio remain available; testing stays muted.
+
+The 888-source/152-object release passes 31 native suites with 223,543,249 primary checks, plus 29,323,451 separate late-game checks and 49,403 separate family regression checks. The new 24 cases include sixteen genuine five-flag clears, four natural defeats and four zero-credit controls at 1x/2x.
+
+Six muted CUA captures record functional browser play, paid Sunflower/Cabbage-pult planting, 2x and Save/Leave/reload/Continue with the same plants, zero sun and 2x retained. They do not claim a browser full win or fresh FPS, GPU-completion or performance measurement. The existing Pages workflow validates the release before deployment; source-download and public-byte checks have separate publication receipts.
+
+[Play the game](https://caleb-guyer.github.io/plants-vs-zombies-web/).
+
+## Historical release records (.45.2 and earlier)
+
+The following sections retain their original release-time scope.
+
 ## Zombotany attachment and roster correction
 
 Sea-shroom zombie heads now follow the actual animated neck joint in previews, walking, eating and swimming. Zombotany uses plant-headed zombies throughout: ordinary and flag entries are replaced without changing authored wave counts (99 in Night, 156 in Fog, 109 on Roof), and native wave banners/progress remain. Continue normalizes old future waves and converts healthy ordinary actors while preserving their identity, health, position and status. Unsupported or already dying legacy ordinary rigs are removed without loot or victory credit. The eight saved-class/serializer files remain byte-exact. Normal audio remains available; automated testing opens no audio device.

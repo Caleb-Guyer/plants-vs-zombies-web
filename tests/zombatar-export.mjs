@@ -5,7 +5,7 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 import assert from 'node:assert/strict';
 import {createRequire} from 'node:module';
-import {SCRAP_SOURCE_ADDITIONS, AMBUSH_SOURCE_ADDITIONS, TORCH_SOURCE_ADDITIONS, DOUBLE_SOURCE_ADDITIONS, GUST_SOURCE_ADDITIONS, ZOMBOTANY3_SOURCE_ADDITIONS} from './native-release-context.mjs';
+import {SCRAP_SOURCE_ADDITIONS, AMBUSH_SOURCE_ADDITIONS, TORCH_SOURCE_ADDITIONS, DOUBLE_SOURCE_ADDITIONS, GUST_SOURCE_ADDITIONS, ZOMBOTANY3_SOURCE_ADDITIONS, ZSURVIVAL_SOURCE_ADDITIONS} from './native-release-context.mjs';
 
 const require = createRequire(import.meta.url);
 const dist = new URL('../dist/', import.meta.url);
@@ -51,7 +51,7 @@ const candidates = srcFiles(modified);
 const addedRendererFiles=['src/SexyAppFramework/graphics/SoftwareScreenImage.cpp','src/SexyAppFramework/graphics/SoftwareScreenImage.h','src/PvzpLib/PvzpNativeScreenPixel888.inc','src/PvzpLib/PvzpNativeScreenTexel.inc'];
 const addedContentFiles=['src/Lawn/System/PoolPanicEndless.h','src/Lawn/System/PoolPanicEndless.cpp','src/Lawn/System/PoolPanicEndlessPresentation.h','src/Lawn/System/PoolPanicEndlessPresentation.cpp','src/Lawn/System/PoolPanic.h','src/Lawn/System/PoolPanic.cpp','src/Lawn/System/PoolPanicPresentation.h','src/Lawn/System/PoolPanicPresentation.cpp','src/Lawn/System/CobCannonCommand.h','src/Lawn/System/CobCannonCommand.cpp','src/Lawn/System/CobCannonCommandPresentation.h','src/Lawn/System/CobCannonCommandPresentation.cpp','src/Lawn/System/BungeeBusiness.h','src/Lawn/System/BungeeBusiness.cpp','src/Lawn/System/BungeeBusinessPresentation.h','src/Lawn/System/BungeeBusinessPresentation.cpp','src/Lawn/System/GarlicRun.h','src/Lawn/System/GarlicRun.cpp','src/Lawn/System/GarlicRunPresentation.h','src/Lawn/System/GarlicRunPresentation.cpp','src/Lawn/System/LightsOut.h','src/Lawn/System/LightsOut.cpp','src/Lawn/System/LightsOutPresentation.h','src/Lawn/System/LightsOutPresentation.cpp','src/Lawn/System/RallyRaid.h','src/Lawn/System/RallyRaid.cpp','src/Lawn/System/RallyRaidPresentation.h','src/Lawn/System/RallyRaidPresentation.cpp',"src/Lawn/System/RallyPresentation.cpp","src/Lawn/System/RallyPresentation.h","src/Lawn/System/RallyZombie.cpp","src/Lawn/System/RallyZombie.h",'src/Lawn/System/ChainReaction.h','src/Lawn/System/ChainReaction.cpp','src/Lawn/System/CareFatigue.h','src/Lawn/System/IntensiveCare.h','src/Lawn/System/MenderBloom.h','src/Lawn/System/MenderBloom.cpp','src/Lawn/System/MenderBloomArt.h','src/Lawn/System/SeedSwap.h','src/Lawn/System/GardenShuffle.h','src/Lawn/System/BonusChallenge.h','src/Lawn/System/NightShift.h','src/Lawn/System/LanternGlow.h','src/Lawn/System/LanternShroom.h','src/Lawn/System/LanternShroom.cpp','src/Lawn/System/ChillShroomArt.h'];
 const addedQoLFiles=['src/Lawn/System/QoLSettings.h','src/Lawn/System/QoLSettings.cpp','src/Lawn/Widget/QoLDialog.h','src/Lawn/Widget/QoLDialog.cpp','src/Lawn/System/DeckPresets.h','src/Lawn/System/DeckPresets.cpp','src/Lawn/Widget/PlantDecksDialog.h','src/Lawn/Widget/PlantDecksDialog.cpp','src/Lawn/SeedPacketCooldown.h'];
-assert.deepEqual([...candidates.keys()].sort(), [...originals.keys(),...addedRendererFiles,...addedQoLFiles,...addedContentFiles,...SCRAP_SOURCE_ADDITIONS,...AMBUSH_SOURCE_ADDITIONS,...TORCH_SOURCE_ADDITIONS,...DOUBLE_SOURCE_ADDITIONS,...GUST_SOURCE_ADDITIONS,...ZOMBOTANY3_SOURCE_ADDITIONS].sort(),
+assert.deepEqual([...candidates.keys()].sort(), [...originals.keys(),...addedRendererFiles,...addedQoLFiles,...addedContentFiles,...SCRAP_SOURCE_ADDITIONS,...AMBUSH_SOURCE_ADDITIONS,...TORCH_SOURCE_ADDITIONS,...DOUBLE_SOURCE_ADDITIONS,...GUST_SOURCE_ADDITIONS,...ZOMBOTANY3_SOURCE_ADDITIONS,...ZSURVIVAL_SOURCE_ADDITIONS].sort(),
   'The complete source adds exactly the retained renderer, QoL and reviewed bonus files');
 const code = /\.(?:c|cc|cpp|cxx|h|hh|hpp|hxx|inc|java|bas|rc|sh|cmake|in)$/i;
 const normalize = text => text.replace(/\r\n?/g, '\n');
@@ -79,6 +79,7 @@ assert.deepEqual(changed.sort(), [
   "src/Lawn/Widget/GameButton.cpp",
   "src/Lawn/Widget/AlmanacDialog.h",
   "src/Lawn/Widget/AlmanacDialog.cpp",
+  "src/Lawn/Widget/AwardScreen.cpp", // Reviewed Survival flag record and final trophy routing.
   "src/ConstEnums.h",
   "src/Lawn/Widget/ChallengeScreen.cpp",
   "src/Lawn/Widget/ChallengeScreen.h",

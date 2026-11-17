@@ -3,7 +3,7 @@
 // earned regular-play unlock. Development probes never satisfy this gate.
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {CURRENT_ENGINE_ID as LATEST_ENGINE_ID,CURRENT_GUST_RETENTION_SHA256,GUST_ENGINE_ID as CURRENT_ENGINE_ID,GUST_SOURCE_COUNT as CURRENT_SOURCE_COUNT,GUST_OBJECT_COUNT as CURRENT_OBJECT_COUNT,reconstructDoubleSources}
+import {CURRENT_ENGINE_ID as LATEST_ENGINE_ID,CURRENT_SOURCE_COUNT as LATEST_SOURCE_COUNT,CURRENT_OBJECT_COUNT as LATEST_OBJECT_COUNT,CURRENT_GUST_RETENTION_SHA256,GUST_ENGINE_ID as CURRENT_ENGINE_ID,GUST_SOURCE_COUNT as CURRENT_SOURCE_COUNT,GUST_OBJECT_COUNT as CURRENT_OBJECT_COUNT,reconstructDoubleSources}
  from './native-release-context.mjs';
 import {authenticateZombotany3RetainedFamily}from'./zombotany3-retained-native.mjs';
 const z3Projection=Symbol('authenticated new production before the sealed Gust gameplay oracle');
@@ -105,7 +105,7 @@ export async function verifyGustBloomSourceBounds({read,sha,engine}){
 
 export async function verifyGustBloomBuildBindings({report,read,sha,engine,fullRunReport,productionBuildBytes}){
  const z3=engine.id===LATEST_ENGINE_ID;assert(z3||engine.id===CURRENT_ENGINE_ID);
- const sourceCount=z3?886:878,objectCount=z3?151:147;
+ const sourceCount=z3?LATEST_SOURCE_COUNT:878,objectCount=z3?LATEST_OBJECT_COUNT:147;
  fields(report,{execution:'complete-production-engine',optimization:'O2',engineId:engine.id,mode:92,profileIndex:91,
   productionObjectCount:objectCount,failures:0,exitCode:0,presentationControlsAvailable:true,developmentNoArt:false});
  assert.equal(CURRENT_SOURCE_COUNT,878);assert.equal(CURRENT_OBJECT_COUNT,147);
@@ -260,7 +260,7 @@ export async function verifyGustBloom(options){
   const historic=await authenticateZombotany3RetainedFamily({...options,family:'gust-bloom',adapterSha256:Z3_GUST_RETENTION_SHA256,
    verifyBuild:verifyGustBloomBuildBindings,verifyCase:verifyGustBloomCaseLog});
   const result=await verifyGustBloom({...options,...historic,[z3Projection]:z3Projection});
-  return {...result,currentProductionObjects:151,retainedCases:48};
+  return {...result,currentProductionObjects:historic.actualProductionObjects,retainedCases:48};
  }
  const projected=options[z3Projection]===z3Projection;
  const bytes=await read('tests/gust-bloom-results.json'),authenticated=verifyGustBloomReportIdentity({reportBytes:bytes,sha});

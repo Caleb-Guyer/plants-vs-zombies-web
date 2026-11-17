@@ -2,10 +2,10 @@
 // Separate zero-credit native renderer/compatibility acceptance on the same45 CLI.
 import assert from 'node:assert/strict';
 import {CURRENT_ENGINE_ID,CURRENT_NORMAL_RECEIPT_SHA256} from './native-release-context.mjs';
-const acceptedContractPins=new Set(['1b883a41604308fa8569f9a870c22b8224b6d8ad10fa0a03874e5312fe88aaaf']);
-const acceptedReportPins=new Set(['d272590f7801b7a335552d092c33540f27ef6e33b0214528d9d2efbdb76d50df']);
-const acceptedContentPins=new Set(['e8d8c72ffd8c65955db828f2825791763df8fd6b88a657cd82b888b495e117cf']);
-const ENGINE='0.2.6-web-zombotany45.2';
+const acceptedContractPins=new Set(['f77a4076ea28a6a67d9fd41b4ae25bc92809162f5b47f81a3a5c648c871722b4']);
+const acceptedReportPins=new Set(['a9414b20467950f14444b851165689fbfc3212b8429ed730bc80b586296c18b9']);
+const acceptedContentPins=new Set(['1fc0c8b981108367135a46429962f93fd49a0fc339a668b19fd276d7eb13acb6']);
+const ENGINE='0.2.6-web-zsurvival.1';
 const MODES=[16,32,93,94,95];
 const KINDS=['headless-last','mixed','unsupported-last'];
 export const FAMILY_FIX_INPUTS=[
@@ -57,7 +57,7 @@ export function verifyZombotanyFamilyFixesNative(row){
 
 export function verifyZombotanyFamilyFixesContract(c){
  fields(c,{schemaVersion:1,engineId:ENGINE,execution:'complete-production-engine',case:[94,'family-fixes',1,1729],
-  normalBuildReceiptSha256:CURRENT_NORMAL_RECEIPT_SHA256,sourceCount:886,productionObjectCount:151,countedEarnedWins:0,profileCredits:0,hardwareAudio:false});
+  normalBuildReceiptSha256:CURRENT_NORMAL_RECEIPT_SHA256,sourceCount:888,productionObjectCount:152,countedEarnedWins:0,profileCredits:0,hardwareAudio:false});
  fields(c.sea,{mainCycleSamples:4260,hypnoSamples:1300,maximumBaseToNamedNeckGapPixels:4,minimumJointColumns:2,
   maximumBasePenetrationBelowNeckBottom:0,phaseNames:phases,samples,firstSixBodyKeyCounts:[29,15,47,47,40,42],
   idleKeyCount:25,shootKeyCount:14,cacheDraws:40,muzzleQueries:40});
@@ -72,10 +72,10 @@ export function verifyZombotanyFamilyFixesContract(c){
 export async function verifyZombotanyFamilyFixesBindings({report,read,sha,engine,build}){
  assert.equal(CURRENT_ENGINE_ID,ENGINE);assert.equal(engine.id,ENGINE);assert(CURRENT_NORMAL_RECEIPT_SHA256);
  fields(report,{status:'PASS',exitCode:0,failures:0,engineId:ENGINE,execution:'complete-production-engine',optimization:'O2',
-  productionObjectCount:151,productionBuildReceiptSha256:CURRENT_NORMAL_RECEIPT_SHA256,resourceCapacityWarnings:0});
+  productionObjectCount:152,productionBuildReceiptSha256:CURRENT_NORMAL_RECEIPT_SHA256,resourceCapacityWarnings:0});
  for(const key of ['sourceSha256','productionObjectSha256','testInputSha256','testArtifactSha256','builderSha256','generatedHarnessSha256'])
   assert.deepEqual(report[key],build[key],key);
- assert.equal(Object.keys(report.sourceSha256).length,886);assert.equal(Object.keys(report.productionObjectSha256).length,151);
+ assert.equal(Object.keys(report.sourceSha256).length,888);assert.equal(Object.keys(report.productionObjectSha256).length,152);
  for(const[name,pin]of Object.entries(report.sourceSha256))assert.equal(sha(await read(name)),pin,name);
  assert.equal(report.runnerSha256,sha(await read('tests/test-zombotany45.py')));
  const contractBytes=await read('tests/zombotany-family-fixes-contract.json'),contract=json(contractBytes);

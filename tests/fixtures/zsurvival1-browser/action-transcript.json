@@ -1,0 +1,116 @@
+{
+  "provider": "unified-computer-use",
+  "api": "cua_repl",
+  "audioMutedThroughout": true,
+  "browserEarnedWins": 0,
+  "freshBrowserPerformanceMeasured": false,
+  "actions": [
+    {
+      "action": "Opened restored local preview",
+      "url": "http://127.0.0.1:4257/?testing=1",
+      "observed": "Native title screen; mute control checked; no game-file picker"
+    },
+    {
+      "action": "Added isolated QA profiles using the app control",
+      "observed": "6 test profiles added; existing progress kept",
+      "privateEarnedProfile": true
+    },
+    {
+      "action": "Selected QA - Full Game through native player dialog",
+      "observed": "Welcome back QA - Full Game"
+    },
+    {
+      "action": "Opened native Zombotany category",
+      "observed": "Six cards including Survival: Day with original plant-headed zombie artwork"
+    },
+    {
+      "action": "Native seed chooser selected Sunflower, Cabbage-pult, Wall-nut, Snow Pea, Cherry Bomb, Squash",
+      "observed": "Six packets; starting sun 50; preview uses only Pea/Wall-nut heads"
+    },
+    {
+      "action": "Planted Sunflower using native packet and lawn clicks",
+      "seed": 1,
+      "col": 0,
+      "row": 2,
+      "cost": 50,
+      "sunBefore": 50,
+      "sunAfter": 0
+    },
+    {
+      "action": "Extra native Wall-nut placement while collecting sun; remove using native shovel before the two-plant save smoke",
+      "seed": 3,
+      "col": 1,
+      "row": 0
+    },
+    {
+      "action": "Removed extra Wall-nut using native shovel; collected visible native suns until 100; planted Cabbage-pult and selected2x",
+      "seed": 32,
+      "col": 1,
+      "row": 2,
+      "cost": 100,
+      "sunBefore": 100,
+      "sunAfter": 0
+    },
+    {
+      "action": "Native Menu → Main Menu → Leave confirmation",
+      "observed": "Your game will be saved; two test plants present; visible sun 0; speed2x",
+      "sunBeforeLeave": 0
+    },
+    {
+      "action": "Reloaded browser",
+      "observed": "Muted file-free title screen after restoring saved data"
+    },
+    {
+      "action": "Native Continue after browser reload and reselecting QA - Full Game",
+      "observed": "Sunflower col0,row2 and Cabbage-pult col1,row2 restored; sun0 restored; speed already2x, no retoggle required",
+      "nativeSpeedResetOnContinue": false,
+      "nativeDoubleSpeedRetoggledAfterContinue": false,
+      "continuedNativeDoubleSpeed": 2,
+      "sunAfterContinue": 0
+    }
+  ],
+  "captures": {
+    "title": {
+      "path": "tests/fixtures/zsurvival1-browser/captures/title.jpg",
+      "bytes": 127538,
+      "sha256": "d9853611f02d0a86e1150d47ba128fdb01e7d6476e0fdde6760f9f218e851d2a",
+      "audioMuted": true,
+      "actualBrowserCapture": true
+    },
+    "family": {
+      "path": "tests/fixtures/zsurvival1-browser/captures/family.jpg",
+      "bytes": 62746,
+      "sha256": "bc135e5962385429fa68b76cebd457a61668f94ee331ef1a54fcc7300eb1a937",
+      "audioMuted": true,
+      "actualBrowserCapture": true
+    },
+    "chooser": {
+      "path": "tests/fixtures/zsurvival1-browser/captures/chooser.jpg",
+      "bytes": 136387,
+      "sha256": "704200432824d807d9a90753b0492aa73936ca6df776b130ffd1cd174a31c40c",
+      "audioMuted": true,
+      "actualBrowserCapture": true
+    },
+    "planted-2x": {
+      "path": "tests/fixtures/zsurvival1-browser/captures/planted-2x.jpg",
+      "bytes": 127924,
+      "sha256": "b5ee2f5c31a46b886afb17aa74fbfc41af24bedf546b18c2266823c41a9122ba",
+      "audioMuted": true,
+      "actualBrowserCapture": true
+    },
+    "continue-dialog": {
+      "path": "tests/fixtures/zsurvival1-browser/captures/continue-dialog.jpg",
+      "bytes": 128775,
+      "sha256": "dad9d35ca3f6bd0de61133e4a11a8aa4d501a29a58b6a1d953e03c811b9b2840",
+      "audioMuted": true,
+      "actualBrowserCapture": true
+    },
+    "continued": {
+      "path": "tests/fixtures/zsurvival1-browser/captures/continued.jpg",
+      "bytes": 128097,
+      "sha256": "47a22a7d76d389e6ddaa9f696dd3a5861c426855b04f21b80d929423f47310b3",
+      "audioMuted": true,
+      "actualBrowserCapture": true
+    }
+  }
+}

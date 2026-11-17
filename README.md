@@ -1,5 +1,17 @@
 # Plants vs. Zombies — browser playtest
 
+## Zombotany Survival: Day
+
+Beat the original ZomBotany to unlock the sixth card on the Zombotany page. Survive five ten-wave flags on the day lawn, starting with 50 sun. Your plants, sun and surviving mowers carry between flags, with the original seed chooser returning between rounds. The changing waves contain 207 zombies using the six original plant-headed types and their native attacks.
+
+Muted native tests completed sixteen full five-flag clears at 1x/2x. Six muted browser captures also record the six-seed chooser, paid Sunflower and Cabbage-pult planting, 2x, and Save/Leave/reload/Continue with the same plants, zero remaining sun and 2x retained. These browser observations cover functionality; no browser full win or fresh performance measurement is claimed. Normal game audio remains available.
+
+[Play the game](https://caleb-guyer.github.io/plants-vs-zombies-web/).
+
+## Historical release records (.45.2 and earlier)
+
+The following sections retain their original release-time scope.
+
 ## Zombotany attachment and roster correction
 
 Sea-shroom zombie heads now follow the actual animated neck joint in previews, walking, eating and swimming. Zombotany uses plant-headed zombies throughout: ordinary and flag entries are replaced without changing authored wave counts (99 in Night, 156 in Fog, 109 on Roof), and native wave banners/progress remain. Continue normalizes old future waves and converts healthy ordinary actors while preserving their identity, health, position and status. Unsupported or already dying legacy ordinary rigs are removed without loot or victory credit. The eight saved-class/serializer files remain byte-exact. Normal audio remains available; automated testing opens no audio device.
