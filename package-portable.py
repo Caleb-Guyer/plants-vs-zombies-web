@@ -757,6 +757,7 @@ def root_sources():
     # runtime caches, downloaded QA packs, or repository/credential metadata.
     for pattern in ("*.mjs", "*.js", "*.py", "*.md"):
         files.update(ROOT.glob(pattern))
+    files.update((ROOT / ".github" / "workflows").glob("*.yml"))
     for path in (ROOT / "tests").rglob("*"):
         if path.is_file() and not any(part in {".git", "node_modules", "__pycache__"} for part in path.relative_to(ROOT).parts):
             files.add(path)

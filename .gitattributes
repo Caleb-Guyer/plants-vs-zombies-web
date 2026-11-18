@@ -62,3 +62,4 @@ tests/fixtures/zsurvival1-browser/** -text whitespace=cr-at-eol
 tests/fixtures/performance/zsurvival1-browser-validation.json -text whitespace=cr-at-eol
 tests/fixtures/zsurvival1-parent-reference.json -text
 tests/fixtures/zsurvival1-release.json -text
+tests/fixtures/zsurvival1-linux-ci.* -text whitespace=cr-at-eol

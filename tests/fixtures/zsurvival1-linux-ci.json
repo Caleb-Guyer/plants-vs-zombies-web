@@ -1,0 +1,224 @@
+{
+  "schemaVersion": 1,
+  "codec": "xz-u32le-length-framed-v1",
+  "scope": "All original Linux CI bytes; no report or graph normalization",
+  "sourceArchiveSha256": "a3bebe9b89f0816f4e44e00ee4edf3b3a93ec95f1d2e301f26c793252b88d5ba",
+  "sourceMemberPrefix": "zombotany3-candidate/",
+  "origin": {
+    "repository": "Caleb-Guyer/plants-vs-zombies-web",
+    "workflow": "survival-report-diagnostic.yml",
+    "runId": 44030432919,
+    "runAttempt": 1,
+    "commit": "1cc26dccdaee1ca7a782ea648b59ed51f72feaa8",
+    "artifactId": 14304518512,
+    "artifactName": "survival-report-diagnostic-44030432919-1",
+    "artifactZipSha256": "dc0698e128decb8c5fb3445f03d4e6efe02aa3f68753c0e432ba87543d27e0a6",
+    "normalReceiptSha256": "6ea3a215e5c3e7ac3e4cccd238e9c759173e68ebd248b6cadfbb48e76d033fe8"
+  },
+  "xzBytes": 68696,
+  "xzSha256": "f421456502d800869c9b890dfe5988bb99497260899dbd800314b87c91923a4d",
+  "rawBytes": 1300298,
+  "rawSha256": "17dc718dc74f891cd79fec64c9fdf63bcce477dec017374803aaf9551a8f5157",
+  "files": [
+    {
+      "path": "tests/zsurvival1-results.json",
+      "frameOffset": 0,
+      "bytes": 510822,
+      "sha256": "2cdbaa3237a3981705582f325bd76122d4e47a1a659716ffa380685f059f800e",
+      "baseBytes": 528342,
+      "baseSha256": "caf29629c41df8c5cd3a4b31ccc1160cc4c14c2cdd575308b3ca43746858bbd3"
+    },
+    {
+      "path": "tests/zsurvival1-logs/normal-1x-1729.log",
+      "frameOffset": 510826,
+      "bytes": 29975,
+      "sha256": "d8cf447bf1ffe4f6a290806e55c0282061bdbb6f721bfd361392bda83fbd627b",
+      "baseBytes": 30312,
+      "baseSha256": "45cc625de28ff5d54659973cdde11d46e533e51e420f23fdc3884e5d32294359"
+    },
+    {
+      "path": "tests/zsurvival1-logs/normal-2x-1729.log",
+      "frameOffset": 540805,
+      "bytes": 30041,
+      "sha256": "03565f93dd0bfec38513802e527caad26047c463b1a668976eee511366efa6bb",
+      "baseBytes": 30237,
+      "baseSha256": "d3e8770bedf2d432814d472879ae8fcc6eb97381ca952982b86183eef4439536"
+    },
+    {
+      "path": "tests/zsurvival1-logs/hesitation-1x-1729.log",
+      "frameOffset": 570850,
+      "bytes": 31754,
+      "sha256": "b485750b7ee283797975de49a72b421f4fe128cdba8195431e7a5dc5e4cd3839",
+      "baseBytes": 32018,
+      "baseSha256": "38eb273536d19c14e0aed68de698f9828a97ad416f767519d8e65220cd53e2c7"
+    },
+    {
+      "path": "tests/zsurvival1-logs/hesitation-2x-1729.log",
+      "frameOffset": 602608,
+      "bytes": 31824,
+      "sha256": "951670ea79bf99bfaeb7652b04e4150fbcef47e516de5080cb7f80931b5abb62",
+      "baseBytes": 32017,
+      "baseSha256": "2689ffec7ffcb9b9a14e1df97922417cd240709b576004383287e181971bf76d"
+    },
+    {
+      "path": "tests/zsurvival1-logs/save-combat-1x-1729.log",
+      "frameOffset": 634436,
+      "bytes": 45306,
+      "sha256": "0138f20974031144deea2b9fc0773fe4acd3ba0528187c39b6cbb20574058e56",
+      "baseBytes": 45488,
+      "baseSha256": "e186141ab9b54af7b4b99d602f994cd43ada43dd06eb69fb8e8e947ca89b998e"
+    },
+    {
+      "path": "tests/zsurvival1-logs/save-combat-2x-1729.log",
+      "frameOffset": 679746,
+      "bytes": 45369,
+      "sha256": "cbbec7859e39ca7b47f5cf4ab2be0e601558dd784ae4ba86b172aa0a93516fc7",
+      "baseBytes": 45567,
+      "baseSha256": "dc0fe5e60132b40981c3416cbd8bbe5887a8a125271e77b9c3e05e18fdeefebb"
+    },
+    {
+      "path": "tests/zsurvival1-logs/save-transition-1x-1729.log",
+      "frameOffset": 725119,
+      "bytes": 42889,
+      "sha256": "393c0637f4c584f48740d9422f543bc20189448655bce7211cbe472ebf9e5602",
+      "baseBytes": 43227,
+      "baseSha256": "606c85ad2f9a370f8a9dc1945f180a3b738224adf2601d3a3dd23987ee952b20"
+    },
+    {
+      "path": "tests/zsurvival1-logs/save-transition-2x-1729.log",
+      "frameOffset": 768012,
+      "bytes": 42881,
+      "sha256": "52970c53ebbba4b7b77164585b1e649dcba633cccd632a33ce4ecfd4e0ff4cf1",
+      "baseBytes": 43226,
+      "baseSha256": "c973d2b2c392f0597e46f57e2e1fcd3642624a70c0d9b8a88fdb0e4b0dfe90f6"
+    },
+    {
+      "path": "tests/zsurvival1-logs/no-action-1x-1729.log",
+      "frameOffset": 810897,
+      "bytes": 24854,
+      "sha256": "859b895db0f568346a024e036c764dc2413835d5b5c8755ad3b01b1d910c4e80",
+      "baseBytes": 25275,
+      "baseSha256": "04b0ef9813d99c78754cf669dd96422230c1601759c8105b154481554704edca"
+    },
+    {
+      "path": "tests/zsurvival1-logs/no-action-2x-1729.log",
+      "frameOffset": 835755,
+      "bytes": 24914,
+      "sha256": "3fc65a5d7bf03512ac4fd8a1f4ff2a7b695b88f7f1cf4a5f9c8d1cad05909613",
+      "baseBytes": 25353,
+      "baseSha256": "4c7b109d4b06be32a772167d4d8f3fb8a516cdb00534e50fc7b3762258bb2b8a"
+    },
+    {
+      "path": "tests/zsurvival1-logs/controls-1x-1729.log",
+      "frameOffset": 860673,
+      "bytes": 24224,
+      "sha256": "16b6ed62c856035ab71d77de46cd40b24b28dddd14f8ac93399d8afdf14ddc0c",
+      "baseBytes": 24336,
+      "baseSha256": "44cf7d3dd9371c9b0921577493040330424b51ae2757725ad8e8151630f757d0"
+    },
+    {
+      "path": "tests/zsurvival1-logs/controls-2x-1729.log",
+      "frameOffset": 884901,
+      "bytes": 24223,
+      "sha256": "60f624052c0d286377bd20df9b63bf777b5c827141038973ba874bff422d87e0",
+      "baseBytes": 24495,
+      "baseSha256": "e13073c933866295d4e811d4e243ed3f28864f29b25a1b6abd4eadfa94bf6bb1"
+    },
+    {
+      "path": "tests/zsurvival1-logs/normal-1x-7331.log",
+      "frameOffset": 909128,
+      "bytes": 29372,
+      "sha256": "9d097317c6e80c6fd8cafde16e7e1f00ae0e0a3ae18f56c3ecd4214217b0bd00",
+      "baseBytes": 29633,
+      "baseSha256": "e124772cd7971b1417379237e13a153bf69ff84ba01343a4acab5c209eaf6c7c"
+    },
+    {
+      "path": "tests/zsurvival1-logs/normal-2x-7331.log",
+      "frameOffset": 938504,
+      "bytes": 29371,
+      "sha256": "c88a928643f89e40b6bc5504e02ccbec4f7403045fb276907e884c707519164b",
+      "baseBytes": 29632,
+      "baseSha256": "2efadf6524d617d7df1d85ca9dcfebd6eaa2d1dac15fdca4875ebf6620ffd48c"
+    },
+    {
+      "path": "tests/zsurvival1-logs/hesitation-1x-7331.log",
+      "frameOffset": 967879,
+      "bytes": 29488,
+      "sha256": "a334043ba131931473ae2c376094589d5f72300b214f9149be4de6f6e27fed11",
+      "baseBytes": 29750,
+      "baseSha256": "fb27092ef007845e55b4c284002c92799717b6c2106da08e980494ab1c40cdc3"
+    },
+    {
+      "path": "tests/zsurvival1-logs/hesitation-2x-7331.log",
+      "frameOffset": 997371,
+      "bytes": 29555,
+      "sha256": "06f7834de21092035150320bbc167fcb5b83654a35e2972d9acac6f4bc25c34c",
+      "baseBytes": 29749,
+      "baseSha256": "c51ac360a9cf39526bac6bfe289088695110524fc47ff5bbb81822fa78f17a97"
+    },
+    {
+      "path": "tests/zsurvival1-logs/save-combat-1x-7331.log",
+      "frameOffset": 1026930,
+      "bytes": 44854,
+      "sha256": "31e71955f5951ce6743e99bf0743b22588fd1610fbaa0089d38091294ee27d3d",
+      "baseBytes": 44985,
+      "baseSha256": "accabbb98f91d1a5f0c63e12246ee9648d3c36a6ef5744b17e22217b0c30c4b2"
+    },
+    {
+      "path": "tests/zsurvival1-logs/save-combat-2x-7331.log",
+      "frameOffset": 1071788,
+      "bytes": 44778,
+      "sha256": "5cc69ab4710137be4996c9b772969c6e6f8be51949ea4e4b4998e0940dcb7e0a",
+      "baseBytes": 45120,
+      "baseSha256": "047e99c1ecb7baab2e9221e6ff87271995426ac558db8c072d3d87b2682cceb9"
+    },
+    {
+      "path": "tests/zsurvival1-logs/save-transition-1x-7331.log",
+      "frameOffset": 1116570,
+      "bytes": 42757,
+      "sha256": "baeecf5fd8681ca5dba0b60a3176f8f4ec3be4b819e373058534487a8046f00a",
+      "baseBytes": 42936,
+      "baseSha256": "205cee0b99c3a98dce917f5c6867561665efad27f1e11263fe358dfe8be2f9f9"
+    },
+    {
+      "path": "tests/zsurvival1-logs/save-transition-2x-7331.log",
+      "frameOffset": 1159331,
+      "bytes": 42821,
+      "sha256": "60e1ab52e90050b2b6fed03ccc0b51f5be977a58f8d624d40a9da160c6b96f86",
+      "baseBytes": 42938,
+      "baseSha256": "3d7cdce7ce4f89135793500b5d3456a7366676e8f6c014c318a96050c5177684"
+    },
+    {
+      "path": "tests/zsurvival1-logs/no-action-1x-7331.log",
+      "frameOffset": 1202156,
+      "bytes": 24840,
+      "sha256": "0c1f37b134a966937825b1b35a88c5a29c0c32e30bd693f03af17a7a04c5021c",
+      "baseBytes": 25183,
+      "baseSha256": "9935cfc8219d8211318ba5de05bba117cdd7d95a42721319cd32f90bbcd70041"
+    },
+    {
+      "path": "tests/zsurvival1-logs/no-action-2x-7331.log",
+      "frameOffset": 1227000,
+      "bytes": 24908,
+      "sha256": "c7c2729b7079a09a27038b9e1bb87af2fa5857cd629f29dd2f01a16c3c0f9e68",
+      "baseBytes": 25184,
+      "baseSha256": "c87065ff04e4620e7911a9ec948c838f485a92b86545581c4af9755ea67f68c8"
+    },
+    {
+      "path": "tests/zsurvival1-logs/controls-1x-7331.log",
+      "frameOffset": 1251912,
+      "bytes": 24155,
+      "sha256": "c00c1ed0fe5d70f6b5a52f0a4b7b65eb934d12f3912b3e871a26cd7a5c67731c",
+      "baseBytes": 24417,
+      "baseSha256": "d208ecb937ed661923319be1aa4f1031445486d7ed6616ce25a109d9bed980f7"
+    },
+    {
+      "path": "tests/zsurvival1-logs/controls-2x-7331.log",
+      "frameOffset": 1276071,
+      "bytes": 24223,
+      "sha256": "eb7deacc15223471aaa1a8ec11ac2e65a6eb4b9752b462d309551ef2da2bc88c",
+      "baseBytes": 24337,
+      "baseSha256": "0734865c971835b1d1a3c925222d37035daf435a783c620bdcc605dcfde53b2b"
+    }
+  ]
+}

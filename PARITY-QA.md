@@ -10,6 +10,8 @@ Six muted CUA browser captures record the family card, native six-seed selection
 
 [Play the game](https://caleb-guyer.github.io/plants-vs-zombies-web/).
 
+After the first Linux Pages validation rejected a fresh cross-run report, a separate Linux diagnostic confirmed that every gameplay observation matched the reviewed report. Only 96 unused `Challenge.mCloudsCounter` integer values across 16 saved-state graph strings differed. The comparison correction excludes only those six unused counters per graph from the cross-run canonical hash for mode 96 on its day lawn. Complete raw before/after save-graph equality remains strict, and the exact diagnostic reports and logs are retained. The game, native executable bytes and production source are unchanged by this report-only correction.
+
 ## Historical release records (.45.2 and earlier)
 
 The following sections retain their original release-time scope.

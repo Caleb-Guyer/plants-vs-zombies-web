@@ -74,7 +74,7 @@ if(sourceBundle.stderr)process.stdout.write(sourceBundle.stderr);
 const pagesStaging=spawnSync(process.platform==='win32'?'python':'python3',[join(root,'tests/pages-staging.py')],{encoding:'utf8'});
 if(pagesStaging.stdout)process.stdout.write(pagesStaging.stdout);
 assert.equal(pagesStaging.status,0,pagesStaging.stderr);
-for(const test of ['tests/audio-controls.mjs','tests/generator-fileless.mjs','tests/bundled-assets.mjs','tests/fileless-startup.mjs','tests/shell-keyboard.mjs','tests/fullscreen-controls.mjs','tests/save-storage.mjs','tests/save-worker.mjs','tests/save-recovery.mjs','tests/save-sync.mjs','tests/save-transfer.mjs','tests/zombatar-export.mjs','tests/steam-compat.mjs','tests/test-profile-merge.mjs','tests/native-content.mjs','tests/performance-baseline.mjs']){
+for(const test of ['tests/audio-controls.mjs','tests/generator-fileless.mjs','tests/bundled-assets.mjs','tests/fileless-startup.mjs','tests/shell-keyboard.mjs','tests/fullscreen-controls.mjs','tests/save-storage.mjs','tests/save-worker.mjs','tests/save-recovery.mjs','tests/save-sync.mjs','tests/save-transfer.mjs','tests/zombatar-export.mjs','tests/steam-compat.mjs','tests/test-profile-merge.mjs','tests/zsurvival1-canonical.mjs','tests/native-content.mjs','tests/performance-baseline.mjs']){
   const result=spawnSync(process.execPath,[join(root,test)],{encoding:'utf8'});
   if(result.stdout)process.stdout.write(result.stdout);
   assert.equal(result.status,0,result.stderr);

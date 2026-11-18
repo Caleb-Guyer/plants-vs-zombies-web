@@ -3,9 +3,12 @@
 import assert from 'node:assert/strict';
 import {CURRENT_ENGINE_ID,CURRENT_SOURCE_COUNT,CURRENT_OBJECT_COUNT,CURRENT_NORMAL_RECEIPT_SHA256,
  reconstructZsurvivalParentSources,ZSURVIVAL_PARENT_ARCHIVE_SHA256} from './native-release-context.mjs';
+import {verifyZsurvivalCloudSourceGuard,projectZsurvival1CloudCanonical} from './zsurvival1-cloud-canonical.mjs';
 const acceptedContractPins=new Set(['a4af8834e7903731d03b1080101e2f0bb3c73e1aeddbfd30ff250c63689f6014']);
 const acceptedReportPins=new Set(['caf29629c41df8c5cd3a4b31ccc1160cc4c14c2cdd575308b3ca43746858bbd3']);
-const acceptedContentPins=new Set(['8760d7467df0601dc82d19f69a8183e7d6ab3f0f3c25a7d606e0bd0a46a09431']);
+// Original raw golden identity8760d746... remains preserved in the source ZIP.
+// Root separately reviews the projection of that exact caf29629... report.
+const acceptedContentPins=new Set(['502dcdc07283fa9dc6c9f0a96bbb222427a521d2554db07df40f6286dacd8fbe']); // Root independently projected the exact golden and Linux reports.
 const ENGINE='0.2.6-web-zsurvival.1';
 const names=['normal','hesitation','save-combat','save-transition','no-action','controls'];
 export const ZSURVIVAL1_MATRIX=[1729,7331].flatMap(seed=>names.flatMap(name=>[1,2].map(speed=>[name,speed,seed])));
@@ -191,8 +194,6 @@ export async function verifyZsurvival1Prerequisite({read,sha}){
 export async function verifyZsurvival1(options){
  const{report,read,sha,engine}=options,bytes=await read('tests/zsurvival1-results.json'),cbytes=await read('tests/zsurvival1-verification-contract.json');
  assert.deepEqual(report,json(bytes));assert(acceptedContractPins.has(sha(cbytes)),'Current Survival contract is not independently reviewed');
- const scenarios=report.scenarios.map(({logSha256,...row})=>row);
- assert(acceptedContentPins.has(sha(Buffer.from(JSON.stringify(canonical({...report,scenarios}))))),'Current actual Survival24 observations are not independently reviewed');
  const c=json(cbytes);fields(c,{schemaVersion:1,engineId:ENGINE,stage:'final-preregistered',sourceCount:888,productionObjectCount:152,mode:96,profileIndex:95,
   stageActorTotals:stageTotals,authoredActors:207,headTypes:types,nativeArtInputs:1027,hardwareAudio:false,speedPairNativeTickTolerance:60,finiteNativeTickLimit:600000});
  assert.deepEqual(c.matrix,ZSURVIVAL1_MATRIX);assert.deepEqual(c.independentStages,stages);assert.deepEqual(Object.keys(c.fixtureSha256).sort(),fixtureInputs.sort());
@@ -207,7 +208,12 @@ export async function verifyZsurvival1(options){
  fields(c.saveTransportLifecycleAmendment,{manualBoardResultAssignment:false,productionSourceChanged:false,
   policyStatsRostersCheckpointPhasesGraphAndWinBoundsChanged:false,actualNativeSaveCopyRequired:true});
  await verifyZsurvival1BuildBindings(options);await verifyZsurvival1SourceBounds(options);await verifyZsurvival1Prerequisite(options);
+ await verifyZsurvivalCloudSourceGuard({read,sha,engineId:engine.id,normalReceiptSha256:report.productionBuildReceiptSha256});
  const facts=verifyZsurvival1Matrix(report);for(const row of report.scenarios)await verifyZsurvival1CaseLog(row,{read,sha});
+ // All raw CP strings and full log JSON have passed above. Only the copied
+ // cross-run identity projects the six source-proven unused DAY counters.
+ const projected=projectZsurvival1CloudCanonical(report),scenarios=projected.scenarios.map(({logSha256,...row})=>row);
+ assert(acceptedContentPins.has(sha(Buffer.from(JSON.stringify(canonical({...projected,scenarios}))))),'Current actual Survival24 observations are not independently reviewed');
  assert.equal(engine.parent.artifacts.sourceSha256,ZSURVIVAL_PARENT_ARCHIVE_SHA256);
  return {...facts,sealedReport:acceptedReportPins.has(sha(bytes))};
 }
