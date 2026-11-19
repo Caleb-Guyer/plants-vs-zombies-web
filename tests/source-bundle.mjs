@@ -15,3 +15,11 @@ export function ensureSourceArchive(root = new URL('../', import.meta.url)) {
     {encoding: 'utf8', timeout: 60000, maxBuffer: 64 * 1024});
   assert.equal(run.status, 0, run.error?.message || run.stderr || run.stdout || 'Historical source bootstrap failed');
 }
+
+export function ensureVasebreakerBaseline() {
+  const directory = fileURLToPath(new URL('../', import.meta.url));
+  const decoder = fileURLToPath(new URL('../source-bundle.py', import.meta.url));
+  const run = spawnSync(process.platform === 'win32' ? 'python' : 'python3',
+    [decoder, directory, '--with-vasebreaker-baseline'], {encoding: 'utf8', timeout: 120000});
+  assert.equal(run.status, 0, run.error?.message || run.stderr || 'Vasebreaker baseline verification failed');
+}

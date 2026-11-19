@@ -135,8 +135,9 @@ function sealedDoubleEvidence() {
   sealedDouble ??= (async () => {
     const engineUrl = new URL('../dist/game/engine-provenance.json', import.meta.url);
     const engine = JSON.parse(fs.readFileSync(engineUrl, 'utf8'));
-    assert([DOUBLE_ENGINE_ID,GUST_ENGINE_ID,'0.2.6-web-zombotany45.1',
-      ZSURVIVAL_PARENT_ENGINE_ID,ZVASE_PARENT_ENGINE_ID,CURRENT_ENGINE_ID].includes(engine.id));
+    const familyArchives = ['0.2.6-web-zombotany45.1', ZSURVIVAL_PARENT_ENGINE_ID,
+      ZVASE_PARENT_ENGINE_ID, CURRENT_ENGINE_ID, '0.2.6-web-izombotany.1'];
+    assert([DOUBLE_ENGINE_ID,GUST_ENGINE_ID,...familyArchives].includes(engine.id));
     const publishedDouble = historicalEngine(engine,DOUBLE_ENGINE_ID);
     assert.equal(publishedDouble.artifacts.sourceSha256,DOUBLE_ARCHIVE_SHA256);
     assert.equal(engine.artifacts.source, '../source/pvz-portable-'+engine.id+'-source.zip');
@@ -146,7 +147,7 @@ function sealedDoubleEvidence() {
     const zip = await JSZip.loadAsync(archiveBytes);
     const prefix=engine.id===DOUBLE_ENGINE_ID?'double1-candidate/':
       engine.id===GUST_ENGINE_ID?'gust1-candidate/':
-      ['0.2.6-web-zombotany45.1',ZSURVIVAL_PARENT_ENGINE_ID,ZVASE_PARENT_ENGINE_ID,CURRENT_ENGINE_ID].includes(engine.id)?'zombotany3-candidate/':null;
+      familyArchives.includes(engine.id)?'zombotany3-candidate/':null;
     assert(prefix,'Reviewed native archive family');
     const entry = zip.file(prefix+(engine.id===DOUBLE_ENGINE_ID?'tests/double-agent-results.json':'tests/gust1-retained-parent/double-agent-results.json'));
     assert(entry);

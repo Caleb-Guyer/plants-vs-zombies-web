@@ -1,6 +1,12 @@
 # Browser parity and QA record
 
-## Zombotany Vasebreaker
+## I, ZomBotany
+
+Run `python tests/izombotany.py --play` to exercise the shipping engine's production objects with a silent sound manager and disposable profiles. The cases cover the original unlock, eight card positions, legal and rejected placements, all six priced zombie packets, natural Sunflower payments, the one-use Jalapeño, all fifteen brains, and the final trophy. Separate paths intentionally lose and retry the first two boards and save and continue on the second and third. Neighboring-mode checks place an ordinary zombie in the original I, Zombie and Rally Raid and smash a vase in Zombotany Vasebreaker.
+
+The suite runs the four paths with two random seeds at both 1× and 2×. Offscreen renders use the native game widgets and renderer. The older suite results below belong to their named engines.
+
+## Zombotany Vasebreaker (previous release)
 
 Beat the original ZomBotany to unlock Vasebreaker, the seventh card on the Zombotany page. Solve five linked night puzzles using the original hammer, vases and temporary one-use plant packets. Every enemy has an original plant head. Each board has a finite 150 sun in vases for the normally priced Cherry Bomb bank. Retry restarts the current board; Continue preserves opened vases, actors and packet clocks. Complete all five boards for the trophy; replays use the original money-bag reward.
 

@@ -38,16 +38,17 @@ import {verifyVaseAmbush} from './vase-ambush-verification.mjs';
 import {verifyTorchbearer} from './torchbearer-verification.mjs';
 import {verifyAmbushFocusedRetention} from './ambush-focused-retention-verification.mjs';
 import {verifyTorchFocusedRetention,TORCH_FOCUSED_CHECK_EXTENSIONS} from './torch-focused-retention-verification.mjs';
-import {ensureSourceArchive} from './source-bundle.mjs';
+import {ensureVasebreakerBaseline} from './source-bundle.mjs';
 
 const require = createRequire(import.meta.url);
 const dist = new URL('../dist/', import.meta.url);
-ensureSourceArchive(new URL('../', import.meta.url));
+ensureVasebreakerBaseline();
 const vendor = {exports: {}};
 new Function('module', 'exports', 'require', fs.readFileSync(new URL('vendor/jszip.min.js', dist), 'utf8'))(vendor, vendor.exports, require);
 const JSZip = vendor.exports;
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
-const engine = JSON.parse(fs.readFileSync(new URL('game/engine-provenance.json', dist)));
+// These immutable drivers and golden reports belong to the published Vasebreaker build.
+const engine = JSON.parse(fs.readFileSync(new URL('game/engine-provenance.json', dist))).parent;
 assert.equal(engine.id, CURRENT_ENGINE_ID);
 const publishedSurvivalEngine=engine.parent;
 assert.equal(publishedSurvivalEngine.id,'0.2.6-web-zsurvival.1');
@@ -2289,7 +2290,7 @@ if (process.argv.includes('--run-native')) {
         read:async input=>fs.readFileSync(path.join(temporary,input)),sha,engine,fullRunReport,
         productionBuildBytes:fullRunProductionBuildBytes});
     }
-    console.log(`PASS all ${checks} assertions across 32 native suites, including five-board Zombotany Vasebreaker and five-flag Zombotany Survival: Day, complete headless Zombotany 3, 4 and 5 and retained challenge scenarios on CI.`);
+    console.log(`PASS historical Vasebreaker baseline: ${checks} assertions across 32 native suites.`);
   } finally {
     const resolved = fs.realpathSync(temporary);
     assert.equal(path.dirname(resolved), temporaryRoot);

@@ -7,6 +7,7 @@ import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 import {createRequire} from 'node:module';
 import {fileURLToPath} from 'node:url';
+import {ensureVasebreakerBaseline} from './source-bundle.mjs';
 import {verifyZVase1Matrix,verifyZVase1Controls,verifyZVase1SpeedPairs,verifyZVase1CaseLog,zVase1CanonicalBytes} from './zvase1-verification.mjs';
 const root=new URL('../',import.meta.url),sha=b=>createHash('sha256').update(b).digest('hex'),json=b=>JSON.parse(Buffer.from(b).toString('utf8')),clone=structuredClone;
 const safe=n=>{assert(typeof n==='string'&&!/[\\:\x00-\x1f]/.test(n)&&!n.startsWith('/')&&n.split('/').every(p=>p&&p!=='.'&&p!=='..'));return n;};
@@ -17,7 +18,8 @@ if(index!==-1){
  read=async n=>fs.readFileSync(path.join(candidate,safe(n)));
 }else{
  const readRoot=n=>fs.readFileSync(new URL(n,root));
- const engine=json(readRoot('dist/game/engine-provenance.json'));assert.equal(engine.id,'0.2.6-web-zvase.1');
+ ensureVasebreakerBaseline();
+ const engine=json(readRoot('dist/game/engine-provenance.json')).parent;assert.equal(engine.id,'0.2.6-web-zvase.1');
  const vendor={exports:{}};new Function('module','exports','require',readRoot('dist/vendor/jszip.min.js').toString())(vendor,vendor.exports,createRequire(import.meta.url));
  const source=fs.readFileSync(new URL(engine.artifacts.source,new URL('dist/game/engine-provenance.json',root)));assert.equal(sha(source),engine.artifacts.sourceSha256);
  const zip=await vendor.exports.loadAsync(source);read=async n=>{const entry=zip.file('zombotany3-candidate/'+safe(n));assert(entry,n);return entry.async('uint8array');};

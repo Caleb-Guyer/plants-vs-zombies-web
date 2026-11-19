@@ -1,6 +1,14 @@
 # Plants vs. Zombies — browser playtest
 
-## Zombotany Vasebreaker
+## I, ZomBotany
+
+Beat the original ZomBotany, then open the eighth card on the Zombotany tab. You play as the zombies. Eat five brains on each of three night lawns to earn the trophy. The first board gives you just 50 sun and an exposed Sunflower. The second has a firing line that rewards sending an armored zombie ahead of a shooter. The last gives you one Jalapeño-head and a choice of which lane to burn.
+
+The six packets use the original plant-headed zombies. Retry restarts the current lawn, and the game's Continue button restores an unfinished puzzle.
+
+[Play on GitHub Pages](https://caleb-guyer.github.io/plants-vs-zombies-web/).
+
+## Zombotany Vasebreaker (previous release)
 
 Beat the original ZomBotany to unlock Vasebreaker, the seventh card on the Zombotany page. Solve five linked night puzzles using the original hammer, vases and temporary one-use plant packets. Every enemy has an original plant head. Each board has a finite 150 sun in vases for the normally priced Cherry Bomb bank. Retry restarts the current board; Continue preserves opened vases, actors and packet clocks. Complete all five boards for the trophy; replays use the original money-bag reward.
 

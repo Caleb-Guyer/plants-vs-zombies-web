@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-zvase.1
-Adds five original-style Zombotany Vasebreaker puzzles with finite packets and plant-headed threats.
-Engine JavaScript SHA-256: 0297c91b196eab98c4e2f046ba9faaaa2fd92510ccc85ccc88b1d4228db0fbbb
-Engine WASM SHA-256: ca1c6cc4b87ad1364a71dcd78cee95d1df84c540e78b3db8669c6f19d8f98b28
+PvZ-Portable 0.2.6-web-izombotany.1
+Adds three I, ZomBotany puzzles with six playable plant-headed zombies.
+Engine JavaScript SHA-256: 0040fef805348871fc236ce27ddf6018707bca910daf80148e410d020caeac29
+Engine WASM SHA-256: 0b335019b6caf70db15c4ae9e685090e4769a974a786323b589ed4294ac366ca
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.

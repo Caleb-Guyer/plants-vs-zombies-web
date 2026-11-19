@@ -30,7 +30,9 @@ jobs:
         run: python bundle-game-assets.py --verify-only
       - name: Verify browser shell and corresponding source
         run: npm run check
-      - name: Test native challenge, completion and retained QoL
+      - name: Play I, ZomBotany and affected classic puzzles with sound off
+        run: python tests/izombotany.py --play
+      - name: Replay retained Vasebreaker baseline and QoL tests
         run: node tests/native-content.mjs --run-native
       - name: Configure Pages
         uses: actions/configure-pages@v5

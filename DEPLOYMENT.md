@@ -1,6 +1,10 @@
 # GitHub Pages release: Caleb-Guyer/plants-vs-zombies-web
 
-## Zombotany Vasebreaker
+## I, ZomBotany
+
+The Pages workflow validates the shipping browser files, replays the new native puzzle with sound off, and runs the retained Vasebreaker baseline before deployment. The current engine is `0.2.6-web-izombotany.1`. The corresponding-source ZIP includes the complete source tree, the muted driver and its build records. Apply `zvase1-to-izombotany1.patch` to the published Vasebreaker source to obtain the same tree.
+
+## Zombotany Vasebreaker (previous release)
 
 Beat the original ZomBotany to unlock Vasebreaker, the seventh card on the Zombotany page. Solve five linked night puzzles using the original hammer, vases and temporary one-use plant packets. Every enemy has an original plant head. Each board has a finite 150 sun in vases for the normally priced Cherry Bomb bank. Retry restarts the current board; Continue preserves opened vases, actors and packet clocks. Complete all five boards for the trophy; replays use the original money-bag reward.
 

@@ -1,6 +1,10 @@
 # Current requirements
 
-## Zombotany Vasebreaker
+## I, ZomBotany
+
+The eighth card unlocks after the original ZomBotany. Use the original I, Zombie night lawn, cardboard defenders, native brain meter and six original plant-headed attackers. Preserve each board's budget on retry, the spent Jalapeño on continue, and the neighboring modes' original packets and records. Award the trophy after all three boards.
+
+## Zombotany Vasebreaker (previous release)
 
 Beat the original ZomBotany to unlock Vasebreaker, the seventh card on the Zombotany page. Solve five linked night puzzles using the original hammer, vases and temporary one-use plant packets. Every enemy has an original plant head. Each board has a finite 150 sun in vases for the normally priced Cherry Bomb bank. Retry restarts the current board; Continue preserves opened vases, actors and packet clocks. Complete all five boards for the trophy; replays use the original money-bag reward.
 

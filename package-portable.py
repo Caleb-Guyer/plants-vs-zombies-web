@@ -116,6 +116,9 @@ def parent_source_input(engine):
             or any(character not in "0123456789abcdef" for character in expected)):
         raise ValueError("Invalid immediate-parent source SHA-256")
     path = DIST / "game" / reference
+    if engine.get("id") == "0.2.6-web-izombotany.1":
+        source_bundle_helpers().ensure_vasebreaker_baseline(ROOT)
+        return None
     if engine.get("id") == "0.2.6-web-zvase.1":
         authenticate_zvase1_parent(engine)
         return None
@@ -588,6 +591,9 @@ def nested_source_inputs(engine, paths, baseline):
             or hashlib.sha256(native_ui.read_bytes()).hexdigest()
             != "d9861034849eca9d637197aa78a1bae4c90b5656db91ca102d8c903100031edd"):
         raise ValueError("Authenticated native I, Zombie UI fixture is missing or changed")
+    if engine.get("id") == "0.2.6-web-izombotany.1":
+        # The full, exact parent archive is already present in the current ZIP.
+        return [baseline]
     if engine.get("id") in {"0.2.6-web-scrap.1", "0.2.6-web-ambush.1", "0.2.6-web-torch.1", "0.2.6-web-double.1", "0.2.6-web-gust.1", "0.2.6-web-zombotany45.2", "0.2.6-web-zsurvival.1", "0.2.6-web-zvase.1"}:
         if engine["id"] == "0.2.6-web-zvase.1":
             authenticate_zvase1_parent(engine)
@@ -722,7 +728,10 @@ def regenerate_source_downloads(transport_entries=None):
         "schema_version": 1,
         "current_engine": engine["id"],
         "upstream_tag": engine["upstream"]["tag"],
-        "layout": "Site-source nests the upstream baseline, independently pinned complete Gust.1, Double.1, Torch.1, Ambush.1, Scrap.1 and Endless.3 source projections, the native I, Zombie UI reference and the current full patch. Before offline checks, the exact current native source ZIP is restored from a bounded lossless XZ transport, then the historical Endless.2 comparator ZIP is restored from compressed byte ranges shared with that current ZIP and a literal payload. Every original native archive byte, member and checksum is preserved. Each archives[].url is its original download location: current and upstream source stay on Pages; historical source archives use immutable GitHub repository URLs and remain in the full runtime distribution. Linked native test artifacts are losslessly packed; the included decoder restores their exact pinned bytes.",
+        "layout": ("Site source includes the upstream baseline and the patch from the published Vasebreaker source to I, ZomBotany. "
+                   "The current complete native source ZIP is restored offline from the lossless XZ transport. "
+                   "Its original Vasebreaker prefix and shared Endless.2 byte ranges reconstruct the exact historical test inputs. "
+                   "The archive list links the current and upstream sources on Pages and historical releases at immutable GitHub revisions."),
         "nested_sources": [path.name for path in nested],
         "restored_sources": [{
             "name": paths["source"].name,

@@ -365,6 +365,29 @@ def ensure_current_archive(root):
             **reference, "bytes": len(output)}
 
 
+def ensure_vasebreaker_baseline(root):
+    """Recover the previously published ZIP from the sealed prefix of its successor."""
+    root = _root(root)
+    engine = _json(_read(root, ENGINE_REL, MAX_MANIFEST_BYTES))
+    reference = {"path": "dist/source/pvz-portable-0.2.6-web-zvase.1-source.zip",
+                 "sha256": "d9d4351181e09f1b0eceacc8203bf4d0bcf46910b7e27027c762b521d8805f2b"}
+    size = 94_720_307
+    _require(engine.get("id") == "0.2.6-web-izombotany.1" and
+             engine.get("parent", {}).get("artifacts", {}).get("sourceSha256") == reference["sha256"] and
+             engine.get("parentArchivePrefixBytes") == size, "Unexpected regression baseline")
+    if _current_target(root, reference) is not None:
+        return
+    ensure_current_archive(root)
+    current = _current_reference(root)
+    path = _path(root, current["path"])
+    with path.open("rb") as stream:
+        original = stream.read(size)
+    _require(len(original) == size and _sha(original) == reference["sha256"],
+             "Retained Vasebreaker ZIP differs from the previous public release")
+    _publish_archive(root, reference["path"], original, {**reference, "bytes": size},
+                     lambda: _current_target(root, reference), ".vasebreaker-restore-")
+
+
 def _streams(data):
     try:
         with zipfile.ZipFile(io.BytesIO(data)) as archive:
@@ -453,9 +476,12 @@ def make_bundle_transports(root):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("root", nargs="?", type=Path, default=Path(__file__).resolve().parent)
+    parser.add_argument("--with-vasebreaker-baseline", action="store_true")
     arguments = parser.parse_args()
     try:
         print(json.dumps(ensure_source_archive(arguments.root), sort_keys=True))
+        if arguments.with_vasebreaker_baseline:
+            ensure_vasebreaker_baseline(arguments.root)
     except (SourceBundleError, OSError) as exc:
         print("source-bundle: " + str(exc), file=sys.stderr)
         return 1

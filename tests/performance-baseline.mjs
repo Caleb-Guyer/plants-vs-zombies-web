@@ -9,6 +9,7 @@ import {createHash} from 'node:crypto';
 import {createRequire} from 'node:module';
 import {analyzeCapture, statistics} from './performance/metrics.mjs';
 import {historicalEngine} from './native-release-context.mjs';
+import {ensureVasebreakerBaseline} from './source-bundle.mjs';
 import {verifyDoubleBrowserEvidence} from './double-agent-browser-verification.mjs';
 import {verifyGustBrowserEvidence} from './gust-bloom-browser-verification.mjs';
 
@@ -160,7 +161,10 @@ console.log(`PASS ${current ? 'current' : 'historical '+engine.id} recorded brow
 }
 assert.equal(sha(read('tests/fixtures/performance/baseline.json')),'43312dcdce1130b7ea1cb0d0cb1e11c19ad5ef6a7e4d22724257d959ca64770f','Published Torch baseline remains immutable');
 await verifyRecordedBaseline('tests/fixtures/performance/baseline.json', false);
-const currentEngine=json(read('dist/game/engine-provenance.json'));
+const shippedEngine=json(read('dist/game/engine-provenance.json'));
+assert.equal(shippedEngine.id,'0.2.6-web-izombotany.1');
+ensureVasebreakerBaseline();
+const currentEngine=historicalEngine(shippedEngine,'0.2.6-web-zvase.1');
 const require=createRequire(import.meta.url),vendor={exports:{}};
 new Function('module','exports','require',read('dist/vendor/jszip.min.js').toString())(vendor,vendor.exports,require);
 // These are separately scoped Double observations. Their two executable
@@ -217,10 +221,20 @@ if(currentEngine.id==='0.2.6-web-gust.1'){
      const {verifyZVaseHistoricalBrowserEvidence,verifyZVase1BrowserAvailability}=await import('./zvase1-browser-verification.mjs');
      await verifyZVaseHistoricalBrowserEvidence({currentEngine,read,sha});
      console.log('PASS preserved historical Survival six-capture native UI smoke; no current executable or timing claim.');
+     const currentArchive=read('dist/source/'+shippedEngine.artifacts.source.split('/').at(-1));
+     assert.equal(sha(currentArchive),shippedEngine.artifacts.sourceSha256);
+     const archive=await vendor.exports.loadAsync(currentArchive);
+     const readParent=async name=>{
+      if(name==='dist/game/pvz-portable.js'||name==='dist/game/pvz-portable.wasm'){
+       const item=archive.file('zombotany3-candidate/history/zvase1/'+name.split('/').at(-1));
+       assert(item,'Missing archived Vasebreaker executable');return item.async('nodebuffer');
+      }
+      return read(name);
+     };
      const currentBrowser=await verifyZVase1BrowserAvailability({availability:json(read('tests/fixtures/performance/zvase1-browser-validation.json')),
-      currentEngine,read,sha,Zip:vendor.exports});
+      currentEngine,read:readParent,sha,Zip:vendor.exports});
      assert.equal(currentBrowser.verdict,'NOT RUN');
-     console.log('NOT RUN current Zombotany Vasebreaker browser functionality: browser not attempted; screenshots0, current timings unmeasured. Native and source validation remain separate.');
+     console.log('Historical Vasebreaker browser availability verified. Current I, ZomBotany coverage is reported by its own gameplay tests.');
     }else{
     const currentBrowser=await verifyZsurvival1BrowserAvailability({availability:json(read('tests/fixtures/performance/zsurvival1-browser-validation.json')),
      currentEngine,read,sha,Zip:vendor.exports});
