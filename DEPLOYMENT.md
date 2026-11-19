@@ -1,6 +1,10 @@
 # GitHub Pages release: Caleb-Guyer/plants-vs-zombies-web
 
-## I, ZomBotany
+## ZomBotany Beghouled
+
+Build the normal web engine and the muted replay executable from the same source tree. The native source download includes the test driver and its build receipt. `python tests/zbeghouled.py --play` replays all 16 scenarios against the published assets. The GitHub Pages workflow also checks the prior I, ZomBotany puzzles and the older regression suites before deploying.
+
+## I, ZomBotany (previous release)
 
 The Pages workflow validates the shipping browser files, replays the new native puzzle with sound off, and runs the retained Vasebreaker baseline before deployment. The current engine is `0.2.6-web-izombotany.1`. The corresponding-source ZIP includes the complete source tree, the muted driver and its build records. Apply `zvase1-to-izombotany1.patch` to the published Vasebreaker source to obtain the same tree.
 

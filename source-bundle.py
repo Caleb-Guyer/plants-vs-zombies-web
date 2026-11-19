@@ -372,6 +372,12 @@ def ensure_vasebreaker_baseline(root):
     reference = {"path": "dist/source/pvz-portable-0.2.6-web-zvase.1-source.zip",
                  "sha256": "d9d4351181e09f1b0eceacc8203bf4d0bcf46910b7e27027c762b521d8805f2b"}
     size = 94_720_307
+    if engine.get("id") == "0.2.6-web-zbeghouled.1":
+        _require(engine.get("parentArchivePrefixBytes") == 100_558_183 and
+                 engine.get("parent", {}).get("artifacts", {}).get("sourceSha256") ==
+                 "ab56f8150ddaf8d8985de74afeea2b51c7c09ef800d0f4ba58cd3a270393152c",
+                 "Unexpected I, ZomBotany parent")
+        engine = engine["parent"]
     _require(engine.get("id") == "0.2.6-web-izombotany.1" and
              engine.get("parent", {}).get("artifacts", {}).get("sourceSha256") == reference["sha256"] and
              engine.get("parentArchivePrefixBytes") == size, "Unexpected regression baseline")

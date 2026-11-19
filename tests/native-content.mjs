@@ -11,7 +11,7 @@ import {createRequire} from 'node:module';
 import {spawnSync} from 'node:child_process';
 import {inflateSync} from 'node:zlib';
 import {fileURLToPath} from 'node:url';
-import {CURRENT_ENGINE_ID, CURRENT_SOURCE_COUNT, CURRENT_OBJECT_COUNT, SCRAP_SOURCE_ADDITIONS, SCRAP_PARENT_REFERENCE_SHA256, AMBUSH_PARENT_REFERENCE_SHA256, AMBUSH_SOURCE_ADDITIONS, TORCH_SOURCE_ADDITIONS, TORCH_PARENT_REFERENCE_SHA256, reconstructAmbushSources, reconstructAmbushFocusedEvidence, reconstructScrapSources, reconstructEndless3Sources, verifyTorchRetainedParentInputs} from './native-release-context.mjs';
+import {historicalEngine, CURRENT_ENGINE_ID, CURRENT_SOURCE_COUNT, CURRENT_OBJECT_COUNT, SCRAP_SOURCE_ADDITIONS, SCRAP_PARENT_REFERENCE_SHA256, AMBUSH_PARENT_REFERENCE_SHA256, AMBUSH_SOURCE_ADDITIONS, TORCH_SOURCE_ADDITIONS, TORCH_PARENT_REFERENCE_SHA256, reconstructAmbushSources, reconstructAmbushFocusedEvidence, reconstructScrapSources, reconstructEndless3Sources, verifyTorchRetainedParentInputs} from './native-release-context.mjs';
 import {DOUBLE_SOURCE_ADDITIONS,DOUBLE_PARENT_REFERENCE_SHA256,reconstructTorchSources,reconstructTorchFocusedEvidence,
  GUST_SOURCE_ADDITIONS,GUST_PARENT_REFERENCE_SHA256,reconstructDoubleSources,reconstructDoubleFocusedEvidence,
  ZOMBOTANY3_SOURCE_ADDITIONS,ZSURVIVAL_SOURCE_ADDITIONS,ZVASE_SOURCE_ADDITIONS,ZOMBOTANY3_PARENT_REFERENCE_SHA256,reconstructGustSources,reconstructGustFocusedEvidence} from './native-release-context.mjs';
@@ -48,7 +48,7 @@ new Function('module', 'exports', 'require', fs.readFileSync(new URL('vendor/jsz
 const JSZip = vendor.exports;
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
 // These immutable drivers and golden reports belong to the published Vasebreaker build.
-const engine = JSON.parse(fs.readFileSync(new URL('game/engine-provenance.json', dist))).parent;
+const engine = historicalEngine(JSON.parse(fs.readFileSync(new URL('game/engine-provenance.json', dist))), CURRENT_ENGINE_ID);
 assert.equal(engine.id, CURRENT_ENGINE_ID);
 const publishedSurvivalEngine=engine.parent;
 assert.equal(publishedSurvivalEngine.id,'0.2.6-web-zsurvival.1');

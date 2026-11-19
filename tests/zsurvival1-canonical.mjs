@@ -7,6 +7,7 @@ import {createHash} from 'node:crypto';
 import {createRequire} from 'node:module';
 import {spawnSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
+import {historicalEngine} from './native-release-context.mjs';
 import {ensureVasebreakerBaseline} from './source-bundle.mjs';
 import {verifyZsurvivalCloudSourceGuard,projectZsurvival1CloudCanonical,ZSURVIVAL_UNUSED_CLOUD_INDICES,ZSURVIVAL_CLOUD_SOURCE_PINS} from './zsurvival1-cloud-canonical.mjs';
 import {verifyZsurvival1Scenario,verifyZsurvival1HistoricalMatrix as verifyZsurvival1Matrix,verifyZsurvival1CaseLog} from './zsurvival1-verification.mjs';
@@ -15,7 +16,7 @@ const root=new URL('../',import.meta.url),sha=b=>createHash('sha256').update(b).
 const readRoot=n=>fs.readFileSync(new URL(n,root)),clone=structuredClone;
 const vendor={exports:{}};new Function('module','exports','require',readRoot('dist/vendor/jszip.min.js').toString())(vendor,vendor.exports,createRequire(import.meta.url));
 ensureVasebreakerBaseline();
-const currentEngine=json(readRoot('dist/game/engine-provenance.json')).parent;
+const currentEngine=historicalEngine(json(readRoot('dist/game/engine-provenance.json')), '0.2.6-web-zvase.1');
 const {engine,read}=await openZsurvival1HistoricalCanonicalInputs({root,currentEngine,Zip:vendor.exports,readRoot,sha});
 assert.equal(engine.id,'0.2.6-web-zsurvival.1');
 const raw=await read('tests/zsurvival1-results.json');assert.equal(sha(raw),'caf29629c41df8c5cd3a4b31ccc1160cc4c14c2cdd575308b3ca43746858bbd3');

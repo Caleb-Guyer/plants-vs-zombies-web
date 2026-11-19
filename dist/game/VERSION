@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-izombotany.1
-Adds three I, ZomBotany puzzles with six playable plant-headed zombies.
-Engine JavaScript SHA-256: 0040fef805348871fc236ce27ddf6018707bca910daf80148e410d020caeac29
-Engine WASM SHA-256: 0b335019b6caf70db15c4ae9e685090e4769a974a786323b589ed4294ac366ca
+PvZ-Portable 0.2.6-web-zbeghouled.1
+Adds ZomBotany Beghouled, a 50-match night lawn with final volleys and plant-headed zombies.
+Engine JavaScript SHA-256: 86989133b033eabc4a4c35e01b7322681bae37f82ce6bc22eb95c1094e69cdd7
+Engine WASM SHA-256: bd9e7b3f4f5ffa5af6f7e04bad4c1201c3b5773756d61e48bfa6fec57a9f1dbf
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.

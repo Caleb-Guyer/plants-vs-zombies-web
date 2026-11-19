@@ -1,28 +1,28 @@
 {
   "schema_version": 1,
-  "current_engine": "0.2.6-web-izombotany.1",
+  "current_engine": "0.2.6-web-zbeghouled.1",
   "upstream_tag": "0.2.6",
-  "layout": "Site source includes the upstream baseline and the patch from the published Vasebreaker source to I, ZomBotany. The current complete native source ZIP is restored offline from the lossless XZ transport. Its original Vasebreaker prefix and shared Endless.2 byte ranges reconstruct the exact historical test inputs. The archive list links the current and upstream sources on Pages and historical releases at immutable GitHub revisions.",
+  "layout": "Site source includes the upstream baseline, the I, ZomBotany patch and its successor ZomBotany Beghouled patch. The current complete native source ZIP is restored offline from the lossless XZ transport. Its I, ZomBotany and Vasebreaker prefixes and shared Endless.2 byte ranges reconstruct the exact historical test inputs. The archive list links the current and upstream sources on Pages and historical releases at immutable GitHub revisions.",
   "nested_sources": [
     "pvz-portable-0.2.6-source.zip"
   ],
   "restored_sources": [
     {
-      "name": "pvz-portable-0.2.6-web-izombotany.1-source.zip",
-      "path": "dist/source/pvz-portable-0.2.6-web-izombotany.1-source.zip",
-      "bytes": 100558183,
-      "sha256": "ab56f8150ddaf8d8985de74afeea2b51c7c09ef800d0f4ba58cd3a270393152c",
+      "name": "pvz-portable-0.2.6-web-zbeghouled.1-source.zip",
+      "path": "dist/source/pvz-portable-0.2.6-web-zbeghouled.1-source.zip",
+      "bytes": 103906885,
+      "sha256": "47021a0d7c60380102b6fb18b4d12e44ceb1d612b4ea5d06d537a3bcc96f29a2",
       "automatic_before_checks": true,
       "encoding": "xz",
       "manifest": {
         "path": "source-transports/current.json",
         "bytes": 349,
-        "sha256": "b0270f8475d1688c37bd6bf51fbed28dacae09c7df9727b39b428a3344bbbbf1"
+        "sha256": "10e98cb2fb37385ef8d5becdc20eb21b36bf001c079065d3e2994bb82fd597c1"
       },
       "compressed_payload": {
         "path": "source-transports/current.xz",
-        "bytes": 31317184,
-        "sha256": "3aa46d5589a4affb31a9bb93ef1dd031a7202780cda9019ac07d15b9e7317087"
+        "bytes": 34037404,
+        "sha256": "0923172d60e24edb90ba3967b3dc3334cc23f93de1cab3016c520d6a0c2d547d"
       }
     },
     {
@@ -34,7 +34,7 @@
       "manifest": {
         "path": "source-transports/endless2.json",
         "bytes": 93666,
-        "sha256": "20e73713fdc028b37694a7c6e8189a5428cb286702e6e92b4e4219b92bf2afe1"
+        "sha256": "bf269a7ca7b95381eb50100c43798ea9f0291a9a2265c588fd9a685d9ac6111d"
       },
       "literal_payload": {
         "path": "source-transports/endless2.literals",
@@ -44,7 +44,7 @@
     }
   ],
   "nested_patches": [
-    "zvase1-to-izombotany1.patch"
+    "izombotany1-to-zbeghouled1.patch"
   ],
   "archives": [
     {
@@ -251,9 +251,9 @@
       "name": "pvz-portable-0.2.6-web-izombotany.1-source.zip",
       "bytes": 100558183,
       "sha256": "ab56f8150ddaf8d8985de74afeea2b51c7c09ef800d0f4ba58cd3a270393152c",
-      "current": true,
+      "current": false,
       "upstream": false,
-      "url": "./pvz-portable-0.2.6-web-izombotany.1-source.zip"
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/af09a47b8e445d4c7de2f3d80ea5eea1eee35574/dist/source/pvz-portable-0.2.6-web-izombotany.1-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-lantern.1-source.zip",
@@ -510,6 +510,14 @@
       "current": false,
       "upstream": false,
       "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/3bdbedb939b4e46dbb76a59475a275add9cc105e/dist/source/pvz-portable-0.2.6-web-torch.1-source.zip"
+    },
+    {
+      "name": "pvz-portable-0.2.6-web-zbeghouled.1-source.zip",
+      "bytes": 103906885,
+      "sha256": "47021a0d7c60380102b6fb18b4d12e44ceb1d612b4ea5d06d537a3bcc96f29a2",
+      "current": true,
+      "upstream": false,
+      "url": "./pvz-portable-0.2.6-web-zbeghouled.1-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-zombatar-source.zip",

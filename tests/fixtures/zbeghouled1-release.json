@@ -1,0 +1,12 @@
+{
+  "id": "0.2.6-web-zbeghouled.1",
+  "sourceFiles": 895,
+  "productionObjects": 155,
+  "normalReceiptSha256": "ca679a2a5a01d686c21272783d7e05f9fb25082e9381d870258a8bcca7edd712",
+  "reportSha256": "a256da1662692ddeafa66a3d9e8a3bbc730fc2419d3e3a147e7dddf664b7572f",
+  "driverBuildSha256": "8cb9b1b43ac4a1ef9c87318e2096797b0bed716633498afb75a2d6bd45c54f00",
+  "sourceSha256": "47021a0d7c60380102b6fb18b4d12e44ceb1d612b4ea5d06d537a3bcc96f29a2",
+  "patchSha256": "95c865b41271edf3fade5513e81edbfcb126ae535347497e9bb0d92ace49f835",
+  "jsSha256": "86989133b033eabc4a4c35e01b7322681bae37f82ce6bc22eb95c1094e69cdd7",
+  "wasmSha256": "bd9e7b3f4f5ffa5af6f7e04bad4c1201c3b5773756d61e48bfa6fec57a9f1dbf"
+}

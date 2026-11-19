@@ -65,6 +65,8 @@ tests/fixtures/zsurvival1-release.json -text
 tests/fixtures/zsurvival1-linux-ci.* -text whitespace=cr-at-eol
 # Preserve the exact Vasebreaker provenance and historical Survival evidence.
 tests/fixtures/zvase1-*.json -text
+tests/fixtures/zbeghouled1-release.json -text
+tests/fixtures/historical/izombotany1-published/** -text
 tests/fixtures/performance/zvase1-*.json -text
 tests/fixtures/historical/zsurvival1-published/** -text whitespace=cr-at-eol
 tests/fixtures/zsurvival1-windows-golden.* -text whitespace=cr-at-eol

@@ -1,6 +1,10 @@
 # Browser parity and QA record
 
-## I, ZomBotany
+## ZomBotany Beghouled
+
+Run `python tests/zbeghouled.py --play` to run 16 muted native-engine playthroughs covering two seeds and both game speeds. Each run uses a disposable profile and plays through to a trophy. The suite exercises legal and rejected swaps, sun collection, the paid shuffle, Continue during an active swap, and a natural loss followed by retry. At normal speed the driver compares freshly created projectiles with the matched tiles on every observed scoring tick, including cascades. Classic Beghouled reaches 75 matches and the ninth card reaches 50. The card and lawn captures use the game's own renderer.
+
+## I, ZomBotany (previous release)
 
 Run `python tests/izombotany.py --play` to exercise the shipping engine's production objects with a silent sound manager and disposable profiles. The cases cover the original unlock, eight card positions, legal and rejected placements, all six priced zombie packets, natural Sunflower payments, the one-use Jalapeño, all fifteen brains, and the final trophy. Separate paths intentionally lose and retry the first two boards and save and continue on the second and third. Neighboring-mode checks place an ordinary zombie in the original I, Zombie and Rally Raid and smash a vase in Zombotany Vasebreaker.
 

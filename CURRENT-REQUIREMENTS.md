@@ -1,6 +1,10 @@
 # Current requirements
 
-## I, ZomBotany
+## ZomBotany Beghouled
+
+The ninth card unlocks after the original ZomBotany trophy. Use the original Beghouled night lawn, swaps, upgrades and match meter. Each matched shooter fires from its tile. Only plant-headed attackers enter, with later Gatling-heads following a Wall-nut-head in the same lane. Award a trophy at 50 matches. Preserve native Continue, retry and classic Beghouled’s 75-match goal.
+
+## I, ZomBotany (previous release)
 
 The eighth card unlocks after the original ZomBotany. Use the original I, Zombie night lawn, cardboard defenders, native brain meter and six original plant-headed attackers. Preserve each board's budget on retry, the spent Jalapeño on continue, and the neighboring modes' original packets and records. Award the trophy after all three boards.
 

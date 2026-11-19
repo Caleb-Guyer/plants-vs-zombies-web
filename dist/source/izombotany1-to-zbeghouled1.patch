@@ -1,0 +1,867 @@
+diff --git a/CMake/ProjectVersion.cmake b/CMake/ProjectVersion.cmake
+index a0c2eb2..dd642df 100644
+--- a/CMake/ProjectVersion.cmake
++++ b/CMake/ProjectVersion.cmake
+@@ -66,6 +66,6 @@ if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
+ endif()
+ 
+ # Browser release identity; keep binary and corresponding-source manifests aligned.
+-set(PVZP_VERSION "0.2.6-web-izombotany.1")
++set(PVZP_VERSION "0.2.6-web-zbeghouled.1")
+ set(PVZP_VERSION_PLAIN "0.2.6")
+ configure_file("${PROJECT_SOURCE_DIR}/CMake/ProjectVersion.h.in" "${PROJECT_BINARY_DIR}/ProjectVersion.h" @ONLY)
+diff --git a/src/ConstEnums.h b/src/ConstEnums.h
+index 05436b2..970e3ac 100644
+--- a/src/ConstEnums.h
++++ b/src/ConstEnums.h
+@@ -479,7 +479,8 @@ enum GameMode : int32_t
+ 	GAMEMODE_SURVIVAL_ZOMBOTANY_DAY = 96,
+ 	GAMEMODE_CHALLENGE_ZOMBOTANY_VASEBREAKER = 97,
+ 	GAMEMODE_PUZZLE_I_ZOMBOTANY = 98,
+-	NUM_GAME_MODES = 99
++	GAMEMODE_CHALLENGE_ZOMBOTANY_BEGHOULED = 99,
++	NUM_GAME_MODES = 100
+ };
+ enum GameObjectType : int32_t
+ {
+diff --git a/src/Lawn/Board.cpp b/src/Lawn/Board.cpp
+index 2f9a8d9..202f75a 100644
+--- a/src/Lawn/Board.cpp
++++ b/src/Lawn/Board.cpp
+@@ -19,6 +19,7 @@
+  * along with PvZ-Portable. If not, see <https://www.gnu.org/licenses/>.
+  */
+ 
++#include "System/ZomBotanyBeghouled.h"
+ #include <time.h>
+ #include <algorithm>
+ #include <climits>
+@@ -610,6 +611,11 @@ void Board::PutInMissingZombies(int theWaveNumber, ZombiePicker* theZombiePicker
+ 
+ void Board::PickZombieWaves()
+ {
++    if (mApp->mGameMode == ZomBotanyBeghouled::kMode)
++    {
++        ZomBotanyBeghouled::ConfigureWaves(*this);
++        return;
++    }
+     if (mApp->mGameMode == IZombotany::kMode)
+     {
+         IZombotany::ConfigureWaves(*this);
+@@ -980,6 +986,7 @@ void Board::PickBackground()
+ 	case GameMode::GAMEMODE_SURVIVAL_NORMAL_STAGE_2:
+ 	case GameMode::GAMEMODE_SURVIVAL_HARD_STAGE_2:
+ 	case GameMode::GAMEMODE_SURVIVAL_ENDLESS_STAGE_2:
++	case ZomBotanyBeghouled::kMode:
+ 	case GameMode::GAMEMODE_CHALLENGE_BEGHOULED:
+ 	case GameMode::GAMEMODE_CHALLENGE_BEGHOULED_TWIST:
+ 	case GameMode::GAMEMODE_CHALLENGE_PORTAL_COMBAT:
+@@ -1458,7 +1465,7 @@ void Board::InitLevel()
+ 	{
+ 		mSunMoney = BonusChallenge::StartingSun(aGameMode, mChallenge->mChallengeState);
+ 	}
+-	else if (aGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED || aGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED_TWIST ||
++	else if (ZomBotanyBeghouled::IsBoard(aGameMode) ||
+ 		mApp->IsScaryPotterLevel() || mApp->IsWhackAZombieLevel())
+ 	{
+ 		mSunMoney = 0;
+@@ -1699,8 +1706,7 @@ void Board::PlaceRake()
+ 	}
+ 	else
+ 	{
+-		if (!StageHasZombieWalkInFromRight() || mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED ||
+-			mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED_TWIST || mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_BOBSLED_BONANZA)
++		if (!StageHasZombieWalkInFromRight() || ZomBotanyBeghouled::IsBoard(mApp->mGameMode) || mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_BOBSLED_BONANZA)
+ 			return;
+ 	}
+ 
+@@ -1736,7 +1742,7 @@ void Board::InitLawnMowers()
+ 	GameMode aGameMode = mApp->mGameMode;
+     if (GustChallenge::IsMode(aGameMode) || DoubleAgent::IsMode(aGameMode) || ChainReaction::IsMode(aGameMode) || GarlicRun::IsMode(aGameMode)) return;
+ 	// levels that never have lawn mowers
+-	if (aGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED || aGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED_TWIST ||
++	if (ZomBotanyBeghouled::IsBoard(aGameMode) ||
+ 		aGameMode == GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN || aGameMode == GameMode::GAMEMODE_TREE_OF_WISDOM ||
+ 		aGameMode == GameMode::GAMEMODE_CHALLENGE_LAST_STAND || aGameMode == GameMode::GAMEMODE_CHALLENGE_ZOMBIQUARIUM ||
+ 		mApp->IsSquirrelLevel() || mApp->IsIZombieLevel() || (StageHasRoof() && !mApp->mPlayerInfo->mPurchases[StoreItem::STORE_ITEM_ROOF_CLEANER]))
+@@ -1764,8 +1770,7 @@ bool Board::ChooseSeedsOnCurrentLevel()
+ 		return false;
+ 
+ 	if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ICE ||
+-		mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED ||
+-		mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED_TWIST ||
++		ZomBotanyBeghouled::IsBoard(mApp->mGameMode) ||
+ 		mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZOMBIQUARIUM)
+ 		return false;
+ 
+@@ -2772,6 +2777,9 @@ Zombie* Board::AddZombieInRow(ZombieType theZombieType, int theRow, int theFromW
+     theZombieType = Zombotany45::PlantHeadForSpawn(mApp->mGameMode, theZombieType, theRow);
+     theZombieType = ZombotanySurvival::HeadForSpawn(mApp->mGameMode, theZombieType);
+     theZombieType = ZombotanyVasebreaker::HeadForSpawn(mApp->mGameMode, theZombieType);
++    if (mApp->mGameMode == ZomBotanyBeghouled::kMode && theZombieType >= ZOMBIE_NORMAL &&
++        theZombieType < NUM_ZOMBIE_TYPES && !ZomBotanyBeghouled::IsAttacker(theZombieType))
++        theZombieType = ZOMBIE_PEA_HEAD;
+ 	if (mZombies.mSize >= mZombies.mMaxSize - 1)
+ 	{
+ 		PvzpLogLn("Too many zombies!!");
+@@ -2801,6 +2809,9 @@ Zombie* Board::AddZombie(ZombieType theZombieType, int theFromWave)
+     theZombieType = Zombotany45::PlantHeadForSpawn(mApp->mGameMode, theZombieType);
+     theZombieType = ZombotanySurvival::HeadForSpawn(mApp->mGameMode, theZombieType);
+     theZombieType = ZombotanyVasebreaker::HeadForSpawn(mApp->mGameMode, theZombieType);
++    if (mApp->mGameMode == ZomBotanyBeghouled::kMode && theZombieType >= ZOMBIE_NORMAL &&
++        theZombieType < NUM_ZOMBIE_TYPES && !ZomBotanyBeghouled::IsAttacker(theZombieType))
++        theZombieType = ZOMBIE_PEA_HEAD;
+ 	return AddZombieInRow(theZombieType, PickRowForNewZombie(theZombieType), theFromWave);
+ }
+ 
+@@ -3139,7 +3150,7 @@ void Board::UpdateCursor(const HitResult* theHitResult)
+ 		break;
+ 
+ 	case GameObjectType::OBJECT_TYPE_PLANT:
+-		if ((mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED || mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED_TWIST || GardenShuffle::IsMode(mApp->mGameMode) ||
++		if ((ZomBotanyBeghouled::IsBoard(mApp->mGameMode) || GardenShuffle::IsMode(mApp->mGameMode) ||
+             (LightsOut::IsMode(mApp->mGameMode) && ((Plant*)theHitResult->mObject)->mSeedType == SEED_PLANTERN) ||
+             (GarlicRun::IsMode(mApp->mGameMode) && GarlicRun::CanMove(*(Plant*)theHitResult->mObject)) ||
+             (IntensiveCare::IsMode(mApp->mGameMode) && IntensiveCare::IsCrewSeed(((Plant*)theHitResult->mObject)->mSeedType))) && !HasLevelAwardDropped())
+@@ -3550,7 +3561,7 @@ void Board::UpdateToolTip(const HitResult* theHitResult)
+ 		aUseSeedType = aSeedPacket->mImitaterType;
+ 	}
+ 
+-	if (gLawnApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED || gLawnApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED_TWIST)
++	if (ZomBotanyBeghouled::IsBoard(gLawnApp->mGameMode))
+ 	{
+ 		if (aUseSeedType == SeedType::SEED_REPEATER)
+ 		{
+@@ -3659,7 +3670,7 @@ void Board::UpdateToolTip(const HitResult* theHitResult)
+ 	{
+ 		mToolTip->SetWarningText("FREE_PLANTING_CHEAT");
+ 	}
+-	else if (!aSeedPacket->mActive && (gLawnApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED || gLawnApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED_TWIST))
++	else if (!aSeedPacket->mActive && (ZomBotanyBeghouled::IsBoard(gLawnApp->mGameMode)))
+ 	{
+ 		if (aSeedPacket->mPacketType == SeedType::SEED_BEGHOULED_BUTTON_CRATER)
+ 		{
+@@ -5269,7 +5280,7 @@ void Board::MouseUp(int x, int y, int theClickCount)
+ 		return;
+ 	}
+ 
+-	if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED && mChallenge->MouseUp(x, y) && theClickCount > 0)
++	if (ZomBotanyBeghouled::IsSwap(mApp->mGameMode) && mChallenge->MouseUp(x, y) && theClickCount > 0)
+ 		return;
+ 
+ 	if (CanInteractWithBoardButtons() && theClickCount > 0)
+@@ -5625,6 +5636,10 @@ void Board::SpawnZombieWave()
+ 			}
+ 		}
+ 	}
++    else if (mApp->mGameMode == ZomBotanyBeghouled::kMode)
++    {
++        ZomBotanyBeghouled::SpawnWave(*this);
++    }
+     else if (RallyZombie::IsMode(mApp->mGameMode))
+     {
+         for (int i = 0; i < MAX_ZOMBIES_IN_WAVE; ++i)
+@@ -7279,8 +7294,7 @@ void Board::DrawGameObjects(Graphics* g)
+ bool Board::HasProgressMeter()
+ {
+     if (BungeeBusiness::IsMode(mApp->mGameMode) || ChainReaction::IsMode(mApp->mGameMode) || GarlicRun::IsMode(mApp->mGameMode)) return false;
+-	if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED ||
+-		mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED_TWIST ||
++	if (ZomBotanyBeghouled::IsBoard(mApp->mGameMode) ||
+ 		mApp->IsFinalBossLevel() ||
+ 		mApp->IsSlotMachineLevel() ||
+ 		mApp->IsSquirrelLevel() ||
+@@ -7306,8 +7320,7 @@ bool Board::ProgressMeterHasFlags()
+ 
+ 	if (mApp->IsWhackAZombieLevel() ||
+ 		mApp->IsFinalBossLevel() ||
+-		mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED ||
+-		mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED_TWIST ||
++		ZomBotanyBeghouled::IsBoard(mApp->mGameMode) ||
+ 		mApp->IsSlotMachineLevel() ||
+ 		mApp->IsSquirrelLevel() ||
+ 		mApp->IsIZombieLevel())
+@@ -7332,9 +7345,9 @@ void Board::DrawProgressMeter(Graphics* g)
+ 	// Draw mode-specific text or flags on the meter
+ 	int aPosX = aCelWidth / 2 + 600;
+ 	Color aColor(224, 187, 98);
+-	if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED || mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED_TWIST)
++	if (ZomBotanyBeghouled::IsBoard(mApp->mGameMode))
+ 	{
+-		std::string aMatchStr = std::format("{}/{} {}", mChallenge->mChallengeScore, 75, PvzpStringTranslate("[MATCHES]"));
++		std::string aMatchStr = std::format("{}/{} {}", mChallenge->mChallengeScore, ZomBotanyBeghouled::MatchGoal(mApp->mGameMode), PvzpStringTranslate("[MATCHES]"));
+ 		PvzpDrawString(g, aMatchStr, aPosX, 589, Sexy::FONT_DWARVENTODCRAFT12, aColor, DrawStringJustification::DS_ALIGN_CENTER);
+ 	}
+ 	else if (mApp->IsSquirrelLevel())
+@@ -7383,8 +7396,7 @@ void Board::DrawProgressMeter(Graphics* g)
+ 	}
+ 
+ 	g->DrawImage(Sexy::IMAGE_FLAGMETERLEVELPROGRESS, 638, 589);
+-	if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED ||
+-		mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED_TWIST ||
++	if (ZomBotanyBeghouled::IsBoard(mApp->mGameMode) ||
+ 		mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZOMBIQUARIUM ||
+ 		mApp->IsSquirrelLevel() ||
+ 		mApp->IsSlotMachineLevel() ||
+@@ -9514,7 +9526,7 @@ int Board::GetNumSeedsInBank()
+ 	{
+ 		return 6;
+ 	}
+-	if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED || mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED_TWIST)
++	if (ZomBotanyBeghouled::IsBoard(mApp->mGameMode))
+ 	{
+ 		return 0;
+ 	}
+@@ -9570,8 +9582,7 @@ bool Board::StageHasGraveStones()
+     if (mChallenge && LanternGlow::IsMode(mApp->mGameMode) && BonusChallenge::IsCurrentRules(mApp->mGameMode, mChallenge->mChallengeState)) return false;
+ 	if (mApp->IsWallnutBowlingLevel() ||
+ 		mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_POGO_PARTY ||
+-		mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED ||
+-		mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED_TWIST ||
++		ZomBotanyBeghouled::IsBoard(mApp->mGameMode) ||
+ 		mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_PORTAL_COMBAT ||
+ 		mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_LAST_STAND ||
+ 		mApp->IsIZombieLevel() ||
+diff --git a/src/Lawn/Challenge.cpp b/src/Lawn/Challenge.cpp
+index 0551e6f..ac2b64b 100644
+--- a/src/Lawn/Challenge.cpp
++++ b/src/Lawn/Challenge.cpp
+@@ -19,6 +19,7 @@
+  * along with PvZ-Portable. If not, see <https://www.gnu.org/licenses/>.
+  */
+ 
++#include "System/ZomBotanyBeghouled.h"
+ #include "Coin.h"
+ #include "Board.h"
+ #include "LawnCommon.h"
+@@ -66,7 +67,6 @@
+ #include <climits>
+ #include <format>
+ 
+-constexpr const int BEGHOULED_WINNING_SCORE = 75;
+ constexpr const int SLOT_MACHINE_WINNING_SCORE = 2000;
+ constexpr const int ZOMBIQUARIUM_WINNING_SCORE = 1000;
+ constexpr const int I_ZOMBIE_WINNING_SCORE = 5;
+@@ -463,15 +463,15 @@ void Challenge::StartLevel()
+ 	{
+ 		mBoard->SetTutorialState(TUTORIAL_SLOT_MACHINE_PULL);
+ 	}
+-	if (aGameMode == GAMEMODE_CHALLENGE_BEGHOULED || aGameMode == GAMEMODE_CHALLENGE_BEGHOULED_TWIST)
++	if (ZomBotanyBeghouled::IsBoard(aGameMode))
+ 	{
+-		mBoard->mZombieCountDown = 200;
++		mBoard->mZombieCountDown = aGameMode == ZomBotanyBeghouled::kMode ? 800 : 200;
+ 		mBoard->mZombieCountDownStart = mBoard->mZombieCountDown;
+ 		mChallengeStateCounter = 1500;
+ 		BeghouledMakeStartBoard();
+ 		BeghouledUpdateCraters();
+ 
+-		if (aGameMode == GAMEMODE_CHALLENGE_BEGHOULED)
++		if (ZomBotanyBeghouled::IsSwap(aGameMode))
+ 		{
+ 			mBoard->DisplayAdvice("[ADVICE_BEGHOULED_DRAG_TO_MATCH_3]", MESSAGE_STYLE_HINT_FAST, ADVICE_NONE);
+ 		}
+@@ -714,8 +714,9 @@ void Challenge::BeghouledRemoveHorizontalMatch(int theGridX, int theGridY, Begho
+ 		Plant* aPlant = mBoard->GetTopPlantAt(theGridX, theGridY, TOPPLANT_ANY);
+ 		if (aPlant)
+ 		{
+-			aPlant->Die();
+-
++			if (mApp->mGameMode == ZomBotanyBeghouled::kMode)
++                ZomBotanyBeghouled::FireMatchedPlant(*aPlant);
++            aPlant->Die();
+ 		}
+ 		theGridX++;
+ 	} while (BeghouledGetPlantAt(theGridX, theGridY, theBoardState) == aSeedType);
+@@ -729,7 +730,9 @@ void Challenge::BeghouledRemoveVerticalMatch(int theGridX, int theGridY, Beghoul
+ 		Plant* aPlant = mBoard->GetTopPlantAt(theGridX, theGridY, TOPPLANT_ANY);
+ 		if (aPlant)
+ 		{
+-			aPlant->Die();
++			if (mApp->mGameMode == ZomBotanyBeghouled::kMode)
++                ZomBotanyBeghouled::FireMatchedPlant(*aPlant);
++            aPlant->Die();
+ 		}
+ 		theGridY++;
+ 	} while (BeghouledGetPlantAt(theGridX, theGridY, theBoardState) == aSeedType);
+@@ -837,18 +840,18 @@ void Challenge::BeghouledScore(int theGridX, int theGridY, int theNumPlants, int
+ 	{
+ 		if (!mBoard->mAdvice->IsBeingDisplayed())
+ 		{
+-			std::string aMsg = PvzpReplaceNumberString("[ADVICE_BEGHOULED_MATCH_3]", "{SCORE}", BEGHOULED_WINNING_SCORE);
++			std::string aMsg = PvzpReplaceNumberString("[ADVICE_BEGHOULED_MATCH_3]", "{SCORE}", ZomBotanyBeghouled::MatchGoal(mApp->mGameMode));
+ 			mBoard->DisplayAdvice(aMsg, MESSAGE_STYLE_HINT_FAST, ADVICE_BEGHOULED_MATCH_3);
+ 		}
+-		if (mChallengeScore >= BEGHOULED_WINNING_SCORE - 5)
++		if (mChallengeScore >= ZomBotanyBeghouled::MatchGoal(mApp->mGameMode) - 5)
+ 		{
+ 			mBoard->DisplayAdvice("[ADVICE_BEGHOULED_ALMOST_THERE]", MESSAGE_STYLE_HINT_FAST, ADVICE_ALMOST_THERE);
+ 		}
+ 	}
+ 
+-	if (mChallengeScore >= BEGHOULED_WINNING_SCORE)
++	if (mChallengeScore >= ZomBotanyBeghouled::MatchGoal(mApp->mGameMode))
+ 	{
+-		mChallengeScore = BEGHOULED_WINNING_SCORE;
++		mChallengeScore = ZomBotanyBeghouled::MatchGoal(mApp->mGameMode);
+ 		SpawnLevelAward(theGridX, theGridY);
+ 		mBoard->ClearAdvice(ADVICE_NONE);
+ 	}
+@@ -1052,7 +1055,7 @@ int Challenge::BeghouledCheckForPossibleMoves(BeghouledBoardState* theBoardState
+ 	{
+ 		for (int aCol = 0; aCol < BEGHOULED_MAX_GRIDSIZEX; aCol++)
+ 		{
+-			if (aGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED)
++			if (ZomBotanyBeghouled::IsSwap(aGameMode))
+ 			{
+ 				if (BeghouledIsValidMove(aCol, aRow, aCol + 1, aRow, theBoardState) || BeghouledIsValidMove(aCol, aRow, aCol, aRow + 1, theBoardState))
+ 				{
+@@ -1088,7 +1091,7 @@ void Challenge::BeghouledDragStart(int x, int y)
+ 
+ int Challenge::MouseMove(int x, int y)
+ {
+-	if (mApp->mGameMode == GAMEMODE_CHALLENGE_BEGHOULED && !mBoard->HasLevelAwardDropped())
++	if (ZomBotanyBeghouled::IsSwap(mApp->mGameMode) && !mBoard->HasLevelAwardDropped())
+ 	{
+ 		if (mBeghouledMouseCapture)
+ 		{
+@@ -1227,7 +1230,7 @@ int Challenge::MouseDown(int x, int y, int theClickCount, HitResult* theHitResul
+ 	if (theHitResult->mObjectType == OBJECT_TYPE_COIN && theClickCount >= 0)
+ 		return false;
+ 
+-	if (mApp->mGameMode == GAMEMODE_CHALLENGE_BEGHOULED)
++	if (ZomBotanyBeghouled::IsSwap(mApp->mGameMode))
+ 	{
+ 		if (mChallengeState != STATECHALLENGE_NORMAL)
+ 			return false;
+@@ -1304,7 +1307,7 @@ Rect Challenge::SlotMachineGetHandleRect()
+ 
+ int Challenge::MouseUp([[maybe_unused]] int x, [[maybe_unused]] int y)
+ {
+-	if (mApp->mGameMode == GAMEMODE_CHALLENGE_BEGHOULED)
++	if (ZomBotanyBeghouled::IsSwap(mApp->mGameMode))
+ 	{
+ 		if (mBeghouledMouseCapture && !mBoard->mAdvice->IsBeingDisplayed() && mChallengeScore == 0)
+ 		{
+@@ -1319,7 +1322,7 @@ int Challenge::MouseUp([[maybe_unused]] int x, [[maybe_unused]] int y)
+ 
+ void Challenge::ClearCursor()
+ {
+-	if (mApp->mGameMode == GAMEMODE_CHALLENGE_BEGHOULED)
++	if (ZomBotanyBeghouled::IsSwap(mApp->mGameMode))
+ 	{
+ 		BeghouledDragCancel();
+ 	}
+@@ -1468,7 +1471,7 @@ void Challenge::BeghouledFlashAMatch()
+ 	LoadBeghouledBoardState(&aBoardState);
+ 
+ 	GameMode aGameMode = mApp->mGameMode;
+-	if (aGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED)
++	if (ZomBotanyBeghouled::IsSwap(aGameMode))
+ 	{
+ 		for (int aRow = 0; aRow <= BEGHOULED_MAX_GRIDSIZEY - 1; aRow++)
+ 		{
+@@ -1495,7 +1498,7 @@ void Challenge::BeghouledFlashAMatch()
+ 
+ void Challenge::UpdateBeghouled()
+ {
+-	mBoard->mProgressMeterWidth = PvzpAnimateCurve(0, BEGHOULED_WINNING_SCORE, mChallengeScore, 0, PROGRESS_METER_COUNTER, CURVE_LINEAR);
++	mBoard->mProgressMeterWidth = PvzpAnimateCurve(0, ZomBotanyBeghouled::MatchGoal(mApp->mGameMode), mChallengeScore, 0, PROGRESS_METER_COUNTER, CURVE_LINEAR);
+ 
+ 	int aMovingPlant = false;
+ 	for (Plant* aPlant : mBoard->mPlants)
+@@ -2145,7 +2148,7 @@ void Challenge::BeghouledCheckStuckState()
+ void Challenge::ZombieAtePlant(/*Zombie* theZombie,*/ Plant* thePlant)
+ {
+ 	// theZombie was dropped from the signature; if re-enabled, note callers may pass nullptr
+-	if (mApp->mGameMode != GAMEMODE_CHALLENGE_BEGHOULED && mApp->mGameMode != GAMEMODE_CHALLENGE_BEGHOULED_TWIST)
++	if (!ZomBotanyBeghouled::IsBoard(mApp->mGameMode))
+ 		return;
+ 
+ 	mBeghouledEated[thePlant->mPlantCol][thePlant->mRow] = true;
+@@ -2290,7 +2293,7 @@ void Challenge::Update()
+ 	{
+ 		UpdateConveyorBelt();
+ 	}
+-	if (mApp->mGameMode == GAMEMODE_CHALLENGE_BEGHOULED || mApp->mGameMode == GAMEMODE_CHALLENGE_BEGHOULED_TWIST)
++	if (ZomBotanyBeghouled::IsBoard(mApp->mGameMode))
+ 	{
+ 		UpdateBeghouled();
+ 	}
+@@ -2523,7 +2526,7 @@ void Challenge::DrawBackdrop(Graphics* g)
+ 	{
+ 		TreeOfWisdomDraw(g);
+ 	}
+-	if (mApp->mGameMode == GAMEMODE_CHALLENGE_BEGHOULED || mApp->mGameMode == GAMEMODE_CHALLENGE_BEGHOULED_TWIST)
++	if (ZomBotanyBeghouled::IsBoard(mApp->mGameMode))
+ 	{
+ 		DrawBeghouled(g);
+ 	}
+@@ -2677,6 +2680,12 @@ void Challenge::InitZombieWavesFromList(ZombieType* theZombieList, int theListLe
+ void Challenge::InitZombieWaves()
+ {
+ 	GameMode aGameMode = mApp->mGameMode;
++    if (aGameMode == ZomBotanyBeghouled::kMode)
++    {
++        for (int i = 0; i < NUM_ZOMBIE_TYPES; ++i)
++            mBoard->mZombieAllowed[i] = ZomBotanyBeghouled::IsAttacker(static_cast<ZombieType>(i));
++        return;
++    }
+     if (aGameMode == IZombotany::kMode)
+     {
+         IZombotany::ConfigureRoster(*mBoard);
+@@ -2800,7 +2809,7 @@ void Challenge::InitZombieWaves()
+ 	{
+ 		aList[ZOMBIE_BALLOON] = true;
+ 	}
+-	else if (aGameMode == GAMEMODE_CHALLENGE_BEGHOULED || aGameMode == GAMEMODE_CHALLENGE_BEGHOULED_TWIST)
++	else if (ZomBotanyBeghouled::IsBoard(aGameMode))
+ 	{
+ 		aList[ZOMBIE_NORMAL] = true;
+ 		aList[ZOMBIE_TRAFFIC_CONE] = true;
+@@ -3059,6 +3068,11 @@ void Challenge::WhackAZombieSpawning()
+ 
+ bool Challenge::UpdateZombieSpawning()
+ {
++    if (mApp->mGameMode == ZomBotanyBeghouled::kMode)
++    {
++        ZomBotanyBeghouled::UpdateSpawning(*mBoard);
++        return true;
++    }
+     if (GustChallenge::IsMode(mApp->mGameMode)) return true;
+     if (DoubleAgent::IsMode(mApp->mGameMode)) return true;
+     if (FireDrill::IsMode(mApp->mGameMode)) return true;
+diff --git a/src/Lawn/CutScene.cpp b/src/Lawn/CutScene.cpp
+index a5d2d91..ff7d7f0 100644
+--- a/src/Lawn/CutScene.cpp
++++ b/src/Lawn/CutScene.cpp
+@@ -19,6 +19,7 @@
+  * along with PvZ-Portable. If not, see <https://www.gnu.org/licenses/>.
+  */
+ 
++#include "System/ZomBotanyBeghouled.h"
+ #include "Board.h"
+ #include "Plant.h"
+ #include "Zombie.h"
+@@ -1327,8 +1328,7 @@ void CutScene::ShowShovel()
+ {
+ 	if (mApp->IsWhackAZombieLevel() ||
+ 		mApp->IsWallnutBowlingLevel() ||
+-		mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED ||
+-		mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED_TWIST ||
++		ZomBotanyBeghouled::IsBoard(mApp->mGameMode) ||
+ 		mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN ||
+ 		mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZOMBIQUARIUM ||
+ 		mApp->mGameMode == GameMode::GAMEMODE_TREE_OF_WISDOM ||
+diff --git a/src/Lawn/Plant.cpp b/src/Lawn/Plant.cpp
+index 27941b0..8bab966 100644
+--- a/src/Lawn/Plant.cpp
++++ b/src/Lawn/Plant.cpp
+@@ -19,6 +19,7 @@
+  * along with PvZ-Portable. If not, see <https://www.gnu.org/licenses/>.
+  */
+ 
++#include "System/ZomBotanyBeghouled.h"
+ #include "Coin.h"
+ #include "Plant.h"
+ #include "Board.h"
+@@ -2978,7 +2979,11 @@ void Plant::Update()
+ 		Animate();
+ 
+ 		if (mPlantHealth < 0)
+-			Die();
++        {
++            Die();
++            if (mApp->mGameMode == ZomBotanyBeghouled::kMode)
++                mBoard->mChallenge->ZombieAtePlant(this);
++        }
+ 
+ 		UpdateReanim();
+ 	}
+@@ -5231,7 +5236,7 @@ const PlantDefinition& GetPlantDefinition(SeedType theSeedType)
+ int Plant::GetCost(SeedType theSeedType, SeedType theImitaterType)
+ {
+ 	if (IZombotany::IsPacket(theSeedType)) return IZombotany::PacketFor(theSeedType).sun;
+-	if (gLawnApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED || gLawnApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED_TWIST)
++	if (ZomBotanyBeghouled::IsBoard(gLawnApp->mGameMode))
+ 	{
+ 		if (theSeedType == SeedType::SEED_REPEATER)
+ 		{
+diff --git a/src/Lawn/SeedPacket.cpp b/src/Lawn/SeedPacket.cpp
+index c218589..f528fc3 100644
+--- a/src/Lawn/SeedPacket.cpp
++++ b/src/Lawn/SeedPacket.cpp
+@@ -19,6 +19,7 @@
+  * along with PvZ-Portable. If not, see <https://www.gnu.org/licenses/>.
+  */
+ 
++#include "System/ZomBotanyBeghouled.h"
+ #include <format>
+ #include <utility>
+ #include "Board.h"
+@@ -659,7 +660,7 @@ void SeedPacket::Draw(Graphics* g)
+ 		int aCost = mBoard->GetCurrentPlantCost(mPacketType, mImitaterType);
+ 
+ 		int aGrayness = 255;
+-		if ((mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED && !mActive) ||
++		if ((ZomBotanyBeghouled::IsSwap(mApp->mGameMode) && !mActive) ||
+ 			(mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED_TWIST && !mActive))
+ 		{
+ 			aGrayness = 64;
+@@ -850,7 +851,7 @@ void SeedPacket::MouseDown([[maybe_unused]] int x, [[maybe_unused]] int y, [[may
+ 	mBoard->ClearAdvice(AdviceType::ADVICE_PLANT_NEEDS_FUMESHROOM);
+ 	mBoard->ClearAdvice(AdviceType::ADVICE_PLANT_NEEDS_LILYPAD);
+ 
+-	if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED || mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED_TWIST)
++	if (ZomBotanyBeghouled::IsBoard(mApp->mGameMode))
+ 	{
+ 		mBoard->mChallenge->BeghouledPacketClicked(this);
+ 	}
+@@ -1157,7 +1158,7 @@ void SeedPacket::SetPacketType(SeedType theSeedType, SeedType theImitaterType)
+ 		aUseSeedType = theImitaterType;
+ 	}
+ 
+-	if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED || mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED_TWIST ||
++	if (ZomBotanyBeghouled::IsBoard(mApp->mGameMode) ||
+ 		mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZOMBIQUARIUM || mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_LAST_STAND ||
+         DoubleAgent::IsPlanning(*mBoard) ||
+ 		mApp->IsIZombieLevel() || mApp->IsScaryPotterLevel() || mApp->IsWhackAZombieLevel() || (mApp->IsSurvivalMode() && mBoard->mChallenge->mSurvivalStage > 0))
+diff --git a/src/Lawn/System/ZomBotanyBeghouled.cpp b/src/Lawn/System/ZomBotanyBeghouled.cpp
+new file mode 100644
+index 0000000..823f3e0
+--- /dev/null
++++ b/src/Lawn/System/ZomBotanyBeghouled.cpp
+@@ -0,0 +1,100 @@
++// SPDX-License-Identifier: LGPL-3.0-or-later
++#include "ZomBotanyBeghouled.h"
++#include "../Board.h"
++#include "../Challenge.h"
++#include "../Plant.h"
++#include "../Zombie.h"
++#include "../../LawnApp.h"
++#include <algorithm>
++#include <array>
++#include <span>
++
++namespace ZomBotanyBeghouled
++{
++namespace
++{
++constexpr ZombieType single[] = {ZOMBIE_PEA_HEAD};
++constexpr ZombieType peas[] = {ZOMBIE_PEA_HEAD, ZOMBIE_PEA_HEAD};
++constexpr ZombieType armor[] = {ZOMBIE_WALLNUT_HEAD, ZOMBIE_PEA_HEAD};
++constexpr ZombieType escort[] = {ZOMBIE_WALLNUT_HEAD, ZOMBIE_GATLING_HEAD};
++constexpr ZombieType mixed[] = {ZOMBIE_WALLNUT_HEAD, ZOMBIE_GATLING_HEAD, ZOMBIE_PEA_HEAD};
++constexpr ZombieType twoEscorts[] = {ZOMBIE_WALLNUT_HEAD, ZOMBIE_GATLING_HEAD,
++                                     ZOMBIE_WALLNUT_HEAD, ZOMBIE_GATLING_HEAD};
++struct Wave { int matches; int interval; std::span<const ZombieType> heads; };
++constexpr std::array<Wave, 7> waves = {{
++    {2, 800, single}, {9, 1450, peas}, {16, 1600, armor}, {23, 1650, escort},
++    {30, 1500, mixed}, {38, 1500, escort}, {45, 1700, twoEscorts}
++}};
++}
++
++void ConfigureWaves(Board& board)
++{
++    for (auto& bank : board.mZombiesInWave)
++        std::fill(std::begin(bank), std::end(bank), ZOMBIE_INVALID);
++    board.mNumWaves = static_cast<int>(waves.size());
++    for (int i = 0; i < board.mNumWaves; ++i)
++        std::copy(waves[i].heads.begin(), waves[i].heads.end(), board.mZombiesInWave[i]);
++}
++
++void UpdateSpawning(Board& board)
++{
++    // Time keeps pressure on idle lawns. Match milestones bring the same waves
++    // forward for quicker players, with space between consecutive entrances.
++    const int index = std::min(board.mCurrentWave, board.mNumWaves - 1);
++    const Wave& wave = waves[index];
++    --board.mZombieCountDown;
++    const bool reachedMilestone = board.mTotalSpawnedWaves < board.mNumWaves &&
++        board.mChallenge->mChallengeScore >= wave.matches &&
++        board.mZombieCountDownStart - board.mZombieCountDown >= 350;
++    if (board.mZombieCountDown > 0 && !reachedMilestone) return;
++    board.SpawnZombieWave();
++    const int next = std::min(board.mCurrentWave, board.mNumWaves - 1);
++    board.mZombieCountDown = board.mZombieCountDownStart = waves[next].interval;
++}
++
++void SpawnWave(Board& board)
++{
++    // The continuous-challenge handler rewinds the last wave before this call.
++    Zombie* shield = nullptr;
++    for (ZombieType type : board.mZombiesInWave[board.mCurrentWave])
++    {
++        if (type == ZOMBIE_INVALID) break;
++        if (type == ZOMBIE_GATLING_HEAD && shield)
++        {
++            if (Zombie* shooter = board.AddZombieInRow(type, shield->mRow, board.mCurrentWave))
++            {
++                shooter->mPosX = shield->mPosX + 65.0f;
++                shooter->mX = static_cast<int>(shooter->mPosX);
++            }
++            shield = nullptr;
++        }
++        else
++        {
++            Zombie* zombie = board.AddZombie(type, board.mCurrentWave);
++            shield = type == ZOMBIE_WALLNUT_HEAD ? zombie : nullptr;
++        }
++    }
++}
++
++void FireMatchedPlant(Plant& plant)
++{
++    switch (plant.mSeedType)
++    {
++    case SEED_FUMESHROOM:
++        // The normal wind-up attaches its cloud to the plant. A matched plant
++        // disappears this tick, so let the original cloud finish on the lawn.
++        plant.mApp->AddPvzpParticle(plant.mX + 85, plant.mY + 31,
++            Board::MakeRenderOrder(RENDER_LAYER_PARTICLE, plant.mRow, 0), PARTICLE_FUMECLOUD);
++        [[fallthrough]];
++    case SEED_PEASHOOTER:
++    case SEED_REPEATER:
++    case SEED_SNOWPEA:
++    case SEED_PUFFSHROOM:
++    case SEED_STARFRUIT:
++        plant.Fire(nullptr, plant.mRow, WEAPON_PRIMARY);
++        break;
++    default:
++        break;
++    }
++}
++}
+diff --git a/src/Lawn/System/ZomBotanyBeghouled.h b/src/Lawn/System/ZomBotanyBeghouled.h
+new file mode 100644
+index 0000000..997c2d1
+--- /dev/null
++++ b/src/Lawn/System/ZomBotanyBeghouled.h
+@@ -0,0 +1,23 @@
++// SPDX-License-Identifier: LGPL-3.0-or-later
++#pragma once
++#include "../../ConstEnums.h"
++
++class Board;
++class Plant;
++
++namespace ZomBotanyBeghouled
++{
++constexpr GameMode kMode = GAMEMODE_CHALLENGE_ZOMBOTANY_BEGHOULED;
++constexpr int kGoal = 50;
++constexpr bool IsSwap(GameMode mode) { return mode == GAMEMODE_CHALLENGE_BEGHOULED || mode == kMode; }
++constexpr bool IsBoard(GameMode mode) { return IsSwap(mode) || mode == GAMEMODE_CHALLENGE_BEGHOULED_TWIST; }
++constexpr int MatchGoal(GameMode mode) { return mode == kMode ? kGoal : 75; }
++constexpr bool IsAttacker(ZombieType type)
++{
++    return type == ZOMBIE_PEA_HEAD || type == ZOMBIE_WALLNUT_HEAD || type == ZOMBIE_GATLING_HEAD;
++}
++void ConfigureWaves(Board& board);
++void UpdateSpawning(Board& board);
++void SpawnWave(Board& board);
++void FireMatchedPlant(Plant& plant);
++}
+diff --git a/src/Lawn/Widget/ChallengeScreen.cpp b/src/Lawn/Widget/ChallengeScreen.cpp
+index eaa332e..5f7d311 100644
+--- a/src/Lawn/Widget/ChallengeScreen.cpp
++++ b/src/Lawn/Widget/ChallengeScreen.cpp
+@@ -19,6 +19,7 @@
+  * along with PvZ-Portable. If not, see <https://www.gnu.org/licenses/>.
+  */
+ 
++#include "../System/ZomBotanyBeghouled.h"
+ #include "GameButton.h"
+ #include "../../LawnApp.h"
+ #include "../System/Music.h"
+@@ -158,7 +159,8 @@ constinit const ChallengeDefinition gChallengeDefs[NUM_CHALLENGE_MODES] = {
+ 	{ .mChallengeMode = GameMode::GAMEMODE_CHALLENGE_ZOMBOTANY_5, .mChallengeIconIndex = 0, .mPage = ChallengePage::CHALLENGE_PAGE_ZOMBOTANY, .mRow = 0, .mCol = 4, .mChallengeName = "Zombotany 5" },
+ 	{ .mChallengeMode = GameMode::GAMEMODE_SURVIVAL_ZOMBOTANY_DAY, .mChallengeIconIndex = 0, .mPage = ChallengePage::CHALLENGE_PAGE_ZOMBOTANY, .mRow = 1, .mCol = 0, .mChallengeName = "Survival: Day" },
+ 	{ .mChallengeMode = ZombotanyVasebreaker::kMode, .mChallengeIconIndex = 0, .mPage = ChallengePage::CHALLENGE_PAGE_ZOMBOTANY, .mRow = 1, .mCol = 1, .mChallengeName = "Vasebreaker" },
+-	{ .mChallengeMode = IZombotany::kMode, .mChallengeIconIndex = 0, .mPage = CHALLENGE_PAGE_ZOMBOTANY, .mRow = 1, .mCol = 2, .mChallengeName = "I, ZomBotany" }
++	{ .mChallengeMode = IZombotany::kMode, .mChallengeIconIndex = 0, .mPage = CHALLENGE_PAGE_ZOMBOTANY, .mRow = 1, .mCol = 2, .mChallengeName = "I, ZomBotany" },
++	{ .mChallengeMode = ZomBotanyBeghouled::kMode, .mChallengeIconIndex = 1, .mPage = CHALLENGE_PAGE_ZOMBOTANY, .mRow = 1, .mCol = 3, .mChallengeName = "ZomBotany Beghouled" }
+ };
+ 
+ ChallengeScreen::ChallengeScreen(LawnApp* theApp, ChallengePage thePage)
+@@ -322,8 +324,8 @@ void ChallengeScreen::SetUnlockChallengeIndex(ChallengePage thePage, bool theIsI
+ int ChallengeScreen::MoreTrophiesNeeded(int theChallengeIndex)
+ {
+ 	const ChallengeDefinition& aDef = GetChallengeDefinition(theChallengeIndex);
+-	if (aDef.mChallengeMode == IZombotany::kMode)
+-		return mApp->HasBeatenChallenge(GAMEMODE_CHALLENGE_WAR_AND_PEAS) || mApp->HasBeatenChallenge(IZombotany::kMode) ? 0 : 1;
++	if (aDef.mChallengeMode == IZombotany::kMode || aDef.mChallengeMode == ZomBotanyBeghouled::kMode)
++		return mApp->HasBeatenChallenge(GAMEMODE_CHALLENGE_WAR_AND_PEAS) || mApp->HasBeatenChallenge(aDef.mChallengeMode) ? 0 : 1;
+ 	if (ZombotanyVasebreaker::IsMode(aDef.mChallengeMode))
+ 		return mApp->HasBeatenChallenge(GAMEMODE_CHALLENGE_WAR_AND_PEAS) ||
+ 			mApp->mPlayerInfo->mChallengeRecords[ZombotanyVasebreaker::kProfileIndex] > 0 ? 0 : 1;
+@@ -459,7 +461,8 @@ void ChallengeScreen::UpdateButtons()
+ 			aDef.mChallengeMode == GAMEMODE_CHALLENGE_ZOMBOTANY_5 ? 4 :
+ 			ZombotanySurvival::IsMode(aDef.mChallengeMode) ? 5 :
+ 			ZombotanyVasebreaker::IsMode(aDef.mChallengeMode) ? 6 :
+-			aDef.mChallengeMode == IZombotany::kMode ? 7 : -1;
++			aDef.mChallengeMode == IZombotany::kMode ? 7 :
++			aDef.mChallengeMode == ZomBotanyBeghouled::kMode ? 8 : -1;
+ 		ButtonWidget* aButton = mChallengeButtons[aChallengeMode].get();
+ 		aButton->mVisible = aFamilyPage ? aFamilySlot >= 0 : aDef.mPage == mPageIndex;
+ 		// The family aliases the existing buttons and records. Returning restores
+@@ -679,6 +682,33 @@ Image* ChallengeScreen::GetIZombotanyImage()
+ 	return mIZombotanyImage.get();
+ }
+ 
++Image* ChallengeScreen::GetZomBotanyBeghouledImage()
++{
++    if (mZomBotanyBeghouledImage) return mZomBotanyBeghouledImage.get();
++    auto* cache = mApp->mReanimatorCache.get();
++    if (!cache || !Sexy::IMAGE_REANIM_DIAMOND) return nullptr;
++    const std::string group = "DelayLoad_Background2";
++    if (std::find(mLoadedResourceNames.begin(), mLoadedResourceNames.end(), group) == mLoadedResourceNames.end())
++    {
++        if (!PvzpLoadResources(group.c_str())) return nullptr;
++        mLoadedResourceNames.push_back(group);
++    }
++    auto* head = cache->GetVasebreakerPlantHeadImage(ZOMBIE_WALLNUT_HEAD);
++    if (!head || !Sexy::IMAGE_BACKGROUND2) return nullptr;
++    auto image = cache->MakeBlankMemoryImage(80, 65);
++    Graphics picture(image.get());
++    picture.SetLinearBlend(true);
++    picture.ClipRect(0, 0, 80, 65);
++    // The original Beghouled diamond stays legible beside the armored zombie.
++    picture.DrawImage(Sexy::IMAGE_BACKGROUND2, Rect(0, 0, 80, 65), Rect(300, 110, 400, 325));
++    auto* diamond = Sexy::IMAGE_REANIM_DIAMOND;
++    const float scale = 34.0f / diamond->GetWidth();
++    PvzpDrawImageScaledF(&picture, diamond, 5.0f, 36.0f - diamond->GetHeight() * scale * .5f, scale, scale);
++    PvzpDrawImageScaledF(&picture, head, 24.0f, -15.0f, .44f, .44f);
++    mZomBotanyBeghouledImage = std::move(image);
++    return mZomBotanyBeghouledImage.get();
++}
++
+ void ChallengeScreen::DrawButton(Graphics* g, int theChallengeIndex)
+ {
+ 	ButtonWidget* aChallengeButton = mChallengeButtons[theChallengeIndex].get();
+@@ -727,9 +757,13 @@ void ChallengeScreen::DrawButton(Graphics* g, int theChallengeIndex)
+ 			{
+ 				if (Image* image = GetZombotanySurvivalImage()) g->DrawImage(image, aPosX + 13, aPosY + 4);
+ 			}
+-			else if (aDef.mChallengeMode == IZombotany::kMode)
+-			{
+-				if (Image* image = GetIZombotanyImage()) g->DrawImage(image, aPosX + 13, aPosY + 4);
++			else if (aDef.mChallengeMode == ZomBotanyBeghouled::kMode)
++            {
++                if (Image* image = GetZomBotanyBeghouledImage()) g->DrawImage(image, aPosX + 13, aPosY + 4);
++            }
++            else if (aDef.mChallengeMode == IZombotany::kMode)
++            {
++                if (Image* image = GetIZombotanyImage()) g->DrawImage(image, aPosX + 13, aPosY + 4);
+ 			}
+ 			else if (ZombotanyVasebreaker::IsMode(aDef.mChallengeMode))
+ 			{
+@@ -899,8 +933,9 @@ void ChallengeScreen::Draw(Graphics* g)
+ 		static_cast<int>(mApp->HasBeatenChallenge(GAMEMODE_CHALLENGE_ZOMBOTANY_5)) +
+ 		static_cast<int>(mApp->HasBeatenChallenge(ZombotanySurvival::kMode)) +
+ 		static_cast<int>(mApp->HasBeatenChallenge(ZombotanyVasebreaker::kMode)) +
+-		static_cast<int>(mApp->HasBeatenChallenge(IZombotany::kMode)) : mApp->GetNumTrophies(mPageIndex);
+-	int aTrophiesTotal = mPageIndex == CHALLENGE_PAGE_SURVIVAL ? 10 : mPageIndex == CHALLENGE_PAGE_CHALLENGE ? 20 : mPageIndex == CHALLENGE_PAGE_PUZZLE ? 18 : mPageIndex == CHALLENGE_PAGE_ZOMBOTANY ? 8 : 0;
++		static_cast<int>(mApp->HasBeatenChallenge(IZombotany::kMode)) +
++		static_cast<int>(mApp->HasBeatenChallenge(ZomBotanyBeghouled::kMode)) : mApp->GetNumTrophies(mPageIndex);
++	int aTrophiesTotal = mPageIndex == CHALLENGE_PAGE_SURVIVAL ? 10 : mPageIndex == CHALLENGE_PAGE_CHALLENGE ? 20 : mPageIndex == CHALLENGE_PAGE_PUZZLE ? 18 : mPageIndex == CHALLENGE_PAGE_ZOMBOTANY ? 9 : 0;
+ 	if (aTrophiesTotal > 0)
+ 	{
+ 		std::string aTrophyString = std::format("{}/{}", aTrophiesGot, aTrophiesTotal);
+@@ -1045,7 +1080,7 @@ void ChallengeScreen::UpdateToolTip()
+ 			if (MoreTrophiesNeeded(aChallengeMode) > 0)
+ 			{
+ 				std::string aLabel;
+-				if (aDef.mChallengeMode == IZombotany::kMode || ZombotanySurvival::IsMode(aDef.mChallengeMode) || ZombotanyVasebreaker::IsMode(aDef.mChallengeMode))
++				if (aDef.mChallengeMode == ZomBotanyBeghouled::kMode || aDef.mChallengeMode == IZombotany::kMode || ZombotanySurvival::IsMode(aDef.mChallengeMode) || ZombotanyVasebreaker::IsMode(aDef.mChallengeMode))
+ 				{
+ 					aLabel = "Complete Zombotany first.";
+ 				}
+diff --git a/src/Lawn/Widget/ChallengeScreen.h b/src/Lawn/Widget/ChallengeScreen.h
+index 661cbb6..1b737e4 100644
+--- a/src/Lawn/Widget/ChallengeScreen.h
++++ b/src/Lawn/Widget/ChallengeScreen.h
+@@ -58,6 +58,7 @@ public:
+ 	std::unique_ptr<Sexy::MemoryImage>                             mZombotanySurvivalImage;
+ 	std::unique_ptr<Sexy::MemoryImage>                             mZombotanyVasebreakerImage;
+ 	std::unique_ptr<Sexy::MemoryImage> mIZombotanyImage;
++	std::unique_ptr<Sexy::MemoryImage> mZomBotanyBeghouledImage;
+ 	ChallengePage               mPageIndex;
+ 	bool                        mCheatEnableChallenges;
+ 	UnlockingState              mUnlockState;
+@@ -80,6 +81,7 @@ public:
+ 	Sexy::Image*                GetZombotanySurvivalImage();
+ 	Sexy::Image*                GetZombotanyVasebreakerImage();
+ 	Sexy::Image* GetIZombotanyImage();
++	Sexy::Image* GetZomBotanyBeghouledImage();
+ 	void                        DrawButton(Graphics* g, int theChallengeIndex);
+ 	void                        Draw(Graphics* g) override;
+ 	void                        Update() override;
+diff --git a/src/Lawn/Widget/ContinueDialog.cpp b/src/Lawn/Widget/ContinueDialog.cpp
+index 1ef5ade..ba64cdb 100644
+--- a/src/Lawn/Widget/ContinueDialog.cpp
++++ b/src/Lawn/Widget/ContinueDialog.cpp
+@@ -19,6 +19,7 @@
+  * along with PvZ-Portable. If not, see <https://www.gnu.org/licenses/>.
+  */
+ 
++#include "../System/ZomBotanyBeghouled.h"
+ #include "../Board.h"
+ #include "../Zombie.h"
+ #include "GameButton.h"
+@@ -218,7 +219,7 @@ void ContinueDialog::ButtonDepress(int theId)
+ 		else
+ 		{
+ 			mApp->KillBoard();
+-			mApp->ShowChallengeScreen(ChallengePage::CHALLENGE_PAGE_CHALLENGE);
++			mApp->ShowChallengeScreen(mApp->mGameMode == ZomBotanyBeghouled::kMode ? CHALLENGE_PAGE_ZOMBOTANY : CHALLENGE_PAGE_CHALLENGE);
+ 		}
+ 	}
+ }
+diff --git a/src/LawnApp.cpp b/src/LawnApp.cpp
+index 59cf7ec..3ffb74c 100644
+--- a/src/LawnApp.cpp
++++ b/src/LawnApp.cpp
+@@ -19,6 +19,7 @@
+  * along with PvZ-Portable. If not, see <https://www.gnu.org/licenses/>.
+  */
+ 
++#include "Lawn/System/ZomBotanyBeghouled.h"
+ #include <time.h>
+ #include <cstdarg>
+ #include <cstdio>
+@@ -1473,6 +1474,17 @@ void LawnApp::HandleCmdLineParam(std::string_view theParamName, std::string_view
+ 
+ bool LawnApp::UpdatePlayerProfileForFinishingLevel()
+ {
++    if (mGameMode == ZomBotanyBeghouled::kMode)
++    {
++        if (mBoard && mBoard->mChallenge->mChallengeScore == ZomBotanyBeghouled::kGoal &&
++            mBoard->HasLevelAwardDropped())
++        {
++            auto& record = mPlayerInfo->mChallengeRecords[GetCurrentChallengeIndex()];
++            if (record < UINT32_MAX) ++record;
++            WriteCurrentUserConfig();
++        }
++        return false;
++    }
+     if (mGameMode == IZombotany::kMode)
+     {
+         if (mBoard && mBoard->mChallenge && mBoard->mChallenge->mChallengeState == IZombotany::kFinished &&
+@@ -1620,7 +1632,7 @@ void LawnApp::CheckForGameEnd()
+         ShowChallengeScreen(ChallengePage::CHALLENGE_PAGE_ZOMBOTANY);
+         return;
+     }
+-    if (mGameMode == IZombotany::kMode || ZombotanyVasebreaker::IsMode(mGameMode) || Zombotany3::IsMode(mGameMode) || Zombotany45::IsMode(mGameMode))
++    if (mGameMode == ZomBotanyBeghouled::kMode || mGameMode == IZombotany::kMode || ZombotanyVasebreaker::IsMode(mGameMode) || Zombotany3::IsMode(mGameMode) || Zombotany45::IsMode(mGameMode))
+     {
+         KillBoard();
+         ShowChallengeScreen(ChallengePage::CHALLENGE_PAGE_ZOMBOTANY);
+@@ -2461,7 +2473,7 @@ bool LawnApp::IsContinuousChallenge()
+ 		IsArtChallenge() ||
+ 		IsSlotMachineLevel() ||
+ 		IsFinalBossLevel() ||
+-		mGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED ||
++		ZomBotanyBeghouled::IsSwap(mGameMode) ||
+ 		mGameMode == GameMode::GAMEMODE_UPSELL ||
+ 		mGameMode == GameMode::GAMEMODE_INTRO ||
+ 		mGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED_TWIST;

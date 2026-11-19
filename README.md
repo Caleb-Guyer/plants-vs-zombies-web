@@ -1,6 +1,14 @@
 # Plants vs. Zombies — browser playtest
 
-## I, ZomBotany
+## ZomBotany Beghouled
+
+Beat the original ZomBotany to unlock the ninth card. Swap adjacent plants on the Beghouled night lawn and make 50 matches before the zombies reach the house. Matched shooters get one last shot. Line up Peashooters across a row to concentrate fire, or stack them in a column to fire down several lanes. Later waves send a Wall-nut-head ahead of a Gatling-head in the same lane.
+
+Collect sun for the original upgrades, shuffle and crater repair. The Minigames tab still has classic Beghouled with its 75-match goal.
+
+[Play on GitHub Pages](https://caleb-guyer.github.io/plants-vs-zombies-web/).
+
+## I, ZomBotany (previous release)
 
 Beat the original ZomBotany, then open the eighth card on the Zombotany tab. You play as the zombies. Eat five brains on each of three night lawns to earn the trophy. The first board gives you just 50 sun and an exposed Sunflower. The second has a firing line that rewards sending an armored zombie ahead of a shooter. The last gives you one Jalapeño-head and a choice of which lane to burn.
 
