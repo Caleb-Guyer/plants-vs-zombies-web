@@ -1,28 +1,28 @@
 {
   "schema_version": 1,
-  "current_engine": "0.2.6-web-zbeghouled.1",
+  "current_engine": "0.2.6-web-zsnight.1",
   "upstream_tag": "0.2.6",
-  "layout": "Site source includes the upstream baseline, the I, ZomBotany patch and its successor ZomBotany Beghouled patch. The current complete native source ZIP is restored offline from the lossless XZ transport. Its I, ZomBotany and Vasebreaker prefixes and shared Endless.2 byte ranges reconstruct the exact historical test inputs. The archive list links the current and upstream sources on Pages and historical releases at immutable GitHub revisions.",
+  "layout": "Site source includes the upstream baseline and the three native Zombotany extension patches. The current complete native source ZIP is restored offline from the lossless XZ transport. The shared I, ZomBotany prefix and Beghouled suffix restore the previous release. Shared byte ranges restore the earlier regression inputs. The archive list links the current and upstream sources on Pages and historical releases at immutable GitHub revisions.",
   "nested_sources": [
     "pvz-portable-0.2.6-source.zip"
   ],
   "restored_sources": [
     {
-      "name": "pvz-portable-0.2.6-web-zbeghouled.1-source.zip",
-      "path": "dist/source/pvz-portable-0.2.6-web-zbeghouled.1-source.zip",
-      "bytes": 103906885,
-      "sha256": "47021a0d7c60380102b6fb18b4d12e44ceb1d612b4ea5d06d537a3bcc96f29a2",
+      "name": "pvz-portable-0.2.6-web-zsnight.1-source.zip",
+      "path": "dist/source/pvz-portable-0.2.6-web-zsnight.1-source.zip",
+      "bytes": 103925423,
+      "sha256": "cac01b72b470a6b9aa167ed1eed93bb4e78235d496418d1cda118e33656cb1e1",
       "automatic_before_checks": true,
       "encoding": "xz",
       "manifest": {
         "path": "source-transports/current.json",
-        "bytes": 349,
-        "sha256": "10e98cb2fb37385ef8d5becdc20eb21b36bf001c079065d3e2994bb82fd597c1"
+        "bytes": 346,
+        "sha256": "045a25177de627af0026ea6e1c45b4141ca5a2d1ccd97adf30934baf76acc4ec"
       },
       "compressed_payload": {
         "path": "source-transports/current.xz",
-        "bytes": 34037404,
-        "sha256": "0923172d60e24edb90ba3967b3dc3334cc23f93de1cab3016c520d6a0c2d547d"
+        "bytes": 34120048,
+        "sha256": "5cc3012a23a930277d2dc1fc515c7848c85a173fcc992a08b5af676c0fbdda8f"
       }
     },
     {
@@ -33,18 +33,21 @@
       "automatic_before_checks": true,
       "manifest": {
         "path": "source-transports/endless2.json",
-        "bytes": 93666,
-        "sha256": "bf269a7ca7b95381eb50100c43798ea9f0291a9a2265c588fd9a685d9ac6111d"
+        "bytes": 93663,
+        "sha256": "0b15aef21356e929ce1efdee6365aad8858197df6bc5fbdd4f03b919ce54836d"
       },
       "literal_payload": {
-        "path": "source-transports/endless2.literals",
-        "bytes": 29086342,
-        "sha256": "fcebf9b8e6ba2ef1b8e4e51f956c7fcb3fdba9686bee6e2a13c56bae80e55a82"
+        "path": "source-transports/endless2.literals.xz",
+        "bytes": 26541220,
+        "encoding": "xz",
+        "sha256": "2eb69a9475d44f9f41d76371e0383276ad7088fb53ce748588f24dd657197b95"
       }
     }
   ],
   "nested_patches": [
-    "izombotany1-to-zbeghouled1.patch"
+    "izombotany1-to-zbeghouled1.patch",
+    "zbeghouled1-to-zsnight1.patch",
+    "zvase1-to-izombotany1.patch"
   ],
   "archives": [
     {
@@ -515,9 +518,9 @@
       "name": "pvz-portable-0.2.6-web-zbeghouled.1-source.zip",
       "bytes": 103906885,
       "sha256": "47021a0d7c60380102b6fb18b4d12e44ceb1d612b4ea5d06d537a3bcc96f29a2",
-      "current": true,
+      "current": false,
       "upstream": false,
-      "url": "./pvz-portable-0.2.6-web-zbeghouled.1-source.zip"
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/996f999ee3e73af601446f5da7acfb78a9ed1dcc/dist/source/pvz-portable-0.2.6-web-zbeghouled.1-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-zombatar-source.zip",
@@ -558,6 +561,14 @@
       "current": false,
       "upstream": false,
       "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/fa37aee4a3b6793903cb5e1b4c592e565439560c/dist/source/pvz-portable-0.2.6-web-zombotany45.2-source.zip"
+    },
+    {
+      "name": "pvz-portable-0.2.6-web-zsnight.1-source.zip",
+      "bytes": 103925423,
+      "sha256": "cac01b72b470a6b9aa167ed1eed93bb4e78235d496418d1cda118e33656cb1e1",
+      "current": true,
+      "upstream": false,
+      "url": "./pvz-portable-0.2.6-web-zsnight.1-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-zsurvival.1-source.zip",

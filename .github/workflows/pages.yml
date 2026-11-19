@@ -30,7 +30,9 @@ jobs:
         run: python bundle-game-assets.py --verify-only
       - name: Verify browser shell and corresponding source
         run: npm run check
-      - name: Play ZomBotany Beghouled and classic Beghouled with sound off
+      - name: Play ZomBotany Survival Night and its neighboring modes with sound off
+        run: python tests/zsnight.py --play
+      - name: Replay ZomBotany Beghouled and classic Beghouled with sound off
         run: python tests/zbeghouled.py --play
       - name: Replay the I, ZomBotany baseline with sound off
         run: python tests/izombotany.py --play

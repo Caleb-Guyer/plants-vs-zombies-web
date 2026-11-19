@@ -400,8 +400,10 @@ class SourceBundle(unittest.TestCase):
             combined = codec.make_bundle_transports(ROOT)
         historical.assert_called_once_with(ROOT)
         current.assert_called_once_with(ROOT)
-        self.assertEqual(set(combined), {INDEX, LITERALS, CURRENT_INDEX, CURRENT_PAYLOAD})
-        self.assertEqual({name: combined[name] for name in (INDEX, LITERALS)}, self.transport)
+        self.assertEqual(set(combined), {INDEX, LITERALS + '.xz', CURRENT_INDEX, CURRENT_PAYLOAD})
+        self.assertEqual(self.transport, {INDEX: self.manifest_bytes, LITERALS: self.literals})
+        self.assertEqual(combined[INDEX], self.manifest_bytes)
+        self.assertEqual(lzma.decompress(combined[LITERALS + '.xz']), self.literals)
         self.assertEqual({name: combined[name] for name in (CURRENT_INDEX, CURRENT_PAYLOAD)}, self.current_transport)
 
     def test_current_manifest_paths_sizes_types_and_hashes_rejected(self):
@@ -610,6 +612,21 @@ class SourceBundle(unittest.TestCase):
                     codec.ensure_source_archive(root)
                 self.assertFalse((root / BASE).exists())
                 self.assertFalse((root / OLD).exists())
+
+    def test_compressed_historical_literals_restore_only_after_integrity_checks(self):
+        root = self.temporary()
+        self.stage(root)
+        (root / LITERALS).unlink()
+        transport = root / (LITERALS + ".xz")
+        packed = lzma.compress(self.literals, format=lzma.FORMAT_XZ, check=lzma.CHECK_CRC64, preset=1)
+        for damaged in (packed[:-1], packed + b"extra"):
+            transport.write_bytes(damaged)
+            with self.assertRaises(ValueError):
+                codec.ensure_source_archive(root)
+            self.assertFalse((root / OLD).exists())
+        transport.write_bytes(packed)
+        self.assertTrue(codec.ensure_source_archive(root)["restored"])
+        self.assertEqual((root / OLD).read_bytes(), self.original)
 
     def test_current_full_repository_archive_is_not_rewritten(self):
         target = ROOT / BASE

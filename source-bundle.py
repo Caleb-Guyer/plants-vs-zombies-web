@@ -195,15 +195,20 @@ def decode_current_transport(manifest_bytes, payload_bytes, *, expected_target_p
     encoded = _record(manifest["payload"], MAX_DONOR_BYTES, path=CURRENT_PAYLOAD_REL)
     _require(len(payload) == encoded["bytes"] and _sha(payload) == encoded["sha256"],
              "Current XZ payload bytes differ")
+    output = _decode_xz(payload, target["bytes"], decoder_memory_limit)
+    _require(_sha(output) == expected_target_sha256, "Restored current ZIP digest differs")
+    return output
+
+
+def _decode_xz(payload, size, decoder_memory_limit=MAX_CURRENT_MEMORY_BYTES):
     try:
         decoder = lzma.LZMADecompressor(format=lzma.FORMAT_XZ, memlimit=decoder_memory_limit)
-        output = decoder.decompress(payload, max_length=target["bytes"] + 1)
+        output = decoder.decompress(payload, max_length=size + 1)
     except (lzma.LZMAError, MemoryError) as exc:
         raise SourceBundleError("Invalid current XZ stream or decoder memory bound exceeded") from exc
-    _require(len(output) == target["bytes"] and decoder.eof and not decoder.unused_data,
-             "Current XZ stream must contain exactly the bounded original ZIP")
-    _require(decoder.check == lzma.CHECK_CRC64, "Current XZ transport requires CRC64")
-    _require(_sha(output) == expected_target_sha256, "Restored current ZIP digest differs")
+    _require(len(output) == size and decoder.eof and not decoder.unused_data,
+             "XZ stream must contain exactly its declared bytes")
+    _require(decoder.check == lzma.CHECK_CRC64, "XZ transport requires CRC64")
     return output
 
 
@@ -308,7 +313,13 @@ def ensure_source_archive(root):
     donor_record, donor = _donor(root)
     _require(manifest.get("donor") == donor_record,
              "Transport donor differs from the actual current engine source")
-    literals = _read(root, LITERALS_REL, TARGET_BYTES)
+    if _path(root, LITERALS_REL, required=False).exists():
+        literals = _read(root, LITERALS_REL, TARGET_BYTES)
+    else:
+        expected = _record(manifest["literals"], TARGET_BYTES, path=LITERALS_REL)
+        payload = _read(root, LITERALS_REL + ".xz", TARGET_BYTES)
+        literals = _decode_xz(payload, expected["bytes"])
+
     output = decode_source_transport(manifest_bytes, literals, donor)
     return _report(_publish_archive(root, TARGET_REL, output,
         {"bytes": TARGET_BYTES, "sha256": TARGET_SHA256}, lambda: _target(root), ".endless2-restore-"))
@@ -372,6 +383,15 @@ def ensure_vasebreaker_baseline(root):
     reference = {"path": "dist/source/pvz-portable-0.2.6-web-zvase.1-source.zip",
                  "sha256": "d9d4351181e09f1b0eceacc8203bf4d0bcf46910b7e27027c762b521d8805f2b"}
     size = 94_720_307
+    if engine.get("id") == "0.2.6-web-zsnight.1":
+        base = engine.get("sourceArchiveBase", {})
+        previous = engine.get("parent", {})
+        _require(previous.get("id") == "0.2.6-web-zbeghouled.1" and
+                 base.get("id") == previous.get("parent", {}).get("id") and
+                 base.get("bytes") == previous.get("parentArchivePrefixBytes") and
+                 base.get("sha256") == previous.get("parent", {}).get("artifacts", {}).get("sourceSha256"),
+                 "Unexpected shared source ancestry")
+        engine = previous
     if engine.get("id") == "0.2.6-web-zbeghouled.1":
         _require(engine.get("parentArchivePrefixBytes") == 100_558_183 and
                  engine.get("parent", {}).get("artifacts", {}).get("sourceSha256") ==
@@ -476,7 +496,11 @@ def make_current_transport(root):
 
 def make_bundle_transports(root):
     """Combine four virtual files while retaining the original two-file API."""
-    return {**make_source_transport(root), **make_current_transport(root)}
+    historical = make_source_transport(root)
+    packed_literals = lzma.compress(historical[LITERALS_REL], format=lzma.FORMAT_XZ,
+                                    check=lzma.CHECK_CRC64, preset=8)
+    return {MANIFEST_REL: historical[MANIFEST_REL], LITERALS_REL + ".xz": packed_literals,
+            **make_current_transport(root)}
 
 
 def main():

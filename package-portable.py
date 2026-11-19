@@ -116,7 +116,7 @@ def parent_source_input(engine):
             or any(character not in "0123456789abcdef" for character in expected)):
         raise ValueError("Invalid immediate-parent source SHA-256")
     path = DIST / "game" / reference
-    if engine.get("id") in {"0.2.6-web-izombotany.1", "0.2.6-web-zbeghouled.1"}:
+    if engine.get("id") in {"0.2.6-web-izombotany.1", "0.2.6-web-zbeghouled.1", "0.2.6-web-zsnight.1"}:
         source_bundle_helpers().ensure_vasebreaker_baseline(ROOT)
         return None
     if engine.get("id") == "0.2.6-web-zvase.1":
@@ -591,7 +591,7 @@ def nested_source_inputs(engine, paths, baseline):
             or hashlib.sha256(native_ui.read_bytes()).hexdigest()
             != "d9861034849eca9d637197aa78a1bae4c90b5656db91ca102d8c903100031edd"):
         raise ValueError("Authenticated native I, Zombie UI fixture is missing or changed")
-    if engine.get("id") in {"0.2.6-web-izombotany.1", "0.2.6-web-zbeghouled.1"}:
+    if engine.get("id") in {"0.2.6-web-izombotany.1", "0.2.6-web-zbeghouled.1", "0.2.6-web-zsnight.1"}:
         # The full, exact parent archive is already present in the current ZIP.
         return [baseline]
     if engine.get("id") in {"0.2.6-web-scrap.1", "0.2.6-web-ambush.1", "0.2.6-web-torch.1", "0.2.6-web-double.1", "0.2.6-web-gust.1", "0.2.6-web-zombotany45.2", "0.2.6-web-zsurvival.1", "0.2.6-web-zvase.1"}:
@@ -674,7 +674,8 @@ def regenerate_source_downloads(transport_entries=None):
     engine, paths, baseline = engine_inputs()
     nested = nested_source_inputs(engine, paths, baseline)
     transport_entries = transport_entries if transport_entries is not None else source_bundle_helpers().make_bundle_transports(ROOT)
-    if set(transport_entries) != {TRANSPORT_MANIFEST, TRANSPORT_LITERALS,
+    literal_path = TRANSPORT_LITERALS + ".xz" if TRANSPORT_LITERALS + ".xz" in transport_entries else TRANSPORT_LITERALS
+    if set(transport_entries) != {TRANSPORT_MANIFEST, literal_path,
                                  CURRENT_TRANSPORT_MANIFEST, CURRENT_TRANSPORT_PAYLOAD}:
         raise ValueError("Unexpected source-archive transport entries")
     current_zip = source_bundle_helpers().decode_current_transport(
@@ -728,9 +729,9 @@ def regenerate_source_downloads(transport_entries=None):
         "schema_version": 1,
         "current_engine": engine["id"],
         "upstream_tag": engine["upstream"]["tag"],
-        "layout": ("Site source includes the upstream baseline, the I, ZomBotany patch and its successor ZomBotany Beghouled patch. "
+        "layout": ("Site source includes the upstream baseline and the three native Zombotany extension patches. "
                    "The current complete native source ZIP is restored offline from the lossless XZ transport. "
-                   "Its I, ZomBotany and Vasebreaker prefixes and shared Endless.2 byte ranges reconstruct the exact historical test inputs. "
+                   "The shared I, ZomBotany prefix and Beghouled suffix restore the previous release. Shared byte ranges restore the earlier regression inputs. "
                    "The archive list links the current and upstream sources on Pages and historical releases at immutable GitHub revisions."),
         "nested_sources": [path.name for path in nested],
         "restored_sources": [{
@@ -754,10 +755,11 @@ def regenerate_source_downloads(transport_entries=None):
             "automatic_before_checks": True,
             "manifest": {"path": TRANSPORT_MANIFEST, "bytes": len(transport_entries[TRANSPORT_MANIFEST]),
                          "sha256": hashlib.sha256(transport_entries[TRANSPORT_MANIFEST]).hexdigest()},
-            "literal_payload": {"path": TRANSPORT_LITERALS, "bytes": len(transport_entries[TRANSPORT_LITERALS]),
-                                "sha256": hashlib.sha256(transport_entries[TRANSPORT_LITERALS]).hexdigest()},
+            "literal_payload": {"path": literal_path, "bytes": len(transport_entries[literal_path]),
+                                "encoding": "xz" if literal_path.endswith(".xz") else "raw",
+                                "sha256": hashlib.sha256(transport_entries[literal_path]).hexdigest()},
         }],
-        "nested_patches": [paths["patch"].name],
+        "nested_patches": sorted(nested_patches(engine)),
         "archives": archives,
     }
     SOURCE_DOWNLOADS.write_text(json.dumps(index, indent=2, ensure_ascii=True) + "\n", encoding="utf-8", newline="\n")
@@ -785,9 +787,19 @@ def inspect_zip(data, label, depth=0):
             raise ValueError(f"Archive CRC failure in {label}: {bad}")
 
 
+def nested_patches(engine):
+    names = {PurePosixPath(engine["artifacts"]["patch"]).name}
+    if engine["id"] in ("0.2.6-web-zbeghouled.1", "0.2.6-web-zsnight.1"):
+        names.add("zvase1-to-izombotany1.patch")
+    if engine["id"] == "0.2.6-web-zsnight.1":
+        names.add("izombotany1-to-zbeghouled1.patch")
+    return names
+
+
 def collect_dist(include_site_source=False, source_bundle=False):
     engine, paths, baseline = engine_inputs()
     nested_source_names = {path.name for path in nested_source_inputs(engine, paths, baseline)}
+    patch_names = nested_patches(engine)
     files = []
     for path in sorted(DIST.rglob("*")):
         if not path.is_file():
@@ -808,9 +820,7 @@ def collect_dist(include_site_source=False, source_bundle=False):
                 and path.name not in nested_source_names):
             continue  # Exact historical source downloads remain standalone in dist/source.
         if (source_bundle and path.parent == DIST / "source"
-                and path.suffix.lower() == ".patch" and path.resolve() != paths["patch"]
-                and not (engine["id"] == "0.2.6-web-zbeghouled.1"
-                         and path.name == "zvase1-to-izombotany1.patch")):
+                and path.suffix.lower() == ".patch" and path.name not in patch_names):
             continue  # Complete source/current full patch suffice for checks and rebuilding.
         if forbidden(path.name):
             raise ValueError(f"Remove prohibited resource/private file from dist: {path}")
@@ -833,6 +843,13 @@ def root_sources():
     for path in (ROOT / "tests").rglob("*"):
         if path.is_file() and not any(part in {".git", "node_modules", "__pycache__"} for part in path.relative_to(ROOT).parts):
             files.add(path)
+    # The new source download carries both previous browser builds together.
+    # Their separately pinned bytes are verified by the two native extension suites.
+    if engine_inputs()[0]["id"] == "0.2.6-web-zsnight.1":
+        if not (ROOT / "tests/fixtures/historical/extension-browsers.tar.xz").is_file():
+            raise ValueError("Missing historical browser executables")
+        for ext in ("js", "wasm"):
+            files.discard(ROOT / f"tests/fixtures/historical/izombotany1-published/pvz-portable.{ext}")
     manifest = ROOT / ".openai" / "hosting.json"
     if manifest.is_file():
         files.add(manifest)

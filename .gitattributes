@@ -4,6 +4,7 @@ dist/game/pvz-portable.js -text
 dist/source/*.patch -text -whitespace
 *.wasm binary
 *.zip binary
+tests/fixtures/historical/extension-browsers.tar.xz binary
 
 # Preserve checksum-pinned game data, including original XML line endings.
 dist/game-assets/** -text
@@ -66,6 +67,8 @@ tests/fixtures/zsurvival1-linux-ci.* -text whitespace=cr-at-eol
 # Preserve the exact Vasebreaker provenance and historical Survival evidence.
 tests/fixtures/zvase1-*.json -text
 tests/fixtures/zbeghouled1-release.json -text
+tests/fixtures/zsnight1-release.json -text
+tests/fixtures/historical/zbeghouled1-published/** -text
 tests/fixtures/historical/izombotany1-published/** -text
 tests/fixtures/performance/zvase1-*.json -text
 tests/fixtures/historical/zsurvival1-published/** -text whitespace=cr-at-eol

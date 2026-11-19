@@ -1,0 +1,58 @@
+{
+  "id": "0.2.6-web-zbeghouled.1",
+  "parentId": "0.2.6-web-izombotany.1",
+  "sourceArchive": {
+    "path": "pvz-portable-0.2.6-web-zbeghouled.1-source.zip",
+    "sha256": "47021a0d7c60380102b6fb18b4d12e44ceb1d612b4ea5d06d537a3bcc96f29a2",
+    "bytes": 103906885,
+    "entries": 3711
+  },
+  "incrementalPatch": {
+    "path": "izombotany1-to-zbeghouled1.patch",
+    "sha256": "95c865b41271edf3fade5513e81edbfcb126ae535347497e9bb0d92ace49f835",
+    "baseSourceSha256": "ab56f8150ddaf8d8985de74afeea2b51c7c09ef800d0f4ba58cd3a270393152c"
+  },
+  "sourceFiles": 895,
+  "productionObjects": 155,
+  "normalBuild": {
+    "status": "PASS",
+    "exitCode": 0,
+    "elapsedSeconds": 146.154,
+    "sourceUnchangedDuringBuild": true,
+    "sourceFiles": 895,
+    "outputs": {
+      "build/pvz-portable.js": {
+        "bytes": 210891,
+        "sha256": "86989133b033eabc4a4c35e01b7322681bae37f82ce6bc22eb95c1094e69cdd7"
+      },
+      "build/pvz-portable.wasm": {
+        "bytes": 7974693,
+        "sha256": "bd9e7b3f4f5ffa5af6f7e04bad4c1201c3b5773756d61e48bfa6fec57a9f1dbf"
+      },
+      "build/ProjectVersion.h": {
+        "bytes": 196,
+        "sha256": "4e3cb218a67a757b468d57d4d62c07c9b8393be7d61c2b9a77757a9b9942d853"
+      }
+    }
+  },
+  "changedSources": [
+    "CMake/ProjectVersion.cmake",
+    "src/ConstEnums.h",
+    "src/Lawn/Board.cpp",
+    "src/Lawn/Challenge.cpp",
+    "src/Lawn/CutScene.cpp",
+    "src/Lawn/Plant.cpp",
+    "src/Lawn/SeedPacket.cpp",
+    "src/Lawn/System/ZomBotanyBeghouled.cpp",
+    "src/Lawn/System/ZomBotanyBeghouled.h",
+    "src/Lawn/Widget/ChallengeScreen.cpp",
+    "src/Lawn/Widget/ChallengeScreen.h",
+    "src/Lawn/Widget/ContinueDialog.cpp",
+    "src/LawnApp.cpp"
+  ],
+  "silentGameplayDriver": {
+    "zbeghouled-engine.js": "340998931b81a553fc0c2b14539c44e88a4d9f743dd9353c376ba8fb21d5788b",
+    "zbeghouled-engine.wasm": "dc3727cb37dc1e11e0ce894f07164b1ec55b14fc1078cbfa0b4db3f887a6ec28"
+  },
+  "gameplayScenarios": 16
+}

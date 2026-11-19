@@ -162,7 +162,7 @@ console.log(`PASS ${current ? 'current' : 'historical '+engine.id} recorded brow
 assert.equal(sha(read('tests/fixtures/performance/baseline.json')),'43312dcdce1130b7ea1cb0d0cb1e11c19ad5ef6a7e4d22724257d959ca64770f','Published Torch baseline remains immutable');
 await verifyRecordedBaseline('tests/fixtures/performance/baseline.json', false);
 const shippedEngine=json(read('dist/game/engine-provenance.json'));
-assert.equal(shippedEngine.id,'0.2.6-web-zbeghouled.1');
+assert.equal(shippedEngine.id,'0.2.6-web-zsnight.1');
 ensureVasebreakerBaseline();
 const currentEngine=historicalEngine(shippedEngine,'0.2.6-web-zvase.1');
 const require=createRequire(import.meta.url),vendor={exports:{}};
@@ -234,7 +234,7 @@ if(currentEngine.id==='0.2.6-web-gust.1'){
      const currentBrowser=await verifyZVase1BrowserAvailability({availability:json(read('tests/fixtures/performance/zvase1-browser-validation.json')),
       currentEngine,read:readParent,sha,Zip:vendor.exports});
      assert.equal(currentBrowser.verdict,'NOT RUN');
-     console.log('Historical Vasebreaker browser availability verified. Current ZomBotany Beghouled coverage is reported by its own gameplay tests.');
+     console.log('Historical Vasebreaker browser availability verified. Current ZomBotany Survival Night coverage is reported by its own gameplay tests.');
     }else{
     const currentBrowser=await verifyZsurvival1BrowserAvailability({availability:json(read('tests/fixtures/performance/zsurvival1-browser-validation.json')),
      currentEngine,read,sha,Zip:vendor.exports});

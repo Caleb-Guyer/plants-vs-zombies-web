@@ -1,6 +1,10 @@
 # Browser parity and QA record
 
-## ZomBotany Beghouled
+## ZomBotany Survival: Night
+
+The automated suite plays the new survival course at 1× and 2× across two seeds with sound output disabled. It checks all five flags, the four seed selections between them, the card unlock, grave growth and clearing, and plant-headed attackers rising from real graves. The Continue scenario restores a battle from its native save. The retry scenario lets an undefended lawn fall before playing again. Separate controls start standard Survival: Night and ZomBotany Survival: Day using their own original rosters. Replay with `python tests/zsnight.py --play`.
+
+## ZomBotany Beghouled (previous release)
 
 Run `python tests/zbeghouled.py --play` to run 16 muted native-engine playthroughs covering two seeds and both game speeds. Each run uses a disposable profile and plays through to a trophy. The suite exercises legal and rejected swaps, sun collection, the paid shuffle, Continue during an active swap, and a natural loss followed by retry. At normal speed the driver compares freshly created projectiles with the matched tiles on every observed scoring tick, including cascades. Classic Beghouled reaches 75 matches and the ninth card reaches 50. The card and lawn captures use the game's own renderer.
 

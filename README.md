@@ -1,6 +1,14 @@
 # Plants vs. Zombies — browser playtest
 
-## ZomBotany Beghouled
+## ZomBotany Survival: Night
+
+Beat the original ZomBotany, then open **Survival: Night**, the tenth card on the Zombotany tab. Defend the same night lawn for five flags. At each break you can change seeds and keep the garden you have grown.
+
+Watch the graves when a flag arrives. A Puff-head or Fume-head can climb out behind your front line. Clearing a grave removes that way in. Later waves pair Wall-nut-heads with Fume-heads in the same lane, and Ice-heads can briefly freeze the garden.
+
+[Play on GitHub Pages](https://caleb-guyer.github.io/plants-vs-zombies-web/).
+
+## ZomBotany Beghouled (previous release)
 
 Beat the original ZomBotany to unlock the ninth card. Swap adjacent plants on the Beghouled night lawn and make 50 matches before the zombies reach the house. Matched shooters get one last shot. Line up Peashooters across a row to concentrate fire, or stack them in a column to fire down several lanes. Later waves send a Wall-nut-head ahead of a Gatling-head in the same lane.
 

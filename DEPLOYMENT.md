@@ -1,6 +1,12 @@
 # GitHub Pages release: Caleb-Guyer/plants-vs-zombies-web
 
-## ZomBotany Beghouled
+## ZomBotany Survival: Night
+
+The Pages workflow runs `python tests/zsnight.py --play` against the hosted asset bundle. It also replays Beghouled, I, ZomBotany and the older native suites before publishing. The gameplay driver shares the normal build’s 155 production objects. The downloadable native source includes the driver and its build receipt.
+
+The site source download stores the historical Endless.2 data in `source-transports/endless2.literals.xz`. The offline verifier decompresses it and checks the restored archive against its original SHA-256. The Beghouled and Survival Night archives share the published I, ZomBotany prefix.
+
+## ZomBotany Beghouled (previous release)
 
 Build the normal web engine and the muted replay executable from the same source tree. The native source download includes the test driver and its build receipt. `python tests/zbeghouled.py --play` replays all 16 scenarios against the published assets. The GitHub Pages workflow also checks the prior I, ZomBotany puzzles and the older regression suites before deploying.
 

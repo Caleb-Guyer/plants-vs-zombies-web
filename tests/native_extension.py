@@ -10,11 +10,15 @@ import tempfile
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+import native_release_chain as chain
+
 GAME = ROOT / "dist/game"
 PREFIX = "zombotany3-candidate/"
 RELEASES = {
     "izombotany": (893, 154, "IZombotany.cpp.o", "i-zombotany"),
     "zbeghouled": (895, 155, "ZomBotanyBeghouled.cpp.o", "zbeghouled"),
+    "zsnight": (895, 155, "ZombotanySurvival.cpp.o", "zsnight"),
 }
 CASES = {(name, speed, seed) for name in ("solution", "resume", "retry", "classic")
          for speed in (1, 2) for seed in (1729, 7331)}
@@ -35,7 +39,7 @@ def check(condition, message):
         raise ValueError(message)
 
 
-def verify_archive(archive, engine, receipt, pins, key, binaries, verify_results):
+def verify_archive(archive, engine, receipt, pins, key, read_binary, verify_results):
     count, objects_count, object_name, _ = RELEASES[key]
     def read(name):
         return archive.read(PREFIX + name)
@@ -71,7 +75,7 @@ def verify_archive(archive, engine, receipt, pins, key, binaries, verify_results
     for ext in ("js", "wasm"):
         filename = "pvz-portable." + ext
         expected = engine["artifacts"][ext + "Sha256"]
-        check(digest((binaries / filename).read_bytes()) == expected ==
+        check(digest(read_binary(filename, expected)) == expected ==
               normal["outputs"]["build/" + filename]["sha256"] == pins[ext + "Sha256"], filename)
     for name, expected in (linked["driverSources"] | linked["artifacts"]).items():
         check(digest(read("tests/" + name)) == expected, name)
@@ -86,16 +90,22 @@ def run(key, verify_results, fields):
     pins = json.loads((ROOT / f"tests/fixtures/{key}1-release.json").read_bytes())
     engine = json.loads((GAME / "engine-provenance.json").read_bytes())
     source = (GAME / engine["artifacts"]["source"]).read_bytes()
-    binaries = GAME
-    if engine["id"] != engine_id:
-        check(key == "izombotany" and engine["id"] == "0.2.6-web-zbeghouled.1"
-              and engine["parent"]["id"] == engine_id, "Unexpected baseline")
-        source = source[:engine["parentArchivePrefixBytes"]]
+    active_id = engine["id"]
+    historical = active_id != engine_id
+    while engine["id"] != engine_id:
+        check(engine["id"] in (chain.NIGHT, chain.BEGHOUL), "Unexpected extension ancestry")
+        source = chain.parent_source(ROOT, engine, source)
         engine = engine["parent"]
-        binaries = ROOT / f"tests/fixtures/historical/{key}1-published"
-        receipt_path = binaries / "build-provenance.json"
-    else:
-        receipt_path = GAME / engine["buildRecord"]
+    binaries = ROOT / f"tests/fixtures/historical/{key}1-published" if historical else GAME
+    receipt_path = binaries / "build-provenance.json" if historical else GAME / engine["buildRecord"]
+    def read_binary(name, expected):
+        if historical and active_id == chain.NIGHT:
+            active_pins = json.loads((ROOT / "tests/fixtures/zsnight1-release.json").read_bytes())
+            data = chain.read_browser(ROOT, key, name, expected, active_pins["historicalBrowserSha256"])
+            if (binaries / name).is_file():
+                check((binaries / name).read_bytes() == data, "Historical checkout executable differs")
+            return data
+        return (binaries / name).read_bytes()
     receipt = json.loads(receipt_path.read_bytes())
     check(receipt["id"] == engine["id"] == pins["id"] == engine_id, "Wrong release")
     artifacts = engine["artifacts"]
@@ -103,11 +113,11 @@ def run(key, verify_results, fields):
     check(digest(source) == pins["sourceSha256"] == artifacts["sourceSha256"], "Source ZIP changed")
     check(digest(patch) == pins["patchSha256"] == artifacts["patchSha256"], "Native patch changed")
     parent = engine["parent"]
-    prefix = source[:engine["parentArchivePrefixBytes"]]
+    prefix = chain.parent_source(ROOT, engine, source)
     check(digest(prefix) == parent["artifacts"]["sourceSha256"] ==
           receipt["incrementalPatch"]["baseSourceSha256"], "Parent source prefix changed")
     with zipfile.ZipFile(io.BytesIO(source)) as archive, zipfile.ZipFile(io.BytesIO(prefix)) as previous:
-        recorded, linked = verify_archive(archive, engine, receipt, pins, key, binaries, verify_results)
+        recorded, linked = verify_archive(archive, engine, receipt, pins, key, read_binary, verify_results)
         old = json.loads(previous.read(PREFIX + "source-manifest.json"))["files"]
         changed = {n for n, pin in linked["sources"].items() if old.get(n, {}).get("sha256") != pin}
         check(old.keys() <= linked["sources"].keys() and changed == set(receipt["changedSources"]),

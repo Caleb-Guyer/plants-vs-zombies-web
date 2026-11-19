@@ -1,6 +1,10 @@
 # Current requirements
 
-## ZomBotany Beghouled
+## ZomBotany Survival: Night
+
+The tenth Zombotany card unlocks with the original ZomBotany trophy. Preserve native night Survival timing, five flags, persistent plants, seed selection, rewards and Continue. Use plant-headed zombies and the game's original mushroom attacks. Grow new graves only on legal, unplanted squares and let Grave Busters prevent reinforcements. The native card, lawn and HUD use the original artwork.
+
+## ZomBotany Beghouled (previous release)
 
 The ninth card unlocks after the original ZomBotany trophy. Use the original Beghouled night lawn, swaps, upgrades and match meter. Each matched shooter fires from its tile. Only plant-headed attackers enter, with later Gatling-heads following a Wall-nut-head in the same lane. Award a trophy at 50 matches. Preserve native Continue, retry and classic Beghouled’s 75-match goal.
 

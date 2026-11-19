@@ -1,0 +1,13 @@
+{
+  "id": "0.2.6-web-zsnight.1",
+  "sourceFiles": 895,
+  "productionObjects": 155,
+  "normalReceiptSha256": "263fe41b24a40fdda5058ab3d071e1a30441592825b39ca0cc0aab28aabdb3fb",
+  "reportSha256": "44ebe2b701d2ffe3249899e52c3db9198524d0f4b0a31eeb4f207e0848cc6b62",
+  "driverBuildSha256": "998d263aa84309f44bddbefa95eb9ef63bbad7a916cf2594214fea224edf3d67",
+  "sourceSha256": "cac01b72b470a6b9aa167ed1eed93bb4e78235d496418d1cda118e33656cb1e1",
+  "patchSha256": "ce8ca6e7801e0298d071e8773968d05e83112d265db5189ed208b797a4d73b8c",
+  "jsSha256": "9f238524a2c7fbdba6975d274cd145bf529d4c8824811aafdb1b944eba4d801c",
+  "wasmSha256": "301c15e0a7323b992a261a68ffbd0bcf78762f2bb9e668c542a308d2bb850960",
+  "historicalBrowserSha256": "b7986960e5276fbc1e5f7d5b9cd7fe868b0065c826c3e672e96248dd71661f71"
+}
