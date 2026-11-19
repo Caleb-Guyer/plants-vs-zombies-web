@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "engineId": "0.2.6-web-zsurvival.1",
+  "commit": "385d8d51fe7de7fe07be297751a82e9ae7b8faee",
+  "sourceArchiveSha256": "a3bebe9b89f0816f4e44e00ee4edf3b3a93ec95f1d2e301f26c793252b88d5ba",
+  "normalReceiptSha256": "6ea3a215e5c3e7ac3e4cccd238e9c759173e68ebd248b6cadfbb48e76d033fe8",
+  "files": {
+    "release.json": {
+      "bytes": 516,
+      "sha256": "34efb840400b2981235c910579cd8f01b66ff8b3c300d15bdbb789fc5f2c7863"
+    },
+    "engine-provenance.json": {
+      "bytes": 192773,
+      "sha256": "7a6d3242d5c45a9dbffce8793ad7f4d4343c4631ee9f56f5147e98b311e7ecae"
+    },
+    "browser-availability.json": {
+      "bytes": 1615,
+      "sha256": "f445c75682bd6d5806e2bf04dac1d46f4bb6b55c2b8d49c330f51a33c2b95c25"
+    },
+    "normal-build.json": {
+      "bytes": 580,
+      "sha256": "6ea3a215e5c3e7ac3e4cccd238e9c759173e68ebd248b6cadfbb48e76d033fe8"
+    },
+    "runtime-files.json": {
+      "bytes": 2593,
+      "sha256": "500990ae3752e95a2390aa1b04b8d14d45eeb8314fa262656abb3b1f14b3c5be"
+    }
+  },
+  "externalEvidenceFiles": {
+    "tests/fixtures/zsurvival1-browser/action-transcript.json": {
+      "bytes": 4068,
+      "sha256": "d631955cf63fc5fa7b7995d17b500b647d83c6fadac3f686b77334cff2e60ec1"
+    },
+    "tests/fixtures/zsurvival1-browser/automation-amendment.json": {
+      "bytes": 1987,
+      "sha256": "b834a42b938ad89acd69ca61c7583f6b6787593667156de66374888f3af6a529"
+    },
+    "tests/fixtures/zsurvival1-browser/captures/chooser.jpg": {
+      "bytes": 136387,
+      "sha256": "704200432824d807d9a90753b0492aa73936ca6df776b130ffd1cd174a31c40c"
+    },
+    "tests/fixtures/zsurvival1-browser/captures/continue-dialog.jpg": {
+      "bytes": 128775,
+      "sha256": "dad9d35ca3f6bd0de61133e4a11a8aa4d501a29a58b6a1d953e03c811b9b2840"
+    },
+    "tests/fixtures/zsurvival1-browser/captures/continued.jpg": {
+      "bytes": 128097,
+      "sha256": "47a22a7d76d389e6ddaa9f696dd3a5861c426855b04f21b80d929423f47310b3"
+    },
+    "tests/fixtures/zsurvival1-browser/captures/family.jpg": {
+      "bytes": 62746,
+      "sha256": "bc135e5962385429fa68b76cebd457a61668f94ee331ef1a54fcc7300eb1a937"
+    },
+    "tests/fixtures/zsurvival1-browser/captures/planted-2x.jpg": {
+      "bytes": 127924,
+      "sha256": "b5ee2f5c31a46b886afb17aa74fbfc41af24bedf546b18c2266823c41a9122ba"
+    },
+    "tests/fixtures/zsurvival1-browser/captures/title.jpg": {
+      "bytes": 127538,
+      "sha256": "d9853611f02d0a86e1150d47ba128fdb01e7d6476e0fdde6760f9f218e851d2a"
+    },
+    "tests/fixtures/zsurvival1-browser/preregistration-sky.json": {
+      "bytes": 1906,
+      "sha256": "84d9802d925a59402f052b0c3e5e1a8cf787d2508302ad0b1f4b4620d8fc229b"
+    },
+    "tests/fixtures/zsurvival1-browser/preregistration.json": {
+      "bytes": 2192,
+      "sha256": "a603ba1a4eec379f1a5b277168398f9e82e66e5b25c743b5861175c68fec93e7"
+    },
+    "tests/fixtures/zsurvival1-browser/private-browser-fixture.json": {
+      "bytes": 632,
+      "sha256": "0a6b261c0a48825e00bbe585c7ade7f1fdd9ef41ba37a255efe4f1ef1edb22eb"
+    },
+    "tests/fixtures/zsurvival1-browser/private-browser-profiles.zip": {
+      "bytes": 1265,
+      "sha256": "5c6b99ecf38bca4eceec7aa9840c7d0eb773c291dfdf316c143ea28d57154cd4"
+    },
+    "tests/fixtures/zsurvival1-browser/proof.json": {
+      "bytes": 8908,
+      "sha256": "262396221ea9c2d61eca268db5886ff70918838c836ce1f7ffcc2c2746fc6f18"
+    },
+    "tests/fixtures/zsurvival1-browser/speed-expectation-correction.json": {
+      "bytes": 2751,
+      "sha256": "1349e4b7cb0970548e57893535aff5b45aae560e8e651bd134e06405b5fd1506"
+    }
+  },
+  "historicalOnly": true,
+  "currentExecutableChecks": 0
+}

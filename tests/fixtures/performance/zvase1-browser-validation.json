@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "status": "not-run",
+  "proof": null,
+  "engine": {
+    "id": "0.2.6-web-zvase.1",
+    "jsSha256": "0297c91b196eab98c4e2f046ba9faaaa2fd92510ccc85ccc88b1d4228db0fbbb",
+    "wasmSha256": "ca1c6cc4b87ad1364a71dcd78cee95d1df84c540e78b3db8669c6f19d8f98b28"
+  },
+  "currentReason": "Browser not attempted for this feature; official Computer Use is unavailable in this session.",
+  "currentGameObserved": false,
+  "currentBrowserFunctionalPassed": false,
+  "screenshots": 0,
+  "currentBrowserScreenshots": 0,
+  "browserEarnedWins": 0,
+  "browserAttempted": false,
+  "blockingEvidence": null,
+  "audioMutedThroughout": null,
+  "freshBrowserPerformanceMeasured": false,
+  "freshBrowserPerformancePassed": false,
+  "nativeTestsReplaceBrowserPerformance": false
+}

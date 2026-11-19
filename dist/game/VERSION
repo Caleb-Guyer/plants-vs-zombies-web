@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-zsurvival.1
-Adds Zombotany Survival: Day, with a persistent lawn, four seed repicks and five changing plant-headed rounds.
-Engine JavaScript SHA-256: 0091ae18587667ce01b16185f2c463a9de7505d34efdadac48c382201a128a44
-Engine WASM SHA-256: 72115fe5df5c69b2bc59672cefee7d07d25e9f3d31f2b3a225e137bacb208765
+PvZ-Portable 0.2.6-web-zvase.1
+Adds five original-style Zombotany Vasebreaker puzzles with finite packets and plant-headed threats.
+Engine JavaScript SHA-256: 0297c91b196eab98c4e2f046ba9faaaa2fd92510ccc85ccc88b1d4228db0fbbb
+Engine WASM SHA-256: ca1c6cc4b87ad1364a71dcd78cee95d1df84c540e78b3db8669c6f19d8f98b28
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.

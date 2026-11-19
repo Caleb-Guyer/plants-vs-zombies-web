@@ -39,6 +39,7 @@ AMBUSH_FOCUSED_REFERENCE_SHA256 = "9463bdd7c262c1749c57b00d25d45257951f8b8b2c8d4
 LEGACY_SOURCE_NAME = "pvz-portable-0.2.6-web-endless.2-source.zip"
 TRANSPORT_MANIFEST = "source-transports/endless2.json"
 TRANSPORT_LITERALS = "source-transports/endless2.literals"
+ZVASE1_PARENT_REFERENCE_SHA256 = "c5d8a49fc25337feb574ffbf8be2114a530310522a1a43fd02dcfb7753c95625"  # Root replayed all888 published source bytes.
 CURRENT_TRANSPORT_MANIFEST = "source-transports/current.json"
 CURRENT_TRANSPORT_PAYLOAD = "source-transports/current.xz"
 REQUIRED_ROOT = (
@@ -115,7 +116,10 @@ def parent_source_input(engine):
             or any(character not in "0123456789abcdef" for character in expected)):
         raise ValueError("Invalid immediate-parent source SHA-256")
     path = DIST / "game" / reference
-    if engine.get("id") == "0.2.6-web-zsurvival.1":
+    if engine.get("id") == "0.2.6-web-zvase.1":
+        authenticate_zvase1_parent(engine)
+        return None
+    elif engine.get("id") == "0.2.6-web-zsurvival.1":
         authenticate_zsurvival1_parent(engine)
         return None
     if engine.get("id") == "0.2.6-web-zombotany45.2":
@@ -458,6 +462,61 @@ def authenticate_zombotany3_parent(engine, current_sources=None):
     return restored
 
 
+def authenticate_zvase1_parent(engine, current_sources=None):
+    """Restore the exact published45.2 sources without a redundant parent ZIP."""
+    raw = (ROOT / "tests/fixtures/zvase1-parent-reference.json").read_bytes()
+    if hashlib.sha256(raw).hexdigest() != ZVASE1_PARENT_REFERENCE_SHA256:
+        raise ValueError("Zombotany Vasebreaker parent projection is not independently sealed")
+    reference = json.loads(raw)
+    changed = {'CMake/ProjectVersion.cmake', 'src/ConstEnums.h', 'src/Lawn/Board.cpp', 'src/Lawn/Challenge.cpp', 'src/Lawn/GridItem.cpp', 'src/Lawn/System/ReanimationLawn.cpp', 'src/Lawn/System/ReanimationLawn.h', 'src/Lawn/Widget/AwardScreen.cpp', 'src/Lawn/Widget/ChallengeScreen.cpp', 'src/Lawn/Widget/ChallengeScreen.h', 'src/Lawn/Widget/ContinueDialog.cpp', 'src/Lawn/Widget/LawnDialog.cpp', 'src/Lawn/Zombie.cpp', 'src/LawnApp.cpp'}
+    if (engine["id"] != "0.2.6-web-zvase.1" or reference["schemaVersion"] != 1 or
+            reference["current"] != {"id": engine["id"], "sourceCount": 891} or
+            reference["parent"]["id"] != "0.2.6-web-zsurvival.1" or
+            reference["parent"]["archivePrefix"] != "zombotany3-candidate/source/" or
+            reference["parent"]["archiveSha256"] != "a3bebe9b89f0816f4e44e00ee4edf3b3a93ec95f1d2e301f26c793252b88d5ba" or
+            engine["parent"]["id"] != reference["parent"]["id"] or
+            engine["parent"]["artifacts"]["sourceSha256"] != reference["parent"]["archiveSha256"] or
+            len(reference["files"]) != 888 or set(reference["changedPaths"]) != changed or
+            set(reference["reverseEdits"]) != changed):
+        raise ValueError("Zombotany Vasebreaker parent identity or scoped changes differ")
+    if current_sources is None:
+        current = DIST / "game" / engine["artifacts"]["source"]
+        if hashlib.sha256(current.read_bytes()).hexdigest() != engine["artifacts"]["sourceSha256"]:
+            raise ValueError("Zombotany Vasebreaker current archive differs from provenance")
+        with zipfile.ZipFile(current) as archive:
+            prefix = "zombotany3-candidate/source/"
+            current_sources = {name[len(prefix):]: archive.read(name) for name in archive.namelist()
+                               if name.startswith(prefix) and not name.endswith('/')}
+    additions = {"src/Lawn/System/ZombotanyVasebreaker.cpp", "src/Lawn/System/ZombotanyVasebreaker.h", "src/Lawn/System/ZombotanyVasebreakerBoards.h"}
+    if len(current_sources) != 891 or set(current_sources) != set(reference["files"]) | additions:
+        raise ValueError("Zombotany Vasebreaker source graph exceeds its three additions")
+    restored = {}
+    for name, pin in reference["files"].items():
+        if (not name or name.startswith('/') or any(p in ('', '.', '..') for p in name.split('/')) or
+                "\\" in name or ':' in name):
+            raise ValueError("Unsafe Zombotany Vasebreaker source path")
+        data = current_sources[name]
+        delta = reference["reverseEdits"].get(name)
+        if delta:
+            if len(data) != delta["currentBytes"] or hashlib.sha256(data).hexdigest() != delta["currentSha256"]:
+                raise ValueError("Changed Zombotany Vasebreaker projection input: " + name)
+            previous = len(data) + 1
+            for edit in reversed(delta["edits"]):
+                offset = edit["offset"]
+                before = base64.b64decode(edit["beforeBase64"], validate=True)
+                after = base64.b64decode(edit["afterBase64"], validate=True)
+                if (not isinstance(offset, int) or offset < 0 or offset >= previous or
+                        offset + len(before) > previous or data[offset:offset + len(before)] != before):
+                    raise ValueError("Invalid Zombotany Vasebreaker reverse edit: " + name)
+                data = data[:offset] + after + data[offset + len(before):]
+                previous = offset
+        if len(data) != pin["bytes"] or hashlib.sha256(data).hexdigest() != pin["sha256"]:
+            raise ValueError("Published Zombotany Vasebreaker source reconstruction differs: " + name)
+        restored[name] = data
+    authenticate_zsurvival1_parent(engine["parent"], restored)
+    return restored
+
+
 def authenticate_zsurvival1_parent(engine, current_sources=None):
     """Restore the exact published45.2 sources without a redundant parent ZIP."""
     raw = (ROOT / "tests/fixtures/zsurvival1-parent-reference.json").read_bytes()
@@ -529,8 +588,10 @@ def nested_source_inputs(engine, paths, baseline):
             or hashlib.sha256(native_ui.read_bytes()).hexdigest()
             != "d9861034849eca9d637197aa78a1bae4c90b5656db91ca102d8c903100031edd"):
         raise ValueError("Authenticated native I, Zombie UI fixture is missing or changed")
-    if engine.get("id") in {"0.2.6-web-scrap.1", "0.2.6-web-ambush.1", "0.2.6-web-torch.1", "0.2.6-web-double.1", "0.2.6-web-gust.1", "0.2.6-web-zombotany45.2", "0.2.6-web-zsurvival.1"}:
-        if engine["id"] == "0.2.6-web-zsurvival.1":
+    if engine.get("id") in {"0.2.6-web-scrap.1", "0.2.6-web-ambush.1", "0.2.6-web-torch.1", "0.2.6-web-double.1", "0.2.6-web-gust.1", "0.2.6-web-zombotany45.2", "0.2.6-web-zsurvival.1", "0.2.6-web-zvase.1"}:
+        if engine["id"] == "0.2.6-web-zvase.1":
+            authenticate_zvase1_parent(engine)
+        elif engine["id"] == "0.2.6-web-zsurvival.1":
             authenticate_zsurvival1_parent(engine)
         elif engine["id"] == "0.2.6-web-zombotany45.2":
             authenticate_zombotany3_parent(engine)

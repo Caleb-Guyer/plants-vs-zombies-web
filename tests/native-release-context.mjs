@@ -3,11 +3,36 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 
-export const CURRENT_ENGINE_ID = '0.2.6-web-zsurvival.1';
-export const CURRENT_SOURCE_COUNT = 888;
-export const CURRENT_OBJECT_COUNT = 152;
-// Sealed after the actual unchanged888-source/152-object Survival normal build was reviewed.
-export const CURRENT_NORMAL_RECEIPT_SHA256 = '6ea3a215e5c3e7ac3e4cccd238e9c759173e68ebd248b6cadfbb48e76d033fe8';
+export const CURRENT_ENGINE_ID = '0.2.6-web-zvase.1';
+export const CURRENT_SOURCE_COUNT = 891;
+export const CURRENT_OBJECT_COUNT = 153;
+// Root reviewed the actual unchanged frozen891/153 normal build.
+export const CURRENT_NORMAL_RECEIPT_SHA256 = '7351dfbf72f989cddf155ac334b19e181bb898a86896817f6a26af5e1789c1dd';
+
+export const ZVASE_PARENT_ENGINE_ID = '0.2.6-web-zsurvival.1';
+export const ZVASE_PARENT_SOURCE_COUNT = 888;
+export const ZVASE_PARENT_OBJECT_COUNT = 152;
+export const ZVASE_PARENT_NORMAL_SHA256 = '6ea3a215e5c3e7ac3e4cccd238e9c759173e68ebd248b6cadfbb48e76d033fe8';
+export const ZVASE_PARENT_ARCHIVE_SHA256 = 'a3bebe9b89f0816f4e44e00ee4edf3b3a93ec95f1d2e301f26c793252b88d5ba';
+export const ZVASE_PARENT_REFERENCE_SHA256 = 'c5d8a49fc25337feb574ffbf8be2114a530310522a1a43fd02dcfb7753c95625'; // Root replayed every888 published byte; current source remains held.
+export const ZVASE_SOURCE_ADDITIONS = ['src/Lawn/System/ZombotanyVasebreaker.cpp',
+ 'src/Lawn/System/ZombotanyVasebreaker.h','src/Lawn/System/ZombotanyVasebreakerBoards.h'];
+const ZVASE_PARENT_CHANGED_PATHS = [
+ "CMake/ProjectVersion.cmake",
+ "src/ConstEnums.h",
+ "src/Lawn/Board.cpp",
+ "src/Lawn/Challenge.cpp",
+ "src/Lawn/GridItem.cpp",
+ "src/Lawn/System/ReanimationLawn.cpp",
+ "src/Lawn/System/ReanimationLawn.h",
+ "src/Lawn/Widget/AwardScreen.cpp",
+ "src/Lawn/Widget/ChallengeScreen.cpp",
+ "src/Lawn/Widget/ChallengeScreen.h",
+ "src/Lawn/Widget/ContinueDialog.cpp",
+ "src/Lawn/Widget/LawnDialog.cpp",
+ "src/Lawn/Zombie.cpp",
+ "src/LawnApp.cpp"
+];
 export const ZSURVIVAL_PARENT_ENGINE_ID = '0.2.6-web-zombotany45.2';
 export const ZSURVIVAL_PARENT_SOURCE_COUNT = 886;
 export const ZSURVIVAL_PARENT_OBJECT_COUNT = 151;
@@ -66,12 +91,12 @@ const reviewedDoubleRetentionPins = Object.freeze({
   vase:'05025af9fa6976e55aa6d158d875733fac80dde9739449f7c6341468785e71b3',
   torch:'ddfbb060d29ff59dc04770b7c068f4b1f1973a1f14b1d94adde02cb44f0461b7',
 });
-export const CURRENT_ENDLESS_RETENTION_SHA256 = 'fff956867982353d783ea308dfc476c0bd433ae1b1e0971efab4ba5a30c5d728';
-export const CURRENT_SCRAP_RETENTION_SHA256 = 'a06d897cb8c7faf362516e256cb46f29fa01f8a7e5b0af49f5f7ea2a62eae47e';
-export const CURRENT_VASE_RETENTION_SHA256 = '6d9dc8d9908445b86288fcee82f21b2032d190a62620f76fd0732e966d5d967f';
-export const CURRENT_TORCH_RETENTION_SHA256 = '45cd85c6ccc218cfb28b45e19cc595969d29731353f24daa559b57957bc9eae0';
-export const CURRENT_DOUBLE_RETENTION_SHA256 = '3d767fbee943435f29f987fc7e6276bc28c34bf5e02e20a715d72e7867f5789d';
-export const CURRENT_GUST_RETENTION_SHA256 = '34ad867b83de6ae50030cde8d92ea479255a5f42f141a4e744c0667ee9300b6e';
+export const CURRENT_ENDLESS_RETENTION_SHA256 = '34866b4024eac98dabd6a1b7b376dd117ae76ba7d63904b9cc55b402d25d85c1';
+export const CURRENT_SCRAP_RETENTION_SHA256 = '14ad62fb268ca65ed5b9915334d7f1d6610ac7a0fc1608c73f371ad6fc43b12f';
+export const CURRENT_VASE_RETENTION_SHA256 = '82ab5ba34b52151045a53f50e4313fba10e1e6391b201b53865d1a053c83138e';
+export const CURRENT_TORCH_RETENTION_SHA256 = 'ed86e28c6b2ed12124d65422f2a29613c4f7206a907c5d12a5f4206265234e8c';
+export const CURRENT_DOUBLE_RETENTION_SHA256 = 'c5e7bf3fb4774b9b730cdbd1545d3a4ffd893b60cbae9cbfb811dc3e5c54292f';
+export const CURRENT_GUST_RETENTION_SHA256 = '1891d45cafb61d5a7001fc8a224902d09126d62f1e267845370105d763bc92f5';
 export const PARENT_TEST_INPUTS_SHA256 = '7d6c2749a2d9d1ae462e964447e017f4fcd0e3146909de210ddacaab06be8c82';
 export const AMBUSH_SOURCE_ADDITIONS = ['src/Lawn/System/VaseAmbush.cpp', 'src/Lawn/System/VaseAmbush.h',
   'src/Lawn/System/VaseAmbushPresentation.cpp', 'src/Lawn/System/VaseAmbushPresentation.h'];
@@ -529,14 +554,58 @@ export async function verifyPublishedDoubleAdapter({read,sha,adapter,family}) {
   return old;
 }
 
+export async function reconstructZVaseParentSources({referenceBytes,read,sha,engine}) {
+ assert.equal(engine.id,CURRENT_ENGINE_ID);assert.equal(engine.parent.id,ZVASE_PARENT_ENGINE_ID);
+ assert.equal(engine.parent.artifacts.sourceSha256,ZVASE_PARENT_ARCHIVE_SHA256);
+ referenceBytes??=fs.readFileSync(new URL('./fixtures/zvase1-parent-reference.json',import.meta.url));
+ assert(ZVASE_PARENT_REFERENCE_SHA256,'Current Vasebreaker parent projection has not been independently reviewed');
+ assert.equal(sha(referenceBytes),ZVASE_PARENT_REFERENCE_SHA256);
+ const reference=JSON.parse(referenceBytes);assert.equal(reference.schemaVersion,1);
+ assert.deepEqual(reference.parent,{id:ZVASE_PARENT_ENGINE_ID,archiveSha256:ZVASE_PARENT_ARCHIVE_SHA256,archivePrefix:'zombotany3-candidate/source/'});
+ assert.deepEqual(reference.current,{id:CURRENT_ENGINE_ID,sourceCount:CURRENT_SOURCE_COUNT});
+ assert.equal(Object.keys(reference.files).length,ZVASE_PARENT_SOURCE_COUNT);
+ assert.deepEqual(Object.keys(reference.reverseEdits).sort(),reference.changedPaths);assert.deepEqual(reference.changedPaths,[...ZVASE_PARENT_CHANGED_PATHS].sort());
+ const files=new Map();
+ for(const[name,pin]of Object.entries(reference.files)){
+  safeName(name);digest(pin.sha256);digest(pin.normalizedSha256);
+  let bytes=Buffer.from(await read('source/'+name));const delta=reference.reverseEdits[name];
+  if(delta){
+   assert.equal(bytes.length,delta.currentBytes);digest(delta.currentSha256);assert.equal(sha(bytes),delta.currentSha256);
+   assert(Array.isArray(delta.edits)&&delta.edits.length>0);let previous=bytes.length+1;
+   for(const edit of [...delta.edits].reverse()){
+    const before=Buffer.from(edit.beforeBase64,'base64'),after=Buffer.from(edit.afterBase64,'base64');
+    assert.equal(before.toString('base64'),edit.beforeBase64);assert.equal(after.toString('base64'),edit.afterBase64);
+    assert(Number.isSafeInteger(edit.offset)&&edit.offset>=0&&edit.offset<previous);
+    assert(edit.offset+before.length<=previous&&edit.offset+before.length<=bytes.length);
+    assert.deepEqual(bytes.subarray(edit.offset,edit.offset+before.length),before);
+    bytes=Buffer.concat([bytes.subarray(0,edit.offset),after,bytes.subarray(edit.offset+before.length)]);previous=edit.offset;
+   }
+  }
+  assert.equal(bytes.length,pin.bytes);assert.equal(sha(bytes),pin.sha256,name);
+  assert.equal(sha(Buffer.from(bytes.toString('latin1').replace(/\r\n?/g,'\n'),'latin1')),pin.normalizedSha256);
+  files.set(name,bytes);
+ }
+ for(const name of ZVASE_SOURCE_ADDITIONS)assert(!files.has(name));
+ return {files,manifest:{version:ZVASE_PARENT_ENGINE_ID,files:reference.files}};
+}
+export async function zvaseParentSourceReader({read,sha,engine,referenceBytes}) {
+ if(engine.id===ZVASE_PARENT_ENGINE_ID)return {read,engine};
+ const parent=await reconstructZVaseParentSources({read,sha,engine,referenceBytes});
+ return {engine:engine.parent,files:parent.files,read:async name=>{
+  if(!name.startsWith('source/'))return read(name);
+  safeName(name);const bytes=parent.files.get(name.slice(7));assert(bytes,name);return bytes;
+ }};
+}
+
 export async function reconstructZsurvivalParentSources({referenceBytes,read,sha,engine}) {
- assert.equal(engine.id,CURRENT_ENGINE_ID);assert.equal(engine.parent.id,ZSURVIVAL_PARENT_ENGINE_ID);
+ if(engine.id===CURRENT_ENGINE_ID){const parent=await zvaseParentSourceReader({read,sha,engine});read=parent.read;engine=parent.engine;}
+ assert.equal(engine.id,ZVASE_PARENT_ENGINE_ID);assert.equal(engine.parent.id,ZSURVIVAL_PARENT_ENGINE_ID);
  assert.equal(engine.parent.artifacts.sourceSha256,ZSURVIVAL_PARENT_ARCHIVE_SHA256);
  referenceBytes??=fs.readFileSync(new URL('./fixtures/zsurvival1-parent-reference.json',import.meta.url));
  assert.equal(sha(referenceBytes),ZSURVIVAL_PARENT_REFERENCE_SHA256);
  const reference=JSON.parse(referenceBytes);assert.equal(reference.schemaVersion,1);
  assert.deepEqual(reference.parent,{id:ZSURVIVAL_PARENT_ENGINE_ID,archiveSha256:ZSURVIVAL_PARENT_ARCHIVE_SHA256,archivePrefix:'zombotany3-candidate/source/'});
- assert.deepEqual(reference.current,{id:CURRENT_ENGINE_ID,sourceCount:CURRENT_SOURCE_COUNT});
+ assert.deepEqual(reference.current,{id:ZVASE_PARENT_ENGINE_ID,sourceCount:ZVASE_PARENT_SOURCE_COUNT});
  assert.equal(Object.keys(reference.files).length,ZSURVIVAL_PARENT_SOURCE_COUNT);
  assert.deepEqual(Object.keys(reference.reverseEdits).sort(),reference.changedPaths);assert.equal(reference.changedPaths.length,11);
  const files=new Map();
@@ -563,6 +632,7 @@ export async function reconstructZsurvivalParentSources({referenceBytes,read,sha
  return {files,manifest:{version:ZSURVIVAL_PARENT_ENGINE_ID,files:reference.files}};
 }
 export async function zsurvivalParentSourceReader({read,sha,engine,referenceBytes}) {
+ if(engine.id===CURRENT_ENGINE_ID){const parent=await zvaseParentSourceReader({read,sha,engine});read=parent.read;engine=parent.engine;}
  if(engine.id===ZSURVIVAL_PARENT_ENGINE_ID)return {read,engine};
  const parent=await reconstructZsurvivalParentSources({read,sha,engine,referenceBytes});
  return {engine:engine.parent,files:parent.files,read:async name=>{

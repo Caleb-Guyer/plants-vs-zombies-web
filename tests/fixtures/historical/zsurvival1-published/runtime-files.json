@@ -1,0 +1,82 @@
+{
+  "audio-controls.js": {
+    "bytes": 12216,
+    "sha256": "95e6a1b3e7ccae54ee797e8ed3b63668b672ee51f55978dc4d29231ec225a343"
+  },
+  "bundled-assets.js": {
+    "bytes": 8188,
+    "sha256": "07449dfe0aca7efb7888c62d598b54dc0be5cdfaadab6961e5f9977f87db6e8c"
+  },
+  "game-assets/manifest.json": {
+    "bytes": 3176,
+    "sha256": "5488eb8cf5d38d2d999e29a5b3aca45ecff02f8ee49356ccb327de8676111dc4"
+  },
+  "game/pvz-portable.js": {
+    "bytes": 210891,
+    "sha256": "0091ae18587667ce01b16185f2c463a9de7505d34efdadac48c382201a128a44"
+  },
+  "game/pvz-portable.wasm": {
+    "bytes": 7933047,
+    "sha256": "72115fe5df5c69b2bc59672cefee7d07d25e9f3d31f2b3a225e137bacb208765"
+  },
+  "index-port.html": {
+    "bytes": 6446,
+    "sha256": "16d4c0bf1034ab28fc291b60b66f9c05f097fad197a77a5c6f6e16b1db4644c9"
+  },
+  "index.html": {
+    "bytes": 6446,
+    "sha256": "16d4c0bf1034ab28fc291b60b66f9c05f097fad197a77a5c6f6e16b1db4644c9"
+  },
+  "launcher.js": {
+    "bytes": 10755,
+    "sha256": "9e41170068f913e8f966d650953972a311f57e7efb6241340fa6c5a349d3cfdd"
+  },
+  "loader.js": {
+    "bytes": 10670,
+    "sha256": "a183ed4e17810de2431989f3ebc263d2f511d1514c53e73c8933b8486bced73a"
+  },
+  "original-ui.js": {
+    "bytes": 2774,
+    "sha256": "a8f0aab63956a0280f03520671b712c2709da353c287be430592c64ba91ffe5b"
+  },
+  "port.css": {
+    "bytes": 11410,
+    "sha256": "6020b3fb0e1517aa9c9c1bab93873cf5c5c9f2204e3c0d9f3335853789e6b821"
+  },
+  "runtime.js": {
+    "bytes": 2931,
+    "sha256": "d23f37023f62d9a8a9d105bf7943af6a90b58d34e29dec207733244f23b5e314"
+  },
+  "save-recovery.js": {
+    "bytes": 4921,
+    "sha256": "eff0eb9325e0bdc18c1f76582e9f260a07ffbf680b3ada25763f1972204e84bf"
+  },
+  "save-storage-core.js": {
+    "bytes": 13211,
+    "sha256": "5473e221a0b86818835a9ed5a1b473d718ae14da9838c7e37d99bdef48203bee"
+  },
+  "save-storage-worker.js": {
+    "bytes": 1864,
+    "sha256": "4951c5dd05dcc2c79dd99f4ddeba19935ffd23a69dd6726e4b4e1b819772a246"
+  },
+  "save-storage.js": {
+    "bytes": 9518,
+    "sha256": "e46cef9257f3608f0edbd1af4c0424e09665aa919aed5e5e16d234045ef1c49c"
+  },
+  "save-transfer.js": {
+    "bytes": 16375,
+    "sha256": "de0c5b67863c8f307906d4d1c739b05ef0d32d5f854a8d77581750a37dd6f314"
+  },
+  "steam-compat.js": {
+    "bytes": 5185,
+    "sha256": "ace261bed202e3f99a242ac6b6dc2f532c1967d1b803a0e91a38461db44311eb"
+  },
+  "test-profiles.js": {
+    "bytes": 10112,
+    "sha256": "b93318eb4738b199d39dbf10ad6313e11fd2350dc4526c64216b2a13c27e1ce0"
+  },
+  "vendor/jszip.min.js": {
+    "bytes": 97630,
+    "sha256": "acc7e41455a80765b5fd9c7ee1b8078a6d160bbbca455aeae854de65c947d59e"
+  }
+}

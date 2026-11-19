@@ -14,11 +14,11 @@ const Zip=vendor.exports;
 // may vary raw log hashes; all other canonical native observations stay fixed.
 // Published45.1 observations remain historical. The final45.2 current56 run
 // and separate renderer/compatibility proof were independently reviewed.
-const acceptedContractPins=new Set(['3f3c8f6e8495ec7f6021a244981f523fd99ec8d06714d187695646147e56a310']);
-const acceptedReportPins=new Set(['0743dfa37842d4e0e6b199e9e26279e9ac4b8f8cf5d7ed394f58d415cb9ba46a']);
-const acceptedReportContentPins=new Set(['770518a16e3e206740025ae1a0b1f83f6f77aff99e4758eb96598b38a15ba406']);
+const acceptedContractPins=new Set(['f61656c8044f3bfaa1a2d0b9afd003acda02f9f5bddbeec657242fce2a1330fb']); // Root reviewed the actual closed current execution.
+const acceptedReportPins=new Set(['1c7c200a7232852ccf5783c1afdca8aace904b8a09b6b31fe2a9cb7b48e65b1b']); // Root reviewed the actual closed current execution.
+const acceptedReportContentPins=new Set(['2264ed814158e541136a9f15bea67447fdd5066f68f1b557b01252e96340487e']); // Root reviewed the actual closed current execution.
 const acceptedPrerequisitePins=new Set(['80570015aaa34160568aa38a068fd6c7c5a14b6b4df040f0a901206e0e363f8c']);
-const ENGINE='0.2.6-web-zsurvival.1';
+const ENGINE='0.2.6-web-zvase.1';
 const NORMAL=CURRENT_NORMAL_RECEIPT_SHA256;
 const PREREQUISITE_ENGINE='0.2.6-web-zombotany45.1';
 const PREREQUISITE_NORMAL='721a1d47b75566e042bf7bd69dc3e34dc8c7cd69fe7a00eb4455f662defaef3b';
@@ -102,7 +102,7 @@ export function verifyZombotany45PlayerPolicy({policyBytes,sha}){
 }
 
 export async function verifyZombotany45SourceBounds({read,sha,engine}){
- assert.equal(CURRENT_ENGINE_ID,ENGINE);assert.equal(CURRENT_SOURCE_COUNT,888);assert.equal(CURRENT_OBJECT_COUNT,152);
+ assert.equal(CURRENT_ENGINE_ID,ENGINE);assert.equal(CURRENT_SOURCE_COUNT,891);assert.equal(CURRENT_OBJECT_COUNT,153);
  const sourceParent=await zsurvivalParentSourceReader({read,sha,engine});read=sourceParent.read;
  for(const[path,pin]of Object.entries(legacySources))assert.equal(sha(await read('source/'+path)),pin,'Prior saved ABI/native3 bytes: '+path);
  verifyZombotany3PlantHeadRoster({header:await read('source/src/Lawn/System/Zombotany3.h'),sha});
@@ -230,19 +230,19 @@ export async function verifyZombotany45SourceBounds({read,sha,engine}){
  assert.equal((battles.match(/Sexy::SRand\(/g)||[]).length,1);
  assert(battles.includes('Require(app->mGameScene==SCENE_ZOMBIES_WON&&app->mBoardResult==BOARDRESULT_LOST&&app->GetDialog(DIALOG_GAME_OVER),"retry seed setup must occur only after native loss and before the new board");Sexy::SRand(seed);app->mAppRandSeed=seed;Click(app,pos.mX+button->mWidth/2,pos.mY+button->mHeight/2);'));
  assert(!/(?:\.|->)(?:mBodyHealth|mBodyMaxHealth|mPosX|mPosY|mCurrentWave|mZombieCountDown|mPlantHealth)\s*(?:[+*/-]=|=(?!=))/.test(battles),'Ordinary battles cannot edit actors, waves or health');
- return {sourceCount:888,productionObjectCount:152,priorSavedAndNative3Files:Object.keys(legacySources).length};
+ return {sourceCount:891,productionObjectCount:153,priorSavedAndNative3Files:Object.keys(legacySources).length};
 }
 
 export async function verifyZombotany45BuildBindings({report,read,sha,engine,fullRunReport,productionBuildBytes}){
  fields(report,{status:'PASS',execution:'complete-production-engine',optimization:'O2',engineId:ENGINE,
-  productionObjectCount:152,failures:0,exitCode:0,presentationControlsAvailable:true,developmentNoArt:false});
- assert.equal(engine.id,ENGINE);assert.equal(Object.keys(report.sourceSha256).length,888);assert.equal(Object.keys(report.productionObjectSha256).length,152);
+  productionObjectCount:153,failures:0,exitCode:0,presentationControlsAvailable:true,developmentNoArt:false});
+ assert.equal(engine.id,ENGINE);assert.equal(Object.keys(report.sourceSha256).length,891);assert.equal(Object.keys(report.productionObjectSha256).length,153);
  assert.deepEqual(report.sourceSha256,fullRunReport.sourceSha256);assert.deepEqual(report.productionObjectSha256,fullRunReport.productionObjectSha256);
  for(const[path,pin]of Object.entries(report.sourceSha256)){safe(path);assert(path.startsWith('source/'));digest(pin);assert.equal(sha(await read(path)),pin,path);}
  for(const[path,pin]of Object.entries(report.productionObjectSha256)){safe(path);digest(pin);assert(path.endsWith('.o'));}
  assert(NORMAL,'Current45.2 normal build has not been independently reviewed');
  assert.equal(sha(productionBuildBytes),NORMAL);assert.equal(report.productionBuildReceiptSha256,NORMAL);
- const normal=json(productionBuildBytes);fields(normal,{status:'PASS',exitCode:0,sourceUnchangedDuringBuild:true,sourceFiles:888});
+ const normal=json(productionBuildBytes);fields(normal,{status:'PASS',exitCode:0,sourceUnchangedDuringBuild:true,sourceFiles:891});
  for(const suffix of ['js','wasm'])assert.equal(normal.outputs['build/pvz-portable.'+suffix].sha256,engine.artifacts[suffix+'Sha256']);
  for(const name of ['source-before.json','source-after.json']){
   const pins=json(await read('logs/'+name));assert.deepEqual(Object.fromEntries(Object.entries(pins).map(([p,h])=>['source/'+safe(p),h])),report.sourceSha256);
@@ -393,7 +393,7 @@ export function verifyZombotany45Matrix(report){
  assert.equal(report.scenarios.filter(r=>r.family==='synthetic-controls').length,8);assert.equal(report.scenarios.reduce((s,r)=>s+r.profileCredits,0),48);
  assert.equal(report.scenarios.filter(r=>r.family==='zombotany45'&&r.checkpoint.performed).length,8);
  assert.equal(report.scenarios.filter(r=>r.nativeGameOver||r.failureAndRetry).length,16);
- assert.equal(report.speedPairs.length,28);assert.equal(report.checks,888+report.scenarios.reduce((s,r)=>s+r.checks,0));
+ assert.equal(report.speedPairs.length,28);assert.equal(report.checks,891+report.scenarios.reduce((s,r)=>s+r.checks,0));
  assert.deepEqual(report.speedPairs.map(r=>[r.mode,r.name,r.seed].join('/')).sort(),[94,95].flatMap(mode=>names.flatMap(name=>[1729,7331].map(seed=>[mode,name,seed].join('/')))).sort());
  for(const pair of report.speedPairs){fields(pair,{semanticResultEqual:true});const rows=report.scenarios.filter(r=>r.mode===pair.mode&&r.name===pair.name&&r.seed===pair.seed).sort((a,b)=>a.speed-b.speed);
   assert.deepEqual(rows.map(r=>r.speed),[1,2]);for(const key of ['family','outcome','profileCredits','nativeFormationLedger','replayFormationLedger','nativeAwardWave','nativeAwardEnemies','nativeAwardType','failureAndRetry','nativeReplayCompleted','nativeGameOver'])
@@ -477,7 +477,7 @@ export async function verifyZombotany45(options){
  const{report,read,sha,engine}=options,reportBytes=await read('tests/zombotany45-results.json');
  const authenticated=verifyZombotany45ReportIdentity({reportBytes,sha});assert.deepEqual(report,authenticated.report);
  const contractBytes=await read('tests/zombotany45-verification-contract.json');assert(acceptedContractPins.has(sha(contractBytes)),'Final actual56 preregistration has not been reviewed');
- const c=json(contractBytes);fields(c,{schemaVersion:1,stage:'final-preregistered',engineId:ENGINE,cases:56,speedPairs:28,sourceCount:888,productionObjectCount:152,nativeArtInputs:1027,syntheticControlsEarnCurrentModeCredits:false});
+ const c=json(contractBytes);fields(c,{schemaVersion:1,stage:'final-preregistered',engineId:ENGINE,cases:56,speedPairs:28,sourceCount:891,productionObjectCount:153,nativeArtInputs:1027,syntheticControlsEarnCurrentModeCredits:false});
  assert.deepEqual(c.matrix,ZOMBOTANY45_MATRIX);assert.deepEqual(c.nativeStats,stats);assert.deepEqual(c.course,course);assert.deepEqual(c.independentWaves,{fog:fogWaves,roof:roofWaves});
  assert.deepEqual(c.nativeDecks,{fog:[9,16,8,13,10,3],roof:[1,33,32,3,37,2]});
  fields(c.roofShieldedFormation,{nativeDeck:[1,33,32,3,37,2],umbrellaPairs:[[1,1],[1,3],[4,1],[4,3]],

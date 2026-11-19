@@ -1,5 +1,21 @@
 # GitHub Pages release: Caleb-Guyer/plants-vs-zombies-web
 
+## Zombotany Vasebreaker
+
+Beat the original ZomBotany to unlock Vasebreaker, the seventh card on the Zombotany page. Solve five linked night puzzles using the original hammer, vases and temporary one-use plant packets. Every enemy has an original plant head. Each board has a finite 150 sun in vases for the normally priced Cherry Bomb bank. Retry restarts the current board; Continue preserves opened vases, actors and packet clocks. Complete all five boards for the trophy; replays use the original money-bag reward.
+
+The new thumbnail and revealed-vase portraits use original game artwork and attached native plant heads. Native fonts, card frames, pause and speed controls carry the interface. There are no extra card tips or HUD panels. Normal audio remains available; automated tests open no audio device.
+
+The current 891-source/153-object release passes 32 native suites with 227,342,832 primary checks, plus 29,323,455 separately counted late-game checks and 49,403 separate family regression checks. The new 24 cases form twelve 1x/2x pairs, with twenty complete five-board clears, four release-without-planting defeats, four genuine retry defeats and four zero-credit control cases. The alternate replay uses a slower 90-tick input cadence. Five save checkpoints cover unopened vases, the hammer, an unplanted packet, active combat and a board transition.
+
+Native offscreen pixel checks cover the seventh card, all six plant-headed vase portraits and layout bounds. Browser interaction was not run for this release because the official browser-control tool was unavailable. No new browser win or performance result is claimed; the earlier Survival captures retain their historical scope.
+
+[Play the game](https://caleb-guyer.github.io/plants-vs-zombies-web/).
+
+## Historical release records (Survival and earlier)
+
+The following records retain their original release-time scope.
+
 ## Zombotany Survival: Day release
 
 Engine `0.2.6-web-zsurvival.1` adds the sixth Zombotany card, unlocked by beating the original ZomBotany. Five ten-wave day-lawn flags start with 50 sun and retain plants, sun and surviving mowers through native seed repicks. The changing roster contains 207 zombies using six original plant-headed types. Existing artwork, controls and normal audio remain available; testing stays muted.

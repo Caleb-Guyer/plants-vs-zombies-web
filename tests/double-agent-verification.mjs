@@ -106,7 +106,7 @@ export async function verifyDoubleAgentBuildBindings({report,read,sha,engine,ful
  const current=engine.id==='0.2.6-web-gust.1'||z3;
  const sourceCount=z3?CURRENT_SOURCE_COUNT:current?878:872,objectCount=z3?CURRENT_OBJECT_COUNT:current?147:144;
  assert(current||engine.id==='0.2.6-web-double.1');
- if(z3){assert.equal(CURRENT_SOURCE_COUNT,888);assert.equal(CURRENT_OBJECT_COUNT,152);}
+ if(z3){assert.equal(CURRENT_SOURCE_COUNT,891);assert.equal(CURRENT_OBJECT_COUNT,153);}
  fields(report,{execution:'complete-production-engine',optimization:'O2',engineId:engine.id,
   mode:91,profileIndex:90,productionObjectCount:objectCount,failures:0,exitCode:0});
  assert.equal(Object.keys(report.sourceSha256).length,sourceCount);

@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "status": "functional-only",
+  "engine": {
+    "id": "0.2.6-web-zsurvival.1",
+    "jsSha256": "0091ae18587667ce01b16185f2c463a9de7505d34efdadac48c382201a128a44",
+    "wasmSha256": "72115fe5df5c69b2bc59672cefee7d07d25e9f3d31f2b3a225e137bacb208765"
+  },
+  "proof": {
+    "path": "tests/fixtures/zsurvival1-browser/proof.json",
+    "bytes": 8908,
+    "sha256": "262396221ea9c2d61eca268db5886ff70918838c836ce1f7ffcc2c2746fc6f18"
+  },
+  "preregistration": {
+    "path": "tests/fixtures/zsurvival1-browser/preregistration.json",
+    "bytes": 2192,
+    "sha256": "a603ba1a4eec379f1a5b277168398f9e82e66e5b25c743b5861175c68fec93e7"
+  },
+  "automationAmendment": {
+    "path": "tests/fixtures/zsurvival1-browser/automation-amendment.json",
+    "bytes": 1987,
+    "sha256": "b834a42b938ad89acd69ca61c7583f6b6787593667156de66374888f3af6a529"
+  },
+  "expectationCorrection": {
+    "path": "tests/fixtures/zsurvival1-browser/speed-expectation-correction.json",
+    "bytes": 2751,
+    "sha256": "1349e4b7cb0970548e57893535aff5b45aae560e8e651bd134e06405b5fd1506"
+  },
+  "currentGameObserved": true,
+  "currentBrowserFunctionalPassed": true,
+  "screenshots": 6,
+  "browserEarnedWins": 0,
+  "audioMutedThroughout": true,
+  "freshBrowserPerformanceMeasured": false,
+  "freshBrowserPerformancePassed": false,
+  "nativeTestsReplaceBrowserPerformance": false,
+  "scope": "Actual muted current native UI smoke only; prior browser/timing evidence remains historical. The pretest speed-reset assumption is transparently corrected against original QoL persistence behavior."
+}

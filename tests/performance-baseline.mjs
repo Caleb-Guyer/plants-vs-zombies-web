@@ -181,7 +181,7 @@ if(currentEngine.id==='0.2.6-web-gust.1'){
  assert.equal(availability.status,'functional-only','Actual current muted browser observations are required');
  await verifyGustBrowserEvidence({availability,currentEngine,read,sha,Zip:vendor.exports});
  console.log('PASS current muted Gust chooser/Almanac/planting/2x/SaveContinue; browser wins0, fresh FPS unmeasured.');
-}else if(['0.2.6-web-zombotany3.1','0.2.6-web-zombotany3.2','0.2.6-web-zombotany45.1','0.2.6-web-zombotany45.2','0.2.6-web-zsurvival.1'].includes(currentEngine.id)){
+}else if(['0.2.6-web-zombotany3.1','0.2.6-web-zombotany3.2','0.2.6-web-zombotany45.1','0.2.6-web-zombotany45.2','0.2.6-web-zsurvival.1','0.2.6-web-zvase.1'].includes(currentEngine.id)){
  const gustFocused=read('tests/fixtures/gust1-focused-reference.json');
  assert.equal(sha(gustFocused),'5f213369ad0e86e5e15c2f75e3eb267243350ac7f310df1efc55dddbc0a4e793');
  const oldNormal=Buffer.from(json(gustFocused).files['logs/build-result.json'].base64,'base64');
@@ -205,19 +205,29 @@ if(currentEngine.id==='0.2.6-web-gust.1'){
    historicalNormalBytes:read('tests/fixtures/zombotany3-1-normal-build-reference.json'),
    historicalBuildBytes:read('tests/fixtures/zombotany3-1-native-build-reference.json')});
   console.log('PASS preserved historical Zombotany 3.1 browser functionality; no current executable or timing claim.');
-  if(['0.2.6-web-zombotany45.1','0.2.6-web-zombotany45.2','0.2.6-web-zsurvival.1'].includes(currentEngine.id)){
+  if(['0.2.6-web-zombotany45.1','0.2.6-web-zombotany45.2','0.2.6-web-zsurvival.1','0.2.6-web-zvase.1'].includes(currentEngine.id)){
    const {verifyZombotany3HistoricalEvidence}=await import('./zombotany3-2-history-verification.mjs');
    await verifyZombotany3HistoricalEvidence({read,sha,Zip:vendor.exports});
    console.log('PASS preserved historical Zombotany 3.2 browser and timing observations; no current timing claim.');
-   if(currentEngine.id==='0.2.6-web-zsurvival.1'){
+   if(['0.2.6-web-zsurvival.1','0.2.6-web-zvase.1'].includes(currentEngine.id)){
     const {verifyZsurvivalHistoricalAvailability,verifyZsurvival1BrowserAvailability}=await import('./zsurvival1-browser-verification.mjs');
     await verifyZsurvivalHistoricalAvailability({currentEngine,read,sha});
     console.log('NOT RUN historical Zombotany 4/5 correction browser functionality: preserved published45.2 availability; no current or timing claim.');
+    if(currentEngine.id==='0.2.6-web-zvase.1'){
+     const {verifyZVaseHistoricalBrowserEvidence,verifyZVase1BrowserAvailability}=await import('./zvase1-browser-verification.mjs');
+     await verifyZVaseHistoricalBrowserEvidence({currentEngine,read,sha});
+     console.log('PASS preserved historical Survival six-capture native UI smoke; no current executable or timing claim.');
+     const currentBrowser=await verifyZVase1BrowserAvailability({availability:json(read('tests/fixtures/performance/zvase1-browser-validation.json')),
+      currentEngine,read,sha,Zip:vendor.exports});
+     assert.equal(currentBrowser.verdict,'NOT RUN');
+     console.log('NOT RUN current Zombotany Vasebreaker browser functionality: browser not attempted; screenshots0, current timings unmeasured. Native and source validation remain separate.');
+    }else{
     const currentBrowser=await verifyZsurvival1BrowserAvailability({availability:json(read('tests/fixtures/performance/zsurvival1-browser-validation.json')),
      currentEngine,read,sha,Zip:vendor.exports});
     console.log(currentBrowser.verdict==='PASS'?
      'PASS current muted Zombotany Survival: Day native UI smoke; browser wins0, current timings and FPS unmeasured.':
      'NOT RUN current Zombotany Survival: Day browser functionality: actual official Computer Use URL-policy block; screenshots0, current timings unmeasured.');
+    }
    }else{
    const {verifyZombotany45BrowserAvailability}=await import(currentEngine.id==='0.2.6-web-zombotany45.2'?
     './zombotany45-browser-verification.mjs':'./zombotany45-1-browser-verification.mjs');
@@ -239,5 +249,5 @@ if(currentEngine.id==='0.2.6-web-gust.1'){
   console.log('PASS current muted Zombotany 3.2 native callback/save CPU and rAF scheduling; presented FPS and GPU timing unmeasured.');
   }
  }
- if(!['0.2.6-web-zombotany45.1','0.2.6-web-zombotany45.2','0.2.6-web-zsurvival.1'].includes(currentEngine.id))console.log('PASS current muted Zombotany 3 family/chooser/night planting/2x/SaveContinue; browser wins0, fresh FPS unmeasured.');
+ if(!['0.2.6-web-zombotany45.1','0.2.6-web-zombotany45.2','0.2.6-web-zsurvival.1','0.2.6-web-zvase.1'].includes(currentEngine.id))console.log('PASS current muted Zombotany 3 family/chooser/night planting/2x/SaveContinue; browser wins0, fresh FPS unmeasured.');
 }else assert.equal(currentEngine.id,'0.2.6-web-double.1','Unreviewed current browser epoch');

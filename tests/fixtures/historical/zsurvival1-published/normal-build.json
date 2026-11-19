@@ -1,0 +1,21 @@
+{
+  "status": "PASS",
+  "exitCode": 0,
+  "elapsedSeconds": 74.481,
+  "sourceUnchangedDuringBuild": true,
+  "sourceFiles": 888,
+  "outputs": {
+    "build/pvz-portable.js": {
+      "bytes": 210891,
+      "sha256": "0091ae18587667ce01b16185f2c463a9de7505d34efdadac48c382201a128a44"
+    },
+    "build/pvz-portable.wasm": {
+      "bytes": 7933047,
+      "sha256": "72115fe5df5c69b2bc59672cefee7d07d25e9f3d31f2b3a225e137bacb208765"
+    },
+    "build/ProjectVersion.h": {
+      "bytes": 195,
+      "sha256": "54c2ff01ed975b1069017818ebcf753209df97ef080b432ddacbfbd90dd4d6ce"
+    }
+  }
+}

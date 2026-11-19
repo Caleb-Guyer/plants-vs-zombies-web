@@ -1,0 +1,79 @@
+// SPDX-License-Identifier: MIT
+// Independent adversarial checks on the actual24 native report/raw logs.
+// Reads evidence only: no native game, renderer, browser or audio is started.
+import fs from 'node:fs';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
+import {createRequire} from 'node:module';
+import {fileURLToPath} from 'node:url';
+import {verifyZVase1Matrix,verifyZVase1Controls,verifyZVase1SpeedPairs,verifyZVase1CaseLog,zVase1CanonicalBytes} from './zvase1-verification.mjs';
+const root=new URL('../',import.meta.url),sha=b=>createHash('sha256').update(b).digest('hex'),json=b=>JSON.parse(Buffer.from(b).toString('utf8')),clone=structuredClone;
+const safe=n=>{assert(typeof n==='string'&&!/[\\:\x00-\x1f]/.test(n)&&!n.startsWith('/')&&n.split('/').every(p=>p&&p!=='.'&&p!=='..'));return n;};
+let read;
+const index=process.argv.indexOf('--candidate-root');
+if(index!==-1){
+ assert.equal(process.argv.length,index+2);const candidate=fs.realpathSync(process.argv[index+1]);assert.equal(path.basename(candidate),'zombotany3-candidate');
+ read=async n=>fs.readFileSync(path.join(candidate,safe(n)));
+}else{
+ const readRoot=n=>fs.readFileSync(new URL(n,root));
+ const engine=json(readRoot('dist/game/engine-provenance.json'));assert.equal(engine.id,'0.2.6-web-zvase.1');
+ const vendor={exports:{}};new Function('module','exports','require',readRoot('dist/vendor/jszip.min.js').toString())(vendor,vendor.exports,createRequire(import.meta.url));
+ const source=fs.readFileSync(new URL(engine.artifacts.source,new URL('dist/game/engine-provenance.json',root)));assert.equal(sha(source),engine.artifacts.sourceSha256);
+ const zip=await vendor.exports.loadAsync(source);read=async n=>{const entry=zip.file('zombotany3-candidate/'+safe(n));assert(entry,n);return entry.async('uint8array');};
+}
+assert.equal(sha(await read('logs/build-result.json')),'7351dfbf72f989cddf155ac334b19e181bb898a86896817f6a26af5e1789c1dd');
+const bytes=await read('tests/zvase1-results.json');assert.equal(sha(bytes),'fa0cfaf0a953b920afbf66619010b3b31906002e1304a145433fd5699e628487');
+const report=json(bytes),original=JSON.stringify(report);verifyZVase1Matrix(report);
+for(const row of report.scenarios)await verifyZVase1CaseLog(row,{read,sha});
+const negatives=[];
+function bad(name,change,fn=verifyZVase1Matrix){const value=clone(report);change(value);assert.throws(()=>fn(value),name);negatives.push(name);}
+const row=(r,name,speed=1,seed=1729)=>r.scenarios.find(x=>x.name===name&&x.speed===speed&&x.seed===seed);
+bad('missing native case',r=>r.scenarios.pop());
+bad('duplicate native case',r=>r.scenarios[1]=r.scenarios[0]);
+bad('ordinary actor99 appears in passive live scan',r=>row(r,'solution').nativeObservedPlantHeadTypes.push(99));
+bad('authored actor99 substituted into actual board roster',r=>row(r,'solution').nativeBoardHeadLedgers[0][0][0]=99);
+bad('authored enemy lost',r=>row(r,'solution').nativeBoardHeadLedgers[0][0][1]--);
+bad('card release lost',r=>row(r,'solution').nativeBoardCardCounts[0]--);
+bad('four boards called full course',r=>row(r,'solution').boardsSolved=4);
+bad('other99 profile record changed',r=>row(r,'solution').nativeProfileRecordsAfter[17]++);
+bad('early board reward',r=>row(r,'solution').nativeAwardBoard=3);
+bad('replay duplicates original trophy',r=>row(r,'alternate-replay').nativeAwardTypes=[8,8]);
+bad('replay final coin is not native moneybag18',r=>row(r,'alternate-replay').nativeAwardType=8);
+bad('post-start game-state cheat',r=>row(r,'solution').postStartActorResourceTimerStageOrRngEdits=true);
+bad('cadence weakened',r=>row(r,'solution').minimumDecisionCadenceTicks=29);
+bad('free-card native expiry broken',r=>row(r,'controls').nativeUnplantedPacketExpiresWithoutDuplication=false);
+bad('native saved graph differs',r=>row(r,'save-sequence').checkpoints[2].afterGraph+=';changed');
+bad('Menu Leave Continue bypassed',r=>row(r,'save-sequence').checkpoints[0].nativeMenuLeaveCardContinue=false);
+bad('mallet checkpoint has no pending native hammer',r=>row(r,'save-sequence').checkpoints[1].pendingMallet=false);
+bad('packet checkpoint omits the actual card',r=>row(r,'save-sequence').checkpoints[2].packets=0);
+bad('combat checkpoint omits real projectiles',r=>row(r,'save-sequence').checkpoints[3].projectiles=0);
+bad('transition exceeds native120 updates',r=>row(r,'save-sequence').checkpoints[4].transitionCounter=121);
+bad('natural defeat grants credit',r=>row(r,'release-loss').nativeProfileRecordsAfter[96]=1);
+bad('natural defeat reports zero active ticks',r=>{const x=row(r,'release-loss');x.nativeTicks=0;x.nativeLossTicks=0;});
+bad('defeat cutscene was skipped',r=>row(r,'release-loss').nativeDefeatCutsceneWaitUpdates=0);
+bad('forged defeat cutscene completion',r=>row(r,'retry').nativeOriginalDefeatCutsceneCompleted=false);
+bad('Retry lacked actual lost boundary',r=>row(r,'retry').nativeDefeatBoundaryObservations=0);
+bad('defeat wait exceeds bounded native modal wait',r=>row(r,'retry').nativeDefeatCutsceneWaitUpdates=2001);
+bad('Retry claimed without actual original button',r=>row(r,'retry').nativeActualRetry=false);
+bad('winning ticks include fabricated transition time',r=>row(r,'solution').nativeWinningCourseTicks++);
+bad('native bank cost reduced',r=>row(r,'solution').nativeSunSpent--);
+bad('sun budget invented',r=>row(r,'solution').nativeSunCollected+=25);
+bad('ordinary portrait head accepted',r=>row(r,'controls').nativePresentationPortraitMatchPercentMilli[0]=54999);
+bad('ordinary portrait negative no longer fails',r=>row(r,'controls').nativePresentationOrdinaryMatchPercentMilli[0]=55000);
+bad('ordinary revealed-vase head accepted',r=>row(r,'controls').nativePresentationVaseOrdinaryMatchPercentMilli[0]=55000);
+bad('ordinary thumbnail accepted',r=>row(r,'controls').nativePresentationThumbnailOrdinaryMatchPercentMilli=55000);
+bad('synthetic controls counted as earned clear',r=>row(r,'controls').earnedClears=1);
+bad('audio hardware opened',r=>row(r,'solution').audioDeviceOpened=true);
+bad('missing speed pair',r=>r.speedPairs.pop(),verifyZVase1SpeedPairs);
+bad('duplicate speed pair',r=>r.speedPairs[1]=r.speedPairs[0],verifyZVase1SpeedPairs);
+bad('speed pair falsely reports timing delta',r=>r.speedPairs[0].nativeTickDelta+=1,verifyZVase1SpeedPairs);
+bad('speed semantics differ despite true pair flag',r=>row(r,'solution',2).nativeProfileRecordsAfter[96]=2,verifyZVase1SpeedPairs);
+const win=row(report,'solution'),cp=row(report,'save-sequence');
+const logfile=`tests/zvase1-logs/${win.name}-${win.speed}x-${win.seed}.log`,raw=Buffer.from(await read(logfile));
+await assert.rejects(()=>verifyZVase1CaseLog(win,{read:async n=>n===logfile?Buffer.concat([raw,Buffer.from('tampered')]):read(n),sha}));negatives.push('raw native log bytes changed');
+const changed=clone(cp);changed.checkpoints[0].afterGraph+=';forged';await assert.rejects(()=>verifyZVase1CaseLog(changed,{read,sha}));negatives.push('reported graph differs from unchanged native marker');
+assert.equal(JSON.stringify(report),original,'All verifier calls are read-only');
+verifyZVase1Controls(row(report,'controls'));
+const unknown=clone(report);row(unknown,'solution').nativeSunSpent++;assert.notEqual(sha(zVase1CanonicalBytes(unknown)),sha(zVase1CanonicalBytes(report)));negatives.push('unknown meaningful native content remains distinct');
+console.log(`PASS actual24 native Vasebreaker scenarios/12 actual speed pairs and ${negatives.length} independent tamper controls; no native rerun.`);

@@ -9,9 +9,9 @@ import {CURRENT_ENGINE_ID,CURRENT_SOURCE_COUNT,CURRENT_OBJECT_COUNT,reconstructG
 // Sealed after independent review of the actual final45.2 complete36 rerun.
 // Renderer/compatibility corrections also require their separate native proof.
 // Published45.1 observations remain historical; no result is relabelled.
-const acceptedContractPins=new Set(['4700f79b51395b3825f17a0ae809a4ba8aa84c7dbe0ebda5b76923935663fb8a']);
-const acceptedReportPins=new Set(['35ab937d621e00b8225df6c67dcae9d8de39bb5da3a84d008a53d07d253f9176']);
-const acceptedReportContentPins=new Set(['8a40a731eea12510f75ad5e74b2efe87292b90280cdb22ff57b883d6a94a809b']);
+const acceptedContractPins=new Set(['6ffc2ac83d362ac7c9538389452361c4df76b6c7f252439226daa8ad5e834c76']); // Root reviewed the actual closed current execution.
+const acceptedReportPins=new Set(['566f4654ef3d7f2f54cb0e53b46c039c0c678e365fa708628de5a378c02f8f02']); // Root reviewed the actual closed current execution.
+const acceptedReportContentPins=new Set(['ea9299ee077a1b157c047af8f847e697dc8f41b7b45af6e0433e4e659d1b7ac3']); // Root reviewed the actual closed current execution.
 const names=['normal','hesitation','save-windup','save-freeze','retry','replay','no-action','mechanics','presentation'];
 const battleNames=names.slice(0,7);
 export const ZOMBOTANY3_MATRIX=[1729,7331].flatMap(seed=>names.flatMap(name=>[1,2].map(speed=>[name,speed,seed])));
@@ -86,7 +86,7 @@ export function verifyZombotany3PlantHeadRoster({header,sha}){
 }
 
 export async function verifyZombotany3SourceBounds({read,sha,engine}){
- assert.equal(CURRENT_ENGINE_ID,'0.2.6-web-zsurvival.1');assert.equal(CURRENT_SOURCE_COUNT,888);assert.equal(CURRENT_OBJECT_COUNT,152);
+ assert.equal(CURRENT_ENGINE_ID,'0.2.6-web-zvase.1');assert.equal(CURRENT_SOURCE_COUNT,891);assert.equal(CURRENT_OBJECT_COUNT,153);
  const sourceParent=await zsurvivalParentSourceReader({read,sha,engine});
  const parent=await reconstructGustSources({referenceBytes:fs.readFileSync(new URL('./fixtures/zombotany3-parent-reference.json',import.meta.url)),read:sourceParent.read,sha,engine:sourceParent.engine});
  read=sourceParent.read;
@@ -157,18 +157,18 @@ export async function verifyZombotany3SourceBounds({read,sha,engine}){
 
 export async function verifyZombotany3BuildBindings({report,read,sha,engine,fullRunReport,productionBuildBytes}){
  fields(report,{execution:'complete-production-engine',optimization:'O2',engineId:CURRENT_ENGINE_ID,mode:93,profileIndex:92,
-  productionObjectCount:152,failures:0,exitCode:0,presentationControlsAvailable:true,developmentNoArt:false});
- assert.equal(engine.id,CURRENT_ENGINE_ID);assert.equal(Object.keys(report.sourceSha256).length,888);
- assert.equal(Object.keys(report.productionObjectSha256).length,152);
+  productionObjectCount:153,failures:0,exitCode:0,presentationControlsAvailable:true,developmentNoArt:false});
+ assert.equal(engine.id,CURRENT_ENGINE_ID);assert.equal(Object.keys(report.sourceSha256).length,891);
+ assert.equal(Object.keys(report.productionObjectSha256).length,153);
  assert.deepEqual(report.sourceSha256,fullRunReport.sourceSha256);assert.deepEqual(report.productionObjectSha256,fullRunReport.productionObjectSha256);
  for(const [name,pin]of Object.entries(report.sourceSha256)){safeName(name);assert(name.startsWith('source/'));digest(pin);assert.equal(sha(await read(name)),pin,name);}
  for(const [name,pin]of Object.entries(report.productionObjectSha256)){safeName(name);digest(pin);assert(name.endsWith('.o'));}
- const normal=json(productionBuildBytes);fields(normal,{status:'PASS',exitCode:0,sourceUnchangedDuringBuild:true,sourceFiles:888});
+ const normal=json(productionBuildBytes);fields(normal,{status:'PASS',exitCode:0,sourceUnchangedDuringBuild:true,sourceFiles:891});
  assert.equal(report.productionBuildReceiptSha256,sha(productionBuildBytes));
  for(const snapshot of ['source-before.json','source-after.json']){
   const pins=json(await read('logs/'+snapshot));
   assert.deepEqual(Object.fromEntries(Object.entries(pins).map(([name,pin])=>['source/'+safeName(name),pin])),report.sourceSha256,
-   'Both ordinary production build snapshots bind all 888 final sources: '+snapshot);
+   'Both ordinary production build snapshots bind all 891 final sources: '+snapshot);
  }
  for(const suffix of ['js','wasm'])assert.equal(normal.outputs['build/pvz-portable.'+suffix].sha256,engine.artifacts[suffix+'Sha256']);
  const build=json(await read('tests/zombotany3-build.json'));
@@ -307,7 +307,7 @@ export async function verifyZombotany3(options){
  const contractBytes=await read('tests/zombotany3-verification-contract.json');
  assert(acceptedContractPins.has(sha(contractBytes)),'The actual final preregistered complete Zombotany3 contract is not accepted yet');
  const contract=json(contractBytes);fields(contract,{schemaVersion:1,stage:'final-preregistered',engineId:CURRENT_ENGINE_ID,
-  mode:93,profileIndex:92,sourceCount:888,productionObjectCount:152,rulesVersion:1,syntheticCasesEarnCredits:false,
+  mode:93,profileIndex:92,sourceCount:891,productionObjectCount:153,rulesVersion:1,syntheticCasesEarnCredits:false,
   parentArchiveSha256:'10acb269866b175ed4836c2c64c6a79dc86a11241de9e48c7be54f8f89808be8'});assert.deepEqual(contract.matrix,ZOMBOTANY3_MATRIX);
  assert.deepEqual(contract.nativeStats,nativeStats);assert.deepEqual(contract.course,course);assert.deepEqual(contract.waves,waves);
  fields(contract.plantHeadOnlyCorrection,{priorEngineId:'0.2.6-web-zombotany45.1',sameAuthoredEnemyTotals:true,
@@ -345,7 +345,7 @@ export async function verifyZombotany3(options){
    }
   }
  }
- assert.equal(report.checks,888+report.scenarios.reduce((sum,row)=>sum+row.checks,0));
+ assert.equal(report.checks,891+report.scenarios.reduce((sum,row)=>sum+row.checks,0));
  assert.equal(report.scenarios.filter(row=>row.family==='night-zombotany').length,28);
  assert.equal(report.scenarios.filter(row=>row.family==='synthetic-controls').length,8);
  assert.equal(report.scenarios.reduce((sum,row)=>sum+row.profileCredits,0),28);
