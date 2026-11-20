@@ -1,0 +1,13 @@
+{
+  "id": "0.2.6-web-zspool.1",
+  "sourceFiles": 895,
+  "productionObjects": 155,
+  "normalReceiptSha256": "ccaded2965f136661a22e7c2459398b50e70210a9c6ad7b5861e39e0c59e15c4",
+  "reportSha256": "917afaa5cfe6179c8e3193da5d399df6c288fdb847461447d68a1c17981e93a9",
+  "driverBuildSha256": "354264a961229b1a60bc4371cafb03c8d2294e9d2a6247e9a2e3422f8cce8034",
+  "sourceSha256": "a57b215ffd83e8934fcbe5de7ffb1f94bbae34ba0dff33bf8258458b17b02f29",
+  "patchSha256": "e8d3f192a745e9e6daf37c8edbeb290f5e0ba21574a9df42012646ca3e543be2",
+  "jsSha256": "ad5b83e9bb048eb17643f3d6fcea82c5b51b0c66c2249d5ebefff1511c945fe8",
+  "wasmSha256": "09581bac71c446a64681170df8acd36f3f3f17bf44d58422d2cc6187f4e89e83",
+  "historicalBrowserSha256": "e3fd975bf579436024b72dbdf4ebd3446f6b8d651a2afa4952d15cc209525eed"
+}

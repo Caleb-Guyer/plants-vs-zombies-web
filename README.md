@@ -1,6 +1,14 @@
 # Plants vs. Zombies — browser playtest
 
-## ZomBotany Survival: Night
+## ZomBotany Survival: Pool
+
+Beat the original ZomBotany to unlock **Survival: Pool**, the eleventh card on the ZomBotany tab. Defend the daytime pool for five flags. Plant Lily Pads to give your shooters a foothold in the two water lanes. Between flags, pick a new deck and keep your garden.
+
+Watch the water near the flags. Sea-shroom-heads can surface inside the pool. Later flags bring them up in both lanes while Wall-nut-heads shield the attackers and Gatling-heads fire from the banks.
+
+[Play on GitHub Pages](https://caleb-guyer.github.io/plants-vs-zombies-web/).
+
+## ZomBotany Survival: Night (previous release)
 
 Beat the original ZomBotany, then open **Survival: Night**, the tenth card on the Zombotany tab. Defend the same night lawn for five flags. At each break you can change seeds and keep the garden you have grown.
 

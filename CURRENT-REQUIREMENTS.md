@@ -1,6 +1,10 @@
 # Current requirements
 
-## ZomBotany Survival: Night
+## ZomBotany Survival: Pool
+
+The eleventh card opens with the original ZomBotany trophy. Use the six-row daytime pool, native Survival seed choices, existing rewards and five flags of plant-headed opponents. Preserve the four grass lanes, both water lanes, original planting rules and water animations. Keep earned Pool records independent of Night and of the original profile fields.
+
+## ZomBotany Survival: Night (previous release)
 
 The tenth Zombotany card unlocks with the original ZomBotany trophy. Preserve native night Survival timing, five flags, persistent plants, seed selection, rewards and Continue. Use plant-headed zombies and the game's original mushroom attacks. Grow new graves only on legal, unplanted squares and let Grave Busters prevent reinforcements. The native card, lawn and HUD use the original artwork.
 

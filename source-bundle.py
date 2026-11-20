@@ -383,6 +383,12 @@ def ensure_vasebreaker_baseline(root):
     reference = {"path": "dist/source/pvz-portable-0.2.6-web-zvase.1-source.zip",
                  "sha256": "d9d4351181e09f1b0eceacc8203bf4d0bcf46910b7e27027c762b521d8805f2b"}
     size = 94_720_307
+    if engine.get("id") == "0.2.6-web-zspool.1":
+        previous = engine.get("parent", {})
+        _require(previous.get("id") == "0.2.6-web-zsnight.1" and
+                 engine.get("sourceArchiveBase") == previous.get("sourceArchiveBase"),
+                 "Unexpected Survival Night parent")
+        engine = previous
     if engine.get("id") == "0.2.6-web-zsnight.1":
         base = engine.get("sourceArchiveBase", {})
         previous = engine.get("parent", {})
@@ -483,8 +489,12 @@ def make_current_transport(root):
     """Return two deterministic outer-only entries; leave the native ZIP exact."""
     root = _root(root)
     target, original = _donor(root)
-    # Preset8 uses a32MiB dictionary within the existing64MiB decoder bound.
-    payload = lzma.compress(original, format=lzma.FORMAT_XZ, check=lzma.CHECK_CRC64, preset=8)
+    options = {"preset": 8}
+    if target["path"].endswith("/pvz-portable-0.2.6-web-zspool.1-source.zip"):
+        # Pool's shared ZIP prefix contains matching spans more than 32 MiB apart.
+        # A 48 MiB dictionary still decodes within the existing 64 MiB limit.
+        options = {"filters": [{"id": lzma.FILTER_LZMA2, "preset": 8, "dict_size": 48 * 1024 * 1024}]}
+    payload = lzma.compress(original, format=lzma.FORMAT_XZ, check=lzma.CHECK_CRC64, **options)
     manifest = {"format": CURRENT_FORMAT, "target": target,
                 "payload": {"path": CURRENT_PAYLOAD_REL, "bytes": len(payload), "sha256": _sha(payload)}}
     encoded = (json.dumps(manifest, sort_keys=True, separators=(",", ":")) + "\n").encode("utf-8")

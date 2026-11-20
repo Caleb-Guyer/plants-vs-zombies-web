@@ -1,0 +1,440 @@
+diff --git a/CMake/ProjectVersion.cmake b/CMake/ProjectVersion.cmake
+index 706b447..65c6b31 100644
+--- a/CMake/ProjectVersion.cmake
++++ b/CMake/ProjectVersion.cmake
+@@ -66,6 +66,6 @@ if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
+ endif()
+ 
+ # Browser release identity; keep binary and corresponding-source manifests aligned.
+-set(PVZP_VERSION "0.2.6-web-zsnight.1")
++set(PVZP_VERSION "0.2.6-web-zspool.1")
+ set(PVZP_VERSION_PLAIN "0.2.6")
+ configure_file("${PROJECT_SOURCE_DIR}/CMake/ProjectVersion.h.in" "${PROJECT_BINARY_DIR}/ProjectVersion.h" @ONLY)
+diff --git a/src/ConstEnums.h b/src/ConstEnums.h
+index 1816e95..12ee096 100644
+--- a/src/ConstEnums.h
++++ b/src/ConstEnums.h
+@@ -481,7 +481,8 @@ enum GameMode : int32_t
+ 	GAMEMODE_PUZZLE_I_ZOMBOTANY = 98,
+ 	GAMEMODE_CHALLENGE_ZOMBOTANY_BEGHOULED = 99,
+ 	GAMEMODE_CHALLENGE_ZOMBOTANY_SURVIVAL_NIGHT = 100,
+-	NUM_GAME_MODES = 101
++	GAMEMODE_CHALLENGE_ZOMBOTANY_SURVIVAL_POOL = 101,
++	NUM_GAME_MODES = 102
+ };
+ enum GameObjectType : int32_t
+ {
+diff --git a/src/Lawn/Board.cpp b/src/Lawn/Board.cpp
+index 9e5ed53..2b44401 100644
+--- a/src/Lawn/Board.cpp
++++ b/src/Lawn/Board.cpp
+@@ -276,6 +276,8 @@ void Board::DisposeBoard()
+ 
+ bool Board::AreEnemyZombiesOnScreen()
+ {
++    // Wait for the original delayed pool surfacing before advancing the flag.
++    if (mRiseFromGraveCounter > 0 && mApp->mGameMode == ZombotanySurvival::kPoolMode) return true;
+     // The native award check asks this before a pending grave wave emerges.
+     // Treat that saved countdown as remaining opposition in Night Shift.
+     if (mRiseFromGraveCounter > 0 && mChallenge && NightShift::IsMode(mApp->mGameMode) &&
+@@ -1020,6 +1022,7 @@ void Board::PickBackground()
+ 
+ 	case GameMode::GAMEMODE_CHALLENGE_POOL_PANIC_ENDLESS:
+ 	case GameMode::GAMEMODE_CHALLENGE_POOL_PANIC:
++	case ZombotanySurvival::kPoolMode:
+ 	case GameMode::GAMEMODE_SURVIVAL_NORMAL_STAGE_3:
+ 	case GameMode::GAMEMODE_SURVIVAL_HARD_STAGE_3:
+ 	case GameMode::GAMEMODE_SURVIVAL_ENDLESS_STAGE_3:
+@@ -2666,6 +2669,9 @@ bool Board::RowCanHaveZombieType(int theRow, ZombieType theZombieType)
+ 	{
+ 		return false;
+ 	}
++	if (mApp->mGameMode == ZombotanySurvival::kPoolMode && mPlantRow[theRow] == PLANTROW_POOL &&
++		(theZombieType == ZOMBIE_PEA_HEAD || theZombieType == ZOMBIE_GATLING_HEAD))
++		return false;
+ 	if (mPlantRow[theRow] == PlantRowType::PLANTROW_POOL && !Zombie::ZombieTypeCanGoInPool(theZombieType) && theZombieType != ZombieType::ZOMBIE_BALLOON)
+ 	{
+ 		return false;
+@@ -2776,7 +2782,7 @@ bool Board::CanAddBobSled()
+ Zombie* Board::AddZombieInRow(ZombieType theZombieType, int theRow, int theFromWave)
+ {
+     theZombieType = Zombotany45::PlantHeadForSpawn(mApp->mGameMode, theZombieType, theRow);
+-    theZombieType = ZombotanySurvival::HeadForSpawn(mApp->mGameMode, theZombieType);
++    theZombieType = ZombotanySurvival::HeadForSpawn(mApp->mGameMode, theZombieType, theRow);
+     theZombieType = ZombotanyVasebreaker::HeadForSpawn(mApp->mGameMode, theZombieType);
+     if (mApp->mGameMode == ZomBotanyBeghouled::kMode && theZombieType >= ZOMBIE_NORMAL &&
+         theZombieType < NUM_ZOMBIE_TYPES && !ZomBotanyBeghouled::IsAttacker(theZombieType))
+@@ -5546,6 +5552,11 @@ void Board::SpawnZombiesFromSky()
+ 
+ void Board::SpawnZombiesFromGraves()
+ {
++    if (mApp->mGameMode == ZombotanySurvival::kPoolMode)
++    {
++        ZombotanySurvival::SurfacePoolAmbush(*this);
++        return;
++    }
+ 	if (ZombotanySurvival::IsMode(mApp->mGameMode)) return;
+ 	if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_WAR_AND_PEAS || mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_WAR_AND_PEAS_2 || Zombotany3::IsMode(mApp->mGameMode) || Zombotany45::IsMode(mApp->mGameMode))
+ 		return;
+diff --git a/src/Lawn/System/PlayerInfo.cpp b/src/Lawn/System/PlayerInfo.cpp
+index 7572849..eede354 100644
+--- a/src/Lawn/System/PlayerInfo.cpp
++++ b/src/Lawn/System/PlayerInfo.cpp
+@@ -25,6 +25,7 @@
+ #include "DataSync.h"
+ #include <algorithm>
+ #include "PlayerInfo.h"
++#include "ZombotanySurvival.h"
+ #include "../../LawnApp.h"
+ #include "../LawnCommon.h"
+ #include "../Widget/ChallengeScreen.h"
+@@ -34,6 +35,8 @@
+ #include "../../SexyAppFramework/SexyAppBase.h"
+ 
+ static int gUserVersion = 12;
++// Optional little-endian "ZSP1" footer after the complete original GOTY profile.
++static constexpr uint32_t kPoolProgressTag = 0x3150535A;
+ 
+ // Convert PottedPlant between little-endian file format and native byte order.
+ // No-op on little-endian machines (entire function optimized away at compile time).
+@@ -179,7 +182,22 @@ void PlayerInfo::SyncDetails(DataSync& theSync)
+ 			mZombatarHeadCount = 0;
+ 			mZombatarData.clear();
+ 			mZombatarCreatedBefore = 0;
++			return;
++		}
++		// Older profiles end here. A missing or partial extension leaves every
++		// original field intact and the new record at its reset value.
++		try
++		{
++			uint32_t tag = 0, flags = 0;
++			theSync.SyncUInt32(tag);
++			if (tag == kPoolProgressTag)
++			{
++				theSync.SyncUInt32(flags);
++				if (flags <= ZombotanySurvival::kFlagGoal)
++					mChallengeRecords[ZombotanySurvival::kPoolProfileIndex] = flags;
++			}
+ 		}
++		catch (const DataReaderException&) {}
+ 		return;
+ 	}
+ 
+@@ -211,6 +229,13 @@ void PlayerInfo::SyncDetails(DataSync& theSync)
+ 	uint8_t aZombatarCreatedBefore = mZombatarCreatedBefore ? 1 : 0;
+ 	theSync.SyncUInt8(aZombatarCreatedBefore);
+ 	mZombatarCreatedBefore = aZombatarCreatedBefore;
++	auto flags = mChallengeRecords[ZombotanySurvival::kPoolProfileIndex];
++	if (flags > 0)
++	{
++		uint32_t tag = kPoolProgressTag;
++		theSync.SyncUInt32(tag);
++		theSync.SyncUInt32(flags);
++	}
+ }
+ 
+ void PlayerInfo::LoadDetails()
+@@ -321,7 +346,7 @@ void PlayerInfo::AddCoins(int theAmount)
+ void PlayerInfo::ResetChallengeRecord(GameMode theGameMode)
+ {
+ 	int aGameMode = static_cast<int>(theGameMode) - static_cast<int>(GameMode::GAMEMODE_SURVIVAL_NORMAL_STAGE_1);
+-	PVZP_ASSERT(aGameMode >= 0 && aGameMode <= NUM_CHALLENGE_MODES);
++	PVZP_ASSERT(aGameMode >= 0 && aGameMode < NUM_CHALLENGE_MODES);
+ 	mChallengeRecords[aGameMode] = 0;
+ }
+ 
+diff --git a/src/Lawn/System/PlayerInfo.h b/src/Lawn/System/PlayerInfo.h
+index 9f230d5..db6c75f 100644
+--- a/src/Lawn/System/PlayerInfo.h
++++ b/src/Lawn/System/PlayerInfo.h
+@@ -75,7 +75,7 @@ public:
+ 	int32_t             mLevel;                             //+0x24
+ 	int32_t             mCoins;                             //+0x28
+ 	uint32_t            mFinishedAdventure;                 //+0x2C
+-	uint32_t            mChallengeRecords[100];             //+0x30
++	uint32_t            mChallengeRecords[NUM_GAME_MODES - GAMEMODE_SURVIVAL_NORMAL_STAGE_1];  // First 100 records use the original file layout.
+ 	uint32_t            mPurchases[80];                     //+0x1C0
+ 	uint32_t            mPlayTimeActivePlayer;              //+0x300
+ 	uint32_t            mPlayTimeInactivePlayer;            //+0x304
+diff --git a/src/Lawn/System/ZombotanySurvival.cpp b/src/Lawn/System/ZombotanySurvival.cpp
+index 182e8a8..25b213a 100644
+--- a/src/Lawn/System/ZombotanySurvival.cpp
++++ b/src/Lawn/System/ZombotanySurvival.cpp
+@@ -4,6 +4,7 @@
+ #include "../Board.h"
+ #include "../Challenge.h"
+ #include "../GridItem.h"
++#include "../Plant.h"
+ #include "../Zombie.h"
+ #include "../../LawnApp.h"
+ #include "../../PvzpLib/PvzpCommon.h"
+@@ -33,6 +34,25 @@ constexpr std::array<NightStage, kStageCount> nightStages = {{
+        {2,1,1,1}, {3,0,2,0}, {2,1,2,0}, {3,0,2,0}, {3,1,2,1} }}
+ }};
+ 
++constexpr std::array<ZombieType, 5> poolHeads = {
++    ZOMBIE_PUFF_HEAD, ZOMBIE_SEA_HEAD, ZOMBIE_WALLNUT_HEAD, ZOMBIE_PEA_HEAD, ZOMBIE_GATLING_HEAD
++};
++using PoolStage = std::array<std::array<int, poolHeads.size()>, kWavesPerStage>;
++// First establish the banks, then the pool. Later flags split the defense
++// between short-range swimmers and ranged attackers on the grass.
++constexpr std::array<PoolStage, kStageCount> poolStages = {{
++    {{ {1,0,0,0,0}, {1,0,0,0,0}, {1,0,0,0,0}, {2,0,0,0,0}, {0,1,0,0,0},
++       {2,0,0,0,0}, {1,1,0,0,0}, {1,1,0,0,0}, {2,0,0,0,0}, {2,1,0,0,0} }},
++    {{ {1,1,0,0,0}, {2,0,0,0,0}, {1,1,0,0,0}, {1,0,0,1,0}, {0,1,1,0,0},
++       {2,1,0,0,0}, {1,1,0,1,0}, {1,0,1,0,0}, {1,2,0,0,0}, {2,1,1,0,0} }},
++    {{ {1,1,0,1,0}, {2,1,0,0,0}, {1,2,0,0,0}, {2,0,1,0,0}, {0,2,0,1,0},
++       {1,1,1,0,0}, {2,1,0,1,0}, {1,2,0,0,0}, {1,1,1,0,0}, {2,2,0,1,0} }},
++    {{ {1,2,0,1,0}, {2,1,1,0,0}, {1,1,0,1,0}, {0,1,0,0,1}, {1,2,1,0,0},
++       {2,1,0,1,0}, {2,2,0,0,0}, {1,1,1,1,0}, {1,2,0,0,0}, {2,2,1,0,1} }},
++    {{ {2,1,1,0,0}, {1,2,0,1,0}, {1,1,0,0,1}, {2,2,0,1,0}, {1,2,1,0,0},
++       {1,1,0,1,1}, {2,2,1,0,0}, {1,2,0,1,0}, {2,1,1,0,0}, {2,2,1,1,1} }}
++}};
++
+ template<class Visitor>
+ void VisitStage(const Board& board, Visitor visit)
+ {
+@@ -47,6 +67,7 @@ void VisitStage(const Board& board, Visitor visit)
+         }
+     };
+     if (board.mApp->mGameMode == kNightMode) visitWaves(nightHeads, nightStages[stage]);
++    else if (board.mApp->mGameMode == kPoolMode) visitWaves(poolHeads, poolStages[stage]);
+     else visitWaves(kHeadTypes, kStages[stage]);
+ }
+ 
+@@ -97,9 +118,14 @@ void RaiseNightMushrooms(Board& board, int stage)
+ }
+ }
+ 
+-ZombieType HeadForSpawn(GameMode mode, ZombieType type)
++ZombieType HeadForSpawn(GameMode mode, ZombieType type, int row)
+ {
+     if (!IsMode(mode) || type < ZOMBIE_NORMAL || type >= NUM_ZOMBIE_TYPES) return type;
++    if (mode == kPoolMode)
++    {
++        if (std::find(poolHeads.begin(), poolHeads.end(), type) != poolHeads.end()) return type;
++        return row == 2 || row == 3 ? ZOMBIE_SEA_HEAD : ZOMBIE_PUFF_HEAD;
++    }
+     if (mode == kNightMode)
+         return std::find(nightHeads.begin(), nightHeads.end(), type) != nightHeads.end() ? type : ZOMBIE_PUFF_HEAD;
+     return IsHead(type) ? type : ZOMBIE_PEA_HEAD;
+@@ -148,8 +174,44 @@ void SpawnNightWave(Board& board)
+     if (board.mCurrentWave == kWavesPerStage - 1) RaiseNightMushrooms(board, stage);
+ }
+ 
++void SurfacePoolAmbush(Board& board)
++{
++    const int stage = board.mChallenge->mSurvivalStage;
++    // The original final-wave timer and RiseFromGrave provide the seaweed,
++    // waterline, swim transition and saveable countdown. Ice blocks the rise.
++    if (!board.mIceTrapCounter)
++    {
++        const int first = Rand(2);
++        const int lanes = stage < 2 ? 1 : 2;
++        for (int i = 0; i < lanes; ++i)
++        {
++            const int row = 2 + (first + i) % 2;
++            const int col = RandRangeInt(7 - stage / 2, 8);
++            if (Zombie* swimmer = board.AddZombieInRow(ZOMBIE_SEA_HEAD, row, board.mCurrentWave))
++                swimmer->RiseFromGrave(col, row);
++        }
++    }
++    // If ice stopped the swimmers after the last land zombie died, there is
++    // no remaining zombie death to finish this round.
++    if (board.AreEnemyZombiesOnScreen()) return;
++    if (board.IsSurvivalStageWithRepick())
++    {
++        board.mLevelAwardSpawned = true;
++        board.mApp->mBoardResult = BOARDRESULT_WON;
++        board.FadeOutLevel();
++    }
++    else board.mChallenge->SpawnLevelAward(4, 2);
++}
++
+ void PreloadResources(GameMode mode)
+ {
++    if (mode == kPoolMode)
++    {
++        for (const auto plant : {SEED_PUFFSHROOM, SEED_SEASHROOM, SEED_WALLNUT, SEED_PEASHOOTER, SEED_GATLINGPEA})
++            Plant::PreloadPlantResources(plant);
++        for (const auto head : poolHeads) Zombie::PreloadZombieResources(head);
++        return;
++    }
+     if (mode == kNightMode)
+     {
+         Zombotany3::PreloadResources();
+@@ -163,13 +225,16 @@ bool Validate(const Board& board)
+ {
+     if (!board.mApp || !board.mChallenge || !IsMode(board.mApp->mGameMode)) return false;
+     const GameMode mode = board.mApp->mGameMode;
+-    if (board.mBackground != (mode == kNightMode ? BACKGROUND_2_NIGHT : BACKGROUND_1_DAY) ||
++    const auto lawn = mode == kPoolMode ? BACKGROUND_3_POOL : mode == kNightMode ? BACKGROUND_2_NIGHT : BACKGROUND_1_DAY;
++    if (board.mBackground != lawn ||
+         board.mNumWaves != kWavesPerStage || board.mChallenge->mChallengeState != STATECHALLENGE_NORMAL ||
+         board.mChallenge->mSurvivalStage < 0 || board.mChallenge->mSurvivalStage >= kStageCount ||
+         board.mCurrentWave < 0 || board.mCurrentWave > kWavesPerStage) return false;
+     if (mode == kNightMode && (board.mChallenge->mChallengeStateCounter < 0 ||
+         board.mChallenge->mChallengeStateCounter > Zombotany3::kFreezeTicks ||
+         board.mChallenge->mChallengeGridX < 0 || board.mChallenge->mChallengeGridX > board.mMainCounter)) return false;
++    if (mode == kPoolMode && (board.mRiseFromGraveCounter < 0 || board.mRiseFromGraveCounter > 200 ||
++        (board.mRiseFromGraveCounter && board.mCurrentWave != kWavesPerStage))) return false;
+     bool correctWaves = true;
+     VisitStage(board, [&](int wave, int slot, ZombieType head) {
+         if (board.mZombiesInWave[wave][slot] != head) correctWaves = false;
+diff --git a/src/Lawn/System/ZombotanySurvival.h b/src/Lawn/System/ZombotanySurvival.h
+index a1aed93..6ed462c 100644
+--- a/src/Lawn/System/ZombotanySurvival.h
++++ b/src/Lawn/System/ZombotanySurvival.h
+@@ -12,6 +12,9 @@ inline constexpr int kProfileIndex = 95;
+ inline constexpr GameMode kNightMode = GAMEMODE_CHALLENGE_ZOMBOTANY_SURVIVAL_NIGHT;
+ inline constexpr int kNightProfileIndex = static_cast<int>(kNightMode) - GAMEMODE_SURVIVAL_NORMAL_STAGE_1;
+ static_assert(kNightProfileIndex == 99);
++inline constexpr GameMode kPoolMode = GAMEMODE_CHALLENGE_ZOMBOTANY_SURVIVAL_POOL;
++inline constexpr int kPoolProfileIndex = static_cast<int>(kPoolMode) - GAMEMODE_SURVIVAL_NORMAL_STAGE_1;
++static_assert(kPoolProfileIndex == 100);
+ inline constexpr int kStageCount = 5;
+ inline constexpr int kWavesPerStage = 10;
+ inline constexpr int kFlagGoal = 5;
+@@ -42,17 +45,18 @@ inline constexpr std::array<Stage,kStageCount> kStages = {{
+        {2,1,0,0,0,1}, {3,1,1,1,0,0}, {3,1,0,0,1,0}, {3,1,0,1,0,0},
+        {3,1,1,1,0,0}, {3,2,0,1,1,0} }}
+ }};
+-constexpr bool IsMode(GameMode mode) { return mode == kMode || mode == kNightMode; }
++constexpr bool IsMode(GameMode mode) { return mode == kMode || mode == kNightMode || mode == kPoolMode; }
+ constexpr bool IsHead(ZombieType type)
+ {
+     for (const auto head : kHeadTypes) if (type == head) return true;
+     return false;
+ }
+ // Each Survival lawn has its own spawn roster and five flag record.
+-ZombieType HeadForSpawn(GameMode mode, ZombieType type);
++ZombieType HeadForSpawn(GameMode mode, ZombieType type, int row = -1);
+ void PopulateAllowedZombies(Board& board);
+ void PopulateWaves(Board& board);
+ void SpawnNightWave(Board& board);
++void SurfacePoolAmbush(Board& board);
+ void PreloadResources(GameMode mode);
+ bool Validate(const Board& board);
+ }
+diff --git a/src/Lawn/Widget/ChallengeScreen.cpp b/src/Lawn/Widget/ChallengeScreen.cpp
+index de355da..6079c76 100644
+--- a/src/Lawn/Widget/ChallengeScreen.cpp
++++ b/src/Lawn/Widget/ChallengeScreen.cpp
+@@ -161,7 +161,8 @@ constinit const ChallengeDefinition gChallengeDefs[NUM_CHALLENGE_MODES] = {
+ 	{ .mChallengeMode = ZombotanyVasebreaker::kMode, .mChallengeIconIndex = 0, .mPage = ChallengePage::CHALLENGE_PAGE_ZOMBOTANY, .mRow = 1, .mCol = 1, .mChallengeName = "Vasebreaker" },
+ 	{ .mChallengeMode = IZombotany::kMode, .mChallengeIconIndex = 0, .mPage = CHALLENGE_PAGE_ZOMBOTANY, .mRow = 1, .mCol = 2, .mChallengeName = "I, ZomBotany" },
+ 	{ .mChallengeMode = ZomBotanyBeghouled::kMode, .mChallengeIconIndex = 1, .mPage = CHALLENGE_PAGE_ZOMBOTANY, .mRow = 1, .mCol = 3, .mChallengeName = "ZomBotany Beghouled" },
+-	{ .mChallengeMode = GAMEMODE_CHALLENGE_ZOMBOTANY_SURVIVAL_NIGHT, .mChallengeIconIndex = 1, .mPage = CHALLENGE_PAGE_ZOMBOTANY, .mRow = 1, .mCol = 4, .mChallengeName = "Survival: Night" }
++	{ .mChallengeMode = GAMEMODE_CHALLENGE_ZOMBOTANY_SURVIVAL_NIGHT, .mChallengeIconIndex = 1, .mPage = CHALLENGE_PAGE_ZOMBOTANY, .mRow = 1, .mCol = 4, .mChallengeName = "Survival: Night" },
++	{ .mChallengeMode = ZombotanySurvival::kPoolMode, .mChallengeIconIndex = 2, .mPage = CHALLENGE_PAGE_ZOMBOTANY, .mRow = 2, .mCol = 0, .mChallengeName = "Survival: Pool" }
+ };
+ 
+ ChallengeScreen::ChallengeScreen(LawnApp* theApp, ChallengePage thePage)
+@@ -464,7 +465,8 @@ void ChallengeScreen::UpdateButtons()
+ 			ZombotanyVasebreaker::IsMode(aDef.mChallengeMode) ? 6 :
+ 			aDef.mChallengeMode == IZombotany::kMode ? 7 :
+ 			aDef.mChallengeMode == ZomBotanyBeghouled::kMode ? 8 :
+-			aDef.mChallengeMode == GAMEMODE_CHALLENGE_ZOMBOTANY_SURVIVAL_NIGHT ? 9 : -1;
++			aDef.mChallengeMode == GAMEMODE_CHALLENGE_ZOMBOTANY_SURVIVAL_NIGHT ? 9 :
++			aDef.mChallengeMode == ZombotanySurvival::kPoolMode ? 10 : -1;
+ 		ButtonWidget* aButton = mChallengeButtons[aChallengeMode].get();
+ 		aButton->mVisible = aFamilyPage ? aFamilySlot >= 0 : aDef.mPage == mPageIndex;
+ 		// The family aliases the existing buttons and records. Returning restores
+@@ -655,6 +657,54 @@ Image* ChallengeScreen::GetZombotanySurvivalNightImage()
+ 	return mZombotanySurvivalNightImage.get();
+ }
+ 
++Image* ChallengeScreen::GetZombotanySurvivalPoolImage()
++{
++	if (mZombotanySurvivalPoolImage) return mZombotanySurvivalPoolImage.get();
++	auto* cache = mApp->mReanimatorCache.get();
++	if (!cache || !Sexy::IMAGE_POOL) return nullptr;
++	const std::string group = "DelayLoad_Background3";
++	if (std::find(mLoadedResourceNames.begin(), mLoadedResourceNames.end(), group) == mLoadedResourceNames.end())
++	{
++		if (!PvzpLoadResources(group.c_str())) return nullptr;
++		mLoadedResourceNames.push_back(group);
++	}
++	if (!Sexy::IMAGE_BACKGROUND3) return nullptr;
++	auto image = cache->MakeBlankMemoryImage(80, 65);
++	Graphics picture(image.get());
++	picture.SetLinearBlend(true);
++	picture.SetColor(Color::Black);
++	picture.FillRect(0, 0, 80, 65);
++	// Crop at one third scale, keeping the original pool edge and water aligned.
++	const Rect crop(480, 272, 240, 195);
++	const int waterY = (278 - crop.mY) / 3;
++	picture.DrawImage(Sexy::IMAGE_BACKGROUND3, Rect(0, 0, 80, 65), crop);
++	picture.DrawImage(Sexy::IMAGE_POOL, Rect(0, waterY, 80, 65 - waterY),
++		Rect(crop.mX - (34 + BOARD_OFFSET), 0, crop.mWidth, (65 - waterY) * 3));
++
++	auto lily = cache->MakeCachedPlantFrame(SEED_LILYPAD, VARIATION_NORMAL);
++	DrawFittedCardSprite(picture, *lily, 15, 55, 23, 12);
++	auto swimmer = cache->MakeBlankMemoryImage(200, 210);
++	Graphics native(swimmer.get());
++	native.SetLinearBlend(true);
++	Reanimation body;
++	body.ReanimationInitializeType(40, 40, REANIM_ZOMBIE);
++	body.SetFramesForLayer("anim_swim");
++	body.mAnimTime = .5f;
++	Zombie::SetupReanimLayers(&body, ZOMBIE_DUCKY_TUBE);
++	Zombotany45Art::PrepareBodyRig(body);
++	// At full pool depth the original carrier clips 80 pixels below its origin.
++	// The rubber ring, wake and hands are drawn above that waterline.
++	native.ClipRect(0, 0, swimmer->GetWidth(), 40 + 80);
++	for (const char* track : {"Zombie_duckytube", "Zombie_outerarm_hand", "Zombie_innerarm3",
++		"Zombie_whitewater", "Zombie_whitewater2"})
++		if (body.TrackExists(track)) body.GetTrackInstanceByName(track)->mIgnoreClipRect = true;
++	body.Draw(&native);
++	Zombotany45Art::DrawCachedHead(&native, body, ZOMBIE_SEA_HEAD);
++	DrawFittedCardSprite(picture, *swimmer, 48, 59, 58, 55);
++	mZombotanySurvivalPoolImage = std::move(image);
++	return mZombotanySurvivalPoolImage.get();
++}
++
+ Image* ChallengeScreen::GetZombotanyVasebreakerImage()
+ {
+ 	if (mZombotanyVasebreakerImage) return mZombotanyVasebreakerImage.get();
+@@ -792,6 +842,10 @@ void ChallengeScreen::DrawButton(Graphics* g, int theChallengeIndex)
+ 			{
+ 				if (Image* image = Zombotany45Art::GetImage(aDef.mChallengeMode)) g->DrawImage(image, aPosX + 13, aPosY + 4);
+ 			}
++			else if (aDef.mChallengeMode == ZombotanySurvival::kPoolMode)
++			{
++				if (Image* image = GetZombotanySurvivalPoolImage()) g->DrawImage(image, aPosX + 13, aPosY + 4);
++			}
+ 			else if (aDef.mChallengeMode == GAMEMODE_CHALLENGE_ZOMBOTANY_SURVIVAL_NIGHT)
+ 			{
+ 				if (Image* image = GetZombotanySurvivalNightImage()) g->DrawImage(image, aPosX + 13, aPosY + 4);
+@@ -978,8 +1032,9 @@ void ChallengeScreen::Draw(Graphics* g)
+ 		static_cast<int>(mApp->HasBeatenChallenge(ZombotanyVasebreaker::kMode)) +
+ 		static_cast<int>(mApp->HasBeatenChallenge(IZombotany::kMode)) +
+ 		static_cast<int>(mApp->HasBeatenChallenge(ZomBotanyBeghouled::kMode)) +
+-		static_cast<int>(mApp->HasBeatenChallenge(GAMEMODE_CHALLENGE_ZOMBOTANY_SURVIVAL_NIGHT)) : mApp->GetNumTrophies(mPageIndex);
+-	int aTrophiesTotal = mPageIndex == CHALLENGE_PAGE_SURVIVAL ? 10 : mPageIndex == CHALLENGE_PAGE_CHALLENGE ? 20 : mPageIndex == CHALLENGE_PAGE_PUZZLE ? 18 : mPageIndex == CHALLENGE_PAGE_ZOMBOTANY ? 10 : 0;
++		static_cast<int>(mApp->HasBeatenChallenge(GAMEMODE_CHALLENGE_ZOMBOTANY_SURVIVAL_NIGHT)) +
++		static_cast<int>(mApp->HasBeatenChallenge(ZombotanySurvival::kPoolMode)) : mApp->GetNumTrophies(mPageIndex);
++	int aTrophiesTotal = mPageIndex == CHALLENGE_PAGE_SURVIVAL ? 10 : mPageIndex == CHALLENGE_PAGE_CHALLENGE ? 20 : mPageIndex == CHALLENGE_PAGE_PUZZLE ? 18 : mPageIndex == CHALLENGE_PAGE_ZOMBOTANY ? 11 : 0;
+ 	if (aTrophiesTotal > 0)
+ 	{
+ 		std::string aTrophyString = std::format("{}/{}", aTrophiesGot, aTrophiesTotal);
+diff --git a/src/Lawn/Widget/ChallengeScreen.h b/src/Lawn/Widget/ChallengeScreen.h
+index c6eb8a0..40a2261 100644
+--- a/src/Lawn/Widget/ChallengeScreen.h
++++ b/src/Lawn/Widget/ChallengeScreen.h
+@@ -60,6 +60,7 @@ public:
+ 	std::unique_ptr<Sexy::MemoryImage> mIZombotanyImage;
+ 	std::unique_ptr<Sexy::MemoryImage> mZomBotanyBeghouledImage;
+ 	std::unique_ptr<Sexy::MemoryImage> mZombotanySurvivalNightImage;
++	std::unique_ptr<Sexy::MemoryImage> mZombotanySurvivalPoolImage;
+ 	ChallengePage               mPageIndex;
+ 	bool                        mCheatEnableChallenges;
+ 	UnlockingState              mUnlockState;
+@@ -84,6 +85,7 @@ public:
+ 	Sexy::Image* GetIZombotanyImage();
+ 	Sexy::Image* GetZomBotanyBeghouledImage();
+ 	Sexy::Image* GetZombotanySurvivalNightImage();
++	Sexy::Image* GetZombotanySurvivalPoolImage();
+ 	void                        DrawButton(Graphics* g, int theChallengeIndex);
+ 	void                        Draw(Graphics* g) override;
+ 	void                        Update() override;

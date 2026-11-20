@@ -68,6 +68,10 @@ tests/fixtures/zsurvival1-linux-ci.* -text whitespace=cr-at-eol
 tests/fixtures/zvase1-*.json -text
 tests/fixtures/zbeghouled1-release.json -text
 tests/fixtures/zsnight1-release.json -text
+tests/fixtures/zspool1-release.json -text
+tests/fixtures/zspool1-earned.dat binary
+tests/fixtures/historical/zsnight1-published/** -text
+tests/fixtures/historical/zspool1-browser-deltas.tar.xz binary
 tests/fixtures/historical/zbeghouled1-published/** -text
 tests/fixtures/historical/izombotany1-published/** -text
 tests/fixtures/performance/zvase1-*.json -text

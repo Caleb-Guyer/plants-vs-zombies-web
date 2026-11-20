@@ -18,6 +18,9 @@ ROOT = Path(__file__).resolve().parents[1]
 SPEC = importlib.util.spec_from_file_location('source_bundle_codec', ROOT / 'source-bundle.py')
 codec = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(codec)
+CHAIN_SPEC = importlib.util.spec_from_file_location('native_release_chain', ROOT / 'native_release_chain.py')
+chain = importlib.util.module_from_spec(CHAIN_SPEC)
+CHAIN_SPEC.loader.exec_module(chain)
 OLD = 'dist/source/pvz-portable-0.2.6-web-endless.2-source.zip'
 ENGINE = json.loads((ROOT / 'dist/game/engine-provenance.json').read_text('utf-8'))
 BASE = 'dist/source/' + Path(ENGINE['artifacts']['source']).name
@@ -28,6 +31,26 @@ BASE_SHA = ENGINE['artifacts']['sourceSha256']
 CURRENT_INDEX = 'source-transports/current.json'
 CURRENT_PAYLOAD = 'source-transports/current.xz'
 sha = lambda data: hashlib.sha256(data).hexdigest()
+
+
+class HistoricalBrowserTests(unittest.TestCase):
+    def test_pool_delta_restores_insertions_and_rejects_invalid_ranges_or_digest(self):
+        base = b''.join(hashlib.sha256(bytes([i])).digest() for i in range(128))
+        original = base[3:1700] + b'original function body' + base[1900:] + b'tail'
+        delta = chain._encode_delta(base, original)
+        self.assertEqual(chain._restore_delta(base, delta), original)
+        for damaged in (delta[:-1], delta + b'tail', delta[:4] + b'\xff\xff\xff\x7f' + delta[8:]):
+            with self.assertRaises(ValueError):
+                chain._restore_delta(base, damaged)
+        with tempfile.TemporaryDirectory() as path:
+            root = Path(path)
+            name = 'pvz-portable.wasm'
+            packed = chain.pack_browsers(root, {'zsnight/' + name: original}, {name: base})
+            self.assertEqual(chain.read_browser(root, 'zsnight', name, sha(original), packed, base), original)
+            with self.assertRaises(ValueError):
+                chain.read_browser(root, 'zsnight', name, '0' * 64, packed, base)
+            with self.assertRaises(ValueError):
+                chain.read_browser(root, 'zsnight', name, sha(original), '0' * 64, base)
 
 
 class SourceBundle(unittest.TestCase):

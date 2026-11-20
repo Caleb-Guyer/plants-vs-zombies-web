@@ -99,6 +99,7 @@ assert.deepEqual(changed.sort(), [
   "src/Lawn/Projectile.cpp",
   "src/Lawn/SeedPacket.cpp",
   "src/Lawn/System/PlayerInfo.cpp",
+  "src/Lawn/System/PlayerInfo.h",
   "src/Lawn/Widget/NewOptionsDialog.cpp",
   "src/Lawn/Widget/NewOptionsDialog.h",
   "src/Lawn/Widget/SeedChooserScreen.cpp",

@@ -1,6 +1,12 @@
 # Browser parity and QA record
 
-## ZomBotany Survival: Night
+## ZomBotany Survival: Pool
+
+The muted Pool suite covers two seeds at both speeds. It plays all five flags, repicks seeds four times, and checks Lily Pads, supported plants, water-lane reinforcements and the land roster. Continue restores a board during the third flag’s underwater ambush countdown. Retry begins with an undefended loss. The suite also loads the winning profile again and checks the Pool record while preserving the older save format. Run `python tests/zspool.py --play` to repeat it.
+
+The browser check imports a profile earned by that suite, reloads from browser storage and compares the exported profile byte for byte. It then opens Mini-Games, selects the Pool card, chooses six seeds and plants a Lily Pad in the upper water lane. Run `python tests/pool-browser.py` with ChromeDriver or pass `--driver` with a matching Edge WebDriver.
+
+## ZomBotany Survival: Night (previous release)
 
 The automated suite plays the new survival course at 1× and 2× across two seeds with sound output disabled. It checks all five flags, the four seed selections between them, the card unlock, grave growth and clearing, and plant-headed attackers rising from real graves. The Continue scenario restores a battle from its native save. The retry scenario lets an undefended lawn fall before playing again. Separate controls start standard Survival: Night and ZomBotany Survival: Day using their own original rosters. Replay with `python tests/zsnight.py --play`.
 

@@ -116,7 +116,7 @@ def parent_source_input(engine):
             or any(character not in "0123456789abcdef" for character in expected)):
         raise ValueError("Invalid immediate-parent source SHA-256")
     path = DIST / "game" / reference
-    if engine.get("id") in {"0.2.6-web-izombotany.1", "0.2.6-web-zbeghouled.1", "0.2.6-web-zsnight.1"}:
+    if engine.get("id") in {"0.2.6-web-izombotany.1", "0.2.6-web-zbeghouled.1", "0.2.6-web-zsnight.1", "0.2.6-web-zspool.1"}:
         source_bundle_helpers().ensure_vasebreaker_baseline(ROOT)
         return None
     if engine.get("id") == "0.2.6-web-zvase.1":
@@ -591,8 +591,8 @@ def nested_source_inputs(engine, paths, baseline):
             or hashlib.sha256(native_ui.read_bytes()).hexdigest()
             != "d9861034849eca9d637197aa78a1bae4c90b5656db91ca102d8c903100031edd"):
         raise ValueError("Authenticated native I, Zombie UI fixture is missing or changed")
-    if engine.get("id") in {"0.2.6-web-izombotany.1", "0.2.6-web-zbeghouled.1", "0.2.6-web-zsnight.1"}:
-        # The full, exact parent archive is already present in the current ZIP.
+    if engine.get("id") in {"0.2.6-web-izombotany.1", "0.2.6-web-zbeghouled.1", "0.2.6-web-zsnight.1", "0.2.6-web-zspool.1"}:
+        # The current ZIP and historical suffixes reconstruct the extension archives.
         return [baseline]
     if engine.get("id") in {"0.2.6-web-scrap.1", "0.2.6-web-ambush.1", "0.2.6-web-torch.1", "0.2.6-web-double.1", "0.2.6-web-gust.1", "0.2.6-web-zombotany45.2", "0.2.6-web-zsurvival.1", "0.2.6-web-zvase.1"}:
         if engine["id"] == "0.2.6-web-zvase.1":
@@ -729,9 +729,10 @@ def regenerate_source_downloads(transport_entries=None):
         "schema_version": 1,
         "current_engine": engine["id"],
         "upstream_tag": engine["upstream"]["tag"],
-        "layout": ("Site source includes the upstream baseline and the three native Zombotany extension patches. "
+        "layout": ("Site source includes the upstream baseline and the native ZomBotany extension patches. "
                    "The current complete native source ZIP is restored offline from the lossless XZ transport. "
-                   "The shared I, ZomBotany prefix and Beghouled suffix restore the previous release. Shared byte ranges restore the earlier regression inputs. "
+                   "The shared I, ZomBotany prefix and published source suffixes restore the earlier extensions. "
+                   "Shared byte ranges restore the earlier regression inputs. "
                    "The archive list links the current and upstream sources on Pages and historical releases at immutable GitHub revisions."),
         "nested_sources": [path.name for path in nested],
         "restored_sources": [{
@@ -789,10 +790,9 @@ def inspect_zip(data, label, depth=0):
 
 def nested_patches(engine):
     names = {PurePosixPath(engine["artifacts"]["patch"]).name}
-    if engine["id"] in ("0.2.6-web-zbeghouled.1", "0.2.6-web-zsnight.1"):
-        names.add("zvase1-to-izombotany1.patch")
-    if engine["id"] == "0.2.6-web-zsnight.1":
-        names.add("izombotany1-to-zbeghouled1.patch")
+    while engine["id"] in ("0.2.6-web-zspool.1", "0.2.6-web-zsnight.1", "0.2.6-web-zbeghouled.1"):
+        engine = engine["parent"]
+        names.add(PurePosixPath(engine["artifacts"]["patch"]).name)
     return names
 
 
@@ -843,13 +843,19 @@ def root_sources():
     for path in (ROOT / "tests").rglob("*"):
         if path.is_file() and not any(part in {".git", "node_modules", "__pycache__"} for part in path.relative_to(ROOT).parts):
             files.add(path)
-    # The new source download carries both previous browser builds together.
-    # Their separately pinned bytes are verified by the two native extension suites.
-    if engine_inputs()[0]["id"] == "0.2.6-web-zsnight.1":
-        if not (ROOT / "tests/fixtures/historical/extension-browsers.tar.xz").is_file():
+    # The Pool source download represents all earlier extension browsers relative
+    # to the checked-in shipping browser. Each original executable has its own digest.
+    active_id = engine_inputs()[0]["id"]
+    if active_id in ("0.2.6-web-zsnight.1", "0.2.6-web-zspool.1"):
+        history = ROOT / "tests/fixtures/historical"
+        capsule = history / "extension-browsers.tar.xz"
+        if active_id == "0.2.6-web-zspool.1":
+            files.discard(capsule)
+            capsule = history / "zspool1-browser-deltas.tar.xz"
+        if not capsule.is_file():
             raise ValueError("Missing historical browser executables")
         for ext in ("js", "wasm"):
-            files.discard(ROOT / f"tests/fixtures/historical/izombotany1-published/pvz-portable.{ext}")
+            files.discard(history / f"izombotany1-published/pvz-portable.{ext}")
     manifest = ROOT / ".openai" / "hosting.json"
     if manifest.is_file():
         files.add(manifest)

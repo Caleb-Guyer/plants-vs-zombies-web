@@ -32,7 +32,12 @@ RELEASES = {
         parent=chain.BEGHOUL, parent_bytes=chain.BEGHOUL_BYTES, parent_sha=chain.BEGHOUL_SHA,
         commit='996f999ee3e73af601446f5da7acfb78a9ed1dcc', sources=895, objects=155,
         caption='with Zombotany Survival: Night.',
-        change='Adds the tenth Zombotany card, a five-flag night Survival with spreading graves and mushroom-headed attackers.')
+        change='Adds the tenth Zombotany card, a five-flag night Survival with spreading graves and mushroom-headed attackers.'),
+    'zspool': dict(tag='zspool1', stem='zspool', parent_tag='zsnight1',
+        parent=chain.NIGHT, parent_bytes=chain.NIGHT_BYTES, parent_sha=chain.NIGHT_SHA,
+        commit='41834c696beb5689d4083bbac7fa5f6154538288', sources=895, objects=155,
+        caption='with ZomBotany Survival: Pool.',
+        change='Adds the eleventh ZomBotany card, a five-flag pool Survival with plant-headed zombies on land and in the water.')
 }
 
 def sha(data):
@@ -77,7 +82,7 @@ def package(candidate, results, key):
     parent=DIST/'source'/Path(engine['artifacts']['source']).name
     parent_bytes=parent.read_bytes()
     assert len(parent_bytes)==release['parent_bytes'] and sha(parent_bytes)==release['parent_sha']
-    base = chain.shared_base(parent_bytes) if key == 'zsnight' else parent_bytes
+    base = chain.shared_base(parent_bytes, engine_id) if engine_id in chain.ARCHIVE_PARENTS else parent_bytes
     normal=json.loads((candidate/'logs/build-result.json').read_bytes())
     src={f.relative_to(candidate/'source').as_posix():f.read_bytes() for f in sorted((candidate/'source').rglob('*')) if f.is_file()}
     source_sha={name:sha(data) for name,data in src.items()}
@@ -114,12 +119,17 @@ def package(candidate, results, key):
         assert sha(binary)==engine['artifacts'][ext+'Sha256']
         if key == 'izombotany':
             files['history/zvase1/pvz-portable.'+ext]=binary
-        elif key == 'zsnight':
+        elif engine_id in chain.ARCHIVE_PARENTS:
             filename = 'pvz-portable.' + ext
-            previous_browsers['zbeghouled/' + filename] = binary
-            baseline_binary = parent_file(RELEASES['zbeghouled'], 'dist/game/' + filename)
-            assert sha(baseline_binary) == engine['parent']['artifacts'][ext + 'Sha256']
-            previous_browsers['izombotany/' + filename] = baseline_binary
+            older = engine
+            while True:
+                older_key = older['id'].removeprefix('0.2.6-web-').removesuffix('.1')
+                assert sha(binary) == older['artifacts'][ext + 'Sha256']
+                previous_browsers[older_key + '/' + filename] = binary
+                if older_key == 'izombotany':
+                    break
+                binary = parent_file(RELEASES[older_key], 'dist/game/' + filename)
+                older = older['parent']
         else:
             # External historical executables keep the standalone full native source below GitHub's file limit.
             history = ROOT / 'tests/fixtures/historical/izombotany1-published'
@@ -127,12 +137,15 @@ def package(candidate, results, key):
             (history / ('pvz-portable.'+ext)).write_bytes(binary)
     if key == 'zbeghouled':
         (history/'build-provenance.json').write_bytes(parent_file(release, 'dist/source/build-provenance.json'))
-    if key == 'zsnight':
-        suffix = ROOT / chain.SUFFIX
+    if engine_id in chain.ARCHIVE_PARENTS:
+        suffix = ROOT / chain.ARCHIVE_PARENTS[engine_id][3]
         suffix.parent.mkdir(parents=True, exist_ok=True)
         suffix.write_bytes(parent_bytes[len(base):])
         (suffix.parent/'build-provenance.json').write_bytes(parent_file(release, 'dist/source/build-provenance.json'))
-        historic_digest = chain.pack_browsers(ROOT, previous_browsers)
+        bases = None
+        if key == 'zspool':
+            bases = {name: (candidate/'build'/name).read_bytes() for name in ('pvz-portable.js','pvz-portable.wasm')}
+        historic_digest = chain.pack_browsers(ROOT, previous_browsers, bases)
     archive_name=f'pvz-portable-{engine_id}-source.zip'
     destination=DIST/'source'/archive_name
     with tempfile.TemporaryDirectory(dir=destination.parent) as temp:
@@ -171,7 +184,7 @@ def package(candidate, results, key):
              'caption':release['caption'],'gameAssetsIncluded':True,
              'assetManifest':engine['assetManifest'],'assetBundleId':engine['assetBundleId'],
               'parent':engine}
-    if key == 'zsnight':
+    if engine_id in chain.ARCHIVE_PARENTS:
         current['sourceArchiveBase'] = chain.SHARED_BASE
         assert chain.parent_source(ROOT, current, destination.read_bytes()) == parent_bytes
     else:
@@ -185,7 +198,7 @@ def package(candidate, results, key):
     fixture={'id':engine_id,'sourceFiles':len(src),'productionObjects':release['objects'],'normalReceiptSha256':sha(files['logs/build-result.json']),
              'reportSha256':sha(results.read_bytes()),'driverBuildSha256':sha(files['tests/'+key+'-build.json']),
              **{key:value for key,value in artifacts.items() if key.endswith('Sha256')}}
-    if key == 'zsnight':
+    if engine_id in chain.ARCHIVE_PARENTS:
         fixture['historicalBrowserSha256'] = historic_digest
     (ROOT/'tests/fixtures'/(tag+'-release.json')).write_bytes(encode(fixture))
     print(f'{archive_name}: {destination.stat().st_size:,} bytes, {entries} entries, {len(changes)} changed source files')

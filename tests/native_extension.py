@@ -19,6 +19,7 @@ RELEASES = {
     "izombotany": (893, 154, "IZombotany.cpp.o", "i-zombotany"),
     "zbeghouled": (895, 155, "ZomBotanyBeghouled.cpp.o", "zbeghouled"),
     "zsnight": (895, 155, "ZombotanySurvival.cpp.o", "zsnight"),
+    "zspool": (895, 155, "ZombotanySurvival.cpp.o", "zspool"),
 }
 CASES = {(name, speed, seed) for name in ("solution", "resume", "retry", "classic")
          for speed in (1, 2) for seed in (1729, 7331)}
@@ -91,17 +92,24 @@ def run(key, verify_results, fields):
     engine = json.loads((GAME / "engine-provenance.json").read_bytes())
     source = (GAME / engine["artifacts"]["source"]).read_bytes()
     active_id = engine["id"]
+    active_artifacts = engine["artifacts"]
     historical = active_id != engine_id
     while engine["id"] != engine_id:
-        check(engine["id"] in (chain.NIGHT, chain.BEGHOUL), "Unexpected extension ancestry")
+        check(engine["id"] in (chain.POOL, chain.NIGHT, chain.BEGHOUL), "Unexpected extension ancestry")
         source = chain.parent_source(ROOT, engine, source)
         engine = engine["parent"]
     binaries = ROOT / f"tests/fixtures/historical/{key}1-published" if historical else GAME
     receipt_path = binaries / "build-provenance.json" if historical else GAME / engine["buildRecord"]
     def read_binary(name, expected):
-        if historical and active_id == chain.NIGHT:
-            active_pins = json.loads((ROOT / "tests/fixtures/zsnight1-release.json").read_bytes())
-            data = chain.read_browser(ROOT, key, name, expected, active_pins["historicalBrowserSha256"])
+        if historical and active_id in chain.ARCHIVE_PARENTS:
+            active_key = active_id.removeprefix("0.2.6-web-").removesuffix(".1")
+            active_pins = json.loads((ROOT / f"tests/fixtures/{active_key}1-release.json").read_bytes())
+            base = None
+            if active_id == chain.POOL:
+                base = (GAME / name).read_bytes()
+                ext = name.rsplit(".", 1)[-1]
+                check(digest(base) == active_artifacts[ext + "Sha256"], "Unexpected current browser")
+            data = chain.read_browser(ROOT, key, name, expected, active_pins["historicalBrowserSha256"], base)
             if (binaries / name).is_file():
                 check((binaries / name).read_bytes() == data, "Historical checkout executable differs")
             return data

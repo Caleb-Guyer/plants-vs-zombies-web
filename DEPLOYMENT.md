@@ -1,6 +1,10 @@
 # GitHub Pages release: Caleb-Guyer/plants-vs-zombies-web
 
-## ZomBotany Survival: Night
+## ZomBotany Survival: Pool
+
+The Pages workflow replays the muted Pool course from its packaged native source with `python tests/zspool.py --play`. It also checks the original Survival pool, the adjacent ZomBotany Night course and the earlier gameplay suites. The matching browser engine, native source archive and patch are available from the published site.
+
+## ZomBotany Survival: Night (previous release)
 
 The Pages workflow runs `python tests/zsnight.py --play` against the hosted asset bundle. It also replays Beghouled, I, ZomBotany and the older native suites before publishing. The gameplay driver shares the normal build’s 155 production objects. The downloadable native source includes the driver and its build receipt.
 

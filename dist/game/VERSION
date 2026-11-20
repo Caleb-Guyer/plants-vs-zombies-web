@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-zsnight.1
-Adds the tenth Zombotany card, a five-flag night Survival with spreading graves and mushroom-headed attackers.
-Engine JavaScript SHA-256: 9f238524a2c7fbdba6975d274cd145bf529d4c8824811aafdb1b944eba4d801c
-Engine WASM SHA-256: 301c15e0a7323b992a261a68ffbd0bcf78762f2bb9e668c542a308d2bb850960
+PvZ-Portable 0.2.6-web-zspool.1
+Adds the eleventh ZomBotany card, a five-flag pool Survival with plant-headed zombies on land and in the water.
+Engine JavaScript SHA-256: ad5b83e9bb048eb17643f3d6fcea82c5b51b0c66c2249d5ebefff1511c945fe8
+Engine WASM SHA-256: 09581bac71c446a64681170df8acd36f3f3f17bf44d58422d2cc6187f4e89e83
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.
