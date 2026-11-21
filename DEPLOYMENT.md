@@ -1,6 +1,10 @@
 # GitHub Pages release: Caleb-Guyer/plants-vs-zombies-web
 
-## ZomBotany Survival: Pool
+## ZomBotany Survival: Fog
+
+The Pages workflow replays the five-flag Fog course with `python tests/zsfog.py --play`. A separate muted browser run opens the new card, plants a Plantern and checks that the light clears the fog. The earlier Pool browser and native suites also run before publication.
+
+## ZomBotany Survival: Pool (previous release)
 
 The Pages workflow replays the muted Pool course from its packaged native source with `python tests/zspool.py --play`. It also checks the original Survival pool, the adjacent ZomBotany Night course and the earlier gameplay suites. The matching browser engine, native source archive and patch are available from the published site.
 

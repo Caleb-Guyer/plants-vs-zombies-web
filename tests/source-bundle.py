@@ -53,6 +53,60 @@ class HistoricalBrowserTests(unittest.TestCase):
                 chain.read_browser(root, 'zsnight', name, sha(original), '0' * 64, base)
 
 
+class HistoricalSourceSuffixTests(unittest.TestCase):
+    def setUp(self):
+        directory = tempfile.TemporaryDirectory()
+        self.addCleanup(directory.cleanup)
+        self.path = Path(directory.name) / 'source-suffix.xz'
+        base_driver = b''.join(hashlib.sha256(bytes([i])).digest() for i in range(128))
+        self.original = base_driver[13:2000] + b'historical driver' + base_driver[2057:]
+        self.delta = chain._encode_delta(base_driver, self.original)
+        archive_bytes = io.BytesIO()
+        with zipfile.ZipFile(archive_bytes, 'w') as archive:
+            archive.writestr(chain.ZIP_ROOT + 'i-zombotany-engine.wasm', base_driver)
+        self.base = archive_bytes.getvalue()
+        self.compressed = chain._portable_deflate(self.original)
+        self.before, self.after = b'retained local header', b'retained footer and central directory'
+        self.expected = self.before + self.compressed + self.after
+        self.header = chain.SUFFIX_HEADER.pack(b'PVS1', len(self.before), len(self.compressed),
+                                              hashlib.sha256(self.compressed).digest())
+        self.record = self.header + self.before + self.after + self.delta
+
+    def encode(self, data):
+        return lzma.compress(data, format=lzma.FORMAT_XZ, check=lzma.CHECK_CRC64)
+
+    def restore(self, data):
+        self.path.write_bytes(data)
+        return chain._restore_suffix(self.base, self.path, len(self.expected))
+
+    def test_physical_zip_stream_and_host_encoder_fallback(self):
+        packed = self.encode(self.record)
+        self.assertEqual(self.restore(packed), self.expected)
+        with mock.patch.object(chain.zlib, 'compressobj') as encoder:
+            encoder.return_value.compress.return_value = b'another implementation'
+            encoder.return_value.flush.return_value = b''
+            with mock.patch.object(chain, '_portable_deflate', wraps=chain._portable_deflate) as portable:
+                self.assertEqual(self.restore(packed), self.expected)
+                portable.assert_called_once_with(self.original)
+
+    def test_rejects_invalid_stream_span_delta_or_compressed_digest(self):
+        valid = self.encode(self.record)
+        wrong_span = chain.SUFFIX_HEADER.pack(b'PVS1', len(self.expected), len(self.compressed),
+                                              hashlib.sha256(self.compressed).digest())
+        wrong_digest = self.header[:-1] + bytes([self.header[-1] ^ 1])
+        body = self.record[len(self.header):]
+        for label, damaged in (
+            ('truncated stream', valid[:-1]), ('trailing data', valid + b'x'),
+            ('concatenated streams', valid + valid),
+            ('missing checksum', lzma.compress(self.record, check=lzma.CHECK_NONE)),
+            ('out-of-bounds span', self.encode(wrong_span + body)),
+            ('truncated delta', self.encode(self.record[:-1])),
+            ('wrong compressed digest', self.encode(wrong_digest + body)),
+        ):
+            with self.subTest(label=label), self.assertRaises(ValueError):
+                self.restore(damaged)
+
+
 class SourceBundle(unittest.TestCase):
     @classmethod
     def setUpClass(cls):

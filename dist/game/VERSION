@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-zspool.1
-Adds the eleventh ZomBotany card, a five-flag pool Survival with plant-headed zombies on land and in the water.
-Engine JavaScript SHA-256: ad5b83e9bb048eb17643f3d6fcea82c5b51b0c66c2249d5ebefff1511c945fe8
-Engine WASM SHA-256: 09581bac71c446a64681170df8acd36f3f3f17bf44d58422d2cc6187f4e89e83
+PvZ-Portable 0.2.6-web-zsfog.1
+Adds the twelfth ZomBotany card, a five-flag Survival on the original foggy pool lawn.
+Engine JavaScript SHA-256: 1218c3198f1b9aa845f54c28da7399c33fef9b0f5925079ec46f6e176c9c3013
+Engine WASM SHA-256: 23b6346ae35bdbcf3c879c96e2a581b38d60efd06bafda1e13183ad2e7e62b37
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.

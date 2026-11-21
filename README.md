@@ -1,6 +1,14 @@
 # Plants vs. Zombies — browser playtest
 
-## ZomBotany Survival: Pool
+## ZomBotany Survival: Fog
+
+Beat the original ZomBotany to unlock **Survival: Fog**, the twelfth card on the ZomBotany tab. Defend the night pool for five flags. The fog moves one column closer on flags three and five. Grow your sun supply and change seeds between flags.
+
+Sea-shroom-heads can surface in water that is still covered by thick fog. A Plantern lights nearby squares. A Blover can clear both lanes if you time it for the flag. Fume-heads arrive on the banks, followed by Wall-nut-heads and Tall-nut-heads.
+
+[Play on GitHub Pages](https://caleb-guyer.github.io/plants-vs-zombies-web/).
+
+## ZomBotany Survival: Pool (previous release)
 
 Beat the original ZomBotany to unlock **Survival: Pool**, the eleventh card on the ZomBotany tab. Defend the daytime pool for five flags. Plant Lily Pads to give your shooters a foothold in the two water lanes. Between flags, pick a new deck and keep your garden.
 

@@ -26,6 +26,8 @@ ROOT = Path(__file__).resolve().parent
 DIST = ROOT / "dist"
 SITE_SOURCE = DIST / "source" / "site-source.zip"
 SOURCE_DOWNLOADS = DIST / "source" / "source-downloads.json"
+EXTENSIONS = {"0.2.6-web-izombotany.1", "0.2.6-web-zbeghouled.1", "0.2.6-web-zsnight.1",
+              "0.2.6-web-zspool.1", "0.2.6-web-zsfog.1"}
 # Current publication target is GitHub Pages, via the existing Pages workflow.
 # https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-large-files-on-github
 MAX_STATIC_ASSET_BYTES = 100 * 1024 * 1024
@@ -116,7 +118,7 @@ def parent_source_input(engine):
             or any(character not in "0123456789abcdef" for character in expected)):
         raise ValueError("Invalid immediate-parent source SHA-256")
     path = DIST / "game" / reference
-    if engine.get("id") in {"0.2.6-web-izombotany.1", "0.2.6-web-zbeghouled.1", "0.2.6-web-zsnight.1", "0.2.6-web-zspool.1"}:
+    if engine.get("id") in EXTENSIONS:
         source_bundle_helpers().ensure_vasebreaker_baseline(ROOT)
         return None
     if engine.get("id") == "0.2.6-web-zvase.1":
@@ -591,7 +593,7 @@ def nested_source_inputs(engine, paths, baseline):
             or hashlib.sha256(native_ui.read_bytes()).hexdigest()
             != "d9861034849eca9d637197aa78a1bae4c90b5656db91ca102d8c903100031edd"):
         raise ValueError("Authenticated native I, Zombie UI fixture is missing or changed")
-    if engine.get("id") in {"0.2.6-web-izombotany.1", "0.2.6-web-zbeghouled.1", "0.2.6-web-zsnight.1", "0.2.6-web-zspool.1"}:
+    if engine.get("id") in EXTENSIONS:
         # The current ZIP and historical suffixes reconstruct the extension archives.
         return [baseline]
     if engine.get("id") in {"0.2.6-web-scrap.1", "0.2.6-web-ambush.1", "0.2.6-web-torch.1", "0.2.6-web-double.1", "0.2.6-web-gust.1", "0.2.6-web-zombotany45.2", "0.2.6-web-zsurvival.1", "0.2.6-web-zvase.1"}:
@@ -790,7 +792,7 @@ def inspect_zip(data, label, depth=0):
 
 def nested_patches(engine):
     names = {PurePosixPath(engine["artifacts"]["patch"]).name}
-    while engine["id"] in ("0.2.6-web-zspool.1", "0.2.6-web-zsnight.1", "0.2.6-web-zbeghouled.1"):
+    while engine["id"] in EXTENSIONS and engine["id"] != "0.2.6-web-izombotany.1":
         engine = engine["parent"]
         names.add(PurePosixPath(engine["artifacts"]["patch"]).name)
     return names
@@ -843,15 +845,22 @@ def root_sources():
     for path in (ROOT / "tests").rglob("*"):
         if path.is_file() and not any(part in {".git", "node_modules", "__pycache__"} for part in path.relative_to(ROOT).parts):
             files.add(path)
-    # The Pool source download represents all earlier extension browsers relative
-    # to the checked-in shipping browser. Each original executable has its own digest.
+    # Include the historical representation decoded by this release's test suites.
     active_id = engine_inputs()[0]["id"]
-    if active_id in ("0.2.6-web-zsnight.1", "0.2.6-web-zspool.1"):
+    if active_id in ("0.2.6-web-zsnight.1", "0.2.6-web-zspool.1", "0.2.6-web-zsfog.1"):
         history = ROOT / "tests/fixtures/historical"
         capsule = history / "extension-browsers.tar.xz"
-        if active_id == "0.2.6-web-zspool.1":
+        if active_id in ("0.2.6-web-zspool.1", "0.2.6-web-zsfog.1"):
             files.discard(capsule)
             capsule = history / "zspool1-browser-deltas.tar.xz"
+        if active_id == "0.2.6-web-zsfog.1":
+            files.discard(capsule)
+            capsule = history / "zsfog1-browser-deltas.tar.xz"
+            for key in ("zbeghouled", "zsnight", "zspool"):
+                raw = history / (key + "1-published") / "source-suffix.bin"
+                if not raw.with_suffix(".xz").is_file():
+                    raise ValueError("Missing compact source suffix for " + key)
+                files.discard(raw)
         if not capsule.is_file():
             raise ValueError("Missing historical browser executables")
         for ext in ("js", "wasm"):

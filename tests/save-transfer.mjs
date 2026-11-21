@@ -45,12 +45,19 @@ originals.set('/saves/userdata/game900002_75.v4',board(75));
 originals.set('/saves/userdata/game900002_10.v4',board(10));
 originals.set('/saves/userdata/game900002_100.v4',board(100));
 originals.set('/saves/userdata/game900002_101.v4',board(101));
+originals.set('/saves/userdata/game900002_102.v4',board(102));
 // This profile was saved by the native player after beating all five Pool flags.
 const earnedPool = fs.readFileSync(new URL('fixtures/zspool1-earned.dat',import.meta.url));
 assert.equal(earnedPool.readUInt32LE(),12);
 assert.equal(earnedPool.subarray(-8,-4).toString('ascii'),'ZSP1');
 assert.equal(earnedPool.readUInt32LE(earnedPool.length-4),5);
 originals.set('/saves/userdata/user900002.dat',earnedPool);
+const earnedFog = fs.readFileSync(new URL('fixtures/zsfog1-earned.dat',import.meta.url));
+assert.equal(earnedFog.readUInt32LE(),12);
+assert.deepEqual(earnedFog.subarray(-16,-8),earnedPool.subarray(-8));
+assert.equal(earnedFog.subarray(-8,-4).toString('ascii'),'ZSF1');
+assert.equal(earnedFog.readUInt32LE(earnedFog.length-4),5);
+originals.set('/saves/userdata/user900003.dat',earnedFog);
 originals.set('/saves/userdata/auxiliary/notes.bin',Buffer.from([0,251,255,4]));
 originals.set('/saves/userdata/qol-settings-900001.txt',Buffer.from('PVZQOL 1\n1 1 1 1\n49 50 51 52 53 54 55 56 57 48 83 70\n'));
 originals.set('/saves/userdata/qol-decks-900001.txt',Buffer.from('PVZDECKS 1\n8\n"Day" 1 0 -1\n"Night" 0\n"Pool" 0\n"Roof" 0\n"Deck 5" 0\n"Deck 6" 0\n"Deck 7" 0\n"Deck 8" 0\n'));
@@ -97,7 +104,7 @@ assert.notDeepEqual(originals.get('/saves/userdata/game900002_75.v4'),originals.
 assert(!zipped.file('outside-backup.note'));
 assert(!Object.keys(zipped.files).some(name=>/main\.pak|properties\//i.test(name)),'Export contains saved data only, never game resources');
 assert.deepEqual(Object.keys(zipped.files).sort(),[...originals.keys()].map(n=>n.slice('/saves/'.length)).sort());
-for(const mode of [10,100,101]){
+for(const mode of [10,100,101,102]){
   const name='userdata/game900002_'+mode+'.v4';
   assert.deepEqual(Buffer.from(await zipped.file(name).async('uint8array')),board(mode),name);
 }

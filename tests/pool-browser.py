@@ -1,4 +1,4 @@
-"""Exercise native Pool save import, browser persistence and startup on the shipping website."""
+"""Play the ZomBotany water lawns in a muted browser and restore their native trophies."""
 import argparse
 import base64
 from contextlib import contextmanager
@@ -123,10 +123,12 @@ def click_canvas(browser, x, y):
             {"type": "pointerUp", "button": 0}]}]})
 
 
-def play_opening(browser, output):
+def play_opening(browser, output, mode="pool"):
     # Each reference is the average RGB across a 6-by-4 grid on the native 800-by-600 screen.
     # Sample stable artwork so menu movement and the pool's ripples can vary between frames.
     references = json.loads((ROOT / "tests/fixtures/zspool1-screens.json").read_bytes())
+    if mode == "fog":
+        references.update(json.loads((ROOT / "tests/fixtures/zsfog1-screens.json").read_bytes()))
     def inspect(frame):
         return browser.execute("""
             const [png, references, done] = arguments;
@@ -178,14 +180,36 @@ def play_opening(browser, output):
     reach("menu", "title", (400,545))
     reach("minigames", "menu", (565,245))
     reach("family", "minigames", (562,581))
-    reach("chooser", "family", (90,385))
-    # Peashooter, Sunflower, Wall-nut, Potato Mine, Lily Pad and Squash.
-    for position in ((45,154),(100,154),(206,154),(260,154),(45,298),(100,298)):
+    reach("chooser", "family", (245 if mode == "fog" else 90,385))
+    if mode == "fog":
+        # Sun-shroom, Puff-shroom, Sea-shroom, Lily Pad, Plantern and Blover.
+        seeds = ((100,224),(45,224),(45,366),(45,298),(100,366),(206,366))
+    else:
+        # Peashooter, Sunflower, Wall-nut, Potato Mine, Lily Pad and Squash.
+        seeds = ((45,154),(100,154),(206,154),(260,154),(45,298),(100,298))
+    for position in seeds:
         click_canvas(browser, *position)
         time.sleep(0.35)
     time.sleep(1)
     click_canvas(browser, 231,565)
     reach("lawn")
+    if mode == "fog":
+        reach("coveredWater")
+        # The original Plantern packet starts the first flag on cooldown.
+        reach("readyPlantern")
+        click_canvas(browser, 354,42)
+        click_canvas(browser, 560,230)
+        def upper_bank_is_lit():
+            frame = browser.screenshot()
+            scores = inspect(frame)
+            if scores["plantern"] < 18 and scores["litWater"] < 18 and scores["coveredWater"] > 26:
+                if output:
+                    (output / "lit-water.png").write_bytes(frame)
+                return True
+            return False
+        wait_until(upper_bank_is_lit, 35)
+        assert browser.execute("return PVZAudio.isMuted()"), "Fog gameplay test lost its mute"
+        return
     wait_until(lambda: inspect(browser.screenshot())["lily"] < 0.05, 20)
     def plant_lily():
         frame = browser.screenshot()
@@ -202,16 +226,16 @@ def play_opening(browser, output):
     assert browser.execute("return PVZAudio.isMuted()"), "Gameplay test lost its mute"
 
 
-def exercise(browser, site, scratch, profile, output):
+def exercise(browser, site, scratch, profile, output, mode="pool"):
     # Use the save controls before native startup so the game reads the imported profile itself.
     browser.request("POST", "/url", {"url": site + "/source/build-provenance.json"})
     browser.execute("sessionStorage.setItem('pvz-show-import','1')")
     browser.request("POST", "/url", {"url": site + "/?testing=1"})
     wait_until(lambda: browser.execute("return !!document.querySelector('#more-dialog')?.open"))
     assert browser.execute("return PVZAudio.isMuted()"), "Browser test must be muted"
-    name = b"Pool QA"
+    name = (mode.title() + " QA").encode()
     index = struct.pack("<IHH", 14, 1, len(name)) + name + struct.pack("<II", 1, 1)
-    save = scratch / "pool-save.zip"
+    save = scratch / (mode + "-save.zip")
     with zipfile.ZipFile(save, "w") as archive:
         archive.writestr("userdata/users.dat", index)
         archive.writestr("userdata/user1.dat", profile)
@@ -230,7 +254,7 @@ def exercise(browser, site, scratch, profile, output):
             return await file.async('base64');
         })().then(done, error => done({error:String(error)}));
     """, asynchronous=True)
-    assert isinstance(exported, str) and base64.b64decode(exported) == profile, "Reload changed earned Pool save"
+    assert isinstance(exported, str) and base64.b64decode(exported) == profile, "Reload changed the earned native save"
     browser.request("POST", "/element/" + browser.element("#more-close") + "/click", {})
     wait_until(lambda: browser.execute("return document.body.classList.contains('game-mode')"), 120)
     assert browser.execute("return PVZAudio.isMuted() && Module.canvas.width >= 800 && Module.canvas.height >= 600")
@@ -241,24 +265,29 @@ def exercise(browser, site, scratch, profile, output):
     if output:
         output.mkdir(parents=True, exist_ok=True)
         (output / "startup.png").write_bytes(frame)
-    play_opening(browser, output)
-    print(f"PASS muted browser Pool card, seed selection, planted Lily Pad and cold save roundtrip ({sha256(profile).hexdigest()[:12]}).")
+    play_opening(browser, output, mode)
+    planting = "Plantern cleared the upper water lane" if mode == "fog" else "planted Lily Pad"
+    print(f"PASS muted {mode.title()} card, seed selection, {planting}, cold save roundtrip ({sha256(profile).hexdigest()[:12]}).")
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     driver = shutil.which("chromedriver") or shutil.which("chromedriver", path=os.getenv("CHROMEWEBDRIVER", ""))
     parser.add_argument("--driver", default=driver or shutil.which("msedgedriver"))
+    parser.add_argument("--mode", choices=("pool", "fog"), default="pool")
     parser.add_argument("--output", type=Path, help="Keep a screenshot of the native canvas")
     args = parser.parse_args()
     if not args.driver:
         parser.error("A matching ChromeDriver or Microsoft Edge WebDriver is required")
-    profile = (ROOT / "tests/fixtures/zspool1-earned.dat").read_bytes()
-    assert profile.startswith(struct.pack("<I", 12)) and profile.endswith(b"ZSP1" + struct.pack("<I", 5))
-    with tempfile.TemporaryDirectory(prefix="pvz-pool-browser-", ignore_cleanup_errors=True) as temp:
+    profile = (ROOT / f"tests/fixtures/zs{args.mode}1-earned.dat").read_bytes()
+    trophies = b"ZSP1" + struct.pack("<I", 5)
+    if args.mode == "fog":
+        trophies += b"ZSF1" + struct.pack("<I", 5)
+    assert profile.startswith(struct.pack("<I", 12)) and profile.endswith(trophies)
+    with tempfile.TemporaryDirectory(prefix=f"pvz-{args.mode}-browser-", ignore_cleanup_errors=True) as temp:
         scratch = Path(temp)
         with serve_site(ROOT / "dist") as site, launch_browser(args.driver, scratch / "profile") as browser:
-            exercise(browser, site, scratch, profile, args.output)
+            exercise(browser, site, scratch, profile, args.output, mode=args.mode)
 
 
 if __name__ == "__main__":

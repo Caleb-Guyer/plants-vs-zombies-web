@@ -1,37 +1,37 @@
 {
-  "id": "0.2.6-web-zspool.1",
-  "parentId": "0.2.6-web-zsnight.1",
+  "id": "0.2.6-web-zsfog.1",
+  "parentId": "0.2.6-web-zspool.1",
   "sourceArchive": {
-    "path": "pvz-portable-0.2.6-web-zspool.1-source.zip",
-    "sha256": "a57b215ffd83e8934fcbe5de7ffb1f94bbae34ba0dff33bf8258458b17b02f29",
-    "bytes": 103940854,
-    "entries": 3711
+    "path": "pvz-portable-0.2.6-web-zsfog.1-source.zip",
+    "sha256": "122686484ebe6b0a6ac681c60e032303ca595452640e7091b6b3f83d8109be94",
+    "bytes": 103965147,
+    "entries": 3712
   },
   "incrementalPatch": {
-    "path": "zsnight1-to-zspool1.patch",
-    "sha256": "e8d3f192a745e9e6daf37c8edbeb290f5e0ba21574a9df42012646ca3e543be2",
-    "baseSourceSha256": "cac01b72b470a6b9aa167ed1eed93bb4e78235d496418d1cda118e33656cb1e1"
+    "path": "zspool1-to-zsfog1.patch",
+    "sha256": "46f3e6ee78d394964d2d0483e54c33c8a97e09c852250447de78997a4923ea9c",
+    "baseSourceSha256": "a57b215ffd83e8934fcbe5de7ffb1f94bbae34ba0dff33bf8258458b17b02f29"
   },
   "sourceFiles": 895,
   "productionObjects": 155,
   "normalBuild": {
     "status": "PASS",
     "exitCode": 0,
-    "elapsedSeconds": 147.918,
+    "elapsedSeconds": 96.317,
     "sourceUnchangedDuringBuild": true,
     "sourceFiles": 895,
     "outputs": {
       "build/pvz-portable.js": {
         "bytes": 210891,
-        "sha256": "ad5b83e9bb048eb17643f3d6fcea82c5b51b0c66c2249d5ebefff1511c945fe8"
+        "sha256": "1218c3198f1b9aa845f54c28da7399c33fef9b0f5925079ec46f6e176c9c3013"
       },
       "build/pvz-portable.wasm": {
-        "bytes": 7992308,
-        "sha256": "09581bac71c446a64681170df8acd36f3f3f17bf44d58422d2cc6187f4e89e83"
+        "bytes": 8001234,
+        "sha256": "23b6346ae35bdbcf3c879c96e2a581b38d60efd06bafda1e13183ad2e7e62b37"
       },
       "build/ProjectVersion.h": {
-        "bytes": 192,
-        "sha256": "d033604dcbd126d74560a50b3293ee8c058e6caf6fcf9fe2f3a0eff312c19e8f"
+        "bytes": 191,
+        "sha256": "6e8a3672afc6e0dc2dcda9b27933ab3986e59b6024501acadc12efd77455e76b"
       }
     }
   },
@@ -40,15 +40,14 @@
     "src/ConstEnums.h",
     "src/Lawn/Board.cpp",
     "src/Lawn/System/PlayerInfo.cpp",
-    "src/Lawn/System/PlayerInfo.h",
     "src/Lawn/System/ZombotanySurvival.cpp",
     "src/Lawn/System/ZombotanySurvival.h",
     "src/Lawn/Widget/ChallengeScreen.cpp",
     "src/Lawn/Widget/ChallengeScreen.h"
   ],
   "silentGameplayDriver": {
-    "zspool-engine.js": "48090dbefd6a3503fa8de39a18cbec3e7f3b3043cb66d71df151cffec9d6f8c9",
-    "zspool-engine.wasm": "f607bb0755c557161e19be3c2caf0567a4f8962fbad04eb4feeaf2860b32355e"
+    "zsfog-engine.js": "e01ba3674d327ea1c96a44045cda03e34233bf3b53b8ba1e09b29f11e6507b20",
+    "zsfog-engine.wasm": "f80f3542dec2f4fc298ed6c6a8e73850ee501adcfdf4cdba0539be0d7233c68e"
   },
   "gameplayScenarios": 16
 }

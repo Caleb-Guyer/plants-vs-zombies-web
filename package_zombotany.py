@@ -37,7 +37,12 @@ RELEASES = {
         parent=chain.NIGHT, parent_bytes=chain.NIGHT_BYTES, parent_sha=chain.NIGHT_SHA,
         commit='41834c696beb5689d4083bbac7fa5f6154538288', sources=895, objects=155,
         caption='with ZomBotany Survival: Pool.',
-        change='Adds the eleventh ZomBotany card, a five-flag pool Survival with plant-headed zombies on land and in the water.')
+        change='Adds the eleventh ZomBotany card, a five-flag pool Survival with plant-headed zombies on land and in the water.'),
+    'zsfog': dict(tag='zsfog1', stem='zsfog', parent_tag='zspool1',
+        parent=chain.POOL, parent_bytes=chain.POOL_BYTES, parent_sha=chain.POOL_SHA,
+        commit='567e85611a91d89324e65707a7f59595a32c281e', sources=895, objects=155,
+        caption='with ZomBotany Survival: Fog.',
+        change='Adds the twelfth ZomBotany card, a five-flag Survival on the original foggy pool lawn.')
 }
 
 def sha(data):
@@ -77,6 +82,11 @@ def package(candidate, results, key):
     stem, tag = release['stem'], release['tag']
     test_files = (stem+'.cpp', 'headless-app.h', f'build-{key}.py', key+'-run.cjs',
                   f'test-{key}.py', key+'-build.json', stem+'-engine.js', stem+'-engine.wasm')
+    if key == 'zsfog':
+        earned_profile = 'zspool1-earned.dat'
+        if sha((candidate/'tests'/earned_profile).read_bytes()) != chain.POOL_WINNER_SHA256:
+            raise ValueError('Fog replay requires the published Pool winner profile')
+        test_files += (earned_profile,)
     engine=json.loads(parent_file(release, 'dist/game/engine-provenance.json'))
     assert engine['id']==release['parent'] and engine['artifacts']['sourceSha256']==release['parent_sha']
     parent=DIST/'source'/Path(engine['artifacts']['source']).name
@@ -140,12 +150,21 @@ def package(candidate, results, key):
     if engine_id in chain.ARCHIVE_PARENTS:
         suffix = ROOT / chain.ARCHIVE_PARENTS[engine_id][3]
         suffix.parent.mkdir(parents=True, exist_ok=True)
-        suffix.write_bytes(parent_bytes[len(base):])
+        if key == 'zsfog':
+            parent_record = engine
+            child = engine_id
+            while child in chain.ARCHIVE_PARENTS:
+                archive = DIST/'source'/Path(parent_record['artifacts']['source']).name
+                chain.pack_source_suffix(ROOT, child, archive.read_bytes())
+                child = parent_record['id']
+                parent_record = parent_record['parent']
+        else:
+            suffix.write_bytes(parent_bytes[len(base):])
         (suffix.parent/'build-provenance.json').write_bytes(parent_file(release, 'dist/source/build-provenance.json'))
         bases = None
-        if key == 'zspool':
+        if engine_id in chain.DELTA_CAPSULES:
             bases = {name: (candidate/'build'/name).read_bytes() for name in ('pvz-portable.js','pvz-portable.wasm')}
-        historic_digest = chain.pack_browsers(ROOT, previous_browsers, bases)
+        historic_digest = chain.pack_browsers(ROOT, previous_browsers, bases, chain.DELTA_CAPSULES.get(engine_id))
     archive_name=f'pvz-portable-{engine_id}-source.zip'
     destination=DIST/'source'/archive_name
     with tempfile.TemporaryDirectory(dir=destination.parent) as temp:

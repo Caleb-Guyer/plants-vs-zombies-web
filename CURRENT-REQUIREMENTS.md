@@ -1,6 +1,10 @@
 # Current requirements
 
-## ZomBotany Survival: Pool
+## ZomBotany Survival: Fog
+
+The twelfth ZomBotany card uses the original six-row Fog lawn at night. Retain five Survival flags, deck changes, native plants, mowers, profile records and Continue. Each ambush uses the visible fog boundary and saved cloud opacity. Only covered water admits a surfacing Sea-shroom-head. Use the native Plantern light and Blover animation, with only plant-headed attackers.
+
+## ZomBotany Survival: Pool (previous release)
 
 The eleventh card opens with the original ZomBotany trophy. Use the six-row daytime pool, native Survival seed choices, existing rewards and five flags of plant-headed opponents. Preserve the four grass lanes, both water lanes, original planting rules and water animations. Keep earned Pool records independent of Night and of the original profile fields.
 

@@ -1,6 +1,12 @@
 # Browser parity and QA record
 
-## ZomBotany Survival: Pool
+## ZomBotany Survival: Fog
+
+The Fog suite exercises two seeds at both speeds, four seed repicks, the night economy, both water lanes and the later bank attackers. The winning runs face the early surfacing zombies and play Blover at later flag warnings. Tests check which water squares are covered during Plantern illumination, a gust and the fog’s return. A separate run restores a saved battle, and another earns the trophy after a genuine loss and retry. Controls cover classic Survival: Fog and ZomBotany Survival: Pool. Replay with `python tests/zsfog.py --play`.
+
+The browser test restores a profile that earned both Pool and Fog, reloads it from browser storage, and checks the exported bytes. It then selects the twelfth card, waits for the Plantern packet to recharge and plants it on the upper bank. Screenshots check the lamp and the exposed water. The native rendering test compares the last packet, its price and the shovel with and without fifth-flag fog, and checks that the clouds remain visible on the lawn. Use `python tests/pool-browser.py --mode fog` with a matching ChromeDriver or Edge WebDriver.
+
+## ZomBotany Survival: Pool (previous release)
 
 The muted Pool suite covers two seeds at both speeds. It plays all five flags, repicks seeds four times, and checks Lily Pads, supported plants, water-lane reinforcements and the land roster. Continue restores a board during the third flag’s underwater ambush countdown. Retry begins with an undefended loss. The suite also loads the winning profile again and checks the Pool record while preserving the older save format. Run `python tests/zspool.py --play` to repeat it.
 

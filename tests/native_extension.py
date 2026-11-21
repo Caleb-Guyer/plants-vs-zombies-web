@@ -20,15 +20,17 @@ RELEASES = {
     "zbeghouled": (895, 155, "ZomBotanyBeghouled.cpp.o", "zbeghouled"),
     "zsnight": (895, 155, "ZombotanySurvival.cpp.o", "zsnight"),
     "zspool": (895, 155, "ZombotanySurvival.cpp.o", "zspool"),
+    "zsfog": (895, 155, "ZombotanySurvival.cpp.o", "zsfog"),
 }
 CASES = {(name, speed, seed) for name in ("solution", "resume", "retry", "classic")
          for speed in (1, 2) for seed in (1729, 7331)}
 
 def run_files(key):
     stem = RELEASES[key][3]
-    return (f"test-{key}.py", f"{key}-run.cjs", f"{key}-build.json", "headless-app.h",
+    files = (f"test-{key}.py", f"{key}-run.cjs", f"{key}-build.json", "headless-app.h",
             f"{stem}.cpp", f"build-{key}.py", f"{stem}-engine.js", f"{stem}-engine.wasm",
             "test-pool-panic.py", "pool-panic-assets.json", "zsurvival1-earned-z1/userdata/user1.dat")
+    return files + ("zspool1-earned.dat",) if key == "zsfog" else files
 
 
 def digest(data):
@@ -49,9 +51,11 @@ def verify_archive(archive, engine, receipt, pins, key, read_binary, verify_resu
     normal_raw = read("logs/build-result.json")
     link_raw = read(f"tests/{key}-build.json")
     results_raw = read(f"tests/{key}-results.json")
-    for key, data in (("normalReceiptSha256", normal_raw), ("driverBuildSha256", link_raw),
-                      ("reportSha256", results_raw)):
-        check(digest(data) == pins[key], key)
+    if key == "zsfog":
+        check(digest(read("tests/zspool1-earned.dat")) == chain.POOL_WINNER_SHA256, "Incorrect Pool winner fixture")
+    for field, data in (("normalReceiptSha256", normal_raw), ("driverBuildSha256", link_raw),
+                        ("reportSha256", results_raw)):
+        check(digest(data) == pins[field], field)
     normal, linked, report = map(json.loads, (normal_raw, link_raw, results_raw))
     manifest = json.loads(read("source-manifest.json"))
     sources = linked["sources"]
@@ -95,7 +99,7 @@ def run(key, verify_results, fields):
     active_artifacts = engine["artifacts"]
     historical = active_id != engine_id
     while engine["id"] != engine_id:
-        check(engine["id"] in (chain.POOL, chain.NIGHT, chain.BEGHOUL), "Unexpected extension ancestry")
+        check(engine["id"] in chain.ARCHIVE_PARENTS or engine["id"] == chain.BEGHOUL, "Unexpected extension ancestry")
         source = chain.parent_source(ROOT, engine, source)
         engine = engine["parent"]
     binaries = ROOT / f"tests/fixtures/historical/{key}1-published" if historical else GAME
@@ -105,11 +109,12 @@ def run(key, verify_results, fields):
             active_key = active_id.removeprefix("0.2.6-web-").removesuffix(".1")
             active_pins = json.loads((ROOT / f"tests/fixtures/{active_key}1-release.json").read_bytes())
             base = None
-            if active_id == chain.POOL:
+            if active_id in chain.DELTA_CAPSULES:
                 base = (GAME / name).read_bytes()
                 ext = name.rsplit(".", 1)[-1]
                 check(digest(base) == active_artifacts[ext + "Sha256"], "Unexpected current browser")
-            data = chain.read_browser(ROOT, key, name, expected, active_pins["historicalBrowserSha256"], base)
+            data = chain.read_browser(ROOT, key, name, expected, active_pins["historicalBrowserSha256"],
+                                      base, chain.DELTA_CAPSULES.get(active_id))
             if (binaries / name).is_file():
                 check((binaries / name).read_bytes() == data, "Historical checkout executable differs")
             return data
