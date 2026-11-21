@@ -1,6 +1,10 @@
 # Current requirements
 
-## ZomBotany Survival: Fog
+## ZomBotany Survival: Roof
+
+The thirteenth card uses the original five-lane roof, Flower Pots, slope, daytime sun and roof cleaner purchase. Use five Survival flags and four seed changes. Retain surviving plants, pots, sun and cleaners. Use plant-headed attackers throughout, with the native lob animations, Umbrella Leaf protection and Kernel-head butter.
+
+## ZomBotany Survival: Fog (previous release)
 
 The twelfth ZomBotany card uses the original six-row Fog lawn at night. Retain five Survival flags, deck changes, native plants, mowers, profile records and Continue. Each ambush uses the visible fog boundary and saved cloud opacity. Only covered water admits a surfacing Sea-shroom-head. Use the native Plantern light and Blover animation, with only plant-headed attackers.
 

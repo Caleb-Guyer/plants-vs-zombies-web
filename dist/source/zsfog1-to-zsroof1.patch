@@ -1,0 +1,402 @@
+diff --git a/CMake/ProjectVersion.cmake b/CMake/ProjectVersion.cmake
+index 3cf50ca..ad403ce 100644
+--- a/CMake/ProjectVersion.cmake
++++ b/CMake/ProjectVersion.cmake
+@@ -66,6 +66,6 @@ if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
+ endif()
+ 
+ # Browser release identity; keep binary and corresponding-source manifests aligned.
+-set(PVZP_VERSION "0.2.6-web-zsfog.1")
++set(PVZP_VERSION "0.2.6-web-zsroof.1")
+ set(PVZP_VERSION_PLAIN "0.2.6")
+ configure_file("${PROJECT_SOURCE_DIR}/CMake/ProjectVersion.h.in" "${PROJECT_BINARY_DIR}/ProjectVersion.h" @ONLY)
+diff --git a/src/ConstEnums.h b/src/ConstEnums.h
+index f9d6205..cd5e654 100644
+--- a/src/ConstEnums.h
++++ b/src/ConstEnums.h
+@@ -483,7 +483,8 @@ enum GameMode : int32_t
+ 	GAMEMODE_CHALLENGE_ZOMBOTANY_SURVIVAL_NIGHT = 100,
+ 	GAMEMODE_CHALLENGE_ZOMBOTANY_SURVIVAL_POOL = 101,
+ 	GAMEMODE_CHALLENGE_ZOMBOTANY_SURVIVAL_FOG = 102,
+-	NUM_GAME_MODES = 103
++	GAMEMODE_CHALLENGE_ZOMBOTANY_SURVIVAL_ROOF = 103,
++	NUM_GAME_MODES = 104
+ };
+ enum GameObjectType : int32_t
+ {
+diff --git a/src/Lawn/Board.cpp b/src/Lawn/Board.cpp
+index 24ba599..7349c39 100644
+--- a/src/Lawn/Board.cpp
++++ b/src/Lawn/Board.cpp
+@@ -1049,6 +1049,7 @@ void Board::PickBackground()
+ 		break;
+ 
+ 	case GameMode::GAMEMODE_CHALLENGE_ZOMBOTANY_5:
++	case ZombotanySurvival::kRoofMode:
+ 	case GameMode::GAMEMODE_SURVIVAL_NORMAL_STAGE_5:
+ 	case GameMode::GAMEMODE_SURVIVAL_HARD_STAGE_5:
+ 	case GameMode::GAMEMODE_SURVIVAL_ENDLESS_STAGE_5:
+@@ -5734,7 +5735,7 @@ void Board::SpawnZombieWave()
+ 		}
+ 	}
+ 
+-	if (mCurrentWave == mNumWaves - 1 && mApp->mGameMode != ZombotanySurvival::kNightMode && !mApp->IsContinuousChallenge() && !LightsOut::IsMode(mApp->mGameMode) && !GardenShuffle::IsMode(mApp->mGameMode) && !SeedSwap::IsMode(mApp->mGameMode) && !IntensiveCare::IsMode(mApp->mGameMode) &&
++	if (mCurrentWave == mNumWaves - 1 && mApp->mGameMode != ZombotanySurvival::kNightMode && mApp->mGameMode != ZombotanySurvival::kRoofMode && !mApp->IsContinuousChallenge() && !LightsOut::IsMode(mApp->mGameMode) && !GardenShuffle::IsMode(mApp->mGameMode) && !SeedSwap::IsMode(mApp->mGameMode) && !IntensiveCare::IsMode(mApp->mGameMode) &&
+         !(NightShift::IsMode(mApp->mGameMode) && BonusChallenge::IsCurrentRules(mApp->mGameMode, mChallenge->mChallengeState)))
+ 	{
+ 		mRiseFromGraveCounter = 200;
+@@ -7061,8 +7062,10 @@ void Board::DrawGameObjects(Graphics* g)
+ 	}
+ 	{
+ 		int aZPos;
+-		// Keep the seed bank and shovel readable as Survival Fog advances toward the house.
+-		const auto aBankLayer = mApp->mGameMode == ZombotanySurvival::kFogMode
++		// Fog and the roof's raised first row can both cross the bottom of the seed bank.
++		const bool aKeepBankInFront = mApp->mGameMode == ZombotanySurvival::kFogMode ||
++			mApp->mGameMode == ZombotanySurvival::kRoofMode;
++		const auto aBankLayer = aKeepBankInFront
+ 			? RenderLayer::RENDER_LAYER_FOG : RenderLayer::RENDER_LAYER_UI_BOTTOM;
+ 		if (mTimeStopCounter > 0)
+ 		{
+diff --git a/src/Lawn/Challenge.cpp b/src/Lawn/Challenge.cpp
+index 41d2fdf..3b1c062 100644
+--- a/src/Lawn/Challenge.cpp
++++ b/src/Lawn/Challenge.cpp
+@@ -127,6 +127,10 @@ void Challenge::LoadBeghouledBoardState(BeghouledBoardState* theBoardState)
+ 
+ void Challenge::InitLevel()
+ {
++    // Roof Survival stores Kernel-head butter expiry in the same saved row
++    // timers as ZomBotany 5. A fresh board starts with no buttered plants.
++    if (mApp->mGameMode == ZombotanySurvival::kRoofMode)
++        std::fill(std::begin(mCloudsCounter), std::end(mCloudsCounter), 0);
+     if (ZombotanyVasebreaker::IsMode(mApp->mGameMode))
+     {
+         ZombotanyVasebreaker::Populate(*mBoard);
+@@ -2208,7 +2212,7 @@ void Challenge::Update()
+         return;
+     }
+     if (Zombotany3::UsesIceHeadFreeze(mApp->mGameMode)) Zombotany3::Update(*mBoard);
+-    if (Zombotany45::IsMode(mApp->mGameMode)) Zombotany45::Update(*mBoard);
++    if (Zombotany45::UsesRoofButter(mApp->mGameMode)) Zombotany45::Update(*mBoard);
+     if (DoubleAgent::IsMode(mApp->mGameMode))
+     {
+         DoubleAgent::Update(*mBoard);
+diff --git a/src/Lawn/System/PlayerInfo.cpp b/src/Lawn/System/PlayerInfo.cpp
+index 8a7dcf1..44220ae 100644
+--- a/src/Lawn/System/PlayerInfo.cpp
++++ b/src/Lawn/System/PlayerInfo.cpp
+@@ -38,9 +38,10 @@ static int gUserVersion = 12;
+ // Optional tagged records follow the original v12 profile. Keep the published
+ // Pool record first so a Pool-era reader can still find it.
+ struct SurvivalProgressField { uint32_t tag; int index; };
+-static constexpr std::array<SurvivalProgressField, 2> kExtraSurvivalRecords = {{
++static constexpr std::array<SurvivalProgressField, 3> kExtraSurvivalRecords = {{
+     {0x3150535A, ZombotanySurvival::kPoolProfileIndex},  // ZSP1, little endian
+-    {0x3146535A, ZombotanySurvival::kFogProfileIndex}   // ZSF1, little endian
++    {0x3146535A, ZombotanySurvival::kFogProfileIndex},  // ZSF1, little endian
++    {0x3152535A, ZombotanySurvival::kRoofProfileIndex}  // ZSR1, little endian
+ }};
+ 
+ // Convert PottedPlant between little-endian file format and native byte order.
+diff --git a/src/Lawn/System/Zombotany45.cpp b/src/Lawn/System/Zombotany45.cpp
+index 0f08f5e..4cb0bb6 100644
+--- a/src/Lawn/System/Zombotany45.cpp
++++ b/src/Lawn/System/Zombotany45.cpp
+@@ -95,7 +95,7 @@ void ClearButterRow(Challenge& challenge,int row)
+ }
+ void Butter(Plant& plant)
+ {
+-    if(!plant.mBoard || !plant.mApp || !IsRoof(plant.mApp->mGameMode) || !Eligible(plant))return;
++    if(!plant.mBoard || !plant.mApp || !UsesRoofButter(plant.mApp->mGameMode) || !Eligible(plant))return;
+     Challenge& challenge=*plant.mBoard->mChallenge;
+     if(IsButtered(plant))return; // Repeated butter cannot extend an existing pause.
+     ClearButterRow(challenge,plant.mRow);
+@@ -244,7 +244,7 @@ void Populate(Board& board)
+ }
+ void Update(Board& board)
+ {
+-    if(!IsRoof(board.mApp->mGameMode) || board.mApp->mGameScene!=SCENE_PLAYING || board.mPaused || board.mTimeStopCounter>0)return;
++    if(!UsesRoofButter(board.mApp->mGameMode) || board.mApp->mGameScene!=SCENE_PLAYING || board.mPaused || board.mTimeStopCounter>0)return;
+     auto& c=*board.mChallenge;
+     for(int row=0;row<6;++row)
+     {
+@@ -257,15 +257,20 @@ void Update(Board& board)
+         if(c.mCloudsCounter[row]<=board.mMainCounter || !alive)ClearButterRow(c,row);
+     }
+ }
++bool ValidRoofButter(const Board& board)
++{
++    const auto maximum = static_cast<int64_t>(board.mMainCounter) + kButterTicks;
++    for (const auto expiry : board.mChallenge->mCloudsCounter)
++        if (expiry < 0 || expiry > maximum) return false;
++    return true;
++}
+ bool Validate(const Board& board)
+ {
+     if(!board.mApp || !board.mChallenge || !IsMode(board.mApp->mGameMode))return false;
+     const auto& c=*board.mChallenge;
+     if(c.mChallengeState!=kActive || c.mChallengeGridY!=kRulesVersion || board.mNumWaves!=kWaveCount || board.mCurrentWave<0 || board.mCurrentWave>kWaveCount)return false;
+     if(IsFog(board.mApp->mGameMode))return board.mBackground==BACKGROUND_4_FOG;
+-    if(board.mBackground!=BACKGROUND_5_ROOF)return false;
+-    for(int row=0;row<6;++row)if(c.mCloudsCounter[row]<0 || c.mCloudsCounter[row]>board.mMainCounter+kButterTicks)return false;
+-    return true;
++    return board.mBackground==BACKGROUND_5_ROOF && ValidRoofButter(board);
+ }
+ void PreloadResources(GameMode mode)
+ {
+@@ -364,7 +369,7 @@ bool UpdateLobMotion(Projectile& p)
+ }
+ bool IsButtered(const Plant& plant)
+ {
+-    if(!plant.mApp || !plant.mBoard || !plant.mBoard->mChallenge || !IsRoof(plant.mApp->mGameMode) ||
++    if(!plant.mApp || !plant.mBoard || !plant.mBoard->mChallenge || !UsesRoofButter(plant.mApp->mGameMode) ||
+         plant.mApp->mGameScene!=SCENE_PLAYING || !plant.mIsOnBoard || plant.mDead || plant.mRow<0 || plant.mRow>=6 || plant.mPlantCol<0 || plant.mPlantCol>=9)return false;
+     const auto& c=*plant.mBoard->mChallenge;
+     return c.mCloudsCounter[plant.mRow]>=plant.mBoard->mMainCounter && c.mCloudsCounter[plant.mRow]>0 &&
+@@ -372,7 +377,7 @@ bool IsButtered(const Plant& plant)
+ }
+ bool UpdateButteredPlant(Plant& plant)
+ {
+-    if(plant.mApp && plant.mBoard && IsMode(plant.mApp->mGameMode) && plant.mApp->mGameScene==SCENE_PLAYING &&
++    if(plant.mApp && plant.mBoard && (IsFog(plant.mApp->mGameMode) || UsesRoofButter(plant.mApp->mGameMode)) && plant.mApp->mGameScene==SCENE_PLAYING &&
+         plant.mIsOnBoard && !plant.mDead && plant.mPlantHealth<=0){plant.Die();return true;}
+     return IsButtered(plant);
+ }
+diff --git a/src/Lawn/System/Zombotany45.h b/src/Lawn/System/Zombotany45.h
+index 63f6bfa..9f30740 100644
+--- a/src/Lawn/System/Zombotany45.h
++++ b/src/Lawn/System/Zombotany45.h
+@@ -50,6 +50,7 @@ inline constexpr int kHostileLobMarker = -405;
+ inline constexpr int kFriendlyLobMarker = -406;
+ constexpr bool IsFog(GameMode mode) { return mode == kFogMode; }
+ constexpr bool IsRoof(GameMode mode) { return mode == kRoofMode; }
++constexpr bool UsesRoofButter(GameMode mode) { return IsRoof(mode) || mode == GAMEMODE_CHALLENGE_ZOMBOTANY_SURVIVAL_ROOF; }
+ constexpr bool IsMode(GameMode mode) { return IsFog(mode) || IsRoof(mode); }
+ constexpr bool IsFamilyMode(GameMode mode)
+ { return mode==GAMEMODE_CHALLENGE_WAR_AND_PEAS || mode==GAMEMODE_CHALLENGE_WAR_AND_PEAS_2 ||
+@@ -108,6 +109,7 @@ ZombieType PlantHeadForSpawn(GameMode mode, ZombieType type, int row=-1);
+ void RestorePlantHeadOnly(Board& board);
+ void Populate(Board& board);
+ void Update(Board& board);
++bool ValidRoofButter(const Board& board);
+ bool Validate(const Board& board);
+ void PreloadResources(GameMode mode);
+ void InitializeZombie(Zombie& zombie);
+diff --git a/src/Lawn/System/ZombotanySurvival.cpp b/src/Lawn/System/ZombotanySurvival.cpp
+index 59ad47d..dc84db1 100644
+--- a/src/Lawn/System/ZombotanySurvival.cpp
++++ b/src/Lawn/System/ZombotanySurvival.cpp
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: LGPL-3.0-or-later
+ #include "ZombotanySurvival.h"
+ #include "Zombotany3.h"
++#include "Zombotany45.h"
+ #include "../Board.h"
+ #include "../Challenge.h"
+ #include "../GridItem.h"
+@@ -72,6 +73,25 @@ constexpr std::array<FogStage, kStageCount> fogStages = {{
+        {1,2,1,0,0}, {1,0,1,0,1}, {1,2,1,1,0}, {2,1,2,0,0}, {2,2,1,0,1} }}
+ }};
+ 
++constexpr std::array<ZombieType, 5> roofHeads = {
++    ZOMBIE_CABBAGE_HEAD, ZOMBIE_KERNEL_HEAD, ZOMBIE_WALLNUT_HEAD, ZOMBIE_MELON_HEAD, ZOMBIE_TALLNUT_HEAD
++};
++using RoofStage = std::array<std::array<int, roofHeads.size()>, kWavesPerStage>;
++// Start with single cabbage volleys. Add butter, armored escorts, then melon
++// splash so each seed repick previews a different threat to the potted garden.
++constexpr std::array<RoofStage, kStageCount> roofStages = {{
++    {{ {1,0,0,0,0}, {1,0,0,0,0}, {1,0,0,0,0}, {1,0,0,0,0}, {2,0,0,0,0},
++       {1,0,0,0,0}, {1,0,0,0,0}, {2,0,0,0,0}, {1,0,0,0,0}, {2,0,0,0,0} }},
++    {{ {1,0,0,0,0}, {0,1,0,0,0}, {1,0,0,0,0}, {1,1,0,0,0}, {2,0,0,0,0},
++       {0,1,0,0,0}, {1,1,0,0,0}, {2,0,0,0,0}, {0,2,0,0,0}, {2,1,0,0,0} }},
++    {{ {1,1,0,0,0}, {1,0,1,0,0}, {1,1,0,0,0}, {2,0,0,0,0}, {0,1,1,0,0},
++       {1,1,0,0,0}, {2,0,1,0,0}, {0,2,0,0,0}, {2,1,0,0,0}, {1,1,1,0,0} }},
++    {{ {1,1,0,0,0}, {1,0,0,1,0}, {0,1,1,0,0}, {2,1,0,0,0}, {1,0,0,1,0},
++       {1,1,1,0,0}, {0,2,0,0,0}, {1,1,0,1,0}, {2,0,1,0,0}, {1,1,1,1,0} }},
++    {{ {2,1,0,0,0}, {1,0,1,1,0}, {1,2,0,0,0}, {0,1,0,0,1}, {2,0,0,1,0},
++       {1,2,1,0,0}, {1,1,0,1,0}, {2,1,1,0,0}, {0,2,0,1,0}, {1,1,0,1,1} }}
++}};
++
+ template<class Visitor>
+ void VisitStage(const Board& board, Visitor visit)
+ {
+@@ -88,6 +108,7 @@ void VisitStage(const Board& board, Visitor visit)
+     if (board.mApp->mGameMode == kNightMode) visitWaves(nightHeads, nightStages[stage]);
+     else if (board.mApp->mGameMode == kPoolMode) visitWaves(poolHeads, poolStages[stage]);
+     else if (board.mApp->mGameMode == kFogMode) visitWaves(fogHeads, fogStages[stage]);
++    else if (board.mApp->mGameMode == kRoofMode) visitWaves(roofHeads, roofStages[stage]);
+     else visitWaves(kHeadTypes, kStages[stage]);
+ }
+ 
+@@ -157,6 +178,8 @@ void RaiseNightMushrooms(Board& board, int stage)
+ ZombieType HeadForSpawn(GameMode mode, ZombieType type, int row)
+ {
+     if (!IsMode(mode) || type < ZOMBIE_NORMAL || type >= NUM_ZOMBIE_TYPES) return type;
++    if (mode == kRoofMode)
++        return std::find(roofHeads.begin(), roofHeads.end(), type) != roofHeads.end() ? type : ZOMBIE_CABBAGE_HEAD;
+     if (IsWaterMode(mode))
+     {
+         const auto& heads = mode == kFogMode ? fogHeads : poolHeads;
+@@ -248,6 +271,13 @@ void SurfacePoolAmbush(Board& board)
+ 
+ void PreloadResources(GameMode mode)
+ {
++    if (mode == kRoofMode)
++    {
++        for (const auto plant : {SEED_FLOWERPOT, SEED_UMBRELLA, SEED_CABBAGEPULT, SEED_KERNELPULT, SEED_WALLNUT, SEED_MELONPULT, SEED_TALLNUT})
++            Plant::PreloadPlantResources(plant);
++        for (const auto head : roofHeads) Zombie::PreloadZombieResources(head);
++        return;
++    }
+     if (mode == kFogMode)
+     {
+         for (const auto plant : {SEED_PUFFSHROOM, SEED_SEASHROOM, SEED_FUMESHROOM, SEED_WALLNUT, SEED_TALLNUT})
+@@ -279,6 +309,7 @@ bool Validate(const Board& board)
+     if (mode == kNightMode) lawn = BACKGROUND_2_NIGHT;
+     else if (mode == kPoolMode) lawn = BACKGROUND_3_POOL;
+     else if (mode == kFogMode) lawn = BACKGROUND_4_FOG;
++    else if (mode == kRoofMode) lawn = BACKGROUND_5_ROOF;
+     if (board.mBackground != lawn ||
+         board.mNumWaves != kWavesPerStage || board.mChallenge->mChallengeState != STATECHALLENGE_NORMAL ||
+         board.mChallenge->mSurvivalStage < 0 || board.mChallenge->mSurvivalStage >= kStageCount ||
+@@ -290,6 +321,7 @@ bool Validate(const Board& board)
+         board.mFogBlownCountDown < 0 || board.mFogBlownCountDown > 4000)) return false;
+     if (IsWaterMode(mode) && (board.mRiseFromGraveCounter < 0 || board.mRiseFromGraveCounter > 200 ||
+         (board.mRiseFromGraveCounter && board.mCurrentWave != kWavesPerStage))) return false;
++    if (mode == kRoofMode && (board.mRiseFromGraveCounter != 0 || !Zombotany45::ValidRoofButter(board))) return false;
+     bool correctWaves = true;
+     VisitStage(board, [&](int wave, int slot, ZombieType head) {
+         if (board.mZombiesInWave[wave][slot] != head) correctWaves = false;
+diff --git a/src/Lawn/System/ZombotanySurvival.h b/src/Lawn/System/ZombotanySurvival.h
+index 3512c6e..6a94f80 100644
+--- a/src/Lawn/System/ZombotanySurvival.h
++++ b/src/Lawn/System/ZombotanySurvival.h
+@@ -18,6 +18,9 @@ static_assert(kPoolProfileIndex == 100);
+ inline constexpr GameMode kFogMode = GAMEMODE_CHALLENGE_ZOMBOTANY_SURVIVAL_FOG;
+ inline constexpr int kFogProfileIndex = static_cast<int>(kFogMode) - GAMEMODE_SURVIVAL_NORMAL_STAGE_1;
+ static_assert(kFogProfileIndex == 101);
++inline constexpr GameMode kRoofMode = GAMEMODE_CHALLENGE_ZOMBOTANY_SURVIVAL_ROOF;
++inline constexpr int kRoofProfileIndex = static_cast<int>(kRoofMode) - GAMEMODE_SURVIVAL_NORMAL_STAGE_1;
++static_assert(kRoofProfileIndex == 102);
+ inline constexpr int kStageCount = 5;
+ inline constexpr int kWavesPerStage = 10;
+ inline constexpr int kFlagGoal = 5;
+@@ -49,7 +52,7 @@ inline constexpr std::array<Stage,kStageCount> kStages = {{
+        {3,1,1,1,0,0}, {3,2,0,1,1,0} }}
+ }};
+ constexpr bool IsWaterMode(GameMode mode) { return mode == kPoolMode || mode == kFogMode; }
+-constexpr bool IsMode(GameMode mode) { return mode == kMode || mode == kNightMode || IsWaterMode(mode); }
++constexpr bool IsMode(GameMode mode) { return mode == kMode || mode == kNightMode || IsWaterMode(mode) || mode == kRoofMode; }
+ constexpr bool IsHead(ZombieType type)
+ {
+     for (const auto head : kHeadTypes) if (type == head) return true;
+diff --git a/src/Lawn/Widget/ChallengeScreen.cpp b/src/Lawn/Widget/ChallengeScreen.cpp
+index 1bcdb25..41e30a9 100644
+--- a/src/Lawn/Widget/ChallengeScreen.cpp
++++ b/src/Lawn/Widget/ChallengeScreen.cpp
+@@ -164,7 +164,8 @@ constinit const ChallengeDefinition gChallengeDefs[NUM_CHALLENGE_MODES] = {
+ 	{ .mChallengeMode = ZomBotanyBeghouled::kMode, .mChallengeIconIndex = 1, .mPage = CHALLENGE_PAGE_ZOMBOTANY, .mRow = 1, .mCol = 3, .mChallengeName = "ZomBotany Beghouled" },
+ 	{ .mChallengeMode = GAMEMODE_CHALLENGE_ZOMBOTANY_SURVIVAL_NIGHT, .mChallengeIconIndex = 1, .mPage = CHALLENGE_PAGE_ZOMBOTANY, .mRow = 1, .mCol = 4, .mChallengeName = "Survival: Night" },
+ 	{ .mChallengeMode = ZombotanySurvival::kPoolMode, .mChallengeIconIndex = 2, .mPage = CHALLENGE_PAGE_ZOMBOTANY, .mRow = 2, .mCol = 0, .mChallengeName = "Survival: Pool" },
+-	{ .mChallengeMode = ZombotanySurvival::kFogMode, .mChallengeIconIndex = 3, .mPage = CHALLENGE_PAGE_ZOMBOTANY, .mRow = 2, .mCol = 1, .mChallengeName = "Survival: Fog" }
++	{ .mChallengeMode = ZombotanySurvival::kFogMode, .mChallengeIconIndex = 3, .mPage = CHALLENGE_PAGE_ZOMBOTANY, .mRow = 2, .mCol = 1, .mChallengeName = "Survival: Fog" },
++	{ .mChallengeMode = ZombotanySurvival::kRoofMode, .mChallengeIconIndex = 4, .mPage = CHALLENGE_PAGE_ZOMBOTANY, .mRow = 2, .mCol = 2, .mChallengeName = "Survival: Roof" }
+ };
+ 
+ ChallengeScreen::ChallengeScreen(LawnApp* theApp, ChallengePage thePage)
+@@ -469,7 +470,8 @@ void ChallengeScreen::UpdateButtons()
+ 			aDef.mChallengeMode == ZomBotanyBeghouled::kMode ? 8 :
+ 			aDef.mChallengeMode == GAMEMODE_CHALLENGE_ZOMBOTANY_SURVIVAL_NIGHT ? 9 :
+ 			aDef.mChallengeMode == ZombotanySurvival::kPoolMode ? 10 :
+-			aDef.mChallengeMode == ZombotanySurvival::kFogMode ? 11 : -1;
++			aDef.mChallengeMode == ZombotanySurvival::kFogMode ? 11 :
++			aDef.mChallengeMode == ZombotanySurvival::kRoofMode ? 12 : -1;
+ 		ButtonWidget* aButton = mChallengeButtons[aChallengeMode].get();
+ 		aButton->mVisible = aFamilyPage ? aFamilySlot >= 0 : aDef.mPage == mPageIndex;
+ 		// The family aliases the existing buttons and records. Returning restores
+@@ -762,6 +764,41 @@ Image* ChallengeScreen::GetZombotanySurvivalFogImage()
+ 	return mZombotanySurvivalFogImage.get();
+ }
+ 
++Image* ChallengeScreen::GetZombotanySurvivalRoofImage()
++{
++	if (mZombotanySurvivalRoofImage) return mZombotanySurvivalRoofImage.get();
++	auto* cache = mApp->mReanimatorCache.get();
++	if (!cache) return nullptr;
++	const std::string group = "DelayLoad_Background5";
++	if (std::find(mLoadedResourceNames.begin(), mLoadedResourceNames.end(), group) == mLoadedResourceNames.end())
++	{
++		if (!PvzpLoadResources(group.c_str())) return nullptr;
++		mLoadedResourceNames.push_back(group);
++	}
++	if (!Sexy::IMAGE_BACKGROUND5) return nullptr;
++	auto pot = cache->MakeCachedPlantFrame(SEED_FLOWERPOT, VARIATION_NORMAL);
++	auto cabbage = cache->MakeCachedPlantFrame(SEED_CABBAGEPULT, VARIATION_NORMAL);
++	auto kernelHead = cache->MakeCachedZombieFrame(ZOMBIE_KERNEL_HEAD);
++	if (!pot || !cabbage || !kernelHead) return nullptr;
++
++	auto image = cache->MakeBlankMemoryImage(80, 65);
++	Graphics picture(image.get());
++	picture.SetLinearBlend(true);
++	picture.SetColor(Color::Black);
++	picture.FillRect(0, 0, 80, 65);
++	picture.DrawImage(Sexy::IMAGE_BACKGROUND5, Rect(0, 0, 80, 65), Rect(154, 72, 480, 390));
++	if (Sexy::IMAGE_PLANTSHADOW)
++	{
++		picture.DrawImage(Sexy::IMAGE_PLANTSHADOW, 44, 52, 27, 5);
++		picture.DrawImage(Sexy::IMAGE_PLANTSHADOW, 6, 58, 32, 6);
++	}
++	DrawFittedCardSprite(picture, *kernelHead, 57, 56, 42, 51);
++	DrawFittedCardSprite(picture, *pot, 22, 62, 30, 17);
++	DrawFittedCardSprite(picture, *cabbage, 22, 53, 38, 32);
++	mZombotanySurvivalRoofImage = std::move(image);
++	return mZombotanySurvivalRoofImage.get();
++}
++
+ Image* ChallengeScreen::GetZombotanyVasebreakerImage()
+ {
+ 	if (mZombotanyVasebreakerImage) return mZombotanyVasebreakerImage.get();
+@@ -899,6 +936,10 @@ void ChallengeScreen::DrawButton(Graphics* g, int theChallengeIndex)
+ 			{
+ 				if (Image* image = Zombotany45Art::GetImage(aDef.mChallengeMode)) g->DrawImage(image, aPosX + 13, aPosY + 4);
+ 			}
++			else if (aDef.mChallengeMode == ZombotanySurvival::kRoofMode)
++			{
++				if (Image* image = GetZombotanySurvivalRoofImage()) g->DrawImage(image, aPosX + 13, aPosY + 4);
++			}
+ 			else if (aDef.mChallengeMode == ZombotanySurvival::kFogMode)
+ 			{
+ 				if (Image* image = GetZombotanySurvivalFogImage()) g->DrawImage(image, aPosX + 13, aPosY + 4);
+@@ -1095,8 +1136,9 @@ void ChallengeScreen::Draw(Graphics* g)
+ 		static_cast<int>(mApp->HasBeatenChallenge(ZomBotanyBeghouled::kMode)) +
+ 		static_cast<int>(mApp->HasBeatenChallenge(GAMEMODE_CHALLENGE_ZOMBOTANY_SURVIVAL_NIGHT)) +
+ 		static_cast<int>(mApp->HasBeatenChallenge(ZombotanySurvival::kPoolMode)) +
+-		static_cast<int>(mApp->HasBeatenChallenge(ZombotanySurvival::kFogMode)) : mApp->GetNumTrophies(mPageIndex);
+-	int aTrophiesTotal = mPageIndex == CHALLENGE_PAGE_SURVIVAL ? 10 : mPageIndex == CHALLENGE_PAGE_CHALLENGE ? 20 : mPageIndex == CHALLENGE_PAGE_PUZZLE ? 18 : mPageIndex == CHALLENGE_PAGE_ZOMBOTANY ? 12 : 0;
++		static_cast<int>(mApp->HasBeatenChallenge(ZombotanySurvival::kFogMode)) +
++		static_cast<int>(mApp->HasBeatenChallenge(ZombotanySurvival::kRoofMode)) : mApp->GetNumTrophies(mPageIndex);
++	int aTrophiesTotal = mPageIndex == CHALLENGE_PAGE_SURVIVAL ? 10 : mPageIndex == CHALLENGE_PAGE_CHALLENGE ? 20 : mPageIndex == CHALLENGE_PAGE_PUZZLE ? 18 : mPageIndex == CHALLENGE_PAGE_ZOMBOTANY ? 13 : 0;
+ 	if (aTrophiesTotal > 0)
+ 	{
+ 		std::string aTrophyString = std::format("{}/{}", aTrophiesGot, aTrophiesTotal);
+diff --git a/src/Lawn/Widget/ChallengeScreen.h b/src/Lawn/Widget/ChallengeScreen.h
+index f2f51b0..0627e6e 100644
+--- a/src/Lawn/Widget/ChallengeScreen.h
++++ b/src/Lawn/Widget/ChallengeScreen.h
+@@ -62,6 +62,7 @@ public:
+ 	std::unique_ptr<Sexy::MemoryImage> mZombotanySurvivalNightImage;
+ 	std::unique_ptr<Sexy::MemoryImage> mZombotanySurvivalPoolImage;
+ 	std::unique_ptr<Sexy::MemoryImage> mZombotanySurvivalFogImage;
++	std::unique_ptr<Sexy::MemoryImage> mZombotanySurvivalRoofImage;
+ 	ChallengePage               mPageIndex;
+ 	bool                        mCheatEnableChallenges;
+ 	UnlockingState              mUnlockState;
+@@ -88,6 +89,7 @@ public:
+ 	Sexy::Image* GetZombotanySurvivalNightImage();
+ 	Sexy::Image* GetZombotanySurvivalPoolImage();
+ 	Sexy::Image* GetZombotanySurvivalFogImage();
++	Sexy::Image* GetZombotanySurvivalRoofImage();
+ 	void                        DrawButton(Graphics* g, int theChallengeIndex);
+ 	void                        Draw(Graphics* g) override;
+ 	void                        Update() override;

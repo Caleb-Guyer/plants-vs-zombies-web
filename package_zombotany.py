@@ -42,7 +42,12 @@ RELEASES = {
         parent=chain.POOL, parent_bytes=chain.POOL_BYTES, parent_sha=chain.POOL_SHA,
         commit='567e85611a91d89324e65707a7f59595a32c281e', sources=895, objects=155,
         caption='with ZomBotany Survival: Fog.',
-        change='Adds the twelfth ZomBotany card, a five-flag Survival on the original foggy pool lawn.')
+        change='Adds the twelfth ZomBotany card, a five-flag Survival on the original foggy pool lawn.'),
+    'zsroof': dict(tag='zsroof1', stem='zsroof', parent_tag='zsfog1',
+        parent=chain.FOG, parent_bytes=chain.FOG_BYTES, parent_sha=chain.FOG_SHA,
+        commit='9ab47551c316bbee0674dbf74579d726b576b55a', sources=895, objects=155,
+        caption='with ZomBotany Survival: Roof.',
+        change='Adds the thirteenth ZomBotany card, a five-flag Survival on the sloped roof with Flower Pots and pult-headed zombies.')
 }
 
 def sha(data):
@@ -82,10 +87,10 @@ def package(candidate, results, key):
     stem, tag = release['stem'], release['tag']
     test_files = (stem+'.cpp', 'headless-app.h', f'build-{key}.py', key+'-run.cjs',
                   f'test-{key}.py', key+'-build.json', stem+'-engine.js', stem+'-engine.wasm')
-    if key == 'zsfog':
-        earned_profile = 'zspool1-earned.dat'
-        if sha((candidate/'tests'/earned_profile).read_bytes()) != chain.POOL_WINNER_SHA256:
-            raise ValueError('Fog replay requires the published Pool winner profile')
+    if key in chain.WINNING_PROFILES:
+        earned_profile, expected = chain.WINNING_PROFILES[key]
+        if sha((candidate/'tests'/earned_profile).read_bytes()) != expected:
+            raise ValueError('Incorrect earned profile for replay: ' + earned_profile)
         test_files += (earned_profile,)
     engine=json.loads(parent_file(release, 'dist/game/engine-provenance.json'))
     assert engine['id']==release['parent'] and engine['artifacts']['sourceSha256']==release['parent_sha']
@@ -151,6 +156,7 @@ def package(candidate, results, key):
         suffix = ROOT / chain.ARCHIVE_PARENTS[engine_id][3]
         suffix.parent.mkdir(parents=True, exist_ok=True)
         if key == 'zsfog':
+            # Fog first published compact versions of the earlier source suffixes.
             parent_record = engine
             child = engine_id
             while child in chain.ARCHIVE_PARENTS:
@@ -158,6 +164,8 @@ def package(candidate, results, key):
                 chain.pack_source_suffix(ROOT, child, archive.read_bytes())
                 child = parent_record['id']
                 parent_record = parent_record['parent']
+        elif suffix.suffix == '.xz':
+            chain.pack_source_suffix(ROOT, engine_id, parent_bytes)
         else:
             suffix.write_bytes(parent_bytes[len(base):])
         (suffix.parent/'build-provenance.json').write_bytes(parent_file(release, 'dist/source/build-provenance.json'))

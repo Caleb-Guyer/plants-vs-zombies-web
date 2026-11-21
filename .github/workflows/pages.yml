@@ -30,7 +30,11 @@ jobs:
         run: python bundle-game-assets.py --verify-only
       - name: Verify browser shell and corresponding source
         run: npm run check
-      - name: Play ZomBotany Survival Fog and its neighboring modes with sound off
+      - name: Play ZomBotany Survival Roof and its neighboring modes with sound off
+        run: python tests/zsroof.py --play
+      - name: Plant a Flower Pot and Potato Mine on the roof in a muted browser
+        run: python tests/pool-browser.py --mode roof
+      - name: Replay ZomBotany Survival Fog and its neighboring modes with sound off
         run: python tests/zsfog.py --play
       - name: Open the Fog card and plant a Plantern in a muted browser
         run: python tests/pool-browser.py --mode fog

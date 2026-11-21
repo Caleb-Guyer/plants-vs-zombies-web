@@ -1,6 +1,12 @@
 # Browser parity and QA record
 
-## ZomBotany Survival: Fog
+## ZomBotany Survival: Roof
+
+The Roof suite plays the five flags at 1× and 2× with two seeds. It covers the slope, planting on bare tiles and in pots, incoming lobs, butter, Umbrella Leaf protection and melon splash. It compares the pixels of the seed packets and shovel with and without first-row Cabbage-pults and airborne shots. The native player also resumes a saved attack, retries after a loss and earns the trophy. Classic Survival: Roof and ZomBotany Survival: Fog serve as controls. Replay with `python tests/zsroof.py --play`.
+
+The muted browser test opens the thirteenth card, selects six seed packets and arms a Potato Mine in a newly planted Flower Pot. It also imports an earned Roof profile, reloads the page and checks the exported profile byte for byte. Run `python tests/pool-browser.py --mode roof` with ChromeDriver or Edge WebDriver.
+
+## ZomBotany Survival: Fog (previous release)
 
 The Fog suite exercises two seeds at both speeds, four seed repicks, the night economy, both water lanes and the later bank attackers. The winning runs face the early surfacing zombies and play Blover at later flag warnings. Tests check which water squares are covered during Plantern illumination, a gust and the fog’s return. A separate run restores a saved battle, and another earns the trophy after a genuine loss and retry. Controls cover classic Survival: Fog and ZomBotany Survival: Pool. Replay with `python tests/zsfog.py --play`.
 

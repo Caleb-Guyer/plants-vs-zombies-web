@@ -383,7 +383,8 @@ def ensure_vasebreaker_baseline(root):
     reference = {"path": "dist/source/pvz-portable-0.2.6-web-zvase.1-source.zip",
                  "sha256": "d9d4351181e09f1b0eceacc8203bf4d0bcf46910b7e27027c762b521d8805f2b"}
     size = 94_720_307
-    for child_id, parent_id in (("0.2.6-web-zsfog.1", "0.2.6-web-zspool.1"),
+    for child_id, parent_id in (("0.2.6-web-zsroof.1", "0.2.6-web-zsfog.1"),
+                                ("0.2.6-web-zsfog.1", "0.2.6-web-zspool.1"),
                                 ("0.2.6-web-zspool.1", "0.2.6-web-zsnight.1")):
         if engine.get("id") == child_id:
             previous = engine.get("parent", {})
@@ -493,7 +494,8 @@ def make_current_transport(root):
     target, original = _donor(root)
     options = {"preset": 8}
     if target["path"].endswith(("/pvz-portable-0.2.6-web-zspool.1-source.zip",
-                               "/pvz-portable-0.2.6-web-zsfog.1-source.zip")):
+                               "/pvz-portable-0.2.6-web-zsfog.1-source.zip",
+                               "/pvz-portable-0.2.6-web-zsroof.1-source.zip")):
         # The Survival ZIP prefix contains matching spans more than 32 MiB apart.
         # A 48 MiB dictionary still decodes within the existing 64 MiB limit.
         options = {"filters": [{"id": lzma.FILTER_LZMA2, "preset": 8, "dict_size": 48 * 1024 * 1024}]}

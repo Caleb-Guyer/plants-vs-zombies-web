@@ -15,6 +15,7 @@ BEGHOUL = "0.2.6-web-zbeghouled.1"
 NIGHT = "0.2.6-web-zsnight.1"
 POOL = "0.2.6-web-zspool.1"
 FOG = "0.2.6-web-zsfog.1"
+ROOF = "0.2.6-web-zsroof.1"
 SHARED_BASE = {"id": I_ZOMBOTANY, "bytes": 100_558_183,
                "sha256": "ab56f8150ddaf8d8985de74afeea2b51c7c09ef800d0f4ba58cd3a270393152c"}
 BEGHOUL_BYTES = 103_906_885
@@ -23,21 +24,30 @@ NIGHT_BYTES = 103_925_423
 NIGHT_SHA = "cac01b72b470a6b9aa167ed1eed93bb4e78235d496418d1cda118e33656cb1e1"
 POOL_BYTES = 103_940_854
 POOL_SHA = "a57b215ffd83e8934fcbe5de7ffb1f94bbae34ba0dff33bf8258458b17b02f29"
+FOG_BYTES = 103_965_147
+FOG_SHA = "122686484ebe6b0a6ac681c60e032303ca595452640e7091b6b3f83d8109be94"
 POOL_WINNER_SHA256 = "0975e051c8585ab3535697e4d56f895f566c33afcf3946932326d4654f24fefa"
+WINNING_PROFILES = {
+    "zsfog": ("zspool1-earned.dat", POOL_WINNER_SHA256),
+    "zsroof": ("zsfog1-earned.dat", "e265c019f72c08c7beeb114676792dc6e66a4707cc91430b26f8c3ced6a4aac7"),
+}
 HISTORY = Path("tests/fixtures/historical")
 SUFFIX = HISTORY / "zbeghouled1-published/source-suffix.bin"
 NIGHT_SUFFIX = HISTORY / "zsnight1-published/source-suffix.bin"
 POOL_SUFFIX = HISTORY / "zspool1-published/source-suffix.xz"
+FOG_SUFFIX = HISTORY / "zsfog1-published/source-suffix.xz"
 BROWSERS = HISTORY / "extension-browsers.tar.xz"
 POOL_BROWSER_DELTAS = HISTORY / "zspool1-browser-deltas.tar.xz"
 FOG_BROWSER_DELTAS = HISTORY / "zsfog1-browser-deltas.tar.xz"
-DELTA_CAPSULES = {POOL: POOL_BROWSER_DELTAS, FOG: FOG_BROWSER_DELTAS}
+ROOF_BROWSER_DELTAS = HISTORY / "zsroof1-browser-deltas.tar.xz"
+DELTA_CAPSULES = {POOL: POOL_BROWSER_DELTAS, FOG: FOG_BROWSER_DELTAS, ROOF: ROOF_BROWSER_DELTAS}
 BLOCK_SIZE = 128
 MAX_BROWSER_BYTES = 16 * 1024 * 1024
 ARCHIVE_PARENTS = {
     NIGHT: (BEGHOUL, BEGHOUL_BYTES, BEGHOUL_SHA, SUFFIX),
     POOL: (NIGHT, NIGHT_BYTES, NIGHT_SHA, NIGHT_SUFFIX),
     FOG: (POOL, POOL_BYTES, POOL_SHA, POOL_SUFFIX),
+    ROOF: (FOG, FOG_BYTES, FOG_SHA, FOG_SUFFIX),
 }
 ZIP_ROOT = "zombotany3-candidate/tests/"
 SUFFIX_HEADER = struct.Struct("<4sII32s")

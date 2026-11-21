@@ -1,6 +1,14 @@
 # Plants vs. Zombies — browser playtest
 
-## ZomBotany Survival: Fog
+## ZomBotany Survival: Roof
+
+Beat the original ZomBotany to unlock **Survival: Roof**, the thirteenth card on the ZomBotany tab. Defend the roof for five flags. You start with 50 sun and three columns of Flower Pots. Add pots to expand across the tiles, and pick a new deck between flags.
+
+Cabbage-heads lob over your front line. Kernel-heads join on the second flag and can butter a plant. Wall-nut-heads arrive on the third, Melon-heads on the fourth and Tall-nut-heads on the fifth. Umbrella Leaves block incoming lobs over nearby pots and plants.
+
+[Play on GitHub Pages](https://caleb-guyer.github.io/plants-vs-zombies-web/).
+
+## ZomBotany Survival: Fog (previous release)
 
 Beat the original ZomBotany to unlock **Survival: Fog**, the twelfth card on the ZomBotany tab. Defend the night pool for five flags. The fog moves one column closer on flags three and five. Grow your sun supply and change seeds between flags.
 

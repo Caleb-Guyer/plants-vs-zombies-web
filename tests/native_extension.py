@@ -21,6 +21,7 @@ RELEASES = {
     "zsnight": (895, 155, "ZombotanySurvival.cpp.o", "zsnight"),
     "zspool": (895, 155, "ZombotanySurvival.cpp.o", "zspool"),
     "zsfog": (895, 155, "ZombotanySurvival.cpp.o", "zsfog"),
+    "zsroof": (895, 155, "ZombotanySurvival.cpp.o", "zsroof"),
 }
 CASES = {(name, speed, seed) for name in ("solution", "resume", "retry", "classic")
          for speed in (1, 2) for seed in (1729, 7331)}
@@ -30,7 +31,9 @@ def run_files(key):
     files = (f"test-{key}.py", f"{key}-run.cjs", f"{key}-build.json", "headless-app.h",
             f"{stem}.cpp", f"build-{key}.py", f"{stem}-engine.js", f"{stem}-engine.wasm",
             "test-pool-panic.py", "pool-panic-assets.json", "zsurvival1-earned-z1/userdata/user1.dat")
-    return files + ("zspool1-earned.dat",) if key == "zsfog" else files
+    if key in chain.WINNING_PROFILES:
+        files += (chain.WINNING_PROFILES[key][0],)
+    return files
 
 
 def digest(data):
@@ -51,8 +54,9 @@ def verify_archive(archive, engine, receipt, pins, key, read_binary, verify_resu
     normal_raw = read("logs/build-result.json")
     link_raw = read(f"tests/{key}-build.json")
     results_raw = read(f"tests/{key}-results.json")
-    if key == "zsfog":
-        check(digest(read("tests/zspool1-earned.dat")) == chain.POOL_WINNER_SHA256, "Incorrect Pool winner fixture")
+    if key in chain.WINNING_PROFILES:
+        name, expected = chain.WINNING_PROFILES[key]
+        check(digest(read("tests/" + name)) == expected, "Incorrect earned profile: " + name)
     for field, data in (("normalReceiptSha256", normal_raw), ("driverBuildSha256", link_raw),
                         ("reportSha256", results_raw)):
         check(digest(data) == pins[field], field)

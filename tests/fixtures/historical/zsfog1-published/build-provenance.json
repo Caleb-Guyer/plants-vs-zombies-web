@@ -1,0 +1,53 @@
+{
+  "id": "0.2.6-web-zsfog.1",
+  "parentId": "0.2.6-web-zspool.1",
+  "sourceArchive": {
+    "path": "pvz-portable-0.2.6-web-zsfog.1-source.zip",
+    "sha256": "122686484ebe6b0a6ac681c60e032303ca595452640e7091b6b3f83d8109be94",
+    "bytes": 103965147,
+    "entries": 3712
+  },
+  "incrementalPatch": {
+    "path": "zspool1-to-zsfog1.patch",
+    "sha256": "46f3e6ee78d394964d2d0483e54c33c8a97e09c852250447de78997a4923ea9c",
+    "baseSourceSha256": "a57b215ffd83e8934fcbe5de7ffb1f94bbae34ba0dff33bf8258458b17b02f29"
+  },
+  "sourceFiles": 895,
+  "productionObjects": 155,
+  "normalBuild": {
+    "status": "PASS",
+    "exitCode": 0,
+    "elapsedSeconds": 96.317,
+    "sourceUnchangedDuringBuild": true,
+    "sourceFiles": 895,
+    "outputs": {
+      "build/pvz-portable.js": {
+        "bytes": 210891,
+        "sha256": "1218c3198f1b9aa845f54c28da7399c33fef9b0f5925079ec46f6e176c9c3013"
+      },
+      "build/pvz-portable.wasm": {
+        "bytes": 8001234,
+        "sha256": "23b6346ae35bdbcf3c879c96e2a581b38d60efd06bafda1e13183ad2e7e62b37"
+      },
+      "build/ProjectVersion.h": {
+        "bytes": 191,
+        "sha256": "6e8a3672afc6e0dc2dcda9b27933ab3986e59b6024501acadc12efd77455e76b"
+      }
+    }
+  },
+  "changedSources": [
+    "CMake/ProjectVersion.cmake",
+    "src/ConstEnums.h",
+    "src/Lawn/Board.cpp",
+    "src/Lawn/System/PlayerInfo.cpp",
+    "src/Lawn/System/ZombotanySurvival.cpp",
+    "src/Lawn/System/ZombotanySurvival.h",
+    "src/Lawn/Widget/ChallengeScreen.cpp",
+    "src/Lawn/Widget/ChallengeScreen.h"
+  ],
+  "silentGameplayDriver": {
+    "zsfog-engine.js": "e01ba3674d327ea1c96a44045cda03e34233bf3b53b8ba1e09b29f11e6507b20",
+    "zsfog-engine.wasm": "f80f3542dec2f4fc298ed6c6a8e73850ee501adcfdf4cdba0539be0d7233c68e"
+  },
+  "gameplayScenarios": 16
+}

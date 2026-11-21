@@ -52,6 +52,34 @@ class HistoricalBrowserTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 chain.read_browser(root, 'zsnight', name, sha(original), '0' * 64, base)
 
+    def test_roof_standalone_bundle_keeps_every_source_suffix_and_one_browser_capsule(self):
+        spec = importlib.util.spec_from_file_location('source_packager', ROOT / 'package-portable.py')
+        packager = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(packager)
+        engine = {'id': chain.I_ZOMBOTANY}
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            expected = {root / chain.ROOF_BROWSER_DELTAS}
+            history = root / chain.HISTORY
+            history.mkdir(parents=True)
+            for archive in (chain.BROWSERS, *chain.DELTA_CAPSULES.values()):
+                (root / archive).touch()
+            for parent_id in (chain.BEGHOUL, chain.NIGHT, chain.POOL, chain.FOG):
+                engine = {'id': parent_id, 'parent': engine}
+                key = parent_id.removeprefix('0.2.6-web-').removesuffix('.1')
+                raw = history / (key + '1-published') / 'source-suffix.bin'
+                raw.parent.mkdir()
+                raw.touch()
+                raw.with_suffix('.xz').touch()
+                expected.add(raw.with_suffix('.xz'))
+            roof = {'id': chain.ROOF, 'parent': engine}
+            with mock.patch.object(packager, 'ROOT', root), mock.patch.object(packager, 'REQUIRED_ROOT', ()), \
+                    mock.patch.object(packager, 'engine_inputs', return_value=(roof, {}, None)):
+                self.assertEqual(set(packager.root_sources()), expected)
+                (root / chain.FOG_SUFFIX).unlink()
+                with self.assertRaisesRegex(ValueError, 'Missing compact source suffix for zsfog'):
+                    packager.root_sources()
+
 
 class HistoricalSourceSuffixTests(unittest.TestCase):
     def setUp(self):

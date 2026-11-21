@@ -1,4 +1,4 @@
-"""Play the ZomBotany water lawns in a muted browser and restore their native trophies."""
+"""Play the ZomBotany Survival courses in a muted browser and restore their native trophies."""
 import argparse
 import base64
 from contextlib import contextmanager
@@ -127,8 +127,8 @@ def play_opening(browser, output, mode="pool"):
     # Each reference is the average RGB across a 6-by-4 grid on the native 800-by-600 screen.
     # Sample stable artwork so menu movement and the pool's ripples can vary between frames.
     references = json.loads((ROOT / "tests/fixtures/zspool1-screens.json").read_bytes())
-    if mode == "fog":
-        references.update(json.loads((ROOT / "tests/fixtures/zsfog1-screens.json").read_bytes()))
+    if mode != "pool":
+        references.update(json.loads((ROOT / f"tests/fixtures/zs{mode}1-screens.json").read_bytes()))
     def inspect(frame):
         return browser.execute("""
             const [png, references, done] = arguments;
@@ -180,8 +180,12 @@ def play_opening(browser, output, mode="pool"):
     reach("menu", "title", (400,545))
     reach("minigames", "menu", (565,245))
     reach("family", "minigames", (562,581))
-    reach("chooser", "family", (245 if mode == "fog" else 90,385))
-    if mode == "fog":
+    card_x = {"pool": 90, "fog": 245, "roof": 400}[mode]
+    reach("chooser", "family", (card_x,385))
+    if mode == "roof":
+        # Flower Pot, Potato Mine, Sunflower, Cabbage-pult, Kernel-pult and Umbrella Leaf.
+        seeds = ((100,437),(260,154),(100,154),(45,437),(155,437),(314,437))
+    elif mode == "fog":
         # Sun-shroom, Puff-shroom, Sea-shroom, Lily Pad, Plantern and Blover.
         seeds = ((100,224),(45,224),(45,366),(45,298),(100,366),(206,366))
     else:
@@ -193,6 +197,17 @@ def play_opening(browser, output, mode="pool"):
     time.sleep(1)
     click_canvas(browser, 231,565)
     reach("lawn")
+    if mode == "roof":
+        reach("bareTile")
+        reach("readyMine")
+        click_canvas(browser, 120,42)
+        click_canvas(browser, 320,320)
+        reach("flowerPot")
+        click_canvas(browser, 178,42)
+        click_canvas(browser, 320,320)
+        reach("armedMine")
+        assert browser.execute("return PVZAudio.isMuted()"), "Roof gameplay test lost its mute"
+        return
     if mode == "fog":
         reach("coveredWater")
         # The original Plantern packet starts the first flag on cooldown.
@@ -266,7 +281,8 @@ def exercise(browser, site, scratch, profile, output, mode="pool"):
         output.mkdir(parents=True, exist_ok=True)
         (output / "startup.png").write_bytes(frame)
     play_opening(browser, output, mode)
-    planting = "Plantern cleared the upper water lane" if mode == "fog" else "planted Lily Pad"
+    planting = {"pool": "planted Lily Pad", "fog": "Plantern cleared the upper water lane",
+                "roof": "armed a Potato Mine in a newly planted Flower Pot"}[mode]
     print(f"PASS muted {mode.title()} card, seed selection, {planting}, cold save roundtrip ({sha256(profile).hexdigest()[:12]}).")
 
 
@@ -274,15 +290,17 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     driver = shutil.which("chromedriver") or shutil.which("chromedriver", path=os.getenv("CHROMEWEBDRIVER", ""))
     parser.add_argument("--driver", default=driver or shutil.which("msedgedriver"))
-    parser.add_argument("--mode", choices=("pool", "fog"), default="pool")
+    parser.add_argument("--mode", choices=("pool", "fog", "roof"), default="pool")
     parser.add_argument("--output", type=Path, help="Keep a screenshot of the native canvas")
     args = parser.parse_args()
     if not args.driver:
         parser.error("A matching ChromeDriver or Microsoft Edge WebDriver is required")
     profile = (ROOT / f"tests/fixtures/zs{args.mode}1-earned.dat").read_bytes()
     trophies = b"ZSP1" + struct.pack("<I", 5)
-    if args.mode == "fog":
+    if args.mode in ("fog", "roof"):
         trophies += b"ZSF1" + struct.pack("<I", 5)
+    if args.mode == "roof":
+        trophies += b"ZSR1" + struct.pack("<I", 5)
     assert profile.startswith(struct.pack("<I", 12)) and profile.endswith(trophies)
     with tempfile.TemporaryDirectory(prefix=f"pvz-{args.mode}-browser-", ignore_cleanup_errors=True) as temp:
         scratch = Path(temp)

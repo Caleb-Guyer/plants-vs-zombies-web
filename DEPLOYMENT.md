@@ -1,6 +1,10 @@
 # GitHub Pages release: Caleb-Guyer/plants-vs-zombies-web
 
-## ZomBotany Survival: Fog
+## ZomBotany Survival: Roof
+
+The Pages workflow replays Roof from the published native source using `python tests/zsroof.py --play`. A muted browser also restores the trophy, opens the thirteenth card, places a Flower Pot on a bare tile and plants a Potato Mine in it. Earlier courses run before the deployment.
+
+## ZomBotany Survival: Fog (previous release)
 
 The Pages workflow replays the five-flag Fog course with `python tests/zsfog.py --play`. A separate muted browser run opens the new card, plants a Plantern and checks that the light clears the fog. The earlier Pool browser and native suites also run before publication.
 
