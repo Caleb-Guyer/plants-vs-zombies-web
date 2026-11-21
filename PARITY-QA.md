@@ -1,6 +1,12 @@
 # Browser parity and QA record
 
-## ZomBotany Survival: Roof
+## ZomBotany Bowling
+
+The muted native suite plays all twenty waves with normal, explosive and giant nuts at 1× and 2×. It exercises a saved roll, Retry, the first trophy and the replay money bag. Classic Wall-nut Bowling provides the reference for how a first-row Pea-head crosses an empty conveyor or a moving packet. The test compares the rendered pixels and clicks the packet at its center and corners. ZomBotany Survival: Roof provides the adjacent card and saved-trophy control. Run `python tests/zbowling.py --play`.
+
+The browser test follows the original menu to card fourteen, takes the first Wall-nut from the conveyor, and observes it rolling across the center lane. It also imports a profile that earned the Bowling trophy, cold-reloads it from browser storage and checks the exported profile bytes. Run `python tests/pool-browser.py --mode bowling` with ChromeDriver or Edge WebDriver.
+
+## ZomBotany Survival: Roof (previous release)
 
 The Roof suite plays the five flags at 1× and 2× with two seeds. It covers the slope, planting on bare tiles and in pots, incoming lobs, butter, Umbrella Leaf protection and melon splash. It compares the pixels of the seed packets and shovel with and without first-row Cabbage-pults and airborne shots. The native player also resumes a saved attack, retries after a loss and earns the trophy. Classic Survival: Roof and ZomBotany Survival: Fog serve as controls. Replay with `python tests/zsroof.py --play`.
 

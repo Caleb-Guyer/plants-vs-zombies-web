@@ -1,6 +1,10 @@
 # Current requirements
 
-## ZomBotany Survival: Roof
+## ZomBotany Bowling
+
+The fourteenth card uses the original daytime Wall-nut Bowling rules, red release line, conveyor, rolling animation and ricochets. Twenty authored formations contain plant-headed zombies exclusively. The first clear earns the family trophy. Returning players can continue from an in-flight roll and use their saved trophies.
+
+## ZomBotany Survival: Roof (previous release)
 
 The thirteenth card uses the original five-lane roof, Flower Pots, slope, daytime sun and roof cleaner purchase. Use five Survival flags and four seed changes. Retain surviving plants, pots, sun and cleaners. Use plant-headed attackers throughout, with the native lob animations, Umbrella Leaf protection and Kernel-head butter.
 

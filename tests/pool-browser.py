@@ -1,4 +1,4 @@
-"""Play the ZomBotany Survival courses in a muted browser and restore their native trophies."""
+"""Play ZomBotany cards in a muted browser and restore their native trophies."""
 import argparse
 import base64
 from contextlib import contextmanager
@@ -127,11 +127,12 @@ def play_opening(browser, output, mode="pool"):
     # Each reference is the average RGB across a 6-by-4 grid on the native 800-by-600 screen.
     # Sample stable artwork so menu movement and the pool's ripples can vary between frames.
     references = json.loads((ROOT / "tests/fixtures/zspool1-screens.json").read_bytes())
+    key = "zbowling" if mode == "bowling" else "zs" + mode
     if mode != "pool":
-        references.update(json.loads((ROOT / f"tests/fixtures/zs{mode}1-screens.json").read_bytes()))
-    def inspect(frame):
+        references.update(json.loads((ROOT / f"tests/fixtures/{key}1-screens.json").read_bytes()))
+    def inspect(frame, before_roll=None):
         return browser.execute("""
-            const [png, references, done] = arguments;
+            const [png, references, beforeRoll, done] = arguments;
             (async () => {
                 const image = new Image();
                 image.src = 'data:image/png;base64,' + png;
@@ -156,9 +157,29 @@ def play_opening(browser, output, mode="pool"):
                 for (let i=0; i<plant.length; i+=4)
                     if (plant[i+1]>80 && plant[i+1]>plant[i]*1.3 && plant[i+1]>plant[i+2]*1.4) green++;
                 scores.lily = green/(40*24);
+                if (beforeRoll) {
+                    // Only the rolling nut crosses the middle of this empty lane at launch.
+                    const bounds = [190,284,480,73];
+                    const current = ctx.getImageData(...bounds).data;
+                    const previous = new Image();
+                    previous.src = 'data:image/png;base64,' + beforeRoll;
+                    await previous.decode();
+                    ctx.drawImage(previous,0,0,800,600);
+                    const bare = ctx.getImageData(...bounds).data;
+                    let count=0, sumX=0;
+                    for (let i=0; i<current.length; i+=4) {
+                        const [r,g,b] = [current[i],current[i+1],current[i+2]];
+                        if (r>85 && g>45 && r>1.10*g && r<2.25*g && g>1.55*b &&
+                            Math.abs(r-bare[i])+Math.abs(g-bare[i+1])+Math.abs(b-bare[i+2])>75) {
+                            count++;
+                            sumX += bounds[0]+((i/4)%bounds[2]);
+                        }
+                    }
+                    scores.rollingX = count>200 ? sumX/count : null;
+                }
                 return scores;
             })().then(done, error => done({error:String(error)}));
-        """, base64.b64encode(frame).decode(), references, asynchronous=True)
+        """, base64.b64encode(frame).decode(), references, before_roll, asynchronous=True)
 
     def reach(target, source=None, position=None):
         next_click = 0
@@ -180,6 +201,32 @@ def play_opening(browser, output, mode="pool"):
     reach("menu", "title", (400,545))
     reach("minigames", "menu", (565,245))
     reach("family", "minigames", (562,581))
+    if mode == "bowling":
+        reach("stripe", "family", (555,385))
+        reach("readyNut")
+        before_roll = base64.b64encode(browser.screenshot()).decode()
+        click_canvas(browser, 125,40)
+        click_canvas(browser, 202,331)
+        first = None
+        def rolled_across_line():
+            nonlocal first
+            frame = browser.screenshot()
+            x = inspect(frame, before_roll)["rollingX"]
+            if x is None: return False
+            if first is None and 215<x<465:
+                first = x
+                if output: (output / "near-roll.png").write_bytes(frame)
+            if first is not None and x>360 and x-first>90:
+                if output: (output / "far-roll.png").write_bytes(frame)
+                return True
+            return False
+        end = time.monotonic()+12
+        while not rolled_across_line():
+            if time.monotonic() >= end:
+                raise AssertionError("The Wall-nut did not travel down the middle lane past the release line")
+            time.sleep(0.05)
+        assert browser.execute("return PVZAudio.isMuted()"), "Bowling test lost its mute"
+        return
     card_x = {"pool": 90, "fog": 245, "roof": 400}[mode]
     reach("chooser", "family", (card_x,385))
     if mode == "roof":
@@ -281,26 +328,30 @@ def exercise(browser, site, scratch, profile, output, mode="pool"):
         output.mkdir(parents=True, exist_ok=True)
         (output / "startup.png").write_bytes(frame)
     play_opening(browser, output, mode)
-    planting = {"pool": "planted Lily Pad", "fog": "Plantern cleared the upper water lane",
-                "roof": "armed a Potato Mine in a newly planted Flower Pot"}[mode]
-    print(f"PASS muted {mode.title()} card, seed selection, {planting}, cold save roundtrip ({sha256(profile).hexdigest()[:12]}).")
+    action = {"pool": "planted Lily Pad", "fog": "Plantern cleared the upper water lane",
+              "roof": "armed a Potato Mine in a newly planted Flower Pot",
+              "bowling": "rolled a conveyor Wall-nut across the red line"}[mode]
+    print(f"PASS muted {mode.title()} card, {action}, cold save roundtrip ({sha256(profile).hexdigest()[:12]}).")
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     driver = shutil.which("chromedriver") or shutil.which("chromedriver", path=os.getenv("CHROMEWEBDRIVER", ""))
     parser.add_argument("--driver", default=driver or shutil.which("msedgedriver"))
-    parser.add_argument("--mode", choices=("pool", "fog", "roof"), default="pool")
+    parser.add_argument("--mode", choices=("pool", "fog", "roof", "bowling"), default="pool")
     parser.add_argument("--output", type=Path, help="Keep a screenshot of the native canvas")
     args = parser.parse_args()
     if not args.driver:
         parser.error("A matching ChromeDriver or Microsoft Edge WebDriver is required")
-    profile = (ROOT / f"tests/fixtures/zs{args.mode}1-earned.dat").read_bytes()
+    key = "zbowling" if args.mode == "bowling" else "zs" + args.mode
+    profile = (ROOT / f"tests/fixtures/{key}1-earned.dat").read_bytes()
     trophies = b"ZSP1" + struct.pack("<I", 5)
-    if args.mode in ("fog", "roof"):
+    if args.mode in ("fog", "roof", "bowling"):
         trophies += b"ZSF1" + struct.pack("<I", 5)
-    if args.mode == "roof":
+    if args.mode in ("roof", "bowling"):
         trophies += b"ZSR1" + struct.pack("<I", 5)
+    if args.mode == "bowling":
+        trophies += b"ZBW1" + struct.pack("<I", 1)
     assert profile.startswith(struct.pack("<I", 12)) and profile.endswith(trophies)
     with tempfile.TemporaryDirectory(prefix=f"pvz-{args.mode}-browser-", ignore_cleanup_errors=True) as temp:
         scratch = Path(temp)

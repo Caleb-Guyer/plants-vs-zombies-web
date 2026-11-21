@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-zsroof.1
-Adds the thirteenth ZomBotany card, a five-flag Survival on the sloped roof with Flower Pots and pult-headed zombies.
-Engine JavaScript SHA-256: 5f3820e86059ab9740ea172f7df8b5b786ebbc95011d7f27233dcffb526525d1
-Engine WASM SHA-256: ca157046883248d8f7d74b0ae300075b4df12e447b12af7fe8978da59bba6604
+PvZ-Portable 0.2.6-web-zbowling.1
+Adds ZomBotany Bowling, the fourteenth ZomBotany card, with Wall-nut bowling against plant-headed zombies.
+Engine JavaScript SHA-256: dc09b524ec95b930a5f8467fe067fefec0eda131552028afc4709c61ef5aa7c2
+Engine WASM SHA-256: 5a4da882f6329496114ed3c919cdcefff47c6762ad93aa57a62778ffbc6fa760
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.

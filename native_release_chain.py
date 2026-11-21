@@ -16,6 +16,7 @@ NIGHT = "0.2.6-web-zsnight.1"
 POOL = "0.2.6-web-zspool.1"
 FOG = "0.2.6-web-zsfog.1"
 ROOF = "0.2.6-web-zsroof.1"
+BOWLING = "0.2.6-web-zbowling.1"
 SHARED_BASE = {"id": I_ZOMBOTANY, "bytes": 100_558_183,
                "sha256": "ab56f8150ddaf8d8985de74afeea2b51c7c09ef800d0f4ba58cd3a270393152c"}
 BEGHOUL_BYTES = 103_906_885
@@ -26,21 +27,27 @@ POOL_BYTES = 103_940_854
 POOL_SHA = "a57b215ffd83e8934fcbe5de7ffb1f94bbae34ba0dff33bf8258458b17b02f29"
 FOG_BYTES = 103_965_147
 FOG_SHA = "122686484ebe6b0a6ac681c60e032303ca595452640e7091b6b3f83d8109be94"
+ROOF_BYTES = 103_972_955
+ROOF_SHA = "0c70111f1849b2ef3cd94ddf1731d4da04e9209651c0e87a4e1ab6cb16de066b"
 POOL_WINNER_SHA256 = "0975e051c8585ab3535697e4d56f895f566c33afcf3946932326d4654f24fefa"
 WINNING_PROFILES = {
     "zsfog": ("zspool1-earned.dat", POOL_WINNER_SHA256),
     "zsroof": ("zsfog1-earned.dat", "e265c019f72c08c7beeb114676792dc6e66a4707cc91430b26f8c3ced6a4aac7"),
+    "zbowling": ("zsroof1-earned.dat", "0afa64046adb263d6519082ee1ea8ae3bc5ce4640676b12d090d41ec55466ad9"),
 }
 HISTORY = Path("tests/fixtures/historical")
 SUFFIX = HISTORY / "zbeghouled1-published/source-suffix.bin"
 NIGHT_SUFFIX = HISTORY / "zsnight1-published/source-suffix.bin"
 POOL_SUFFIX = HISTORY / "zspool1-published/source-suffix.xz"
 FOG_SUFFIX = HISTORY / "zsfog1-published/source-suffix.xz"
+ROOF_SUFFIX = HISTORY / "zsroof1-published/source-suffix.xz"
 BROWSERS = HISTORY / "extension-browsers.tar.xz"
 POOL_BROWSER_DELTAS = HISTORY / "zspool1-browser-deltas.tar.xz"
 FOG_BROWSER_DELTAS = HISTORY / "zsfog1-browser-deltas.tar.xz"
 ROOF_BROWSER_DELTAS = HISTORY / "zsroof1-browser-deltas.tar.xz"
-DELTA_CAPSULES = {POOL: POOL_BROWSER_DELTAS, FOG: FOG_BROWSER_DELTAS, ROOF: ROOF_BROWSER_DELTAS}
+BOWLING_BROWSER_DELTAS = HISTORY / "zbowling1-browser-deltas.tar.xz"
+DELTA_CAPSULES = {POOL: POOL_BROWSER_DELTAS, FOG: FOG_BROWSER_DELTAS, ROOF: ROOF_BROWSER_DELTAS,
+                  BOWLING: BOWLING_BROWSER_DELTAS}
 BLOCK_SIZE = 128
 MAX_BROWSER_BYTES = 16 * 1024 * 1024
 ARCHIVE_PARENTS = {
@@ -48,6 +55,7 @@ ARCHIVE_PARENTS = {
     POOL: (NIGHT, NIGHT_BYTES, NIGHT_SHA, NIGHT_SUFFIX),
     FOG: (POOL, POOL_BYTES, POOL_SHA, POOL_SUFFIX),
     ROOF: (FOG, FOG_BYTES, FOG_SHA, FOG_SUFFIX),
+    BOWLING: (ROOF, ROOF_BYTES, ROOF_SHA, ROOF_SUFFIX),
 }
 ZIP_ROOT = "zombotany3-candidate/tests/"
 SUFFIX_HEADER = struct.Struct("<4sII32s")
@@ -163,7 +171,7 @@ def parent_source(root, engine, current):
     if engine["id"] in ARCHIVE_PARENTS:
         parent_id, size, expected, suffix = ARCHIVE_PARENTS[engine["id"]]
         if engine.get("sourceArchiveBase") != SHARED_BASE or parent["id"] != parent_id:
-            raise ValueError("Unexpected Survival archive ancestry")
+            raise ValueError("Unexpected ZomBotany archive ancestry")
         base = current[:SHARED_BASE["bytes"]]
         if digest(base) != SHARED_BASE["sha256"]:
             raise ValueError("Unexpected shared source prefix")

@@ -47,7 +47,12 @@ RELEASES = {
         parent=chain.FOG, parent_bytes=chain.FOG_BYTES, parent_sha=chain.FOG_SHA,
         commit='9ab47551c316bbee0674dbf74579d726b576b55a', sources=895, objects=155,
         caption='with ZomBotany Survival: Roof.',
-        change='Adds the thirteenth ZomBotany card, a five-flag Survival on the sloped roof with Flower Pots and pult-headed zombies.')
+        change='Adds the thirteenth ZomBotany card, a five-flag Survival on the sloped roof with Flower Pots and pult-headed zombies.'),
+    'zbowling': dict(tag='zbowling1', stem='zbowling', parent_tag='zsroof1',
+        parent=chain.ROOF, parent_bytes=chain.ROOF_BYTES, parent_sha=chain.ROOF_SHA,
+        commit='9c6cb6360056c9687337477cd0ec0001d9af0ce9', sources=897, objects=156,
+        caption='with ZomBotany Bowling.',
+        change='Adds ZomBotany Bowling, the fourteenth ZomBotany card, with Wall-nut bowling against plant-headed zombies.')
 }
 
 def sha(data):

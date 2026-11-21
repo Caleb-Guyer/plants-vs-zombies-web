@@ -1,0 +1,13 @@
+{
+  "id": "0.2.6-web-zbowling.1",
+  "sourceFiles": 897,
+  "productionObjects": 156,
+  "normalReceiptSha256": "df88e9b6a90363cbda3a5344c680b5eeb0cae783b139c44ffa9f4d95116060ce",
+  "reportSha256": "69191911a255c12926e0440dc990a00ae15e8e6d2bbbb37a2de32a5de271b1a2",
+  "driverBuildSha256": "6b17b46c49a8cfeb0d68284e0e16acc17d385d2cd73f5151342f4312726ef0b2",
+  "sourceSha256": "608feffc5a9743f21d920492487a05be2a8816d2bd617ef9343fa871f1ccccde",
+  "patchSha256": "43990576ad9faeeda66480bf93935d75962ea773d427c98847b011a2122b29bd",
+  "jsSha256": "dc09b524ec95b930a5f8467fe067fefec0eda131552028afc4709c61ef5aa7c2",
+  "wasmSha256": "5a4da882f6329496114ed3c919cdcefff47c6762ad93aa57a62778ffbc6fa760",
+  "historicalBrowserSha256": "8be5a105d4e6039f055e0daf9f49493fb5028f727e65e2aff3f2d3cf0ab28445"
+}

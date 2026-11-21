@@ -26,13 +26,14 @@ ROOT = Path(__file__).resolve().parent
 DIST = ROOT / "dist"
 SITE_SOURCE = DIST / "source" / "site-source.zip"
 SOURCE_DOWNLOADS = DIST / "source" / "source-downloads.json"
-SURVIVAL_BROWSERS = {
+HISTORICAL_BROWSERS = {
     "0.2.6-web-zsnight.1": "extension-browsers.tar.xz",
     "0.2.6-web-zspool.1": "zspool1-browser-deltas.tar.xz",
     "0.2.6-web-zsfog.1": "zsfog1-browser-deltas.tar.xz",
     "0.2.6-web-zsroof.1": "zsroof1-browser-deltas.tar.xz",
+    "0.2.6-web-zbowling.1": "zbowling1-browser-deltas.tar.xz",
 }
-EXTENSIONS = {"0.2.6-web-izombotany.1", "0.2.6-web-zbeghouled.1"} | SURVIVAL_BROWSERS.keys()
+EXTENSIONS = {"0.2.6-web-izombotany.1", "0.2.6-web-zbeghouled.1"} | HISTORICAL_BROWSERS.keys()
 # Current publication target is GitHub Pages, via the existing Pages workflow.
 # https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-large-files-on-github
 MAX_STATIC_ASSET_BYTES = 100 * 1024 * 1024
@@ -853,15 +854,15 @@ def root_sources():
     # Include the historical representation decoded by this release's test suites.
     engine = engine_inputs()[0]
     active_id = engine["id"]
-    if active_id in SURVIVAL_BROWSERS:
+    if active_id in HISTORICAL_BROWSERS:
         history = ROOT / "tests/fixtures/historical"
-        capsule = history / SURVIVAL_BROWSERS[active_id]
-        for release, name in SURVIVAL_BROWSERS.items():
+        capsule = history / HISTORICAL_BROWSERS[active_id]
+        for release, name in HISTORICAL_BROWSERS.items():
             if release != active_id:
                 files.discard(history / name)
-        if active_id in ("0.2.6-web-zsfog.1", "0.2.6-web-zsroof.1"):
+        if active_id in ("0.2.6-web-zsfog.1", "0.2.6-web-zsroof.1", "0.2.6-web-zbowling.1"):
             parent = engine["parent"]
-            while parent["id"] in SURVIVAL_BROWSERS or parent["id"] == "0.2.6-web-zbeghouled.1":
+            while parent["id"] in HISTORICAL_BROWSERS or parent["id"] == "0.2.6-web-zbeghouled.1":
                 key = parent["id"].removeprefix("0.2.6-web-").removesuffix(".1")
                 raw = history / (key + "1-published") / "source-suffix.bin"
                 if not raw.with_suffix(".xz").is_file():

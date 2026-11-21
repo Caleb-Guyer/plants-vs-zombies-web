@@ -1,6 +1,10 @@
 # GitHub Pages release: Caleb-Guyer/plants-vs-zombies-web
 
-## ZomBotany Survival: Roof
+## ZomBotany Bowling
+
+The Pages workflow replays ZomBotany Bowling and its control levels with sound off, then opens card fourteen and rolls a Wall-nut in a muted browser. It also runs the earlier native and browser suites before publishing.
+
+## ZomBotany Survival: Roof (previous release)
 
 The Pages workflow replays Roof from the published native source using `python tests/zsroof.py --play`. A muted browser also restores the trophy, opens the thirteenth card, places a Flower Pot on a bare tile and plants a Potato Mine in it. Earlier courses run before the deployment.
 

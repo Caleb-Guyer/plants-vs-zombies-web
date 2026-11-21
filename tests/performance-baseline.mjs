@@ -162,7 +162,7 @@ console.log(`PASS ${current ? 'current' : 'historical '+engine.id} recorded brow
 assert.equal(sha(read('tests/fixtures/performance/baseline.json')),'43312dcdce1130b7ea1cb0d0cb1e11c19ad5ef6a7e4d22724257d959ca64770f','Published Torch baseline remains immutable');
 await verifyRecordedBaseline('tests/fixtures/performance/baseline.json', false);
 const shippedEngine=json(read('dist/game/engine-provenance.json'));
-assert.equal(shippedEngine.id,'0.2.6-web-zsroof.1');
+assert.equal(shippedEngine.id,'0.2.6-web-zbowling.1');
 ensureVasebreakerBaseline();
 const currentEngine=historicalEngine(shippedEngine,'0.2.6-web-zvase.1');
 const require=createRequire(import.meta.url),vendor={exports:{}};

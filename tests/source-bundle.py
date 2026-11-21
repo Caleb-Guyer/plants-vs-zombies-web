@@ -52,36 +52,52 @@ class HistoricalBrowserTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 chain.read_browser(root, 'zsnight', name, sha(original), '0' * 64, base)
 
-    def test_roof_standalone_bundle_keeps_every_source_suffix_and_one_browser_capsule(self):
+    def test_standalone_bundle_keeps_each_ancestor_suffix_and_one_browser_capsule(self):
         spec = importlib.util.spec_from_file_location('source_packager', ROOT / 'package-portable.py')
         packager = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(packager)
-        engine = {'id': chain.I_ZOMBOTANY}
-        with tempfile.TemporaryDirectory() as folder:
-            root = Path(folder)
-            expected = {root / chain.ROOF_BROWSER_DELTAS}
-            history = root / chain.HISTORY
-            history.mkdir(parents=True)
-            for archive in (chain.BROWSERS, *chain.DELTA_CAPSULES.values()):
-                (root / archive).touch()
-            for parent_id in (chain.BEGHOUL, chain.NIGHT, chain.POOL, chain.FOG):
-                engine = {'id': parent_id, 'parent': engine}
-                key = parent_id.removeprefix('0.2.6-web-').removesuffix('.1')
-                raw = history / (key + '1-published') / 'source-suffix.bin'
-                raw.parent.mkdir()
-                raw.touch()
-                raw.with_suffix('.xz').touch()
-                expected.add(raw.with_suffix('.xz'))
-            roof = {'id': chain.ROOF, 'parent': engine}
-            with mock.patch.object(packager, 'ROOT', root), mock.patch.object(packager, 'REQUIRED_ROOT', ()), \
-                    mock.patch.object(packager, 'engine_inputs', return_value=(roof, {}, None)):
-                self.assertEqual(set(packager.root_sources()), expected)
-                (root / chain.FOG_SUFFIX).unlink()
-                with self.assertRaisesRegex(ValueError, 'Missing compact source suffix for zsfog'):
-                    packager.root_sources()
+        roof_parents = (chain.BEGHOUL, chain.NIGHT, chain.POOL, chain.FOG)
+        for release, parents in ((chain.ROOF, roof_parents), (chain.BOWLING, roof_parents + (chain.ROOF,))):
+            with self.subTest(release=release), tempfile.TemporaryDirectory() as folder:
+                root = Path(folder)
+                expected = {root / chain.DELTA_CAPSULES[release]}
+                history = root / chain.HISTORY
+                history.mkdir(parents=True)
+                for archive in (chain.BROWSERS, *chain.DELTA_CAPSULES.values()):
+                    (root / archive).touch()
+                engine = {'id': chain.I_ZOMBOTANY}
+                for parent_id in parents:
+                    engine = {'id': parent_id, 'parent': engine}
+                    key = parent_id.removeprefix('0.2.6-web-').removesuffix('.1')
+                    raw = history / (key + '1-published') / 'source-suffix.bin'
+                    raw.parent.mkdir()
+                    raw.touch()
+                    raw.with_suffix('.xz').touch()
+                    expected.add(raw.with_suffix('.xz'))
+                engine = {'id': release, 'parent': engine}
+                with mock.patch.object(packager, 'ROOT', root), mock.patch.object(packager, 'REQUIRED_ROOT', ()), \
+                        mock.patch.object(packager, 'engine_inputs', return_value=(engine, {}, None)):
+                    self.assertEqual(set(packager.root_sources()), expected)
+                    (root / chain.ARCHIVE_PARENTS[release][3]).unlink()
+                    with self.assertRaisesRegex(ValueError, 'Missing compact source suffix for ' + key):
+                        packager.root_sources()
 
 
 class HistoricalSourceSuffixTests(unittest.TestCase):
+    def test_bowling_rejects_a_skipped_roof_or_a_different_source_base(self):
+        for parent_id, base in ((chain.FOG, chain.SHARED_BASE), (chain.ROOF, {})):
+            engine = {'id': chain.BOWLING, 'sourceArchiveBase': base,
+                      'parent': {'id': parent_id, 'sourceArchiveBase': chain.SHARED_BASE}}
+            with self.subTest(parent=parent_id), tempfile.TemporaryDirectory() as folder:
+                root = Path(folder)
+                provenance = root / codec.ENGINE_REL
+                provenance.parent.mkdir(parents=True)
+                provenance.write_text(json.dumps(engine), encoding='utf-8')
+                with self.assertRaisesRegex(codec.SourceBundleError, 'Unexpected ZomBotany archive parent'):
+                    codec.ensure_vasebreaker_baseline(root)
+                with self.assertRaisesRegex(ValueError, 'Unexpected ZomBotany archive ancestry'):
+                    chain.parent_source(root, engine, b'')
+
     def setUp(self):
         directory = tempfile.TemporaryDirectory()
         self.addCleanup(directory.cleanup)

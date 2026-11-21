@@ -136,7 +136,7 @@ function sealedDoubleEvidence() {
     const engineUrl = new URL('../dist/game/engine-provenance.json', import.meta.url);
     const engine = JSON.parse(fs.readFileSync(engineUrl, 'utf8'));
     const familyArchives = ['0.2.6-web-zombotany45.1', ZSURVIVAL_PARENT_ENGINE_ID,
-      ZVASE_PARENT_ENGINE_ID, CURRENT_ENGINE_ID, '0.2.6-web-izombotany.1', '0.2.6-web-zbeghouled.1', '0.2.6-web-zsnight.1', '0.2.6-web-zspool.1', '0.2.6-web-zsfog.1', '0.2.6-web-zsroof.1'];
+      ZVASE_PARENT_ENGINE_ID, CURRENT_ENGINE_ID, '0.2.6-web-izombotany.1', '0.2.6-web-zbeghouled.1', '0.2.6-web-zsnight.1', '0.2.6-web-zspool.1', '0.2.6-web-zsfog.1', '0.2.6-web-zsroof.1', '0.2.6-web-zbowling.1'];
     assert([DOUBLE_ENGINE_ID,GUST_ENGINE_ID,...familyArchives].includes(engine.id));
     const publishedDouble = historicalEngine(engine,DOUBLE_ENGINE_ID);
     assert.equal(publishedDouble.artifacts.sourceSha256,DOUBLE_ARCHIVE_SHA256);

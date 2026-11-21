@@ -53,7 +53,8 @@ const addedContentFiles=['src/Lawn/System/PoolPanicEndless.h','src/Lawn/System/P
 const addedQoLFiles=['src/Lawn/System/QoLSettings.h','src/Lawn/System/QoLSettings.cpp','src/Lawn/Widget/QoLDialog.h','src/Lawn/Widget/QoLDialog.cpp','src/Lawn/System/DeckPresets.h','src/Lawn/System/DeckPresets.cpp','src/Lawn/Widget/PlantDecksDialog.h','src/Lawn/Widget/PlantDecksDialog.cpp','src/Lawn/SeedPacketCooldown.h'];
 const iZombotanyFiles = ['src/Lawn/System/IZombotany.cpp', 'src/Lawn/System/IZombotany.h'];
 const beghouledFiles = ['src/Lawn/System/ZomBotanyBeghouled.cpp', 'src/Lawn/System/ZomBotanyBeghouled.h'];
-assert.deepEqual([...candidates.keys()].sort(), [...originals.keys(),...addedRendererFiles,...addedQoLFiles,...addedContentFiles,...SCRAP_SOURCE_ADDITIONS,...AMBUSH_SOURCE_ADDITIONS,...TORCH_SOURCE_ADDITIONS,...DOUBLE_SOURCE_ADDITIONS,...GUST_SOURCE_ADDITIONS,...ZOMBOTANY3_SOURCE_ADDITIONS,...ZSURVIVAL_SOURCE_ADDITIONS,...ZVASE_SOURCE_ADDITIONS,...iZombotanyFiles,...beghouledFiles].sort(),
+const bowlingFiles = ['src/Lawn/System/ZomBotanyBowling.cpp', 'src/Lawn/System/ZomBotanyBowling.h'];
+assert.deepEqual([...candidates.keys()].sort(), [...originals.keys(),...addedRendererFiles,...addedQoLFiles,...addedContentFiles,...SCRAP_SOURCE_ADDITIONS,...AMBUSH_SOURCE_ADDITIONS,...TORCH_SOURCE_ADDITIONS,...DOUBLE_SOURCE_ADDITIONS,...GUST_SOURCE_ADDITIONS,...ZOMBOTANY3_SOURCE_ADDITIONS,...ZSURVIVAL_SOURCE_ADDITIONS,...ZVASE_SOURCE_ADDITIONS,...iZombotanyFiles,...beghouledFiles,...bowlingFiles].sort(),
   'The complete source adds exactly the retained renderer, QoL and reviewed bonus files');
 const code = /\.(?:c|cc|cpp|cxx|h|hh|hpp|hxx|inc|java|bas|rc|sh|cmake|in)$/i;
 const normalize = text => text.replace(/\r\n?/g, '\n');

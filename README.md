@@ -1,6 +1,14 @@
 # Plants vs. Zombies — browser playtest
 
-## ZomBotany Survival: Roof
+## ZomBotany Bowling
+
+Beat the original ZomBotany to unlock **ZomBotany Bowling**, the fourteenth card. Roll a Wall-nut from any of the three columns left of the red line. Pea-heads enter in staggered groups, giving an ordinary nut a chance to ricochet into the next row.
+
+The conveyor also brings Explode-o-nuts for clusters and Giant Wall-nuts for armored zombies lined up in the same lane. Watch for Jalapeño-heads among the Wall-nut, Gatling and Tall-nut heads. Clear all twenty waves to earn the trophy.
+
+[Play on GitHub Pages](https://caleb-guyer.github.io/plants-vs-zombies-web/).
+
+## ZomBotany Survival: Roof (previous release)
 
 Beat the original ZomBotany to unlock **Survival: Roof**, the thirteenth card on the ZomBotany tab. Defend the roof for five flags. You start with 50 sun and three columns of Flower Pots. Add pots to expand across the tiles, and pick a new deck between flags.
 
