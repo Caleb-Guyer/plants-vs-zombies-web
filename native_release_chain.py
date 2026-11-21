@@ -17,6 +17,7 @@ POOL = "0.2.6-web-zspool.1"
 FOG = "0.2.6-web-zsfog.1"
 ROOF = "0.2.6-web-zsroof.1"
 BOWLING = "0.2.6-web-zbowling.1"
+PINS = "0.2.6-web-zpins.1"
 SHARED_BASE = {"id": I_ZOMBOTANY, "bytes": 100_558_183,
                "sha256": "ab56f8150ddaf8d8985de74afeea2b51c7c09ef800d0f4ba58cd3a270393152c"}
 BEGHOUL_BYTES = 103_906_885
@@ -29,11 +30,18 @@ FOG_BYTES = 103_965_147
 FOG_SHA = "122686484ebe6b0a6ac681c60e032303ca595452640e7091b6b3f83d8109be94"
 ROOF_BYTES = 103_972_955
 ROOF_SHA = "0c70111f1849b2ef3cd94ddf1731d4da04e9209651c0e87a4e1ab6cb16de066b"
+BOWLING_BYTES = 104_022_458
+BOWLING_SHA = "608feffc5a9743f21d920492487a05be2a8816d2bd617ef9343fa871f1ccccde"
 POOL_WINNER_SHA256 = "0975e051c8585ab3535697e4d56f895f566c33afcf3946932326d4654f24fefa"
 WINNING_PROFILES = {
     "zsfog": ("zspool1-earned.dat", POOL_WINNER_SHA256),
     "zsroof": ("zsfog1-earned.dat", "e265c019f72c08c7beeb114676792dc6e66a4707cc91430b26f8c3ced6a4aac7"),
     "zbowling": ("zsroof1-earned.dat", "0afa64046adb263d6519082ee1ea8ae3bc5ce4640676b12d090d41ec55466ad9"),
+}
+REPLAY_FIXTURES = {
+    **{key: (profile,) for key, profile in WINNING_PROFILES.items()},
+    "zpins": (WINNING_PROFILES["zbowling"],
+              ("zbowling1-legacy.zip", "286f846c89dc5fee957a66f4054e7d7edfd2780a9e65319fbe4b08219d460a54")),
 }
 HISTORY = Path("tests/fixtures/historical")
 SUFFIX = HISTORY / "zbeghouled1-published/source-suffix.bin"
@@ -41,13 +49,15 @@ NIGHT_SUFFIX = HISTORY / "zsnight1-published/source-suffix.bin"
 POOL_SUFFIX = HISTORY / "zspool1-published/source-suffix.xz"
 FOG_SUFFIX = HISTORY / "zsfog1-published/source-suffix.xz"
 ROOF_SUFFIX = HISTORY / "zsroof1-published/source-suffix.xz"
+BOWLING_SUFFIX = HISTORY / "zbowling1-published/source-suffix.xz"
 BROWSERS = HISTORY / "extension-browsers.tar.xz"
 POOL_BROWSER_DELTAS = HISTORY / "zspool1-browser-deltas.tar.xz"
 FOG_BROWSER_DELTAS = HISTORY / "zsfog1-browser-deltas.tar.xz"
 ROOF_BROWSER_DELTAS = HISTORY / "zsroof1-browser-deltas.tar.xz"
 BOWLING_BROWSER_DELTAS = HISTORY / "zbowling1-browser-deltas.tar.xz"
+PINS_BROWSER_DELTAS = HISTORY / "zpins1-browser-deltas.tar.xz"
 DELTA_CAPSULES = {POOL: POOL_BROWSER_DELTAS, FOG: FOG_BROWSER_DELTAS, ROOF: ROOF_BROWSER_DELTAS,
-                  BOWLING: BOWLING_BROWSER_DELTAS}
+                  BOWLING: BOWLING_BROWSER_DELTAS, PINS: PINS_BROWSER_DELTAS}
 BLOCK_SIZE = 128
 MAX_BROWSER_BYTES = 16 * 1024 * 1024
 ARCHIVE_PARENTS = {
@@ -56,6 +66,7 @@ ARCHIVE_PARENTS = {
     FOG: (POOL, POOL_BYTES, POOL_SHA, POOL_SUFFIX),
     ROOF: (FOG, FOG_BYTES, FOG_SHA, FOG_SUFFIX),
     BOWLING: (ROOF, ROOF_BYTES, ROOF_SHA, ROOF_SUFFIX),
+    PINS: (BOWLING, BOWLING_BYTES, BOWLING_SHA, BOWLING_SUFFIX),
 }
 ZIP_ROOT = "zombotany3-candidate/tests/"
 SUFFIX_HEADER = struct.Struct("<4sII32s")
@@ -87,25 +98,36 @@ def _compressed_member(blob, entry):
     return start, blob[start:end]
 
 
-def _portable_deflate(raw):
-    # The distributed JSZip includes a portable implementation of zlib's
-    # level-9 encoder. Its bitstream is independent of the host zlib build.
+def _portable_deflate(raw, level=9):
+    # The distributed JSZip reproduces the historical zlib bitstream on hosts
+    # whose native encoder produces a different, equally valid representation.
     script = """
         const fs = require('fs');
         const pkg = {exports: {}};
         new Function('module','exports','require',fs.readFileSync(process.argv[1], 'utf8'))(pkg,pkg.exports,require);
         const zip = new pkg.exports();
         zip.file('data', fs.readFileSync(0));
-        zip.generateAsync({type: 'nodebuffer', compression: 'DEFLATE', compressionOptions: {level: 9}})
+        zip.generateAsync({type: 'nodebuffer', compression: 'DEFLATE', compressionOptions: {level: Number(process.argv[2])}})
            .then(bytes => process.stdout.write(bytes));
     """
     vendor = Path(__file__).resolve().parent / "dist/vendor/jszip.min.js"
     if digest(vendor.read_bytes()) != "acc7e41455a80765b5fd9c7ee1b8078a6d160bbbca455aeae854de65c947d59e":
         raise ValueError("Unexpected portable ZIP encoder")
-    result = subprocess.run(["node", "-e", script, str(vendor)], input=raw, capture_output=True,
+    result = subprocess.run(["node", "-e", script, str(vendor), str(level)], input=raw, capture_output=True,
                             check=True, timeout=60)
     with zipfile.ZipFile(io.BytesIO(result.stdout)) as archive:
         return _compressed_member(result.stdout, archive.getinfo("data"))[1]
+
+
+def exact_deflate(raw, size, expected, level):
+    """Recreate the original, authenticated ZIP data stream at its known compression level."""
+    encoder = zlib.compressobj(level, zlib.DEFLATED, -15)
+    stream = encoder.compress(raw) + encoder.flush()
+    if hashlib.sha256(stream).digest() != expected:
+        stream = _portable_deflate(raw, level)
+    if len(stream) != size or hashlib.sha256(stream).digest() != expected:
+        raise ValueError("Recreated driver differs from its original compressed bytes")
+    return stream
 
 
 def _base_driver(base):
@@ -156,12 +178,7 @@ def _restore_suffix(base, path, size):
         raise ValueError("Invalid driver span in the source suffix")
     split = SUFFIX_HEADER.size + retained
     raw = _restore_delta(_base_driver(base), record[split:])
-    encoder = zlib.compressobj(9, zlib.DEFLATED, -15)
-    stream = encoder.compress(raw) + encoder.flush()
-    if hashlib.sha256(stream).digest() != expected:
-        stream = _portable_deflate(raw)
-    if len(stream) != length or hashlib.sha256(stream).digest() != expected:
-        raise ValueError("Recreated driver differs from its original compressed bytes")
+    stream = exact_deflate(raw, length, expected, 9)
     literals = record[SUFFIX_HEADER.size:split]
     return literals[:offset] + stream + literals[offset:]
 

@@ -2,7 +2,7 @@
 
 ## ZomBotany Bowling
 
-The fourteenth card uses the original daytime Wall-nut Bowling rules, red release line, conveyor, rolling animation and ricochets. Twenty authored formations contain plant-headed zombies exclusively. The first clear earns the family trophy. Returning players can continue from an in-flight roll and use their saved trophies.
+The fourteenth card uses the original Bowling lawn, red release line, conveyor and rewards. Its twenty formations teach straight, banked and split shots against plant-headed opponents. Screen doors take frontal hits, Squash-heads intercept straight ordinary nuts, and Ice-shroom-heads stall light rollers nearby. Tall-nuts ram two separate targets. Pumpkins split toward the adjacent playable lanes. Continue retains the exact rollers, wave rules and first-version trophies.
 
 ## ZomBotany Survival: Roof (previous release)
 

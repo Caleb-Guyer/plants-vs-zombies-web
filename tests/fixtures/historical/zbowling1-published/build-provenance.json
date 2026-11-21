@@ -1,0 +1,56 @@
+{
+  "id": "0.2.6-web-zbowling.1",
+  "parentId": "0.2.6-web-zsroof.1",
+  "sourceArchive": {
+    "path": "pvz-portable-0.2.6-web-zbowling.1-source.zip",
+    "sha256": "608feffc5a9743f21d920492487a05be2a8816d2bd617ef9343fa871f1ccccde",
+    "bytes": 104022458,
+    "entries": 3714
+  },
+  "incrementalPatch": {
+    "path": "zsroof1-to-zbowling1.patch",
+    "sha256": "43990576ad9faeeda66480bf93935d75962ea773d427c98847b011a2122b29bd",
+    "baseSourceSha256": "0c70111f1849b2ef3cd94ddf1731d4da04e9209651c0e87a4e1ab6cb16de066b"
+  },
+  "sourceFiles": 897,
+  "productionObjects": 156,
+  "normalBuild": {
+    "status": "PASS",
+    "exitCode": 0,
+    "elapsedSeconds": 98.968,
+    "sourceUnchangedDuringBuild": true,
+    "sourceFiles": 897,
+    "outputs": {
+      "build/pvz-portable.js": {
+        "bytes": 210891,
+        "sha256": "dc09b524ec95b930a5f8467fe067fefec0eda131552028afc4709c61ef5aa7c2"
+      },
+      "build/pvz-portable.wasm": {
+        "bytes": 8017336,
+        "sha256": "5a4da882f6329496114ed3c919cdcefff47c6762ad93aa57a62778ffbc6fa760"
+      },
+      "build/ProjectVersion.h": {
+        "bytes": 194,
+        "sha256": "22af4d47624fc5dd015425d6458030e0730cdbfbdc278df5f91932db59834af2"
+      }
+    }
+  },
+  "changedSources": [
+    "CMake/ProjectVersion.cmake",
+    "src/ConstEnums.h",
+    "src/Lawn/Board.cpp",
+    "src/Lawn/Challenge.cpp",
+    "src/Lawn/System/PlayerInfo.cpp",
+    "src/Lawn/System/ZomBotanyBowling.cpp",
+    "src/Lawn/System/ZomBotanyBowling.h",
+    "src/Lawn/Widget/ChallengeScreen.cpp",
+    "src/Lawn/Widget/ChallengeScreen.h",
+    "src/Lawn/Zombie.cpp",
+    "src/LawnApp.cpp"
+  ],
+  "silentGameplayDriver": {
+    "zbowling-engine.js": "56c42bec43fb6fab505c6535a984cefbbe9d92ed9e5e2e6242a70cee7d35e2ee",
+    "zbowling-engine.wasm": "d0a68ed4cbc3a0178bae2006be5788abbfcca9e14f9e29c1e34aed4c73cccce9"
+  },
+  "gameplayScenarios": 16
+}

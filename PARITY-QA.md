@@ -2,9 +2,9 @@
 
 ## ZomBotany Bowling
 
-The muted native suite plays all twenty waves with normal, explosive and giant nuts at 1× and 2×. It exercises a saved roll, Retry, the first trophy and the replay money bag. Classic Wall-nut Bowling provides the reference for how a first-row Pea-head crosses an empty conveyor or a moving packet. The test compares the rendered pixels and clicks the packet at its center and corners. ZomBotany Survival: Roof provides the adjacent card and saved-trophy control. Run `python tests/zbowling.py --play`.
+Run `python tests/zpins.py --play` for the muted replay of the expanded Bowling card at 1× and 2×. It exercises physical door impacts, Squash interceptions, frost and thaw, Tall-nut hits, Pumpkin splits, in-flight saves, legacy Continue, retries and rewards. The earlier Bowling test uses its original engine and fixtures.
 
-The browser test follows the original menu to card fourteen, takes the first Wall-nut from the conveyor, and observes it rolling across the center lane. It also imports a profile that earned the Bowling trophy, cold-reloads it from browser storage and checks the exported profile bytes. Run `python tests/pool-browser.py --mode bowling` with ChromeDriver or Edge WebDriver.
+Run `python tests/pool-browser.py --mode pins` to open the card in a muted browser, bowl from the conveyor and reload a genuinely earned trophy from browser storage.
 
 ## ZomBotany Survival: Roof (previous release)
 

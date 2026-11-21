@@ -2,9 +2,11 @@
 
 ## ZomBotany Bowling
 
-Beat the original ZomBotany to unlock **ZomBotany Bowling**, the fourteenth card. Roll a Wall-nut from any of the three columns left of the red line. Pea-heads enter in staggered groups, giving an ordinary nut a chance to ricochet into the next row.
+Beat the original ZomBotany to unlock **ZomBotany Bowling**, the fourteenth card. Bowl from the three columns behind the red line. In twenty waves, Wall-nut-heads carry screen doors in front of their teammates, Squash-heads leap onto straight Wall-nuts, and Ice-shroom-heads freeze nearby light rollers when struck.
 
-The conveyor also brings Explode-o-nuts for clusters and Giant Wall-nuts for armored zombies lined up in the same lane. Watch for Jalapeño-heads among the Wall-nut, Gatling and Tall-nut heads. Clear all twenty waves to earn the trophy.
+Bank an ordinary nut into a door from the next lane, or send a Tall-nut straight through it. The Tall-nut cracks on its first hit and breaks on its second. A Pumpkin splits on impact, sending a Wall-nut into each neighboring lane. The conveyor also delivers the classic Explode-o-nut and Giant Wall-nut. Both heavy nuts keep rolling through frost.
+
+A saved game from the first version of Bowling finishes with its original formations. New games use the expanded conveyor and opponents.
 
 [Play on GitHub Pages](https://caleb-guyer.github.io/plants-vs-zombies-web/).
 

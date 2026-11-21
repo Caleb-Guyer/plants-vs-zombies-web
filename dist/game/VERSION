@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-zbowling.1
-Adds ZomBotany Bowling, the fourteenth ZomBotany card, with Wall-nut bowling against plant-headed zombies.
-Engine JavaScript SHA-256: dc09b524ec95b930a5f8467fe067fefec0eda131552028afc4709c61ef5aa7c2
-Engine WASM SHA-256: 5a4da882f6329496114ed3c919cdcefff47c6762ad93aa57a62778ffbc6fa760
+PvZ-Portable 0.2.6-web-zpins.1
+Adds Tall-nut and Pumpkin bowling packets, shielded Wall-nut-heads, Squash interceptors and Ice-shroom-heads to ZomBotany Bowling. Earlier boards retain their original lineup and deliveries.
+Engine JavaScript SHA-256: fedeef354c836814255a641013620883cbda6a6814c6dae38ac4c5051e5551ac
+Engine WASM SHA-256: 623a540ed430edb887ce4327f61fadb5980a1889d22cbab98cb057eeb0af21b1
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.

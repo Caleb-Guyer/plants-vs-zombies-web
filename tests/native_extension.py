@@ -23,6 +23,7 @@ RELEASES = {
     "zsfog": (895, 155, "ZombotanySurvival.cpp.o", "zsfog"),
     "zsroof": (895, 155, "ZombotanySurvival.cpp.o", "zsroof"),
     "zbowling": (897, 156, "ZomBotanyBowling.cpp.o", "zbowling"),
+    "zpins": (897, 156, "ZomBotanyBowling.cpp.o", "zpins"),
 }
 CASES = {(name, speed, seed) for name in ("solution", "resume", "retry", "classic")
          for speed in (1, 2) for seed in (1729, 7331)}
@@ -32,9 +33,7 @@ def run_files(key):
     files = (f"test-{key}.py", f"{key}-run.cjs", f"{key}-build.json", "headless-app.h",
             f"{stem}.cpp", f"build-{key}.py", f"{stem}-engine.js", f"{stem}-engine.wasm",
             "test-pool-panic.py", "pool-panic-assets.json", "zsurvival1-earned-z1/userdata/user1.dat")
-    if key in chain.WINNING_PROFILES:
-        files += (chain.WINNING_PROFILES[key][0],)
-    return files
+    return files + tuple(name for name, _ in chain.REPLAY_FIXTURES.get(key, ()))
 
 
 def digest(data):
@@ -55,9 +54,8 @@ def verify_archive(archive, engine, receipt, pins, key, read_binary, verify_resu
     normal_raw = read("logs/build-result.json")
     link_raw = read(f"tests/{key}-build.json")
     results_raw = read(f"tests/{key}-results.json")
-    if key in chain.WINNING_PROFILES:
-        name, expected = chain.WINNING_PROFILES[key]
-        check(digest(read("tests/" + name)) == expected, "Incorrect earned profile: " + name)
+    for name, expected in chain.REPLAY_FIXTURES.get(key, ()):
+        check(digest(read("tests/" + name)) == expected, "Incorrect replay input: " + name)
     for field, data in (("normalReceiptSha256", normal_raw), ("driverBuildSha256", link_raw),
                         ("reportSha256", results_raw)):
         check(digest(data) == pins[field], field)

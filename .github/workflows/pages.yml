@@ -30,7 +30,11 @@ jobs:
         run: python bundle-game-assets.py --verify-only
       - name: Verify browser shell and corresponding source
         run: npm run check
-      - name: Play ZomBotany Bowling and its neighboring modes with sound off
+      - name: Play the expanded ZomBotany Bowling rules with sound off
+        run: python tests/zpins.py --play
+      - name: Bowl the new Tall-nut and Pumpkin in a muted browser
+        run: python tests/pool-browser.py --mode pins
+      - name: Replay the original ZomBotany Bowling release with sound off
         run: python tests/zbowling.py --play
       - name: Bowl on the daytime lawn in a muted browser
         run: python tests/pool-browser.py --mode bowling

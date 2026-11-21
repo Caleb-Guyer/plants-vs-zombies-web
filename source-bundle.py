@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 """Restore exact native ZIPs from bounded, lossless outer-only transports.
 
-This transports compressed byte streams; it never recompresses or changes an
-archive member. The original complete ZIP digest remains the acceptance gate.
+The original ZIP's bytes and digest govern every restored archive. Historical
+test drivers can travel together and regain their exact ZIP DEFLATE streams.
 """
 from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.util
 import io
 import json
 import lzma
@@ -34,6 +35,11 @@ CURRENT_FORMAT = "pvz-exact-zip-xz-v1"
 CURRENT_MANIFEST_REL = "source-transports/current.json"
 CURRENT_PAYLOAD_REL = "source-transports/current.xz"
 MAX_CURRENT_MEMORY_BYTES = 64 * 1024 * 1024
+DRIVER_HEADER = struct.Struct("<4sI")
+DRIVER_SPAN = struct.Struct("<III32s")  # literal offset, DEFLATE length, original driver length, DEFLATE digest
+DRIVER_MAGIC = b"PVL1"
+MAX_LITERAL_DRIVERS = 32
+MAX_DRIVER_BYTES = 16 * 1024 * 1024
 
 
 class SourceBundleError(ValueError):
@@ -212,6 +218,90 @@ def _decode_xz(payload, size, decoder_memory_limit=MAX_CURRENT_MEMORY_BYTES):
     return output
 
 
+def _driver_codec():
+    # The source packager also runs by absolute path from outside the checkout.
+    spec = importlib.util.spec_from_file_location("pvz_native_release_chain", Path(__file__).with_name("native_release_chain.py"))
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def decode_packed_literals(payload, expected):
+    """Read the original XZ literals or the version containing solid-compressed WASM drivers."""
+    _require(isinstance(payload, bytes) and 0 < len(payload) <= TARGET_BYTES, "Unexpected packed literal size")
+    size = _uint(expected["bytes"], TARGET_BYTES, positive=True)
+    expected_sha = _digest(expected["sha256"])
+    try:
+        decoder = lzma.LZMADecompressor(format=lzma.FORMAT_XZ, memlimit=MAX_CURRENT_MEMORY_BYTES)
+        header = decoder.decompress(payload, max_length=DRIVER_HEADER.size)
+        if not header.startswith(DRIVER_MAGIC):
+            del decoder
+            original = _decode_xz(payload, size)
+            _require(_sha(original) == expected_sha, "Restored ZIP literals differ")
+            return original
+        _require(len(header) == DRIVER_HEADER.size, "Truncated literal driver header")
+        _, count = DRIVER_HEADER.unpack(header)
+        _require(0 < count <= MAX_LITERAL_DRIVERS, "Unexpected literal driver count")
+        table = decoder.decompress(b"", max_length=count * DRIVER_SPAN.size)
+        _require(len(table) == count * DRIVER_SPAN.size, "Truncated literal driver table")
+        rows = list(DRIVER_SPAN.iter_unpack(table))
+        end = 0
+        expanded_size = size
+        for offset, packed, raw, _ in rows:
+            _require(end <= offset and 0 < packed <= size - offset and 0 < raw <= MAX_DRIVER_BYTES,
+                     "Invalid literal driver range")
+            end = offset + packed
+            expanded_size += raw - packed
+        _require(0 < expanded_size <= MAX_DONOR_BYTES, "Literal drivers exceed the output bound")
+        content = decoder.decompress(b"", max_length=expanded_size + 1)
+        _require(len(content) == expanded_size and decoder.eof and not decoder.unused_data
+                 and decoder.check == lzma.CHECK_CRC64, "Invalid packed literal driver stream")
+    except (EOFError, lzma.LZMAError, MemoryError) as exc:
+        raise SourceBundleError("Invalid packed XZ literals") from exc
+    codec = _driver_codec()
+    cursor = 0
+    result = bytearray()
+    for offset, packed, raw, digest in rows:
+        start = cursor + offset - len(result)
+        result.extend(content[cursor:start])
+        try:
+            result.extend(codec.exact_deflate(content[start:start + raw], packed, digest, 6))
+        except ValueError as exc:
+            raise SourceBundleError("Historical driver DEFLATE digest differs") from exc
+        cursor = start + raw
+    result.extend(content[cursor:])
+    _require(len(result) == size and _sha(result) == expected_sha, "Restored ZIP literals differ")
+    return bytes(result)
+
+
+def pack_driver_literals(target, literals):
+    """Expose shared bytes across the historical drivers to the XZ dictionary."""
+    codec = _driver_codec()
+    rows, parts = [], []
+    cursor = 0
+    with zipfile.ZipFile(io.BytesIO(target)) as archive:
+        for info in sorted(archive.infolist(), key=lambda entry: entry.header_offset):
+            if not info.filename.endswith("-engine.wasm"):
+                continue
+            _, compressed = codec._compressed_member(target, info)
+            offset = literals.find(compressed, cursor)
+            if offset < 0:
+                continue  # The donor already supplies these bytes.
+            _require(0 < info.file_size <= MAX_DRIVER_BYTES and len(rows) < MAX_LITERAL_DRIVERS,
+                     "Unexpected historical ZIP driver")
+            raw = archive.read(info)
+            rows.append(DRIVER_SPAN.pack(offset, len(compressed), len(raw), hashlib.sha256(compressed).digest()))
+            parts.extend((literals[cursor:offset], raw))
+            cursor = offset + len(compressed)
+    _require(0 < len(rows) <= MAX_LITERAL_DRIVERS, "Unexpected number of historical ZIP drivers")
+    header = DRIVER_HEADER.pack(DRIVER_MAGIC, len(rows)) + b"".join(rows)
+    data = b"".join((header, *parts, literals[cursor:]))
+    payload = lzma.compress(data, format=lzma.FORMAT_XZ, check=lzma.CHECK_CRC64, preset=8)
+    _require(decode_packed_literals(payload, {"bytes": len(literals), "sha256": _sha(literals)}) == literals,
+             "ZIP driver transport failed exact round trip")
+    return payload
+
+
 def _root(value):
     value = Path(value)
     info = value.lstat()
@@ -318,7 +408,7 @@ def ensure_source_archive(root):
     else:
         expected = _record(manifest["literals"], TARGET_BYTES, path=LITERALS_REL)
         payload = _read(root, LITERALS_REL + ".xz", TARGET_BYTES)
-        literals = _decode_xz(payload, expected["bytes"])
+        literals = decode_packed_literals(payload, expected)
 
     output = decode_source_transport(manifest_bytes, literals, donor)
     return _report(_publish_archive(root, TARGET_REL, output,
@@ -383,7 +473,8 @@ def ensure_vasebreaker_baseline(root):
     reference = {"path": "dist/source/pvz-portable-0.2.6-web-zvase.1-source.zip",
                  "sha256": "d9d4351181e09f1b0eceacc8203bf4d0bcf46910b7e27027c762b521d8805f2b"}
     size = 94_720_307
-    for child_id, parent_id in (("0.2.6-web-zbowling.1", "0.2.6-web-zsroof.1"),
+    for child_id, parent_id in (("0.2.6-web-zpins.1", "0.2.6-web-zbowling.1"),
+                                ("0.2.6-web-zbowling.1", "0.2.6-web-zsroof.1"),
                                 ("0.2.6-web-zsroof.1", "0.2.6-web-zsfog.1"),
                                 ("0.2.6-web-zsfog.1", "0.2.6-web-zspool.1"),
                                 ("0.2.6-web-zspool.1", "0.2.6-web-zsnight.1")):
@@ -497,7 +588,8 @@ def make_current_transport(root):
     if target["path"].endswith(("/pvz-portable-0.2.6-web-zspool.1-source.zip",
                                "/pvz-portable-0.2.6-web-zsfog.1-source.zip",
                                "/pvz-portable-0.2.6-web-zsroof.1-source.zip",
-                               "/pvz-portable-0.2.6-web-zbowling.1-source.zip")):
+                               "/pvz-portable-0.2.6-web-zbowling.1-source.zip",
+                               "/pvz-portable-0.2.6-web-zpins.1-source.zip")):
         # The shared native ZIP prefix contains matching spans more than 32 MiB apart.
         # A 48 MiB dictionary still decodes within the existing 64 MiB limit.
         options = {"filters": [{"id": lzma.FILTER_LZMA2, "preset": 8, "dict_size": 48 * 1024 * 1024}]}
@@ -514,8 +606,12 @@ def make_current_transport(root):
 def make_bundle_transports(root):
     """Combine four virtual files while retaining the original two-file API."""
     historical = make_source_transport(root)
-    packed_literals = lzma.compress(historical[LITERALS_REL], format=lzma.FORMAT_XZ,
-                                    check=lzma.CHECK_CRC64, preset=8)
+    manifest = json.loads(historical[MANIFEST_REL])
+    if manifest["donor"]["path"].endswith("/pvz-portable-0.2.6-web-zpins.1-source.zip"):
+        packed_literals = pack_driver_literals(_target(_root(root)), historical[LITERALS_REL])
+    else:
+        packed_literals = lzma.compress(historical[LITERALS_REL], format=lzma.FORMAT_XZ,
+                                        check=lzma.CHECK_CRC64, preset=8)
     return {MANIFEST_REL: historical[MANIFEST_REL], LITERALS_REL + ".xz": packed_literals,
             **make_current_transport(root)}
 

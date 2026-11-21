@@ -2,7 +2,7 @@
 
 ## ZomBotany Bowling
 
-The Pages workflow replays ZomBotany Bowling and its control levels with sound off, then opens card fourteen and rolls a Wall-nut in a muted browser. It also runs the earlier native and browser suites before publishing.
+The Pages workflow plays the expanded Bowling card with sound off. It also runs the first-version Bowling replay, the other ZomBotany challenges, and the existing browser and save checks before publishing.
 
 ## ZomBotany Survival: Roof (previous release)
 

@@ -1,0 +1,13 @@
+{
+  "id": "0.2.6-web-zpins.1",
+  "sourceFiles": 897,
+  "productionObjects": 156,
+  "normalReceiptSha256": "5d53157a0740fc398214c8a63ab2b3f4b3042d045f7f8dee75e2fe9e1975d0d1",
+  "reportSha256": "0b269e7325cca498c3312e4f3dfe6bef20c026a9aea41a2c3bf581af85603dca",
+  "driverBuildSha256": "bacf2622d8007cc204b5a549a7f3eabd9a7a8c8b88e3933eecbdc35bfad97704",
+  "sourceSha256": "9efc45935abd69515a2b1fd0f3e6f60b73f87938d029c237ca0e8c7325c22b1c",
+  "patchSha256": "85690b9449da16ce32822911d5941036176254211c6a1ab919b36905a923dfc5",
+  "jsSha256": "fedeef354c836814255a641013620883cbda6a6814c6dae38ac4c5051e5551ac",
+  "wasmSha256": "623a540ed430edb887ce4327f61fadb5980a1889d22cbab98cb057eeb0af21b1",
+  "historicalBrowserSha256": "b80e059e36b197ad65b97c01e6a2f5d2f6e80b6f82be779b8c925f5cc22182af"
+}

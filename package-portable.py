@@ -32,6 +32,7 @@ HISTORICAL_BROWSERS = {
     "0.2.6-web-zsfog.1": "zsfog1-browser-deltas.tar.xz",
     "0.2.6-web-zsroof.1": "zsroof1-browser-deltas.tar.xz",
     "0.2.6-web-zbowling.1": "zbowling1-browser-deltas.tar.xz",
+    "0.2.6-web-zpins.1": "zpins1-browser-deltas.tar.xz",
 }
 EXTENSIONS = {"0.2.6-web-izombotany.1", "0.2.6-web-zbeghouled.1"} | HISTORICAL_BROWSERS.keys()
 # Current publication target is GitHub Pages, via the existing Pages workflow.
@@ -683,14 +684,23 @@ def regenerate_source_downloads(transport_entries=None):
     nested = nested_source_inputs(engine, paths, baseline)
     transport_entries = transport_entries if transport_entries is not None else source_bundle_helpers().make_bundle_transports(ROOT)
     literal_path = TRANSPORT_LITERALS + ".xz" if TRANSPORT_LITERALS + ".xz" in transport_entries else TRANSPORT_LITERALS
+    literal_encoding = "xz" if literal_path.endswith(".xz") else "raw"
+    if engine["id"] == "0.2.6-web-zpins.1" and literal_encoding == "xz":
+        literal_encoding = "xz-deflate-streams-v1"
     if set(transport_entries) != {TRANSPORT_MANIFEST, literal_path,
                                  CURRENT_TRANSPORT_MANIFEST, CURRENT_TRANSPORT_PAYLOAD}:
         raise ValueError("Unexpected source-archive transport entries")
-    current_zip = source_bundle_helpers().decode_current_transport(
+    helpers = source_bundle_helpers()
+    current_zip = helpers.decode_current_transport(
         transport_entries[CURRENT_TRANSPORT_MANIFEST], transport_entries[CURRENT_TRANSPORT_PAYLOAD],
         expected_target_path=paths["source"].relative_to(ROOT).as_posix(),
         expected_target_sha256=engine["artifacts"]["sourceSha256"],
         expected_target_bytes=paths["source"].stat().st_size)
+    historical_manifest = transport_entries[TRANSPORT_MANIFEST]
+    literals = transport_entries[literal_path]
+    if literal_path.endswith(".xz"):
+        literals = helpers.decode_packed_literals(literals, json.loads(historical_manifest)["literals"])
+    helpers.decode_source_transport(historical_manifest, literals, current_zip)
     # The outer inspector sees an opaque XZ file, so retain the same complete
     # native-member/path/private-file/CRC audit before writing any transport.
     inspect_zip(current_zip, paths["source"].name)
@@ -765,7 +775,7 @@ def regenerate_source_downloads(transport_entries=None):
             "manifest": {"path": TRANSPORT_MANIFEST, "bytes": len(transport_entries[TRANSPORT_MANIFEST]),
                          "sha256": hashlib.sha256(transport_entries[TRANSPORT_MANIFEST]).hexdigest()},
             "literal_payload": {"path": literal_path, "bytes": len(transport_entries[literal_path]),
-                                "encoding": "xz" if literal_path.endswith(".xz") else "raw",
+                                "encoding": literal_encoding,
                                 "sha256": hashlib.sha256(transport_entries[literal_path]).hexdigest()},
         }],
         "nested_patches": sorted(nested_patches(engine)),
@@ -860,7 +870,7 @@ def root_sources():
         for release, name in HISTORICAL_BROWSERS.items():
             if release != active_id:
                 files.discard(history / name)
-        if active_id in ("0.2.6-web-zsfog.1", "0.2.6-web-zsroof.1", "0.2.6-web-zbowling.1"):
+        if active_id not in ("0.2.6-web-zsnight.1", "0.2.6-web-zspool.1"):
             parent = engine["parent"]
             while parent["id"] in HISTORICAL_BROWSERS or parent["id"] == "0.2.6-web-zbeghouled.1":
                 key = parent["id"].removeprefix("0.2.6-web-").removesuffix(".1")

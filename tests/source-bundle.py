@@ -57,7 +57,8 @@ class HistoricalBrowserTests(unittest.TestCase):
         packager = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(packager)
         roof_parents = (chain.BEGHOUL, chain.NIGHT, chain.POOL, chain.FOG)
-        for release, parents in ((chain.ROOF, roof_parents), (chain.BOWLING, roof_parents + (chain.ROOF,))):
+        for release, parents in ((chain.ROOF, roof_parents), (chain.BOWLING, roof_parents + (chain.ROOF,)),
+                                 (chain.PINS, roof_parents + (chain.ROOF, chain.BOWLING))):
             with self.subTest(release=release), tempfile.TemporaryDirectory() as folder:
                 root = Path(folder)
                 expected = {root / chain.DELTA_CAPSULES[release]}
@@ -84,9 +85,10 @@ class HistoricalBrowserTests(unittest.TestCase):
 
 
 class HistoricalSourceSuffixTests(unittest.TestCase):
-    def test_bowling_rejects_a_skipped_roof_or_a_different_source_base(self):
-        for parent_id, base in ((chain.FOG, chain.SHARED_BASE), (chain.ROOF, {})):
-            engine = {'id': chain.BOWLING, 'sourceArchiveBase': base,
+    def test_rejects_a_skipped_release_or_a_different_source_base(self):
+        for child_id, parent_id, base in ((chain.BOWLING, chain.FOG, chain.SHARED_BASE), (chain.BOWLING, chain.ROOF, {}),
+                                          (chain.PINS, chain.ROOF, chain.SHARED_BASE), (chain.PINS, chain.BOWLING, {})):
+            engine = {'id': child_id, 'sourceArchiveBase': base,
                       'parent': {'id': parent_id, 'sourceArchiveBase': chain.SHARED_BASE}}
             with self.subTest(parent=parent_id), tempfile.TemporaryDirectory() as folder:
                 root = Path(folder)
@@ -131,7 +133,7 @@ class HistoricalSourceSuffixTests(unittest.TestCase):
             encoder.return_value.flush.return_value = b''
             with mock.patch.object(chain, '_portable_deflate', wraps=chain._portable_deflate) as portable:
                 self.assertEqual(self.restore(packed), self.expected)
-                portable.assert_called_once_with(self.original)
+                portable.assert_called_once_with(self.original, 9)
 
     def test_rejects_invalid_stream_span_delta_or_compressed_digest(self):
         valid = self.encode(self.record)
@@ -149,6 +151,48 @@ class HistoricalSourceSuffixTests(unittest.TestCase):
         ):
             with self.subTest(label=label), self.assertRaises(ValueError):
                 self.restore(damaged)
+
+
+class SolidLiteralDriverTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        source = io.BytesIO()
+        with zipfile.ZipFile(source, 'w', compression=zipfile.ZIP_DEFLATED, compresslevel=6) as archive:
+            archive.writestr('tests/first-engine.wasm', b'abcd' * 500)
+            archive.writestr('readme', b'between the drivers')
+            archive.writestr('tests/second-engine.wasm', b'abcd' * 400 + b'bcd' * 100)
+        cls.original = source.getvalue()
+        cls.expected = {'bytes': len(cls.original), 'sha256': sha(cls.original)}
+        cls.packed = codec.pack_driver_literals(cls.original, cls.original)
+        cls.filtered = lzma.decompress(cls.packed)
+
+    def test_restores_each_compressed_stream_and_accepts_old_plain_xz(self):
+        self.assertEqual(codec.DRIVER_HEADER.unpack_from(self.filtered), (codec.DRIVER_MAGIC, 2))
+        self.assertEqual(codec.decode_packed_literals(self.packed, self.expected), self.original)
+        self.assertEqual(codec.decode_packed_literals(lzma.compress(self.original), self.expected), self.original)
+
+    def test_portable_level_six_recreates_both_original_deflate_streams(self):
+        driver = codec._driver_codec()
+        with mock.patch.object(codec, '_driver_codec', return_value=driver), \
+                mock.patch.object(driver.zlib, 'compressobj') as native, \
+                mock.patch.object(driver, '_portable_deflate', wraps=driver._portable_deflate) as portable:
+            native.return_value.compress.return_value = b'different bitstream'
+            native.return_value.flush.return_value = b''
+            self.assertEqual(codec.decode_packed_literals(self.packed, self.expected), self.original)
+            self.assertEqual([call.args[1] for call in portable.call_args_list], [6, 6])
+
+    def test_rejects_changed_bounds_stream_digest_and_trailing_data(self):
+        start = codec.DRIVER_HEADER.size
+        offset, packed, raw, digest = codec.DRIVER_SPAN.unpack_from(self.filtered, start)
+        following = self.filtered[start + codec.DRIVER_SPAN.size:]
+        bad_rows = ((offset, packed, 32 * 1024 * 1024, digest), (len(self.original), packed, raw, digest),
+                    (offset, packed, raw, bytes(32)))
+        damaged = [lzma.compress(self.filtered[:start] + codec.DRIVER_SPAN.pack(*row) + following) for row in bad_rows]
+        damaged += [lzma.compress(self.filtered[0:5]), lzma.compress(self.filtered[:-1]), self.packed + self.packed,
+                    lzma.compress(self.filtered, check=lzma.CHECK_NONE)]
+        for data in damaged:
+            with self.subTest(size=len(data)), self.assertRaises(codec.SourceBundleError):
+                codec.decode_packed_literals(data, self.expected)
 
 
 class SourceBundle(unittest.TestCase):
@@ -524,7 +568,11 @@ class SourceBundle(unittest.TestCase):
         self.assertEqual(set(combined), {INDEX, LITERALS + '.xz', CURRENT_INDEX, CURRENT_PAYLOAD})
         self.assertEqual(self.transport, {INDEX: self.manifest_bytes, LITERALS: self.literals})
         self.assertEqual(combined[INDEX], self.manifest_bytes)
-        self.assertEqual(lzma.decompress(combined[LITERALS + '.xz']), self.literals)
+        packed = combined[LITERALS + '.xz']
+        self.assertEqual(codec.decode_packed_literals(packed, self.manifest['literals']), self.literals)
+        if ENGINE['id'] == chain.PINS:
+            header = lzma.LZMADecompressor().decompress(packed, max_length=codec.DRIVER_HEADER.size)
+            self.assertEqual(codec.DRIVER_HEADER.unpack(header), (codec.DRIVER_MAGIC, 10))
         self.assertEqual({name: combined[name] for name in (CURRENT_INDEX, CURRENT_PAYLOAD)}, self.current_transport)
 
     def test_current_manifest_paths_sizes_types_and_hashes_rejected(self):

@@ -52,7 +52,12 @@ RELEASES = {
         parent=chain.ROOF, parent_bytes=chain.ROOF_BYTES, parent_sha=chain.ROOF_SHA,
         commit='9c6cb6360056c9687337477cd0ec0001d9af0ce9', sources=897, objects=156,
         caption='with ZomBotany Bowling.',
-        change='Adds ZomBotany Bowling, the fourteenth ZomBotany card, with Wall-nut bowling against plant-headed zombies.')
+        change='Adds ZomBotany Bowling, the fourteenth ZomBotany card, with Wall-nut bowling against plant-headed zombies.'),
+    'zpins': dict(tag='zpins1', stem='zpins', parent_tag='zbowling1',
+        parent=chain.BOWLING, parent_bytes=chain.BOWLING_BYTES, parent_sha=chain.BOWLING_SHA,
+        commit='db639cbc636d776c7275f61fec68477b9f3aa97d', sources=897, objects=156,
+        caption='with ZomBotany Bowling.',
+        change='Adds Tall-nut and Pumpkin bowling packets, shielded Wall-nut-heads, Squash interceptors and Ice-shroom-heads to ZomBotany Bowling. Earlier boards retain their original lineup and deliveries.')
 }
 
 def sha(data):
@@ -92,11 +97,10 @@ def package(candidate, results, key):
     stem, tag = release['stem'], release['tag']
     test_files = (stem+'.cpp', 'headless-app.h', f'build-{key}.py', key+'-run.cjs',
                   f'test-{key}.py', key+'-build.json', stem+'-engine.js', stem+'-engine.wasm')
-    if key in chain.WINNING_PROFILES:
-        earned_profile, expected = chain.WINNING_PROFILES[key]
-        if sha((candidate/'tests'/earned_profile).read_bytes()) != expected:
-            raise ValueError('Incorrect earned profile for replay: ' + earned_profile)
-        test_files += (earned_profile,)
+    for name, expected in chain.REPLAY_FIXTURES.get(key, ()):
+        if sha((candidate/'tests'/name).read_bytes()) != expected:
+            raise ValueError('Incorrect replay input: ' + name)
+        test_files += (name,)
     engine=json.loads(parent_file(release, 'dist/game/engine-provenance.json'))
     assert engine['id']==release['parent'] and engine['artifacts']['sourceSha256']==release['parent_sha']
     parent=DIST/'source'/Path(engine['artifacts']['source']).name

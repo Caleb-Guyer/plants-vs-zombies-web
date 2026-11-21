@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "current_engine": "0.2.6-web-zbowling.1",
+  "current_engine": "0.2.6-web-zpins.1",
   "upstream_tag": "0.2.6",
   "layout": "Site source includes the upstream baseline and the native ZomBotany extension patches. The current complete native source ZIP is restored offline from the lossless XZ transport. The shared I, ZomBotany prefix and published source suffixes restore the earlier extensions. Shared byte ranges restore the earlier regression inputs. The archive list links the current and upstream sources on Pages and historical releases at immutable GitHub revisions.",
   "nested_sources": [
@@ -8,21 +8,21 @@
   ],
   "restored_sources": [
     {
-      "name": "pvz-portable-0.2.6-web-zbowling.1-source.zip",
-      "path": "dist/source/pvz-portable-0.2.6-web-zbowling.1-source.zip",
-      "bytes": 104022458,
-      "sha256": "608feffc5a9743f21d920492487a05be2a8816d2bd617ef9343fa871f1ccccde",
+      "name": "pvz-portable-0.2.6-web-zpins.1-source.zip",
+      "path": "dist/source/pvz-portable-0.2.6-web-zpins.1-source.zip",
+      "bytes": 104050137,
+      "sha256": "9efc45935abd69515a2b1fd0f3e6f60b73f87938d029c237ca0e8c7325c22b1c",
       "automatic_before_checks": true,
       "encoding": "xz",
       "manifest": {
         "path": "source-transports/current.json",
-        "bytes": 347,
-        "sha256": "acb5f88e7494fbfc84a35d50c12dd604f4a287eef3f35fc8069cc1829094c3c6"
+        "bytes": 344,
+        "sha256": "357b02e28b85bcf50e8bcb2f323d0c55a9c72028340bd22fef8213e9f3a5900f"
       },
       "compressed_payload": {
         "path": "source-transports/current.xz",
-        "bytes": 33951748,
-        "sha256": "640328e8ba2936f08563404d454a9cf5cfc078835472f8536d0548210dc7a0d9"
+        "bytes": 34016656,
+        "sha256": "ecb002713b0b80d259cea8133e84fe4275e028de00af004ca751736fbcc63a5d"
       }
     },
     {
@@ -33,20 +33,21 @@
       "automatic_before_checks": true,
       "manifest": {
         "path": "source-transports/endless2.json",
-        "bytes": 93664,
-        "sha256": "c7578f5c876c18be7c57d1e1e4dbd1b3338ecd2a72bdc46b00bf4fa12de102e9"
+        "bytes": 93661,
+        "sha256": "40a81e74a89f949f734efe91b97368de78312265898a887696be714f4f7a3eaf"
       },
       "literal_payload": {
         "path": "source-transports/endless2.literals.xz",
-        "bytes": 26541220,
-        "encoding": "xz",
-        "sha256": "2eb69a9475d44f9f41d76371e0383276ad7088fb53ce748588f24dd657197b95"
+        "bytes": 7982796,
+        "encoding": "xz-deflate-streams-v1",
+        "sha256": "b0a01e564e7cc7087d44745ffb718ee4601fea4410ee20b9ee3daa3a5e765840"
       }
     }
   ],
   "nested_patches": [
     "izombotany1-to-zbeghouled1.patch",
     "zbeghouled1-to-zsnight1.patch",
+    "zbowling1-to-zpins1.patch",
     "zsfog1-to-zsroof1.patch",
     "zsnight1-to-zspool1.patch",
     "zspool1-to-zsfog1.patch",
@@ -530,9 +531,9 @@
       "name": "pvz-portable-0.2.6-web-zbowling.1-source.zip",
       "bytes": 104022458,
       "sha256": "608feffc5a9743f21d920492487a05be2a8816d2bd617ef9343fa871f1ccccde",
-      "current": true,
+      "current": false,
       "upstream": false,
-      "url": "./pvz-portable-0.2.6-web-zbowling.1-source.zip"
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/db639cbc636d776c7275f61fec68477b9f3aa97d/dist/source/pvz-portable-0.2.6-web-zbowling.1-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-zombatar-source.zip",
@@ -573,6 +574,14 @@
       "current": false,
       "upstream": false,
       "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/fa37aee4a3b6793903cb5e1b4c592e565439560c/dist/source/pvz-portable-0.2.6-web-zombotany45.2-source.zip"
+    },
+    {
+      "name": "pvz-portable-0.2.6-web-zpins.1-source.zip",
+      "bytes": 104050137,
+      "sha256": "9efc45935abd69515a2b1fd0f3e6f60b73f87938d029c237ca0e8c7325c22b1c",
+      "current": true,
+      "upstream": false,
+      "url": "./pvz-portable-0.2.6-web-zpins.1-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-zsfog.1-source.zip",
