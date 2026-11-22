@@ -67,7 +67,12 @@ RELEASES = {
         parent=chain.WHACK, parent_bytes=chain.WHACK_BYTES, parent_sha=chain.WHACK_SHA,
         commit='740917c790dccb10ac401020a68223d9727ea8ca', sources=899, objects=157,
         caption='with ZomBotany Twist.',
-        change='Adds ZomBotany Twist as card sixteen. Rotate four plants, make 45 matches and use long matches to butter the approaching plant-headed zombies.')
+        change='Adds ZomBotany Twist as card sixteen. Rotate four plants, make 45 matches and use long matches to butter the approaching plant-headed zombies.'),
+    'zfinal': dict(tag='zfinal1', stem='zfinal', parent_tag='ztwist1',
+        parent=chain.TWIST, parent_bytes=chain.TWIST_BYTES, parent_sha=chain.TWIST_SHA,
+        commit='3b29a0116ef6aa66b950778a9b8549fef2679bc7', sources=901, objects=158, scenarios=17,
+        caption='with all twenty ZomBotany cards.',
+        change='Completes the ZomBotany tab with Shooting Stars, Portal Panic, Column Climb and Last Stand.'),
 }
 
 def sha(data):
@@ -126,7 +131,7 @@ def package(candidate, results, key):
     for name, pin in normal['outputs'].items(): assert sha((candidate/name).read_bytes())==pin['sha256']
     for name, pin in {**linked['artifacts'],**linked['driverSources']}.items(): assert sha((candidate/'tests'/name).read_bytes())==pin
     report=json.loads(results.read_bytes())
-    assert report['status']=='PASS' and report['driver']==linked['artifacts'] and len(report['cases'])==16
+    assert report['status']=='PASS' and report['driver']==linked['artifacts'] and len(report['cases'])==release.get('scenarios',16)
     files={}
     with zipfile.ZipFile(parent) as previous:
         old=json.loads(previous.read(PREFIX+'source-manifest.json'))

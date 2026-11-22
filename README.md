@@ -1,5 +1,16 @@
 # Plants vs. Zombies — browser playtest
 
+## The completed ZomBotany tab
+
+The ZomBotany tab has twenty cards. Beat the original ZomBotany to unlock the final four.
+
+| Card | Game | How to play |
+| --- | --- | --- |
+| 17 | Shooting Stars | Fill eleven Starfruit outlines to make a shooting star. Other squares are yours to defend or grow sun. |
+| 18 | Portal Panic | Follow the two pairs of moving gates on the night lawn. Your peas, enemy peas, zombies and mowers can change lanes through them. |
+| 19 | Column Climb | One conveyor packet plants a whole roof column. Extend the four starting columns of pots and use Umbrella Leaves against incoming lobs. |
+| 20 | Last Stand | Spend 5,000 sun to set up at the pool. Start each of five flags when ready and use the breaks to rebuild as swimmers, pults and Jalapeño-heads arrive. |
+
 ## ZomBotany Twist
 
 Beat the original ZomBotany to unlock the first card in the fourth row. Click where four plants meet to rotate them clockwise. Make 45 matches before the plant-headed zombies reach the house.

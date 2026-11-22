@@ -30,6 +30,10 @@ jobs:
         run: python bundle-game-assets.py --verify-only
       - name: Verify browser shell and corresponding source
         run: npm run check
+      - name: Play the four ZomBotany finale cards with sound off
+        run: python tests/zfinal.py --play
+      - name: Open and play all four new cards in a muted browser
+        run: python tests/zfinal-browser.py
       - name: Play ZomBotany Twist and classic Beghouled Twist with sound off
         run: python tests/ztwist.py --play
       - name: Rotate plants on the night lawn in a muted browser

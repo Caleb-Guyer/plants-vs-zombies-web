@@ -54,8 +54,9 @@ const addedQoLFiles=['src/Lawn/System/QoLSettings.h','src/Lawn/System/QoLSetting
 const iZombotanyFiles = ['src/Lawn/System/IZombotany.cpp', 'src/Lawn/System/IZombotany.h'];
 const beghouledFiles = ['src/Lawn/System/ZomBotanyBeghouled.cpp', 'src/Lawn/System/ZomBotanyBeghouled.h'];
 const bowlingFiles = ['src/Lawn/System/ZomBotanyBowling.cpp', 'src/Lawn/System/ZomBotanyBowling.h'];
+const finaleFiles = ['src/Lawn/System/ZomBotanyFinale.h','src/Lawn/System/ZomBotanyFinale.cpp'];
 const whackFiles = ['src/Lawn/System/ZomBotanyWhack.cpp', 'src/Lawn/System/ZomBotanyWhack.h'];
-assert.deepEqual([...candidates.keys()].sort(), [...originals.keys(),...addedRendererFiles,...addedQoLFiles,...addedContentFiles,...SCRAP_SOURCE_ADDITIONS,...AMBUSH_SOURCE_ADDITIONS,...TORCH_SOURCE_ADDITIONS,...DOUBLE_SOURCE_ADDITIONS,...GUST_SOURCE_ADDITIONS,...ZOMBOTANY3_SOURCE_ADDITIONS,...ZSURVIVAL_SOURCE_ADDITIONS,...ZVASE_SOURCE_ADDITIONS,...iZombotanyFiles,...beghouledFiles,...bowlingFiles,...whackFiles].sort(),
+assert.deepEqual([...candidates.keys()].sort(), [...originals.keys(),...addedRendererFiles,...addedQoLFiles,...addedContentFiles,...SCRAP_SOURCE_ADDITIONS,...AMBUSH_SOURCE_ADDITIONS,...TORCH_SOURCE_ADDITIONS,...DOUBLE_SOURCE_ADDITIONS,...GUST_SOURCE_ADDITIONS,...ZOMBOTANY3_SOURCE_ADDITIONS,...ZSURVIVAL_SOURCE_ADDITIONS,...ZVASE_SOURCE_ADDITIONS,...iZombotanyFiles,...beghouledFiles,...bowlingFiles,...whackFiles,...finaleFiles].sort(),
   'The complete source adds exactly the retained renderer, QoL and reviewed bonus files');
 const code = /\.(?:c|cc|cpp|cxx|h|hh|hpp|hxx|inc|java|bas|rc|sh|cmake|in)$/i;
 const normalize = text => text.replace(/\r\n?/g, '\n');
@@ -95,6 +96,8 @@ assert.deepEqual(changed.sort(), [
   "src/Lawn/CutScene.cpp",
   "src/Lawn/Challenge.h",
   "src/Lawn/Coin.cpp",
+  "src/Lawn/System/Music.cpp",
+  "src/SexyAppFramework/graphics/SWTri/SWTri_Pixel8888.inc",
   "src/Lawn/CursorObject.cpp",
   "src/Lawn/GridItem.cpp", // Vase Ambush routing; original methods are checked by its source gate.
   "src/Lawn/Plant.cpp",

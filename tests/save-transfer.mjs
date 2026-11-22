@@ -88,6 +88,15 @@ assert.deepEqual(earnedTwist.subarray(-48,-8),earnedWhack.subarray(-40));
 assert.equal(earnedTwist.subarray(-8,-4).toString('ascii'),'ZTW1');
 assert.equal(earnedTwist.readUInt32LE(earnedTwist.length-4),1);
 originals.set('/saves/userdata/user900008.dat',earnedTwist);
+const earnedFinal = fs.readFileSync(new URL('fixtures/zfinal1-earned.dat',import.meta.url));
+assert.equal(earnedFinal.readUInt32LE(),12);
+assert.deepEqual(earnedFinal.subarray(-80,-32),earnedTwist.subarray(-48));
+for (const [i, tag] of ['ZST1','ZPO1','ZCL1','ZLS1'].entries()) {
+  const offset = earnedFinal.length - 32 + 8 * i;
+  assert.equal(earnedFinal.toString('ascii', offset, offset + 4), tag);
+  assert.equal(earnedFinal.readUInt32LE(offset + 4), 1);
+}
+originals.set('/saves/userdata/user900009.dat',earnedFinal);
 originals.set('/saves/userdata/auxiliary/notes.bin',Buffer.from([0,251,255,4]));
 originals.set('/saves/userdata/qol-settings-900001.txt',Buffer.from('PVZQOL 1\n1 1 1 1\n49 50 51 52 53 54 55 56 57 48 83 70\n'));
 originals.set('/saves/userdata/qol-decks-900001.txt',Buffer.from('PVZDECKS 1\n8\n"Day" 1 0 -1\n"Night" 0\n"Pool" 0\n"Roof" 0\n"Deck 5" 0\n"Deck 6" 0\n"Deck 7" 0\n"Deck 8" 0\n'));

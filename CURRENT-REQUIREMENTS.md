@@ -1,5 +1,9 @@
 # Current requirements
 
+## The completed ZomBotany tab
+
+The final four slots use the native challenge grid, one original-art portrait apiece, the original ZomBotany prerequisite and independent optional save records. The completed tab shows twenty trophies.
+
 ## ZomBotany Twist
 
 Card sixteen uses clockwise two-by-two rotation, a 45-match goal and lane-targeted butter on matches of four or more. The card unlocks after ZomBotany and stores its trophy after the earlier tagged records.

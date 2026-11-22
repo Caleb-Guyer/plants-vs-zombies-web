@@ -69,6 +69,11 @@ tests/fixtures/zvase1-*.json -text
 tests/fixtures/zbeghouled1-release.json -text
 tests/fixtures/zsnight1-release.json -text
 tests/fixtures/zspool1-release.json -text
+tests/fixtures/zfinal1-release.json -text
+tests/fixtures/zfinal1-screens.json text eol=lf
+tests/fixtures/zfinal1-earned.dat binary
+tests/fixtures/historical/ztwist1-published/** -text
+tests/fixtures/historical/zfinal1-browser-deltas.tar.xz binary
 tests/fixtures/ztwist1-release.json -text
 tests/fixtures/ztwist1-screens.json text eol=lf
 tests/fixtures/ztwist1-earned.dat binary

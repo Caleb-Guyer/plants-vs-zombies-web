@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-ztwist.1
-Adds ZomBotany Twist as card sixteen. Rotate four plants, make 45 matches and use long matches to butter the approaching plant-headed zombies.
-Engine JavaScript SHA-256: 6b7ee8d81c6bd5d1b316f3b24c70113ebb87eb74eb14cf70c9c246bd3f3a5874
-Engine WASM SHA-256: c34786034c100f1afd55b65181643a046fd6eac0f768063e979eab755e272776
+PvZ-Portable 0.2.6-web-zfinal.1
+Completes the ZomBotany tab with Shooting Stars, Portal Panic, Column Climb and Last Stand.
+Engine JavaScript SHA-256: 5aed1bbba0fa65c62a66eb6d5fcf1c5e576b55b907257dc87679e1981056e5eb
+Engine WASM SHA-256: 6bc25564776c067cc57d85158eed7b06bf37b4d18bd28d290e306c438e776b0e
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.

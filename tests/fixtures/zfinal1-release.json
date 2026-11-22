@@ -1,0 +1,13 @@
+{
+  "id": "0.2.6-web-zfinal.1",
+  "sourceFiles": 901,
+  "productionObjects": 158,
+  "normalReceiptSha256": "fe5ee1838465cfa980aab04a9965fe92950a257a55b7042cbf01b07b7fee591e",
+  "reportSha256": "361cbbb1520ae9b657c4235bbc14aa08396fe92b3964517d95fdd6779bcdf942",
+  "driverBuildSha256": "02e34f1361a8ebff4f980f92ed3906773172e44904c2e889b39a0e10b21244fe",
+  "sourceSha256": "855725957312215ab31ac3a5149794c779b694436502625a1f7ffd2a4e08e9c2",
+  "patchSha256": "1758cea9fc1517ac59ce9ff4a1b7d7d77482a5bee72cdda459ccd75ac11a7d03",
+  "jsSha256": "5aed1bbba0fa65c62a66eb6d5fcf1c5e576b55b907257dc87679e1981056e5eb",
+  "wasmSha256": "6bc25564776c067cc57d85158eed7b06bf37b4d18bd28d290e306c438e776b0e",
+  "historicalBrowserSha256": "c92856f0d6c0c8e5ebcbb582793be8e1a4caaea3773a6151062a82cb1c2bf68f"
+}

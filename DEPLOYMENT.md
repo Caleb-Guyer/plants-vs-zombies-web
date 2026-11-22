@@ -1,5 +1,9 @@
 # GitHub Pages release: Caleb-Guyer/plants-vs-zombies-web
 
+## The completed ZomBotany tab
+
+The Pages workflow plays the four new games and exercises their fourth-row cards in a muted browser before publishing.
+
 ## ZomBotany Twist
 
 The Pages workflow replays ZomBotany Twist and its classic control with sound off, then opens card sixteen and makes a scoring rotation in a muted browser.

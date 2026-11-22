@@ -406,7 +406,7 @@ def play_opening(browser, output, mode="pool"):
     assert browser.execute("return PVZAudio.isMuted()"), "Gameplay test lost its mute"
 
 
-def exercise(browser, site, scratch, profile, output, mode="pool"):
+def open_with_profile(browser, site, scratch, profile, output, mode):
     # Use the save controls before native startup so the game reads the imported profile itself.
     browser.request("POST", "/url", {"url": site + "/source/build-provenance.json"})
     browser.execute("sessionStorage.setItem('pvz-show-import','1')")
@@ -445,6 +445,10 @@ def exercise(browser, site, scratch, profile, output, mode="pool"):
     if output:
         output.mkdir(parents=True, exist_ok=True)
         (output / "startup.png").write_bytes(frame)
+
+
+def exercise(browser, site, scratch, profile, output, mode="pool"):
+    open_with_profile(browser, site, scratch, profile, output, mode)
     play_opening(browser, output, mode)
     action = {"pool": "planted Lily Pad", "fog": "Plantern cleared the upper water lane",
               "roof": "armed a Potato Mine in a newly planted Flower Pot",

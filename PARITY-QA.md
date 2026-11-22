@@ -1,5 +1,9 @@
 # Browser parity and QA record
 
+## The completed ZomBotany tab
+
+Run `python tests/zfinal.py --play` to play all four cards at both speeds, exercise mid-level Continue and earn all four trophies on one profile. `python tests/zfinal-browser.py` opens each card, performs a real lawn action and reloads the saved profile with sound off.
+
 ## ZomBotany Twist
 
 Run `python tests/ztwist.py --play` to replay ZomBotany Twist and classic Beghouled Twist with sound off. The tests use real mouse clicks to check the four rotated tiles, native butter flight and stuns, saving during a turn, loss and retry, and the earned trophy. `python tests/pool-browser.py --mode twist` exercises the fourth-row card and the first scored rotation in a muted browser.

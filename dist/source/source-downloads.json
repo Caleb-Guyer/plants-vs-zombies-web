@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "current_engine": "0.2.6-web-ztwist.1",
+  "current_engine": "0.2.6-web-zfinal.1",
   "upstream_tag": "0.2.6",
   "layout": "Site source includes the upstream baseline and the native ZomBotany extension patches. The current complete native source ZIP is restored offline from the lossless XZ transport. The shared I, ZomBotany prefix and published source suffixes restore the earlier extensions. Shared byte ranges restore the earlier regression inputs. The archive list links the current and upstream sources on Pages and historical releases at immutable GitHub revisions.",
   "nested_sources": [
@@ -8,21 +8,21 @@
   ],
   "restored_sources": [
     {
-      "name": "pvz-portable-0.2.6-web-ztwist.1-source.zip",
-      "path": "dist/source/pvz-portable-0.2.6-web-ztwist.1-source.zip",
-      "bytes": 104037115,
-      "sha256": "7a7340590541569e1cd8291f73374e9e6de4988fdd9a1bf4c967f461861641a0",
+      "name": "pvz-portable-0.2.6-web-zfinal.1-source.zip",
+      "path": "dist/source/pvz-portable-0.2.6-web-zfinal.1-source.zip",
+      "bytes": 104066945,
+      "sha256": "855725957312215ab31ac3a5149794c779b694436502625a1f7ffd2a4e08e9c2",
       "automatic_before_checks": true,
       "encoding": "xz",
       "manifest": {
         "path": "source-transports/current.json",
         "bytes": 345,
-        "sha256": "f40bf69e858e3386d64a63bbd3cbe469be7ea219ace23a679e6953290c23f4d3"
+        "sha256": "225bf3dd24f52dd2672e189da4472e115c0048d2c0880654af81c9739d8080af"
       },
       "compressed_payload": {
         "path": "source-transports/current.xz",
-        "bytes": 34002048,
-        "sha256": "22e6bfce13bbcfa00cc385c8a6e3b1cb4f7bb5c5e8ff1e165e45a18b51c82a99"
+        "bytes": 34031952,
+        "sha256": "fc4cf152ec3d9edd40c7775cb968bcd5d138d9ceb3bd88d6fdf67afb9dbd4fdd"
       }
     },
     {
@@ -33,14 +33,14 @@
       "automatic_before_checks": true,
       "manifest": {
         "path": "source-transports/endless2.json",
-        "bytes": 93662,
-        "sha256": "8d39d5c688c9213795d7b937e43811e06bd2958148dca441ad9e1cf332e830d6"
+        "bytes": 93355,
+        "sha256": "6c37db7d27dc14f957e6cf1cdff86267eec6d85f0f0fa8090becc30b6e9113d6"
       },
       "literal_payload": {
         "path": "source-transports/endless2.literals.xz",
-        "bytes": 7982796,
+        "bytes": 7984460,
         "encoding": "xz-deflate-streams-v1",
-        "sha256": "b0a01e564e7cc7087d44745ffb718ee4601fea4410ee20b9ee3daa3a5e765840"
+        "sha256": "2f809df1d5d2ba7cd9bbf1d170fda0764b30a09b4b0e1819a32a5216ceb06ebf"
       }
     }
   ],
@@ -53,6 +53,7 @@
     "zsnight1-to-zspool1.patch",
     "zspool1-to-zsfog1.patch",
     "zsroof1-to-zbowling1.patch",
+    "ztwist1-to-zfinal1.patch",
     "zvase1-to-izombotany1.patch",
     "zwhack1-to-ztwist1.patch"
   ],
@@ -538,6 +539,14 @@
       "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/db639cbc636d776c7275f61fec68477b9f3aa97d/dist/source/pvz-portable-0.2.6-web-zbowling.1-source.zip"
     },
     {
+      "name": "pvz-portable-0.2.6-web-zfinal.1-source.zip",
+      "bytes": 104066945,
+      "sha256": "855725957312215ab31ac3a5149794c779b694436502625a1f7ffd2a4e08e9c2",
+      "current": true,
+      "upstream": false,
+      "url": "./pvz-portable-0.2.6-web-zfinal.1-source.zip"
+    },
+    {
       "name": "pvz-portable-0.2.6-web-zombatar-source.zip",
       "bytes": 4281012,
       "sha256": "f7119893eb13d04eacca0fbd3ced518cf2c7a00aae0ef1237e8a250d5966f029",
@@ -629,9 +638,9 @@
       "name": "pvz-portable-0.2.6-web-ztwist.1-source.zip",
       "bytes": 104037115,
       "sha256": "7a7340590541569e1cd8291f73374e9e6de4988fdd9a1bf4c967f461861641a0",
-      "current": true,
+      "current": false,
       "upstream": false,
-      "url": "./pvz-portable-0.2.6-web-ztwist.1-source.zip"
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/3b29a0116ef6aa66b950778a9b8549fef2679bc7/dist/source/pvz-portable-0.2.6-web-ztwist.1-source.zip"
     },
     {
       "name": "pvz-portable-0.2.6-web-zvase.1-source.zip",
