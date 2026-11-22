@@ -220,9 +220,9 @@ def play_opening(browser, output, mode="pool"):
         references.update(json.loads((ROOT / f"tests/fixtures/{key}1-screens.json").read_bytes()))
     if mode == "pins":
         references.update(json.loads((ROOT / "tests/fixtures/zpins1-screens.json").read_bytes()))
-    def inspect(frame, before_roll=None, lane=2, pumpkin=False):
+    def inspect(frame):
         return browser.execute("""
-            const [png, references, beforeRoll, lane, pumpkin, done] = arguments;
+            const [png, references, done] = arguments;
             (async () => {
                 const image = new Image();
                 image.src = 'data:image/png;base64,' + png;
@@ -247,36 +247,15 @@ def play_opening(browser, output, mode="pool"):
                 for (let i=0; i<plant.length; i+=4)
                     if (plant[i+1]>80 && plant[i+1]>plant[i]*1.3 && plant[i+1]>plant[i+2]*1.4) green++;
                 scores.lily = green/(40*24);
-                if (beforeRoll) {
-                    const bounds = [190,84+100*lane,480,73];
-                    const current = ctx.getImageData(...bounds).data;
-                    const previous = new Image();
-                    previous.src = 'data:image/png;base64,' + beforeRoll;
-                    await previous.decode();
-                    ctx.drawImage(previous,0,0,800,600);
-                    const bare = ctx.getImageData(...bounds).data;
-                    let count=0, sumX=0;
-                    for (let i=0; i<current.length; i+=4) {
-                        const [r,g,b] = [current[i],current[i+1],current[i+2]];
-                        const shell = pumpkin ? r>125 && r>1.45*g && g>1.8*b :
-                            r>85 && g>45 && r>1.10*g && r<2.25*g && g>1.55*b;
-                        if (shell &&
-                            Math.abs(r-bare[i])+Math.abs(g-bare[i+1])+Math.abs(b-bare[i+2])>75) {
-                            count++;
-                            sumX += bounds[0]+((i/4)%bounds[2]);
-                        }
-                    }
-                    scores.rollingX = count>200 ? sumX/count : null;
-                }
                 return scores;
             })().then(done, error => done({error:String(error)}));
-        """, base64.b64encode(frame).decode(), references, before_roll, lane, pumpkin, asynchronous=True)
+        """, base64.b64encode(frame).decode(), references, asynchronous=True)
 
     def reach(target, source=None, position=None):
         next_click = 0
         end = time.monotonic() + 70
         # The two golden-brown nut packets have similar colors at conveyor size.
-        tolerance = 9 if target in ("readyTall", "readyPumpkin") else 18
+        tolerance = 9 if target in ("readyNut", "readyTall", "readyPumpkin") else 18
         while time.monotonic() < end:
             frame = browser.screenshot()
             scores = inspect(frame)
@@ -323,26 +302,41 @@ def play_opening(browser, output, mode="pool"):
         opening = [("readyNut", 2)]
         if mode == "pins":
             opening.extend([("readyTall", 1), ("readyPumpkin", 3)])
+        watch_script = (ROOT / "tests/bowling-roll.js").read_text(encoding="utf-8")
         for packet, lane in opening:
             reach(packet)
-            before_roll = base64.b64encode(browser.screenshot()).decode()
-            click_canvas(browser, 125,40)
-            click_canvas(browser, 202,131+100*lane)
-            first = None
-            end = time.monotonic()+12
-            while time.monotonic() < end:
-                frame = browser.screenshot()
-                x = inspect(frame, before_roll, lane, packet == "readyPumpkin")["rollingX"]
-                if x is not None:
-                    if first is None and 215 < x < 465:
-                        first = x
-                        if output: (output / (packet + "-near.png")).write_bytes(frame)
-                    if first is not None and x > 360 and x-first > 90:
-                        if output: (output / (packet + "-far.png")).write_bytes(frame)
+            armed = browser.execute(watch_script, lane, packet == "readyPumpkin", bool(output), asynchronous=True)
+            assert armed.get("armed"), (packet, armed)
+            def roll():
+                click_canvas(browser, 125,40)
+                click_canvas(browser, 202,131+100*lane)
+            roll()
+            started = time.monotonic()
+            retried = False
+            try:
+                while time.monotonic()-started < 18:
+                    motion = browser.execute("""
+                        const {frames,first,last,done,error} = window.bowlingRoll;
+                        return {frames,first,last,done,error};
+                    """)
+                    if motion["done"]:
+                        if output:
+                            pictures = browser.execute("return window.bowlingRoll.pictures")
+                            for name, png in pictures.items():
+                                (output / (packet+"-"+name+".png")).write_bytes(base64.b64decode(png))
                         break
-                time.sleep(0.05)
-            else:
-                raise AssertionError(f"{packet} did not roll across the red line in lane {lane+1}")
+                    assert not motion.get("error"), (packet, lane, motion)
+                    if not retried and motion["first"] is None and time.monotonic()-started > 1.6:
+                        # The rolling intro can show the packet before the board accepts input.
+                        # Repeat the throw only if the same opening packet is still in its slot.
+                        if inspect(browser.screenshot())[packet] < 9:
+                            roll()
+                        retried = True
+                    time.sleep(.12)
+                else:
+                    raise AssertionError(f"{packet} did not cross the line in lane {lane+1}: {motion}")
+            finally:
+                browser.execute("window.bowlingRoll.stop()")
         assert browser.execute("return PVZAudio.isMuted()"), "Bowling test lost its mute"
         return
     card_x = {"pool": 90, "fog": 245, "roof": 400}[mode]
