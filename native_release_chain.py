@@ -18,6 +18,7 @@ FOG = "0.2.6-web-zsfog.1"
 ROOF = "0.2.6-web-zsroof.1"
 BOWLING = "0.2.6-web-zbowling.1"
 PINS = "0.2.6-web-zpins.1"
+WHACK = "0.2.6-web-zwhack.1"
 SHARED_BASE = {"id": I_ZOMBOTANY, "bytes": 100_558_183,
                "sha256": "ab56f8150ddaf8d8985de74afeea2b51c7c09ef800d0f4ba58cd3a270393152c"}
 BEGHOUL_BYTES = 103_906_885
@@ -32,11 +33,14 @@ ROOF_BYTES = 103_972_955
 ROOF_SHA = "0c70111f1849b2ef3cd94ddf1731d4da04e9209651c0e87a4e1ab6cb16de066b"
 BOWLING_BYTES = 104_022_458
 BOWLING_SHA = "608feffc5a9743f21d920492487a05be2a8816d2bd617ef9343fa871f1ccccde"
+PINS_BYTES = 104_050_137
+PINS_SHA = "9efc45935abd69515a2b1fd0f3e6f60b73f87938d029c237ca0e8c7325c22b1c"
 POOL_WINNER_SHA256 = "0975e051c8585ab3535697e4d56f895f566c33afcf3946932326d4654f24fefa"
 WINNING_PROFILES = {
     "zsfog": ("zspool1-earned.dat", POOL_WINNER_SHA256),
     "zsroof": ("zsfog1-earned.dat", "e265c019f72c08c7beeb114676792dc6e66a4707cc91430b26f8c3ced6a4aac7"),
     "zbowling": ("zsroof1-earned.dat", "0afa64046adb263d6519082ee1ea8ae3bc5ce4640676b12d090d41ec55466ad9"),
+    "zwhack": ("zpins1-earned.dat", "7db698deab6e2d99c9b170e8dac1b135a0074eaf9d81f700d355151f61e9ba96"),
 }
 REPLAY_FIXTURES = {
     **{key: (profile,) for key, profile in WINNING_PROFILES.items()},
@@ -50,14 +54,16 @@ POOL_SUFFIX = HISTORY / "zspool1-published/source-suffix.xz"
 FOG_SUFFIX = HISTORY / "zsfog1-published/source-suffix.xz"
 ROOF_SUFFIX = HISTORY / "zsroof1-published/source-suffix.xz"
 BOWLING_SUFFIX = HISTORY / "zbowling1-published/source-suffix.xz"
+PINS_SUFFIX = HISTORY / "zpins1-published/source-suffix.xz"
 BROWSERS = HISTORY / "extension-browsers.tar.xz"
 POOL_BROWSER_DELTAS = HISTORY / "zspool1-browser-deltas.tar.xz"
 FOG_BROWSER_DELTAS = HISTORY / "zsfog1-browser-deltas.tar.xz"
 ROOF_BROWSER_DELTAS = HISTORY / "zsroof1-browser-deltas.tar.xz"
 BOWLING_BROWSER_DELTAS = HISTORY / "zbowling1-browser-deltas.tar.xz"
 PINS_BROWSER_DELTAS = HISTORY / "zpins1-browser-deltas.tar.xz"
+WHACK_BROWSER_DELTAS = HISTORY / "zwhack1-browser-deltas.tar.xz"
 DELTA_CAPSULES = {POOL: POOL_BROWSER_DELTAS, FOG: FOG_BROWSER_DELTAS, ROOF: ROOF_BROWSER_DELTAS,
-                  BOWLING: BOWLING_BROWSER_DELTAS, PINS: PINS_BROWSER_DELTAS}
+                  BOWLING: BOWLING_BROWSER_DELTAS, PINS: PINS_BROWSER_DELTAS, WHACK: WHACK_BROWSER_DELTAS}
 BLOCK_SIZE = 128
 MAX_BROWSER_BYTES = 16 * 1024 * 1024
 ARCHIVE_PARENTS = {
@@ -67,6 +73,7 @@ ARCHIVE_PARENTS = {
     ROOF: (FOG, FOG_BYTES, FOG_SHA, FOG_SUFFIX),
     BOWLING: (ROOF, ROOF_BYTES, ROOF_SHA, ROOF_SUFFIX),
     PINS: (BOWLING, BOWLING_BYTES, BOWLING_SHA, BOWLING_SUFFIX),
+    WHACK: (PINS, PINS_BYTES, PINS_SHA, PINS_SUFFIX),
 }
 ZIP_ROOT = "zombotany3-candidate/tests/"
 SUFFIX_HEADER = struct.Struct("<4sII32s")

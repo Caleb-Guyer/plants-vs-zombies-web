@@ -58,7 +58,8 @@ class HistoricalBrowserTests(unittest.TestCase):
         spec.loader.exec_module(packager)
         roof_parents = (chain.BEGHOUL, chain.NIGHT, chain.POOL, chain.FOG)
         for release, parents in ((chain.ROOF, roof_parents), (chain.BOWLING, roof_parents + (chain.ROOF,)),
-                                 (chain.PINS, roof_parents + (chain.ROOF, chain.BOWLING))):
+                                 (chain.PINS, roof_parents + (chain.ROOF, chain.BOWLING)),
+                                 (chain.WHACK, roof_parents + (chain.ROOF, chain.BOWLING, chain.PINS))):
             with self.subTest(release=release), tempfile.TemporaryDirectory() as folder:
                 root = Path(folder)
                 expected = {root / chain.DELTA_CAPSULES[release]}
@@ -87,7 +88,8 @@ class HistoricalBrowserTests(unittest.TestCase):
 class HistoricalSourceSuffixTests(unittest.TestCase):
     def test_rejects_a_skipped_release_or_a_different_source_base(self):
         for child_id, parent_id, base in ((chain.BOWLING, chain.FOG, chain.SHARED_BASE), (chain.BOWLING, chain.ROOF, {}),
-                                          (chain.PINS, chain.ROOF, chain.SHARED_BASE), (chain.PINS, chain.BOWLING, {})):
+                                          (chain.PINS, chain.ROOF, chain.SHARED_BASE), (chain.PINS, chain.BOWLING, {}),
+                                          (chain.WHACK, chain.BOWLING, chain.SHARED_BASE), (chain.WHACK, chain.PINS, {})):
             engine = {'id': child_id, 'sourceArchiveBase': base,
                       'parent': {'id': parent_id, 'sourceArchiveBase': chain.SHARED_BASE}}
             with self.subTest(parent=parent_id), tempfile.TemporaryDirectory() as folder:
@@ -570,7 +572,7 @@ class SourceBundle(unittest.TestCase):
         self.assertEqual(combined[INDEX], self.manifest_bytes)
         packed = combined[LITERALS + '.xz']
         self.assertEqual(codec.decode_packed_literals(packed, self.manifest['literals']), self.literals)
-        if ENGINE['id'] == chain.PINS:
+        if ENGINE['id'] in (chain.PINS, chain.WHACK):
             header = lzma.LZMADecompressor().decompress(packed, max_length=codec.DRIVER_HEADER.size)
             self.assertEqual(codec.DRIVER_HEADER.unpack(header), (codec.DRIVER_MAGIC, 10))
         self.assertEqual({name: combined[name] for name in (CURRENT_INDEX, CURRENT_PAYLOAD)}, self.current_transport)

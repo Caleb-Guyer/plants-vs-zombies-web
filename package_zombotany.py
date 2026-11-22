@@ -57,7 +57,12 @@ RELEASES = {
         parent=chain.BOWLING, parent_bytes=chain.BOWLING_BYTES, parent_sha=chain.BOWLING_SHA,
         commit='db639cbc636d776c7275f61fec68477b9f3aa97d', sources=897, objects=156,
         caption='with ZomBotany Bowling.',
-        change='Adds Tall-nut and Pumpkin bowling packets, shielded Wall-nut-heads, Squash interceptors and Ice-shroom-heads to ZomBotany Bowling. Earlier boards retain their original lineup and deliveries.')
+        change='Adds Tall-nut and Pumpkin bowling packets, shielded Wall-nut-heads, Squash interceptors and Ice-shroom-heads to ZomBotany Bowling. Earlier boards retain their original lineup and deliveries.'),
+    'zwhack': dict(tag='zwhack1', stem='zwhack', parent_tag='zpins1',
+        parent=chain.PINS, parent_bytes=chain.PINS_BYTES, parent_sha=chain.PINS_SHA,
+        commit='bc314c111d44cc03b6b5fa12a93682ea4e7e3e82', sources=899, objects=157,
+        caption='with Whack a Sprout.',
+        change='Adds Whack a Sprout as the fifteenth ZomBotany card. Use the mallet against plant-headed zombies in the nighttime graveyard.')
 }
 
 def sha(data):

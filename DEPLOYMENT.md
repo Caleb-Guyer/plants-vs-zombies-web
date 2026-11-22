@@ -1,5 +1,9 @@
 # GitHub Pages release: Caleb-Guyer/plants-vs-zombies-web
 
+## Whack a Sprout
+
+The Pages workflow plays Whack a Sprout with sound off and opens card fifteen in a muted browser before it stages the site. The previous Bowling release and neighboring ZomBotany cards retain their own replay checks.
+
 ## ZomBotany Bowling
 
 The Pages workflow plays the expanded Bowling card with sound off. It also runs the first-version Bowling replay, the other ZomBotany challenges, and the existing browser and save checks before publishing.

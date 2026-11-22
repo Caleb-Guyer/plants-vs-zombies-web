@@ -24,6 +24,7 @@ RELEASES = {
     "zsroof": (895, 155, "ZombotanySurvival.cpp.o", "zsroof"),
     "zbowling": (897, 156, "ZomBotanyBowling.cpp.o", "zbowling"),
     "zpins": (897, 156, "ZomBotanyBowling.cpp.o", "zpins"),
+    "zwhack": (899, 157, "ZomBotanyWhack.cpp.o", "zwhack"),
 }
 CASES = {(name, speed, seed) for name in ("solution", "resume", "retry", "classic")
          for speed in (1, 2) for seed in (1729, 7331)}

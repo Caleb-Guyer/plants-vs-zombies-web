@@ -1,5 +1,9 @@
 # Current requirements
 
+## Whack a Sprout
+
+Whack a Sprout occupies the fifteenth slot on the ZomBotany page. Twelve graveyard waves use five plant-headed zombies, the original mallet, three native seed packets and the original night lawn. A hammer blow to a Jalapeño-head releases a lane of fire. Nut heads use their existing cracked shell artwork to show damage. Gravedigging, armor and wave progress survive Continue. Beating the original ZomBotany unlocks the card, and a clear awards its own trophy.
+
 ## ZomBotany Bowling
 
 The fourteenth card uses the original Bowling lawn, red release line, conveyor and rewards. Its twenty formations teach straight, banked and split shots against plant-headed opponents. Screen doors take frontal hits, Squash-heads intercept straight ordinary nuts, and Ice-shroom-heads stall light rollers nearby. Tall-nuts ram two separate targets. Pumpkins split toward the adjacent playable lanes. Continue retains the exact rollers, wave rules and first-version trophies.

@@ -123,11 +123,99 @@ def click_canvas(browser, x, y):
             {"type": "pointerUp", "button": 0}]}]})
 
 
+def whack_puff(browser, output):
+    # Track the Puff-shroom's purple cap on the lawn. Restricting the search to
+    # its former position after the swing also works when a second grave opens.
+    def read_lawn(frame, near=None):
+        result = browser.execute("""
+            const [png, near, done] = arguments;
+            (async () => {
+                const image = new Image();
+                image.src = 'data:image/png;base64,' + png;
+                await image.decode();
+                const ctx = new OffscreenCanvas(800,600).getContext('2d');
+                ctx.drawImage(image,0,0,800,600);
+                const x0 = near ? Math.max(140,near[0]-65) : 185;
+                const x1 = near ? Math.min(799,near[0]+65) : 799;
+                const y0 = near ? Math.max(74,near[1]-55) : 74;
+                const y1 = near ? Math.min(563,near[1]+55) : 563;
+                const w = x1-x0, h = y1-y0, pixels = ctx.getImageData(x0,y0,w,h).data;
+                const cap = new Uint8Array(w*h), stack = new Int32Array(w*h);
+                let orangePixels = 0;
+                for (let cell=0; cell<cap.length; cell++) {
+                    const i=cell*4, r=pixels[i], g=pixels[i+1], b=pixels[i+2];
+                    if (r>65 && r-g>30 && r-g<90 && r-b>=0 && r-b<22) cap[cell]=1;
+                    if (r>=210 && g>=45 && g<=165 && b<40 && r-g>60 && g-b>45) orangePixels++;
+                }
+                let best=null, largest=90;
+                for(let cell=0; cell<cap.length; cell++) {
+                    if(!cap[cell]) continue;
+                    cap[cell]=0;
+                    let top=1, count=0, sx=0, sy=0;
+                    stack[0]=cell;
+                    while(top) {
+                        const p=stack[--top], x=p%w, y=Math.floor(p/w);
+                        count++; sx+=x; sy+=y;
+                        for (const q of [x>0?p-1:-1,x+1<w?p+1:-1,p-w,p+w]) {
+                            if (q<0 || q>=cap.length || !cap[q]) continue;
+                            cap[q]=0; stack[top++]=q;
+                        }
+                    }
+                    if(count>largest) {
+                        largest=count;
+                        best=[Math.round(sx/count)+x0,Math.round(sy/count)+y0];
+                    }
+                }
+                return {cap:best, orange:orangePixels};
+            })().then(done,error=>done({error:String(error)}));
+        """, base64.b64encode(frame).decode(), near, asynchronous=True)
+        assert "error" not in result, result
+        return result
+
+    end = time.monotonic() + 45
+    while time.monotonic() < end:
+        before = browser.screenshot()
+        target = read_lawn(before)["cap"]
+        if target is None:
+            time.sleep(0.1)
+            continue
+        # Miss in the empty left margin. The same cap must still be on screen.
+        click_canvas(browser, 105, 100)
+        missed = browser.screenshot()
+        control = read_lawn(missed, target)
+        moving = control["cap"]
+        if moving is None:
+            continue
+        click_canvas(browser, moving[0], moving[1]+20)
+        impact = browser.screenshot()
+        # Check the original orange POW burst at the point of contact.
+        saw_pow = read_lawn(impact, moving)["orange"] > control["orange"] + 65
+        # The cursor draws a mallet. Move it clear before checking the kill.
+        canvas = browser.execute("const r=Module.canvas.getBoundingClientRect(); return [r.x+r.width*.12,r.y+r.height*.18]")
+        browser.request("POST", "/actions", {"actions":[{"type":"pointer","id":"mouse",
+            "parameters":{"pointerType":"mouse"},"actions":[{"type":"pointerMove","origin":"viewport",
+            "x":round(canvas[0]),"y":round(canvas[1])}]}]})
+        cutoff = time.monotonic() + 0.9
+        while time.monotonic() < cutoff:
+            after = browser.screenshot()
+            field = read_lawn(after, moving)
+            if field["orange"] > control["orange"] + 65:
+                saw_pow = True
+                impact = after
+            if field["cap"] is None and saw_pow:
+                if output:
+                    (output/"puff-before.png").write_bytes(missed)
+                    (output/"puff-whacked.png").write_bytes(impact)
+                return
+        time.sleep(0.1)
+    raise AssertionError("A deliberate mallet hit did not remove a visible Puff-shroom head")
+
+
 def play_opening(browser, output, mode="pool"):
     # Each reference is the average RGB across a 6-by-4 grid on the native 800-by-600 screen.
     # Sample stable artwork so menu movement and the pool's ripples can vary between frames.
     references = json.loads((ROOT / "tests/fixtures/zspool1-screens.json").read_bytes())
-    key = "zbowling" if mode in ("bowling", "pins") else "zs" + mode
+    key = {"bowling":"zbowling", "pins":"zbowling", "whack":"zwhack"}.get(mode, "zs"+mode)
     if mode != "pool":
         references.update(json.loads((ROOT / f"tests/fixtures/{key}1-screens.json").read_bytes()))
     if mode == "pins":
@@ -206,6 +294,12 @@ def play_opening(browser, output, mode="pool"):
     reach("menu", "title", (400,545))
     reach("minigames", "menu", (565,245))
     reach("family", "minigames", (562,581))
+    if mode == "whack":
+        reach("whackCard")
+        reach("whackLawn", "whackCard", (710,385))
+        whack_puff(browser, output)
+        assert browser.execute("return PVZAudio.isMuted()"), "Whack-a-Zombie test lost its mute"
+        return
     if mode in ("bowling", "pins"):
         reach("stripe", "family", (555,385))
         opening = [("readyNut", 2)]
@@ -337,8 +431,9 @@ def exercise(browser, site, scratch, profile, output, mode="pool"):
     action = {"pool": "planted Lily Pad", "fog": "Plantern cleared the upper water lane",
               "roof": "armed a Potato Mine in a newly planted Flower Pot",
               "bowling": "rolled a conveyor Wall-nut across the red line",
-              "pins": "rolled a Wall-nut, Tall-nut and Pumpkin from the conveyor"}[mode]
-    title = "ZomBotany Bowling" if mode in ("bowling", "pins") else mode.title()
+              "pins": "rolled a Wall-nut, Tall-nut and Pumpkin from the conveyor",
+              "whack": "missed and then struck a rising Puff-shroom head with the mallet"}[mode]
+    title = {"bowling":"ZomBotany Bowling", "pins":"ZomBotany Bowling", "whack":"Whack a Sprout"}.get(mode, mode.title())
     print(f"PASS muted {title} card, {action}, cold save roundtrip ({sha256(profile).hexdigest()[:12]}).")
 
 
@@ -346,20 +441,22 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     driver = shutil.which("chromedriver") or shutil.which("chromedriver", path=os.getenv("CHROMEWEBDRIVER", ""))
     parser.add_argument("--driver", default=driver or shutil.which("msedgedriver"))
-    parser.add_argument("--mode", choices=("pool", "fog", "roof", "bowling", "pins"), default="pool")
+    parser.add_argument("--mode", choices=("pool", "fog", "roof", "bowling", "pins", "whack"), default="pool")
     parser.add_argument("--output", type=Path, help="Keep a screenshot of the native canvas")
     args = parser.parse_args()
     if not args.driver:
         parser.error("A matching ChromeDriver or Microsoft Edge WebDriver is required")
-    key = {"bowling": "zbowling", "pins": "zpins"}.get(args.mode, "zs" + args.mode)
+    key = {"bowling": "zbowling", "pins": "zpins", "whack":"zwhack"}.get(args.mode, "zs" + args.mode)
     profile = (ROOT / f"tests/fixtures/{key}1-earned.dat").read_bytes()
     trophies = b"ZSP1" + struct.pack("<I", 5)
-    if args.mode in ("fog", "roof", "bowling", "pins"):
+    if args.mode in ("fog", "roof", "bowling", "pins", "whack"):
         trophies += b"ZSF1" + struct.pack("<I", 5)
-    if args.mode in ("roof", "bowling", "pins"):
+    if args.mode in ("roof", "bowling", "pins", "whack"):
         trophies += b"ZSR1" + struct.pack("<I", 5)
-    if args.mode in ("bowling", "pins"):
+    if args.mode in ("bowling", "pins", "whack"):
         trophies += b"ZBW1" + struct.pack("<I", 1)
+    if args.mode == "whack":
+        trophies += b"ZWH1" + struct.pack("<I", 1)
     assert profile.startswith(struct.pack("<I", 12)) and profile.endswith(trophies)
     with tempfile.TemporaryDirectory(prefix=f"pvz-{args.mode}-browser-", ignore_cleanup_errors=True) as temp:
         scratch = Path(temp)

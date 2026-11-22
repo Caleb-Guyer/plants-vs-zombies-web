@@ -1,0 +1,13 @@
+{
+  "id": "0.2.6-web-zwhack.1",
+  "sourceFiles": 899,
+  "productionObjects": 157,
+  "normalReceiptSha256": "e795a95d84dd9632a100dd2ca266bfbb29c2df0e5262c83c424f801fae7a6416",
+  "reportSha256": "a75f87f866084b169046ad44220f4a1f4c042aa043ea2fecc6e7e5e6dcca49fe",
+  "driverBuildSha256": "42f8828312b233535c28c65ede23524a376e8d45e1c9b9ed14d52d742b209b19",
+  "sourceSha256": "05e395c0bd8f08c5f8f09926c8dfc727a62b0b0acb64f66d015fe70b498e6f88",
+  "patchSha256": "8d03a141367797ea59f017ab6b74cfecc018dd85c1a54a6c031d73bcfb026860",
+  "jsSha256": "6375026ae90afe31565b59ac0848923dc41ae15e2c147540efbeab965e8d0413",
+  "wasmSha256": "a79b48ab78e23f7b90ef3d1ad0496cd9010d461543afcaf2abad62ce57a7b871",
+  "historicalBrowserSha256": "e5a4f973da4ddaef37bf7ca646258773a323dd5aa681a4003b89336ea3536255"
+}

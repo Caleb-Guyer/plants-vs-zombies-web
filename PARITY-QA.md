@@ -1,5 +1,9 @@
 # Browser parity and QA record
 
+## Whack a Sprout
+
+Run `python tests/zwhack.py --play` to play the twelve waves at 1× and 2× with sound off, check hammer damage and lane fire, resume a cracked shell and retry after a loss. Run `python tests/pool-browser.py --mode whack` to open the fifteenth card, swing the mallet on the night lawn, and reload an earned trophy in a muted browser.
+
 ## ZomBotany Bowling
 
 Run `python tests/zpins.py --play` for the muted replay of the expanded Bowling card at 1× and 2×. It exercises physical door impacts, Squash interceptions, frost and thaw, Tall-nut hits, Pumpkin splits, in-flight saves, legacy Continue, retries and rewards. The earlier Bowling test uses its original engine and fixtures.

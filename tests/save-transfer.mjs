@@ -76,6 +76,12 @@ const expandedBowling = fs.readFileSync(new URL('fixtures/zpins1-earned.dat',imp
 assert.equal(expandedBowling.readUInt32LE(),12);
 assert.deepEqual(expandedBowling.subarray(-32),earnedBowling.subarray(-32));
 originals.set('/saves/userdata/user900006.dat',expandedBowling);
+const earnedWhack = fs.readFileSync(new URL('fixtures/zwhack1-earned.dat',import.meta.url));
+assert.equal(earnedWhack.readUInt32LE(),12);
+assert.deepEqual(earnedWhack.subarray(-40,-8),expandedBowling.subarray(-32));
+assert.equal(earnedWhack.subarray(-8,-4).toString('ascii'),'ZWH1');
+assert.equal(earnedWhack.readUInt32LE(earnedWhack.length-4),1);
+originals.set('/saves/userdata/user900007.dat',earnedWhack);
 originals.set('/saves/userdata/auxiliary/notes.bin',Buffer.from([0,251,255,4]));
 originals.set('/saves/userdata/qol-settings-900001.txt',Buffer.from('PVZQOL 1\n1 1 1 1\n49 50 51 52 53 54 55 56 57 48 83 70\n'));
 originals.set('/saves/userdata/qol-decks-900001.txt',Buffer.from('PVZDECKS 1\n8\n"Day" 1 0 -1\n"Night" 0\n"Pool" 0\n"Roof" 0\n"Deck 5" 0\n"Deck 6" 0\n"Deck 7" 0\n"Deck 8" 0\n'));

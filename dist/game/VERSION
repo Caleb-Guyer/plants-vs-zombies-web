@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-zpins.1
-Adds Tall-nut and Pumpkin bowling packets, shielded Wall-nut-heads, Squash interceptors and Ice-shroom-heads to ZomBotany Bowling. Earlier boards retain their original lineup and deliveries.
-Engine JavaScript SHA-256: fedeef354c836814255a641013620883cbda6a6814c6dae38ac4c5051e5551ac
-Engine WASM SHA-256: 623a540ed430edb887ce4327f61fadb5980a1889d22cbab98cb057eeb0af21b1
+PvZ-Portable 0.2.6-web-zwhack.1
+Adds Whack a Sprout as the fifteenth ZomBotany card. Use the mallet against plant-headed zombies in the nighttime graveyard.
+Engine JavaScript SHA-256: 6375026ae90afe31565b59ac0848923dc41ae15e2c147540efbeab965e8d0413
+Engine WASM SHA-256: a79b48ab78e23f7b90ef3d1ad0496cd9010d461543afcaf2abad62ce57a7b871
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.

@@ -1,5 +1,13 @@
 # Plants vs. Zombies — browser playtest
 
+## Whack a Sprout
+
+Beat the original ZomBotany to unlock **Whack a Sprout**, the fifteenth card. Swing the mallet as plant-headed zombies rise from the night lawn. Puff-shroom and Peashooter heads take one hit, Wall-nut heads take two and Tall-nut heads take three. Their shells crack as you hit them.
+
+When a Jalapeño-head rises alongside an armored head, let them surface together and whack the pepper to burn the whole row. The original Potato Mine, Grave Buster and Ice-shroom packets give you another use for the sun you collect. Finish twelve waves to earn a trophy.
+
+[Play on GitHub Pages](https://caleb-guyer.github.io/plants-vs-zombies-web/).
+
 ## ZomBotany Bowling
 
 Beat the original ZomBotany to unlock **ZomBotany Bowling**, the fourteenth card. Bowl from the three columns behind the red line. In twenty waves, Wall-nut-heads carry screen doors in front of their teammates, Squash-heads leap onto straight Wall-nuts, and Ice-shroom-heads freeze nearby light rollers when struck.

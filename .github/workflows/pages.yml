@@ -30,6 +30,10 @@ jobs:
         run: python bundle-game-assets.py --verify-only
       - name: Verify browser shell and corresponding source
         run: npm run check
+      - name: Play Whack a Sprout and its control levels with sound off
+        run: python tests/zwhack.py --play
+      - name: Swing the mallet on the night lawn in a muted browser
+        run: python tests/pool-browser.py --mode whack
       - name: Play the expanded ZomBotany Bowling rules with sound off
         run: python tests/zpins.py --play
       - name: Bowl the new Tall-nut and Pumpkin in a muted browser
