@@ -99,6 +99,7 @@ assert.deepEqual(changed.sort(), [
   "src/Lawn/GridItem.cpp", // Vase Ambush routing; original methods are checked by its source gate.
   "src/Lawn/Plant.cpp",
   "src/Lawn/Projectile.cpp",
+  "src/Lawn/Projectile.h", // Both Kernel-pult and Twist butter use the native lob trajectory.
   "src/Lawn/SeedPacket.cpp",
   "src/Lawn/System/PlayerInfo.cpp",
   "src/Lawn/System/PlayerInfo.h",
