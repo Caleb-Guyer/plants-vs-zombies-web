@@ -1,7 +1,7 @@
 """Play ZomBotany cards in a muted browser and restore their native trophies."""
 import argparse
 import base64
-from contextlib import contextmanager
+from contextlib import contextmanager, nullcontext
 from functools import partial
 from hashlib import sha256
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
@@ -20,6 +20,7 @@ from urllib.request import build_opener, ProxyHandler, Request
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
+CLASSIC_BOWLING = ("classic-one", "classic-two")
 ELEMENT = "element-6066-11e4-a52e-4f735466cecf"
 DIRECT = build_opener(ProxyHandler({}))
 
@@ -216,10 +217,14 @@ def play_opening(browser, output, mode="pool"):
     # Sample stable artwork so menu movement and the pool's ripples can vary between frames.
     references = json.loads((ROOT / "tests/fixtures/zspool1-screens.json").read_bytes())
     key = {"bowling":"zbowling", "pins":"zbowling", "whack":"zwhack", "twist":"ztwist"}.get(mode, "zs"+mode)
+    if mode in CLASSIC_BOWLING:
+        key = "zbowling"
     if mode != "pool":
         references.update(json.loads((ROOT / f"tests/fixtures/{key}1-screens.json").read_bytes()))
     if mode == "pins":
         references.update(json.loads((ROOT / "tests/fixtures/zpins1-screens.json").read_bytes()))
+    if mode in CLASSIC_BOWLING:
+        references.update(json.loads((ROOT / "tests/fixtures/wbtab1-screens.json").read_bytes()))
     def inspect(frame):
         return browser.execute("""
             const [png, references, done] = arguments;
@@ -272,7 +277,13 @@ def play_opening(browser, output, mode="pool"):
 
     reach("menu", "title", (400,545))
     reach("minigames", "menu", (565,245))
-    reach("family", "minigames", (562,581))
+    if mode in CLASSIC_BOWLING:
+        reach("emptyThirdSlot", "minigames", (415,581))
+        reach("bowlingTitle")
+        reach("originalCards")
+        reach("bowlingTrophies")
+    else:
+        reach("family", "minigames", (562,581))
     if mode == "twist":
         reach("twistCard")
         reach("twistLawn", "twistCard", (90,505))
@@ -297,8 +308,11 @@ def play_opening(browser, output, mode="pool"):
         whack_puff(browser, output)
         assert browser.execute("return PVZAudio.isMuted()"), "Whack-a-Zombie test lost its mute"
         return
-    if mode in ("bowling", "pins"):
-        reach("stripe", "family", (555,385))
+    if mode in ("bowling", "pins", *CLASSIC_BOWLING):
+        if mode in CLASSIC_BOWLING:
+            reach("stripe", "emptyThirdSlot", (90 if mode == "classic-one" else 245,150))
+        else:
+            reach("stripe", "family", (555,385))
         opening = [("readyNut", 2)]
         if mode == "pins":
             opening.extend([("readyTall", 1), ("readyPumpkin", 3)])
@@ -447,6 +461,8 @@ def exercise(browser, site, scratch, profile, output, mode="pool"):
     action = {"pool": "planted Lily Pad", "fog": "Plantern cleared the upper water lane",
               "roof": "armed a Potato Mine in a newly planted Flower Pot",
               "bowling": "rolled a conveyor Wall-nut across the red line",
+              "classic-one": "rolled a Wall-nut from the first original card",
+              "classic-two": "rolled a Wall-nut from the second original card",
               "pins": "rolled a Wall-nut, Tall-nut and Pumpkin from the conveyor",
               "twist": "scored a clockwise rotation and opened the seed shop",
               "whack": "missed and then struck a rising Puff-shroom head with the mallet"}[mode]
@@ -458,12 +474,15 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     driver = shutil.which("chromedriver") or shutil.which("chromedriver", path=os.getenv("CHROMEWEBDRIVER", ""))
     parser.add_argument("--driver", default=driver or shutil.which("msedgedriver"))
-    parser.add_argument("--mode", choices=("pool", "fog", "roof", "bowling", "pins", "whack", "twist"), default="pool")
+    parser.add_argument("--mode", choices=("pool", "fog", "roof", "bowling", "pins", "whack", "twist", *CLASSIC_BOWLING), default="pool")
+    parser.add_argument("--site", help="Exercise this published game in an isolated browser profile")
     parser.add_argument("--output", type=Path, help="Keep a screenshot of the native canvas")
     args = parser.parse_args()
     if not args.driver:
         parser.error("A matching ChromeDriver or Microsoft Edge WebDriver is required")
     key = {"bowling": "zbowling", "pins": "zpins", "whack":"zwhack", "twist":"ztwist"}.get(args.mode, "zs" + args.mode)
+    if args.mode in CLASSIC_BOWLING:
+        key = "wbtab"
     profile = (ROOT / f"tests/fixtures/{key}1-earned.dat").read_bytes()
     trophies = b"ZSP1" + struct.pack("<I", 5)
     if args.mode in ("fog", "roof", "bowling", "pins", "whack", "twist"):
@@ -476,10 +495,15 @@ def main():
         trophies += b"ZWH1" + struct.pack("<I", 1)
     if args.mode == "twist":
         trophies += b"ZTW1" + struct.pack("<I", 1)
+    if args.mode in CLASSIC_BOWLING:
+        previous = (ROOT / "tests/fixtures/zfinal1-earned.dat").read_bytes()
+        trophies = previous[-80:]
+        assert len(previous) == len(profile)
     assert profile.startswith(struct.pack("<I", 12)) and profile.endswith(trophies)
     with tempfile.TemporaryDirectory(prefix=f"pvz-{args.mode}-browser-", ignore_cleanup_errors=True) as temp:
         scratch = Path(temp)
-        with serve_site(ROOT / "dist") as site, launch_browser(args.driver, scratch / "profile") as browser:
+        site_context = nullcontext(args.site.rstrip("/")) if args.site else serve_site(ROOT / "dist")
+        with site_context as site, launch_browser(args.driver, scratch / "profile") as browser:
             exercise(browser, site, scratch, profile, args.output, mode=args.mode)
 
 

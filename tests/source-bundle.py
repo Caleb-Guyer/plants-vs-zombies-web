@@ -61,7 +61,8 @@ class HistoricalBrowserTests(unittest.TestCase):
                                  (chain.PINS, roof_parents + (chain.ROOF, chain.BOWLING)),
                                  (chain.WHACK, roof_parents + (chain.ROOF, chain.BOWLING, chain.PINS)),
                                  (chain.TWIST, roof_parents + (chain.ROOF, chain.BOWLING, chain.PINS, chain.WHACK)),
-                                 (chain.FINAL, roof_parents + (chain.ROOF, chain.BOWLING, chain.PINS, chain.WHACK, chain.TWIST))):
+                                 (chain.FINAL, roof_parents + (chain.ROOF, chain.BOWLING, chain.PINS, chain.WHACK, chain.TWIST)),
+                                 (chain.BOWLING_TAB, roof_parents + (chain.ROOF, chain.BOWLING, chain.PINS, chain.WHACK, chain.TWIST, chain.FINAL))):
             with self.subTest(release=release), tempfile.TemporaryDirectory() as folder:
                 root = Path(folder)
                 expected = {root / chain.DELTA_CAPSULES[release]}
@@ -93,7 +94,8 @@ class HistoricalSourceSuffixTests(unittest.TestCase):
                                           (chain.PINS, chain.ROOF, chain.SHARED_BASE), (chain.PINS, chain.BOWLING, {}),
                                           (chain.WHACK, chain.BOWLING, chain.SHARED_BASE), (chain.WHACK, chain.PINS, {}),
                                           (chain.TWIST, chain.PINS, chain.SHARED_BASE), (chain.TWIST, chain.WHACK, {}),
-                                          (chain.FINAL, chain.WHACK, chain.SHARED_BASE), (chain.FINAL, chain.TWIST, {})):
+                                          (chain.FINAL, chain.WHACK, chain.SHARED_BASE), (chain.FINAL, chain.TWIST, {}),
+                                          (chain.BOWLING_TAB, chain.TWIST, chain.SHARED_BASE), (chain.BOWLING_TAB, chain.FINAL, {})):
             engine = {'id': child_id, 'sourceArchiveBase': base,
                       'parent': {'id': parent_id, 'sourceArchiveBase': chain.SHARED_BASE}}
             with self.subTest(parent=parent_id), tempfile.TemporaryDirectory() as folder:
@@ -576,7 +578,7 @@ class SourceBundle(unittest.TestCase):
         self.assertEqual(combined[INDEX], self.manifest_bytes)
         packed = combined[LITERALS + '.xz']
         self.assertEqual(codec.decode_packed_literals(packed, self.manifest['literals']), self.literals)
-        if ENGINE['id'] in (chain.PINS, chain.WHACK, chain.TWIST, chain.FINAL):
+        if ENGINE['id'] in (chain.PINS, chain.WHACK, chain.TWIST, chain.FINAL, chain.BOWLING_TAB):
             header = lzma.LZMADecompressor().decompress(packed, max_length=codec.DRIVER_HEADER.size)
             self.assertEqual(codec.DRIVER_HEADER.unpack(header), (codec.DRIVER_MAGIC, 10))
         self.assertEqual({name: combined[name] for name in (CURRENT_INDEX, CURRENT_PAYLOAD)}, self.current_transport)

@@ -1,0 +1,308 @@
+diff --git a/CMake/ProjectVersion.cmake b/CMake/ProjectVersion.cmake
+index be5e858..78138f8 100644
+--- a/CMake/ProjectVersion.cmake
++++ b/CMake/ProjectVersion.cmake
+@@ -66,6 +66,6 @@ if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
+ endif()
+ 
+ # Browser release identity; keep binary and corresponding-source manifests aligned.
+-set(PVZP_VERSION "0.2.6-web-zfinal.1")
++set(PVZP_VERSION "0.2.6-web-wbtab.1")
+ set(PVZP_VERSION_PLAIN "0.2.6")
+ configure_file("${PROJECT_SOURCE_DIR}/CMake/ProjectVersion.h.in" "${PROJECT_BINARY_DIR}/ProjectVersion.h" @ONLY)
+diff --git a/src/ConstEnums.h b/src/ConstEnums.h
+index 90c9133..fc31a41 100644
+--- a/src/ConstEnums.h
++++ b/src/ConstEnums.h
+@@ -147,7 +147,8 @@ enum ChallengePage : int32_t
+ 	CHALLENGE_PAGE_PUZZLE = 3,
+ 	CHALLENGE_PAGE_BONUS = 4,
+ 	CHALLENGE_PAGE_ZOMBOTANY = 5,
+-	MAX_CHALLANGE_PAGES = 5
++	CHALLENGE_PAGE_BOWLING = 6,
++	MAX_CHALLANGE_PAGES = 5 // Number of original numbered page buttons.
+ };
+ enum ChallengeState : int32_t
+ {
+diff --git a/src/Lawn/Widget/ChallengeScreen.cpp b/src/Lawn/Widget/ChallengeScreen.cpp
+index 4ffa3da..888e1bf 100644
+--- a/src/Lawn/Widget/ChallengeScreen.cpp
++++ b/src/Lawn/Widget/ChallengeScreen.cpp
+@@ -203,20 +203,19 @@ ChallengeScreen::ChallengeScreen(LawnApp* theApp, ChallengePage thePage)
+ 	mBackButton->SetLabelColor(Color(42, 42, 90));
+ 	mBackButton->SetLabelHiliteColor(Color(42, 42, 90));
+ 	mBackButton->Resize(18, 568, 111, 26);
+-	mBonusButton = MakeNewButton(ChallengeScreen::ChallengeScreen_Bonus, this, "Bonus", nullptr, Sexy::IMAGE_SEEDCHOOSER_BUTTON2,
+-		Sexy::IMAGE_SEEDCHOOSER_BUTTON2_GLOW, Sexy::IMAGE_SEEDCHOOSER_BUTTON2_GLOW);
+-	mBonusButton->mTextDownOffsetX = 1;
+-	mBonusButton->mTextDownOffsetY = 1;
+-	mBonusButton->SetLabelColor(Color(42, 42, 90));
+-	mBonusButton->SetLabelHiliteColor(Color(42, 42, 90));
+-	mBonusButton->Resize(650, 568, 111, 26);
+-	mZombotanyButton = MakeNewButton(ChallengeScreen::ChallengeScreen_Zombotany, this, "Zombotany", nullptr, Sexy::IMAGE_SEEDCHOOSER_BUTTON2,
+-		Sexy::IMAGE_SEEDCHOOSER_BUTTON2_GLOW, Sexy::IMAGE_SEEDCHOOSER_BUTTON2_GLOW);
+-	mZombotanyButton->mTextDownOffsetX = 1;
+-	mZombotanyButton->mTextDownOffsetY = 1;
+-	mZombotanyButton->SetLabelColor(Color(42, 42, 90));
+-	mZombotanyButton->SetLabelHiliteColor(Color(42, 42, 90));
+-	mZombotanyButton->Resize(505, 568, 111, 26);
++	auto makeTab = [&](int id, const char* title, int x) {
++		auto button = MakeNewButton(id, this, title, nullptr, Sexy::IMAGE_SEEDCHOOSER_BUTTON2,
++			Sexy::IMAGE_SEEDCHOOSER_BUTTON2_GLOW, Sexy::IMAGE_SEEDCHOOSER_BUTTON2_GLOW);
++		button->mTextDownOffsetX = 1;
++		button->mTextDownOffsetY = 1;
++		button->SetLabelColor(Color(42, 42, 90));
++		button->SetLabelHiliteColor(Color(42, 42, 90));
++		button->Resize(x, 568, 111, 26);
++		return button;
++	};
++	mBonusButton = makeTab(ChallengeScreen_Bonus, "Bonus", 650);
++	mZombotanyButton = makeTab(ChallengeScreen_Zombotany, "Zombotany", 505);
++	mBowlingButton = makeTab(ChallengeScreen_Bowling, "Bowling", 360);
+ 
+ 	for (int aPageIdx = CHALLENGE_PAGE_SURVIVAL; aPageIdx < MAX_CHALLANGE_PAGES; aPageIdx++)
+ 	{
+@@ -335,6 +334,28 @@ void ChallengeScreen::SetUnlockChallengeIndex(ChallengePage thePage, bool theIsI
+ 	}
+ }
+ 
++namespace
++{
++bool IsFamilyPage(ChallengePage page)
++{
++	return page == CHALLENGE_PAGE_ZOMBOTANY || page == CHALLENGE_PAGE_BOWLING;
++}
++
++int FamilySlot(ChallengePage page, const ChallengeDefinition& def)
++{
++	if (def.mPage == page) return def.mRow * 5 + def.mCol;
++	if (page == CHALLENGE_PAGE_BOWLING) {
++		if (def.mChallengeMode == GAMEMODE_CHALLENGE_WALLNUT_BOWLING) return 0;
++		if (def.mChallengeMode == GAMEMODE_CHALLENGE_WALLNUT_BOWLING_2) return 1;
++	}
++	if (page == CHALLENGE_PAGE_ZOMBOTANY) {
++		if (def.mChallengeMode == GAMEMODE_CHALLENGE_WAR_AND_PEAS) return 0;
++		if (def.mChallengeMode == GAMEMODE_CHALLENGE_WAR_AND_PEAS_2) return 1;
++	}
++	return -1;
++}
++}
++
+ int ChallengeScreen::MoreTrophiesNeeded(int theChallengeIndex)
+ {
+ 	const ChallengeDefinition& aDef = GetChallengeDefinition(theChallengeIndex);
+@@ -354,7 +375,7 @@ int ChallengeScreen::MoreTrophiesNeeded(int theChallengeIndex)
+ 			mApp->HasBeatenChallenge(GAMEMODE_CHALLENGE_ZOMBOTANY_3) ? 1 : 2;
+ 	if (aDef.mPage == CHALLENGE_PAGE_BONUS || aDef.mPage == CHALLENGE_PAGE_ZOMBOTANY)
+ 		return 0;
+-	const ChallengePage aAccessPage = mPageIndex == CHALLENGE_PAGE_ZOMBOTANY ? aDef.mPage : mPageIndex;
++	const ChallengePage aAccessPage = IsFamilyPage(mPageIndex) ? aDef.mPage : mPageIndex;
+ 	if (mApp->mGameMode == GAMEMODE_UPSELL && mApp->mGameScene == SCENE_LEVEL_INTRO)
+ 	{
+ 		return aDef.mChallengeMode == GAMEMODE_CHALLENGE_FINAL_BOSS ? 1 : 0;
+@@ -461,26 +482,24 @@ bool ChallengeScreen::ShowPageButtons()
+ void ChallengeScreen::UpdateButtons()
+ {
+ 	const bool aBonusPage = mPageIndex == CHALLENGE_PAGE_BONUS;
+-	const bool aFamilyPage = mPageIndex == CHALLENGE_PAGE_ZOMBOTANY;
++	const bool aFamilyPage = IsFamilyPage(mPageIndex);
+ 	mBonusButton->mVisible = aBonusPage || aFamilyPage || mPageIndex == CHALLENGE_PAGE_CHALLENGE;
+ 	mBonusButton->SetLabel(aBonusPage || aFamilyPage ? "Mini-Games" : "Bonus");
+ 	mZombotanyButton->mVisible = mBonusButton->mVisible;
+-	mZombotanyButton->SetLabel(aFamilyPage ? "Bonus" : "Zombotany");
+-	for (int aChallengeMode = 0; aChallengeMode < NUM_CHALLENGE_MODES; aChallengeMode++)
++	mZombotanyButton->SetLabel(mPageIndex == CHALLENGE_PAGE_ZOMBOTANY ? "Bonus" : "Zombotany");
++	mBowlingButton->mVisible = mBonusButton->mVisible;
++	mBowlingButton->SetLabel(mPageIndex == CHALLENGE_PAGE_BOWLING ? "Bonus" : "Bowling");
++	for (int index = 0; index < NUM_CHALLENGE_MODES; ++index)
+ 	{
+-		const ChallengeDefinition& aDef = GetChallengeDefinition(aChallengeMode);
+-        const int aFamilySlot = aDef.mChallengeMode == GAMEMODE_CHALLENGE_WAR_AND_PEAS ? 0 :
+-            aDef.mChallengeMode == GAMEMODE_CHALLENGE_WAR_AND_PEAS_2 ? 1 :
+-            aDef.mPage == CHALLENGE_PAGE_ZOMBOTANY ? aDef.mRow * 5 + aDef.mCol : -1;
+-		ButtonWidget* aButton = mChallengeButtons[aChallengeMode].get();
+-		aButton->mVisible = aFamilyPage ? aFamilySlot >= 0 : aDef.mPage == mPageIndex;
+-		// The family aliases the existing buttons and records. Returning restores
+-		// the exact original Mini-Games positions instead of creating new slots.
+-		if (aFamilySlot >= 0)
+-		{
+-			if (aFamilyPage) aButton->Resize(38 + (aFamilySlot % 5) * 155, 93 + (aFamilySlot / 5) * 119, 104, 115);
+-			else aButton->Resize(38 + aDef.mCol * 155, 93 + aDef.mRow * 119, 104, 115);
+-		}
++		const auto& def = GetChallengeDefinition(index);
++		auto& button = *mChallengeButtons[index];
++		const int slot = aFamilyPage ? FamilySlot(mPageIndex, def) : -1;
++		button.mVisible = aFamilyPage ? slot >= 0 : def.mPage == mPageIndex;
++		if (!button.mVisible) continue;
++		if (aFamilyPage)
++			button.Resize(38 + (slot % 5) * 155, 93 + (slot / 5) * 119, 104, 115);
++		else if (def.mPage == CHALLENGE_PAGE_CHALLENGE)
++			button.Resize(38 + def.mCol * 155, 93 + def.mRow * 119, 104, 115);
+ 	}
+ 	for (int aPage = 0; aPage < MAX_CHALLANGE_PAGES; aPage++)
+ 	{
+@@ -1111,7 +1130,7 @@ void ChallengeScreen::DrawButton(Graphics* g, int theChallengeIndex)
+ 			aPosY++;
+ 		}
+ 
+-		if (mPageIndex == CHALLENGE_PAGE_ZOMBOTANY || AccomplishmentsNeeded(theChallengeIndex) <= 1)
++		if (IsFamilyPage(mPageIndex) || AccomplishmentsNeeded(theChallengeIndex) <= 1)
+ 		{
+ 			// draw the minigame icon on the button
+ 			if (aChallengeButton->mDisabled)
+@@ -1341,19 +1360,27 @@ void ChallengeScreen::Draw(Graphics* g)
+ 		mPageIndex == CHALLENGE_PAGE_SURVIVAL ? "[PICK_AREA]" :
+ 		mPageIndex == CHALLENGE_PAGE_BONUS ? "Bonus" :
+ 		mPageIndex == CHALLENGE_PAGE_ZOMBOTANY ? "Zombotany" :
++		mPageIndex == CHALLENGE_PAGE_BOWLING ? "[WALL_NUT_BOWLING]" :
+ 		mPageIndex == CHALLENGE_PAGE_PUZZLE ? "[SCARY_POTTER]" : "[PICK_CHALLENGE]";
+ 	PvzpDrawString(g, aTitleString, 400, 58, Sexy::FONT_HOUSEOFTERROR28,
+ 		Color(220, 220, 220), DS_ALIGN_CENTER);
+ 
+-    int aTrophiesGot = mApp->GetNumTrophies(mPageIndex);
+-    if (mPageIndex == CHALLENGE_PAGE_ZOMBOTANY)
+-    {
+-        // The first two cards also live on the original Mini-Games page.
+-        aTrophiesGot += mApp->HasBeatenChallenge(GAMEMODE_CHALLENGE_WAR_AND_PEAS) +
+-                        mApp->HasBeatenChallenge(GAMEMODE_CHALLENGE_WAR_AND_PEAS_2);
+-    }
+-    int aTrophiesTotal = mPageIndex == CHALLENGE_PAGE_SURVIVAL ? 10 : mPageIndex == CHALLENGE_PAGE_CHALLENGE ||
+-        mPageIndex == CHALLENGE_PAGE_ZOMBOTANY ? 20 : mPageIndex == CHALLENGE_PAGE_PUZZLE ? 18 : 0;
++	int aTrophiesGot = 0;
++	int aTrophiesTotal = 0;
++	if (IsFamilyPage(mPageIndex))
++	{
++		for (const auto& def : gChallengeDefs) {
++			if (FamilySlot(mPageIndex, def) < 0) continue;
++			++aTrophiesTotal;
++			if (mApp->HasBeatenChallenge(def.mChallengeMode)) ++aTrophiesGot;
++		}
++	}
++	else
++	{
++		aTrophiesGot = mApp->GetNumTrophies(mPageIndex);
++		aTrophiesTotal = mPageIndex == CHALLENGE_PAGE_SURVIVAL ? 10 :
++			mPageIndex == CHALLENGE_PAGE_CHALLENGE ? 20 : mPageIndex == CHALLENGE_PAGE_PUZZLE ? 18 : 0;
++	}
+ 	if (aTrophiesTotal > 0)
+ 	{
+ 		std::string aTrophyString = std::format("{}/{}", aTrophiesGot, aTrophiesTotal);
+@@ -1406,6 +1433,7 @@ void ChallengeScreen::AddedToManager(WidgetManager* theWidgetManager)
+ 	AddWidget(mBackButton.get());
+ 	AddWidget(mBonusButton.get());
+ 	AddWidget(mZombotanyButton.get());
++	AddWidget(mBowlingButton.get());
+ 	for (const std::unique_ptr<ButtonWidget>& aButton : mPageButton) AddWidget(aButton.get());
+ 	for (const std::unique_ptr<ButtonWidget>& aButton : mChallengeButtons) AddWidget(aButton.get());
+ }
+@@ -1416,6 +1444,7 @@ void ChallengeScreen::RemovedFromManager(WidgetManager* theWidgetManager)
+ 	RemoveWidget(mBackButton.get());
+ 	RemoveWidget(mBonusButton.get());
+ 	RemoveWidget(mZombotanyButton.get());
++	RemoveWidget(mBowlingButton.get());
+ 	for (const std::unique_ptr<ButtonWidget>& aButton : mPageButton) RemoveWidget(aButton.get());
+ 	for (const std::unique_ptr<ButtonWidget>& aButton : mChallengeButtons) RemoveWidget(aButton.get());
+ }
+@@ -1433,29 +1462,24 @@ void ChallengeScreen::ButtonDepress(int theId)
+ 		mApp->DoBackToMain();
+ 		return;
+ 	}
+-	if (theId == ChallengeScreen::ChallengeScreen_Bonus)
++	if (theId == ChallengeScreen_Bonus || theId == ChallengeScreen_Zombotany || theId == ChallengeScreen_Bowling)
+ 	{
+-		if (mPageIndex == CHALLENGE_PAGE_CHALLENGE || mPageIndex == CHALLENGE_PAGE_BONUS || mPageIndex == CHALLENGE_PAGE_ZOMBOTANY)
+-		{
++		if (!mBonusButton->mVisible) return;
++		if (theId == ChallengeScreen_Bonus)
+ 			mPageIndex = mPageIndex == CHALLENGE_PAGE_CHALLENGE ? CHALLENGE_PAGE_BONUS : CHALLENGE_PAGE_CHALLENGE;
+-			UpdateButtons();
+-		}
+-		return;
+-	}
+-
+-	if (theId == ChallengeScreen::ChallengeScreen_Zombotany)
+-	{
+-		if (mPageIndex == CHALLENGE_PAGE_CHALLENGE || mPageIndex == CHALLENGE_PAGE_BONUS || mPageIndex == CHALLENGE_PAGE_ZOMBOTANY)
++		else
+ 		{
+-			mPageIndex = mPageIndex == CHALLENGE_PAGE_ZOMBOTANY ? CHALLENGE_PAGE_BONUS : CHALLENGE_PAGE_ZOMBOTANY;
+-			UpdateButtons();
++			const auto target = theId == ChallengeScreen_Bowling ? CHALLENGE_PAGE_BOWLING : CHALLENGE_PAGE_ZOMBOTANY;
++			mPageIndex = mPageIndex == target ? CHALLENGE_PAGE_BONUS : target;
+ 		}
++		UpdateButtons();
+ 		return;
+ 	}
+ 
+ 	int aChallengeMode = theId - ChallengeScreen::ChallengeScreen_Mode;
+ 	if (aChallengeMode >= 0 && aChallengeMode < NUM_CHALLENGE_MODES)
+ 	{
++		mApp->mReturnToBowlingTab = mPageIndex == CHALLENGE_PAGE_BOWLING;
+ 		mApp->KillChallengeScreen();
+ 		mApp->PreNewGame((GameMode)(aChallengeMode + 1), true);
+ 		return;
+@@ -1488,7 +1512,7 @@ void ChallengeScreen::UpdateToolTip()
+ 	for (int aChallengeMode = 0; aChallengeMode < NUM_CHALLENGE_MODES; aChallengeMode++)
+ 	{
+ 		const ChallengeDefinition& aDef = GetChallengeDefinition(aChallengeMode);
+-		const ChallengePage aAccessPage = mPageIndex == CHALLENGE_PAGE_ZOMBOTANY ? aDef.mPage : mPageIndex;
++		const ChallengePage aAccessPage = IsFamilyPage(mPageIndex) ? aDef.mPage : mPageIndex;
+ 		ButtonWidget* aChallengeButton = mChallengeButtons[aChallengeMode].get();
+ 		if (aChallengeButton->mVisible && aChallengeButton->mDisabled &&
+ 			aChallengeButton->Contains(mApp->mWidgetManager->mLastMouseX, mApp->mWidgetManager->mLastMouseY) &&
+diff --git a/src/Lawn/Widget/ChallengeScreen.h b/src/Lawn/Widget/ChallengeScreen.h
+index 4d758b5..20c573e 100644
+--- a/src/Lawn/Widget/ChallengeScreen.h
++++ b/src/Lawn/Widget/ChallengeScreen.h
+@@ -42,6 +42,7 @@ private:
+ 		ChallengeScreen_Back = 100,
+ 		ChallengeScreen_Bonus,
+ 		ChallengeScreen_Zombotany,
++		ChallengeScreen_Bowling,
+ 		ChallengeScreen_Mode = 200,
+ 		ChallengeScreen_Page = ChallengeScreen_Mode + NUM_CHALLENGE_MODES
+ 	};
+@@ -50,6 +51,7 @@ public:
+ 	std::unique_ptr<NewLawnButton>                                 mBackButton;
+ 	std::unique_ptr<NewLawnButton>                                 mBonusButton;
+ 	std::unique_ptr<NewLawnButton>                                 mZombotanyButton;
++	std::unique_ptr<NewLawnButton>                                 mBowlingButton;
+ 	std::array<std::unique_ptr<ButtonWidget>, MAX_CHALLANGE_PAGES> mPageButton;
+ 	std::array<std::unique_ptr<ButtonWidget>, NUM_CHALLENGE_MODES> mChallengeButtons;
+ 	LawnApp*                    mApp;
+diff --git a/src/LawnApp.cpp b/src/LawnApp.cpp
+index c1d5293..8cd9645 100644
+--- a/src/LawnApp.cpp
++++ b/src/LawnApp.cpp
+@@ -533,6 +533,7 @@ void LawnApp::NewGame()
+ 
+ void LawnApp::ShowGameSelector()
+ {
++	mReturnToBowlingTab = false;
+ 	KillBoard();
+ 	//UpdateRegisterInfo();
+ 	if (mGameSelector)
+@@ -602,6 +603,11 @@ void LawnApp::KillCreditScreen()
+ 
+ void LawnApp::ShowChallengeScreen(ChallengePage thePage)
+ {
++	// The original bowling modes keep their normal award and Continue dialogs.
++	// Once those dialogs return to Mini-Games, reopen the category they came from.
++	if (mReturnToBowlingTab && thePage == CHALLENGE_PAGE_CHALLENGE)
++		thePage = CHALLENGE_PAGE_BOWLING;
++	mReturnToBowlingTab = false;
+ 	mGameScene = GameScenes::SCENE_CHALLENGE;
+ 	mChallengeScreen = std::make_unique<ChallengeScreen>(this, thePage);
+ 	mChallengeScreen->Resize(0, 0, mWidth, mHeight);
+diff --git a/src/LawnApp.h b/src/LawnApp.h
+index 7ccc3d7..7d4c52c 100644
+--- a/src/LawnApp.h
++++ b/src/LawnApp.h
+@@ -98,6 +98,7 @@ public:
+ 	bool							mCheatKeys;
+ 	GameMode						mGameMode;
+ 	GameScenes						mGameScene;
++	bool                            mReturnToBowlingTab = false;
+ 	bool							mLoadingZombiesThreadCompleted;
+ 	bool							mFirstTimeGameSelector;
+ 	int								mGamesPlayed;

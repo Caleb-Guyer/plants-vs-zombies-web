@@ -73,6 +73,11 @@ RELEASES = {
         commit='3b29a0116ef6aa66b950778a9b8549fef2679bc7', sources=901, objects=158, scenarios=17,
         caption='with all twenty ZomBotany cards.',
         change='Completes the ZomBotany tab with Shooting Stars, Portal Panic, Column Climb and Last Stand.'),
+    'wbtab': dict(tag='wbtab1', stem='wbtab', parent_tag='zfinal1',
+        parent=chain.FINAL, parent_bytes=chain.FINAL_BYTES, parent_sha=chain.FINAL_SHA,
+        commit='685625de09e78e6e8fb1cd278f1b961b0bf5b160', sources=901, objects=158, scenarios=9,
+        caption='with the Wall-nut Bowling tab.',
+        change='Groups the two original Wall-nut Bowling games with their existing unlocks, saves and trophies.'),
 }
 
 def sha(data):

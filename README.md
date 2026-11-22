@@ -1,5 +1,9 @@
 # Plants vs. Zombies — browser playtest
 
+## Wall-nut Bowling
+
+Open **Mini-Games → Bowling** to play the original Wall-nut Bowling and Wall-nut Bowling 2. The same saved game and trophy appear in both menus.
+
 ## The completed ZomBotany tab
 
 The ZomBotany tab has twenty cards. Beat the original ZomBotany to unlock the final four.

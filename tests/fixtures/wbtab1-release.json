@@ -1,0 +1,13 @@
+{
+  "id": "0.2.6-web-wbtab.1",
+  "sourceFiles": 901,
+  "productionObjects": 158,
+  "normalReceiptSha256": "4d88f608d60c9820897bd4a024705dc178e71d0a0a1bba3bd9f384546e559a4b",
+  "reportSha256": "122e2146e140916a4acf44acd5d1847d58f462916498b72a49f72f6a628c3b17",
+  "driverBuildSha256": "ee8297d26934327fa9d2c15600a79aeb9454ff4586fcdf0664eb0fd5fa8ae877",
+  "sourceSha256": "904afc1474757fc8167fbbd8bfd7a961e9bbb5f9b0c8460cbb196fe4641ea44b",
+  "patchSha256": "0421da734d658af31e60365943e84797e5adc523d88e187d13db7bdf2cc39adc",
+  "jsSha256": "5aed1bbba0fa65c62a66eb6d5fcf1c5e576b55b907257dc87679e1981056e5eb",
+  "wasmSha256": "8642d1ee6c93eea5a00bf31d50e2a668447e088209eafc0af3011de129a3f22b",
+  "historicalBrowserSha256": "16e57d0657d400d773b7836049b55309e72fbdb90867035e25dead532e8243ce"
+}

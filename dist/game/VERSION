@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-zfinal.1
-Completes the ZomBotany tab with Shooting Stars, Portal Panic, Column Climb and Last Stand.
+PvZ-Portable 0.2.6-web-wbtab.1
+Groups the two original Wall-nut Bowling games with their existing unlocks, saves and trophies.
 Engine JavaScript SHA-256: 5aed1bbba0fa65c62a66eb6d5fcf1c5e576b55b907257dc87679e1981056e5eb
-Engine WASM SHA-256: 6bc25564776c067cc57d85158eed7b06bf37b4d18bd28d290e306c438e776b0e
+Engine WASM SHA-256: 8642d1ee6c93eea5a00bf31d50e2a668447e088209eafc0af3011de129a3f22b
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.

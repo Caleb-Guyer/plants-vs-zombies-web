@@ -30,6 +30,12 @@ jobs:
         run: python bundle-game-assets.py --verify-only
       - name: Verify browser shell and corresponding source
         run: npm run check
+      - name: Play both original games from the Bowling and Mini-Games menus with sound off
+        run: python tests/wbtab.py --play
+      - name: Roll from both Bowling cards in a muted browser
+        run: |
+          python tests/pool-browser.py --mode classic-one
+          python tests/pool-browser.py --mode classic-two
       - name: Play the four ZomBotany finale cards with sound off
         run: python tests/zfinal.py --play
       - name: Open and play all four new cards in a muted browser
