@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "current_engine": "0.2.6-web-zwhack.1",
+  "current_engine": "0.2.6-web-ztwist.1",
   "upstream_tag": "0.2.6",
   "layout": "Site source includes the upstream baseline and the native ZomBotany extension patches. The current complete native source ZIP is restored offline from the lossless XZ transport. The shared I, ZomBotany prefix and published source suffixes restore the earlier extensions. Shared byte ranges restore the earlier regression inputs. The archive list links the current and upstream sources on Pages and historical releases at immutable GitHub revisions.",
   "nested_sources": [
@@ -8,21 +8,21 @@
   ],
   "restored_sources": [
     {
-      "name": "pvz-portable-0.2.6-web-zwhack.1-source.zip",
-      "path": "dist/source/pvz-portable-0.2.6-web-zwhack.1-source.zip",
-      "bytes": 104032353,
-      "sha256": "05e395c0bd8f08c5f8f09926c8dfc727a62b0b0acb64f66d015fe70b498e6f88",
+      "name": "pvz-portable-0.2.6-web-ztwist.1-source.zip",
+      "path": "dist/source/pvz-portable-0.2.6-web-ztwist.1-source.zip",
+      "bytes": 104037115,
+      "sha256": "7a7340590541569e1cd8291f73374e9e6de4988fdd9a1bf4c967f461861641a0",
       "automatic_before_checks": true,
       "encoding": "xz",
       "manifest": {
         "path": "source-transports/current.json",
         "bytes": 345,
-        "sha256": "6266607910130948ba81ad84af1982cc20fcbaf2c66d3f5dee16a3f911316e2e"
+        "sha256": "f40bf69e858e3386d64a63bbd3cbe469be7ea219ace23a679e6953290c23f4d3"
       },
       "compressed_payload": {
         "path": "source-transports/current.xz",
-        "bytes": 33992192,
-        "sha256": "2751b2e26d4bb0ffd010ba714fc6cbf226e913eb3db7fe46fbad4f31b3c39e4f"
+        "bytes": 34002048,
+        "sha256": "22e6bfce13bbcfa00cc385c8a6e3b1cb4f7bb5c5e8ff1e165e45a18b51c82a99"
       }
     },
     {
@@ -34,7 +34,7 @@
       "manifest": {
         "path": "source-transports/endless2.json",
         "bytes": 93662,
-        "sha256": "aa49d48882445d8c3e35dc098bbae2ce9c141be486a7656679f4bce438155443"
+        "sha256": "8d39d5c688c9213795d7b937e43811e06bd2958148dca441ad9e1cf332e830d6"
       },
       "literal_payload": {
         "path": "source-transports/endless2.literals.xz",
@@ -53,7 +53,8 @@
     "zsnight1-to-zspool1.patch",
     "zspool1-to-zsfog1.patch",
     "zsroof1-to-zbowling1.patch",
-    "zvase1-to-izombotany1.patch"
+    "zvase1-to-izombotany1.patch",
+    "zwhack1-to-ztwist1.patch"
   ],
   "archives": [
     {
@@ -625,6 +626,14 @@
       "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/385d8d51fe7de7fe07be297751a82e9ae7b8faee/dist/source/pvz-portable-0.2.6-web-zsurvival.1-source.zip"
     },
     {
+      "name": "pvz-portable-0.2.6-web-ztwist.1-source.zip",
+      "bytes": 104037115,
+      "sha256": "7a7340590541569e1cd8291f73374e9e6de4988fdd9a1bf4c967f461861641a0",
+      "current": true,
+      "upstream": false,
+      "url": "./pvz-portable-0.2.6-web-ztwist.1-source.zip"
+    },
+    {
       "name": "pvz-portable-0.2.6-web-zvase.1-source.zip",
       "bytes": 94720307,
       "sha256": "d9d4351181e09f1b0eceacc8203bf4d0bcf46910b7e27027c762b521d8805f2b",
@@ -636,9 +645,9 @@
       "name": "pvz-portable-0.2.6-web-zwhack.1-source.zip",
       "bytes": 104032353,
       "sha256": "05e395c0bd8f08c5f8f09926c8dfc727a62b0b0acb64f66d015fe70b498e6f88",
-      "current": true,
+      "current": false,
       "upstream": false,
-      "url": "./pvz-portable-0.2.6-web-zwhack.1-source.zip"
+      "url": "https://raw.githubusercontent.com/Caleb-Guyer/plants-vs-zombies-web/740917c790dccb10ac401020a68223d9727ea8ca/dist/source/pvz-portable-0.2.6-web-zwhack.1-source.zip"
     }
   ]
 }

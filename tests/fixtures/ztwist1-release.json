@@ -1,0 +1,13 @@
+{
+  "id": "0.2.6-web-ztwist.1",
+  "sourceFiles": 899,
+  "productionObjects": 157,
+  "normalReceiptSha256": "aafd6bb7caa8a617bd24e4970f38b76da4fc0a203d0dff541e00880d24817cc8",
+  "reportSha256": "f84ede8637c911ed84262af15186653f595d56bb5480f590d5a57625720120d7",
+  "driverBuildSha256": "50a4a47c26fc751c5dc43b32b2dc62ee47eefd560c71deba8ab45ac8590ff52f",
+  "sourceSha256": "7a7340590541569e1cd8291f73374e9e6de4988fdd9a1bf4c967f461861641a0",
+  "patchSha256": "08b34d7121374601307cd37adb529261b87f12ae5688330621cf2bc733b0954c",
+  "jsSha256": "6b7ee8d81c6bd5d1b316f3b24c70113ebb87eb74eb14cf70c9c246bd3f3a5874",
+  "wasmSha256": "c34786034c100f1afd55b65181643a046fd6eac0f768063e979eab755e272776",
+  "historicalBrowserSha256": "39e9e9cdb585aa1d92e6e48bbcd50163911b4acb74e5301ca17b1e27bd8b07df"
+}

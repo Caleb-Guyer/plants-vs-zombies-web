@@ -215,7 +215,7 @@ def play_opening(browser, output, mode="pool"):
     # Each reference is the average RGB across a 6-by-4 grid on the native 800-by-600 screen.
     # Sample stable artwork so menu movement and the pool's ripples can vary between frames.
     references = json.loads((ROOT / "tests/fixtures/zspool1-screens.json").read_bytes())
-    key = {"bowling":"zbowling", "pins":"zbowling", "whack":"zwhack"}.get(mode, "zs"+mode)
+    key = {"bowling":"zbowling", "pins":"zbowling", "whack":"zwhack", "twist":"ztwist"}.get(mode, "zs"+mode)
     if mode != "pool":
         references.update(json.loads((ROOT / f"tests/fixtures/{key}1-screens.json").read_bytes()))
     if mode == "pins":
@@ -294,6 +294,24 @@ def play_opening(browser, output, mode="pool"):
     reach("menu", "title", (400,545))
     reach("minigames", "menu", (565,245))
     reach("family", "minigames", (562,581))
+    if mode == "twist":
+        reach("twistCard")
+        reach("twistLawn", "twistCard", (90,505))
+        # The seed shop is hidden until a legal rotation scores. Work across the
+        # actual random board with pointer clicks until its four packets appear.
+        def shop_visible():
+            return inspect(browser.screenshot())["twistShop"] < 14
+        assert not shop_visible(), "Unplayed board already shows the match reward"
+        for row in range(4):
+            for col in range(7):
+                click_canvas(browser, 120+80*col, 180+100*row)
+                time.sleep(.38)
+                if shop_visible():
+                    if output:
+                        (output / "scored-rotation.png").write_bytes(browser.screenshot())
+                    assert browser.execute("return PVZAudio.isMuted()")
+                    return
+        raise AssertionError("No rotation scored on the fresh Twist board")
     if mode == "whack":
         reach("whackCard")
         reach("whackLawn", "whackCard", (710,385))
@@ -432,8 +450,9 @@ def exercise(browser, site, scratch, profile, output, mode="pool"):
               "roof": "armed a Potato Mine in a newly planted Flower Pot",
               "bowling": "rolled a conveyor Wall-nut across the red line",
               "pins": "rolled a Wall-nut, Tall-nut and Pumpkin from the conveyor",
+              "twist": "scored a clockwise rotation and opened the seed shop",
               "whack": "missed and then struck a rising Puff-shroom head with the mallet"}[mode]
-    title = {"bowling":"ZomBotany Bowling", "pins":"ZomBotany Bowling", "whack":"Whack a Sprout"}.get(mode, mode.title())
+    title = {"bowling":"ZomBotany Bowling", "pins":"ZomBotany Bowling", "whack":"Whack a Sprout", "twist":"ZomBotany Twist"}.get(mode, mode.title())
     print(f"PASS muted {title} card, {action}, cold save roundtrip ({sha256(profile).hexdigest()[:12]}).")
 
 
@@ -441,22 +460,24 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     driver = shutil.which("chromedriver") or shutil.which("chromedriver", path=os.getenv("CHROMEWEBDRIVER", ""))
     parser.add_argument("--driver", default=driver or shutil.which("msedgedriver"))
-    parser.add_argument("--mode", choices=("pool", "fog", "roof", "bowling", "pins", "whack"), default="pool")
+    parser.add_argument("--mode", choices=("pool", "fog", "roof", "bowling", "pins", "whack", "twist"), default="pool")
     parser.add_argument("--output", type=Path, help="Keep a screenshot of the native canvas")
     args = parser.parse_args()
     if not args.driver:
         parser.error("A matching ChromeDriver or Microsoft Edge WebDriver is required")
-    key = {"bowling": "zbowling", "pins": "zpins", "whack":"zwhack"}.get(args.mode, "zs" + args.mode)
+    key = {"bowling": "zbowling", "pins": "zpins", "whack":"zwhack", "twist":"ztwist"}.get(args.mode, "zs" + args.mode)
     profile = (ROOT / f"tests/fixtures/{key}1-earned.dat").read_bytes()
     trophies = b"ZSP1" + struct.pack("<I", 5)
-    if args.mode in ("fog", "roof", "bowling", "pins", "whack"):
+    if args.mode in ("fog", "roof", "bowling", "pins", "whack", "twist"):
         trophies += b"ZSF1" + struct.pack("<I", 5)
-    if args.mode in ("roof", "bowling", "pins", "whack"):
+    if args.mode in ("roof", "bowling", "pins", "whack", "twist"):
         trophies += b"ZSR1" + struct.pack("<I", 5)
-    if args.mode in ("bowling", "pins", "whack"):
+    if args.mode in ("bowling", "pins", "whack", "twist"):
         trophies += b"ZBW1" + struct.pack("<I", 1)
-    if args.mode == "whack":
+    if args.mode in ("whack", "twist"):
         trophies += b"ZWH1" + struct.pack("<I", 1)
+    if args.mode == "twist":
+        trophies += b"ZTW1" + struct.pack("<I", 1)
     assert profile.startswith(struct.pack("<I", 12)) and profile.endswith(trophies)
     with tempfile.TemporaryDirectory(prefix=f"pvz-{args.mode}-browser-", ignore_cleanup_errors=True) as temp:
         scratch = Path(temp)

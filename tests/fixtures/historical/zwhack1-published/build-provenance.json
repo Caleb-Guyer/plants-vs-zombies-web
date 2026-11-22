@@ -1,0 +1,55 @@
+{
+  "id": "0.2.6-web-zwhack.1",
+  "parentId": "0.2.6-web-zpins.1",
+  "sourceArchive": {
+    "path": "pvz-portable-0.2.6-web-zwhack.1-source.zip",
+    "sha256": "05e395c0bd8f08c5f8f09926c8dfc727a62b0b0acb64f66d015fe70b498e6f88",
+    "bytes": 104032353,
+    "entries": 3716
+  },
+  "incrementalPatch": {
+    "path": "zpins1-to-zwhack1.patch",
+    "sha256": "8d03a141367797ea59f017ab6b74cfecc018dd85c1a54a6c031d73bcfb026860",
+    "baseSourceSha256": "9efc45935abd69515a2b1fd0f3e6f60b73f87938d029c237ca0e8c7325c22b1c"
+  },
+  "sourceFiles": 899,
+  "productionObjects": 157,
+  "normalBuild": {
+    "status": "PASS",
+    "exitCode": 0,
+    "elapsedSeconds": 103.559,
+    "sourceUnchangedDuringBuild": true,
+    "sourceFiles": 899,
+    "outputs": {
+      "build/pvz-portable.js": {
+        "bytes": 210891,
+        "sha256": "6375026ae90afe31565b59ac0848923dc41ae15e2c147540efbeab965e8d0413"
+      },
+      "build/pvz-portable.wasm": {
+        "bytes": 8035563,
+        "sha256": "a79b48ab78e23f7b90ef3d1ad0496cd9010d461543afcaf2abad62ce57a7b871"
+      },
+      "build/ProjectVersion.h": {
+        "bytes": 191,
+        "sha256": "42029669642e96574c86e43675022445e31974fac9375c578a9dff83c7e241fc"
+      }
+    }
+  },
+  "changedSources": [
+    "src/ConstEnums.h",
+    "src/Lawn/Board.cpp",
+    "src/Lawn/Challenge.cpp",
+    "src/Lawn/System/PlayerInfo.cpp",
+    "src/Lawn/System/ZomBotanyWhack.cpp",
+    "src/Lawn/System/ZomBotanyWhack.h",
+    "src/Lawn/Widget/ChallengeScreen.cpp",
+    "src/Lawn/Widget/ChallengeScreen.h",
+    "src/Lawn/Zombie.cpp",
+    "src/LawnApp.cpp"
+  ],
+  "silentGameplayDriver": {
+    "zwhack-engine.js": "727baf3d3b3a7d489fdde07ebee7b25c66c0b0f9d821cf05dffd6c1ced3034f5",
+    "zwhack-engine.wasm": "c462997bdff8011da2e9a4b8ada7a5516d7111930bf68ca86d1cd40321d3d414"
+  },
+  "gameplayScenarios": 16
+}

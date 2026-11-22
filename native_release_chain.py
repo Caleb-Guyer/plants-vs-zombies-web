@@ -19,6 +19,7 @@ ROOF = "0.2.6-web-zsroof.1"
 BOWLING = "0.2.6-web-zbowling.1"
 PINS = "0.2.6-web-zpins.1"
 WHACK = "0.2.6-web-zwhack.1"
+TWIST = "0.2.6-web-ztwist.1"
 SHARED_BASE = {"id": I_ZOMBOTANY, "bytes": 100_558_183,
                "sha256": "ab56f8150ddaf8d8985de74afeea2b51c7c09ef800d0f4ba58cd3a270393152c"}
 BEGHOUL_BYTES = 103_906_885
@@ -35,12 +36,15 @@ BOWLING_BYTES = 104_022_458
 BOWLING_SHA = "608feffc5a9743f21d920492487a05be2a8816d2bd617ef9343fa871f1ccccde"
 PINS_BYTES = 104_050_137
 PINS_SHA = "9efc45935abd69515a2b1fd0f3e6f60b73f87938d029c237ca0e8c7325c22b1c"
+WHACK_BYTES = 104_032_353
+WHACK_SHA = "05e395c0bd8f08c5f8f09926c8dfc727a62b0b0acb64f66d015fe70b498e6f88"
 POOL_WINNER_SHA256 = "0975e051c8585ab3535697e4d56f895f566c33afcf3946932326d4654f24fefa"
 WINNING_PROFILES = {
     "zsfog": ("zspool1-earned.dat", POOL_WINNER_SHA256),
     "zsroof": ("zsfog1-earned.dat", "e265c019f72c08c7beeb114676792dc6e66a4707cc91430b26f8c3ced6a4aac7"),
     "zbowling": ("zsroof1-earned.dat", "0afa64046adb263d6519082ee1ea8ae3bc5ce4640676b12d090d41ec55466ad9"),
     "zwhack": ("zpins1-earned.dat", "7db698deab6e2d99c9b170e8dac1b135a0074eaf9d81f700d355151f61e9ba96"),
+    "ztwist": ("zwhack1-earned.dat", "1477f770927fd548c38b1eb8708f3dd255200dd7d2fb6e7e8c52e96806d108a8"),
 }
 REPLAY_FIXTURES = {
     **{key: (profile,) for key, profile in WINNING_PROFILES.items()},
@@ -55,6 +59,7 @@ FOG_SUFFIX = HISTORY / "zsfog1-published/source-suffix.xz"
 ROOF_SUFFIX = HISTORY / "zsroof1-published/source-suffix.xz"
 BOWLING_SUFFIX = HISTORY / "zbowling1-published/source-suffix.xz"
 PINS_SUFFIX = HISTORY / "zpins1-published/source-suffix.xz"
+WHACK_SUFFIX = HISTORY / "zwhack1-published/source-suffix.xz"
 BROWSERS = HISTORY / "extension-browsers.tar.xz"
 POOL_BROWSER_DELTAS = HISTORY / "zspool1-browser-deltas.tar.xz"
 FOG_BROWSER_DELTAS = HISTORY / "zsfog1-browser-deltas.tar.xz"
@@ -62,8 +67,10 @@ ROOF_BROWSER_DELTAS = HISTORY / "zsroof1-browser-deltas.tar.xz"
 BOWLING_BROWSER_DELTAS = HISTORY / "zbowling1-browser-deltas.tar.xz"
 PINS_BROWSER_DELTAS = HISTORY / "zpins1-browser-deltas.tar.xz"
 WHACK_BROWSER_DELTAS = HISTORY / "zwhack1-browser-deltas.tar.xz"
+TWIST_BROWSER_DELTAS = HISTORY / "ztwist1-browser-deltas.tar.xz"
 DELTA_CAPSULES = {POOL: POOL_BROWSER_DELTAS, FOG: FOG_BROWSER_DELTAS, ROOF: ROOF_BROWSER_DELTAS,
-                  BOWLING: BOWLING_BROWSER_DELTAS, PINS: PINS_BROWSER_DELTAS, WHACK: WHACK_BROWSER_DELTAS}
+                  BOWLING: BOWLING_BROWSER_DELTAS, PINS: PINS_BROWSER_DELTAS, WHACK: WHACK_BROWSER_DELTAS,
+                  TWIST: TWIST_BROWSER_DELTAS}
 BLOCK_SIZE = 128
 MAX_BROWSER_BYTES = 16 * 1024 * 1024
 ARCHIVE_PARENTS = {
@@ -74,6 +81,7 @@ ARCHIVE_PARENTS = {
     BOWLING: (ROOF, ROOF_BYTES, ROOF_SHA, ROOF_SUFFIX),
     PINS: (BOWLING, BOWLING_BYTES, BOWLING_SHA, BOWLING_SUFFIX),
     WHACK: (PINS, PINS_BYTES, PINS_SHA, PINS_SUFFIX),
+    TWIST: (WHACK, WHACK_BYTES, WHACK_SHA, WHACK_SUFFIX),
 }
 ZIP_ROOT = "zombotany3-candidate/tests/"
 SUFFIX_HEADER = struct.Struct("<4sII32s")

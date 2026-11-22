@@ -1,5 +1,9 @@
 # Browser parity and QA record
 
+## ZomBotany Twist
+
+Run `python tests/ztwist.py --play` to replay ZomBotany Twist and classic Beghouled Twist with sound off. The tests use real mouse clicks to check the four rotated tiles, native butter flight and stuns, saving during a turn, loss and retry, and the earned trophy. `python tests/pool-browser.py --mode twist` exercises the fourth-row card and the first scored rotation in a muted browser.
+
 ## Whack a Sprout
 
 Run `python tests/zwhack.py --play` to play the twelve waves at 1× and 2× with sound off, check hammer damage and lane fire, resume a cracked shell and retry after a loss. Run `python tests/pool-browser.py --mode whack` to open the fifteenth card, swing the mallet on the night lawn, and reload an earned trophy in a muted browser.

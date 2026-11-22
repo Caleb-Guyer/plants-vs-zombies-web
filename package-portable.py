@@ -34,6 +34,7 @@ HISTORICAL_BROWSERS = {
     "0.2.6-web-zbowling.1": "zbowling1-browser-deltas.tar.xz",
     "0.2.6-web-zpins.1": "zpins1-browser-deltas.tar.xz",
     "0.2.6-web-zwhack.1": "zwhack1-browser-deltas.tar.xz",
+    "0.2.6-web-ztwist.1": "ztwist1-browser-deltas.tar.xz",
 }
 EXTENSIONS = {"0.2.6-web-izombotany.1", "0.2.6-web-zbeghouled.1"} | HISTORICAL_BROWSERS.keys()
 # Current publication target is GitHub Pages, via the existing Pages workflow.
@@ -686,7 +687,7 @@ def regenerate_source_downloads(transport_entries=None):
     transport_entries = transport_entries if transport_entries is not None else source_bundle_helpers().make_bundle_transports(ROOT)
     literal_path = TRANSPORT_LITERALS + ".xz" if TRANSPORT_LITERALS + ".xz" in transport_entries else TRANSPORT_LITERALS
     literal_encoding = "xz" if literal_path.endswith(".xz") else "raw"
-    if engine["id"] in ("0.2.6-web-zpins.1", "0.2.6-web-zwhack.1") and literal_encoding == "xz":
+    if engine["id"] in ("0.2.6-web-zpins.1", "0.2.6-web-zwhack.1", "0.2.6-web-ztwist.1") and literal_encoding == "xz":
         literal_encoding = "xz-deflate-streams-v1"
     if set(transport_entries) != {TRANSPORT_MANIFEST, literal_path,
                                  CURRENT_TRANSPORT_MANIFEST, CURRENT_TRANSPORT_PAYLOAD}:

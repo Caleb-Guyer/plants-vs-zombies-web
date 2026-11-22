@@ -1,55 +1,60 @@
 {
-  "id": "0.2.6-web-zwhack.1",
-  "parentId": "0.2.6-web-zpins.1",
+  "id": "0.2.6-web-ztwist.1",
+  "parentId": "0.2.6-web-zwhack.1",
   "sourceArchive": {
-    "path": "pvz-portable-0.2.6-web-zwhack.1-source.zip",
-    "sha256": "05e395c0bd8f08c5f8f09926c8dfc727a62b0b0acb64f66d015fe70b498e6f88",
-    "bytes": 104032353,
+    "path": "pvz-portable-0.2.6-web-ztwist.1-source.zip",
+    "sha256": "7a7340590541569e1cd8291f73374e9e6de4988fdd9a1bf4c967f461861641a0",
+    "bytes": 104037115,
     "entries": 3716
   },
   "incrementalPatch": {
-    "path": "zpins1-to-zwhack1.patch",
-    "sha256": "8d03a141367797ea59f017ab6b74cfecc018dd85c1a54a6c031d73bcfb026860",
-    "baseSourceSha256": "9efc45935abd69515a2b1fd0f3e6f60b73f87938d029c237ca0e8c7325c22b1c"
+    "path": "zwhack1-to-ztwist1.patch",
+    "sha256": "08b34d7121374601307cd37adb529261b87f12ae5688330621cf2bc733b0954c",
+    "baseSourceSha256": "05e395c0bd8f08c5f8f09926c8dfc727a62b0b0acb64f66d015fe70b498e6f88"
   },
   "sourceFiles": 899,
   "productionObjects": 157,
   "normalBuild": {
     "status": "PASS",
     "exitCode": 0,
-    "elapsedSeconds": 103.559,
+    "elapsedSeconds": 87.286,
     "sourceUnchangedDuringBuild": true,
     "sourceFiles": 899,
     "outputs": {
       "build/pvz-portable.js": {
         "bytes": 210891,
-        "sha256": "6375026ae90afe31565b59ac0848923dc41ae15e2c147540efbeab965e8d0413"
+        "sha256": "6b7ee8d81c6bd5d1b316f3b24c70113ebb87eb74eb14cf70c9c246bd3f3a5874"
       },
       "build/pvz-portable.wasm": {
-        "bytes": 8035563,
-        "sha256": "a79b48ab78e23f7b90ef3d1ad0496cd9010d461543afcaf2abad62ce57a7b871"
+        "bytes": 8040927,
+        "sha256": "c34786034c100f1afd55b65181643a046fd6eac0f768063e979eab755e272776"
       },
       "build/ProjectVersion.h": {
-        "bytes": 191,
-        "sha256": "42029669642e96574c86e43675022445e31974fac9375c578a9dff83c7e241fc"
+        "bytes": 192,
+        "sha256": "0b88cbc2a19db8dd9a039b4b616741a8eae5790941e389902bad824de84b8fff"
       }
     }
   },
   "changedSources": [
+    "CMake/ProjectVersion.cmake",
     "src/ConstEnums.h",
     "src/Lawn/Board.cpp",
     "src/Lawn/Challenge.cpp",
+    "src/Lawn/Plant.cpp",
+    "src/Lawn/Projectile.cpp",
+    "src/Lawn/Projectile.h",
+    "src/Lawn/SeedPacket.cpp",
     "src/Lawn/System/PlayerInfo.cpp",
-    "src/Lawn/System/ZomBotanyWhack.cpp",
-    "src/Lawn/System/ZomBotanyWhack.h",
+    "src/Lawn/System/ZomBotanyBeghouled.cpp",
+    "src/Lawn/System/ZomBotanyBeghouled.h",
     "src/Lawn/Widget/ChallengeScreen.cpp",
     "src/Lawn/Widget/ChallengeScreen.h",
-    "src/Lawn/Zombie.cpp",
+    "src/Lawn/Widget/ContinueDialog.cpp",
     "src/LawnApp.cpp"
   ],
   "silentGameplayDriver": {
-    "zwhack-engine.js": "727baf3d3b3a7d489fdde07ebee7b25c66c0b0f9d821cf05dffd6c1ced3034f5",
-    "zwhack-engine.wasm": "c462997bdff8011da2e9a4b8ada7a5516d7111930bf68ca86d1cd40321d3d414"
+    "ztwist-engine.js": "08d12486770234cafe36e997ce35554839d0dfc0a9e21f1c02a857fd5fbec590",
+    "ztwist-engine.wasm": "d49f49ce5b7ead744efdc655648ccce74ee3ea426892c655e5bdcb6363287040"
   },
   "gameplayScenarios": 16
 }

@@ -1,5 +1,11 @@
 # Plants vs. Zombies — browser playtest
 
+## ZomBotany Twist
+
+Beat the original ZomBotany to unlock the first card in the fourth row. Click where four plants meet to rotate them clockwise. Make 45 matches before the plant-headed zombies reach the house.
+
+Match four or more to lob butter at the front zombie in each lane the match touches. A vertical four can hold up four lanes, while a horizontal four lets you target a single lane. Watch for the Gatling-head walking behind a Tall-nut-head.
+
 ## Whack a Sprout
 
 Beat the original ZomBotany to unlock **Whack a Sprout**, the fifteenth card. Swing the mallet as plant-headed zombies rise from the night lawn. Puff-shroom and Peashooter heads take one hit, Wall-nut heads take two and Tall-nut heads take three. Their shells crack as you hit them.

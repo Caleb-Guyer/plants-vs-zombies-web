@@ -30,6 +30,10 @@ jobs:
         run: python bundle-game-assets.py --verify-only
       - name: Verify browser shell and corresponding source
         run: npm run check
+      - name: Play ZomBotany Twist and classic Beghouled Twist with sound off
+        run: python tests/ztwist.py --play
+      - name: Rotate plants on the night lawn in a muted browser
+        run: python tests/pool-browser.py --mode twist
       - name: Play Whack a Sprout and its control levels with sound off
         run: python tests/zwhack.py --play
       - name: Swing the mallet on the night lawn in a muted browser

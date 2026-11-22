@@ -1,5 +1,9 @@
 # GitHub Pages release: Caleb-Guyer/plants-vs-zombies-web
 
+## ZomBotany Twist
+
+The Pages workflow replays ZomBotany Twist and its classic control with sound off, then opens card sixteen and makes a scoring rotation in a muted browser.
+
 ## Whack a Sprout
 
 The Pages workflow plays Whack a Sprout with sound off and opens card fifteen in a muted browser before it stages the site. The previous Bowling release and neighboring ZomBotany cards retain their own replay checks.

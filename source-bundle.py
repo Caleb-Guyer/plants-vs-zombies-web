@@ -473,7 +473,8 @@ def ensure_vasebreaker_baseline(root):
     reference = {"path": "dist/source/pvz-portable-0.2.6-web-zvase.1-source.zip",
                  "sha256": "d9d4351181e09f1b0eceacc8203bf4d0bcf46910b7e27027c762b521d8805f2b"}
     size = 94_720_307
-    for child_id, parent_id in (("0.2.6-web-zwhack.1", "0.2.6-web-zpins.1"),
+    for child_id, parent_id in (("0.2.6-web-ztwist.1", "0.2.6-web-zwhack.1"),
+                                ("0.2.6-web-zwhack.1", "0.2.6-web-zpins.1"),
                                 ("0.2.6-web-zpins.1", "0.2.6-web-zbowling.1"),
                                 ("0.2.6-web-zbowling.1", "0.2.6-web-zsroof.1"),
                                 ("0.2.6-web-zsroof.1", "0.2.6-web-zsfog.1"),
@@ -591,7 +592,8 @@ def make_current_transport(root):
                                "/pvz-portable-0.2.6-web-zsroof.1-source.zip",
                                "/pvz-portable-0.2.6-web-zbowling.1-source.zip",
                                "/pvz-portable-0.2.6-web-zpins.1-source.zip",
-                               "/pvz-portable-0.2.6-web-zwhack.1-source.zip")):
+                               "/pvz-portable-0.2.6-web-zwhack.1-source.zip",
+                               "/pvz-portable-0.2.6-web-ztwist.1-source.zip")):
         # The shared native ZIP prefix contains matching spans more than 32 MiB apart.
         # A 48 MiB dictionary still decodes within the existing 64 MiB limit.
         options = {"filters": [{"id": lzma.FILTER_LZMA2, "preset": 8, "dict_size": 48 * 1024 * 1024}]}
@@ -610,7 +612,8 @@ def make_bundle_transports(root):
     historical = make_source_transport(root)
     manifest = json.loads(historical[MANIFEST_REL])
     if manifest["donor"]["path"].endswith(("/pvz-portable-0.2.6-web-zpins.1-source.zip",
-                                           "/pvz-portable-0.2.6-web-zwhack.1-source.zip")):
+                                           "/pvz-portable-0.2.6-web-zwhack.1-source.zip",
+                                           "/pvz-portable-0.2.6-web-ztwist.1-source.zip")):
         packed_literals = pack_driver_literals(_target(_root(root)), historical[LITERALS_REL])
     else:
         packed_literals = lzma.compress(historical[LITERALS_REL], format=lzma.FORMAT_XZ,

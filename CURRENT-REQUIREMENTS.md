@@ -1,5 +1,9 @@
 # Current requirements
 
+## ZomBotany Twist
+
+Card sixteen uses clockwise two-by-two rotation, a 45-match goal and lane-targeted butter on matches of four or more. The card unlocks after ZomBotany and stores its trophy after the earlier tagged records.
+
 ## Whack a Sprout
 
 Whack a Sprout occupies the fifteenth slot on the ZomBotany page. Twelve graveyard waves use five plant-headed zombies, the original mallet, three native seed packets and the original night lawn. A hammer blow to a Jalapeño-head releases a lane of fire. Nut heads use their existing cracked shell artwork to show damage. Gravedigging, armor and wave progress survive Continue. Beating the original ZomBotany unlocks the card, and a clear awards its own trophy.

@@ -1,6 +1,6 @@
-PvZ-Portable 0.2.6-web-zwhack.1
-Adds Whack a Sprout as the fifteenth ZomBotany card. Use the mallet against plant-headed zombies in the nighttime graveyard.
-Engine JavaScript SHA-256: 6375026ae90afe31565b59ac0848923dc41ae15e2c147540efbeab965e8d0413
-Engine WASM SHA-256: a79b48ab78e23f7b90ef3d1ad0496cd9010d461543afcaf2abad62ce57a7b871
+PvZ-Portable 0.2.6-web-ztwist.1
+Adds ZomBotany Twist as card sixteen. Rotate four plants, make 45 matches and use long matches to butter the approaching plant-headed zombies.
+Engine JavaScript SHA-256: 6b7ee8d81c6bd5d1b316f3b24c70113ebb87eb74eb14cf70c9c246bd3f3a5874
+Engine WASM SHA-256: c34786034c100f1afd55b65181643a046fd6eac0f768063e979eab755e272776
 Corresponding modified source and build record: ../source/
 Original JPEG equivalence and full game parity remain unverified.

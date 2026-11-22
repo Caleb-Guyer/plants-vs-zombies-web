@@ -62,7 +62,12 @@ RELEASES = {
         parent=chain.PINS, parent_bytes=chain.PINS_BYTES, parent_sha=chain.PINS_SHA,
         commit='bc314c111d44cc03b6b5fa12a93682ea4e7e3e82', sources=899, objects=157,
         caption='with Whack a Sprout.',
-        change='Adds Whack a Sprout as the fifteenth ZomBotany card. Use the mallet against plant-headed zombies in the nighttime graveyard.')
+        change='Adds Whack a Sprout as the fifteenth ZomBotany card. Use the mallet against plant-headed zombies in the nighttime graveyard.'),
+    'ztwist': dict(tag='ztwist1', stem='ztwist', parent_tag='zwhack1',
+        parent=chain.WHACK, parent_bytes=chain.WHACK_BYTES, parent_sha=chain.WHACK_SHA,
+        commit='740917c790dccb10ac401020a68223d9727ea8ca', sources=899, objects=157,
+        caption='with ZomBotany Twist.',
+        change='Adds ZomBotany Twist as card sixteen. Rotate four plants, make 45 matches and use long matches to butter the approaching plant-headed zombies.')
 }
 
 def sha(data):
