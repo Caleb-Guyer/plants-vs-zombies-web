@@ -28,6 +28,7 @@ RELEASES = {
     "ztwist": (899, 157, "ZomBotanyBeghouled.cpp.o", "ztwist"),
     "zfinal": (901, 158, "ZomBotanyFinale.cpp.o", "zfinal"),
     "wbtab": (901, 158, "ChallengeScreen.cpp.o", "wbtab"),
+    "spare": (903, 159, "SpareChange.cpp.o", "spare"),
 }
 CASES = {(name, speed, seed) for name in ("solution", "resume", "retry", "classic")
          for speed in (1, 2) for seed in (1729, 7331)}

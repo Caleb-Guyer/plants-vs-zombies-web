@@ -111,17 +111,22 @@ def launch_browser(driver, profile):
                 service.terminate()
 
 
-def click_canvas(browser, x, y):
+def point_at_canvas(browser, x, y, click=False):
     x, y = browser.execute("""
         const rect = Module.canvas.getBoundingClientRect();
         return [Math.round(rect.x + rect.width * arguments[0]/800),
                 Math.round(rect.y + rect.height * arguments[1]/600)];
     """, x, y)
+    actions = [{"type": "pointerMove", "origin": "viewport", "x": x, "y": y}]
+    if click:
+        actions.extend([{"type": "pointerDown", "button": 0}, {"type": "pause", "duration": 30},
+                        {"type": "pointerUp", "button": 0}])
     browser.request("POST", "/actions", {"actions": [{"type": "pointer", "id": "mouse",
-        "parameters": {"pointerType": "mouse"}, "actions": [
-            {"type": "pointerMove", "origin": "viewport", "x": x, "y": y},
-            {"type": "pointerDown", "button": 0}, {"type": "pause", "duration": 30},
-            {"type": "pointerUp", "button": 0}]}]})
+        "parameters": {"pointerType": "mouse"}, "actions": actions}]})
+
+
+def click_canvas(browser, x, y):
+    point_at_canvas(browser, x, y, click=True)
 
 
 def whack_puff(browser, output):
@@ -217,14 +222,15 @@ def play_opening(browser, output, mode="pool"):
     # Sample stable artwork so menu movement and the pool's ripples can vary between frames.
     references = json.loads((ROOT / "tests/fixtures/zspool1-screens.json").read_bytes())
     key = {"bowling":"zbowling", "pins":"zbowling", "whack":"zwhack", "twist":"ztwist"}.get(mode, "zs"+mode)
-    if mode in CLASSIC_BOWLING:
+    if mode in (*CLASSIC_BOWLING, "spare"):
         key = "zbowling"
     if mode != "pool":
         references.update(json.loads((ROOT / f"tests/fixtures/{key}1-screens.json").read_bytes()))
     if mode == "pins":
         references.update(json.loads((ROOT / "tests/fixtures/zpins1-screens.json").read_bytes()))
-    if mode in CLASSIC_BOWLING:
+    if mode in (*CLASSIC_BOWLING, "spare"):
         references.update(json.loads((ROOT / "tests/fixtures/wbtab1-screens.json").read_bytes()))
+        references.update(json.loads((ROOT / "tests/fixtures/spare1-screens.json").read_bytes()))
     def inspect(frame):
         return browser.execute("""
             const [png, references, done] = arguments;
@@ -246,6 +252,16 @@ def play_opening(browser, output, mode="pool"):
                     }
                     scores[name] = sums.reduce((total,sum,i) =>
                         total + Math.abs(sum/counts[Math.floor(i/3)]-rgb[i]),0)/72;
+                    if (['stairPin','splitPin','splitSurvivor','edgePin'].includes(name)) {
+                        // A walking Browncoat changes pose and moves 24 pixels onto its mark.
+                        // Measure the coat and head across that space instead of matching one pose.
+                        let body = 0;
+                        for (let i = 0; i < data.length; i += 4) {
+                            const r = data[i], g = data[i+1], b = data[i+2];
+                            if (g < 165 && r < 195 && b < 160 && r > .74*g && r > .78*b) body++;
+                        }
+                        scores[name+'Body'] = body/(w*h);
+                    }
                 }
                 const plant = ctx.getImageData(60,317,40,24).data;
                 let green = 0;
@@ -256,16 +272,22 @@ def play_opening(browser, output, mode="pool"):
             })().then(done, error => done({error:String(error)}));
         """, base64.b64encode(frame).decode(), references, asynchronous=True)
 
+    def visible(target, scores):
+        if target in ("stairPin", "splitPin", "edgePin"):
+            return scores[target+"Body"] > .18
+        if target == "splitSurvivor":
+            return scores[target+"Body"] < .14
+        tolerance = 9 if target in ("readyNut", "readyTall", "readyPumpkin") else 18
+        return scores[target] < tolerance
+
     def reach(target, source=None, position=None):
         next_click = 0
         end = time.monotonic() + 70
-        # The two golden-brown nut packets have similar colors at conveyor size.
-        tolerance = 9 if target in ("readyNut", "readyTall", "readyPumpkin") else 18
         while time.monotonic() < end:
             frame = browser.screenshot()
             scores = inspect(frame)
             assert "error" not in scores, scores
-            if scores[target] < tolerance:
+            if visible(target, scores):
                 if output:
                     (output / (target + ".png")).write_bytes(frame)
                 return
@@ -277,11 +299,11 @@ def play_opening(browser, output, mode="pool"):
 
     reach("menu", "title", (400,545))
     reach("minigames", "menu", (565,245))
-    if mode in CLASSIC_BOWLING:
-        reach("emptyThirdSlot", "minigames", (415,581))
+    if mode in (*CLASSIC_BOWLING, "spare"):
+        reach("emptyFourthSlot", "minigames", (415,581))
         reach("bowlingTitle")
         reach("originalCards")
-        reach("bowlingTrophies")
+        reach("spareCard" if mode == "spare" else "bowlingTrophies")
     else:
         reach("family", "minigames", (562,581))
     if mode == "twist":
@@ -308,9 +330,50 @@ def play_opening(browser, output, mode="pool"):
         whack_puff(browser, output)
         assert browser.execute("return PVZAudio.isMuted()"), "Whack-a-Zombie test lost its mute"
         return
+    if mode == "spare":
+        reach("stripe", "emptyFourthSlot", (400,150))
+        reach("readyNut")
+        reach("stairPin")
+        # Let the intro finish. Each action below is normal canvas input.
+        def aim_preview(label, y):
+            other = "arrowDown" if label == "arrowUp" else "arrowUp"
+            def aimed():
+                point_at_canvas(browser, 210, y)
+                frame = browser.screenshot()
+                scores = inspect(frame)
+                if scores[label] < 18 and scores[other] - scores[label] > 5:
+                    if output: (output / (label + ".png")).write_bytes(frame)
+                    return True
+                return False
+            return aimed
+        click_canvas(browser, 125, 40)
+        wait_until(aim_preview("arrowDown",356), 18)
+        wait_until(aim_preview("arrowUp",304), 18)
+        click_canvas(browser, 210, 304)
+        reach("splitPin")
+        # Bank down in the middle lane, then pick up the remaining top pin.
+        click_canvas(browser, 125, 40)
+        click_canvas(browser, 210, 356)
+        reach("splitSurvivor")
+        next_throw = 0
+        def pick_up_spare():
+            nonlocal next_throw
+            frame = browser.screenshot()
+            scores = inspect(frame)
+            if visible("edgePin", scores):
+                if output: (output / "third-frame.png").write_bytes(frame)
+                return True
+            if visible("splitSurvivor", scores) and visible("readyNut", scores) and time.monotonic() >= next_throw:
+                click_canvas(browser, 125, 40)
+                click_canvas(browser, 210, 204)
+                next_throw = time.monotonic() + 1.5
+            return False
+        wait_until(pick_up_spare, 16)
+        assert browser.execute("return PVZAudio.isMuted()"), "Spare Change test lost its mute"
+        return
     if mode in ("bowling", "pins", *CLASSIC_BOWLING):
         if mode in CLASSIC_BOWLING:
-            reach("stripe", "emptyThirdSlot", (90 if mode == "classic-one" else 245,150))
+            reach("stripe", "emptyFourthSlot", (90 if mode == "classic-one" else 245,150))
         else:
             reach("stripe", "family", (555,385))
         opening = [("readyNut", 2)]
@@ -463,10 +526,12 @@ def exercise(browser, site, scratch, profile, output, mode="pool"):
               "bowling": "rolled a conveyor Wall-nut across the red line",
               "classic-one": "rolled a Wall-nut from the first original card",
               "classic-two": "rolled a Wall-nut from the second original card",
+              "spare": "aimed both banks, bowled a strike and picked up a split",
               "pins": "rolled a Wall-nut, Tall-nut and Pumpkin from the conveyor",
               "twist": "scored a clockwise rotation and opened the seed shop",
               "whack": "missed and then struck a rising Puff-shroom head with the mallet"}[mode]
-    title = {"bowling":"ZomBotany Bowling", "pins":"ZomBotany Bowling", "whack":"Whack a Sprout", "twist":"ZomBotany Twist"}.get(mode, mode.title())
+    title = {"bowling":"ZomBotany Bowling", "pins":"ZomBotany Bowling", "whack":"Whack a Sprout",
+             "twist":"ZomBotany Twist", "spare":"Spare Change"}.get(mode, mode.title())
     print(f"PASS muted {title} card, {action}, cold save roundtrip ({sha256(profile).hexdigest()[:12]}).")
 
 
@@ -474,7 +539,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     driver = shutil.which("chromedriver") or shutil.which("chromedriver", path=os.getenv("CHROMEWEBDRIVER", ""))
     parser.add_argument("--driver", default=driver or shutil.which("msedgedriver"))
-    parser.add_argument("--mode", choices=("pool", "fog", "roof", "bowling", "pins", "whack", "twist", *CLASSIC_BOWLING), default="pool")
+    parser.add_argument("--mode", choices=("pool", "fog", "roof", "bowling", "pins", "whack", "twist", "spare", *CLASSIC_BOWLING), default="pool")
     parser.add_argument("--site", help="Exercise this published game in an isolated browser profile")
     parser.add_argument("--output", type=Path, help="Keep a screenshot of the native canvas")
     args = parser.parse_args()
@@ -483,6 +548,8 @@ def main():
     key = {"bowling": "zbowling", "pins": "zpins", "whack":"zwhack", "twist":"ztwist"}.get(args.mode, "zs" + args.mode)
     if args.mode in CLASSIC_BOWLING:
         key = "wbtab"
+    if args.mode == "spare":
+        key = "spare"
     profile = (ROOT / f"tests/fixtures/{key}1-earned.dat").read_bytes()
     trophies = b"ZSP1" + struct.pack("<I", 5)
     if args.mode in ("fog", "roof", "bowling", "pins", "whack", "twist"):
@@ -499,6 +566,10 @@ def main():
         previous = (ROOT / "tests/fixtures/zfinal1-earned.dat").read_bytes()
         trophies = previous[-80:]
         assert len(previous) == len(profile)
+    if args.mode == "spare":
+        previous = (ROOT / "tests/fixtures/wbtab1-earned.dat").read_bytes()
+        trophies = previous[-80:] + b"WB31" + struct.pack("<I", 1)
+        assert len(profile) == len(previous) + 8
     assert profile.startswith(struct.pack("<I", 12)) and profile.endswith(trophies)
     with tempfile.TemporaryDirectory(prefix=f"pvz-{args.mode}-browser-", ignore_cleanup_errors=True) as temp:
         scratch = Path(temp)

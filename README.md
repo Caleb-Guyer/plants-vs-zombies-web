@@ -4,6 +4,8 @@
 
 Open **Mini-Games → Bowling** to play the original Wall-nut Bowling and Wall-nut Bowling 2. The same saved game and trophy appear in both menus.
 
+Beat the original Wall-nut Bowling to unlock **Wall-nut Bowling 3 — Spare Change**. Each of the five frames gives you two ordinary Wall-nuts. Pick up a nut and click the upper or lower half of a launch square to aim its first bounce. A bank continues diagonally and rebounds at the lawn edge. Clear a frame in one roll for a strike or two for a spare. Leave a zombie standing and you retry that frame.
+
 ## The completed ZomBotany tab
 
 The ZomBotany tab has twenty cards. Beat the original ZomBotany to unlock the final four.

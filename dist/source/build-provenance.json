@@ -1,51 +1,58 @@
 {
-  "id": "0.2.6-web-wbtab.1",
-  "parentId": "0.2.6-web-zfinal.1",
+  "id": "0.2.6-web-spare.1",
+  "parentId": "0.2.6-web-wbtab.1",
   "sourceArchive": {
-    "path": "pvz-portable-0.2.6-web-wbtab.1-source.zip",
-    "sha256": "904afc1474757fc8167fbbd8bfd7a961e9bbb5f9b0c8460cbb196fe4641ea44b",
-    "bytes": 104063136,
-    "entries": 3718
+    "path": "pvz-portable-0.2.6-web-spare.1-source.zip",
+    "sha256": "014bc168b902de4768a0a60b861feec6a51af89677f5556037ca2fcd9965038f",
+    "bytes": 104070408,
+    "entries": 3720
   },
   "incrementalPatch": {
-    "path": "zfinal1-to-wbtab1.patch",
-    "sha256": "0421da734d658af31e60365943e84797e5adc523d88e187d13db7bdf2cc39adc",
-    "baseSourceSha256": "855725957312215ab31ac3a5149794c779b694436502625a1f7ffd2a4e08e9c2"
+    "path": "wbtab1-to-spare1.patch",
+    "sha256": "3565cac3028a91f672f8fe308adbb8b28b5b5c9fdce39e8a96732222ee101f0d",
+    "baseSourceSha256": "904afc1474757fc8167fbbd8bfd7a961e9bbb5f9b0c8460cbb196fe4641ea44b"
   },
-  "sourceFiles": 901,
-  "productionObjects": 158,
+  "sourceFiles": 903,
+  "productionObjects": 159,
   "normalBuild": {
     "status": "PASS",
     "exitCode": 0,
-    "elapsedSeconds": 150.853,
+    "elapsedSeconds": 81.825,
     "sourceUnchangedDuringBuild": true,
-    "sourceFiles": 901,
+    "sourceFiles": 903,
     "outputs": {
       "build/pvz-portable.js": {
         "bytes": 211155,
-        "sha256": "5aed1bbba0fa65c62a66eb6d5fcf1c5e576b55b907257dc87679e1981056e5eb"
+        "sha256": "856ab6f44b08f49d9da2292ec086616778ab8fbb71be00e18d7fbb96e6fb3675"
       },
       "build/pvz-portable.wasm": {
-        "bytes": 8057769,
-        "sha256": "8642d1ee6c93eea5a00bf31d50e2a668447e088209eafc0af3011de129a3f22b"
+        "bytes": 8065205,
+        "sha256": "4212cdbd82d232841dcc6cb66bf72299903212ca5a2c99625adfa242d8f402c7"
       },
       "build/ProjectVersion.h": {
         "bytes": 191,
-        "sha256": "82806f7efa524472f0f7ca91c745a2a42e3da4448bc72782f2a5bac1551a90eb"
+        "sha256": "1506dca349c1a6302e2655a46f759e0e2426627bf2f017761ab48a20a1fd8650"
       }
     }
   },
   "changedSources": [
     "CMake/ProjectVersion.cmake",
     "src/ConstEnums.h",
+    "src/Lawn/Board.cpp",
+    "src/Lawn/Challenge.cpp",
+    "src/Lawn/Plant.cpp",
+    "src/Lawn/SeedPacket.cpp",
+    "src/Lawn/System/PlayerInfo.cpp",
+    "src/Lawn/System/SpareChange.cpp",
+    "src/Lawn/System/SpareChange.h",
     "src/Lawn/Widget/ChallengeScreen.cpp",
     "src/Lawn/Widget/ChallengeScreen.h",
-    "src/LawnApp.cpp",
-    "src/LawnApp.h"
+    "src/Lawn/Zombie.cpp",
+    "src/LawnApp.cpp"
   ],
   "silentGameplayDriver": {
-    "wbtab-engine.js": "7b1b0ade35d50c073854f7bc648a193d75c0abee50f60a0335ed7356f6eb68b3",
-    "wbtab-engine.wasm": "cea135643fda53db874f2103775212d8b85715b8c1dab4b020bbdf7451a6ff61"
+    "spare-engine.js": "f19a5ea801ce72db341e2b34adab1370c456735e056c7026408c9b0f62eb246e",
+    "spare-engine.wasm": "5deae7d4603aaed88112cbf255e67ce57bfea09b21b9314638385538242b197d"
   },
-  "gameplayScenarios": 9
+  "gameplayScenarios": 11
 }

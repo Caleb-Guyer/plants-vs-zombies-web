@@ -30,6 +30,10 @@ jobs:
         run: python bundle-game-assets.py --verify-only
       - name: Verify browser shell and corresponding source
         run: npm run check
+      - name: Play all five Spare Change frames, resume a roll, and retry a frame with sound off
+        run: python tests/spare.py --play
+      - name: Score a Spare Change strike and pick up the split in a muted browser
+        run: python tests/pool-browser.py --mode spare
       - name: Play both original games from the Bowling and Mini-Games menus with sound off
         run: python tests/wbtab.py --play
       - name: Roll from both Bowling cards in a muted browser

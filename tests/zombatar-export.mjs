@@ -55,8 +55,9 @@ const iZombotanyFiles = ['src/Lawn/System/IZombotany.cpp', 'src/Lawn/System/IZom
 const beghouledFiles = ['src/Lawn/System/ZomBotanyBeghouled.cpp', 'src/Lawn/System/ZomBotanyBeghouled.h'];
 const bowlingFiles = ['src/Lawn/System/ZomBotanyBowling.cpp', 'src/Lawn/System/ZomBotanyBowling.h'];
 const finaleFiles = ['src/Lawn/System/ZomBotanyFinale.h','src/Lawn/System/ZomBotanyFinale.cpp'];
+const spareFiles = ['src/Lawn/System/SpareChange.h','src/Lawn/System/SpareChange.cpp'];
 const whackFiles = ['src/Lawn/System/ZomBotanyWhack.cpp', 'src/Lawn/System/ZomBotanyWhack.h'];
-assert.deepEqual([...candidates.keys()].sort(), [...originals.keys(),...addedRendererFiles,...addedQoLFiles,...addedContentFiles,...SCRAP_SOURCE_ADDITIONS,...AMBUSH_SOURCE_ADDITIONS,...TORCH_SOURCE_ADDITIONS,...DOUBLE_SOURCE_ADDITIONS,...GUST_SOURCE_ADDITIONS,...ZOMBOTANY3_SOURCE_ADDITIONS,...ZSURVIVAL_SOURCE_ADDITIONS,...ZVASE_SOURCE_ADDITIONS,...iZombotanyFiles,...beghouledFiles,...bowlingFiles,...whackFiles,...finaleFiles].sort(),
+assert.deepEqual([...candidates.keys()].sort(), [...originals.keys(),...addedRendererFiles,...addedQoLFiles,...addedContentFiles,...SCRAP_SOURCE_ADDITIONS,...AMBUSH_SOURCE_ADDITIONS,...TORCH_SOURCE_ADDITIONS,...DOUBLE_SOURCE_ADDITIONS,...GUST_SOURCE_ADDITIONS,...ZOMBOTANY3_SOURCE_ADDITIONS,...ZSURVIVAL_SOURCE_ADDITIONS,...ZVASE_SOURCE_ADDITIONS,...iZombotanyFiles,...beghouledFiles,...bowlingFiles,...whackFiles,...finaleFiles,...spareFiles].sort(),
   'The complete source adds exactly the retained renderer, QoL and reviewed bonus files');
 const code = /\.(?:c|cc|cpp|cxx|h|hh|hpp|hxx|inc|java|bas|rc|sh|cmake|in)$/i;
 const normalize = text => text.replace(/\r\n?/g, '\n');

@@ -78,6 +78,11 @@ RELEASES = {
         commit='685625de09e78e6e8fb1cd278f1b961b0bf5b160', sources=901, objects=158, scenarios=9,
         caption='with the Wall-nut Bowling tab.',
         change='Groups the two original Wall-nut Bowling games with their existing unlocks, saves and trophies.'),
+    'spare': dict(tag='spare1', stem='spare', parent_tag='wbtab1',
+        parent=chain.BOWLING_TAB, parent_bytes=chain.BOWLING_TAB_BYTES, parent_sha=chain.BOWLING_TAB_SHA,
+        commit='ec10d8f8f5b7c1f932a15fd27e8e62dbc7d6a913', sources=903, objects=159, scenarios=11,
+        caption='with Wall-nut Bowling 3.',
+        change='Adds Spare Change, a five-frame trick-shot minigame with a chosen first bank and two Wall-nuts per frame.'),
 }
 
 def sha(data):
